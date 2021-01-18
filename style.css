@@ -1,0 +1,193 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #000;
+    background: #333;
+    display: block;
+    margin: auto;
+    max-width: 1200px;
+}
+.topbar {
+    background-color: #efefef;
+}
+.cover {
+    float: left;
+    width: 192px;
+    height: 192px;
+}
+.info {
+    margin-left: 192px;
+    height: 192px;
+    max-height: 192px;
+    overflow: auto;
+}
+.info:after {
+    clear: both;
+}
+.metadata {
+    display: none;
+    padding-left: 12px;
+}
+.inputfile {
+    display: none;
+}
+.inputbutton {
+    border: 1px solid #aaa;
+    display: inline-block;
+    padding: 6px 12px;
+    margin: 4px 10px;
+    cursor: pointer;
+}
+.loading {
+    position: relative;
+    background-color:#111;
+    width: 100%;
+}
+#loadingbar {
+    background-color: #4060a0;
+    width: 0%;
+    height: 30px;
+    transition: width 0.2s ease-out;
+}
+#loadingtext {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform:translate(-50%, -50%);
+    margin: auto;
+    text-align: center;
+    color: white;
+}
+.accordion {
+    background-color: #333;
+    cursor: pointer;
+    padding: 8px;
+    width: 100%;
+    color: white;
+    border: none;
+    outline: none;
+    font-size: 1.25em;
+    text-align: left;
+}
+.active, .accordion:hover {
+  background-color: #444;
+}
+.accordion:after {
+    content: '\002B';
+    font-weight: bold;
+    float: left;
+    padding: 0px 12px 0px 4px;
+}
+.active:after {
+  content: '\2212';
+}
+.collapsible {
+    background-color: #fff;
+    overflow: hidden;
+    white-space: nowrap;
+    max-height: 0;
+    transition: max-height 0.2s ease-out;
+}
+#tools {
+    display: table;
+    white-space: normal;
+    width: 100%;
+    height: 100%;
+}
+#settings {
+    display: table-cell;
+    vertical-align: top;
+    width: 50%;
+    padding: 8px;
+}
+#settings select {
+    min-width: 120px;
+}
+#settings input[type=number] {
+    width: 48px;
+}
+#settings input[type=text] {
+    width: 48px;
+}
+#settings input[type=button] {
+    border: 1px solid #aaa;
+    display: inline-block;
+    padding: 2px 6px;
+    margin-right: 2px;
+    cursor: pointer;
+}
+#settings input[type=button]:disabled {
+    cursor: not-allowed;
+}
+#output-container {
+    display: table-cell;
+    width: 50%;
+    padding: 8px;
+}
+#output-box {
+    height: 100%;
+    padding: 8px;
+    border: 1px solid gray;
+    border-radius: 2px;
+    overflow: auto;
+}
+.stats {
+    background-color: white;
+}
+.char-container {
+    display: inline-block;
+    width: 100%;
+    min-width: 600px;
+    border-top: 1px solid #111;
+}
+.char-label {
+    display: block;
+    background-color: white;
+    color: black;
+    padding: 4px 1%;
+    font-size: 2em;
+}
+.diff-container {
+    background-color: white;
+}
+.diff-label {
+    display: block;
+    color: white;
+    padding: 2px 1%;
+    font-size: 1.25em;
+}
+.diff-panel {
+    display: inline-block;
+    vertical-align: top;
+    color: black;
+    padding-left: 1%;
+    padding-right: 1%;
+    width: 23%;
+    margin: 0px;
+}
+#title {
+    font-size: 2.5em;
+    padding: 4px 10px;
+}
+#subtitle {
+    font-size: 1.5em;
+    padding: 0px 10px;
+}
+#statsheader {
+    font-size: 1.25em;
+}
+#view2d {
+    padding: 10px;
+    background-color: #111;
+}
+#songname {
+    font-size: 2.5em;
+}
+#songsubname {
+    font-size: 1.25em;
+}
+#songauthor {
+    font-size: 1.5em;
+}
+#levelauthor {
+    font-size: 1em;
+}

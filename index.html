@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Kival's Map Check</title>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="style.css">
+    <script src="./scripts/libs/jquery.min.js"></script>
+    <script src="./scripts/libs/jszip.min.js"></script>
+  </head>
+  <body>
+    <div class="topbar">
+      <div class="cover">
+        <img id="coverimage" src="./assets/unknown.jpg" alt="No Cover Images" style="width:192px; height:192px;">
+      </div>
+      <div class="info">
+        <div class="metadata">
+          <span id="songname" title="Song Name"></span>
+          <span id="songsubname" title="Song Subname"></span><br>
+          <span id="songauthor" title="Song Author"></span><br>
+          <span id="songbpm" title="Song BPM"></span><br>
+          <span id="songduration" title="Song Duration">0:00</span><br><br>
+          <span id="levelauthor" title="Level Author"></span><br>
+        </div>
+        <div class="input">
+          <span id="title">Beat Saber</span><br>
+          <span id="subtitle">Map Check v1.0</span><br>
+          <label class="inputbutton" for="inputfile">Upload Map</label>
+          <input type="file" name="inputfile" class="inputfile" id="inputfile" accept=".zip">
+        </div>
+      </div>
+    </div>
+    <div class="loading">
+      <div id="loadingbar"></div>
+      <span id="loadingtext">No map loaded</span>
+    </div>
+    <button class="accordion">Tools</button>
+    <div class="collapsible">
+      <div id="tools">
+        <div class="settings" id="settings">
+          <label for="mapset">Characteristic select:</label>
+          <select class="settings" id="mapset"><option disabled selected>-</option></select><br>
+          <label for="mapdiff">Difficulty select:</label>
+          <select class="settings" id="mapdiff"><option disabled selected>-</option></select><br>
+          <label for="ebpm">Effective BPM threshold:</label>
+          <input type="number" class="settings" id="ebpm" name="ebpm"><br>
+          <label for="ebpms">Effective BPM (swing) threshold:</label>
+          <input type="number" class="settings" id="ebpms" name="ebpms"><br>
+          <label for="beatprec">Acceptable beat precision:</label>
+          <input type="text" class="settings" id="beatprec" name="beatprec" placeholder="4 3"><br>
+          <input type="checkbox" class="settings" id="dd" name="dd">
+          <label for="dd">Double-directional check</label><br>
+          <input type="checkbox" class="settings" id="hbstair" name="hitboxstaircase">
+          <label for="hbstair">Detect staircase</label><br>
+          <input type="checkbox" class="settings" id="vblock" name="visionblock">
+          <label for="vblock">Vision block check</label><br>
+          <label for="vblockmin">Vision block min time (ms):</label>
+          <input type="number" class="settings" id="vblockmin" name="vblockmin"><br>
+          <label for="vblockmax">Vision block max time (ms):</label>
+          <input type="number" class="settings" id="vblockmax" name="vblockmax"><br>
+          <input type="button" class="settings" id="vblockhjd" value="Set by HJD"><input type="button" class="settings" id="vblockoptimal" value="Set by optimal reaction time"><br>
+          Apply changes to:<br>
+          <input type="button" id="applythis" value="This difficulty" disabled><input type="button" id="applyall" value="All difficulties" disabled>
+        </div>
+        <div id="output-container">
+          <div id="output-box">No output.</div>
+        </div>
+      </div>
+    </div>
+    <div class="stats" id="stats"></div>
+  </body>
+  <script src="./scripts/index.js" defer></script>
+  <script src="./scripts/ui.js" defer></script>
+  <script src="./scripts/beatmap.js" defer></script>
+  <script src="./scripts/tools/generic.js" defer></script>
+  <script src="./scripts/tools/note.js" defer></script>
+  <script src="./scripts/tools/obstacle.js" defer></script>
+  <script src="./scripts/tools/event.js" defer></script>
+</html>
