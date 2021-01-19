@@ -4,9 +4,13 @@
 * Check for insignificant lighting event count
 
 ### Changed
+* `Set by HJD` now sets value to `HJD` instead of `HJD - 0.125`
+* Beat calculation calculate changes properly
 * Tolerance check function added for readability
-* Watermark and version
-* Cleaned up .css file
+* Title updated
+* Moved watermark and version placement
+* Cleaned up `.css` file
+* Converted old UI stuff to JQuery
 
 ## v1.1.0 [2021-01-19]
 ### Added

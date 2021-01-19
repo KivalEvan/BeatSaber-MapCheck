@@ -127,7 +127,7 @@ $('#vblockminbeat').change(function() {
         if (vBlockMin > vBlockMax) {
             vBlockMax = vBlockMin;
             $('#vblockmax').val(vBlockMin);
-            $('#vblockmaxbeat').val(round(toBeatTime(vBlockMin / 1000), 3));
+            $('#vblockmaxbeat').val(val);
         }
     }
     else $('#vblockminbeat').val(0);
@@ -156,7 +156,7 @@ $('#vblockhjd').click(function() {
         $('#vblockmin').val(vBlockMin);
         $('#vblockmax').val(vBlockMax);
         $('#vblockminbeat').val(0.25);
-        $('#vblockmaxbeat').val(round(hjd, 3));
+        $('#vblockmaxbeat').val(hjd);
     }
 });
 $('#vblockoptimal').click(function() {
@@ -261,26 +261,20 @@ function UIPopulateDiffSelect(mapSet) {
 }
 
 // i could just make a table but i dont want to
-// also gotta convert to jquery but am too lazy
 async function UIcreateDiffSet(charName) {
     let charRename = charName;
     if(modeRename[charRename])
         charRename = modeRename[charRename];
-    let charContainer = document.createElement('div');
-    charContainer.className = 'char-container';
-    charContainer.setAttribute('id', charName);
 
-    let charHeader = document.createElement('span');
-    let charHeaderContent = document.createTextNode(charRename);
-    charHeader.className = 'char-label';
-    charHeader.appendChild(charHeaderContent);
-    charContainer.appendChild(charHeader);
-
-    let statspanel = document.getElementById('stats');
-    statspanel.appendChild(charContainer);
+    $('#stats').append([$('<div>', {
+        id: charName,
+        class: 'char-container'
+    }).append($('<span>', {
+        class: 'char-label',
+        text: charRename
+    }))]);
 }
 
-// dont mind the pepega down there, i'll clean it later
 async function UIcreateDiffInfo(charName, diff) {
     const bpm = mapInfo._beatsPerMinute;
     let diffName = diffRename[diff._difficulty];
@@ -349,68 +343,54 @@ async function UIcreateDiffInfo(charName, diff) {
     }
 
     // set header
-    let diffHeader = document.createElement('span');
-    let diffHeaderContent = document.createTextNode(`${diffName}`);
-    diffHeader.className = 'diff-label';
-    diffHeader.style.backgroundColor = diffColor[diff._difficulty];
-    diffHeader.appendChild(diffHeaderContent);
+    let diffHeader = $('<span>', {
+        class: 'diff-label',
+        text: diffName,
+        css: {
+            'background-color': diffColor[diff._difficulty]
+        }
+    });
 
     // set subpanel
     // map
-    let diffPanelMap = document.createElement('div');
-    diffPanelMap.setAttribute('id', 'map');
-    diffPanelMap.className = 'diff-panel';
-    for (let i = 0; i < textMap.length; i++) {
-        let diffPContent = document.createTextNode(textMap[i]);
-        let linebreak = document.createElement('br');
-        diffPanelMap.appendChild(diffPContent);
-        diffPanelMap.appendChild(linebreak);
-    }
+    let diffPanelMap = $('<div>', {
+        class: 'diff-panel',
+        id: 'map',
+        html: textMap.join('<br>')
+    });
 
     // note
-    let diffPanelNote = document.createElement('div');
-    diffPanelNote.setAttribute('id', 'note');
-    diffPanelNote.className = 'diff-panel';
-    for (let i = 0; i < textNote.length; i++) {
-        let diffPContent = document.createTextNode(textNote[i]);
-        let linebreak = document.createElement('br');
-        diffPanelNote.appendChild(diffPContent);
-        diffPanelNote.appendChild(linebreak);
-    }
+    let diffPanelNote = $('<div>', {
+        class: 'diff-panel',
+        id: 'note',
+        html: textNote.join('<br>')
+    });
     
     // obstacle
-    let diffPanelObstacle = document.createElement('div');
-    diffPanelObstacle.setAttribute('id', 'obstacle');
-    diffPanelObstacle.className = 'diff-panel';
-    for (let i = 0; i < textObstacle.length; i++) {
-        let diffPContent = document.createTextNode(textObstacle[i]);
-        let linebreak = document.createElement('br');
-        diffPanelObstacle.appendChild(diffPContent);
-        diffPanelObstacle.appendChild(linebreak);
-    }
+    let diffPanelObstacle = $('<div>', {
+        class: 'diff-panel',
+        id: 'obstacle',
+        html: textObstacle.join('<br>')
+    });
 
     // event
-    let diffPanelEvent = document.createElement('div');
-    diffPanelEvent.setAttribute('id', 'event');
-    diffPanelEvent.className = 'diff-panel';
-    for (let i = 0; i < textEvent.length; i++) {
-        let diffPContent = document.createTextNode(textEvent[i]);
-        let linebreak = document.createElement('br');
-        diffPanelEvent.appendChild(diffPContent);
-        diffPanelEvent.appendChild(linebreak);
-    }
+    let diffPanelEvent = $('<div>', {
+        class: 'diff-panel',
+        id: 'event',
+        html: textEvent.join('<br>')
+    });
 
     // merge all panel into container
-    let diffContainer = document.createElement('div');
-    diffContainer.className = 'diff-container';
-    diffContainer.appendChild(diffHeader);
-    diffContainer.appendChild(diffPanelMap);
-    diffContainer.appendChild(diffPanelNote);
-    diffContainer.appendChild(diffPanelObstacle);
-    diffContainer.appendChild(diffPanelEvent);
+    let diffContainer = $('<div>', {
+        class: 'diff-container'
+    });
+    diffContainer.append(diffHeader);
+    diffContainer.append(diffPanelMap);
+    diffContainer.append(diffPanelNote);
+    diffContainer.append(diffPanelObstacle);
+    diffContainer.append(diffPanelEvent);
 
-    let charContainer = document.getElementById(charName);
-    charContainer.appendChild(diffContainer);
+    $(`#${charName}`).append(diffContainer);
 }
 
 function UIOutputDisplay(cs, ds) {
