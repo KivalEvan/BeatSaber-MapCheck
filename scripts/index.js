@@ -1,8 +1,13 @@
-/* GENERAL SCRIPT
- * some general and other stuff that has no place yet
- * flag and constant stuff is mostly here
- * also includes unused stuff that i may consider in the future
- */
+ /* GENERAL SCRIPT
+    some general and other stuff that has no place yet
+    flag and constant stuff is mostly here
+    also includes unused stuff that i may consider in the future */
+
+const watermark = 'Kival Evan#5480';
+const version = 'v1.1.1';
+
+$('#watermark').text(`${watermark} - ${version}`)
+
 let flagBPMChanges = false;
 let flagOddBPM = false;
 let flagLoaded = false;
@@ -112,6 +117,18 @@ const noteCutAngle = {
     6: 225,
     7: 135,
     8: 0
+}
+
+const flipCutDir = {
+    0: 1,
+    1: 0,
+    2: 3,
+    3: 2,
+    4: 7,
+    5: 6,
+    6: 5,
+    7: 4,
+    8: 8
 }
 
 const modeRename = {
@@ -301,4 +318,14 @@ function mod(x, m) {
 
 function distance(a, b, m) {
     return Math.min(mod(a - b, m),mod(b - a, m));
+}
+
+function outTxtBold(arg1, arg2) {
+    if (!Array.isArray(arg2)) {
+        if (arg2 == '') return '';
+        return `<b>${arg1}</b>: ${arg2}`
+    }
+    if (arg2.length == 0) return '';
+    if (arg1.search(/\[\]/g) != -1 && arg2.length > 0) arg1 = arg1.replaceAll(/\[\]/g, `[${arg2.length}]`);
+    return `<b>${arg1}</b>: ${arg2.join(', ')}`
 }

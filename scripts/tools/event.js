@@ -1,4 +1,4 @@
-// TODO: extensive lighting stats?
+// TODO: more extensive lighting stats?
 function countEvent(events) {
     let light = 0;
     let boost = 0;
@@ -27,10 +27,21 @@ function countEvent(events) {
 function countEventLight(events) {
     let count = 0;
     for (let i = events.length - 1; i >= 0; i--)
-        if (events[i]._type != 14 || events[i]._type != 15)
+        if (events[i]._type >= 0 && events[i]._type < 5)
             count++;
     return count;
 }
+
+function countEventLight10(events) {
+    let count = 0;
+    for (let i = events.length - 1; i >= 0; i--) {
+        if (events[i]._type >= 0 && events[i]._type < 5)
+            count++;
+        if (count > 10) break;
+    }
+    return count;
+}
+
 function countEventRotation(events) {
     let count = 0;
     for (let i = events.length - 1; i >= 0; i--)
@@ -38,6 +49,7 @@ function countEventRotation(events) {
             count++;
     return count;
 }
+
 function countEventChroma(events) {
     let count = 0;
     for (let i = events.length - 1; i >= 0; i--)

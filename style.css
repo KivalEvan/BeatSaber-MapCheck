@@ -15,6 +15,7 @@ body {
     height: 192px;
 }
 .info {
+    position: relative;
     margin-left: 192px;
     height: 192px;
     max-height: 192px;
@@ -25,7 +26,23 @@ body {
 }
 .metadata {
     display: none;
-    padding-left: 12px;
+    padding: 0 0.75em;
+}
+#songname {
+    font-size: 2.5em;
+}
+#songsubname {
+    font-size: 1.25em;
+}
+#songauthor {
+    font-size: 1.5em;
+}
+#levelauthor {
+    font-size: 1em;
+}
+.input {
+    height: 100%;
+    padding: 0 0.75em;
 }
 .inputfile {
     display: none;
@@ -34,8 +51,21 @@ body {
     border: 1px solid #aaa;
     display: inline-block;
     padding: 6px 12px;
-    margin: 4px 10px;
+    margin-top: 0.25em;
     cursor: pointer;
+}
+#title {
+    font-size: 2.5em;
+}
+#subtitle {
+    font-size: 1.5em;
+    margin-top: 0.25em;
+}
+#watermark {
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+    color: #777;
 }
 .loading {
     position: relative;
@@ -164,30 +194,6 @@ body {
     width: 23%;
     margin: 0px;
 }
-#title {
-    font-size: 2.5em;
-    padding: 4px 10px;
-}
-#subtitle {
-    font-size: 1.5em;
-    padding: 0px 10px;
-}
 #statsheader {
     font-size: 1.25em;
-}
-#view2d {
-    padding: 10px;
-    background-color: #111;
-}
-#songname {
-    font-size: 2.5em;
-}
-#songsubname {
-    font-size: 1.25em;
-}
-#songauthor {
-    font-size: 1.5em;
-}
-#levelauthor {
-    font-size: 1em;
 }
