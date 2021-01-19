@@ -1,5 +1,7 @@
 # Changelog
 ## Unreleased
+### Fixed
+* Properly check for swing tolerance
 
 ## v1.1.1 [2021-01-19]
 ### Added

@@ -4,7 +4,7 @@
     also includes unused stuff that i may consider in the future */
 
 const watermark = 'Kival Evan#5480';
-const version = 'v1.1.1';
+const version = 'v1.1.2';
 
 $('#watermark').text(`${watermark} - ${version}`)
 
@@ -21,8 +21,8 @@ if (flagToolDD) $('#dd').prop('checked', true);
 if (flagToolHBStair) $('#hbstair').prop('checked', true);
 if (flagToolvBlock) $('#vblock').prop('checked', true);
 
-const maxTolerance = 0.07 + 1e-9;
-const maxWindowTolerance = 0.08 + 1e-9;
+const maxTolerance = 0.06 + 1e-9;
+const maxWindowTolerance = 0.07 + 1e-9;
 
 // there's no definite formula for hitbox as of yet
 const hitboxStaircaseThreshold = 0.14 + 1e-9;
