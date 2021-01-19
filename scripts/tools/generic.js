@@ -1,6 +1,6 @@
 // the more i look at this the more pepega it becomes
 function checkHotStart(notes, obstacles, bpm) {
-    if (getFirstInteractiveTime(bpm, notes, obstacles) < 1.5) return true;
+    if (getFirstInteractiveTime(notes, obstacles, bpm) < 1.5) return true;
     return false;
 }
 
@@ -73,8 +73,12 @@ function findOutEndEvent(events, bpm) {
 // derived from Uninstaller's Swings Per Second tool
 // some variable or function may have been modified
 // translating from Python to Javascript is hard
-function maybeWindowed(note1, note2) {
-    return Math.max(Math.abs(note1._lineIndex - note2._lineIndex), Math.abs(note1._lineLayer - note2._lineLayer)) >= 2;
+function checkTolerance(n1, n2, tol) {
+    return (n1._time - n2._time) / mapInfo._beatsPerMinute * 60 > tol;
+}
+
+function maybeWindowed(n1, n2) {
+    return Math.max(Math.abs(n1._lineIndex - n2._lineIndex), Math.abs(n1._lineLayer - n2._lineLayer)) >= 2;
 }
 
 // look at this pepega
@@ -99,7 +103,7 @@ function swingCount(diff) {
         const realTime = toRealTime(note._time);
         if (note._type == 0) {
             if (lastRed) {
-                if (maybeWindowed(note, lastRed) && (note._time - lastRed._time) / mapInfo._beatsPerMinute * 60 > maxWindowTolerance-0.01 || (note._time - lastRed._time) / mapInfo._beatsPerMinute * 60 > maxTolerance-0.01) {
+                if (maybeWindowed(note, lastRed) && checkTolerance(note, lastRed, maxWindowTolerance-0.01) || checkTolerance(note, lastRed, maxTolerance-0.01)) {
                     swingCountRed[Math.floor(realTime)] += 1;
                 }
             }
@@ -108,7 +112,7 @@ function swingCount(diff) {
         }
         else if (note._type == 1) {
             if (lastBlue) {
-                if (maybeWindowed(note, lastBlue) && (note._time - lastBlue._time) / mapInfo._beatsPerMinute * 60 > maxWindowTolerance-0.01 || (note._time - lastBlue._time) / mapInfo._beatsPerMinute * 60 > maxTolerance-0.01) {
+                if (maybeWindowed(note, lastBlue) && checkTolerance(note, lastRed, maxWindowTolerance-0.01) || checkTolerance(note, lastRed, maxTolerance-0.01)) {
                     swingCountBlue[Math.floor(realTime)] += 1;
                 }
             }
@@ -171,7 +175,7 @@ function swingPerSecondInfo(diff) {
         // swingIntervalRed.push(spsRed);
         // swingIntervalBlue.push(spsBlue);
     }
-    const duration = getLastInteractiveTime(mapInfo._beatsPerMinute, diff._notes, diff._obstacles) - getFirstInteractiveTime(mapInfo._beatsPerMinute, diff._notes, diff._obstacles);
+    const duration = getLastInteractiveTime(diff._notes, diff._obstacles, mapInfo._beatsPerMinute) - getFirstInteractiveTime(diff._notes, diff._obstacles, mapInfo._beatsPerMinute);
     // const swingTotalRed = Math.round((swingLR.swingL.reduce((a, b) => a + b) / duration) * 100 + Number.EPSILON) / 100;
     // const swingTotalRedPeak = calcMaxRollingSPS(swingLR.swingL, interval);
     // const swingTotalBlue = Math.round((swingLR.swingR.reduce((a, b) => a + b) / duration) * 100 + Number.EPSILON) / 100;
@@ -193,28 +197,28 @@ function calcNPSMapped(nc, dur) {
 
 // unlike map duration, this starts from the first interactive object
 // had to be done, thx Uninstaller
-function getFirstInteractiveTime(bpm, notes, obstacles) {
+function getFirstInteractiveTime(notes, obstacles, bpm) {
     let firstNoteTime = Number.MAX_VALUE;
     if (notes.length > 0) firstNoteTime = notes[0]._time / bpm * 60;
-    const firstInteractiveObstacleTime = findFirstInteractiveObstacleTime(bpm, obstacles);
+    const firstInteractiveObstacleTime = findFirstInteractiveObstacleTime(obstacles, bpm);
     return Math.min(firstNoteTime, firstInteractiveObstacleTime);
 }
 
-function getLastInteractiveTime(bpm, notes, obstacles) {
+function getLastInteractiveTime(notes, obstacles, bpm) {
     let lastNoteTime = 0;
     if (notes.length > 0) lastNoteTime = notes[notes.length - 1]._time / bpm * 60;
-    const lastInteractiveObstacleTime = findLastInteractiveObstacleTime(bpm, obstacles);
+    const lastInteractiveObstacleTime = findLastInteractiveObstacleTime(obstacles, bpm);
     return Math.max(lastNoteTime, lastInteractiveObstacleTime);
 }
 
-function findFirstInteractiveObstacleTime(bpm, obstacles) {
+function findFirstInteractiveObstacleTime(obstacles, bpm) {
     for (let i = 0, len = obstacles.length; i < len; i++)
         if (obstacles[i]._width >= 2 || obstacles[i]._lineIndex == 1 || obstacles[i]._lineIndex == 2)
             return obstacles[i]._time / bpm * 60;
     return Number.MAX_VALUE;
 }
 
-function findLastInteractiveObstacleTime(bpm, obstacles) {
+function findLastInteractiveObstacleTime(obstacles, bpm) {
     let obstacleEnd = 0;
     for (let i = obstacles.length - 1; i >= 0; i--)
         if (obstacles[i]._width >= 2 || obstacles[i]._lineIndex == 1 || obstacles[i]._lineIndex == 2)

@@ -1,7 +1,8 @@
 # Changelog
 ## Unreleased
 ### Changed
-* Cleaned .css file
+* Cleaned up .css file
+* Tolerance check function added for readability
 ## v1.1.0 [2021-01-19]
 ### Added
 * Note row percentage

@@ -1,6 +1,6 @@
-/* BEATMAP SCRIPT
- * load map and handle map related variable
- */
+ /* BEATMAP SCRIPT
+    load map and handle map related variable */
+
 let mapInfo, mapDiffSet, mapAnalysis = [];
 let mapBPMChange = [], mapMinBPM, mapMaxBPM;
 let songDuration;
@@ -150,7 +150,7 @@ function loadDifficulty(str) {
     }
 
     if (diff._notes.length > 0 || diff._obstacles.length > 0) {
-        diff['_duration'] = getLastInteractiveTime(mapInfo._beatsPerMinute, diff._notes, diff._obstacles);
+        diff['_duration'] = getLastInteractiveTime(diff._notes, diff._obstacles, mapInfo._beatsPerMinute);
         if (!flagLoadAudio) calcMapDuration(mapInfo._beatsPerMinute, diff._notes, diff._obstacles);
     }
     return diff;
@@ -170,7 +170,7 @@ async function mapTool(charName, diff) {
         else if (diff._data._customData._bpmChanges) BPMChanges = diff._data._customData._bpmChanges;
     }
     const bpmc = getBPMChangesTime(bpm, offset, BPMChanges);
-    const startTime = getFirstInteractiveTime(bpm, diff._data._notes, diff._data._obstacles);
+    const startTime = getFirstInteractiveTime(diff._data._notes, diff._data._obstacles, bpm);
 
     let arr = [];
     if (startTime < 1.5) arr.push(`Hot start: ${round(startTime, 3)}s`);

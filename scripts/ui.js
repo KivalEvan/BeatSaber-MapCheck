@@ -1,7 +1,6 @@
-/* USER INTERFACE SCRIPT
- * i dunno what to describe here
- * it's fairly obvious; creating, manipulating, and deleting DOM element
- */
+ /* USER INTERFACE SCRIPT
+    i dunno what to describe here
+    it's fairly obvious; creating, manipulating, and deleting DOM element */
 
 // I took too long just to figure out how to upload and load zip file
 $('#inputfile').change(readFile);
