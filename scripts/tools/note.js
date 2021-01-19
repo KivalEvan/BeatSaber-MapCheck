@@ -179,8 +179,12 @@ function detectDoubleDirectional(notes, bpm, offset, bpmc) {
                     if (startRedDot && checkDD(note._cutDirection, lastRedDir)) {
                         arr.push(adjustTime(startRedDot._time, bpm, offset, bpmc));
                         startRedDot = null;
+                        lastRedDir = note._cutDirection;
                     }
-                    if (note._cutDirection != 8) lastRedDir = note._cutDirection;
+                    if (note._cutDirection != 8) {
+                        startRedDot = null;
+                        lastRedDir = note._cutDirection;
+                    };
                 }
             }
             else lastRedDir = note._cutDirection;
@@ -203,8 +207,12 @@ function detectDoubleDirectional(notes, bpm, offset, bpmc) {
                     if (startBlueDot && checkDD(note._cutDirection, lastBlueDir)) {
                         arr.push(adjustTime(startBlueDot._time, bpm, offset, bpmc));
                         startBlueDot = null;
+                        lastBlueDir = note._cutDirection;
                     }
-                    if (note._cutDirection != 8) lastBlueDir = note._cutDirection;
+                    if (note._cutDirection != 8) {
+                        startBlueDot = null;
+                        lastBlueDir = note._cutDirection;
+                    }
                 }
             }
             else lastBlueDir = note._cutDirection;

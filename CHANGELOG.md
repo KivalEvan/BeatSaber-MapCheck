@@ -1,6 +1,10 @@
 # Changelog
 ## Unreleased
 
+## v1.1.2 [2021-01-19]
+### Fixed
+* Fixed DD again
+
 ## v1.1.1 [2021-01-19]
 ### Added
 * Check for insignificant lighting event count
