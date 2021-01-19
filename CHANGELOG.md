@@ -1,7 +1,7 @@
 # Changelog
 ## Unreleased
 
-## v1.1.1 [2021-01-20]
+## v1.1.1 [2021-01-19]
 ### Added
 * Check for insignificant lighting event count
 
@@ -9,6 +9,7 @@
 * `Set by HJD` now sets value to `HJD` instead of `HJD - 0.125`
 * Beat calculation calculate changes properly
 * DD check now look for weirdchamp sliders (not for full dot)
+* DD check flip previous cut direction for the next note if the current note is (entirely) dot note (check every dot note but assumes only flipping motion from previous known cut direction)
 * Map analysis output now bold text
 * Tolerance check function added for readability
 * Title updated
