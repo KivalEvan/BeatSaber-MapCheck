@@ -173,20 +173,20 @@ async function mapTool(charName, diff) {
     const startTime = getFirstInteractiveTime(diff._data._notes, diff._data._obstacles, bpm);
 
     let arr = [];
-    if (startTime < 1.5) arr.push(`Hot start: ${round(startTime, 3)}s`);
-    if (countEventLight10(diff._data._events) < 10) arr.push('Lack of lighting events (<=10 events)');
-    arr.push(getEffectiveBPMTime(diff._data._notes, bpm, offset, bpmc));
-    arr.push(getEffectiveBPMSwingTime(diff._data._notes, bpm, offset, bpmc));
-    arr.push(findOutStartNote(diff._data._notes, mapInfo._beatsPerMinute));
-    arr.push(findOutEndNote(diff._data._notes, mapInfo._beatsPerMinute));
-    arr.push(findOutStartObstacle(diff._data._obstacles, mapInfo._beatsPerMinute));
-    arr.push(findOutEndObstacle(diff._data._obstacles, mapInfo._beatsPerMinute));
-    arr.push(findOutStartEvent(diff._data._events, mapInfo._beatsPerMinute));
-    arr.push(findOutEndEvent(diff._data._events, mapInfo._beatsPerMinute));
-    if (flagToolDD) arr.push(detectDoubleDirectional(diff._data._notes, bpm, offset, bpmc));
-    if (flagToolvBlock) arr.push(detectVisionBlock(diff._data._notes, bpm, offset, bpmc));
-    if (beatPrecision.length > 0) arr.push(detectOffPrecision(diff._data._notes, bpm, offset, bpmc));
-    if (flagToolHBStair) arr.push(detectHitboxStaircase(diff._data._notes, bpm, offset, bpmc));
+    if (startTime < 1.5) arr.push(outTxtBold('Hot start', `${round(startTime, 3)}s`));
+    if (countEventLight10(diff._data._events) < 10) arr.push(outTxtBold('Lack of lighting events', '(<=10 events)'));
+    arr.push(outTxtBold('Exceeded EBPM []', getEffectiveBPMTime(diff._data._notes, bpm, offset, bpmc)));
+    arr.push(outTxtBold('Exceeded EBPM (swing) []', getEffectiveBPMSwingTime(diff._data._notes, bpm, offset, bpmc)));
+    arr.push(outTxtBold('Note(s) before start time', findOutStartNote(diff._data._notes, mapInfo._beatsPerMinute)));
+    arr.push(outTxtBold('Note(s) after end time', findOutEndNote(diff._data._notes, mapInfo._beatsPerMinute)));
+    arr.push(outTxtBold('Event(s) before start time', findOutStartObstacle(diff._data._obstacles, mapInfo._beatsPerMinute)));
+    arr.push(outTxtBold('Event(s) after end time', findOutEndObstacle(diff._data._obstacles, mapInfo._beatsPerMinute)));
+    arr.push(outTxtBold('Obstacle(s) before start time', findOutStartEvent(diff._data._events, mapInfo._beatsPerMinute)));
+    arr.push(outTxtBold('Obstacle(s) after end time', findOutEndEvent(diff._data._events, mapInfo._beatsPerMinute)));
+    if (flagToolDD) arr.push(outTxtBold('Double-directional []', detectDoubleDirectional(diff._data._notes, bpm, offset, bpmc)));
+    if (flagToolvBlock) arr.push(outTxtBold('Vision blocked []', detectVisionBlock(diff._data._notes, bpm, offset, bpmc)));
+    if (beatPrecision.length > 0) arr.push(outTxtBold('Off-beat precision []', detectOffPrecision(diff._data._notes, bpm, offset, bpmc)));
+    if (flagToolHBStair) arr.push(outTxtBold('Hitbox staircase []', detectHitboxStaircase(diff._data._notes, bpm, offset, bpmc)));
     let text = arr.filter(function(x) {
         return x != '';
     });

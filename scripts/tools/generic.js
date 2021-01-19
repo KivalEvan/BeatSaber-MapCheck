@@ -28,7 +28,7 @@ function getJumpDistance(bpm, njs, offset) {
 function findOutStartNote(notes, bpm) {
     if (!notes.length > 0) return '';
     if (notes[0]._time < 0)
-        return `Note(s) before start time: ${notes[0]._time} (${round(60 / bpm * notes[0]._time, 2)}s)`;
+        return `${notes[0]._time} (${round(60 / bpm * notes[0]._time, 2)}s)`;
     return '';
 }
 
@@ -36,14 +36,14 @@ function findOutEndNote(notes, bpm) {
     if (!notes.length > 0) return '';
     let endBeat = songDuration * bpm / 60;
     if (notes[notes.length - 1]._time > endBeat)
-        return `Note(s) beyond end time: ${notes[notes.length - 1]._time} (${round(60 / bpm * notes[notes.length - 1]._time, 2)}s)`;
+        return `${notes[notes.length - 1]._time} (${round(60 / bpm * notes[notes.length - 1]._time, 2)}s)`;
     return '';
 }
 
 function findOutStartObstacle(obstacles, bpm) {
     if (!obstacles.length > 0) return '';
     if (obstacles[0]._time < 0)
-        return `Obstacle(s) before start time: ${obstacles[0]._time} (${round(60 / bpm * obstacles[0]._time, 2)}s)`;
+        return `${obstacles[0]._time} (${round(60 / bpm * obstacles[0]._time, 2)}s)`;
     return '';
 }
 
@@ -51,14 +51,14 @@ function findOutEndObstacle(obstacles, bpm) {
     if (!obstacles.length > 0) return '';
     let endBeat = songDuration * bpm / 60;
     if (obstacles[obstacles.length - 1]._time > endBeat)
-        return `Obstacle(s) beyond end time: ${obstacles[obstacles.length - 1]._time} (${round(60 / bpm * obstacles[obstacles.length - 1]._time, 2)}s)`;
+        return `${obstacles[obstacles.length - 1]._time} (${round(60 / bpm * obstacles[obstacles.length - 1]._time, 2)}s)`;
     return '';
 }
 
 function findOutStartEvent(events, bpm) {
     if (!events.length > 0) return '';
     if (events[0]._time < 0)
-        return `Event(s) before start time: ${events[0]._time} (${round(60 / bpm * events[0]._time, 2)}s)`;
+        return `${events[0]._time} (${round(60 / bpm * events[0]._time, 2)}s)`;
     return '';
 }
 
