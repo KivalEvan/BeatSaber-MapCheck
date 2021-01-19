@@ -26,7 +26,7 @@ body {
 }
 .metadata {
     display: none;
-    padding-left: 12px;
+    padding: 0 0.75em;
 }
 #songname {
     font-size: 2.5em;
@@ -42,6 +42,7 @@ body {
 }
 .input {
     height: 100%;
+    padding: 0 0.75em;
 }
 .inputfile {
     display: none;
@@ -50,16 +51,15 @@ body {
     border: 1px solid #aaa;
     display: inline-block;
     padding: 6px 12px;
-    margin: 4px 10px;
+    margin-top: 0.25em;
     cursor: pointer;
 }
 #title {
     font-size: 2.5em;
-    padding: 4px 10px;
 }
 #subtitle {
     font-size: 1.5em;
-    padding: 0px 10px;
+    margin-top: 0.25em;
 }
 #watermark {
     position: absolute;
