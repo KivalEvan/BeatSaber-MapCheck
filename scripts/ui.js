@@ -152,11 +152,11 @@ $('#vblockhjd').click(function() {
         let diff = char._difficultyBeatmaps.find(d => d._difficulty == diffSelect);
         let hjd = round(getHalfJumpDuration(mapInfo._beatsPerMinute, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset), 3);
         vBlockMin = Math.ceil(60 / mapInfo._beatsPerMinute * 0.25 * 1000);
-        vBlockMax = Math.floor(60 / mapInfo._beatsPerMinute * (hjd - 0.125) * 1000);
+        vBlockMax = Math.floor(60 / mapInfo._beatsPerMinute * hjd * 1000);
         $('#vblockmin').val(vBlockMin);
         $('#vblockmax').val(vBlockMax);
-        $('#vblockminbeat').val(round(toBeatTime(vBlockMin / 1000), 3));
-        $('#vblockmaxbeat').val(round(toBeatTime(vBlockMax / 1000), 3));
+        $('#vblockminbeat').val(0.25);
+        $('#vblockmaxbeat').val(round(hjd, 3));
     }
 });
 $('#vblockoptimal').click(function() {
