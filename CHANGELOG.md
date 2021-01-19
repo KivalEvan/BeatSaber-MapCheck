@@ -1,5 +1,8 @@
 # Changelog
 ## Unreleased
+### Added
+* Check for insignificant lighting event count
+
 ### Changed
 * Tolerance check function added for readability
 * Watermark and version

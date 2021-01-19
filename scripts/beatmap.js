@@ -174,6 +174,7 @@ async function mapTool(charName, diff) {
 
     let arr = [];
     if (startTime < 1.5) arr.push(`Hot start: ${round(startTime, 3)}s`);
+    if (countEventLight10(diff._data._events) < 10) arr.push(`Lack of lighting events (<=10 events)`);
     arr.push(getEffectiveBPMTime(diff._data._notes, bpm, offset, bpmc));
     arr.push(getEffectiveBPMSwingTime(diff._data._notes, bpm, offset, bpmc));
     arr.push(findOutStartNote(diff._data._notes, mapInfo._beatsPerMinute));
