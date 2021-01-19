@@ -92,19 +92,19 @@ $('#beatprec').change(function() {
     $('#beatprec').val(beatPrecision.join(' '));
 });
 $('#dd').click(function() {
-    if ($(this).prop("checked") == true) {
+    if ($(this).prop("checked")) {
         flagToolDD = true;
     }
     else flagToolDD = false;
 });
 $('#hbstair').click(function() {
-    if ($(this).prop("checked") == true) {
+    if ($(this).prop("checked")) {
         flagToolHBStair = true;
     }
     else flagToolHBStair = false;
 });
 $('#vblock').click(function() {
-    if ($(this).prop("checked") == true) {
+    if ($(this).prop("checked")) {
         flagToolvBlock = true;
     }
     else flagToolvBlock = false;
@@ -112,10 +112,40 @@ $('#vblock').click(function() {
 $('#vblockmin').change(function() {
     vBlockMin = Math.ceil(Math.abs(this.value));
     $('#vblockmin').val(vBlockMin);
+    if (flagLoaded) $('#vblockminbeat').val(round(toBeatTime(vBlockMin / 1000), 3));
+    if (vBlockMin > vBlockMax) {
+        vBlockMax = vBlockMin;
+        $('#vblockmax').val(vBlockMin);
+        if (flagLoaded) $('#vblockmaxbeat').val(round(toBeatTime(vBlockMin / 1000), 3));
+    }
+});
+$('#vblockminbeat').change(function() {
+    if (flagLoaded) {
+        let val = round(Math.abs(this.value), 3);
+        vBlockMin = Math.ceil(toRealTime(val) * 1000);
+        $('#vblockmin').val(vBlockMin);
+        $('#vblockminbeat').val(val);
+        if (vBlockMin > vBlockMax) {
+            vBlockMax = vBlockMin;
+            $('#vblockmax').val(vBlockMin);
+            $('#vblockmaxbeat').val(round(toBeatTime(vBlockMin / 1000), 3));
+        }
+    }
+    else $('#vblockminbeat').val(0);
 });
 $('#vblockmax').change(function() {
     vBlockMax = Math.floor(Math.abs(this.value));
     $('#vblockmax').val(vBlockMax);
+    if (flagLoaded) $('#vblockmaxbeat').val(round(toBeatTime(vBlockMax / 1000), 3));
+});
+$('#vblockmaxbeat').change(function() {
+    if (flagLoaded) {
+        let val = round(Math.abs(this.value), 3);
+        vBlockMax = Math.floor(toRealTime(val) * 1000);
+        $('#vblockmax').val(vBlockMax);
+        $('#vblockmaxbeat').val(val);
+    }
+    else $('#vblockmaxbeat').val(0);
 });
 $('#vblockhjd').click(function() {
     if (flagLoaded) {
@@ -126,6 +156,8 @@ $('#vblockhjd').click(function() {
         vBlockMax = Math.floor(60 / mapInfo._beatsPerMinute * (hjd - 0.125) * 1000);
         $('#vblockmin').val(vBlockMin);
         $('#vblockmax').val(vBlockMax);
+        $('#vblockminbeat').val(round(toBeatTime(vBlockMin / 1000), 3));
+        $('#vblockmaxbeat').val(round(toBeatTime(vBlockMax / 1000), 3));
     }
 });
 $('#vblockoptimal').click(function() {
@@ -133,6 +165,10 @@ $('#vblockoptimal').click(function() {
     vBlockMax = 500;
     $('#vblockmin').val(vBlockMin);
     $('#vblockmax').val(vBlockMax);
+    if (flagLoaded) {
+        $('#vblockminbeat').val(round(toBeatTime(vBlockMin / 1000), 3));
+        $('#vblockmaxbeat').val(round(toBeatTime(vBlockMax / 1000), 3));
+    }
 });
 $('#applythis').click(async function() {
     let char = mapInfo._difficultyBeatmapSets.find(c => c._beatmapCharacteristicName == charSelect);
@@ -267,32 +303,51 @@ async function UIcreateDiffInfo(charName, diff) {
     textMap.push(`HJD: ${round(getHalfJumpDuration(bpm, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset), 3)}`);
     textMap.push(`JD: ${round(getJumpDistance(bpm, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset), 3)}`);
     textMap.push(`Reaction Time: ${Math.round(60 / bpm * getHalfJumpDuration(bpm, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset) * 1000)}ms`);
+    textMap.push('');
     textMap.push(`Effective BPM: ${(findEffectiveBPM(diff._data._notes, bpm)).toFixed(2)}`);
     textMap.push(`Effective BPM (swing): ${(findEffectiveBPMSwing(diff._data._notes, bpm)).toFixed(2)}`);
 
     let textNote = [];
-    const noteR = countNoteRed(diff._data._notes);
-    const noteB = countNoteBlue(diff._data._notes);
+    const note = countNote(diff._data._notes)
+    const noteR = note.red;
+    const noteB = note.blue;
     textNote.push(`Notes: ${noteR + noteB}`);
-    textNote.push(`> Red: ${noteR}`);
-    textNote.push(`> Blue: ${noteB}`);
-    textNote.push(`> R/B Ratio: ${round(noteB ? noteR / noteB : 0, 2)}`);
+    textNote.push(`• Red: ${noteR}`);
+    textNote.push(`• Blue: ${noteB}`);
+    textNote.push(`• R/B Ratio: ${round(noteB ? noteR / noteB : 0, 2)}`);
     textNote.push('');
     textNote.push(`SPS: ${swingPerSecondInfo(diff._data)}`);
     textNote.push(`NPS: ${calcNPS(noteR + noteB).toFixed(2)}`);
-    textNote.push(`> Mapped: ${calcNPSMapped(noteR + noteB, diff._data._duration).toFixed(2)}`);
+    textNote.push(`• Mapped: ${calcNPSMapped(noteR + noteB, diff._data._duration).toFixed(2)}`);
 
     let textObstacle = [];
     // i know bomb isnt obstacle but this side doesnt have much so i merge this together
-    textObstacle.push(`Bombs: ${diff._data._notes.length - noteR - noteB}`);
+    // it now include sps
+    textObstacle.push(`Top Row: ${noteB || noteR ? round(countNoteLayer(diff._data._notes, 2) / (noteR + noteB) * 100, 1) : 0}%`);
+    textObstacle.push(`Mid Row: ${noteB || noteR ? round(countNoteLayer(diff._data._notes, 1) / (noteR + noteB) * 100, 1) : 0}%`);
+    textObstacle.push(`Bot Row: ${noteB || noteR ? round(countNoteLayer(diff._data._notes, 0) / (noteR + noteB) * 100, 1) : 0}%`);
+    textObstacle.push('');
+    textObstacle.push(`Bombs: ${note.bomb}`);
     textObstacle.push('');
     textObstacle.push(`Obstacles: ${diff._data._obstacles.length}`);
-    textObstacle.push(`> Interactive: ${countInteractiveObstacle(diff._data._obstacles)}`);
+    textObstacle.push(`• Interactive: ${countInteractiveObstacle(diff._data._obstacles)}`);
 
     let textEvent = [];
-    let chroma = countEventChroma(diff._data._events);
+    const light = countEvent(diff._data._events);
     textEvent.push(`Events: ${diff._data._events.length}`);
-    if (chroma > 0) textEvent.push(`Chroma 2: ${chroma}`);
+    textEvent.push(`• Lighting: ${light.light}`);
+    textEvent.push(`• Ring Rotation: ${light.rrotate}`);
+    textEvent.push(`• Ring Zoom: ${light.rzoom}`);
+    textEvent.push(`• Laser Rotation: ${light.laser}`);
+    if (light.chroma || light.ogc) {
+        textEvent.push('');
+        if (light.chroma) textEvent.push(`• Chroma: ${light.chroma}`);
+        if (light.ogc) textEvent.push(`• OG Chroma: ${light.ogc}`);
+    }
+    if (light.rot) {
+        textEvent.push('');
+        textEvent.push(`• Lane Rotation: ${light.chroma}`);
+    }
 
     // set header
     let diffHeader = document.createElement('span');

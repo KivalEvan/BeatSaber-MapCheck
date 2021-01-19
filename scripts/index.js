@@ -33,31 +33,86 @@ let beatPrecision = [4, 3]
 $('#ebpm').val(maxEBPM);
 $('#ebpms').val(maxEBPMS);
 $('#vblockmin').val(vBlockMin);
+$('#vblockminbeat').val(0);
 $('#vblockmax').val(vBlockMax);
+$('#vblockmaxbeat').val(0);
 $('#beatprec').val(beatPrecision.join(' '));
 
 /**  REFERENCES  **
- * NOTE TYPE:
- *  0 -> Red Note
- *  1 -> Blue Note
- *  3 -> Bomb
- *
- * NOTE DIRECTION:
- *         ^
- *   | 4 | 0 | 5 | 
- * < | 2 | 8 | 3 | >
- *   | 6 | 1 | 7 | 
- *         v
- * 
- * INDEX_LAYER:
- *  0_2 | 1_2 | 2_2 | 3_2
- *  0_1 | 1_1 | 2_1 | 3_1
- *  0_0 | 1_0 | 2_0 | 3_0
- * INDEX refers to lane.
- * LAYER refers to row.
+NOTE TYPE:
+ 0 -> Red Note
+ 1 -> Blue Note
+ 3 -> Bomb
+
+NOTE DIRECTION:
+        ^
+  | 4 | 0 | 5 | 
+< | 2 | 8 | 3 | >
+  | 6 | 1 | 7 | 
+        v
+
+INDEX_LAYER:
+ 0_2 | 1_2 | 2_2 | 3_2
+ 0_1 | 1_1 | 2_1 | 3_1
+ 0_0 | 1_0 | 2_0 | 3_0
+INDEX refers to lane.
+LAYER refers to row.
+INDEX_LAYER:
+ 0_2 | 1_2 | 2_2 | 3_2
+ 0_1 | 1_1 | 2_1 | 3_1
+ 0_0 | 1_0 | 2_0 | 3_0
+INDEX refers to lane.
+LAYER refers to row.
+
+EVENT TYPE:
+ 0 -> Back Top Lasers
+ 1 -> Track Ring Neons
+ 2 -> Left Lasers
+ 3 -> Right Lasers
+ 4 -> Center Lighting
+ 5 -> Light Boost
+ 8 -> Rings Rotation
+ 9 -> Small Rings Zoom
+10 -> BPM Change (BROKEN)
+12 -> Left Lasers Speed
+13 -> Right Lasers Speed
+14 -> Early Spawn Rotation
+15 -> Late Spawn Rotation
+
+EVENT VALUE:
+ 0 -> Off
+ 1 -> On Blue
+ 2 -> Flash Blue
+ 3 -> Fade Blue
+ 5 -> On Red
+ 6 -> Flash Red
+ 7 -> Fade Red
+Rings: N/A
+Lasers: Speed
+Spawn Rotation (Clockwise):
+ 0 -> -60 degree rotation
+ 1 -> -45 degree rotation
+ 2 -> -30 degree rotation
+ 3 -> -15 degree rotation
+ 4 -> 15 degree rotation
+ 5 -> 30 degree rotation
+ 6 -> 45 degree rotation
+ 7 -> 60 degree rotation
  */
 
 const cutDirections = [Math.PI, 0, Math.PI * 0.5, Math.PI * 1.5, Math.PI * 0.75, Math.PI * 1.25, Math.PI * 0.25, Math.PI * 1.75, 0]
+
+const noteCutAngle = {
+    0: 0,
+    1: 180,
+    2: 270,
+    3: 90,
+    4: 315,
+    5: 45,
+    6: 225,
+    7: 135,
+    8: 0
+}
 
 const modeRename = {
     "OneSaber": "One Saber",
@@ -195,8 +250,11 @@ function toMMSS(num) {
 }
 
 function toRealTime(beat) {
-    if (beat == 0) return 0;
     return beat / mapInfo._beatsPerMinute * 60;
+}
+
+function toBeatTime(num) {
+    return num * mapInfo._beatsPerMinute / 60;
 }
 
 function getBPMChangesTime(bpm, offset = 0, bpmc = []) {
@@ -233,4 +291,14 @@ function round(num, d = 0) {
     if (!d > 0) return Math.round(num);
     // return parseFloat(num.toFixed(d));
     return Math.round(num * Math.pow(10, d)) / Math.pow(10, d);
+}
+
+// thanks Top_Cat
+function mod(x, m) {
+    if (m < 0) m = -m; r = x % m;
+    return r < 0 ? r + m : r;
+}
+
+function distance(a, b, m) {
+    return Math.min(mod(a - b, m),mod(b - a, m));
 }

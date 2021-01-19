@@ -23,7 +23,7 @@
         </div>
         <div class="input">
           <span id="title">Beat Saber</span><br>
-          <span id="subtitle">Map Check v1.0</span><br>
+          <span id="subtitle">Map Check v1.1.0</span><br>
           <label class="inputbutton" for="inputfile">Upload Map</label>
           <input type="file" name="inputfile" class="inputfile" id="inputfile" accept=".zip">
         </div>
@@ -42,9 +42,9 @@
           <label for="mapdiff">Difficulty select:</label>
           <select class="settings" id="mapdiff"><option disabled selected>-</option></select><br>
           <label for="ebpm">Effective BPM threshold:</label>
-          <input type="number" class="settings" id="ebpm" name="ebpm"><br>
+          <input type="number" class="settings" id="ebpm" name="ebpm" min="0"><br>
           <label for="ebpms">Effective BPM (swing) threshold:</label>
-          <input type="number" class="settings" id="ebpms" name="ebpms"><br>
+          <input type="number" class="settings" id="ebpms" name="ebpms" min="0"><br>
           <label for="beatprec">Acceptable beat precision:</label>
           <input type="text" class="settings" id="beatprec" name="beatprec" placeholder="4 3"><br>
           <input type="checkbox" class="settings" id="dd" name="dd">
@@ -54,9 +54,13 @@
           <input type="checkbox" class="settings" id="vblock" name="visionblock">
           <label for="vblock">Vision block check</label><br>
           <label for="vblockmin">Vision block min time (ms):</label>
-          <input type="number" class="settings" id="vblockmin" name="vblockmin"><br>
+          <input type="number" class="settings" id="vblockmin" name="vblockmin" min="0">
+          <label for="vblockminbeat">(beat):</label>
+          <input type="number" class="settings" id="vblockminbeat" name="vblockminbeat" min="0" step="0.125"><br>
           <label for="vblockmax">Vision block max time (ms):</label>
-          <input type="number" class="settings" id="vblockmax" name="vblockmax"><br>
+          <input type="number" class="settings" id="vblockmax" name="vblockmax" min="0">
+          <label for="vblockmaxbeat">(beat):</label>
+          <input type="number" class="settings" id="vblockmaxbeat" name="vblockmaxbeat" min="0" step="0.125"><br>
           <input type="button" class="settings" id="vblockhjd" value="Set by HJD"><input type="button" class="settings" id="vblockoptimal" value="Set by optimal reaction time"><br>
           Apply changes to:<br>
           <input type="button" id="applythis" value="This difficulty" disabled><input type="button" id="applyall" value="All difficulties" disabled>

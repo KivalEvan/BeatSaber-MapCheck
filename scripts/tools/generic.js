@@ -25,6 +25,51 @@ function getJumpDistance(bpm, njs, offset) {
     return njs * (60 / bpm) * getHalfJumpDuration(bpm, njs, offset) * 2;
 }
 
+function findOutStartNote(notes, bpm) {
+    if (!notes.length > 0) return '';
+    if (notes[0]._time < 0)
+        return `Note(s) before start time: ${notes[0]._time} (${round(60 / bpm * notes[0]._time, 2)}s)`;
+    return '';
+}
+
+function findOutEndNote(notes, bpm) {
+    if (!notes.length > 0) return '';
+    let endBeat = songDuration * bpm / 60;
+    if (notes[notes.length - 1]._time > endBeat)
+        return `Note(s) beyond end time: ${notes[notes.length - 1]._time} (${round(60 / bpm * notes[notes.length - 1]._time, 2)}s)`;
+    return '';
+}
+
+function findOutStartObstacle(obstacles, bpm) {
+    if (!obstacles.length > 0) return '';
+    if (obstacles[0]._time < 0)
+        return `Obstacle(s) before start time: ${obstacles[0]._time} (${round(60 / bpm * obstacles[0]._time, 2)}s)`;
+    return '';
+}
+
+function findOutEndObstacle(obstacles, bpm) {
+    if (!obstacles.length > 0) return '';
+    let endBeat = songDuration * bpm / 60;
+    if (obstacles[obstacles.length - 1]._time > endBeat)
+        return `Obstacle(s) beyond end time: ${obstacles[obstacles.length - 1]._time} (${round(60 / bpm * obstacles[obstacles.length - 1]._time, 2)}s)`;
+    return '';
+}
+
+function findOutStartEvent(events, bpm) {
+    if (!events.length > 0) return '';
+    if (events[0]._time < 0)
+        return `Event(s) before start time: ${events[0]._time} (${round(60 / bpm * events[0]._time, 2)}s)`;
+    return '';
+}
+
+function findOutEndEvent(events, bpm) {
+    if (!events.length > 0) return '';
+    let endBeat = songDuration * bpm / 60;
+    if (events[events.length - 1]._time > endBeat)
+        return `Event(s) beyond end time: ${events[events.length - 1]._time} (${round(60 / bpm * events[events.length - 1]._time, 2)}s)`;
+    return '';
+}
+
 // derived from Uninstaller's Swings Per Second tool
 // some variable or function may have been modified
 // translating from Python to Javascript is hard
@@ -135,39 +180,6 @@ function swingPerSecondInfo(diff) {
     // const swingTotalOverallPeak = calcMaxRollingSPS(swingTotal, interval);
     return swingTotalOverall;
     // console.log(swingTotalOverall, swingTotalRed, swingTotalBlue);
-}
-
-// also smort
-function countNote(notes) {
-    let count = 0;
-    notes.forEach(note => { if (note._type != 3) count++; });
-    return count;
-}
-
-function countNoteRed(notes) {
-    let count = 0;
-    notes.forEach(note => { if (note._type == 0) count++; });
-    return count;
-}
-
-function countNoteBlue(notes) {
-    let count = 0;
-    notes.forEach(note => { if (note._type == 1) count++; });
-    return count;
-}
-
-function countBomb(notes) {
-    let count = 0;
-    notes.forEach(note => { if (note._type == 3) count++; });
-    return count;
-}
-
-function countInteractiveObstacle(obstacles) {
-    let count = 0;
-    for (let i = obstacles.length - 1; i >= 0; i--)
-        if (obstacles[i]._width >= 2 || obstacles[i]._lineIndex == 1 || obstacles[i]._lineIndex == 2)
-            count++;
-    return count;
 }
 
 function calcNPS(nc) {

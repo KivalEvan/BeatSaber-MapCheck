@@ -2,6 +2,42 @@
 // TODO: basic unrankable hit
 // TODO: check for bomb reset
 // TODO: rewrite staircase check
+// smort
+function countNote(notes) {
+    let nr = 0;
+    let nb = 0;
+    let b = 0;
+    for (let i = notes.length - 1; i >= 0; i--) {
+        if (notes[i]._type == 0) nr++;
+        else if (notes[i]._type == 1) nb++;
+        else b++;
+    }
+    return {red: nr, blue: nb, bomb: b};
+}
+
+function countNoteLayer(notes, l) {
+    let count = 0;
+    notes.forEach(note => { if (note._type != 3 && note._lineLayer == l) count++; });
+    return count;
+}
+
+function countNoteRed(notes) {
+    let count = 0;
+    notes.forEach(note => { if (note._type == 0) count++; });
+    return count;
+}
+
+function countNoteBlue(notes) {
+    let count = 0;
+    notes.forEach(note => { if (note._type == 1) count++; });
+    return count;
+}
+
+function countBomb(notes) {
+    let count = 0;
+    notes.forEach(note => { if (note._type == 3) count++; });
+    return count;
+}
 
 function findEffectiveBPM(notes, bpm) {
     let EBPM = 0;
@@ -123,26 +159,38 @@ function getEffectiveBPMSwingTime(notes, bpm, offset, bpmc) {
 function detectDoubleDirectional(notes, bpm, offset, bpmc) {
     let arr = [];
     let lastRed;
+    let lastRedDir;
     let lastBlue;
+    let lastBlueDir;
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         if (note._type == 0) {
             if (lastRed) {
                 if (maybeWindowed(note, lastRed) && (note._time - lastRed._time) / bpm * 60 > maxWindowTolerance || (note._time - lastRed._time) / bpm * 60 > maxTolerance) {
-                    if (checkDD(note, lastRed)) arr.push(adjustTime(note._time, bpm, offset, bpmc));
-                    lastRed = note;
+                    if (checkDD(note._cutDirection, lastRedDir)) {
+                        arr.push(adjustTime(note._time, bpm, offset, bpmc));
+                    }
+                    lastRedDir = note._cutDirection;
+                }
+                else {
+                    if (note._cutDirection != 8) lastRedDir = note._cutDirection;
                 }
             }
-            else lastRed = note;
+            lastRed = note;
         }
         else if (note._type == 1) {
             if (lastBlue) {
                 if (maybeWindowed(note, lastBlue) && (note._time - lastBlue._time) / bpm * 60 > maxWindowTolerance || (note._time - lastBlue._time) / bpm * 60 > maxTolerance) {
-                    if (checkDD(note, lastBlue)) arr.push(adjustTime(note._time, bpm, offset, bpmc));
-                    lastBlue = note;
+                    if (checkDD(note._cutDirection, lastBlueDir)) {
+                        arr.push(adjustTime(note._time, bpm, offset, bpmc));
+                    }
+                    lastBlueDir = note._cutDirection;
+                }
+                else {
+                    if (note._cutDirection != 8) lastBlueDir = note._cutDirection;
                 }
             }
-            else lastBlue = note;
+            lastBlue = note;
         }
     }
     arr = arr.filter(function(x, i, ary) {
@@ -153,21 +201,9 @@ function detectDoubleDirectional(notes, bpm, offset, bpmc) {
     return '';
 }
 
-const noteCutDirDD = {
-    0: [4, 0, 5],
-    1: [6, 1, 7],
-    2: [4, 2, 6],
-    3: [5, 3, 7],
-    4: [2, 4, 0],
-    5: [0, 5, 3],
-    6: [1, 6, 2],
-    7: [3, 7, 1],
-    8: [0]
-}
-
-function checkDD(n1, n2) {
-    for (let i = 0; i < noteCutDirDD[n2._cutDirection].length; i++)
-        if (n1._cutDirection == noteCutDirDD[n2._cutDirection][i]) return true;
+function checkDD(n1cd, n2cd) {
+    if (n1cd == 8 || n2cd == 8) return false;
+    if (distance(noteCutAngle[n1cd], noteCutAngle[n2cd], 360) <= 45) return true;
     return false;
 }
 
@@ -233,6 +269,9 @@ function detectOffPrecision(notes, bpm, offset, bpmc) {
             }
         }
     }
+    arr = arr.filter(function(x, i, ary) {
+        return !i || x != ary[i - 1];
+    });
     if (arr.length > 0)
         return `Off-beat precision [${arr.length}]: ${arr.join(', ')}`;
     return '';

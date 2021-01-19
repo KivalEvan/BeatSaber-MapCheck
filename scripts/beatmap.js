@@ -102,6 +102,8 @@ async function loadMap(mapZip) {
         }
         UIOutputDisplay(charSelect, diffSelect);
 
+        $('#vblockminbeat').val(round(toBeatTime(vBlockMin / 1000), 3));
+        $('#vblockmaxbeat').val(round(toBeatTime(vBlockMax / 1000), 3));
         $('#applythis').prop('disabled', false);
         $('#applyall').prop('disabled', false);
         $('.settings').prop('disabled', false);
@@ -174,6 +176,12 @@ async function mapTool(charName, diff) {
     if (startTime < 1.5) arr.push(`Hot start: ${round(startTime, 3)}s`);
     arr.push(getEffectiveBPMTime(diff._data._notes, bpm, offset, bpmc));
     arr.push(getEffectiveBPMSwingTime(diff._data._notes, bpm, offset, bpmc));
+    arr.push(findOutStartNote(diff._data._notes, mapInfo._beatsPerMinute));
+    arr.push(findOutEndNote(diff._data._notes, mapInfo._beatsPerMinute));
+    arr.push(findOutStartObstacle(diff._data._obstacles, mapInfo._beatsPerMinute));
+    arr.push(findOutEndObstacle(diff._data._obstacles, mapInfo._beatsPerMinute));
+    arr.push(findOutStartEvent(diff._data._events, mapInfo._beatsPerMinute));
+    arr.push(findOutEndEvent(diff._data._events, mapInfo._beatsPerMinute));
     if (flagToolDD) arr.push(detectDoubleDirectional(diff._data._notes, bpm, offset, bpmc));
     if (flagToolvBlock) arr.push(detectVisionBlock(diff._data._notes, bpm, offset, bpmc));
     if (beatPrecision.length > 0) arr.push(detectOffPrecision(diff._data._notes, bpm, offset, bpmc));
