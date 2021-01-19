@@ -112,7 +112,7 @@ function swingCount(diff) {
         }
         else if (note._type == 1) {
             if (lastBlue) {
-                if (maybeWindowed(note, lastBlue) && checkTolerance(note, lastRed, maxWindowTolerance-0.01) || checkTolerance(note, lastRed, maxTolerance-0.01)) {
+                if (maybeWindowed(note, lastBlue) && checkTolerance(note, lastBlue, maxWindowTolerance-0.01) || checkTolerance(note, lastBlue, maxTolerance-0.01)) {
                     swingCountBlue[Math.floor(realTime)] += 1;
                 }
             }
