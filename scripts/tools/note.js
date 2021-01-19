@@ -160,36 +160,58 @@ function detectDoubleDirectional(notes, bpm, offset, bpmc) {
     let arr = [];
     let lastRed;
     let lastRedDir;
+    let startRedDot;
     let lastBlue;
     let lastBlueDir;
+    let startBlueDot;
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         if (note._type == 0) {
             if (lastRed) {
                 if (maybeWindowed(note, lastRed) && checkTolerance(note, lastRed, maxWindowTolerance) || checkTolerance(note, lastRed, maxTolerance)) {
+                    if (startRedDot) {
+                        startRedDot = null;
+                        lastRedDir = 8;
+                    }
                     if (checkDD(note._cutDirection, lastRedDir)) {
                         arr.push(adjustTime(note._time, bpm, offset, bpmc));
                     }
-                    lastRedDir = note._cutDirection;
+                    if (note._cutDirection == 8) startRedDot = note;
+                    else lastRedDir = note._cutDirection;
                 }
                 else {
+                    if (startRedDot && checkDD(note._cutDirection, lastRedDir)) {
+                        arr.push(adjustTime(startRedDot._time, bpm, offset, bpmc));
+                        startRedDot = null;
+                    }
                     if (note._cutDirection != 8) lastRedDir = note._cutDirection;
                 }
             }
+            else lastRedDir = note._cutDirection;
             lastRed = note;
         }
         else if (note._type == 1) {
             if (lastBlue) {
                 if (maybeWindowed(note, lastBlue) && checkTolerance(note, lastBlue, maxWindowTolerance) || checkTolerance(note, lastBlue, maxTolerance)) {
+                    if (startBlueDot) {
+                        startBlueDot = null;
+                        lastBlueDir = 8;
+                    }
                     if (checkDD(note._cutDirection, lastBlueDir)) {
                         arr.push(adjustTime(note._time, bpm, offset, bpmc));
                     }
-                    lastBlueDir = note._cutDirection;
+                    if (note._cutDirection == 8) startBlueDot = note;
+                    else lastBlueDir = note._cutDirection;
                 }
                 else {
+                    if (startBlueDot && checkDD(note._cutDirection, lastBlueDir)) {
+                        arr.push(adjustTime(startBlueDot._time, bpm, offset, bpmc));
+                        startBlueDot = null;
+                    }
                     if (note._cutDirection != 8) lastBlueDir = note._cutDirection;
                 }
             }
+            else lastBlueDir = note._cutDirection;
             lastBlue = note;
         }
     }
