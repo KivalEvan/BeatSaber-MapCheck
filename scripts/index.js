@@ -3,6 +3,11 @@
  * flag and constant stuff is mostly here
  * also includes unused stuff that i may consider in the future
  */
+const watermark = 'Kival Evan#5480';
+const version = 'v1.1.1';
+
+$('#watermark').text(`${watermark} - ${version}`)
+
 let flagBPMChanges = false;
 let flagOddBPM = false;
 let flagLoaded = false;
