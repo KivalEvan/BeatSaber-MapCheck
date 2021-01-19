@@ -4,7 +4,7 @@
     also includes unused stuff that i may consider in the future */
 
 const watermark = 'Kival Evan#5480';
-const version = 'v1.1.1';
+const version = 'v1.1.2';
 
 $('#watermark').text(`${watermark} - ${version}`)
 
