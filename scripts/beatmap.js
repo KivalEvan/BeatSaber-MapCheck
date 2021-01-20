@@ -106,9 +106,9 @@ async function loadMap(mapZip) {
         }
         UIOutputDisplay(charSelect, diffSelect);
 
-        $('#shranglemaxbeat').val(round(toBeatTime(shrAngleMax / 1000), 3));
-        $('#vblockminbeat').val(round(toBeatTime(vBlockMin / 1000), 3));
-        $('#vblockmaxbeat').val(round(toBeatTime(vBlockMax / 1000), 3));
+        $('#shranglemaxbeat').val(round(toBeatTime(shrAngleMax), 3));
+        $('#vblockminbeat').val(round(toBeatTime(vBlockMin), 3));
+        $('#vblockmaxbeat').val(round(toBeatTime(vBlockMax), 3));
         $('#applythis').prop('disabled', false);
         $('#applyall').prop('disabled', false);
         $('.settings').prop('disabled', false);
@@ -181,8 +181,8 @@ async function mapTool(charName, diff) {
     console.log('Analysing', charName, diff._difficulty);
     if (startTime < 1.5) arr.push(outTxtBold('Hot start', `${round(startTime, 3)}s`));
     if (countEventLight10(diff._data._events) < 10) arr.push(outTxtBold('Lack of lighting events', '(<=10 events)'));
-    arr.push(outTxtBold('Exceeded EBPM []', getEffectiveBPMTime(diff._data._notes, bpm, offset, bpmc)));
-    arr.push(outTxtBold('Exceeded EBPM (swing) []', getEffectiveBPMSwingTime(diff._data._notes, bpm, offset, bpmc)));
+    arr.push(outTxtBold(`>${maxEBPM}EBPM warning []`, getEffectiveBPMTime(diff._data._notes, bpm, offset, bpmc)));
+    arr.push(outTxtBold(`>${maxEBPMS}EBPM (swing) warning []`, getEffectiveBPMSwingTime(diff._data._notes, bpm, offset, bpmc)));
     arr.push(outTxtBold('Note(s) before start time', findOutStartNote(diff._data._notes, mapInfo._beatsPerMinute)));
     arr.push(outTxtBold('Note(s) after end time', findOutEndNote(diff._data._notes, mapInfo._beatsPerMinute)));
     arr.push(outTxtBold('Event(s) before start time', findOutStartObstacle(diff._data._obstacles, mapInfo._beatsPerMinute)));
@@ -191,6 +191,7 @@ async function mapTool(charName, diff) {
     arr.push(outTxtBold('Obstacle(s) after end time', findOutEndEvent(diff._data._events, mapInfo._beatsPerMinute)));
     if (flagToolDD) arr.push(outTxtBold('Double-directional []', detectDoubleDirectional(diff._data._notes, bpm, offset, bpmc)));
     if (flagToolvBlock) arr.push(outTxtBold('Vision blocked []', detectVisionBlock(diff._data._notes, bpm, offset, bpmc)));
+    arr.push(outTxtBold('Stacked note []', detectStackedNote(diff._data._notes, bpm, offset, bpmc)));
     if (beatPrecision.length > 0) arr.push(outTxtBold('Off-beat precision []', detectOffPrecision(diff._data._notes, bpm, offset, bpmc)));
     if (flagToolHBStair) arr.push(outTxtBold('Hitbox staircase []', detectHitboxStaircase(diff._data._notes, bpm, offset, bpmc)));
     if (flagToolshrAngle) arr.push(outTxtBold('Shrado angle []', detectShrAngle(diff._data._notes, bpm, offset, bpmc)));

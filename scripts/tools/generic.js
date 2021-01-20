@@ -73,10 +73,6 @@ function findOutEndEvent(events, bpm) {
 // derived from Uninstaller's Swings Per Second tool
 // some variable or function may have been modified
 // translating from Python to Javascript is hard
-function checkTolerance(n1, n2, tol) {
-    return (n1._time - n2._time) / mapInfo._beatsPerMinute * 60 > tol;
-}
-
 function maybeWindowed(n1, n2) {
     return Math.max(Math.abs(n1._lineIndex - n2._lineIndex), Math.abs(n1._lineLayer - n2._lineLayer)) >= 2;
 }
@@ -102,7 +98,7 @@ function swingCount(diff) {
         const realTime = toRealTime(note._time);
         if (note._type == 0) {
             if (lastRed) {
-                if ((maybeWindowed(note, lastRed) && checkTolerance(note, lastRed, maxWindowTolerance)) || checkTolerance(note, lastRed, maxTolerance)) {
+                if ((maybeWindowed(note, lastRed) && tolMin(note, lastRed, maxWindowTolerance)) || tolMin(note, lastRed, maxTolerance)) {
                     swingCountRed[Math.floor(realTime)] += 1;
                 }
             }
@@ -111,7 +107,8 @@ function swingCount(diff) {
         }
         else if (note._type == 1) {
             if (lastBlue) {
-                if ((maybeWindowed(note, lastBlue) && checkTolerance(note, lastBlue, maxWindowTolerance)) || checkTolerance(note, lastBlue, maxTolerance)) {
+                if ((maybeWindowed(note, lastBlue) && tolMin(note, lastBlue, maxWindowTolerance)) || tolMin(note, lastBlue, maxTolerance)) {
+
                     swingCountBlue[Math.floor(realTime)] += 1;
                 }
             }

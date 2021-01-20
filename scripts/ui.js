@@ -103,15 +103,15 @@ $('#shrangle').click(function() {
     else flagToolshrAngle = false;
 });
 $('#shranglemax').change(function() {
-    shrAngleMax = Math.floor(Math.abs(this.value));
-    $('#shranglemax').val(shrAngleMax);
-    if (flagLoaded) $('#shranglemaxbeat').val(round(toBeatTime(shrAngleMax / 1000), 3));
+    shrAngleMax = round(Math.abs(this.value) / 1000, 3);
+    $('#shranglemax').val(round(shrAngleMax * 1000, 3));
+    if (flagLoaded) $('#shranglemaxbeat').val(round(toBeatTime(shrAngleMax), 3));
 });
 $('#shranglemaxbeat').change(function() {
     if (flagLoaded) {
         let val = round(Math.abs(this.value), 3);
-        shrAngleMax = Math.floor(toRealTime(val) * 1000);
-        $('#shranglemax').val(shrAngleMax);
+        shrAngleMax = round(toRealTime(val), 3);
+        $('#shranglemax').val(round(shrAngleMax * 1000, 3));
         $('#shranglemaxbeat').val(val);
     }
     else $('#shranglemaxbeat').val(0);
@@ -129,39 +129,39 @@ $('#vblock').click(function() {
     else flagToolvBlock = false;
 });
 $('#vblockmin').change(function() {
-    vBlockMin = Math.ceil(Math.abs(this.value));
-    $('#vblockmin').val(vBlockMin);
-    if (flagLoaded) $('#vblockminbeat').val(round(toBeatTime(vBlockMin / 1000), 3));
+    vBlockMin = round(Math.abs(this.value) / 1000, 3);
+    $('#vblockmin').val(round(vBlockMin * 1000));
+    if (flagLoaded) $('#vblockminbeat').val(round(toBeatTime(vBlockMin), 3));
     if (vBlockMin > vBlockMax) {
         vBlockMax = vBlockMin;
-        $('#vblockmax').val(vBlockMin);
-        if (flagLoaded) $('#vblockmaxbeat').val(round(toBeatTime(vBlockMin / 1000), 3));
+        $('#vblockmax').val(round(vBlockMin * 1000));
+        if (flagLoaded) $('#vblockmaxbeat').val(round(toBeatTime(vBlockMin), 3));
     }
 });
 $('#vblockminbeat').change(function() {
     if (flagLoaded) {
         let val = round(Math.abs(this.value), 3);
-        vBlockMin = Math.ceil(toRealTime(val) * 1000);
-        $('#vblockmin').val(vBlockMin);
+        vBlockMin = round(toRealTime(val), 3);
+        $('#vblockmin').val(round(vBlockMin * 1000));
         $('#vblockminbeat').val(val);
         if (vBlockMin > vBlockMax) {
             vBlockMax = vBlockMin;
-            $('#vblockmax').val(vBlockMin);
+            $('#vblockmax').val(round(vBlockMin * 1000));
             $('#vblockmaxbeat').val(val);
         }
     }
     else $('#vblockminbeat').val(0);
 });
 $('#vblockmax').change(function() {
-    vBlockMax = Math.floor(Math.abs(this.value));
-    $('#vblockmax').val(vBlockMax);
-    if (flagLoaded) $('#vblockmaxbeat').val(round(toBeatTime(vBlockMax / 1000), 3));
+    vBlockMax = round(Math.abs(this.value) / 1000, 3);
+    $('#vblockmax').val(round(vBlockMax * 1000));
+    if (flagLoaded) $('#vblockmaxbeat').val(round(toBeatTime(vBlockMax), 3));
 });
 $('#vblockmaxbeat').change(function() {
     if (flagLoaded) {
         let val = round(Math.abs(this.value), 3);
-        vBlockMax = Math.floor(toRealTime(val) * 1000);
-        $('#vblockmax').val(vBlockMax);
+        vBlockMax = round(toRealTime(val), 3);
+        $('#vblockmax').val(round(vBlockMax * 1000));
         $('#vblockmaxbeat').val(val);
     }
     else $('#vblockmaxbeat').val(0);
@@ -171,22 +171,22 @@ $('#vblockhjd').click(function() {
         let char = mapInfo._difficultyBeatmapSets.find(c => c._beatmapCharacteristicName == charSelect);
         let diff = char._difficultyBeatmaps.find(d => d._difficulty == diffSelect);
         let hjd = round(getHalfJumpDuration(mapInfo._beatsPerMinute, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset), 3);
-        vBlockMin = Math.ceil(60 / mapInfo._beatsPerMinute * 0.25 * 1000);
-        vBlockMax = Math.floor(60 / mapInfo._beatsPerMinute * hjd * 1000);
-        $('#vblockmin').val(vBlockMin);
-        $('#vblockmax').val(vBlockMax);
+        vBlockMin = round(60 / mapInfo._beatsPerMinute * 0.25, 3);
+        vBlockMax = round(60 / mapInfo._beatsPerMinute * hjd, 3);
+        $('#vblockmin').val(vBlockMin * 1000);
+        $('#vblockmax').val(vBlockMax * 1000);
         $('#vblockminbeat').val(0.25);
         $('#vblockmaxbeat').val(hjd);
     }
 });
 $('#vblockoptimal').click(function() {
-    vBlockMin = 100;
-    vBlockMax = 500;
-    $('#vblockmin').val(vBlockMin);
-    $('#vblockmax').val(vBlockMax);
+    vBlockMin = 0.1;
+    vBlockMax = 0.5;
+    $('#vblockmin').val(vBlockMin * 1000);
+    $('#vblockmax').val(vBlockMax * 1000);
     if (flagLoaded) {
-        $('#vblockminbeat').val(round(toBeatTime(vBlockMin / 1000), 3));
-        $('#vblockmaxbeat').val(round(toBeatTime(vBlockMax / 1000), 3));
+        $('#vblockminbeat').val(round(toBeatTime(vBlockMin), 3));
+        $('#vblockmaxbeat').val(round(toBeatTime(vBlockMax), 3));
     }
 });
 $('#applythis').click(async function() {
@@ -310,6 +310,7 @@ async function UIcreateDiffInfo(charName, diff) {
         if (diff._data._customData._BPMChanges) BPMChanges = diff._data._customData._BPMChanges;
         else if (diff._data._customData._bpmChanges) BPMChanges = diff._data._customData._bpmChanges;
     }
+    const bpmc = getBPMChangesTime(bpm, offset, BPMChanges);
     
     let textMap = [];
     textMap.push(`NJS: ${diff._noteJumpMovementSpeed} / ${round(diff._noteJumpStartBeatOffset, 3)}`);
@@ -319,6 +320,7 @@ async function UIcreateDiffInfo(charName, diff) {
     textMap.push('');
     textMap.push(`Effective BPM: ${(findEffectiveBPM(diff._data._notes, bpm)).toFixed(2)}`);
     textMap.push(`Effective BPM (swing): ${(findEffectiveBPMSwing(diff._data._notes, bpm)).toFixed(2)}`);
+    if (bpmc.length > 0) textMap.push(`BPM changes: ${bpmc.length}`);
 
     let textNote = [];
     const note = countNote(diff._data._notes)
