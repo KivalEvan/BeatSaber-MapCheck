@@ -90,17 +90,37 @@ $('#beatprec').change(function() {
     .filter(function(x) {if(x > 0) return !Number.isNaN(x)});
     $('#beatprec').val(beatPrecision.join(' '));
 });
-$('#dd').click(function() {
-    if ($(this).prop("checked")) {
-        flagToolDD = true;
-    }
-    else flagToolDD = false;
-});
 $('#hbstair').click(function() {
     if ($(this).prop("checked")) {
         flagToolHBStair = true;
     }
     else flagToolHBStair = false;
+});
+$('#shrangle').click(function() {
+    if ($(this).prop("checked")) {
+        flagToolshrAngle = true;
+    }
+    else flagToolshrAngle = false;
+});
+$('#shranglemax').change(function() {
+    shrAngleMax = Math.floor(Math.abs(this.value));
+    $('#shranglemax').val(shrAngleMax);
+    if (flagLoaded) $('#shranglemaxbeat').val(round(toBeatTime(shrAngleMax / 1000), 3));
+});
+$('#shranglemaxbeat').change(function() {
+    if (flagLoaded) {
+        let val = round(Math.abs(this.value), 3);
+        shrAngleMax = Math.floor(toRealTime(val) * 1000);
+        $('#shranglemax').val(shrAngleMax);
+        $('#shranglemaxbeat').val(val);
+    }
+    else $('#shranglemaxbeat').val(0);
+});
+$('#dd').click(function() {
+    if ($(this).prop("checked")) {
+        flagToolDD = true;
+    }
+    else flagToolDD = false;
 });
 $('#vblock').click(function() {
     if ($(this).prop("checked")) {
