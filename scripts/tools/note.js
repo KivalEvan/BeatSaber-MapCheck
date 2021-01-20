@@ -462,14 +462,14 @@ function detectShrAngle(notes, bpm, offset, bpmc) {
                         startRedDot = null;
                         lastRedDir = flipCutDir[lastRedDir];
                     }
-                    if (checkShrAngle(note._cutDirection, lastRedDir) && toRealTime(note._time - lastRed._time) < shrAngleMax / 1000) {
+                    if (checkShrAngle(note._cutDirection, lastRedDir) && toRealTime(note._time - lastRed._time) < shrAngleMax / 1000 + 0.01) {
                         arr.push(adjustTime(note._time, bpm, offset, bpmc));
                     }
                     if (note._cutDirection == 8) startRedDot = note;
                     else lastRedDir = note._cutDirection;
                 }
                 else {
-                    if (startRedDot && checkShrAngle(note._cutDirection, lastRedDir) && toRealTime(note._time - lastRed._time) < shrAngleMax / 1000) {
+                    if (startRedDot && checkShrAngle(note._cutDirection, lastRedDir) && toRealTime(note._time - lastRed._time) < shrAngleMax / 1000 + 0.01) {
                         arr.push(adjustTime(startRedDot._time, bpm, offset, bpmc));
                         startRedDot = null;
                     }
@@ -486,14 +486,14 @@ function detectShrAngle(notes, bpm, offset, bpmc) {
                         startBlueDot = null;
                         lastBlueDir = flipCutDir[lastBlueDir];
                     }
-                    if (checkShrAngle(note._cutDirection, lastBlueDir) && toRealTime(note._time - lastBlue._time) < shrAngleMax / 1000) {
+                    if (checkShrAngle(note._cutDirection, lastBlueDir) && toRealTime(note._time - lastBlue._time) < shrAngleMax / 1000 + 0.01) {
                         arr.push(adjustTime(note._time, bpm, offset, bpmc));
                     }
                     if (note._cutDirection == 8) startBlueDot = note;
                     else lastBlueDir = note._cutDirection;
                 }
                 else {
-                    if (startBlueDot && checkShrAngle(note._cutDirection, lastBlueDir) && toRealTime(note._time - lastBlue._time) < shrAngleMax / 1000) {
+                    if (startBlueDot && checkShrAngle(note._cutDirection, lastBlueDir) && toRealTime(note._time - lastBlue._time) < shrAngleMax / 1000 + 0.01) {
                         arr.push(adjustTime(startBlueDot._time, bpm, offset, bpmc));
                         startBlueDot = null;
                     }
