@@ -181,8 +181,8 @@ async function mapTool(charName, diff) {
     console.log('Analysing', charName, diff._difficulty);
     if (startTime < 1.5) arr.push(outTxtBold('Hot start', `${round(startTime, 3)}s`));
     if (countEventLight10(diff._data._events) < 10) arr.push(outTxtBold('Lack of lighting events', '(<=10 events)'));
-    arr.push(outTxtBold('Exceeded EBPM []', getEffectiveBPMTime(diff._data._notes, bpm, offset, bpmc)));
-    arr.push(outTxtBold('Exceeded EBPM (swing) []', getEffectiveBPMSwingTime(diff._data._notes, bpm, offset, bpmc)));
+    arr.push(outTxtBold(`>${maxEBPM}EBPM warning []`, getEffectiveBPMTime(diff._data._notes, bpm, offset, bpmc)));
+    arr.push(outTxtBold(`>${maxEBPMS}EBPM (swing) warning []`, getEffectiveBPMSwingTime(diff._data._notes, bpm, offset, bpmc)));
     arr.push(outTxtBold('Note(s) before start time', findOutStartNote(diff._data._notes, mapInfo._beatsPerMinute)));
     arr.push(outTxtBold('Note(s) after end time', findOutEndNote(diff._data._notes, mapInfo._beatsPerMinute)));
     arr.push(outTxtBold('Event(s) before start time', findOutStartObstacle(diff._data._obstacles, mapInfo._beatsPerMinute)));

@@ -1,5 +1,7 @@
 # Changelog
 ## Unreleased
+### Changed
+* Updated `README.md`
 
 ## v1.1.3 [2021-01-20]
 ### Added

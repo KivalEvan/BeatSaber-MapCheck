@@ -8,6 +8,7 @@ const version = 'v1.1.3';
 
 $('#watermark').text(`${watermark} - ${version}`)
 
+// initialise stuff
 let flagBPMChanges = false;
 let flagOddBPM = false;
 let flagLoaded = false;
@@ -22,12 +23,6 @@ if (flagToolDD) $('#dd').prop('checked', true);
 if (flagToolHBStair) $('#hbstair').prop('checked', true);
 if (flagToolvBlock) $('#vblock').prop('checked', true);
 if (flagToolshrAngle) $('#shrangle').prop('checked', true);
-
-const maxTolerance = 0.06 + 1e-9;
-const maxWindowTolerance = 0.07 + 1e-9;
-
-// there's no definite formula for hitbox as of yet
-const hitboxStaircaseThreshold = 0.145 + 1e-9;
 
 let charSelect = '';
 let diffSelect = '';
@@ -47,6 +42,12 @@ $('#vblockminbeat').val(0);
 $('#vblockmax').val(vBlockMax);
 $('#vblockmaxbeat').val(0);
 $('#beatprec').val(beatPrecision.join(' '));
+
+const maxTolerance = 0.06 + 1e-9;
+const maxWindowTolerance = 0.07 + 1e-9;
+
+// there's no definite formula for hitbox as of yet
+const hitboxStaircaseThreshold = 0.145 + 1e-9;
 
 /**  REFERENCES  **
 NOTE TYPE:
@@ -110,8 +111,6 @@ Spawn Rotation (Clockwise):
  7 -> 60 degree rotation
  */
 
-const cutDirections = [Math.PI, 0, Math.PI * 0.5, Math.PI * 1.5, Math.PI * 0.75, Math.PI * 1.25, Math.PI * 0.25, Math.PI * 1.75, 0]
-
 const noteCutAngle = {
     0: 0,
     1: 180,
@@ -123,7 +122,6 @@ const noteCutAngle = {
     7: 135,
     8: 0
 }
-
 const flipCutDir = {
     0: 1,
     1: 0,
@@ -150,13 +148,12 @@ const diffRename = {
     "Easy": "Easy"
 }
 const diffColor = {
-    "ExpertPlus": "#8F48DB",
-    "Expert": "#BF2A42",
-    "Hard": "#FF6347",
-    "Normal": "#59B0F4",
-    "Easy": "#3CB371"
+    "ExpertPlus": "#8f48db",
+    "Expert": "#bf2a42",
+    "Hard": "#ff6347",
+    "Normal": "#59b0f4",
+    "Easy": "#3cb371"
 }
-
 const envColor = {
     "DefaultEnvironment" : "The First",
     "OriginsEnvironment" : "Origins",
@@ -178,7 +175,6 @@ const envColor = {
     "BTSEnvironment" : "BTS",
     "GlassDesertEnvironment" : "Origins"
 }
-
 const colorScheme = {
     "The First": {
         "_colorLeft": "#c81414",

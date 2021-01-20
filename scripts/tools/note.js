@@ -70,13 +70,19 @@ function findEffectiveBPMSwing(notes, bpm) {
     let EBPM = 0;
     let lastRed;
     let lastBlue;
+    let lastRedMid;
+    let lastBlueMid;
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         if (note._type == 0) {
             if (lastRed) {
                 if ((maybeWindowed(note, lastRed) && checkTolerance(note, lastRed, maxWindowTolerance)) || checkTolerance(note, lastRed, maxTolerance)) {
-                    EBPM = Math.max(EBPM, bpm / ((note._time - lastRed._time) * 2));
+                    if (!lastRedMid) EBPM = Math.max(EBPM, bpm / ((note._time - lastRed._time) * 2));
+                    lastRedMid = null;
                     lastRed = note;
+                }
+                else {
+                    lastRedMid = note;
                 }
             }
             else lastRed = note;
@@ -84,8 +90,12 @@ function findEffectiveBPMSwing(notes, bpm) {
         else if (note._type == 1) {
             if (lastBlue) {
                 if ((maybeWindowed(note, lastBlue) && checkTolerance(note, lastBlue, maxWindowTolerance)) || checkTolerance(note, lastBlue, maxTolerance)) {
-                    EBPM = Math.max(EBPM, bpm / ((note._time - lastBlue._time) * 2));
+                    if (!lastBlueMid) EBPM = Math.max(EBPM, bpm / ((note._time - lastBlue._time) * 2));
+                    lastBlueMid = null;
                     lastBlue = note;
+                }
+                else {
+                    lastBlueMid = note;
                 }
             }
             else lastBlue = note;
@@ -126,14 +136,20 @@ function getEffectiveBPMSwingTime(notes, bpm, offset, bpmc) {
     let arr = [];
     let lastRed;
     let lastBlue;
+    let lastRedMid;
+    let lastBlueMid;
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         let EBPM = 0;
         if (note._type == 0) {
             if (lastRed) {
                 if ((maybeWindowed(note, lastRed) && checkTolerance(note, lastRed, maxWindowTolerance)) || checkTolerance(note, lastRed, maxTolerance)) {
-                    EBPM = bpm / ((note._time - lastRed._time) * 2);
+                    if (!lastRedMid) EBPM = bpm / ((note._time - lastRed._time) * 2);
+                    lastRedMid = null;
                     lastRed = note;
+                }
+                else {
+                    lastRedMid = note;
                 }
             }
             else lastRed = note;
@@ -141,8 +157,12 @@ function getEffectiveBPMSwingTime(notes, bpm, offset, bpmc) {
         else if (note._type == 1) {
             if (lastBlue) {
                 if ((maybeWindowed(note, lastBlue) && checkTolerance(note, lastBlue, maxWindowTolerance)) || checkTolerance(note, lastBlue, maxTolerance)) {
-                    EBPM = bpm / ((note._time - lastBlue._time) * 2);
+                    if (!lastBlueMid) EBPM = bpm / ((note._time - lastBlue._time) * 2);
+                    lastBlueMid = null;
                     lastBlue = note;
+                }
+                else {
+                    lastBlueMid = note;
                 }
             }
             else lastBlue = note;
