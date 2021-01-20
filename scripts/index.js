@@ -4,7 +4,7 @@
     also includes unused stuff that i may consider in the future */
 
 const watermark = 'Kival Evan#5480';
-const version = 'v1.1.2';
+const version = 'v1.1.3';
 
 $('#watermark').text(`${watermark} - ${version}`)
 
@@ -16,27 +16,32 @@ let flagLoadAudio = false;
 let flagToolDD = true;
 let flagToolHBStair = true;
 let flagToolvBlock = true;
+let flagToolshrAngle = false;
 
 if (flagToolDD) $('#dd').prop('checked', true);
 if (flagToolHBStair) $('#hbstair').prop('checked', true);
 if (flagToolvBlock) $('#vblock').prop('checked', true);
+if (flagToolshrAngle) $('#shrangle').prop('checked', true);
 
 const maxTolerance = 0.06 + 1e-9;
 const maxWindowTolerance = 0.07 + 1e-9;
 
 // there's no definite formula for hitbox as of yet
-const hitboxStaircaseThreshold = 0.14 + 1e-9;
+const hitboxStaircaseThreshold = 0.145 + 1e-9;
 
 let charSelect = '';
 let diffSelect = '';
 let maxEBPM = 450;
 let maxEBPMS = 350;
+let shrAngleMax = 200;
 let vBlockMin = 100;
 let vBlockMax = 500;
 let beatPrecision = [4, 3]
 
 $('#ebpm').val(maxEBPM);
 $('#ebpms').val(maxEBPMS);
+$('#shranglemax').val(shrAngleMax);
+$('#shranglemaxbeat').val(0);
 $('#vblockmin').val(vBlockMin);
 $('#vblockminbeat').val(0);
 $('#vblockmax').val(vBlockMax);

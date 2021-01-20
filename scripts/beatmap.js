@@ -106,6 +106,7 @@ async function loadMap(mapZip) {
         }
         UIOutputDisplay(charSelect, diffSelect);
 
+        $('#shranglemaxbeat').val(round(toBeatTime(shrAngleMax / 1000), 3));
         $('#vblockminbeat').val(round(toBeatTime(vBlockMin / 1000), 3));
         $('#vblockmaxbeat').val(round(toBeatTime(vBlockMax / 1000), 3));
         $('#applythis').prop('disabled', false);
@@ -192,6 +193,7 @@ async function mapTool(charName, diff) {
     if (flagToolvBlock) arr.push(outTxtBold('Vision blocked []', detectVisionBlock(diff._data._notes, bpm, offset, bpmc)));
     if (beatPrecision.length > 0) arr.push(outTxtBold('Off-beat precision []', detectOffPrecision(diff._data._notes, bpm, offset, bpmc)));
     if (flagToolHBStair) arr.push(outTxtBold('Hitbox staircase []', detectHitboxStaircase(diff._data._notes, bpm, offset, bpmc)));
+    if (flagToolshrAngle) arr.push(outTxtBold('Shrado angle []', detectShrAngle(diff._data._notes, bpm, offset, bpmc)));
     let text = arr.filter(function(x) {
         return x != '';
     });

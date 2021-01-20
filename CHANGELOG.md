@@ -1,7 +1,17 @@
 # Changelog
 ## Unreleased
+
+## v1.1.3 [2021-01-20]
+### Added
+* Detect Shrado angle
+* Console log for behind the scene
+
 ### Fixed
 * Properly check for swing tolerance
+
+## v1.1.2 [2021-01-19]
+### Fixed
+* Fixed DD issue
 
 ## v1.1.1 [2021-01-19]
 ### Added
