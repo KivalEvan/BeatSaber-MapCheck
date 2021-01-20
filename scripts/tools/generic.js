@@ -90,7 +90,6 @@ function populateSwingArray(diff) {
     return array;
 }
 
-// tolerance value is modified here
 function swingCount(diff) {
     if (diff._notes.length == 0) return {swingL: [0], swingR:[0]};
     const notes = diff._notes;
@@ -103,7 +102,7 @@ function swingCount(diff) {
         const realTime = toRealTime(note._time);
         if (note._type == 0) {
             if (lastRed) {
-                if ((maybeWindowed(note, lastRed) && checkTolerance(note, lastRed, maxWindowTolerance-0.01)) || checkTolerance(note, lastRed, maxTolerance-0.01)) {
+                if ((maybeWindowed(note, lastRed) && checkTolerance(note, lastRed, maxWindowTolerance)) || checkTolerance(note, lastRed, maxTolerance)) {
                     swingCountRed[Math.floor(realTime)] += 1;
                 }
             }
@@ -112,7 +111,7 @@ function swingCount(diff) {
         }
         else if (note._type == 1) {
             if (lastBlue) {
-                if ((maybeWindowed(note, lastBlue) && checkTolerance(note, lastBlue, maxWindowTolerance-0.01)) || checkTolerance(note, lastBlue, maxTolerance-0.01)) {
+                if ((maybeWindowed(note, lastBlue) && checkTolerance(note, lastBlue, maxWindowTolerance)) || checkTolerance(note, lastBlue, maxTolerance)) {
                     swingCountBlue[Math.floor(realTime)] += 1;
                 }
             }
