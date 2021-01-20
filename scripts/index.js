@@ -43,8 +43,8 @@ $('#vblockmax').val(vBlockMax);
 $('#vblockmaxbeat').val(0);
 $('#beatprec').val(beatPrecision.join(' '));
 
-const maxTolerance = 0.06 + 1e-9;
-const maxWindowTolerance = 0.07 + 1e-9;
+const maxTolerance = 0.07 + 1e-9;
+const maxWindowTolerance = 0.08 + 1e-9;
 
 // there's no definite formula for hitbox as of yet
 const hitboxStaircaseThreshold = 0.145 + 1e-9;

@@ -70,19 +70,13 @@ function findEffectiveBPMSwing(notes, bpm) {
     let EBPM = 0;
     let lastRed;
     let lastBlue;
-    let lastRedMid;
-    let lastBlueMid;
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         if (note._type == 0) {
             if (lastRed) {
                 if ((maybeWindowed(note, lastRed) && checkTolerance(note, lastRed, maxWindowTolerance)) || checkTolerance(note, lastRed, maxTolerance)) {
-                    if (!lastRedMid) EBPM = Math.max(EBPM, bpm / ((note._time - lastRed._time) * 2));
-                    lastRedMid = null;
+                    EBPM = Math.max(EBPM, bpm / ((note._time - lastRed._time) * 2));
                     lastRed = note;
-                }
-                else {
-                    lastRedMid = note;
                 }
             }
             else lastRed = note;
@@ -90,12 +84,8 @@ function findEffectiveBPMSwing(notes, bpm) {
         else if (note._type == 1) {
             if (lastBlue) {
                 if ((maybeWindowed(note, lastBlue) && checkTolerance(note, lastBlue, maxWindowTolerance)) || checkTolerance(note, lastBlue, maxTolerance)) {
-                    if (!lastBlueMid) EBPM = Math.max(EBPM, bpm / ((note._time - lastBlue._time) * 2));
-                    lastBlueMid = null;
+                    EBPM = Math.max(EBPM, bpm / ((note._time - lastBlue._time) * 2));
                     lastBlue = note;
-                }
-                else {
-                    lastBlueMid = note;
                 }
             }
             else lastBlue = note;
@@ -136,20 +126,14 @@ function getEffectiveBPMSwingTime(notes, bpm, offset, bpmc) {
     let arr = [];
     let lastRed;
     let lastBlue;
-    let lastRedMid;
-    let lastBlueMid;
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         let EBPM = 0;
         if (note._type == 0) {
             if (lastRed) {
                 if ((maybeWindowed(note, lastRed) && checkTolerance(note, lastRed, maxWindowTolerance)) || checkTolerance(note, lastRed, maxTolerance)) {
-                    if (!lastRedMid) EBPM = bpm / ((note._time - lastRed._time) * 2);
-                    lastRedMid = null;
+                    EBPM = bpm / ((note._time - lastRed._time) * 2);
                     lastRed = note;
-                }
-                else {
-                    lastRedMid = note;
                 }
             }
             else lastRed = note;
@@ -157,12 +141,8 @@ function getEffectiveBPMSwingTime(notes, bpm, offset, bpmc) {
         else if (note._type == 1) {
             if (lastBlue) {
                 if ((maybeWindowed(note, lastBlue) && checkTolerance(note, lastBlue, maxWindowTolerance)) || checkTolerance(note, lastBlue, maxTolerance)) {
-                    if (!lastBlueMid) EBPM = bpm / ((note._time - lastBlue._time) * 2);
-                    lastBlueMid = null;
+                    EBPM = bpm / ((note._time - lastBlue._time) * 2);
                     lastBlue = note;
-                }
-                else {
-                    lastBlueMid = note;
                 }
             }
             else lastBlue = note;
@@ -482,14 +462,14 @@ function detectShrAngle(notes, bpm, offset, bpmc) {
                         startRedDot = null;
                         lastRedDir = flipCutDir[lastRedDir];
                     }
-                    if (checkShrAngle(note._cutDirection, lastRedDir) && toRealTime(note._time - lastRed._time) < shrAngleMax / 1000) {
+                    if (checkShrAngle(note._cutDirection, lastRedDir) && toRealTime(note._time - lastRed._time) < shrAngleMax / 1000 + 0.01) {
                         arr.push(adjustTime(note._time, bpm, offset, bpmc));
                     }
                     if (note._cutDirection == 8) startRedDot = note;
                     else lastRedDir = note._cutDirection;
                 }
                 else {
-                    if (startRedDot && checkShrAngle(note._cutDirection, lastRedDir) && toRealTime(note._time - lastRed._time) < shrAngleMax / 1000) {
+                    if (startRedDot && checkShrAngle(note._cutDirection, lastRedDir) && toRealTime(note._time - lastRed._time) < shrAngleMax / 1000 + 0.01) {
                         arr.push(adjustTime(startRedDot._time, bpm, offset, bpmc));
                         startRedDot = null;
                     }
@@ -506,14 +486,14 @@ function detectShrAngle(notes, bpm, offset, bpmc) {
                         startBlueDot = null;
                         lastBlueDir = flipCutDir[lastBlueDir];
                     }
-                    if (checkShrAngle(note._cutDirection, lastBlueDir) && toRealTime(note._time - lastBlue._time) < shrAngleMax / 1000) {
+                    if (checkShrAngle(note._cutDirection, lastBlueDir) && toRealTime(note._time - lastBlue._time) < shrAngleMax / 1000 + 0.01) {
                         arr.push(adjustTime(note._time, bpm, offset, bpmc));
                     }
                     if (note._cutDirection == 8) startBlueDot = note;
                     else lastBlueDir = note._cutDirection;
                 }
                 else {
-                    if (startBlueDot && checkShrAngle(note._cutDirection, lastBlueDir) && toRealTime(note._time - lastBlue._time) < shrAngleMax / 1000) {
+                    if (startBlueDot && checkShrAngle(note._cutDirection, lastBlueDir) && toRealTime(note._time - lastBlue._time) < shrAngleMax / 1000 + 0.01) {
                         arr.push(adjustTime(startBlueDot._time, bpm, offset, bpmc));
                         startBlueDot = null;
                     }

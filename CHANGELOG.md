@@ -2,6 +2,7 @@
 ## Unreleased
 ### Changed
 * Updated `README.md`
+* Updated tolerance value
 
 ## v1.1.3 [2021-01-20]
 ### Added
