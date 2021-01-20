@@ -18,6 +18,7 @@ async function loadMap(mapZip) {
 
         // load cover image
         UILoadingStatus(10, 'Loading cover image...');
+        console.log('Loading image');
         let imageFile = mapZip.file(mapInfo._coverImageFilename);
         if (imageFile) {
             let imgBase64 = await imageFile.async('base64');
@@ -27,6 +28,7 @@ async function loadMap(mapZip) {
         
         // load audio
         UILoadingStatus(20, 'Loading audio...');
+        console.log('Loading audio');
         let audioFile = mapZip.file(mapInfo._songFilename);
         if (audioFile) {
             let audioBuffer = await audioFile.async('arraybuffer');
@@ -45,6 +47,7 @@ async function loadMap(mapZip) {
 
         // load diff map
         UILoadingStatus(70, 'Loading difficulty...');
+        console.log('Loading difficulty');
         mapDiffSet = mapInfo._difficultyBeatmapSets;
         for (let i = mapDiffSet.length - 1; i >= 0; i--) {
             let mapDiff = mapDiffSet[i]._difficultyBeatmaps;
@@ -78,6 +81,7 @@ async function loadMap(mapZip) {
         // but i need it to be sorted specifically
         UIPopulateCharSelect();
         UILoadingStatus(80, 'Adding map difficulty stats...');
+        console.log('Adding map stats');
         for (let i = 0, len = mapDiffSet.length; i < len; i++) {
             let mapDiff = mapDiffSet[i]._difficultyBeatmaps;
             await UIcreateDiffSet(mapDiffSet[i]._beatmapCharacteristicName);
@@ -173,6 +177,7 @@ async function mapTool(charName, diff) {
     const startTime = getFirstInteractiveTime(diff._data._notes, diff._data._obstacles, bpm);
 
     let arr = [];
+    console.log('Analysing', charName, diff._difficulty);
     if (startTime < 1.5) arr.push(outTxtBold('Hot start', `${round(startTime, 3)}s`));
     if (countEventLight10(diff._data._events) < 10) arr.push(outTxtBold('Lack of lighting events', '(<=10 events)'));
     arr.push(outTxtBold('Exceeded EBPM []', getEffectiveBPMTime(diff._data._notes, bpm, offset, bpmc)));
