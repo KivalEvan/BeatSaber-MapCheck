@@ -520,9 +520,9 @@ function detectStackedNote(notes, bpm, offset, bpmc) {
     let arr = [];
     let lastTime;
     for (let i = 0, len = notes.length; i < len; i++) {
-        if (toRealTime(notes[i]._time) < lastTime + maxTolerance) continue;
+        if (toRealTime(notes[i]._time) < lastTime + 0.02) continue;
         for (let j = i+1; j < len; j++) {
-            if (toRealTime(notes[j]._time) > toRealTime(notes[i]._time) + maxTolerance) break;
+            if (toRealTime(notes[j]._time) > toRealTime(notes[i]._time) + 0.02) break;
             if (notes[i]._lineLayer == notes[j]._lineLayer && notes[i]._lineIndex == notes[j]._lineIndex) {
                 arr.push(adjustTime(notes[i]._time, bpm, offset, bpmc));
                 lastTime = toRealTime(notes[i]._time);
