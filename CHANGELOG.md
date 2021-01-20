@@ -1,12 +1,20 @@
 # Changelog
 ## Unreleased
+
+## v1.1.4
+### Added
+* Stacked note detection
+* BPM changes counter
+* Another tolerance function check
+
 ### Changed
 * Updated `README.md`
 * Updated tolerance value
+* Updated beat calculation
 
 ## v1.1.3 [2021-01-20]
 ### Added
-* Detect Shrado angle
+* Shrado angle detection
 * Console log for behind the scene
 
 ### Fixed

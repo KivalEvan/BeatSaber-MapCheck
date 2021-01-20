@@ -9,7 +9,7 @@ by **Kival Evan#5480**
 Map tools to spot specific error, and map stats per each difficulty in one place.
 
 ## How to use
-Visit the [github.io page](https://kivalevan.github.io/BeatSaber-MapCheck/) or download a copy and run `index.html` locally on any browser. Tools available within collapsible and explanation on what it is and how to use it below.
+Visit the [github.io page](https://kivalevan.github.io/BeatSaber-MapCheck/) or download a copy and run `index.html` locally on any browser. Tools available within collapsible.
 
 ## Limitations
 * Local zip file only

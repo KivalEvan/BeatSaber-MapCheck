@@ -4,7 +4,7 @@
     also includes unused stuff that i may consider in the future */
 
 const watermark = 'Kival Evan#5480';
-const version = 'v1.1.3';
+const version = 'v1.1.4';
 
 $('#watermark').text(`${watermark} - ${version}`)
 
@@ -28,18 +28,18 @@ let charSelect = '';
 let diffSelect = '';
 let maxEBPM = 450;
 let maxEBPMS = 350;
-let shrAngleMax = 200;
-let vBlockMin = 100;
-let vBlockMax = 500;
+let shrAngleMax = 0.175;
+let vBlockMin = 0.1;
+let vBlockMax = 0.5;
 let beatPrecision = [4, 3]
 
 $('#ebpm').val(maxEBPM);
 $('#ebpms').val(maxEBPMS);
-$('#shranglemax').val(shrAngleMax);
+$('#shranglemax').val(shrAngleMax * 1000);
 $('#shranglemaxbeat').val(0);
-$('#vblockmin').val(vBlockMin);
+$('#vblockmin').val(vBlockMin * 1000);
 $('#vblockminbeat').val(0);
-$('#vblockmax').val(vBlockMax);
+$('#vblockmax').val(vBlockMax * 1000);
 $('#vblockmaxbeat').val(0);
 $('#beatprec').val(beatPrecision.join(' '));
 
@@ -267,6 +267,10 @@ function toMMSS(num) {
     return `${min}:${(sec > 9) ? sec : `0${sec}`}`;
 }
 
+function fromMsToSS(num) {
+    return num / 1000;
+}
+
 function toRealTime(beat) {
     return beat / mapInfo._beatsPerMinute * 60;
 }
@@ -329,4 +333,12 @@ function outTxtBold(arg1, arg2) {
     if (arg2.length == 0) return '';
     if (arg1.search(/\[\]/g) != -1 && arg2.length > 0) arg1 = arg1.replaceAll(/\[\]/g, `[${arg2.length}]`);
     return `<b>${arg1}</b>: ${arg2.join(', ')}`
+}
+
+function tolMin(n1, n2, tol) {
+    return toRealTime(n1._time - n2._time) > tol;
+}
+
+function tolMax(n1, n2, tol) {
+    return toRealTime(n1._time - n2._time) < tol;
 }

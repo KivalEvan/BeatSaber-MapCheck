@@ -106,9 +106,9 @@ async function loadMap(mapZip) {
         }
         UIOutputDisplay(charSelect, diffSelect);
 
-        $('#shranglemaxbeat').val(round(toBeatTime(shrAngleMax / 1000), 3));
-        $('#vblockminbeat').val(round(toBeatTime(vBlockMin / 1000), 3));
-        $('#vblockmaxbeat').val(round(toBeatTime(vBlockMax / 1000), 3));
+        $('#shranglemaxbeat').val(round(toBeatTime(shrAngleMax), 3));
+        $('#vblockminbeat').val(round(toBeatTime(vBlockMin), 3));
+        $('#vblockmaxbeat').val(round(toBeatTime(vBlockMax), 3));
         $('#applythis').prop('disabled', false);
         $('#applyall').prop('disabled', false);
         $('.settings').prop('disabled', false);
@@ -191,6 +191,7 @@ async function mapTool(charName, diff) {
     arr.push(outTxtBold('Obstacle(s) after end time', findOutEndEvent(diff._data._events, mapInfo._beatsPerMinute)));
     if (flagToolDD) arr.push(outTxtBold('Double-directional []', detectDoubleDirectional(diff._data._notes, bpm, offset, bpmc)));
     if (flagToolvBlock) arr.push(outTxtBold('Vision blocked []', detectVisionBlock(diff._data._notes, bpm, offset, bpmc)));
+    arr.push(outTxtBold('Stacked note []', detectStackedNote(diff._data._notes, bpm, offset, bpmc)));
     if (beatPrecision.length > 0) arr.push(outTxtBold('Off-beat precision []', detectOffPrecision(diff._data._notes, bpm, offset, bpmc)));
     if (flagToolHBStair) arr.push(outTxtBold('Hitbox staircase []', detectHitboxStaircase(diff._data._notes, bpm, offset, bpmc)));
     if (flagToolshrAngle) arr.push(outTxtBold('Shrado angle []', detectShrAngle(diff._data._notes, bpm, offset, bpmc)));
