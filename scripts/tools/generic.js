@@ -108,7 +108,6 @@ function swingCount(diff) {
         else if (note._type == 1) {
             if (lastBlue) {
                 if ((maybeWindowed(note, lastBlue) && tolMin(note, lastBlue, maxWindowTolerance)) || tolMin(note, lastBlue, maxTolerance)) {
-
                     swingCountBlue[Math.floor(realTime)] += 1;
                 }
             }
