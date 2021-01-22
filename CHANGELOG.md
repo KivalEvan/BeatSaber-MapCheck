@@ -3,8 +3,9 @@
 
 ## v1.2.0
 ### Added
+* swing.js - swing detection, note angle, etc.
 * Environment name to song info
-* Added swing.js
+* Colour dot per difficulty
 
 ## v1.1.4
 ### Added

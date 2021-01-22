@@ -363,3 +363,20 @@ function tolMin(n1, n2, tol) {
 function tolMax(n1, n2, tol) {
     return toRealTime(n1._time - n2._time) < tol;
 }
+
+function compToHex(c) {
+    let hex = c.toString(16);
+    return hex.length == 1 ? '0' + hex : hex;
+}
+
+function cDenorm(c) {
+    return c > 1 && !c < 0 ? 255 : round(c * 255);
+}
+
+function rgbaToHex(colorObj) {
+    let color = {};
+    for (const c in colorObj) {
+        color[c] = cDenorm(colorObj[c]);
+    }
+    return `#${compToHex(color.r)}${compToHex(color.g)}${compToHex(color.b)}${color.a > 0 ? compToHex(c.a) : ''}`
+}
