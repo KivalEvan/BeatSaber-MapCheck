@@ -1,4 +1,4 @@
- /* BEATMAP SCRIPT
+ /* BEATMAP SCRIPT - beatmap.js
     load map and handle map related variable */
 
 let mapInfo, mapDiffSet, mapAnalysis = [];
@@ -22,7 +22,7 @@ async function loadMap(mapZip) {
         let imageFile = mapZip.file(mapInfo._coverImageFilename);
         if (imageFile) {
             let imgBase64 = await imageFile.async('base64');
-            $('#coverimage').attr('src', 'data:image;base64,' + imgBase64);
+            $('#coverimg').attr('src', 'data:image;base64,' + imgBase64);
         }
         else console.error(mapInfo._coverImageFilename + ' does not exists.');
         

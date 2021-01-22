@@ -1,7 +1,10 @@
-// TODO: basic parity check
-// TODO: basic unrankable hit
-// TODO: check for bomb reset
-// TODO: rewrite staircase check
+ /* NOTE SCRIPT - note.js
+    note pattern detection and stuff idk
+    TODO: basic parity check
+    TODO: basic unrankable hit
+    TODO: check for bomb reset
+    TODO: rewrite staircase check */
+
 // smort
 function countNote(notes) {
     let nr = 0;

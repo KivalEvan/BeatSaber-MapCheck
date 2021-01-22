@@ -1,6 +1,6 @@
- /* USER INTERFACE SCRIPT
+ /* USER INTERFACE SCRIPT - ui.js
     i dunno what to describe here
-    it's fairly obvious; creating, manipulating, and deleting DOM element */
+    it's fairly obvious; creating, manipulating, and deleting DOM element with JQuery */
 
 // I took too long just to figure out how to upload and load zip file
 $('#inputfile').change(readFile);
@@ -240,8 +240,9 @@ function UIUpdateMapInfo() {
     $('#songauthor').text(mapInfo._songAuthorName);
     $('#songname').text(mapInfo._songName);
     $('#songsubname').text(mapInfo._songSubName);
-    $('#levelauthor').text('Mapped by ' + mapInfo._levelAuthorName);
-    $('#songbpm').text(round(mapInfo._beatsPerMinute, 3) + 'BPM');
+    $('#songbpm').text(`${round(mapInfo._beatsPerMinute, 3)} BPM`);
+    $('#levelauthor').text(`Mapped by  ${mapInfo._levelAuthorName}`);
+    $('#environment').text(`${envName[mapInfo._environmentName]} Environment`);
     
     $('.input').css('display', 'none');
     $('.metadata').css('display', 'block');

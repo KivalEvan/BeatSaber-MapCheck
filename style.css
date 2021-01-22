@@ -11,14 +11,18 @@ body {
 }
 .cover {
     float: left;
-    width: 192px;
-    height: 192px;
+    width: 200px;
+    height: 200px;
+}
+.cover img {
+    width: 200px;
+    height: 200px;
 }
 .info {
     position: relative;
-    margin-left: 192px;
-    height: 192px;
-    max-height: 192px;
+    margin-left: 200px;
+    height: 200px;
+    max-height: 200px;
     overflow: auto;
 }
 .info:after {

@@ -1,6 +1,11 @@
 # Changelog
 ## Unreleased
 
+## v1.2.0
+### Added
+* Environment name to song info
+* Added swing.js
+
 ## v1.1.4
 ### Added
 * Stacked note detection

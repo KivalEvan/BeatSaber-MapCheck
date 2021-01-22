@@ -1,4 +1,7 @@
-// TODO: more extensive lighting stats?
+ /* EVENT SCRIPT - event.js
+    look after event duh
+    TODO: more extensive lighting stats? */
+
 function countEvent(events) {
     let light = 0;
     let boost = 0;

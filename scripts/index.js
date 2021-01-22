@@ -1,10 +1,10 @@
- /* GENERAL SCRIPT
+ /* GENERAL SCRIPT - index.js
     some general and other stuff that has no place yet
     flag and constant stuff is mostly here
     also includes unused stuff that i may consider in the future */
 
 const watermark = 'Kival Evan#5480';
-const version = 'v1.1.4';
+const version = 'v1.2.0';
 
 $('#watermark').text(`${watermark} - ${version}`)
 
@@ -153,6 +153,27 @@ const diffColor = {
     "Hard": "#ff6347",
     "Normal": "#59b0f4",
     "Easy": "#3cb371"
+}
+const envName = {
+    "DefaultEnvironment" : "The First",
+    "OriginsEnvironment" : "Origins",
+    "Origins" : "Origins", // because beat games
+    "TriangleEnvironment" : "Triangle",
+    "NiceEnvironment" : "Nice",
+    "BigMirrorEnvironment" : "Big Mirror",
+    "DragonsEnvironment" : "Dragons",
+    "KDAEnvironment" : "K/DA",
+    "MonstercatEnvironment" : "Monstercat",
+    "CrabRaveEnvironment" : "Crab Rave",
+    "PanicEnvironment" : "Panic",
+    "RocketEnvironment" : "Rocket",
+    "GreenDayEnvironment" : "Green Day",
+    "GreenDayGrenadeEnvironment" : "Green Day Grenade",
+    "TimbalandEnvironment" : "Timbaland",
+    "FitBeatEnvironment" : "FitBeat",
+    "LinkinParkEnvironment" : "Linkin Park",
+    "BTSEnvironment" : "BTS",
+    "GlassDesertEnvironment" : "Glass Desert"
 }
 const envColor = {
     "DefaultEnvironment" : "The First",

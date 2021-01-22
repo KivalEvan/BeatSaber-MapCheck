@@ -1,4 +1,7 @@
-// the more i look at this the more pepega it becomes
+ /* GENERIC SCRIPT - generic.js
+    for map related that has no place or general map stuff
+    the more i look at this the more pepega it becomes */
+
 function checkHotStart(notes, obstacles, bpm) {
     if (getFirstInteractiveTime(notes, obstacles, bpm) < 1.5) return true;
     return false;
