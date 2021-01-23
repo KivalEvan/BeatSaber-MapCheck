@@ -14,15 +14,13 @@ Visit the [github.io page](https://kivalevan.github.io/BeatSaber-MapCheck/) or d
 ## Limitations
 * Local zip file only
 * DD check does not care about bomb reset
-* No map modification outside base game support
+* No map modification outside base game support (Mapping Extension, Noodle Extension, etc.)
 
 ## Planned
 * Basic parity check
 * Basic unrankable hit check
 * Bomb reset detection
 * Crouch wall detection
-* <15ms wall detection
-* 3-wide wall detection
 * URL support
 * More extensive stats
 

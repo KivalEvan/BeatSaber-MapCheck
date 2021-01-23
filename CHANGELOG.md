@@ -1,7 +1,25 @@
 # Changelog
 ## Unreleased
 
-## v1.1.4
+## v1.2.0 [2021-01-23]
+### Added
+* swing.js - swing detection, note angle, etc.
+* Environment name on map info
+* Colour dot per difficulty
+* 2-center wall detection
+* <15ms wall detection
+* Zero width/duration wall detection
+* Negative wall detection
+
+### Changed
+* Slightly updated layout and style
+* Insignificant lighting event now check for only lit event
+* Tolerance function is now called threshold function
+
+### Fixed
+* Object outside playable not giving correct output
+
+## v1.1.4 [2021-01-21]
 ### Added
 * Stacked note detection
 * BPM changes counter

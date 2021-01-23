@@ -1,4 +1,7 @@
-// TODO: more extensive lighting stats?
+ /* EVENT SCRIPT - event.js
+    look after event duh
+    TODO: more extensive lighting stats? */
+
 function countEvent(events) {
     let light = 0;
     let boost = 0;
@@ -35,9 +38,10 @@ function countEventLight(events) {
 function countEventLight10(events) {
     let count = 0;
     for (let i = events.length - 1; i >= 0; i--) {
-        if (events[i]._type >= 0 && events[i]._type < 5)
+        if (events[i]._type >= 0 && events[i]._type < 5 && events[i]._value != 0) {
             count++;
-        if (count > 10) break;
+            if (count > 10) break;
+        }
     }
     return count;
 }

@@ -1,10 +1,10 @@
- /* GENERAL SCRIPT
+ /* GENERAL SCRIPT - index.js
     some general and other stuff that has no place yet
     flag and constant stuff is mostly here
     also includes unused stuff that i may consider in the future */
 
 const watermark = 'Kival Evan#5480';
-const version = 'v1.1.4';
+const version = 'v1.2.0';
 
 $('#watermark').text(`${watermark} - ${version}`)
 
@@ -45,6 +45,8 @@ $('#beatprec').val(beatPrecision.join(' '));
 
 const maxTolerance = 0.07 + 1e-9;
 const maxWindowTolerance = 0.08 + 1e-9;
+const minWallDur = 0.015 + 1e-9;
+const minWallRecover = 0.1 + 1e-9;
 
 // there's no definite formula for hitbox as of yet
 const hitboxStaircaseThreshold = 0.145 + 1e-9;
@@ -133,6 +135,17 @@ const flipCutDir = {
     7: 4,
     8: 8
 }
+const swingCutDirectionSpace = {
+    0: [0, 1],
+    1: [0, -1],
+    2: [-1, 0],
+    3: [1, 0],
+    4: [-1, 1],
+    5: [1, 1],
+    6: [-1, -1],
+    7: [1, -1],
+    8: [0, 0]
+}
 
 const modeRename = {
     "OneSaber": "One Saber",
@@ -153,6 +166,27 @@ const diffColor = {
     "Hard": "#ff6347",
     "Normal": "#59b0f4",
     "Easy": "#3cb371"
+}
+const envName = {
+    "DefaultEnvironment" : "The First",
+    "OriginsEnvironment" : "Origins",
+    "Origins" : "Origins", // because beat games
+    "TriangleEnvironment" : "Triangle",
+    "NiceEnvironment" : "Nice",
+    "BigMirrorEnvironment" : "Big Mirror",
+    "DragonsEnvironment" : "Dragons",
+    "KDAEnvironment" : "K/DA",
+    "MonstercatEnvironment" : "Monstercat",
+    "CrabRaveEnvironment" : "Crab Rave",
+    "PanicEnvironment" : "Panic",
+    "RocketEnvironment" : "Rocket",
+    "GreenDayEnvironment" : "Green Day",
+    "GreenDayGrenadeEnvironment" : "Green Day Grenade",
+    "TimbalandEnvironment" : "Timbaland",
+    "FitBeatEnvironment" : "FitBeat",
+    "LinkinParkEnvironment" : "Linkin Park",
+    "BTSEnvironment" : "BTS",
+    "GlassDesertEnvironment" : "Glass Desert"
 }
 const envColor = {
     "DefaultEnvironment" : "The First",
@@ -320,7 +354,6 @@ function mod(x, m) {
     if (m < 0) m = -m; r = x % m;
     return r < 0 ? r + m : r;
 }
-
 function distance(a, b, m) {
     return Math.min(mod(a - b, m),mod(b - a, m));
 }
@@ -335,10 +368,27 @@ function outTxtBold(arg1, arg2) {
     return `<b>${arg1}</b>: ${arg2.join(', ')}`
 }
 
-function tolMin(n1, n2, tol) {
-    return toRealTime(n1._time - n2._time) > tol;
+function aboveTH(t, th) {
+    return toRealTime(t) > th;
 }
 
-function tolMax(n1, n2, tol) {
-    return toRealTime(n1._time - n2._time) < tol;
+function belowTH(t, th) {
+    return toRealTime(t) < th;
+}
+
+function compToHex(c) {
+    let hex = c.toString(16);
+    return hex.length == 1 ? '0' + hex : hex;
+}
+
+function cDenorm(c) {
+    return c > 1 && !c < 0 ? 255 : round(c * 255);
+}
+
+function rgbaToHex(colorObj) {
+    let color = {};
+    for (const c in colorObj) {
+        color[c] = cDenorm(colorObj[c]);
+    }
+    return `#${compToHex(color.r)}${compToHex(color.g)}${compToHex(color.b)}${color.a > 0 ? compToHex(c.a) : ''}`
 }

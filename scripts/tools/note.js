@@ -1,7 +1,10 @@
-// TODO: basic parity check
-// TODO: basic unrankable hit
-// TODO: check for bomb reset
-// TODO: rewrite staircase check
+ /* NOTE SCRIPT - note.js
+    note pattern detection and stuff idk
+    TODO: basic parity check
+    TODO: basic unrankable hit
+    TODO: check for bomb reset
+    TODO: rewrite staircase check */
+
 // smort
 function countNote(notes) {
     let nr = 0;
@@ -47,7 +50,7 @@ function findEffectiveBPM(notes, bpm) {
         const note = notes[i];
         if (note._type == 0) {
             if (lastRed) {
-                if ((maybeWindowed(note, lastRed) && tolMin(note, lastRed, maxWindowTolerance)) || tolMin(note, lastRed, maxTolerance)) {
+                if (swingNext(note, lastRed)) {
                     EBPM = Math.max(EBPM, (bpm / ((note._time - lastRed._time) * 2)));
                 }
             }
@@ -55,7 +58,7 @@ function findEffectiveBPM(notes, bpm) {
         }
         else if (note._type == 1) {
             if (lastBlue) {
-                if ((maybeWindowed(note, lastBlue) && tolMin(note, lastBlue, maxWindowTolerance)) || tolMin(note, lastBlue, maxTolerance)) {
+                if (swingNext(note, lastBlue)) {
                     EBPM = Math.max(EBPM, (bpm / ((note._time - lastBlue._time) * 2)));
                 }
             }
@@ -74,7 +77,7 @@ function findEffectiveBPMSwing(notes, bpm) {
         const note = notes[i];
         if (note._type == 0) {
             if (lastRed) {
-                if ((maybeWindowed(note, lastRed) && tolMin(note, lastRed, maxWindowTolerance)) || tolMin(note, lastRed, maxTolerance)) {
+                if (swingNext(note, lastRed)) {
                     EBPM = Math.max(EBPM, bpm / ((note._time - lastRed._time) * 2));
                     lastRed = note;
                 }
@@ -83,7 +86,7 @@ function findEffectiveBPMSwing(notes, bpm) {
         }
         else if (note._type == 1) {
             if (lastBlue) {
-                if ((maybeWindowed(note, lastBlue) && tolMin(note, lastBlue, maxWindowTolerance)) || tolMin(note, lastBlue, maxTolerance)) {
+                if (swingNext(note, lastBlue)) {
                     EBPM = Math.max(EBPM, bpm / ((note._time - lastBlue._time) * 2));
                     lastBlue = note;
                 }
@@ -103,7 +106,7 @@ function getEffectiveBPMTime(notes, bpm, offset, bpmc) {
         let EBPM = 0;
         if (note._type == 0) {
             if (lastRed) {
-                if ((maybeWindowed(note, lastRed) && tolMin(note, lastRed, maxWindowTolerance)) || tolMin(note, lastRed, maxTolerance)) {
+                if (swingNext(note, lastRed)) {
                     EBPM = bpm / ((note._time - lastRed._time) * 2);
                 }
             }
@@ -111,7 +114,7 @@ function getEffectiveBPMTime(notes, bpm, offset, bpmc) {
         }
         else if (note._type == 1) {
             if (lastBlue) {
-                if ((maybeWindowed(note, lastBlue) && tolMin(note, lastBlue, maxWindowTolerance)) || tolMin(note, lastBlue, maxTolerance)) {
+                if (swingNext(note, lastBlue)) {
                     EBPM = bpm / ((note._time - lastBlue._time) * 2);
                 }
             }
@@ -131,7 +134,7 @@ function getEffectiveBPMSwingTime(notes, bpm, offset, bpmc) {
         let EBPM = 0;
         if (note._type == 0) {
             if (lastRed) {
-                if ((maybeWindowed(note, lastRed) && tolMin(note, lastRed, maxWindowTolerance)) || tolMin(note, lastRed, maxTolerance)) {
+                if (swingNext(note, lastRed)) {
                     EBPM = bpm / ((note._time - lastRed._time) * 2);
                     lastRed = note;
                 }
@@ -140,7 +143,7 @@ function getEffectiveBPMSwingTime(notes, bpm, offset, bpmc) {
         }
         else if (note._type == 1) {
             if (lastBlue) {
-                if ((maybeWindowed(note, lastBlue) && tolMin(note, lastBlue, maxWindowTolerance)) || tolMin(note, lastBlue, maxTolerance)) {
+                if (swingNext(note, lastBlue)) {
                     EBPM = bpm / ((note._time - lastBlue._time) * 2);
                     lastBlue = note;
                 }
@@ -164,7 +167,7 @@ function detectDoubleDirectional(notes, bpm, offset, bpmc) {
         const note = notes[i];
         if (note._type == 0) {
             if (lastRed) {
-                if ((maybeWindowed(note, lastRed) && tolMin(note, lastRed, maxWindowTolerance)) || tolMin(note, lastRed, maxTolerance)) {
+                if (swingNext(note, lastRed)) {
                     if (startRedDot) {
                         startRedDot = null;
                         lastRedDir = flipCutDir[lastRedDir];
@@ -192,7 +195,7 @@ function detectDoubleDirectional(notes, bpm, offset, bpmc) {
         }
         else if (note._type == 1) {
             if (lastBlue) {
-                if ((maybeWindowed(note, lastBlue) && tolMin(note, lastBlue, maxWindowTolerance)) || tolMin(note, lastBlue, maxTolerance)) {
+                if (swingNext(note, lastBlue)) {
                     if (startBlueDot) {
                         startBlueDot = null;
                         lastBlueDir = flipCutDir[lastBlueDir];
@@ -238,14 +241,14 @@ function detectVisionBlock(notes, bpm, offset, bpmc) {
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         if (lastMidL) {
-            if (toRealTime(note._time - lastMidL._time) > vBlockMin && toRealTime(note._time - lastMidL._time) < vBlockMax) {
+            if (aboveTH(note._time - lastMidL._time, vBlockMin) && belowTH(note._time - lastMidL._time, vBlockMax)) {
                 if (note._lineIndex < 2) arr.push(adjustTime(note._time, bpm, offset, bpmc));
             }
             // yeet the last note if nothing else found so we dont have to perform check every note
             else if (toRealTime(note._time - lastMidL._time) >= vBlockMax) lastMidL = null;
         }
         if (lastMidR) {
-            if (toRealTime(note._time - lastMidR._time) > vBlockMin && toRealTime(note._time - lastMidR._time) < vBlockMax) {
+            if (aboveTH(note._time - lastMidR._time, vBlockMin) && belowTH(note._time - lastMidR._time, vBlockMax)) {
                 if (note._lineIndex > 1) arr.push(adjustTime(note._time, bpm, offset, bpmc));
             }
             else if (toRealTime(note._time - lastMidR._time) >= vBlockMax) lastMidR = null;
@@ -268,7 +271,7 @@ function detectOffPrecision(notes, bpm, offset, bpmc) {
         const noteTime = adjustTime(note._time, bpm, offset, bpmc);
         if (note._type == 0) {
             if (lastRed) {
-                if ((maybeWindowed(note, lastRed) && tolMin(note, lastRed, maxWindowTolerance)) || tolMin(note, lastRed, maxTolerance)) {
+                if (swingNext(note, lastRed)) {
                     if (checkPrec(noteTime)) arr.push(noteTime);
                     lastRed = note;
                 }
@@ -280,7 +283,7 @@ function detectOffPrecision(notes, bpm, offset, bpmc) {
         }
         else if (note._type == 1) {
             if (lastBlue) {
-                if ((maybeWindowed(note, lastBlue) && tolMin(note, lastBlue, maxWindowTolerance)) || tolMin(note, lastBlue, maxTolerance)) {
+                if (swingNext(note, lastBlue)) {
                     if (checkPrec(noteTime)) arr.push(noteTime);
                     lastBlue = note;
                 }
@@ -319,9 +322,9 @@ function detectHitboxStaircase(notes, bpm, offset, bpmc) {
         const note = notes[i];
         if (note._type == 0) {
             if (lastRed) { // nested if moment
-                if ((maybeWindowed(note, lastRed) && tolMin(note, lastRed, maxWindowTolerance)) || tolMin(note, lastRed, maxTolerance)) {
+                if (swingNext(note, lastRed)) {
                     if (lastBlue) {
-                        if (note._time - lastBlue._time != 0 && (note._time - lastBlue._time) / bpm * 60 < hitboxStaircaseThreshold) {
+                        if (note._time - lastBlue._time != 0 && belowTH(note._time - lastBlue._time, hitboxStaircaseThreshold)) {
                             if (note._lineIndex == blueIndexOccupy && note._lineLayer == blueLayerOccupy) {
                                 arr.push(adjustTime(note._time, bpm, offset, bpmc));
                             }
@@ -333,7 +336,7 @@ function detectHitboxStaircase(notes, bpm, offset, bpmc) {
                     redLayerOccupy = note._lineLayer + swingCutDirectionSpace[note._cutDirection][1];
                 }
                 else { // fuck dot note
-                    if ((maybeWindowed(note, lastRed) && tolMin(note, lastRed, maxWindowTolerance)) || tolMin(note, lastRed, maxTolerance)) {
+                    if (swingNext(note, lastRed)) {
                         redIndexOccupy = -1;
                         redLayerOccupy = -1;
                     }
@@ -357,9 +360,9 @@ function detectHitboxStaircase(notes, bpm, offset, bpmc) {
         }
         else if (note._type == 1) {
             if (lastBlue) {
-                if ((maybeWindowed(note, lastBlue) && tolMin(note, lastBlue, maxWindowTolerance)) || tolMin(note, lastBlue, maxTolerance)) {
+                if (swingNext(note, lastBlue)) {
                     if (lastRed) {
-                        if (note._time - lastRed._time != 0 && (note._time - lastRed._time) / bpm * 60 < hitboxStaircaseThreshold) {
+                        if (note._time - lastRed._time != 0 && belowTH(note._time - lastRed._time, hitboxStaircaseThreshold)) {
                             if (note._lineIndex == redIndexOccupy && note._lineLayer == redLayerOccupy) {
                                 arr.push(adjustTime(note._time, bpm, offset, bpmc));
                             }
@@ -371,7 +374,7 @@ function detectHitboxStaircase(notes, bpm, offset, bpmc) {
                     blueLayerOccupy = note._lineLayer + swingCutDirectionSpace[note._cutDirection][1];
                 }
                 else {
-                    if ((maybeWindowed(note, lastBlue) && tolMin(note, lastBlue, maxWindowTolerance)) || tolMin(note, lastBlue, maxTolerance)) {
+                    if (swingNext(note, lastBlue)) {
                         blueIndexOccupy = -1;
                         blueLayerOccupy = -1;
                     }
@@ -395,18 +398,6 @@ function detectHitboxStaircase(notes, bpm, offset, bpmc) {
         }
     }
     return arr;
-}
-
-const swingCutDirectionSpace = {
-    0: [0, 1],
-    1: [0, -1],
-    2: [-1, 0],
-    3: [1, 0],
-    4: [-1, 1],
-    5: [1, 1],
-    6: [-1, -1],
-    7: [1, -1],
-    8: [0, 0]
 }
 
 // fuck end note stack checking or some shit
@@ -457,19 +448,19 @@ function detectShrAngle(notes, bpm, offset, bpmc) {
         const note = notes[i];
         if (note._type == 0) {
             if (lastRed) {
-                if ((maybeWindowed(note, lastRed) && tolMin(note, lastRed, maxWindowTolerance)) || tolMin(note, lastRed, maxTolerance)) {
+                if (swingNext(note, lastRed)) {
                     if (startRedDot) {
                         startRedDot = null;
                         lastRedDir = flipCutDir[lastRedDir];
                     }
-                    if (checkShrAngle(note._cutDirection, lastRedDir) && tolMax(note, lastRed, shrAngleMax + 0.01)) {
+                    if (checkShrAngle(note._cutDirection, lastRedDir) && belowTH(note._time - lastRed._time, shrAngleMax + 0.01)) {
                         arr.push(adjustTime(note._time, bpm, offset, bpmc));
                     }
                     if (note._cutDirection == 8) startRedDot = note;
                     else lastRedDir = note._cutDirection;
                 }
                 else {
-                    if (startRedDot && checkShrAngle(note._cutDirection, lastRedDir) && tolMax(note, lastRed, shrAngleMax + 0.01)) {
+                    if (startRedDot && checkShrAngle(note._cutDirection, lastRedDir) && belowTH(note._time - lastRed._time, shrAngleMax + 0.01)) {
                         arr.push(adjustTime(startRedDot._time, bpm, offset, bpmc));
                         startRedDot = null;
                     }
@@ -481,19 +472,19 @@ function detectShrAngle(notes, bpm, offset, bpmc) {
         }
         else if (note._type == 1) {
             if (lastBlue) {
-                if ((maybeWindowed(note, lastBlue) && tolMin(note, lastBlue, maxWindowTolerance)) || tolMin(note, lastBlue, maxTolerance)) {
+                if (swingNext(note, lastBlue)) {
                     if (startBlueDot) {
                         startBlueDot = null;
                         lastBlueDir = flipCutDir[lastBlueDir];
                     }
-                    if (checkShrAngle(note._cutDirection, lastBlueDir) && tolMax(note, lastBlue, shrAngleMax + 0.01)) {
+                    if (checkShrAngle(note._cutDirection, lastBlueDir) && belowTH(note, lastBlue, shrAngleMax + 0.01)) {
                         arr.push(adjustTime(note._time, bpm, offset, bpmc));
                     }
                     if (note._cutDirection == 8) startBlueDot = note;
                     else lastBlueDir = note._cutDirection;
                 }
                 else {
-                    if (startBlueDot && checkShrAngle(note._cutDirection, lastBlueDir) && tolMax(note, lastBlue, shrAngleMax + 0.01)) {
+                    if (startBlueDot && checkShrAngle(note._cutDirection, lastBlueDir) && belowTH(note, lastBlue, shrAngleMax + 0.01)) {
                         arr.push(adjustTime(startBlueDot._time, bpm, offset, bpmc));
                         startBlueDot = null;
                     }

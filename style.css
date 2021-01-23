@@ -11,14 +11,18 @@ body {
 }
 .cover {
     float: left;
-    width: 192px;
-    height: 192px;
+    width: 200px;
+    height: 200px;
+}
+.cover img {
+    width: 200px;
+    height: 200px;
 }
 .info {
     position: relative;
-    margin-left: 192px;
-    height: 192px;
-    max-height: 192px;
+    margin-left: 200px;
+    height: 200px;
+    max-height: 200px;
     overflow: auto;
 }
 .info:after {
@@ -167,7 +171,7 @@ body {
     display: inline-block;
     width: 100%;
     min-width: 600px;
-    border-top: 1px solid #111;
+    border-top: 1px solid #222;
 }
 .char-label {
     display: block;
@@ -179,11 +183,30 @@ body {
 .diff-container {
     background-color: white;
 }
-.diff-label {
+.diff-header {
     display: block;
+    height: 2em;
+}
+.diff-label {
     color: white;
-    padding: 2px 1%;
+    padding: 0 1%;
     font-size: 1.25em;
+}
+.diff-dot-container {
+    float: right;
+    background-color: #777;
+    border-left: 4px solid #222;
+    height: 100%;
+    padding: 0 1%
+}
+.diff-dot {
+    display: inline-block;
+    vertical-align: center;
+    width: 1em;
+    height: 1em;
+    border: 1px solid #000;
+    border-radius: 50%;
+    margin: 0.425em 0.125em;
 }
 .diff-panel {
     display: inline-block;
@@ -191,6 +214,7 @@ body {
     color: black;
     padding-left: 1%;
     padding-right: 1%;
+    padding-bottom: 1%;
     width: 23%;
     margin: 0px;
 }

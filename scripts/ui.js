@@ -1,6 +1,6 @@
- /* USER INTERFACE SCRIPT
+ /* USER INTERFACE SCRIPT - ui.js
     i dunno what to describe here
-    it's fairly obvious; creating, manipulating, and deleting DOM element */
+    it's fairly obvious; creating, manipulating, and deleting DOM element with JQuery */
 
 // I took too long just to figure out how to upload and load zip file
 $('#inputfile').change(readFile);
@@ -240,8 +240,9 @@ function UIUpdateMapInfo() {
     $('#songauthor').text(mapInfo._songAuthorName);
     $('#songname').text(mapInfo._songName);
     $('#songsubname').text(mapInfo._songSubName);
-    $('#levelauthor').text('Mapped by ' + mapInfo._levelAuthorName);
-    $('#songbpm').text(round(mapInfo._beatsPerMinute, 3) + 'BPM');
+    $('#songbpm').text(`${round(mapInfo._beatsPerMinute, 3)} BPM`);
+    $('#levelauthor').text(`Mapped by  ${mapInfo._levelAuthorName}`);
+    $('#environment').text(`${envName[mapInfo._environmentName]} Environment`);
     
     $('.input').css('display', 'none');
     $('.metadata').css('display', 'block');
@@ -300,11 +301,73 @@ async function UIcreateDiffInfo(charName, diff) {
     let diffName = diffRename[diff._difficulty];
     let offset = 0;
     let BPMChanges;
+    let customColor = {};
     if (diff._customData) {
         if (diff._customData._difficultyLabel && diff._customData._difficultyLabel != '')
             diffName = `${diff._customData._difficultyLabel} -- ${diffName}`;
+        
         if (diff._customData._editorOffset)
             offset = diff._customData._editorOffset / 1000;
+        
+        // lol this isnt really great but it's the only effective and less error prone
+        if (diff._customData._colorLeft) {
+            customColor._colorLeft = rgbaToHex(diff._customData._colorLeft);
+        }
+        else customColor._colorLeft = colorScheme[envColor[mapInfo._environmentName]]._colorLeft;
+        
+        if (diff._customData._colorRight) {
+            customColor._colorRight = rgbaToHex(diff._customData._colorRight);
+        }
+        else customColor._colorRight = colorScheme[envColor[mapInfo._environmentName]]._colorRight;
+        
+        if (diff._customData._envColorLeft) {
+            customColor._envColorLeft = rgbaToHex(diff._customData._envColorLeft);
+        }
+        else customColor._envColorLeft = colorScheme[envColor[mapInfo._environmentName]]._envColorLeft;
+        
+        if (diff._customData._envColorRight) {
+            customColor._envColorRight = rgbaToHex(diff._customData._envColorRight);
+        }
+        else customColor._envColorRight = colorScheme[envColor[mapInfo._environmentName]]._envColorRight;
+        
+        // tricky stuff
+        // need to display both boost
+        let envBL, envBR, envBoost = false;
+        if (diff._customData._envColorLeftBoost) {
+            envBL = rgbaToHex(diff._customData._envColorLeftBoost);
+            envBoost = true;
+        }
+        else {
+            if (colorScheme[envColor[mapInfo._environmentName]]._envColorLeftBoost) {
+                envBL = colorScheme[envColor[mapInfo._environmentName]]._envColorLeftBoost;
+                envBoost = true;
+            }
+            else {
+                envBL = customColor._colorLeft;
+            }
+        }
+        if (diff._customData._envColorRightBoost) {
+            envBR = rgbaToHex(diff._customData._envColorRightBoost);
+            envBoost = true;
+        }
+        else {
+            if (colorScheme[envColor[mapInfo._environmentName]]._envColorRightBoost) {
+                envBR = colorScheme[envColor[mapInfo._environmentName]]._envColorRightBoost;
+                envBoost = true;
+            }
+            else {
+                envBR = customColor._colorRight;
+            }
+        }
+        if (envBoost) {
+            customColor._envColorLeftBoost = envBL;
+            customColor._envColorRightBoost = envBR;
+        }
+
+        if (diff._customData._obstacleColor) {
+            customColor._obstacleColor = rgbaToHex(diff._customData._obstacleColor);
+        }
+        else customColor._obstacleColor = colorScheme[envColor[mapInfo._environmentName]]._obstacleColor;
     }
     if (diff._data._customData) {
         if (diff._data._customData._BPMChanges) BPMChanges = diff._data._customData._BPMChanges;
@@ -365,13 +428,33 @@ async function UIcreateDiffInfo(charName, diff) {
     }
 
     // set header
-    let diffHeader = $('<span>', {
-        class: 'diff-label',
-        text: diffName,
+    let diffHeader = $('<div>', {
+        class: 'diff-header',
         css: {
             'background-color': diffColor[diff._difficulty]
         }
     });
+
+    let diffLabel = $('<span>', {
+        class: 'diff-label',
+        text: diffName
+    });
+    diffLabel.appendTo(diffHeader);
+
+    let diffDotContainer = $('<div>', {
+        class: 'diff-dot-container'
+    });
+    for (const k in customColor) {
+        let colorDot = $('<span>', {
+            class: 'diff-dot',
+            id: k,
+            css: {
+                'background-color': customColor[k]
+            }
+        });
+        colorDot.appendTo(diffDotContainer);
+    }
+    diffDotContainer.appendTo(diffHeader);
 
     // set subpanel
     // map

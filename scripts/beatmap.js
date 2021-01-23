@@ -1,4 +1,4 @@
- /* BEATMAP SCRIPT
+ /* BEATMAP SCRIPT - beatmap.js
     load map and handle map related variable */
 
 let mapInfo, mapDiffSet, mapAnalysis = [];
@@ -17,17 +17,17 @@ async function loadMap(mapZip) {
         mapUpdateBPMRange(mapInfo._beatsPerMinute, mapInfo._beatsPerMinute);
 
         // load cover image
-        UILoadingStatus(10, 'Loading cover image...');
+        UILoadingStatus(10.4375, 'Loading cover image...');
         console.log('Loading image');
         let imageFile = mapZip.file(mapInfo._coverImageFilename);
         if (imageFile) {
             let imgBase64 = await imageFile.async('base64');
-            $('#coverimage').attr('src', 'data:image;base64,' + imgBase64);
+            $('#coverimg').attr('src', 'data:image;base64,' + imgBase64);
         }
         else console.error(mapInfo._coverImageFilename + ' does not exists.');
         
         // load audio
-        UILoadingStatus(20, 'Loading audio...');
+        UILoadingStatus(20.875, 'Loading audio...');
         console.log('Loading audio');
         let audioFile = mapZip.file(mapInfo._songFilename);
         if (audioFile) {
@@ -179,16 +179,23 @@ async function mapTool(charName, diff) {
 
     let arr = [];
     console.log('Analysing', charName, diff._difficulty);
-    if (startTime < 1.5) arr.push(outTxtBold('Hot start', `${round(startTime, 3)}s`));
+    if (startTime < 1.5) arr.push(outTxtBold('Hot start', `${round(startTime, 2)}s`));
     if (countEventLight10(diff._data._events) < 10) arr.push(outTxtBold('Lack of lighting events', '(<=10 events)'));
     arr.push(outTxtBold(`>${maxEBPM}EBPM warning []`, getEffectiveBPMTime(diff._data._notes, bpm, offset, bpmc)));
     arr.push(outTxtBold(`>${maxEBPMS}EBPM (swing) warning []`, getEffectiveBPMSwingTime(diff._data._notes, bpm, offset, bpmc)));
+
     arr.push(outTxtBold('Note(s) before start time', findOutStartNote(diff._data._notes, mapInfo._beatsPerMinute)));
     arr.push(outTxtBold('Note(s) after end time', findOutEndNote(diff._data._notes, mapInfo._beatsPerMinute)));
-    arr.push(outTxtBold('Event(s) before start time', findOutStartObstacle(diff._data._obstacles, mapInfo._beatsPerMinute)));
-    arr.push(outTxtBold('Event(s) after end time', findOutEndObstacle(diff._data._obstacles, mapInfo._beatsPerMinute)));
-    arr.push(outTxtBold('Obstacle(s) before start time', findOutStartEvent(diff._data._events, mapInfo._beatsPerMinute)));
-    arr.push(outTxtBold('Obstacle(s) after end time', findOutEndEvent(diff._data._events, mapInfo._beatsPerMinute)));
+    arr.push(outTxtBold('Event(s) before start time', findOutStartEvent(diff._data._events, mapInfo._beatsPerMinute)));
+    arr.push(outTxtBold('Event(s) after end time', findOutEndEvent(diff._data._events, mapInfo._beatsPerMinute)));
+    arr.push(outTxtBold('Obstacle(s) before start time', findOutStartObstacle(diff._data._obstacles, mapInfo._beatsPerMinute)));
+    arr.push(outTxtBold('Obstacle(s) after end time', findOutEndObstacle(diff._data._obstacles, mapInfo._beatsPerMinute)));
+
+    arr.push(outTxtBold('Zero width/duration wall []', detectZeroWall(diff._data._obstacles, bpm, offset, bpmc)));
+    arr.push(outTxtBold('Negative wall []', detectNegativeWall(diff._data._obstacles, bpm, offset, bpmc)));
+    arr.push(outTxtBold('2-center wall []', detectCenterWall(diff._data._obstacles, bpm, offset, bpmc)));
+    arr.push(outTxtBold('<15ms wall []', detectShortWall(diff._data._obstacles, bpm, offset, bpmc)));
+
     if (flagToolDD) arr.push(outTxtBold('Double-directional []', detectDoubleDirectional(diff._data._notes, bpm, offset, bpmc)));
     if (flagToolvBlock) arr.push(outTxtBold('Vision blocked []', detectVisionBlock(diff._data._notes, bpm, offset, bpmc)));
     arr.push(outTxtBold('Stacked note []', detectStackedNote(diff._data._notes, bpm, offset, bpmc)));
