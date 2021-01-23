@@ -1,12 +1,14 @@
 # Changelog
 ## Unreleased
 
-## v1.2.0
+## v1.2.0 [2021-01-23]
 ### Added
 * swing.js - swing detection, note angle, etc.
-* Environment name to song info
+* Environment name on map info
 * Colour dot per difficulty
-* Zero width or duration wall detection
+* 2-center wall detection
+* <15ms wall detection
+* Zero width/duration wall detection
 * Negative wall detection
 
 ### Changed
@@ -17,7 +19,7 @@
 ### Fixed
 * Object outside playable not giving correct output
 
-## v1.1.4
+## v1.1.4 [2021-01-21]
 ### Added
 * Stacked note detection
 * BPM changes counter

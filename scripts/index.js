@@ -46,6 +46,7 @@ $('#beatprec').val(beatPrecision.join(' '));
 const maxTolerance = 0.07 + 1e-9;
 const maxWindowTolerance = 0.08 + 1e-9;
 const minWallDur = 0.015 + 1e-9;
+const minWallRecover = 0.1 + 1e-9;
 
 // there's no definite formula for hitbox as of yet
 const hitboxStaircaseThreshold = 0.145 + 1e-9;
@@ -353,7 +354,6 @@ function mod(x, m) {
     if (m < 0) m = -m; r = x % m;
     return r < 0 ? r + m : r;
 }
-
 function distance(a, b, m) {
     return Math.min(mod(a - b, m),mod(b - a, m));
 }

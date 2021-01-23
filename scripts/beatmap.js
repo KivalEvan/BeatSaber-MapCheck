@@ -191,6 +191,11 @@ async function mapTool(charName, diff) {
     arr.push(outTxtBold('Obstacle(s) before start time', findOutStartObstacle(diff._data._obstacles, mapInfo._beatsPerMinute)));
     arr.push(outTxtBold('Obstacle(s) after end time', findOutEndObstacle(diff._data._obstacles, mapInfo._beatsPerMinute)));
 
+    arr.push(outTxtBold('Zero width/duration wall []', detectZeroWall(diff._data._obstacles, bpm, offset, bpmc)));
+    arr.push(outTxtBold('Negative wall []', detectNegativeWall(diff._data._obstacles, bpm, offset, bpmc)));
+    arr.push(outTxtBold('2-center wall []', detectCenterWall(diff._data._obstacles, bpm, offset, bpmc)));
+    arr.push(outTxtBold('<15ms wall []', detectShortWall(diff._data._obstacles, bpm, offset, bpmc)));
+
     if (flagToolDD) arr.push(outTxtBold('Double-directional []', detectDoubleDirectional(diff._data._notes, bpm, offset, bpmc)));
     if (flagToolvBlock) arr.push(outTxtBold('Vision blocked []', detectVisionBlock(diff._data._notes, bpm, offset, bpmc)));
     arr.push(outTxtBold('Stacked note []', detectStackedNote(diff._data._notes, bpm, offset, bpmc)));
