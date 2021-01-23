@@ -69,7 +69,7 @@ function findOutEndEvent(events, bpm) {
     if (!events.length > 0) return '';
     let endBeat = songDuration * bpm / 60;
     if (events[events.length - 1]._time > endBeat)
-        return `Event(s) beyond end time: ${events[events.length - 1]._time} (${round(60 / bpm * events[events.length - 1]._time, 2)}s)`;
+        return `${events[events.length - 1]._time} (${round(60 / bpm * events[events.length - 1]._time, 2)}s)`;
     return '';
 }
 

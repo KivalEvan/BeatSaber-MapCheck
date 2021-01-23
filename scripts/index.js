@@ -368,16 +368,12 @@ function outTxtBold(arg1, arg2) {
     return `<b>${arg1}</b>: ${arg2.join(', ')}`
 }
 
-// i need to come up with better name
-// if time is within toleratable value
-// case for over threshold
-function tolMax(t, tol) {
-    return toRealTime(t) > tol;
+function aboveTH(t, th) {
+    return toRealTime(t) > th;
 }
 
-// case for within threshold
-function tolMin(t, tol) {
-    return toRealTime(t) < tol;
+function belowTH(t, th) {
+    return toRealTime(t) < th;
 }
 
 function compToHex(c) {

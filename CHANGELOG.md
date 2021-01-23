@@ -6,9 +6,16 @@
 * swing.js - swing detection, note angle, etc.
 * Environment name to song info
 * Colour dot per difficulty
+* Zero width or duration wall detection
+* Negative wall detection
 
 ### Changed
-* Updated tolerance function
+* Slightly updated layout and style
+* Insignificant lighting event now check for only lit event
+* Tolerance function is now called threshold function
+
+### Fixed
+* Object outside playable not giving correct output
 
 ## v1.1.4
 ### Added

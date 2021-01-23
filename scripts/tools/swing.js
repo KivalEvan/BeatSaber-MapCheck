@@ -3,7 +3,7 @@
     prolly could use better name tbh */
 
 function swingNext(n1, n2) {
-    return (maybeWindowed(n1, n2) && tolMax(n1._time - n2._time, maxWindowTolerance)) || tolMax(n1._time - n2._time, maxTolerance);
+    return (maybeWindowed(n1, n2) && aboveTH(n1._time - n2._time, maxWindowTolerance)) || aboveTH(n1._time - n2._time, maxTolerance);
 }
 
 // derived from Uninstaller's Swings Per Second tool
@@ -15,11 +15,11 @@ function maybeWindowed(n1, n2) {
 
 // look at this pepega
 function populateSwingArray(diff) {
-    let array = [];
+    let arr = [];
     for (let i = 0, len = Math.floor(diff._duration + 1); i < len; i++) {
-        array.push(0);
+        arr.push(0);
     }
-    return array;
+    return arr;
 }
 
 function swingCount(diff) {

@@ -241,14 +241,14 @@ function detectVisionBlock(notes, bpm, offset, bpmc) {
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         if (lastMidL) {
-            if (toRealTime(note._time - lastMidL._time) > vBlockMin && toRealTime(note._time - lastMidL._time) < vBlockMax) {
+            if (aboveTH(note._time - lastMidL._time, vBlockMin) && belowTH(note._time - lastMidL._time, vBlockMax)) {
                 if (note._lineIndex < 2) arr.push(adjustTime(note._time, bpm, offset, bpmc));
             }
             // yeet the last note if nothing else found so we dont have to perform check every note
             else if (toRealTime(note._time - lastMidL._time) >= vBlockMax) lastMidL = null;
         }
         if (lastMidR) {
-            if (toRealTime(note._time - lastMidR._time) > vBlockMin && toRealTime(note._time - lastMidR._time) < vBlockMax) {
+            if (aboveTH(note._time - lastMidR._time, vBlockMin) && belowTH(note._time - lastMidR._time, vBlockMax)) {
                 if (note._lineIndex > 1) arr.push(adjustTime(note._time, bpm, offset, bpmc));
             }
             else if (toRealTime(note._time - lastMidR._time) >= vBlockMax) lastMidR = null;
@@ -324,7 +324,7 @@ function detectHitboxStaircase(notes, bpm, offset, bpmc) {
             if (lastRed) { // nested if moment
                 if (swingNext(note, lastRed)) {
                     if (lastBlue) {
-                        if (note._time - lastBlue._time != 0 && tolMin(note._time - lastBlue._time, hitboxStaircaseThreshold)) {
+                        if (note._time - lastBlue._time != 0 && belowTH(note._time - lastBlue._time, hitboxStaircaseThreshold)) {
                             if (note._lineIndex == blueIndexOccupy && note._lineLayer == blueLayerOccupy) {
                                 arr.push(adjustTime(note._time, bpm, offset, bpmc));
                             }
@@ -362,7 +362,7 @@ function detectHitboxStaircase(notes, bpm, offset, bpmc) {
             if (lastBlue) {
                 if (swingNext(note, lastBlue)) {
                     if (lastRed) {
-                        if (note._time - lastRed._time != 0 && tolMin(note._time - lastRed._time, hitboxStaircaseThreshold)) {
+                        if (note._time - lastRed._time != 0 && belowTH(note._time - lastRed._time, hitboxStaircaseThreshold)) {
                             if (note._lineIndex == redIndexOccupy && note._lineLayer == redLayerOccupy) {
                                 arr.push(adjustTime(note._time, bpm, offset, bpmc));
                             }
@@ -453,14 +453,14 @@ function detectShrAngle(notes, bpm, offset, bpmc) {
                         startRedDot = null;
                         lastRedDir = flipCutDir[lastRedDir];
                     }
-                    if (checkShrAngle(note._cutDirection, lastRedDir) && tolMin(note._time - lastRed._time, shrAngleMax + 0.01)) {
+                    if (checkShrAngle(note._cutDirection, lastRedDir) && belowTH(note._time - lastRed._time, shrAngleMax + 0.01)) {
                         arr.push(adjustTime(note._time, bpm, offset, bpmc));
                     }
                     if (note._cutDirection == 8) startRedDot = note;
                     else lastRedDir = note._cutDirection;
                 }
                 else {
-                    if (startRedDot && checkShrAngle(note._cutDirection, lastRedDir) && tolMin(note._time - lastRed._time, shrAngleMax + 0.01)) {
+                    if (startRedDot && checkShrAngle(note._cutDirection, lastRedDir) && belowTH(note._time - lastRed._time, shrAngleMax + 0.01)) {
                         arr.push(adjustTime(startRedDot._time, bpm, offset, bpmc));
                         startRedDot = null;
                     }
@@ -477,14 +477,14 @@ function detectShrAngle(notes, bpm, offset, bpmc) {
                         startBlueDot = null;
                         lastBlueDir = flipCutDir[lastBlueDir];
                     }
-                    if (checkShrAngle(note._cutDirection, lastBlueDir) && tolMin(note, lastBlue, shrAngleMax + 0.01)) {
+                    if (checkShrAngle(note._cutDirection, lastBlueDir) && belowTH(note, lastBlue, shrAngleMax + 0.01)) {
                         arr.push(adjustTime(note._time, bpm, offset, bpmc));
                     }
                     if (note._cutDirection == 8) startBlueDot = note;
                     else lastBlueDir = note._cutDirection;
                 }
                 else {
-                    if (startBlueDot && checkShrAngle(note._cutDirection, lastBlueDir) && tolMin(note, lastBlue, shrAngleMax + 0.01)) {
+                    if (startBlueDot && checkShrAngle(note._cutDirection, lastBlueDir) && belowTH(note, lastBlue, shrAngleMax + 0.01)) {
                         arr.push(adjustTime(startBlueDot._time, bpm, offset, bpmc));
                         startBlueDot = null;
                     }
