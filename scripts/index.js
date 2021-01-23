@@ -45,6 +45,7 @@ $('#beatprec').val(beatPrecision.join(' '));
 
 const maxTolerance = 0.07 + 1e-9;
 const maxWindowTolerance = 0.08 + 1e-9;
+const minWallDur = 0.015 + 1e-9;
 
 // there's no definite formula for hitbox as of yet
 const hitboxStaircaseThreshold = 0.145 + 1e-9;
@@ -356,12 +357,12 @@ function outTxtBold(arg1, arg2) {
     return `<b>${arg1}</b>: ${arg2.join(', ')}`
 }
 
-function tolMin(n1, n2, tol) {
-    return toRealTime(n1._time - n2._time) > tol;
+function tolMax(b, tol) {
+    return toRealTime(b) > tol;
 }
 
-function tolMax(n1, n2, tol) {
-    return toRealTime(n1._time - n2._time) < tol;
+function tolMin(b, tol) {
+    return toRealTime(b) < tol;
 }
 
 function compToHex(c) {

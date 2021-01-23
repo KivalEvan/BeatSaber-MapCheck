@@ -3,7 +3,7 @@
     prolly could use better name tbh */
 
 function swingNext(n1, n2) {
-    return (maybeWindowed(n1, n2) && tolMin(n1, n2, maxWindowTolerance)) || tolMin(n1, n2, maxTolerance);
+    return (maybeWindowed(n1, n2) && tolMax(n1._time - n2._time, maxWindowTolerance)) || tolMax(n1._time - n2._time, maxTolerance);
 }
 
 // derived from Uninstaller's Swings Per Second tool
