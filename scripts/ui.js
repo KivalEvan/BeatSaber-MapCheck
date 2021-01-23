@@ -330,16 +330,40 @@ async function UIcreateDiffInfo(charName, diff) {
         }
         else customColor._envColorRight = colorScheme[envColor[mapInfo._environmentName]]._envColorRight;
         
-        if (diff._customData._envColorRightBoost) {
-            customColor._envColorRightBoost = rgbaToHex(diff._customData._envColorRightBoost);
-        }
-        else if (colorScheme[envColor[mapInfo._environmentName]]._envColorRightBoost) customColor._envColorRightBoost = colorScheme[envColor[mapInfo._environmentName]]._envColorRightBoost;
-        
+        // tricky stuff
+        // need to display both boost
+        let envBL, envBR, envBoost = false;
         if (diff._customData._envColorLeftBoost) {
-            customColor._envColorLeftBoost = rgbaToHex(diff._customData._envColorLeftBoost);
+            envBL = rgbaToHex(diff._customData._envColorLeftBoost);
+            envBoost = true;
         }
-        else if (colorScheme[envColor[mapInfo._environmentName]]._envColorLeftBoost) customColor._envColorLeftBoost = colorScheme[envColor[mapInfo._environmentName]]._envColorLeftBoost;
-        
+        else {
+            if (colorScheme[envColor[mapInfo._environmentName]]._envColorLeftBoost) {
+                envBL = colorScheme[envColor[mapInfo._environmentName]]._envColorLeftBoost;
+                envBoost = true;
+            }
+            else {
+                envBL = customColor._colorLeft;
+            }
+        }
+        if (diff._customData._envColorRightBoost) {
+            envBR = rgbaToHex(diff._customData._envColorRightBoost);
+            envBoost = true;
+        }
+        else {
+            if (colorScheme[envColor[mapInfo._environmentName]]._envColorRightBoost) {
+                envBR = colorScheme[envColor[mapInfo._environmentName]]._envColorRightBoost;
+                envBoost = true;
+            }
+            else {
+                envBR = customColor._colorRight;
+            }
+        }
+        if (envBoost) {
+            customColor._envColorLeftBoost = envBL;
+            customColor._envColorRightBoost = envBR;
+        }
+
         if (diff._customData._obstacleColor) {
             customColor._obstacleColor = rgbaToHex(diff._customData._obstacleColor);
         }
