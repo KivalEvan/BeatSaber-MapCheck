@@ -134,6 +134,17 @@ const flipCutDir = {
     7: 4,
     8: 8
 }
+const swingCutDirectionSpace = {
+    0: [0, 1],
+    1: [0, -1],
+    2: [-1, 0],
+    3: [1, 0],
+    4: [-1, 1],
+    5: [1, 1],
+    6: [-1, -1],
+    7: [1, -1],
+    8: [0, 0]
+}
 
 const modeRename = {
     "OneSaber": "One Saber",
@@ -357,12 +368,12 @@ function outTxtBold(arg1, arg2) {
     return `<b>${arg1}</b>: ${arg2.join(', ')}`
 }
 
-function tolMax(b, tol) {
-    return toRealTime(b) > tol;
+function tolMax(t, tol) {
+    return toRealTime(t) < tol;
 }
 
-function tolMin(b, tol) {
-    return toRealTime(b) < tol;
+function tolMin(t, tol) {
+    return toRealTime(t) > tol;
 }
 
 function compToHex(c) {

@@ -7,6 +7,9 @@
 * Environment name to song info
 * Colour dot per difficulty
 
+### Changed
+* Updated tolerance function
+
 ## v1.1.4
 ### Added
 * Stacked note detection

@@ -324,7 +324,7 @@ function detectHitboxStaircase(notes, bpm, offset, bpmc) {
             if (lastRed) { // nested if moment
                 if (swingNext(note, lastRed)) {
                     if (lastBlue) {
-                        if (note._time - lastBlue._time != 0 && (note._time - lastBlue._time) / bpm * 60 < hitboxStaircaseThreshold) {
+                        if (note._time - lastBlue._time != 0 && tolMax(note._time - lastBlue._time, hitboxStaircaseThreshold)) {
                             if (note._lineIndex == blueIndexOccupy && note._lineLayer == blueLayerOccupy) {
                                 arr.push(adjustTime(note._time, bpm, offset, bpmc));
                             }
@@ -362,7 +362,7 @@ function detectHitboxStaircase(notes, bpm, offset, bpmc) {
             if (lastBlue) {
                 if (swingNext(note, lastBlue)) {
                     if (lastRed) {
-                        if (note._time - lastRed._time != 0 && (note._time - lastRed._time) / bpm * 60 < hitboxStaircaseThreshold) {
+                        if (note._time - lastRed._time != 0 && tolMax(note._time - lastRed._time, hitboxStaircaseThreshold)) {
                             if (note._lineIndex == redIndexOccupy && note._lineLayer == redLayerOccupy) {
                                 arr.push(adjustTime(note._time, bpm, offset, bpmc));
                             }
@@ -398,18 +398,6 @@ function detectHitboxStaircase(notes, bpm, offset, bpmc) {
         }
     }
     return arr;
-}
-
-const swingCutDirectionSpace = {
-    0: [0, 1],
-    1: [0, -1],
-    2: [-1, 0],
-    3: [1, 0],
-    4: [-1, 1],
-    5: [1, 1],
-    6: [-1, -1],
-    7: [1, -1],
-    8: [0, 0]
 }
 
 // fuck end note stack checking or some shit
