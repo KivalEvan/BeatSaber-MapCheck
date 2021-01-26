@@ -192,6 +192,7 @@ async function mapTool(charName, diff) {
     arr.push(outTxtBold('Obstacle(s) after end time', findOutEndObstacle(diff._data._obstacles, mapInfo._beatsPerMinute)));
 
     arr.push(outTxtBold('Zero width/duration wall []', detectZeroWall(diff._data._obstacles, bpm, offset, bpmc)));
+    arr.push(outTxtBold('Invalid wall []', detectInvalidWall(diff._data._obstacles, bpm, offset, bpmc)));
     arr.push(outTxtBold('Negative wall []', detectNegativeWall(diff._data._obstacles, bpm, offset, bpmc)));
     arr.push(outTxtBold('2-center wall []', detectCenterWall(diff._data._obstacles, bpm, offset, bpmc)));
     arr.push(outTxtBold('<15ms wall []', detectShortWall(diff._data._obstacles, bpm, offset, bpmc)));

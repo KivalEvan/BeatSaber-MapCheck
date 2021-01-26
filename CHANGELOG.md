@@ -1,6 +1,17 @@
 # Changelog
 ## Unreleased
 
+## v1.2.1 [2021-01-26]
+### Added
+* Invalid wall detection (vanilla only, does not look for negative)
+
+### Changed
+* <15ms wall detection now look for wall inside wall case
+* Reduced stacked note detection time from 20ms to 10ms
+
+### Fixed
+* Rounding for outside playable object detection
+
 ## v1.2.0 [2021-01-23]
 ### Added
 * swing.js - swing detection, note angle, etc.
