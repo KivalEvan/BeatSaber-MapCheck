@@ -31,7 +31,7 @@ function getJumpDistance(bpm, njs, offset) {
 function findOutStartNote(notes, bpm) {
     if (!notes.length > 0) return '';
     if (notes[0]._time < 0)
-        return `${notes[0]._time} (${round(60 / bpm * notes[0]._time, 2)}s)`;
+        return `${round(notes[0]._time, 3)} (${round(60 / bpm * notes[0]._time, 2)}s)`;
     return '';
 }
 
@@ -39,14 +39,14 @@ function findOutEndNote(notes, bpm) {
     if (!notes.length > 0) return '';
     let endBeat = songDuration * bpm / 60;
     if (notes[notes.length - 1]._time > endBeat)
-        return `${notes[notes.length - 1]._time} (${round(60 / bpm * notes[notes.length - 1]._time, 2)}s)`;
+        return `${round(notes[notes.length - 1]._time, 3)} (${round(60 / bpm * notes[notes.length - 1]._time, 2)}s)`;
     return '';
 }
 
 function findOutStartObstacle(obstacles, bpm) {
     if (!obstacles.length > 0) return '';
     if (obstacles[0]._time < 0)
-        return `${obstacles[0]._time} (${round(60 / bpm * obstacles[0]._time, 2)}s)`;
+        return `${round(obstacles[0]._time, 3)} (${round(60 / bpm * obstacles[0]._time, 2)}s)`;
     return '';
 }
 
@@ -54,14 +54,14 @@ function findOutEndObstacle(obstacles, bpm) {
     if (!obstacles.length > 0) return '';
     let endBeat = songDuration * bpm / 60;
     if (obstacles[obstacles.length - 1]._time > endBeat)
-        return `${obstacles[obstacles.length - 1]._time} (${round(60 / bpm * obstacles[obstacles.length - 1]._time, 2)}s)`;
+        return `${round(obstacles[obstacles.length - 1]._time, 3)} (${round(60 / bpm * obstacles[obstacles.length - 1]._time, 2)}s)`;
     return '';
 }
 
 function findOutStartEvent(events, bpm) {
     if (!events.length > 0) return '';
     if (events[0]._time < 0)
-        return `${events[0]._time} (${round(60 / bpm * events[0]._time, 2)}s)`;
+        return `${round(events[0]._time, 3)} (${round(60 / bpm * events[0]._time, 2)}s)`;
     return '';
 }
 
@@ -69,7 +69,7 @@ function findOutEndEvent(events, bpm) {
     if (!events.length > 0) return '';
     let endBeat = songDuration * bpm / 60;
     if (events[events.length - 1]._time > endBeat)
-        return `${events[events.length - 1]._time} (${round(60 / bpm * events[events.length - 1]._time, 2)}s)`;
+        return `${round(events[events.length - 1]._time, 3)} (${round(60 / bpm * events[events.length - 1]._time, 2)}s)`;
     return '';
 }
 
