@@ -282,7 +282,7 @@ function UIPopulateDiffSelect(mapSet) {
 }
 
 // i could just make a table but i dont want to
-async function UIcreateDiffSet(charName) {
+async function UICreateDiffSet(charName) {
     let charRename = charName;
     if(modeRename[charRename])
         charRename = modeRename[charRename];
@@ -296,18 +296,25 @@ async function UIcreateDiffSet(charName) {
     }))]);
 }
 
-async function UIcreateDiffInfo(charName, diff) {
+async function UICreateDiffInfo(charName, diff) {
     const bpm = mapInfo._beatsPerMinute;
     let diffName = diffRename[diff._difficulty];
     let offset = 0;
     let BPMChanges;
     let customColor = {};
+    let hasChroma = false;
     if (diff._customData) {
         if (diff._customData._difficultyLabel && diff._customData._difficultyLabel != '')
             diffName = `${diff._customData._difficultyLabel} -- ${diffName}`;
         
         if (diff._customData._editorOffset)
             offset = diff._customData._editorOffset / 1000;
+        
+        if (!hasChroma && diff._customData._suggestions)
+            hasChroma = diff._customData._suggestions.includes('Chroma');
+        
+        if (!hasChroma && diff._customData._requirements)
+            hasChroma = diff._customData._requirements.includes('Chroma');
         
         // lol this isnt really great but it's the only effective and less error prone
         if (diff._customData._colorLeft) {
@@ -375,6 +382,7 @@ async function UIcreateDiffInfo(charName, diff) {
     }
     const bpmc = getBPMChangesTime(bpm, offset, BPMChanges);
     
+    // general map stuff
     let textMap = [];
     textMap.push(`NJS: ${diff._noteJumpMovementSpeed} / ${round(diff._noteJumpStartBeatOffset, 3)}`);
     textMap.push(`HJD: ${round(getHalfJumpDuration(bpm, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset), 3)}`);
@@ -385,46 +393,46 @@ async function UIcreateDiffInfo(charName, diff) {
     textMap.push(`Effective BPM (swing): ${(findEffectiveBPMSwing(diff._data._notes, bpm)).toFixed(2)}`);
     if (bpmc.length > 0) textMap.push(`BPM changes: ${bpmc.length}`);
 
+    // note
     let textNote = [];
     const note = countNote(diff._data._notes)
-    const noteR = note.red;
-    const noteB = note.blue;
-    textNote.push(`Notes: ${noteR + noteB}`);
-    textNote.push(`• Red: ${noteR}`);
-    textNote.push(`• Blue: ${noteB}`);
-    textNote.push(`• R/B Ratio: ${round(noteB ? noteR / noteB : 0, 2)}`);
+    textNote.push(`Notes: ${note.red + note.blue}`);
+    textNote.push(`• Red: ${note.red}`);
+    textNote.push(`• Blue: ${note.blue}`);
+    textNote.push(`• R/B Ratio: ${round(note.blue ? note.red / note.blue : 0, 2)}`);
     textNote.push('');
     textNote.push(`SPS: ${swingPerSecondInfo(diff._data)}`);
-    textNote.push(`NPS: ${calcNPS(noteR + noteB).toFixed(2)}`);
-    textNote.push(`• Mapped: ${calcNPSMapped(noteR + noteB, diff._data._duration).toFixed(2)}`);
+    textNote.push(`NPS: ${calcNPS(note.red + note.blue).toFixed(2)}`);
+    textNote.push(`• Mapped: ${calcNPSMapped(note.red + note.blue, diff._data._duration).toFixed(2)}`);
 
     let textObstacle = [];
     // i know bomb isnt obstacle but this side doesnt have much so i merge this together
-    // it now include sps
-    textObstacle.push(`Top Row: ${noteB || noteR ? round(countNoteLayer(diff._data._notes, 2) / (noteR + noteB) * 100, 1) : 0}%`);
-    textObstacle.push(`Mid Row: ${noteB || noteR ? round(countNoteLayer(diff._data._notes, 1) / (noteR + noteB) * 100, 1) : 0}%`);
-    textObstacle.push(`Bot Row: ${noteB || noteR ? round(countNoteLayer(diff._data._notes, 0) / (noteR + noteB) * 100, 1) : 0}%`);
+    // it now include row percentage; does not include bomb
+    textObstacle.push(`Top Row: ${note.blue || note.red ? round(countNoteLayer(diff._data._notes, 2) / (note.red + note.blue) * 100, 1) : 0}%`);
+    textObstacle.push(`Mid Row: ${note.blue || note.red ? round(countNoteLayer(diff._data._notes, 1) / (note.red + note.blue) * 100, 1) : 0}%`);
+    textObstacle.push(`Bot Row: ${note.blue || note.red ? round(countNoteLayer(diff._data._notes, 0) / (note.red + note.blue) * 100, 1) : 0}%`);
     textObstacle.push('');
     textObstacle.push(`Bombs: ${note.bomb}`);
     textObstacle.push('');
     textObstacle.push(`Obstacles: ${diff._data._obstacles.length}`);
     textObstacle.push(`• Interactive: ${countInteractiveObstacle(diff._data._obstacles)}`);
 
+    // event n stuff
     let textEvent = [];
-    const light = countEvent(diff._data._events);
+    const event = countEvent(diff._data._events);
     textEvent.push(`Events: ${diff._data._events.length}`);
-    textEvent.push(`• Lighting: ${light.light}`);
-    textEvent.push(`• Ring Rotation: ${light.rrotate}`);
-    textEvent.push(`• Ring Zoom: ${light.rzoom}`);
-    textEvent.push(`• Laser Rotation: ${light.laser}`);
-    if (light.chroma || light.ogc) {
+    textEvent.push(`• Lighting: ${event.light}`);
+    textEvent.push(`• Ring Rotation: ${event.rrotate}`);
+    textEvent.push(`• Ring Zoom: ${event.rzoom}`);
+    textEvent.push(`• Laser Rotation: ${event.laser}`);
+    if (event.chroma || event.ogc) {
         textEvent.push('');
-        if (light.chroma) textEvent.push(`• Chroma: ${light.chroma}`);
-        if (light.ogc) textEvent.push(`• OG Chroma: ${light.ogc}`);
+        if (event.chroma) textEvent.push(hasChroma ? `• Chroma: ${event.chroma}` : `• Chroma: ${event.chroma} ⚠️ not suggested`);
+        if (event.ogc) textEvent.push(`• OG Chroma: ${event.ogc}`);
     }
-    if (light.rot) {
+    if (event.rot) {
         textEvent.push('');
-        textEvent.push(`• Lane Rotation: ${light.chroma}`);
+        textEvent.push(`• Lane Rotation: ${event.rot}`);
     }
 
     // set header

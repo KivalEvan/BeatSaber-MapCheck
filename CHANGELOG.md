@@ -1,5 +1,10 @@
 # Changelog
 ## Unreleased
+### Added
+* Check for Chroma suggestion/requirement if contain Chroma event
+
+### Fixed
+* Fixed lane rotation event showing chroma event instead
 
 ## v1.2.1 [2021-01-26]
 ### Added
