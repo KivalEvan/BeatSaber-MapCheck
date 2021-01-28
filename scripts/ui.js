@@ -283,9 +283,7 @@ function UIPopulateDiffSelect(mapSet) {
 
 // i could just make a table but i dont want to
 async function UICreateDiffSet(charName) {
-    let charRename = charName;
-    if(modeRename[charRename])
-        charRename = modeRename[charRename];
+    let charRename = modeRename[charName] || charName;
 
     $('#stats').append([$('<div>', {
         id: charName,
@@ -298,7 +296,7 @@ async function UICreateDiffSet(charName) {
 
 async function UICreateDiffInfo(charName, diff) {
     const bpm = mapInfo._beatsPerMinute;
-    let diffName = diffRename[diff._difficulty];
+    let diffName = diffRename[diff._difficulty] || diff._difficulty;
     let offset = 0;
     let BPMChanges;
     let customColor = {};
@@ -432,7 +430,7 @@ async function UICreateDiffInfo(charName, diff) {
     }
     if (event.rot) {
         textEvent.push('');
-        textEvent.push(`• Lane Rotation: ${event.rot}`);
+        textEvent.push(`• Lane Rotation: ${charName == '90Degree' || charName == '360Degree' ? event.rot : `${event.rot} ⚠️ not 360/90 mode`}`);
     }
 
     // set header
@@ -510,7 +508,5 @@ function UIOutputDisplay(cs, ds) {
     let mapa = mapAnalysis.find(ma => ma.mapSet == cs && ma.diff == ds);
     $('#output-box').empty();
     if (!mapa.text.length > 0) $('#output-box').text('No issue(s) found.')
-    for (let i = 0; i < mapa.text.length; i++) {
-        $('#output-box').append(mapa.text[i] + '<br>');
-    }
+    $('#output-box').append(mapa.text.join('<br>'));
 }

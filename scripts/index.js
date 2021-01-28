@@ -154,11 +154,7 @@ const modeRename = {
     "90Degree": "90 Degree"
 }
 const diffRename = {
-    "ExpertPlus": "Expert+",
-    "Expert": "Expert",
-    "Hard": "Hard",
-    "Normal": "Normal",
-    "Easy": "Easy"
+    "ExpertPlus": "Expert+"
 }
 const diffColor = {
     "ExpertPlus": "#8f48db",
