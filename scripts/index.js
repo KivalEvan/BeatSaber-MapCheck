@@ -4,7 +4,7 @@
     also includes unused stuff that i may consider in the future */
 
 const watermark = 'Kival Evan#5480';
-const version = 'v1.2.1';
+const version = 'v1.2.2';
 
 $('#watermark').text(`${watermark} - ${version}`)
 
@@ -49,7 +49,7 @@ const minWallDur = 0.015 + 1e-9;
 const minWallRecover = 0.1 + 1e-9;
 
 // there's no definite formula for hitbox as of yet
-const hitboxStaircaseThreshold = 0.145 + 1e-9;
+const hitboxStaircaseThreshold = 0.15 + 1e-9;
 
 /**  REFERENCES  **
 NOTE TYPE:
@@ -154,11 +154,7 @@ const modeRename = {
     "90Degree": "90 Degree"
 }
 const diffRename = {
-    "ExpertPlus": "Expert+",
-    "Expert": "Expert",
-    "Hard": "Hard",
-    "Normal": "Normal",
-    "Easy": "Easy"
+    "ExpertPlus": "Expert+"
 }
 const diffColor = {
     "ExpertPlus": "#8f48db",

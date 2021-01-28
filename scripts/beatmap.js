@@ -62,7 +62,7 @@ async function loadMap(mapZip) {
                 let diffFile = mapZip.file(diff._beatmapFilename);
                 if (diffFile) {
                     let diffFileStr = await diffFile.async('string');
-                    mapDiffSet[i]._difficultyBeatmaps[j]['_data'] = loadDifficulty(diffFileStr);
+                    mapDiffSet[i]._difficultyBeatmaps[j]._data = loadDifficulty(diffFileStr);
                 }
                 else {
                     console.error('Missing ' + diff._beatmapFilename + ' file for ' + mapDiffSet[i]._beatmapCharacteristicName + ' ' + diff._difficulty + ', ignoring.');
@@ -84,10 +84,10 @@ async function loadMap(mapZip) {
         console.log('Adding map stats');
         for (let i = 0, len = mapDiffSet.length; i < len; i++) {
             let mapDiff = mapDiffSet[i]._difficultyBeatmaps;
-            await UIcreateDiffSet(mapDiffSet[i]._beatmapCharacteristicName);
+            await UICreateDiffSet(mapDiffSet[i]._beatmapCharacteristicName);
             for (let j = mapDiff.length - 1; j >= 0; j--) {
                 let diff = mapDiff[j];
-                await UIcreateDiffInfo(mapDiffSet[i]._beatmapCharacteristicName, diff);
+                await UICreateDiffInfo(mapDiffSet[i]._beatmapCharacteristicName, diff);
             }
         }
         
@@ -155,7 +155,7 @@ function loadDifficulty(str) {
     }
 
     if (diff._notes.length > 0 || diff._obstacles.length > 0) {
-        diff['_duration'] = getLastInteractiveTime(diff._notes, diff._obstacles, mapInfo._beatsPerMinute);
+        diff._duration = getLastInteractiveTime(diff._notes, diff._obstacles, mapInfo._beatsPerMinute);
         if (!flagLoadAudio) calcMapDuration(mapInfo._beatsPerMinute, diff._notes, diff._obstacles);
     }
     return diff;

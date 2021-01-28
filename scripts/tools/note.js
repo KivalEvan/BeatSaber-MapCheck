@@ -17,25 +17,26 @@ function countNote(notes) {
     }
     return {red: nr, blue: nb, bomb: b};
 }
-
 function countNoteLayer(notes, l) {
     let count = 0;
     notes.forEach(note => { if (note._type != 3 && note._lineLayer == l) count++; });
     return count;
 }
-
+function countNoteIndex(notes, i) {
+    let count = 0;
+    notes.forEach(note => { if (note._type != 3 && note._lineIndex == i) count++; });
+    return count;
+}
 function countNoteRed(notes) {
     let count = 0;
     notes.forEach(note => { if (note._type == 0) count++; });
     return count;
 }
-
 function countNoteBlue(notes) {
     let count = 0;
     notes.forEach(note => { if (note._type == 1) count++; });
     return count;
 }
-
 function countBomb(notes) {
     let count = 0;
     notes.forEach(note => { if (note._type == 3) count++; });

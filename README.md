@@ -28,4 +28,4 @@ Visit the [github.io page](https://kivalevan.github.io/BeatSaber-MapCheck/) or d
 * Due to pepega that is MediocreMapper BPM change, it may not show correct beat numbering
 
 ## Note
-Since this is my first ever (web) project, I'm open to feedback to further improve skill and develop better stuff in the future.
+Since this is my first ever (web) project, I'm open to feedback to further improve skill and develop better stuff in the future. If you have any suggestion or feedback, let me know on Discord@Kival Evan#5480

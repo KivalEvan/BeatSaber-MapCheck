@@ -1,5 +1,14 @@
 # Changelog
 ## Unreleased
+### Added
+* Missing Chroma suggestion/requirement warning if contain Chroma event
+* Lane rotation event warning in non-360/90 mode
+
+### Changed
+* Cleaned up stuff
+
+### Fixed
+* Fixed lane rotation event showing chroma event instead
 
 ## v1.2.1 [2021-01-26]
 ### Added
