@@ -268,7 +268,7 @@ function UIPopulateCharSelect() {
 function UIPopulateDiffSelect(mapSet) {
     $('#mapdiff').empty();
     for (let i = mapSet._difficultyBeatmaps.length - 1; i >= 0; i--) {
-        let diffName = diffRename[mapSet._difficultyBeatmaps[i]._difficulty];
+        let diffName = diffRename[mapSet._difficultyBeatmaps[i]._difficulty] || mapSet._difficultyBeatmaps[i]._difficulty;
         if (mapSet._difficultyBeatmaps[i]._customData)
             if (mapSet._difficultyBeatmaps[i]._customData._difficultyLabel && mapSet._difficultyBeatmaps[i]._customData._difficultyLabel != '')
                 diffName = `${mapSet._difficultyBeatmaps[i]._customData._difficultyLabel} -- ${diffName}`;

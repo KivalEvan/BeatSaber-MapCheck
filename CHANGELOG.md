@@ -1,5 +1,9 @@
 # Changelog
-## Unreleased
+## v1.2.3 [2021-01-29]
+### Fixed
+* Invisible text for difficulty select
+
+## v1.2.2 [2021-01-28]
 ### Added
 * Missing Chroma suggestion/requirement warning if contain Chroma event
 * Lane rotation event warning in non-360/90 mode
