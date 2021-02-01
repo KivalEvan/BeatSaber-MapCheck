@@ -32,14 +32,11 @@ function detectInvalidWall(diff, mapSettings) {
     for (let i = 0, len = obstacles.length; i < len; i++) {
         if (obstacles[i]._width > 4 || obstacles[i]._lineIndex > 3 || obstacles[i]._lineIndex < 0 || obstacles[i]._type > 1 || obstacles[i]._type < 0) {
             arr.push(adjustTime(obstacles[i]._time, bpm, offset, bpmc));
-        }
-        else if (obstacles[i]._width === 4 && obstacles[i]._lineIndex > 0) {
+        } else if (obstacles[i]._width === 4 && obstacles[i]._lineIndex > 0) {
             arr.push(adjustTime(obstacles[i]._time, bpm, offset, bpmc));
-        }
-        else if (obstacles[i]._width === 3 && obstacles[i]._lineIndex > 1) {
+        } else if (obstacles[i]._width === 3 && obstacles[i]._lineIndex > 1) {
             arr.push(adjustTime(obstacles[i]._time, bpm, offset, bpmc));
-        }
-        else if (obstacles[i]._width === 2 && obstacles[i]._lineIndex > 2) {
+        } else if (obstacles[i]._width === 2 && obstacles[i]._lineIndex > 2) {
             arr.push(adjustTime(obstacles[i]._time, bpm, offset, bpmc));
         }
     }

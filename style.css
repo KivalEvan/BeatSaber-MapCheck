@@ -50,6 +50,12 @@ body {
 .input label, .input input {
     padding: 0;
 }
+#input-url {
+    width: 25em;
+}
+#input-id {
+    width: 5em;
+}
 #input-file {
     display: none;
 }

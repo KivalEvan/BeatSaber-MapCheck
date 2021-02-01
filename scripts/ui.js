@@ -88,8 +88,7 @@ function downloadMap(url) {
             }
             if (xhr.status === 404) {
                 reject('Map does not exist');
-            }
-            else {
+            } else {
                 reject(xhr.status);
             }
         };
@@ -114,8 +113,7 @@ function readFile() {
         fr.addEventListener('load', function(e) {
             extractZip(e.target.result);
         });
-    }
-    else {
+    } else {
         UILoadingStatus('info', 'Unsupported file format, please enter zip file', 0);
     }
 }
@@ -161,14 +159,16 @@ $('#beatprec').change(function() {
 $('#hbstair').click(function() {
     if ($(this).prop("checked")) {
         flag.tool.hb.staircase = true;
+    } else {
+        flag.tool.hb.staircase = false;
     }
-    else flag.tool.hb.staircase = false;
 });
 $('#shrangle').click(function() {
     if ($(this).prop("checked")) {
         flag.tool.shrAngle = true;
+    } else {
+        flag.tool.shrAngle = false;
     }
-    else flag.tool.shrAngle = false;
 });
 $('#shranglemax').change(function() {
     tool.maxShrAngle = round(Math.abs(this.value) / 1000, 3);
@@ -181,20 +181,23 @@ $('#shranglemaxbeat').change(function() {
         tool.maxShrAngle = round(toRealTime(val), 3);
         $('#shranglemax').val(round(tool.maxShrAngle * 1000, 3));
         $('#shranglemaxbeat').val(val);
+    } else {
+        $('#shranglemaxbeat').val(0);
     }
-    else $('#shranglemaxbeat').val(0);
 });
 $('#dd').click(function() {
     if ($(this).prop("checked")) {
         flag.tool.dd = true;
+    } else {
+        flag.tool.dd = false;
     }
-    else flag.tool.dd = false;
 });
 $('#vbnote').click(function() {
     if ($(this).prop("checked")) {
         flag.tool.vb.note = true;
+    } else {
+        flag.tool.vb.note = false;
     }
-    else flag.tool.vb.note = false;
 });
 $('#vbmin').change(function() {
     tool.vb.min = round(Math.abs(this.value) / 1000, 3);
@@ -217,8 +220,9 @@ $('#vbminbeat').change(function() {
             $('#vbmax').val(round(tool.vb.min * 1000));
             $('#vbmaxbeat').val(val);
         }
+    } else {
+        $('#vbminbeat').val(0);
     }
-    else $('#vbminbeat').val(0);
 });
 $('#vbmax').change(function() {
     tool.vb.max = round(Math.abs(this.value) / 1000, 3);
@@ -231,8 +235,9 @@ $('#vbmaxbeat').change(function() {
         tool.vb.max = round(toRealTime(val), 3);
         $('#vbmax').val(round(tool.vb.max * 1000));
         $('#vbmaxbeat').val(val);
+    } else {
+        $('#vbmaxbeat').val(0);
     }
-    else $('#vbmaxbeat').val(0);
 });
 $('#vbhjd').click(function() {
     if (flag.loaded) {
@@ -300,14 +305,11 @@ $('.accordion').click(function() {
 function UILoadingStatus(status, txt, progress = 100) {
     if (status === 'info') {
         $('#loadingbar').css('background-color', '#4060a0');
-    }
-    if (status === 'download') {
+    } else if (status === 'download') {
         $('#loadingbar').css('background-color', '#30a030');
-    }
-    if (status === 'warn') {
+    } else if (status === 'warn') {
         $('#loadingbar').css('background-color', '#cc0000');
-    }
-    else if (status === 'error') {
+    } else if (status === 'error') {
         $('#loadingbar').css('background-color', '#cc0000');
     }
     $('#loadingbar').css('width', `${progress}%`);
@@ -422,15 +424,13 @@ async function UICreateDiffInfo(charName, diff) {
         if (diff._customData._envColorLeftBoost) {
             envBL = rgbaToHex(diff._customData._envColorLeftBoost);
             envBoost = true;
-        }
-        else {
+        } else {
             envBL = colorScheme[envColor[map.info._environmentName]]._envColorLeftBoost || customColor._colorLeft;
         }
         if (diff._customData._envColorRightBoost) {
             envBR = rgbaToHex(diff._customData._envColorRightBoost);
             envBoost = true;
-        }
-        else {
+        } else {
             envBR = colorScheme[envColor[map.info._environmentName]]._envColorRightBoost || customColor._colorRight;
         }
 
