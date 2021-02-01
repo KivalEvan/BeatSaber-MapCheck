@@ -2,9 +2,12 @@
 ## Unreleased
 ### Added
 * global.js - for global variable and settings
+* URL support
 
 ### Changed
 * Code refactored
+* Supported .bsl file
+
 ### Fixed
 * Colour dot not showing up when there is no custom data
 

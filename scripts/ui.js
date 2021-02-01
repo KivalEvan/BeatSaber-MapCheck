@@ -2,69 +2,117 @@
     i dunno what to describe here
     it's fairly obvious; creating, manipulating, and deleting DOM element with JQuery */
 
-// I took too long just to figure out how to upload and load zip file
-$('#inputfile').change(readFile);
-
-// need to figure out how to deal with CORS before implementing it to UI
-$.urlParam = function(name) {
-    var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
-    if (results == null) {
-       return null;
+$('#input-url').keydown(function(event) {
+    if (event.which == 13) {
+        downloadFromURL(this.value);
     }
-    return decodeURI(results[1]) || null;
+});
+$('#input-id').keydown(function(event) {
+    if (event.which == 13) {
+        downloadFromID(this.value);
+    }
+});
+$('#input-file').change(readFile);
+
+function downloadFromURL(input) {
+    let url = sanitizeURL(input);
+    downloadMap(url);
 }
 
-if ($.urlParam('url') !== null) {
-    // what's url sanitisation anyway
-    $('.inputfile').prop('disabled', true);
-    downloadMap($.urlParam('url'));
+function downloadFromID(input) {
+    let url = 'https://beatsaver.com/api/download/key/' + sanitizeBeatSaverID(input);
+    try {
+        let res = downloadMap(url);
+        extractZip(res);
+    } catch(err) {
+        console.error(err);
+    }
+}
+
+function sanitizeURL(url) {
+    url = url.trim();
+    if (/^http:\/\//.test(url)) {
+        url = url.replace('http://', 'https://');
+    }
+    return url;
+}
+
+function sanitizeBeatSaverID(id) {
+    id = id.trim();
+    if (/^!bsr /.test(id)) {
+        id = id.replace('!bsr ', '');
+    }
+    return id;
 }
 
 function downloadMap(url) {
-    let xhr = new XMLHttpRequest();
-    xhr.open('GET', url, true);
-    xhr.setRequestHeader('Content-Type', 'application/zip');
-    xhr.responseType = 'arraybuffer';
-    xhr.send();
-    
-    xhr.onprogress = function(e) {
-        UILoadingStatus(e.loaded / e.total * 100, `Downloading map: ${Math.floor(e.loaded / 1024 / 1024 * 10) / 10}MB / ${Math.floor(e.total / 1024 / 1024 * 10) / 10}MB`);
-    };
-    
-    xhr.onload = function() {
-        if (xhr.status === 200) {
-            extractZip(xhr.response);
-        }
-    };
+    console.log('downloading...');
+    return new Promise(function(resolve, reject) {
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.responseType = 'arraybuffer';
+        xhr.timeout = 5000;
+
+        let startTime = Date.now();
+        xhr.onprogress = function(e) {
+            xhr.timeout += Date.now() - startTime;
+            UILoadingStatus('info', `Downloading map: ${round(e.loaded / 1024 / 1024, 1)}MB / ${round(e.total / 1024 / 1024, 1)}MB`, e.loaded / e.total * 100);
+        };
+
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                resolve(xhr.response);
+            }
+            if (xhr.status === 404) {
+                reject('map does not exist');
+            }
+            else {
+                reject(`response ${xhr.status}`);
+            }
+        };
+
+        xhr.onerror = function() {
+            reject('error downloading map');
+        };
+
+        xhr.ontimeout = function() {
+            reject('connection timeout');
+        };
+
+        xhr.send();
+    });
+}
+
+function UIToggleInput() {
+    $('.input').css('display', 'block').prop('disabled', true);
+    $('.metadata').css('display', 'none');
 }
 
 function readFile() {
     let file = this.files[0];
     const fr = new FileReader();
-    if (file.name.substr(-4) === '.zip') {
+    if (file.name.substr(-4) === '.zip' || file.name.substr(-4) === '.bsl') {
         fr.readAsArrayBuffer(file);
-        fr.addEventListener('load', extractZip);
+        fr.addEventListener('load', function(e) {
+            extractZip(e.target.result);
+        });
     }
     else {
-        alert('Unsupported file format.');
+        UILoadingStatus('info', 'Unsupported file format, please enter zip file', 0);
     }
 }
 
 async function extractZip(data) {
     let mapZip = new JSZip();
-    let temp = data;
-    if (data.target) temp = data.target.result;
     try {
-        mapZip = await JSZip.loadAsync(temp);
-        $('#loadingbar').css('background-color', '#4060a0');
+        mapZip = await JSZip.loadAsync(data);
         await loadMap(mapZip);
-    } catch (error) {
-        $('#loadingbar').css('background-color', '#cc0000');
+    } catch(err) {
         $('.settings').prop('disabled', false);
         $('.input').css('display', 'block');
         $('.metadata').css('display', 'none');
-        UILoadingStatus(100, 'Error while loading map!');
-        console.error(error);
+        UILoadingStatus('error', 'Error while loading map!', 100);
+        console.error(err);
     }
 }
 
@@ -105,10 +153,10 @@ $('#shrangle').click(function() {
 $('#shranglemax').change(function() {
     tool.maxShrAngle = round(Math.abs(this.value) / 1000, 3);
     $('#shranglemax').val(round(tool.maxShrAngle * 1000, 3));
-    if (flag.map.loaded) $('#shranglemaxbeat').val(round(toBeatTime(tool.maxShrAngle), 3));
+    if (flag.loaded) $('#shranglemaxbeat').val(round(toBeatTime(tool.maxShrAngle), 3));
 });
 $('#shranglemaxbeat').change(function() {
-    if (flag.map.loaded) {
+    if (flag.loaded) {
         let val = round(Math.abs(this.value), 3);
         tool.maxShrAngle = round(toRealTime(val), 3);
         $('#shranglemax').val(round(tool.maxShrAngle * 1000, 3));
@@ -131,15 +179,15 @@ $('#vbnote').click(function() {
 $('#vbmin').change(function() {
     tool.vb.min = round(Math.abs(this.value) / 1000, 3);
     $('#vbmin').val(round(tool.vb.min * 1000));
-    if (flag.map.loaded) $('#vbminbeat').val(round(toBeatTime(tool.vb.min), 3));
+    if (flag.loaded) $('#vbminbeat').val(round(toBeatTime(tool.vb.min), 3));
     if (tool.vb.min > tool.vb.max) {
         tool.vb.max = tool.vb.min;
         $('#vbmax').val(round(tool.vb.min * 1000));
-        if (flag.map.loaded) $('#vbmaxbeat').val(round(toBeatTime(tool.vb.min), 3));
+        if (flag.loaded) $('#vbmaxbeat').val(round(toBeatTime(tool.vb.min), 3));
     }
 });
 $('#vbminbeat').change(function() {
-    if (flag.map.loaded) {
+    if (flag.loaded) {
         let val = round(Math.abs(this.value), 3);
         tool.vb.min = round(toRealTime(val), 3);
         $('#vbmin').val(round(tool.vb.min * 1000));
@@ -155,10 +203,10 @@ $('#vbminbeat').change(function() {
 $('#vbmax').change(function() {
     tool.vb.max = round(Math.abs(this.value) / 1000, 3);
     $('#vbmax').val(round(tool.vb.max * 1000));
-    if (flag.map.loaded) $('#vbmaxbeat').val(round(toBeatTime(tool.vb.max), 3));
+    if (flag.loaded) $('#vbmaxbeat').val(round(toBeatTime(tool.vb.max), 3));
 });
 $('#vbmaxbeat').change(function() {
-    if (flag.map.loaded) {
+    if (flag.loaded) {
         let val = round(Math.abs(this.value), 3);
         tool.vb.max = round(toRealTime(val), 3);
         $('#vbmax').val(round(tool.vb.max * 1000));
@@ -167,7 +215,7 @@ $('#vbmaxbeat').change(function() {
     else $('#vbmaxbeat').val(0);
 });
 $('#vbhjd').click(function() {
-    if (flag.map.loaded) {
+    if (flag.loaded) {
         let char = map.info._difficultyBeatmapSets.find(c => c._beatmapCharacteristicName === tool.select.char);
         let diff = char._difficultyBeatmaps.find(d => d._difficulty === tool.select.diff);
         let hjd = round(getHalfJumpDuration(map.info._beatsPerMinute, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset), 3);
@@ -184,7 +232,7 @@ $('#vboptimal').click(function() {
     tool.vb.max = 0.5;
     $('#vbmin').val(tool.vb.min * 1000);
     $('#vbmax').val(tool.vb.max * 1000);
-    if (flag.map.loaded) {
+    if (flag.loaded) {
         $('#vbminbeat').val(round(toBeatTime(tool.vb.min), 3));
         $('#vbmaxbeat').val(round(toBeatTime(tool.vb.max), 3));
     }
@@ -229,7 +277,16 @@ $('.accordion').click(function() {
     }
 });
 
-function UILoadingStatus(progress, txt) {
+function UILoadingStatus(status, txt, progress = 100) {
+    if (status === 'info') {
+        $('#loadingbar').css('background-color', '#4060a0');
+    }
+    if (status === 'warn') {
+        $('#loadingbar').css('background-color', '#cc0000');
+    }
+    else if (status === 'error') {
+        $('#loadingbar').css('background-color', '#cc0000');
+    }
     $('#loadingbar').css('width', `${progress}%`);
     $('#loadingtext').text(txt);
 }
@@ -276,7 +333,7 @@ function UIPopulateDiffSelect(mapSet) {
         }));
     }
     tool.select.diff = mapSet._difficultyBeatmaps[mapSet._difficultyBeatmaps.length - 1]._difficulty;
-    if (flag.map.loaded) UIOutputDisplay(tool.select.char, tool.select.diff);
+    if (flag.loaded) UIOutputDisplay(tool.select.char, tool.select.diff);
 }
 
 // i could just make a table but i dont want to
