@@ -5,6 +5,8 @@
 
 ### Changed
 * Code refactored
+### Fixed
+* Colour dot not showing up when there is no custom data
 
 ## v1.2.3 [2021-01-29]
 ### Fixed

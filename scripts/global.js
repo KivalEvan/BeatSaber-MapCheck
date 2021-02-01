@@ -5,8 +5,9 @@ const watermark = 'Kival Evan#5480';
 const version = 'v1.3.0';
 
 const flag = {
+    loading: false,
+    loaded: false,
     map: {
-        loaded: false,
         load: {
             image: false,
             audio: false

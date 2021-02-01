@@ -15,12 +15,26 @@ $('#ebpm').val(tool.ebpm.th);
 $('#ebpms').val(tool.ebpm.thSwing);
 $('#shranglemax').val(tool.maxShrAngle * 1000);
 $('#shranglemaxbeat').val(0);
-$('#vblockmin').val(tool.vb.min * 1000);
-$('#vblockminbeat').val(0);
-$('#vblockmax').val(tool.vb.max * 1000);
-$('#vblockmaxbeat').val(0);
+$('#vbmin').val(tool.vb.min * 1000);
+$('#vbminbeat').val(0);
+$('#vbmax').val(tool.vb.max * 1000);
+$('#vbmaxbeat').val(0);
 $('#beatprec').val(tool.beatPrec.join(' '));
 $('#songduration').text(toMMSS(map.audio.dur));
+
+$.urlParam = function(name) {
+    var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+    if (results == null) {
+       return null;
+    }
+    return decodeURI(results[1]) || null;
+}
+
+if ($.urlParam('url') !== null) {
+    // what's url sanitisation anyway
+    $('.inputfile').prop('disabled', true);
+    downloadMap($.urlParam('url'));
+}
 
 function toMMSS(num) {
     if (!num) return '0:00';

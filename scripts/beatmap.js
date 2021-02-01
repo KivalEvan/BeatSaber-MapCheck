@@ -2,7 +2,7 @@
     load map and handle map related variable */
 
 async function loadMap(mapZip) {
-    UILoadingStatus(0, 'Loading map info...');
+    UILoadingStatus('info', 'Loading map info...', 0);
     let infoFile = mapZip.file('Info.dat') || mapZip.file('info.dat');
     if (infoFile) {
         $('.settings').prop('disabled', true);
@@ -13,8 +13,8 @@ async function loadMap(mapZip) {
         mapUpdateBPMRange(map.info._beatsPerMinute, map.info._beatsPerMinute);
 
         // load cover image
-        UILoadingStatus(10.4375, 'Loading cover image...');
-        console.log('Loading cover image');
+        UILoadingStatus('info', 'Loading cover image...', 10.4375);
+        console.log('loading cover image');
         let imageFile = mapZip.file(map.info._coverImageFilename);
         if (imageFile) {
             let imgBase64 = await imageFile.async('base64');
@@ -23,8 +23,8 @@ async function loadMap(mapZip) {
         else console.error(map.info._coverImageFilename + ' does not exists.');
         
         // load audio
-        UILoadingStatus(20.875, 'Loading audio...');
-        console.log('Loading audio');
+        UILoadingStatus('info', 'Loading audio...', 20.875);
+        console.log('loading audio');
         let audioFile = mapZip.file(map.info._songFilename);
         if (audioFile) {
             let audioBuffer = await audioFile.async('arraybuffer');
@@ -42,8 +42,8 @@ async function loadMap(mapZip) {
         else console.error(map.info._songFilename + ' does not exist.');
 
         // load diff map
-        UILoadingStatus(70, 'Loading difficulty...');
-        console.log('Loading difficulty');
+        UILoadingStatus('info', 'Loading difficulty...', 70);
+        console.log('loading difficulty');
         map.set = map.info._difficultyBeatmapSets;
         for (let i = map.set.length - 1; i >= 0; i--) {
             let mapDiff = map.set[i]._difficultyBeatmaps;
@@ -76,8 +76,8 @@ async function loadMap(mapZip) {
         // could prolly had done this on previous so i dont have to re-loop
         // but i need it to be sorted specifically
         UIPopulateCharSelect();
-        UILoadingStatus(80, 'Adding map difficulty stats...');
-        console.log('Adding map stats');
+        UILoadingStatus('info', 'Adding map difficulty stats...', 80);
+        console.log('adding map stats');
         for (let i = 0, len = map.set.length; i < len; i++) {
             let mapDiff = map.set[i]._difficultyBeatmaps;
             await UICreateDiffSet(map.set[i]._beatmapCharacteristicName);
@@ -87,7 +87,7 @@ async function loadMap(mapZip) {
             }
         }
         
-        UILoadingStatus(90, 'Analysing map difficulty...');
+        UILoadingStatus('info', 'Analysing map difficulty...', 90);
         for (let i = 0, len = map.set.length; i < len; i++) {
             let mapDiff = map.set[i]._difficultyBeatmaps;
             for (let j = mapDiff.length - 1; j >= 0; j--) {
@@ -103,17 +103,16 @@ async function loadMap(mapZip) {
         UIOutputDisplay(tool.select.char, tool.select.diff);
 
         $('#shranglemaxbeat').val(round(toBeatTime(tool.maxShrAngle), 3));
-        $('#vblockminbeat').val(round(toBeatTime(tool.vb.min), 3));
-        $('#vblockmaxbeat').val(round(toBeatTime(tool.vb.max), 3));
+        $('#vbminbeat').val(round(toBeatTime(tool.vb.min), 3));
+        $('#vbmaxbeat').val(round(toBeatTime(tool.vb.max), 3));
         $('#applythis').prop('disabled', false);
         $('#applyall').prop('disabled', false);
         $('.settings').prop('disabled', false);
-        flag.map.loaded = true;
-        UILoadingStatus(100, 'Map successfully loaded!');
+        flag.loaded = true;
+        UILoadingStatus('info', 'Map successfully loaded!');
     }
     else {
-        alert('Could not find Info.dat file.');
-        UILoadingStatus(0, 'No map loaded');
+        UILoadingStatus('info', 'Couldn\'t find Info.dat, try again', 0);
     }
 }
 
@@ -180,7 +179,7 @@ async function mapTool(charName, diff) {
     }
 
     let arr = [];
-    console.log('Analysing', charName, diff._difficulty);
+    console.log('analysing', charName, diff._difficulty);
     if (startTime < 1.5) arr.push(outTxtBold('Hot start', `${round(startTime, 2)}s`));
     if (countEventLight10(diff._data._events) < 10) arr.push(outTxtBold('Lack of lighting events', '(<=10 events)'));
     arr.push(outTxtBold(`>${tool.ebpm.th}EBPM warning []`, getEffectiveBPMTime(diff._data, mapSettings)));

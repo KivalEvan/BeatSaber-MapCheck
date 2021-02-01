@@ -297,7 +297,15 @@ async function UICreateDiffInfo(charName, diff) {
     let diffName = diffRename[diff._difficulty] || diff._difficulty;
     let offset = 0;
     let BPMChanges;
-    let customColor = {};
+    let customColor = {
+        _colorLeft: colorScheme[envColor[map.info._environmentName]]._colorLeft,
+        _colorRight: colorScheme[envColor[map.info._environmentName]]._colorRight,
+        _envColorLeft: colorScheme[envColor[map.info._environmentName]]._envColorLeft,
+        _envColorRight: colorScheme[envColor[map.info._environmentName]]._envColorRight,
+        _envColorLeftBoost: null,
+        _envColorRightBoost: null,
+        _obstacleColor: colorScheme[envColor[map.info._environmentName]]._obstacleColor
+    };
     let hasChroma = false;
     if (diff._customData) {
         if (diff._customData._difficultyLabel && diff._customData._difficultyLabel !== '')
@@ -316,22 +324,18 @@ async function UICreateDiffInfo(charName, diff) {
         if (diff._customData._colorLeft) {
             customColor._colorLeft = rgbaToHex(diff._customData._colorLeft);
         }
-        else customColor._colorLeft = colorScheme[envColor[map.info._environmentName]]._colorLeft;
         
         if (diff._customData._colorRight) {
             customColor._colorRight = rgbaToHex(diff._customData._colorRight);
         }
-        else customColor._colorRight = colorScheme[envColor[map.info._environmentName]]._colorRight;
         
         if (diff._customData._envColorLeft) {
             customColor._envColorLeft = rgbaToHex(diff._customData._envColorLeft);
         }
-        else customColor._envColorLeft = colorScheme[envColor[map.info._environmentName]]._envColorLeft;
         
         if (diff._customData._envColorRight) {
             customColor._envColorRight = rgbaToHex(diff._customData._envColorRight);
         }
-        else customColor._envColorRight = colorScheme[envColor[map.info._environmentName]]._envColorRight;
         
         // tricky stuff
         // need to display both boost
@@ -370,7 +374,6 @@ async function UICreateDiffInfo(charName, diff) {
         if (diff._customData._obstacleColor) {
             customColor._obstacleColor = rgbaToHex(diff._customData._obstacleColor);
         }
-        else customColor._obstacleColor = colorScheme[envColor[map.info._environmentName]]._obstacleColor;
     }
     if (diff._data._customData) {
         if (diff._data._customData._BPMChanges) BPMChanges = diff._data._customData._BPMChanges;
@@ -449,14 +452,16 @@ async function UICreateDiffInfo(charName, diff) {
         class: 'diff-dot-container'
     });
     for (const k in customColor) {
-        let colorDot = $('<span>', {
-            class: 'diff-dot',
-            id: k,
-            css: {
-                'background-color': customColor[k]
-            }
-        });
-        colorDot.appendTo(diffDotContainer);
+        if (customColor[k] !== null) {
+            let colorDot = $('<span>', {
+                class: 'diff-dot',
+                id: k,
+                css: {
+                    'background-color': customColor[k]
+                }
+            });
+            colorDot.appendTo(diffDotContainer);
+        }
     }
     diffDotContainer.appendTo(diffHeader);
 

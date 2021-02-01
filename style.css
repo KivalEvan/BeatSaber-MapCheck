@@ -22,14 +22,14 @@ body {
     position: relative;
     margin-left: 200px;
     height: 200px;
-    max-height: 200px;
-    overflow: auto;
 }
 .info:after {
     clear: both;
 }
 .metadata {
     display: none;
+    max-height: 200px;
+    overflow: auto;
     padding: 0 0.75em;
 }
 #songname {
@@ -45,13 +45,15 @@ body {
     font-size: 1em;
 }
 .input {
-    height: 100%;
     padding: 0 0.75em;
 }
-.inputfile {
+.input label, .input input {
+    padding: 0;
+}
+#input-file {
     display: none;
 }
-.inputbutton {
+#input-button {
     border: 1px solid #aaa;
     display: inline-block;
     padding: 6px 12px;
@@ -63,12 +65,11 @@ body {
 }
 #subtitle {
     font-size: 1.5em;
-    margin-top: 0.25em;
 }
 #watermark {
     position: absolute;
     bottom: 4px;
-    right: 4px;
+    right: 20px;
     color: #777;
 }
 .loading {
