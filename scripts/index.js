@@ -8,7 +8,7 @@ $('#watermark').text(`${watermark} - ${version}`)
 // ui stuff
 if (flag.tool.dd) $('#dd').prop('checked', true);
 if (flag.tool.hb.staircase) $('#hbstair').prop('checked', true);
-if (flag.tool.vb) $('#vblock').prop('checked', true);
+if (flag.tool.vb) $('#vb').prop('checked', true);
 if (flag.tool.shrAngle) $('#shrangle').prop('checked', true);
 
 $('#ebpm').val(tool.ebpm.th);
@@ -31,9 +31,10 @@ $.urlParam = function(name) {
 }
 
 if ($.urlParam('url') !== null) {
-    // what's url sanitisation anyway
-    $('.inputfile').prop('disabled', true);
-    downloadMap($.urlParam('url'));
+    downloadFromURL($.urlParam('url'));
+}
+else if ($.urlParam('id') !== null) {
+    downloadFromID($.urlParam('id'));
 }
 
 function toMMSS(num) {

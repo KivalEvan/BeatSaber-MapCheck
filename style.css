@@ -74,7 +74,7 @@ body {
 }
 .loading {
     position: relative;
-    background-color:#111;
+    background-color: #111;
     width: 100%;
 }
 #loadingbar {

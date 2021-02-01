@@ -4,28 +4,52 @@
 
 $('#input-url').keydown(function(event) {
     if (event.which == 13) {
-        downloadFromURL(this.value);
+        if (this.value !== '') {
+            downloadFromURL(this.value);
+        }
     }
 });
 $('#input-id').keydown(function(event) {
     if (event.which == 13) {
-        downloadFromID(this.value);
+        if (this.value !== '') {
+            downloadFromID(this.value);
+        }
     }
 });
 $('#input-file').change(readFile);
 
-function downloadFromURL(input) {
+async function downloadFromURL(input) {
+    $('.input').prop('disabled', true);
+    UILoadingStatus('info', 'Requesting download from link', 0);
+    
     let url = sanitizeURL(input);
-    downloadMap(url);
-}
-
-function downloadFromID(input) {
-    let url = 'https://beatsaver.com/api/download/key/' + sanitizeBeatSaverID(input);
+    console.log(`downloading from ${url}`);
     try {
-        let res = downloadMap(url);
+        // apparently i need cors proxy
+        let res = await downloadMap('https://cors-anywhere.herokuapp.com/' + url);
         extractZip(res);
     } catch(err) {
+        $('.input').prop('disabled', false);
+        UILoadingStatus('warn', err, 100);
         console.error(err);
+        setTimeout(function(){ if(!flag.loading) $('#loadingbar').css('background-color', '#111').css('width', '0%'); }, 3000);
+    }
+}
+
+async function downloadFromID(input) {
+    $('.input').prop('disabled', true);
+    UILoadingStatus('info', 'Requesting download from BeatSaver', 0);
+
+    console.log(`downloading from BeatSaver ID ${sanitizeBeatSaverID(input)}`);
+    let url = 'https://beatsaver.com/api/download/key/' + sanitizeBeatSaverID(input);
+    try {
+        let res = await downloadMap(url);
+        extractZip(res);
+    } catch(err) {
+        $('.input').prop('disabled', false);
+        UILoadingStatus('warn', err, 100);
+        console.error(err);
+        setTimeout(function(){ if(!flag.loading) $('#loadingbar').css('background-color', '#111').css('width', '0%'); }, 3000);
     }
 }
 
@@ -46,7 +70,6 @@ function sanitizeBeatSaverID(id) {
 }
 
 function downloadMap(url) {
-    console.log('downloading...');
     return new Promise(function(resolve, reject) {
         let xhr = new XMLHttpRequest();
         xhr.open('GET', url, true);
@@ -56,7 +79,7 @@ function downloadMap(url) {
         let startTime = Date.now();
         xhr.onprogress = function(e) {
             xhr.timeout += Date.now() - startTime;
-            UILoadingStatus('info', `Downloading map: ${round(e.loaded / 1024 / 1024, 1)}MB / ${round(e.total / 1024 / 1024, 1)}MB`, e.loaded / e.total * 100);
+            UILoadingStatus('download', `Downloading map: ${round(e.loaded / 1024 / 1024, 1)}MB / ${round(e.total / 1024 / 1024, 1)}MB`, e.loaded / e.total * 100);
         };
 
         xhr.onload = function() {
@@ -64,28 +87,23 @@ function downloadMap(url) {
                 resolve(xhr.response);
             }
             if (xhr.status === 404) {
-                reject('map does not exist');
+                reject('Map does not exist');
             }
             else {
-                reject(`response ${xhr.status}`);
+                reject(xhr.status);
             }
         };
 
         xhr.onerror = function() {
-            reject('error downloading map');
+            reject('Error downloading map');
         };
 
         xhr.ontimeout = function() {
-            reject('connection timeout');
+            reject('Connection timeout');
         };
 
         xhr.send();
     });
-}
-
-function UIToggleInput() {
-    $('.input').css('display', 'block').prop('disabled', true);
-    $('.metadata').css('display', 'none');
 }
 
 function readFile() {
@@ -105,9 +123,11 @@ function readFile() {
 async function extractZip(data) {
     let mapZip = new JSZip();
     try {
+        flag.loading = true;
         mapZip = await JSZip.loadAsync(data);
         await loadMap(mapZip);
     } catch(err) {
+        flag.loading = false;
         $('.settings').prop('disabled', false);
         $('.input').css('display', 'block');
         $('.metadata').css('display', 'none');
@@ -281,6 +301,9 @@ function UILoadingStatus(status, txt, progress = 100) {
     if (status === 'info') {
         $('#loadingbar').css('background-color', '#4060a0');
     }
+    if (status === 'download') {
+        $('#loadingbar').css('background-color', '#30a030');
+    }
     if (status === 'warn') {
         $('#loadingbar').css('background-color', '#cc0000');
     }
@@ -337,7 +360,7 @@ function UIPopulateDiffSelect(mapSet) {
 }
 
 // i could just make a table but i dont want to
-async function UICreateDiffSet(charName) {
+function UICreateDiffSet(charName) {
     let charRename = modeRename[charName] || charName;
 
     $('#stats').append([$('<div>', {
@@ -359,8 +382,8 @@ async function UICreateDiffInfo(charName, diff) {
         _colorRight: colorScheme[envColor[map.info._environmentName]]._colorRight,
         _envColorLeft: colorScheme[envColor[map.info._environmentName]]._envColorLeft,
         _envColorRight: colorScheme[envColor[map.info._environmentName]]._envColorRight,
-        _envColorLeftBoost: null,
-        _envColorRightBoost: null,
+        _envColorLeftBoost: colorScheme[envColor[map.info._environmentName]]._envColorLeftBoost || null,
+        _envColorRightBoost: colorScheme[envColor[map.info._environmentName]]._envColorRightBoost || null,
         _obstacleColor: colorScheme[envColor[map.info._environmentName]]._obstacleColor
     };
     let hasChroma = false;
@@ -377,7 +400,6 @@ async function UICreateDiffInfo(charName, diff) {
         if (!hasChroma && diff._customData._requirements)
             hasChroma = diff._customData._requirements.includes('Chroma');
         
-        // lol this isnt really great but it's the only effective and less error prone
         if (diff._customData._colorLeft) {
             customColor._colorLeft = rgbaToHex(diff._customData._colorLeft);
         }
@@ -395,34 +417,23 @@ async function UICreateDiffInfo(charName, diff) {
         }
         
         // tricky stuff
-        // need to display both boost
+        // need to display both boost if one exist
         let envBL, envBR, envBoost = false;
         if (diff._customData._envColorLeftBoost) {
             envBL = rgbaToHex(diff._customData._envColorLeftBoost);
             envBoost = true;
         }
         else {
-            if (colorScheme[envColor[map.info._environmentName]]._envColorLeftBoost) {
-                envBL = colorScheme[envColor[map.info._environmentName]]._envColorLeftBoost;
-                envBoost = true;
-            }
-            else {
-                envBL = customColor._colorLeft;
-            }
+            envBL = colorScheme[envColor[map.info._environmentName]]._envColorLeftBoost || customColor._colorLeft;
         }
         if (diff._customData._envColorRightBoost) {
             envBR = rgbaToHex(diff._customData._envColorRightBoost);
             envBoost = true;
         }
         else {
-            if (colorScheme[envColor[map.info._environmentName]]._envColorRightBoost) {
-                envBR = colorScheme[envColor[map.info._environmentName]]._envColorRightBoost;
-                envBoost = true;
-            }
-            else {
-                envBR = customColor._colorRight;
-            }
+            envBR = colorScheme[envColor[map.info._environmentName]]._envColorRightBoost || customColor._colorRight;
         }
+
         if (envBoost) {
             customColor._envColorLeftBoost = envBL;
             customColor._envColorRightBoost = envBR;
