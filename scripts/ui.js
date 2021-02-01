@@ -263,6 +263,7 @@ $('#vboptimal').click(function() {
     }
 });
 $('#applythis').click(async function() {
+    UILoadingStatus('', `Re-analysing ${tool.select.char} ${tool.select.diff}`);
     let char = map.info._difficultyBeatmapSets.find(c => c._beatmapCharacteristicName === tool.select.char);
     let diff = char._difficultyBeatmaps.find(d => d._difficulty === tool.select.diff);
     let mapObj = {
@@ -270,12 +271,13 @@ $('#applythis').click(async function() {
     }
     mapObj.diff = tool.select.diff;
     mapObj.text = await mapTool(tool.select.char, diff);
-    let arr = [mapObj];
-
+    
+    let arr = [mapObj]; // this is dumb
     map.analysis = map.analysis.map(ma => arr.find(obj => obj.mapSet === ma.mapSet && obj.diff === ma.diff) || ma);
     UIOutputDisplay(tool.select.char, tool.select.diff);
 });
 $('#applyall').click(async function() {
+    UILoadingStatus('', `Re-analysing all difficulties`);
     map.analysis = [];
     for (let i = 0, len = map.set.length; i < len; i++) {
         let mapDiff = map.set[i]._difficultyBeatmaps;
