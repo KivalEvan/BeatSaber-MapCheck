@@ -86,7 +86,7 @@ function sanitizeURL(url) {
 function sanitizeBeatSaverID(id) {
     let regexID = /^[0-9a-fA-F]+$/;
     id = id.trim();
-    if (/^!bsr/.test(id)) {
+    if (/^!bsr /.test(id)) {
         id = id.replace('!bsr ', '');
     }
     if (regexID.test(id)) {
