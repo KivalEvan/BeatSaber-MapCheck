@@ -23,7 +23,7 @@ $('#vb-min-beat').val(0);
 $('#vb-max').val(tool.vb.max * 1000);
 $('#vb-max-beat').val(0);
 $('#beatprec').val(tool.beatPrec.join(' '));
-$('#songduration').text(toMMSS(map.audio.dur));
+$('#song-duration').text(toMMSS(map.audio.dur));
 
 $.urlParam = function(name) {
     var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);

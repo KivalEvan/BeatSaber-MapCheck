@@ -16,12 +16,12 @@
       </div>
       <div class="info">
         <div class="metadata">
-          <span id="songname" title="Song Name"></span>
-          <span id="songsubname" title="Song Subname"></span><br>
-          <span id="songauthor" title="Song Author"></span><br>
-          <span id="songbpm" title="Song BPM"></span><br>
-          <span id="songduration" title="Song Duration"></span><br><br>
-          <span id="levelauthor" title="Level Author"></span><br>
+          <span id="song-name" title="Song Name"></span>
+          <span id="song-subname" title="Song Subname"></span><br>
+          <span id="song-author" title="Song Author"></span><br>
+          <span id="song-bpm" title="Song BPM"></span><br>
+          <span id="song-duration" title="Song Duration"></span><br><br>
+          <span id="level-author" title="Level Author"></span><br>
           <span id="environment" title="Environment"></span><br>
         </div>
         <div class="input">
@@ -53,25 +53,31 @@
           <label for="ebpm">Effective BPM threshold:</label>
           <input type="number" class="settings" id="ebpm" name="ebpm" min="0">
           <label for="ebpms">(swing):</label>
-          <input type="number" class="settings" id="ebpms" name="ebpms" min="0"><br>
+          <input type="number" class="settings" id="ebpms" name="ebpms" min="0">
+          <br>
           <label for="beatprec">Acceptable beat precision:</label>
-          <input type="text" class="settings" id="beatprec" name="beatprec" placeholder="4 3"><br>
+          <input type="text" class="settings" id="beatprec" name="beatprec" placeholder="4 3">
+          <br>
           <input type="checkbox" class="settings" id="hb-stair" name="hb-stair">
-          <label for="hb-stair">Hitbox staircase</label><br>
+          <label for="hb-stair">Hitbox staircase</label>
+          <br>
           <input type="checkbox" class="settings" id="shrangle" name="shrangle">
           <label for="shrangle">Shrado angle</label><br>
           <label for="shrangle-max">max time (ms):</label>
           <input type="number" class="settings" id="shrangle-max" name="shrangle-max" min="0">
           <label for="shrangle-max-beat">(beat):</label>
-          <input type="number" class="settings" id="shrangle-max-beat" name="shrangle-max-beat" min="0" step="0.125"><br>
+          <input type="number" class="settings" id="shrangle-max-beat" name="shrangle-max-beat" min="0" step="0.125">
+          <br>
           <input type="checkbox" class="settings" id="speedpause" name="speedpause">
           <label for="speedpause">Speed pause</label><br>
           <label for="speedpause-max">max time (ms):</label>
           <input type="number" class="settings" id="speedpause-max" name="speedpause-max" min="0">
           <label for="speedpause-max-beat">(beat):</label>
-          <input type="number" class="settings" id="speedpause-max-beat" name="speedpause-max-beat" min="0" step="0.125"><br>
+          <input type="number" class="settings" id="speedpause-max-beat" name="speedpause-max-beat" min="0" step="0.125">
+          <br>
           <input type="checkbox" class="settings" id="dd" name="dd">
-          <label for="dd">Double-directional</label><br>
+          <label for="dd">Double-directional</label>
+          <br>
           <input type="checkbox" class="settings" id="vb-note" name="vb-note">
           <label for="vb-note">Vision block</label><br>
           <label for="vb-min">min time (ms):</label>
@@ -81,10 +87,11 @@
           <label for="vb-max">max time (ms):</label>
           <input type="number" class="settings" id="vb-max" name="vb-max" min="0">
           <label for="vb-max-beat">(beat):</label>
-          <input type="number" class="settings" id="vb-max-beat" name="vb-max-beat" min="0" step="0.125"><br>
+          <input type="number" class="settings" id="vb-max-beat" name="vb-max-beat" min="0" step="0.125">
+          <br>
           <input type="button" class="settings" id="vb-hjd" value="Set by HJD">
-          <input type="button" class="settings" id="vb-optimal" value="Set by optimal reaction time"><br>
-          <hr>
+          <input type="button" class="settings" id="vb-optimal" value="Set by optimal reaction time">
+          <br><hr>
           Apply changes to:
           <input type="button" id="apply-this" value="This difficulty" disabled>
           <input type="button" id="apply-all" value="All difficulties" disabled>

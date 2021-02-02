@@ -32,7 +32,7 @@ async function loadMap(mapZip) {
             await audioContext.decodeAudioData(audioBuffer)
             .then(function(buffer) {
                 map.audio.duration = buffer.duration;
-                $('#songduration').text(toMMSS(map.audio.duration));
+                $('#song-duration').text(toMMSS(map.audio.duration));
                 flag.map.load.audioAudio = true;
             })
             .catch(function(err) {
@@ -221,7 +221,7 @@ function calcMapDuration(notes, obstacles, bpm) {
 
     if (!map.audio.duration) map.audio.duration = dur;
     else if (map.audio.duration < dur) map.audio.duration = dur;
-    $('#songduration').text(`${toMMSS(map.audio.duration)} ⚠️ no audio, using map duration`);
+    $('#song-duration').text(`${toMMSS(map.audio.duration)} ⚠️ no audio, using map duration`);
 }
 
 function mapUpdateBPMRange(min, max) {

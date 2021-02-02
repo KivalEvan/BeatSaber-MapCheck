@@ -32,16 +32,16 @@ body {
     overflow: auto;
     padding: 0 0.75em;
 }
-#songname {
+#song-name {
     font-size: 2.5em;
 }
-#songsubname {
+#song-subname {
     font-size: 1.25em;
 }
-#songauthor {
+#song-author {
     font-size: 1.5em;
 }
-#levelauthor {
+#level-author {
     font-size: 1em;
 }
 .input {

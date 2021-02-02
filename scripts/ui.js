@@ -225,9 +225,9 @@ $('#shrangle-max-beat').change(function() {
 // speed pause
 $('#speedpause').click(function() {
     if ($(this).prop("checked")) {
-        flag.tool.shrAngle = true;
+        flag.tool.speedPause = true;
     } else {
-        flag.tool.shrAngle = false;
+        flag.tool.speedPause = false;
     }
 });
 $('#speedpause-max').change(function() {
@@ -391,11 +391,11 @@ function UILoadingStatus(status, txt, progress = 100) {
 }
 
 function UIUpdateMapInfo() {
-    $('#songauthor').text(map.info._songAuthorName);
-    $('#songname').text(map.info._songName);
-    $('#songsubname').text(map.info._songSubName);
-    $('#songbpm').text(`${round(map.info._beatsPerMinute, 3)} BPM`);
-    $('#levelauthor').text(`Mapped by  ${map.info._levelAuthorName}`);
+    $('#song-author').text(map.info._songAuthorName);
+    $('#song-name').text(map.info._songName);
+    $('#song-subname').text(map.info._songSubname);
+    $('#song-bpm').text(`${round(map.info._beatsPerMinute, 3)} BPM`);
+    $('#level-author').text(`Mapped by  ${map.info._levelAuthorName}`);
     $('#environment').text(`${envName[map.info._environmentName]} Environment`);
     
     $('.input').css('display', 'none');
@@ -404,7 +404,7 @@ function UIUpdateMapInfo() {
 
 // case for multiple BPM map
 function UIUpdateMapInfoBPM(min, max) {
-    $('#songbpm').text('(' + round(map.info._beatsPerMinute, 3) + ') ' + round(min, 3) + '-' + round(max, 3) + 'BPM' + (flag.map.bpm.odd ? ' ⚠️ inconsistent BPM between difficulty.' : ''));
+    $('#song-bpm').text('(' + round(map.info._beatsPerMinute, 3) + ') ' + round(min, 3) + '-' + round(max, 3) + 'BPM' + (flag.map.bpm.odd ? ' ⚠️ inconsistent BPM between difficulty.' : ''));
 }
 
 function UIPopulateCharSelect() {
