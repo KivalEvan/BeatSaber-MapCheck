@@ -132,6 +132,7 @@ function downloadMap(url) {
 }
 
 function readFile() {
+    UILoadingStatus('info', 'Reading file input', 0);
     let file = this.files[0];
     const fr = new FileReader();
     if (file.name.substr(-4) === '.zip' || file.name.substr(-4) === '.bsl') {
@@ -145,6 +146,7 @@ function readFile() {
 }
 
 async function extractZip(data) {
+    UILoadingStatus('info', 'Extracting zip', 0);
     let mapZip = new JSZip();
     try {
         flag.loading = true;

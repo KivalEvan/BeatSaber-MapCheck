@@ -7,9 +7,11 @@
 ### Changed
 * Code refactored
 * Supported .bsl file
+* Tweaked UI including QOL stuff
 
 ### Fixed
 * Colour dot not showing up when there is no custom data
+* Attempted to find outside playable object when there is no audio
 
 ## v1.2.3 [2021-01-29]
 ### Fixed

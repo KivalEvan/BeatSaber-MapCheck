@@ -1,7 +1,7 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #000;
-    background: #222;
+    background: #171717;
     display: block;
     margin: auto;
     max-width: 1200px;
@@ -80,7 +80,7 @@ body {
 }
 .loading {
     position: relative;
-    background-color: #111;
+    background-color: #222;
     width: 100%;
 }
 #loadingbar {

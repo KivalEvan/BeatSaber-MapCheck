@@ -187,11 +187,11 @@ async function mapTool(charName, diff) {
     arr.push(outTxtBold(`>${tool.ebpm.thSwing}EBPM (swing) warning []`, getEffectiveBPMSwingTime(diff._data, mapSettings)));
 
     arr.push(outTxtBold('Note(s) before start time', findOutStartNote(diff._data, mapSettings)));
-    arr.push(outTxtBold('Note(s) after end time', findOutEndNote(diff._data, mapSettings)));
+    if (flag.map.load.audio) arr.push(outTxtBold('Note(s) after end time', findOutEndNote(diff._data, mapSettings)));
     arr.push(outTxtBold('Event(s) before start time', findOutStartEvent(diff._data, mapSettings)));
-    arr.push(outTxtBold('Event(s) after end time', findOutEndEvent(diff._data, mapSettings)));
+    if (flag.map.load.audio) arr.push(outTxtBold('Event(s) after end time', findOutEndEvent(diff._data, mapSettings)));
     arr.push(outTxtBold('Obstacle(s) before start time', findOutStartObstacle(diff._data, mapSettings)));
-    arr.push(outTxtBold('Obstacle(s) after end time', findOutEndObstacle(diff._data, mapSettings)));
+    if (flag.map.load.audio) arr.push(outTxtBold('Obstacle(s) after end time', findOutEndObstacle(diff._data, mapSettings)));
 
     arr.push(outTxtBold('Zero width/duration wall []', detectZeroWall(diff._data, mapSettings)));
     arr.push(outTxtBold('Invalid wall []', detectInvalidWall(diff._data, mapSettings)));
