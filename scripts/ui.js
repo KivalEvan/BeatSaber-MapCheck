@@ -3,14 +3,14 @@
     it's fairly obvious; creating, manipulating, and deleting DOM element with JQuery */
 
 $('#input-url').keydown(function(event) {
-    if (event.which == 13) {
-        if (this.value !== '') {
+    if (event.which === 13) {
+        if (sanitizeURL(this.value) !== '') {
             downloadFromURL(this.value);
         }
     }
 });
 $('#input-id').keydown(function(event) {
-    if (event.which == 13) {
+    if (event.which === 13) {
         if (this.value !== '') {
             downloadFromID(this.value);
         }
@@ -19,10 +19,16 @@ $('#input-id').keydown(function(event) {
 $('#input-file').change(readFile);
 
 async function downloadFromURL(input) {
+    // sanitize & validate url
+    let url = sanitizeURL(input);
+    if (url === '') {
+        UILoadingStatus('info', 'URL is not valid', 0);
+        return;
+    }
+
     $('.input').prop('disabled', true);
     UILoadingStatus('info', 'Requesting download from link', 0);
     
-    let url = sanitizeURL(input);
     console.log(`downloading from ${url}`);
     try {
         // apparently i need cors proxy
@@ -31,17 +37,23 @@ async function downloadFromURL(input) {
     } catch(err) {
         $('.input').prop('disabled', false);
         UILoadingStatus('warn', err, 100);
-        console.error(err);
         setTimeout(function(){ if(!flag.loading) $('#loadingbar').css('background-color', '#111').css('width', '0%'); }, 3000);
     }
 }
 
 async function downloadFromID(input) {
+    // sanitize & validate id
+    let id = sanitizeBeatSaverID(input);
+    if (id === '') {
+        UILoadingStatus('info', 'ID is not valid', 0);
+        return;
+    }
+
     $('.input').prop('disabled', true);
     UILoadingStatus('info', 'Requesting download from BeatSaver', 0);
 
-    console.log(`downloading from BeatSaver ID ${sanitizeBeatSaverID(input)}`);
-    let url = 'https://beatsaver.com/api/download/key/' + sanitizeBeatSaverID(input);
+    console.log(`downloading from BeatSaver for map ID ${id}`);
+    let url = 'https://beatsaver.com/api/download/key/' + id;
     try {
         let res = await downloadMap(url);
         extractZip(res);
@@ -63,10 +75,13 @@ function sanitizeURL(url) {
 
 function sanitizeBeatSaverID(id) {
     id = id.trim();
-    if (/^!bsr /.test(id)) {
+    if (/^!bsr/.test(id)) {
         id = id.replace('!bsr ', '');
     }
-    return id;
+    if (/^[0-9a-fA-F]+$/.test(id)) {
+        return id;
+    }
+    return '';
 }
 
 function downloadMap(url) {
@@ -85,11 +100,12 @@ function downloadMap(url) {
         xhr.onload = function() {
             if (xhr.status === 200) {
                 resolve(xhr.response);
-            }
-            if (xhr.status === 404) {
-                reject('Map does not exist');
+            } else if (xhr.status === 404) {
+                reject('Error 404: Map does not exist');
+            } else if (xhr.status === 403) {
+                reject('Error 403: Forbidden');
             } else {
-                reject(xhr.status);
+                reject(`Error ${xhr.status}`);
             }
         };
 
@@ -314,7 +330,7 @@ function UILoadingStatus(status, txt, progress = 100) {
     } else if (status === 'error') {
         $('#loadingbar').css('background-color', '#cc0000');
     }
-    $('#loadingbar').css('width', `${progress}%`);
+    if (progress !== -1) $('#loadingbar').css('width', `${progress}%`);
     $('#loadingtext').text(txt);
 }
 
