@@ -53,7 +53,7 @@ const tool = {
 
     // misc
     maxShrAngle: 0.175,
-    maxSpeedPause: 0.15,
+    maxSpeedPause: 0.075,
 
     // part where no one can control... yet
     stack: 0.01,

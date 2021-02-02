@@ -49,9 +49,10 @@
           <select class="settings" id="mapset"><option disabled selected>-</option></select><br>
           <label for="mapdiff">Difficulty select:</label>
           <select class="settings" id="mapdiff"><option disabled selected>-</option></select><br>
+          <hr>
           <label for="ebpm">Effective BPM threshold:</label>
-          <input type="number" class="settings" id="ebpm" name="ebpm" min="0"><br>
-          <label for="ebpms">Effective BPM (swing) threshold:</label>
+          <input type="number" class="settings" id="ebpm" name="ebpm" min="0">
+          <label for="ebpms">(swing):</label>
           <input type="number" class="settings" id="ebpms" name="ebpms" min="0"><br>
           <label for="beatprec">Acceptable beat precision:</label>
           <input type="text" class="settings" id="beatprec" name="beatprec" placeholder="4 3"><br>
@@ -81,9 +82,12 @@
           <input type="number" class="settings" id="vb-max" name="vb-max" min="0">
           <label for="vb-max-beat">(beat):</label>
           <input type="number" class="settings" id="vb-max-beat" name="vb-max-beat" min="0" step="0.125"><br>
-          <input type="button" class="settings" id="vb-hjd" value="Set by HJD"><input type="button" class="settings" id="vb-optimal" value="Set by optimal reaction time"><br>
-          Apply changes to:<br>
-          <input type="button" id="apply-this" value="This difficulty" disabled><input type="button" id="apply-all" value="All difficulties" disabled>
+          <input type="button" class="settings" id="vb-hjd" value="Set by HJD">
+          <input type="button" class="settings" id="vb-optimal" value="Set by optimal reaction time"><br>
+          <hr>
+          Apply changes to:
+          <input type="button" id="apply-this" value="This difficulty" disabled>
+          <input type="button" id="apply-all" value="All difficulties" disabled>
         </div>
         <div id="output-container">
           <div id="output-box">No output.</div>
