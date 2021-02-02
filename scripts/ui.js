@@ -168,6 +168,8 @@ $('#mapdiff').change(function() {
     tool.select.diff = this.value;
     UIOutputDisplay(tool.select.char, tool.select.diff);
 });
+
+// effective bpm
 $('#ebpm').change(function() {
     tool.ebpm.th = Math.abs(this.value);
     $('#ebpm').val(tool.ebpm.th);
@@ -176,19 +178,25 @@ $('#ebpms').change(function() {
     tool.ebpm.thSwing = Math.abs(this.value);
     $('#ebpms').val(tool.ebpm.thSwing);
 });
+
+// beat precision
 $('#beatprec').change(function() {
     tool.beatPrec = this.value.split(' ')
     .map(function(x) {return parseInt(x)})
     .filter(function(x) {if(x > 0) return !Number.isNaN(x)});
     $('#beatprec').val(tool.beatPrec.join(' '));
 });
-$('#hbstair').click(function() {
+
+// hitbox staircase
+$('#hb-stair').click(function() {
     if ($(this).prop("checked")) {
         flag.tool.hb.staircase = true;
     } else {
         flag.tool.hb.staircase = false;
     }
 });
+
+// shrado angle
 $('#shrangle').click(function() {
     if ($(this).prop("checked")) {
         flag.tool.shrAngle = true;
@@ -196,21 +204,47 @@ $('#shrangle').click(function() {
         flag.tool.shrAngle = false;
     }
 });
-$('#shranglemax').change(function() {
+$('#shrangle-max').change(function() {
     tool.maxShrAngle = round(Math.abs(this.value) / 1000, 3);
-    $('#shranglemax').val(round(tool.maxShrAngle * 1000, 3));
-    if (flag.loaded) $('#shranglemaxbeat').val(round(toBeatTime(tool.maxShrAngle), 3));
+    $('#shrangle-max').val(round(tool.maxShrAngle * 1000, 3));
+    if (flag.loaded) $('#shrangle-max-beat').val(round(toBeatTime(tool.maxShrAngle), 3));
 });
-$('#shranglemaxbeat').change(function() {
+$('#shrangle-max-beat').change(function() {
     if (flag.loaded) {
         let val = round(Math.abs(this.value), 3);
         tool.maxShrAngle = round(toRealTime(val), 3);
-        $('#shranglemax').val(round(tool.maxShrAngle * 1000, 3));
-        $('#shranglemaxbeat').val(val);
+        $('#shrangle-max').val(round(tool.maxShrAngle * 1000, 3));
+        $('#shrangle-max-beat').val(val);
     } else {
-        $('#shranglemaxbeat').val(0);
+        $('#shrangle-max-beat').val(0);
     }
 });
+
+// speed pause
+$('#speedpause').click(function() {
+    if ($(this).prop("checked")) {
+        flag.tool.shrAngle = true;
+    } else {
+        flag.tool.shrAngle = false;
+    }
+});
+$('#speedpause-max').change(function() {
+    tool.maxSpeedPause = round(Math.abs(this.value) / 1000, 3);
+    $('#speedpause-max').val(round(tool.maxSpeedPause * 1000, 3));
+    if (flag.loaded) $('#speedpause-max-beat').val(round(toBeatTime(tool.maxSpeedPause), 3));
+});
+$('#speedpause-max-beat').change(function() {
+    if (flag.loaded) {
+        let val = round(Math.abs(this.value), 3);
+        tool.maxSpeedPause = round(toRealTime(val), 3);
+        $('#speedpause-max').val(round(tool.maxSpeedPause * 1000, 3));
+        $('#speedpause-max-beat').val(val);
+    } else {
+        $('#speedpause-max-beat').val(0);
+    }
+});
+
+// dd
 $('#dd').click(function() {
     if ($(this).prop("checked")) {
         flag.tool.dd = true;
@@ -218,77 +252,81 @@ $('#dd').click(function() {
         flag.tool.dd = false;
     }
 });
-$('#vbnote').click(function() {
+
+// vision block
+$('#vb-note').click(function() {
     if ($(this).prop("checked")) {
         flag.tool.vb.note = true;
     } else {
         flag.tool.vb.note = false;
     }
 });
-$('#vbmin').change(function() {
+$('#vb-min').change(function() {
     tool.vb.min = round(Math.abs(this.value) / 1000, 3);
-    $('#vbmin').val(round(tool.vb.min * 1000));
-    if (flag.loaded) $('#vbminbeat').val(round(toBeatTime(tool.vb.min), 3));
+    $('#vb-min').val(round(tool.vb.min * 1000));
+    if (flag.loaded) $('#vb-min-beat').val(round(toBeatTime(tool.vb.min), 3));
     if (tool.vb.min > tool.vb.max) {
         tool.vb.max = tool.vb.min;
-        $('#vbmax').val(round(tool.vb.min * 1000));
-        if (flag.loaded) $('#vbmaxbeat').val(round(toBeatTime(tool.vb.min), 3));
+        $('#vb-max').val(round(tool.vb.min * 1000));
+        if (flag.loaded) $('#vb-max-beat').val(round(toBeatTime(tool.vb.min), 3));
     }
 });
-$('#vbminbeat').change(function() {
+$('#vb-min-beat').change(function() {
     if (flag.loaded) {
         let val = round(Math.abs(this.value), 3);
         tool.vb.min = round(toRealTime(val), 3);
-        $('#vbmin').val(round(tool.vb.min * 1000));
-        $('#vbminbeat').val(val);
+        $('#vb-min').val(round(tool.vb.min * 1000));
+        $('#vb-min-beat').val(val);
         if (tool.vb.min > tool.vb.max) {
             tool.vb.max = tool.vb.min;
-            $('#vbmax').val(round(tool.vb.min * 1000));
-            $('#vbmaxbeat').val(val);
+            $('#vb-max').val(round(tool.vb.min * 1000));
+            $('#vb-max-beat').val(val);
         }
     } else {
-        $('#vbminbeat').val(0);
+        $('#vb-min-beat').val(0);
     }
 });
-$('#vbmax').change(function() {
+$('#vb-max').change(function() {
     tool.vb.max = round(Math.abs(this.value) / 1000, 3);
-    $('#vbmax').val(round(tool.vb.max * 1000));
-    if (flag.loaded) $('#vbmaxbeat').val(round(toBeatTime(tool.vb.max), 3));
+    $('#vb-max').val(round(tool.vb.max * 1000));
+    if (flag.loaded) $('#vb-max-beat').val(round(toBeatTime(tool.vb.max), 3));
 });
-$('#vbmaxbeat').change(function() {
+$('#vb-max-beat').change(function() {
     if (flag.loaded) {
         let val = round(Math.abs(this.value), 3);
         tool.vb.max = round(toRealTime(val), 3);
-        $('#vbmax').val(round(tool.vb.max * 1000));
-        $('#vbmaxbeat').val(val);
+        $('#vb-max').val(round(tool.vb.max * 1000));
+        $('#vb-max-beat').val(val);
     } else {
-        $('#vbmaxbeat').val(0);
+        $('#vb-max-beat').val(0);
     }
 });
-$('#vbhjd').click(function() {
+$('#vb-hjd').click(function() {
     if (flag.loaded) {
         let char = map.info._difficultyBeatmapSets.find(c => c._beatmapCharacteristicName === tool.select.char);
         let diff = char._difficultyBeatmaps.find(d => d._difficulty === tool.select.diff);
         let hjd = round(getHalfJumpDuration(map.info._beatsPerMinute, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset), 3);
         tool.vb.min = round(60 / map.info._beatsPerMinute * 0.25, 3);
         tool.vb.max = round(60 / map.info._beatsPerMinute * hjd, 3);
-        $('#vbmin').val(tool.vb.min * 1000);
-        $('#vbmax').val(tool.vb.max * 1000);
-        $('#vbminbeat').val(0.25);
-        $('#vbmaxbeat').val(hjd);
+        $('#vb-min').val(tool.vb.min * 1000);
+        $('#vb-max').val(tool.vb.max * 1000);
+        $('#vb-min-beat').val(0.25);
+        $('#vb-max-beat').val(hjd);
     }
 });
-$('#vboptimal').click(function() {
+$('#vb-optimal').click(function() {
     tool.vb.min = 0.1;
     tool.vb.max = 0.5;
-    $('#vbmin').val(tool.vb.min * 1000);
-    $('#vbmax').val(tool.vb.max * 1000);
+    $('#vb-min').val(tool.vb.min * 1000);
+    $('#vb-max').val(tool.vb.max * 1000);
     if (flag.loaded) {
-        $('#vbminbeat').val(round(toBeatTime(tool.vb.min), 3));
-        $('#vbmaxbeat').val(round(toBeatTime(tool.vb.max), 3));
+        $('#vb-min-beat').val(round(toBeatTime(tool.vb.min), 3));
+        $('#vb-max-beat').val(round(toBeatTime(tool.vb.max), 3));
     }
 });
-$('#applythis').click(async function() {
+
+// apply changes
+$('#apply-this').click(async function() {
     UILoadingStatus('', `Re-analysing ${tool.select.char} ${tool.select.diff}`);
     let char = map.info._difficultyBeatmapSets.find(c => c._beatmapCharacteristicName === tool.select.char);
     let diff = char._difficultyBeatmaps.find(d => d._difficulty === tool.select.diff);
@@ -302,7 +340,7 @@ $('#applythis').click(async function() {
     map.analysis = map.analysis.map(ma => arr.find(obj => obj.mapSet === ma.mapSet && obj.diff === ma.diff) || ma);
     UIOutputDisplay(tool.select.char, tool.select.diff);
 });
-$('#applyall').click(async function() {
+$('#apply-all').click(async function() {
     UILoadingStatus('', `Re-analysing all difficulties`);
     map.analysis = [];
     for (let i = 0, len = map.set.length; i < len; i++) {
@@ -372,7 +410,7 @@ function UIPopulateCharSelect() {
     for (let i = 0, len = map.info._difficultyBeatmapSets.length; i < len; i++) {
         $('#mapset').append($('<option>', {
             value: map.info._difficultyBeatmapSets[i]._beatmapCharacteristicName,
-            text: map.info._difficultyBeatmapSets[i]._beatmapCharacteristicName
+            text: modeRename[map.info._difficultyBeatmapSets[i]._beatmapCharacteristicName] || map.info._difficultyBeatmapSets[i]._beatmapCharacteristicName
         }));
     }
     tool.select.char = map.info._difficultyBeatmapSets[0]._beatmapCharacteristicName;

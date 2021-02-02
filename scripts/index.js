@@ -7,18 +7,21 @@ $('#watermark').text(`${watermark} - ${version}`)
 
 // ui stuff
 if (flag.tool.dd) $('#dd').prop('checked', true);
-if (flag.tool.hb.staircase) $('#hbstair').prop('checked', true);
-if (flag.tool.vb) $('#vb').prop('checked', true);
+if (flag.tool.hb.staircase) $('#hb-stair').prop('checked', true);
+if (flag.tool.vb.note) $('#vb-note').prop('checked', true);
 if (flag.tool.shrAngle) $('#shrangle').prop('checked', true);
+if (flag.tool.speedPause) $('#speedpause').prop('checked', true);
 
 $('#ebpm').val(tool.ebpm.th);
 $('#ebpms').val(tool.ebpm.thSwing);
-$('#shranglemax').val(tool.maxShrAngle * 1000);
-$('#shranglemaxbeat').val(0);
-$('#vbmin').val(tool.vb.min * 1000);
-$('#vbminbeat').val(0);
-$('#vbmax').val(tool.vb.max * 1000);
-$('#vbmaxbeat').val(0);
+$('#shrangle-max').val(tool.maxShrAngle * 1000);
+$('#shrangle-max-beat').val(0);
+$('#speedpause-max').val(tool.maxSpeedPause * 1000);
+$('#speedpause-max-beat').val(0);
+$('#vb-min').val(tool.vb.min * 1000);
+$('#vb-min-beat').val(0);
+$('#vb-max').val(tool.vb.max * 1000);
+$('#vb-max-beat').val(0);
 $('#beatprec').val(tool.beatPrec.join(' '));
 $('#songduration').text(toMMSS(map.audio.dur));
 

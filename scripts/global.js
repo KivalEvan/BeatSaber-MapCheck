@@ -25,7 +25,8 @@ const flag = {
         vb: {
             note: true
         },
-        shrAngle: false
+        shrAngle: false,
+        speedPause: false
     }
 }
 
@@ -52,6 +53,7 @@ const tool = {
 
     // misc
     maxShrAngle: 0.175,
+    maxSpeedPause: 0.15,
 
     // part where no one can control... yet
     stack: 0.01,

@@ -102,11 +102,11 @@ async function loadMap(mapZip) {
         }
         UIOutputDisplay(tool.select.char, tool.select.diff);
 
-        $('#shranglemaxbeat').val(round(toBeatTime(tool.maxShrAngle), 3));
-        $('#vbminbeat').val(round(toBeatTime(tool.vb.min), 3));
-        $('#vbmaxbeat').val(round(toBeatTime(tool.vb.max), 3));
-        $('#applythis').prop('disabled', false);
-        $('#applyall').prop('disabled', false);
+        $('#shrangle-max-beat').val(round(toBeatTime(tool.maxShrAngle), 3));
+        $('#vb-min-beat').val(round(toBeatTime(tool.vb.min), 3));
+        $('#vb-max-beat').val(round(toBeatTime(tool.vb.max), 3));
+        $('#apply-this').prop('disabled', false);
+        $('#apply-all').prop('disabled', false);
         $('.settings').prop('disabled', false);
         flag.loaded = true;
         UILoadingStatus('info', 'Map successfully loaded!');
