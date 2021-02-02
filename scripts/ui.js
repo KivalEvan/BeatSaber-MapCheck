@@ -4,7 +4,7 @@
 
 $('#input-url').keydown(function(event) {
     if (event.which === 13) {
-        if (sanitizeURL(this.value) !== '') {
+        if (this.value !== '') {
             downloadFromURL(this.value);
         }
     }
@@ -20,9 +20,12 @@ $('#input-file').change(readFile);
 
 async function downloadFromURL(input) {
     // sanitize & validate url
-    let url = sanitizeURL(input);
-    if (url === '') {
-        UILoadingStatus('info', 'URL is not valid', 0);
+    let url;
+    try {
+        url = sanitizeURL(input);
+    } catch(err) {
+        UILoadingStatus('info', err, 0);
+        console.error(err);
         return;
     }
 
@@ -43,9 +46,12 @@ async function downloadFromURL(input) {
 
 async function downloadFromID(input) {
     // sanitize & validate id
-    let id = sanitizeBeatSaverID(input);
-    if (id === '') {
-        UILoadingStatus('info', 'ID is not valid', 0);
+    let id;
+    try {
+        id = sanitizeBeatSaverID(input);
+    } catch(err) {
+        UILoadingStatus('info', err, 0);
+        console.error(err);
         return;
     }
 
@@ -66,22 +72,26 @@ async function downloadFromID(input) {
 }
 
 function sanitizeURL(url) {
+    // regex from stackoverflow from another source
+    let regexURL = /^(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/;
     url = url.trim();
     if (/^http:\/\//.test(url)) {
         url = url.replace('http://', 'https://');
     }
-    return url;
+    if (regexURL.test(url)) {
+        return url;
+    } else throw new Error('Invalid URL');
 }
 
 function sanitizeBeatSaverID(id) {
+    let regexID = /^[0-9a-fA-F]+$/;
     id = id.trim();
     if (/^!bsr/.test(id)) {
         id = id.replace('!bsr ', '');
     }
-    if (/^[0-9a-fA-F]+$/.test(id)) {
+    if (regexID.test(id)) {
         return id;
-    }
-    return '';
+    } else throw new Error('Invalid ID');
 }
 
 function downloadMap(url) {
@@ -321,17 +331,23 @@ $('.accordion').click(function() {
 });
 
 function UILoadingStatus(status, txt, progress = 100) {
-    if (status === 'info') {
-        $('#loadingbar').css('background-color', '#4060a0');
-    } else if (status === 'download') {
-        $('#loadingbar').css('background-color', '#30a030');
-    } else if (status === 'warn') {
-        $('#loadingbar').css('background-color', '#cc0000');
-    } else if (status === 'error') {
-        $('#loadingbar').css('background-color', '#cc0000');
+    switch (status) {
+        case 'info': {
+            $('#loadingbar').css('background-color', '#4060a0');
+            break;
+        }
+        case 'download': {
+            $('#loadingbar').css('background-color', '#30a030');
+            break;
+        }
+        case 'warn': { }
+        case 'error': {
+            $('#loadingbar').css('background-color', '#cc0000');
+            break;
+        }
     }
     if (progress !== -1) $('#loadingbar').css('width', `${progress}%`);
-    $('#loadingtext').text(txt);
+    if (txt !== '') $('#loadingtext').text(txt);
 }
 
 function UIUpdateMapInfo() {
