@@ -2,7 +2,7 @@
 
 # Beat Saber Map Check
 A small project to bring extensive overview of maps,
-aimed to reduce the error before modding & map release.
+aimed to reduce error before modding & release.
 
 by **Kival Evan#5480**
 

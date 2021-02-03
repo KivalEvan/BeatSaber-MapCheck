@@ -84,7 +84,7 @@ function sanitizeURL(url) {
 }
 
 function sanitizeBeatSaverID(id) {
-    let regexID = /^[0-9a-fA-F]+$/;
+    let regexID = /^[0-9a-fA-F]{1,6}$/;
     id = id.trim();
     if (/^!bsr /.test(id)) {
         id = id.replace('!bsr ', '');
@@ -341,6 +341,7 @@ $('#apply-this').click(async function() {
     let arr = [mapObj]; // this is dumb
     map.analysis = map.analysis.map(ma => arr.find(obj => obj.mapSet === ma.mapSet && obj.diff === ma.diff) || ma);
     UIOutputDisplay(tool.select.char, tool.select.diff);
+    UILoadingStatus('', `Re-analysed ${tool.select.char} ${tool.select.diff}`);
 });
 $('#apply-all').click(async function() {
     UILoadingStatus('', `Re-analysing all difficulties`);
@@ -358,6 +359,7 @@ $('#apply-all').click(async function() {
         }
     }
     UIOutputDisplay(tool.select.char, tool.select.diff);
+    UILoadingStatus('', `Re-analysed all difficulties`);
 });
 
 $('.accordion').click(function() {
