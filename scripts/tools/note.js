@@ -212,6 +212,28 @@ function detectDoubleDirectional(diff, mapSettings) {
             }
             else lastBlueDir = note._cutDirection;
             lastBlue = note;
+        } else if (note._type === 3) {
+            // on bottom row
+            if (note._lineLayer === 0) {
+                //on right center
+                if (note._lineIndex === 1) {
+                    lastRedDir = 0
+                }
+                //on left center
+                if (note._lineIndex === 2) {
+                    lastBlueDir = 0
+                }
+            //on top row
+            } else if (note._lineLayer === 2) {
+                //on right center
+                if (note._lineIndex === 1) {
+                    lastRedDir = 1
+                }
+                //on left center
+                if (note._lineIndex === 2) {
+                    lastBlueDir = 1
+                }
+            }
         }
     }
     arr = arr.filter(function(x, i, ary) {

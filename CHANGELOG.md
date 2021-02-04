@@ -6,6 +6,7 @@
 * Ease colour gradient for accordion
 ### Fixed
 * Input error handling when map fails to load
+* Hitbox Staircase now potentially consistently look for the end of note (except dot note, fuck dot note)
 ### Added
 * global.js - for global variable and settings
 * URL support
