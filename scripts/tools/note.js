@@ -491,3 +491,54 @@ function detectStackedNote(diff, mapSettings) {
     });
     return arr;
 }
+
+// im having pain pls help
+function detectSpeedPause(diff, mapSettings) {
+    const { _notes: notes } = diff;
+    const { bpm, bpmc, offset } = mapSettings;
+    let arr = [];
+    let lastRed;
+    let lastRedPause;
+    let lastBlue;
+    let lastBluePause;
+    let maybePauseRed = false;
+    let maybePauseBlue = false;
+    for (let i = 0, len = notes.length; i < len; i++) {
+        const note = notes[i];
+        if (note._type === 0) {
+            if (lastRed) {
+                if (swingNext(note, lastRed)) {
+                    if (isBelowTH(note._time - lastRed._time, tool.maxSpeedPause * 2 + 0.01)) {
+                        if (maybePauseBlue && maybePauseRed && isBelowTH(lastRed._time - lastRedPause._time, tool.maxSpeedPause * 3 + 0.01)) {
+                            arr.push(adjustTime(lastRed._time, bpm, offset, bpmc));
+                        }
+                        maybePauseRed = false;
+                    } else if (!maybePauseRed) {
+                        maybePauseRed = true;
+                        lastRedPause = lastRed;
+                    }
+                    lastRed = note;
+                }
+            }
+            else lastRed = note;
+        }
+        else if (note._type === 1) {
+            if (lastBlue) {
+                if (swingNext(note, lastBlue)) {
+                    if (isBelowTH(note._time - lastBlue._time, tool.maxSpeedPause * 2 + 0.01)) {
+                        if (maybePauseBlue && maybePauseRed && isBelowTH(lastBlue._time - lastBluePause._time, tool.maxSpeedPause * 3 + 0.01)) {
+                            arr.push(adjustTime(lastBlue._time, bpm, offset, bpmc));
+                        }
+                        maybePauseBlue = false;
+                    } else if (!maybePauseBlue) {
+                        maybePauseBlue = true;
+                        lastBluePause = lastBlue;
+                    }
+                    lastBlue = note;
+                }
+            }
+            else lastBlue = note;
+        }
+    }
+    return arr;
+}

@@ -26,7 +26,7 @@ const flag = {
             note: true
         },
         shrAngle: false,
-        speedPause: false
+        speedPause: true
     }
 }
 
@@ -53,7 +53,7 @@ const tool = {
 
     // misc
     maxShrAngle: 0.175,
-    maxSpeedPause: 0.075,
+    maxSpeedPause: 0.125,
 
     // part where no one can control... yet
     stack: 0.01,

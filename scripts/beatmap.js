@@ -205,6 +205,7 @@ async function mapTool(charName, diff) {
     if (tool.beatPrec.length > 0) arr.push(outTxtBold('Off-beat precision []', detectOffPrecision(diff._data, mapSettings)));
     if (flag.tool.hb.staircase) arr.push(outTxtBold('Hitbox staircase []', detectHitboxStaircase(diff._data, mapSettings)));
     if (flag.tool.shrAngle) arr.push(outTxtBold('Shrado angle []', detectShrAngle(diff._data, mapSettings)));
+    if (flag.tool.speedPause) arr.push(outTxtBold('Speed pause []', detectSpeedPause(diff._data, mapSettings)));
     let txt = arr.filter(function(x) {
         return x !== '';
     });

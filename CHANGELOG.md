@@ -3,6 +3,7 @@
 ### Added
 * global.js - for global variable and settings
 * URL support
+* Speed pause detection (EXPERIMENTAL)
 
 ### Changed
 * Code refactored

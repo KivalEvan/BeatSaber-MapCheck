@@ -17,6 +17,7 @@ Visit the [github.io page](https://kivalevan.github.io/BeatSaber-MapCheck/) or d
 * No map modification outside base game support (Mapping Extension, Noodle Extension, etc.)
 
 ## Planned
+* Rewrite swing detection
 * Basic parity check
 * Basic unrankable hit check
 * Bomb reset detection
