@@ -26,7 +26,7 @@ const flag = {
             note: true
         },
         shrAngle: false,
-        speedPause: true
+        speedPause: false
     }
 }
 
