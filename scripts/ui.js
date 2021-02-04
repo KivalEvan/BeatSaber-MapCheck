@@ -2,224 +2,365 @@
     i dunno what to describe here
     it's fairly obvious; creating, manipulating, and deleting DOM element with JQuery */
 
-// I took too long just to figure out how to upload and load zip file
-$('#inputfile').change(readFile);
-
-// need to figure out how to deal with CORS before implementing it to UI
-$.urlParam = function(name) {
-    var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
-    if (results == null) {
-       return null;
+$('#input-url').keydown(function(event) {
+    if (event.which === 13) {
+        if (this.value !== '') {
+            downloadFromURL(this.value);
+        }
     }
-    return decodeURI(results[1]) || null;
+});
+$('#input-id').keydown(function(event) {
+    if (event.which === 13) {
+        if (this.value !== '') {
+            downloadFromID(this.value);
+        }
+    }
+});
+$('#input-file').change(readFile);
+
+async function downloadFromURL(input) {
+    // sanitize & validate url
+    let url;
+    try {
+        url = sanitizeURL(input);
+    } catch(err) {
+        UILoadingStatus('info', err, 0);
+        console.error(err);
+        return;
+    }
+
+    $('.input').prop('disabled', true);
+    UILoadingStatus('info', 'Requesting download from link', 0);
+    
+    console.log(`downloading from ${url}`);
+    try {
+        // apparently i need cors proxy
+        let res = await downloadMap('https://cors-anywhere.herokuapp.com/' + url);
+        extractZip(res);
+    } catch(err) {
+        $('.input').prop('disabled', false);
+        UILoadingStatus('warn', err, 100);
+        setTimeout(function(){ if(!flag.loading) $('#loadingbar').css('background-color', '#111').css('width', '0%'); }, 3000);
+    }
 }
 
-if ($.urlParam('url') != null) {
-    // what's url sanitisation anyway
-    $('.inputfile').prop('disabled', true);
-    downloadMap($.urlParam('url'));
+async function downloadFromID(input) {
+    // sanitize & validate id
+    let id;
+    try {
+        id = sanitizeBeatSaverID(input);
+    } catch(err) {
+        UILoadingStatus('info', err, 0);
+        console.error(err);
+        return;
+    }
+
+    $('.input').prop('disabled', true);
+    UILoadingStatus('info', 'Requesting download from BeatSaver', 0);
+
+    console.log(`downloading from BeatSaver for map ID ${id}`);
+    let url = 'https://beatsaver.com/api/download/key/' + id;
+    try {
+        let res = await downloadMap(url);
+        extractZip(res);
+    } catch(err) {
+        $('.input').prop('disabled', false);
+        UILoadingStatus('warn', err, 100);
+        console.error(err);
+        setTimeout(function(){ if(!flag.loading) $('#loadingbar').css('background-color', '#111').css('width', '0%'); }, 3000);
+    }
+}
+
+function sanitizeURL(url) {
+    // regex from stackoverflow from another source
+    let regexURL = /^(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/;
+    url = url.trim();
+    if (/^http:\/\//.test(url)) {
+        url = url.replace('http://', 'https://');
+    }
+    if (regexURL.test(url)) {
+        return url;
+    } else throw new Error('Invalid URL');
+}
+
+function sanitizeBeatSaverID(id) {
+    let regexID = /^[0-9a-fA-F]{1,6}$/;
+    id = id.trim();
+    if (/^!bsr /.test(id)) {
+        id = id.replace('!bsr ', '');
+    }
+    if (regexID.test(id)) {
+        return id;
+    } else throw new Error('Invalid ID');
 }
 
 function downloadMap(url) {
-    let xhr = new XMLHttpRequest();
-    xhr.open('GET', url, true);
-    xhr.setRequestHeader('Content-Type', 'application/zip');
-    xhr.responseType = 'arraybuffer';
-    xhr.send();
-    
-    xhr.onprogress = function(e) {
-        UILoadingStatus(e.loaded / e.total * 100, `Downloading map: ${Math.floor(e.loaded / 1024 / 1024 * 10) / 10}MB / ${Math.floor(e.total / 1024 / 1024 * 10) / 10}MB`);
-    };
-    
-    xhr.onload = function() {
-        if (xhr.status == 200) {
-            extractZip(xhr.response);
-        }
-    };
+    return new Promise(function(resolve, reject) {
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.responseType = 'arraybuffer';
+        xhr.timeout = 5000;
+
+        let startTime = Date.now();
+        xhr.onprogress = function(e) {
+            xhr.timeout += Date.now() - startTime;
+            UILoadingStatus('download', `Downloading map: ${round(e.loaded / 1024 / 1024, 1)}MB / ${round(e.total / 1024 / 1024, 1)}MB`, e.loaded / e.total * 100);
+        };
+
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                resolve(xhr.response);
+            } else if (xhr.status === 404) {
+                reject('Error 404: Map does not exist');
+            } else if (xhr.status === 403) {
+                reject('Error 403: Forbidden');
+            } else {
+                reject(`Error ${xhr.status}`);
+            }
+        };
+
+        xhr.onerror = function() {
+            reject('Error downloading map');
+        };
+
+        xhr.ontimeout = function() {
+            reject('Connection timeout');
+        };
+
+        xhr.send();
+    });
 }
 
 function readFile() {
+    UILoadingStatus('info', 'Reading file input', 0);
     let file = this.files[0];
     const fr = new FileReader();
-    if (file.name.substr(-4) == '.zip') {
+    if (file.name.substr(-4) === '.zip' || file.name.substr(-4) === '.bsl') {
         fr.readAsArrayBuffer(file);
-        fr.addEventListener('load', extractZip);
-    }
-    else {
-        alert('Unsupported file format.');
+        fr.addEventListener('load', function(e) {
+            extractZip(e.target.result);
+        });
+    } else {
+        UILoadingStatus('info', 'Unsupported file format, please enter zip file', 0);
     }
 }
 
 async function extractZip(data) {
+    UILoadingStatus('info', 'Extracting zip', 0);
     let mapZip = new JSZip();
-    let temp = data;
-    if (data.target) temp = data.target.result;
     try {
-        mapZip = await JSZip.loadAsync(temp);
-        $('#loadingbar').css('background-color', '#4060a0');
+        flag.loading = true;
+        mapZip = await JSZip.loadAsync(data);
         await loadMap(mapZip);
-    } catch (error) {
-        $('#loadingbar').css('background-color', '#cc0000');
+    } catch(err) {
+        flag.loading = false;
         $('.settings').prop('disabled', false);
         $('.input').css('display', 'block');
         $('.metadata').css('display', 'none');
-        UILoadingStatus(100, "Error while loading map!");
-        console.error(error);
+        UILoadingStatus('error', 'Error while loading map!', 100);
+        console.error(err);
     }
 }
 
 $('#mapset').change(function() {
-    charSelect = this.value;
-    UIPopulateDiffSelect(mapInfo._difficultyBeatmapSets.find(c => c._beatmapCharacteristicName == this.value));
+    tool.select.char = this.value;
+    UIPopulateDiffSelect(map.info._difficultyBeatmapSets.find(c => c._beatmapCharacteristicName === this.value));
 });
 $('#mapdiff').change(function() {
-    diffSelect = this.value;
-    UIOutputDisplay(charSelect, diffSelect);
+    tool.select.diff = this.value;
+    UIOutputDisplay(tool.select.char, tool.select.diff);
 });
+
+// effective bpm
 $('#ebpm').change(function() {
-    maxEBPM = Math.abs(this.value);
-    $('#ebpm').val(maxEBPM);
+    tool.ebpm.th = Math.abs(this.value);
+    $('#ebpm').val(tool.ebpm.th);
 });
 $('#ebpms').change(function() {
-    maxEBPMS = Math.abs(this.value);
-    $('#ebpms').val(maxEBPMS);
+    tool.ebpm.thSwing = Math.abs(this.value);
+    $('#ebpms').val(tool.ebpm.thSwing);
 });
+
+// beat precision
 $('#beatprec').change(function() {
-    beatPrecision = this.value.split(' ')
+    tool.beatPrec = this.value.split(' ')
     .map(function(x) {return parseInt(x)})
     .filter(function(x) {if(x > 0) return !Number.isNaN(x)});
-    $('#beatprec').val(beatPrecision.join(' '));
+    $('#beatprec').val(tool.beatPrec.join(' '));
 });
-$('#hbstair').click(function() {
+
+// hitbox staircase
+$('#hb-stair').click(function() {
     if ($(this).prop("checked")) {
-        flagToolHBStair = true;
+        flag.tool.hb.staircase = true;
+    } else {
+        flag.tool.hb.staircase = false;
     }
-    else flagToolHBStair = false;
 });
+
+// shrado angle
 $('#shrangle').click(function() {
     if ($(this).prop("checked")) {
-        flagToolshrAngle = true;
+        flag.tool.shrAngle = true;
+    } else {
+        flag.tool.shrAngle = false;
     }
-    else flagToolshrAngle = false;
 });
-$('#shranglemax').change(function() {
-    shrAngleMax = round(Math.abs(this.value) / 1000, 3);
-    $('#shranglemax').val(round(shrAngleMax * 1000, 3));
-    if (flagLoaded) $('#shranglemaxbeat').val(round(toBeatTime(shrAngleMax), 3));
+$('#shrangle-max').change(function() {
+    tool.maxShrAngle = round(Math.abs(this.value) / 1000, 3);
+    $('#shrangle-max').val(round(tool.maxShrAngle * 1000, 3));
+    if (flag.loaded) $('#shrangle-max-beat').val(round(toBeatTime(tool.maxShrAngle), 3));
 });
-$('#shranglemaxbeat').change(function() {
-    if (flagLoaded) {
+$('#shrangle-max-beat').change(function() {
+    if (flag.loaded) {
         let val = round(Math.abs(this.value), 3);
-        shrAngleMax = round(toRealTime(val), 3);
-        $('#shranglemax').val(round(shrAngleMax * 1000, 3));
-        $('#shranglemaxbeat').val(val);
+        tool.maxShrAngle = round(toRealTime(val), 3);
+        $('#shrangle-max').val(round(tool.maxShrAngle * 1000, 3));
+        $('#shrangle-max-beat').val(val);
+    } else {
+        $('#shrangle-max-beat').val(0);
     }
-    else $('#shranglemaxbeat').val(0);
 });
+
+// speed pause
+$('#speedpause').click(function() {
+    if ($(this).prop("checked")) {
+        flag.tool.speedPause = true;
+    } else {
+        flag.tool.speedPause = false;
+    }
+});
+$('#speedpause-max').change(function() {
+    tool.maxSpeedPause = round(Math.abs(this.value) / 1000, 3);
+    $('#speedpause-max').val(round(tool.maxSpeedPause * 1000, 3));
+    if (flag.loaded) $('#speedpause-max-beat').val(round(toBeatTime(tool.maxSpeedPause), 3));
+});
+$('#speedpause-max-beat').change(function() {
+    if (flag.loaded) {
+        let val = round(Math.abs(this.value), 3);
+        tool.maxSpeedPause = round(toRealTime(val), 3);
+        $('#speedpause-max').val(round(tool.maxSpeedPause * 1000, 3));
+        $('#speedpause-max-beat').val(val);
+    } else {
+        $('#speedpause-max-beat').val(0);
+    }
+});
+
+// dd
 $('#dd').click(function() {
     if ($(this).prop("checked")) {
-        flagToolDD = true;
-    }
-    else flagToolDD = false;
-});
-$('#vblock').click(function() {
-    if ($(this).prop("checked")) {
-        flagToolvBlock = true;
-    }
-    else flagToolvBlock = false;
-});
-$('#vblockmin').change(function() {
-    vBlockMin = round(Math.abs(this.value) / 1000, 3);
-    $('#vblockmin').val(round(vBlockMin * 1000));
-    if (flagLoaded) $('#vblockminbeat').val(round(toBeatTime(vBlockMin), 3));
-    if (vBlockMin > vBlockMax) {
-        vBlockMax = vBlockMin;
-        $('#vblockmax').val(round(vBlockMin * 1000));
-        if (flagLoaded) $('#vblockmaxbeat').val(round(toBeatTime(vBlockMin), 3));
+        flag.tool.dd = true;
+    } else {
+        flag.tool.dd = false;
     }
 });
-$('#vblockminbeat').change(function() {
-    if (flagLoaded) {
-        let val = round(Math.abs(this.value), 3);
-        vBlockMin = round(toRealTime(val), 3);
-        $('#vblockmin').val(round(vBlockMin * 1000));
-        $('#vblockminbeat').val(val);
-        if (vBlockMin > vBlockMax) {
-            vBlockMax = vBlockMin;
-            $('#vblockmax').val(round(vBlockMin * 1000));
-            $('#vblockmaxbeat').val(val);
-        }
-    }
-    else $('#vblockminbeat').val(0);
-});
-$('#vblockmax').change(function() {
-    vBlockMax = round(Math.abs(this.value) / 1000, 3);
-    $('#vblockmax').val(round(vBlockMax * 1000));
-    if (flagLoaded) $('#vblockmaxbeat').val(round(toBeatTime(vBlockMax), 3));
-});
-$('#vblockmaxbeat').change(function() {
-    if (flagLoaded) {
-        let val = round(Math.abs(this.value), 3);
-        vBlockMax = round(toRealTime(val), 3);
-        $('#vblockmax').val(round(vBlockMax * 1000));
-        $('#vblockmaxbeat').val(val);
-    }
-    else $('#vblockmaxbeat').val(0);
-});
-$('#vblockhjd').click(function() {
-    if (flagLoaded) {
-        let char = mapInfo._difficultyBeatmapSets.find(c => c._beatmapCharacteristicName == charSelect);
-        let diff = char._difficultyBeatmaps.find(d => d._difficulty == diffSelect);
-        let hjd = round(getHalfJumpDuration(mapInfo._beatsPerMinute, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset), 3);
-        vBlockMin = round(60 / mapInfo._beatsPerMinute * 0.25, 3);
-        vBlockMax = round(60 / mapInfo._beatsPerMinute * hjd, 3);
-        $('#vblockmin').val(vBlockMin * 1000);
-        $('#vblockmax').val(vBlockMax * 1000);
-        $('#vblockminbeat').val(0.25);
-        $('#vblockmaxbeat').val(hjd);
-    }
-});
-$('#vblockoptimal').click(function() {
-    vBlockMin = 0.1;
-    vBlockMax = 0.5;
-    $('#vblockmin').val(vBlockMin * 1000);
-    $('#vblockmax').val(vBlockMax * 1000);
-    if (flagLoaded) {
-        $('#vblockminbeat').val(round(toBeatTime(vBlockMin), 3));
-        $('#vblockmaxbeat').val(round(toBeatTime(vBlockMax), 3));
-    }
-});
-$('#applythis').click(async function() {
-    let char = mapInfo._difficultyBeatmapSets.find(c => c._beatmapCharacteristicName == charSelect);
-    let diff = char._difficultyBeatmaps.find(d => d._difficulty == diffSelect);
-    let mapObj = {
-        mapSet: charSelect
-    }
-    mapObj.diff = diffSelect;
-    mapObj.text = await mapTool(charSelect, diff);
-    let arr = [mapObj];
 
-    mapAnalysis = mapAnalysis.map(ma => arr.find(obj => obj.mapSet == ma.mapSet && obj.diff == ma.diff) || ma);
-    UIOutputDisplay(charSelect, diffSelect);
+// vision block
+$('#vb-note').click(function() {
+    if ($(this).prop("checked")) {
+        flag.tool.vb.note = true;
+    } else {
+        flag.tool.vb.note = false;
+    }
 });
-$('#applyall').click(async function() {
-    mapAnalysis = [];
-    for (let i = 0, len = mapDiffSet.length; i < len; i++) {
-        let mapDiff = mapDiffSet[i]._difficultyBeatmaps;
+$('#vb-min').change(function() {
+    tool.vb.min = round(Math.abs(this.value) / 1000, 3);
+    $('#vb-min').val(round(tool.vb.min * 1000));
+    if (flag.loaded) $('#vb-min-beat').val(round(toBeatTime(tool.vb.min), 3));
+    if (tool.vb.min > tool.vb.max) {
+        tool.vb.max = tool.vb.min;
+        $('#vb-max').val(round(tool.vb.min * 1000));
+        if (flag.loaded) $('#vb-max-beat').val(round(toBeatTime(tool.vb.min), 3));
+    }
+});
+$('#vb-min-beat').change(function() {
+    if (flag.loaded) {
+        let val = round(Math.abs(this.value), 3);
+        tool.vb.min = round(toRealTime(val), 3);
+        $('#vb-min').val(round(tool.vb.min * 1000));
+        $('#vb-min-beat').val(val);
+        if (tool.vb.min > tool.vb.max) {
+            tool.vb.max = tool.vb.min;
+            $('#vb-max').val(round(tool.vb.min * 1000));
+            $('#vb-max-beat').val(val);
+        }
+    } else {
+        $('#vb-min-beat').val(0);
+    }
+});
+$('#vb-max').change(function() {
+    tool.vb.max = round(Math.abs(this.value) / 1000, 3);
+    $('#vb-max').val(round(tool.vb.max * 1000));
+    if (flag.loaded) $('#vb-max-beat').val(round(toBeatTime(tool.vb.max), 3));
+});
+$('#vb-max-beat').change(function() {
+    if (flag.loaded) {
+        let val = round(Math.abs(this.value), 3);
+        tool.vb.max = round(toRealTime(val), 3);
+        $('#vb-max').val(round(tool.vb.max * 1000));
+        $('#vb-max-beat').val(val);
+    } else {
+        $('#vb-max-beat').val(0);
+    }
+});
+$('#vb-hjd').click(function() {
+    if (flag.loaded) {
+        let char = map.info._difficultyBeatmapSets.find(c => c._beatmapCharacteristicName === tool.select.char);
+        let diff = char._difficultyBeatmaps.find(d => d._difficulty === tool.select.diff);
+        let hjd = round(getHalfJumpDuration(map.info._beatsPerMinute, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset), 3);
+        tool.vb.min = round(60 / map.info._beatsPerMinute * 0.25, 3);
+        tool.vb.max = round(60 / map.info._beatsPerMinute * hjd, 3);
+        $('#vb-min').val(tool.vb.min * 1000);
+        $('#vb-max').val(tool.vb.max * 1000);
+        $('#vb-min-beat').val(0.25);
+        $('#vb-max-beat').val(hjd);
+    }
+});
+$('#vb-optimal').click(function() {
+    tool.vb.min = 0.1;
+    tool.vb.max = 0.5;
+    $('#vb-min').val(tool.vb.min * 1000);
+    $('#vb-max').val(tool.vb.max * 1000);
+    if (flag.loaded) {
+        $('#vb-min-beat').val(round(toBeatTime(tool.vb.min), 3));
+        $('#vb-max-beat').val(round(toBeatTime(tool.vb.max), 3));
+    }
+});
+
+// apply changes
+$('#apply-this').click(async function() {
+    UILoadingStatus('', `Re-analysing ${tool.select.char} ${tool.select.diff}`);
+    let char = map.info._difficultyBeatmapSets.find(c => c._beatmapCharacteristicName === tool.select.char);
+    let diff = char._difficultyBeatmaps.find(d => d._difficulty === tool.select.diff);
+    let mapObj = {
+        mapSet: tool.select.char
+    }
+    mapObj.diff = tool.select.diff;
+    mapObj.text = await mapTool(tool.select.char, diff);
+    
+    let arr = [mapObj]; // this is dumb
+    map.analysis = map.analysis.map(ma => arr.find(obj => obj.mapSet === ma.mapSet && obj.diff === ma.diff) || ma);
+    UIOutputDisplay(tool.select.char, tool.select.diff);
+    UILoadingStatus('', `Re-analysed ${tool.select.char} ${tool.select.diff}`);
+});
+$('#apply-all').click(async function() {
+    UILoadingStatus('', `Re-analysing all difficulties`);
+    map.analysis = [];
+    for (let i = 0, len = map.set.length; i < len; i++) {
+        let mapDiff = map.set[i]._difficultyBeatmaps;
         for (let j = mapDiff.length - 1; j >= 0; j--) {
             let diff = mapDiff[j];
             let mapObj = {
-                mapSet: mapDiffSet[i]._beatmapCharacteristicName
+                mapSet: map.set[i]._beatmapCharacteristicName
             }
             mapObj.diff = diff._difficulty;
-            mapObj.text = await mapTool(mapDiffSet[i]._beatmapCharacteristicName, diff);
-            mapAnalysis.push(mapObj);
+            mapObj.text = await mapTool(map.set[i]._beatmapCharacteristicName, diff);
+            map.analysis.push(mapObj);
         }
     }
-    UIOutputDisplay(charSelect, diffSelect);
+    UIOutputDisplay(tool.select.char, tool.select.diff);
+    UILoadingStatus('', `Re-analysed all difficulties`);
 });
-let UIHitboxStaircase = document.getElementById('hitboxstaircase');
-let UIVBlock = document.getElementById('vblock');
 
 $('.accordion').click(function() {
     this.classList.toggle('active');
@@ -231,18 +372,33 @@ $('.accordion').click(function() {
     }
 });
 
-function UILoadingStatus(progress, text) {
-    $('#loadingbar').css('width', `${progress}%`);
-    $('#loadingtext').text(text);
+function UILoadingStatus(status, txt, progress = 100) {
+    switch (status) {
+        case 'info': {
+            $('#loadingbar').css('background-color', '#4060a0');
+            break;
+        }
+        case 'download': {
+            $('#loadingbar').css('background-color', '#30a030');
+            break;
+        }
+        case 'warn': { }
+        case 'error': {
+            $('#loadingbar').css('background-color', '#cc0000');
+            break;
+        }
+    }
+    if (progress !== -1) $('#loadingbar').css('width', `${progress}%`);
+    if (txt !== '') $('#loadingtext').text(txt);
 }
 
 function UIUpdateMapInfo() {
-    $('#songauthor').text(mapInfo._songAuthorName);
-    $('#songname').text(mapInfo._songName);
-    $('#songsubname').text(mapInfo._songSubName);
-    $('#songbpm').text(`${round(mapInfo._beatsPerMinute, 3)} BPM`);
-    $('#levelauthor').text(`Mapped by  ${mapInfo._levelAuthorName}`);
-    $('#environment').text(`${envName[mapInfo._environmentName]} Environment`);
+    $('#song-author').text(map.info._songAuthorName);
+    $('#song-name').text(map.info._songName);
+    $('#song-subname').text(map.info._songSubname);
+    $('#song-bpm').text(`${round(map.info._beatsPerMinute, 3)} BPM`);
+    $('#level-author').text(`Mapped by  ${map.info._levelAuthorName}`);
+    $('#environment').text(`${envName[map.info._environmentName]} Environment`);
     
     $('.input').css('display', 'none');
     $('.metadata').css('display', 'block');
@@ -250,19 +406,19 @@ function UIUpdateMapInfo() {
 
 // case for multiple BPM map
 function UIUpdateMapInfoBPM(min, max) {
-    document.getElementById('songbpm').textContent = '(' + round(mapInfo._beatsPerMinute, 3) + ') ' + round(min, 3) + '-' + round(max, 3) + 'BPM' + (flagOddBPM ? ' ⚠️ inconsistent BPM between difficulty.' : '');
+    $('#song-bpm').text('(' + round(map.info._beatsPerMinute, 3) + ') ' + round(min, 3) + '-' + round(max, 3) + 'BPM' + (flag.map.bpm.odd ? ' ⚠️ inconsistent BPM between difficulty.' : ''));
 }
 
 function UIPopulateCharSelect() {
     $('#mapset').empty();
-    for (let i = 0, len = mapInfo._difficultyBeatmapSets.length; i < len; i++) {
+    for (let i = 0, len = map.info._difficultyBeatmapSets.length; i < len; i++) {
         $('#mapset').append($('<option>', {
-            value: mapInfo._difficultyBeatmapSets[i]._beatmapCharacteristicName,
-            text: mapInfo._difficultyBeatmapSets[i]._beatmapCharacteristicName
+            value: map.info._difficultyBeatmapSets[i]._beatmapCharacteristicName,
+            text: modeRename[map.info._difficultyBeatmapSets[i]._beatmapCharacteristicName] || map.info._difficultyBeatmapSets[i]._beatmapCharacteristicName
         }));
     }
-    charSelect = mapInfo._difficultyBeatmapSets[0]._beatmapCharacteristicName;
-    UIPopulateDiffSelect(mapInfo._difficultyBeatmapSets[0]);
+    tool.select.char = map.info._difficultyBeatmapSets[0]._beatmapCharacteristicName;
+    UIPopulateDiffSelect(map.info._difficultyBeatmapSets[0]);
 }
 
 function UIPopulateDiffSelect(mapSet) {
@@ -270,19 +426,19 @@ function UIPopulateDiffSelect(mapSet) {
     for (let i = mapSet._difficultyBeatmaps.length - 1; i >= 0; i--) {
         let diffName = diffRename[mapSet._difficultyBeatmaps[i]._difficulty] || mapSet._difficultyBeatmaps[i]._difficulty;
         if (mapSet._difficultyBeatmaps[i]._customData)
-            if (mapSet._difficultyBeatmaps[i]._customData._difficultyLabel && mapSet._difficultyBeatmaps[i]._customData._difficultyLabel != '')
+            if (mapSet._difficultyBeatmaps[i]._customData._difficultyLabel && mapSet._difficultyBeatmaps[i]._customData._difficultyLabel !== '')
                 diffName = `${mapSet._difficultyBeatmaps[i]._customData._difficultyLabel} -- ${diffName}`;
         $('#mapdiff').append($('<option>', {
             value: mapSet._difficultyBeatmaps[i]._difficulty,
             text: diffName
         }));
     }
-    diffSelect = mapSet._difficultyBeatmaps[mapSet._difficultyBeatmaps.length - 1]._difficulty;
-    if (flagLoaded) UIOutputDisplay(charSelect, diffSelect);
+    tool.select.diff = mapSet._difficultyBeatmaps[mapSet._difficultyBeatmaps.length - 1]._difficulty;
+    if (flag.loaded) UIOutputDisplay(tool.select.char, tool.select.diff);
 }
 
 // i could just make a table but i dont want to
-async function UICreateDiffSet(charName) {
+function UICreateDiffSet(charName) {
     let charRename = modeRename[charName] || charName;
 
     $('#stats').append([$('<div>', {
@@ -295,14 +451,22 @@ async function UICreateDiffSet(charName) {
 }
 
 async function UICreateDiffInfo(charName, diff) {
-    const bpm = mapInfo._beatsPerMinute;
+    const bpm = map.info._beatsPerMinute;
     let diffName = diffRename[diff._difficulty] || diff._difficulty;
     let offset = 0;
     let BPMChanges;
-    let customColor = {};
+    let customColor = {
+        _colorLeft: colorScheme[envColor[map.info._environmentName]]._colorLeft,
+        _colorRight: colorScheme[envColor[map.info._environmentName]]._colorRight,
+        _envColorLeft: colorScheme[envColor[map.info._environmentName]]._envColorLeft,
+        _envColorRight: colorScheme[envColor[map.info._environmentName]]._envColorRight,
+        _envColorLeftBoost: colorScheme[envColor[map.info._environmentName]]._envColorLeftBoost || null,
+        _envColorRightBoost: colorScheme[envColor[map.info._environmentName]]._envColorRightBoost || null,
+        _obstacleColor: colorScheme[envColor[map.info._environmentName]]._obstacleColor
+    };
     let hasChroma = false;
     if (diff._customData) {
-        if (diff._customData._difficultyLabel && diff._customData._difficultyLabel != '')
+        if (diff._customData._difficultyLabel && diff._customData._difficultyLabel !== '')
             diffName = `${diff._customData._difficultyLabel} -- ${diffName}`;
         
         if (diff._customData._editorOffset)
@@ -314,56 +478,38 @@ async function UICreateDiffInfo(charName, diff) {
         if (!hasChroma && diff._customData._requirements)
             hasChroma = diff._customData._requirements.includes('Chroma');
         
-        // lol this isnt really great but it's the only effective and less error prone
         if (diff._customData._colorLeft) {
             customColor._colorLeft = rgbaToHex(diff._customData._colorLeft);
         }
-        else customColor._colorLeft = colorScheme[envColor[mapInfo._environmentName]]._colorLeft;
         
         if (diff._customData._colorRight) {
             customColor._colorRight = rgbaToHex(diff._customData._colorRight);
         }
-        else customColor._colorRight = colorScheme[envColor[mapInfo._environmentName]]._colorRight;
         
         if (diff._customData._envColorLeft) {
             customColor._envColorLeft = rgbaToHex(diff._customData._envColorLeft);
         }
-        else customColor._envColorLeft = colorScheme[envColor[mapInfo._environmentName]]._envColorLeft;
         
         if (diff._customData._envColorRight) {
             customColor._envColorRight = rgbaToHex(diff._customData._envColorRight);
         }
-        else customColor._envColorRight = colorScheme[envColor[mapInfo._environmentName]]._envColorRight;
         
         // tricky stuff
-        // need to display both boost
+        // need to display both boost if one exist
         let envBL, envBR, envBoost = false;
         if (diff._customData._envColorLeftBoost) {
             envBL = rgbaToHex(diff._customData._envColorLeftBoost);
             envBoost = true;
-        }
-        else {
-            if (colorScheme[envColor[mapInfo._environmentName]]._envColorLeftBoost) {
-                envBL = colorScheme[envColor[mapInfo._environmentName]]._envColorLeftBoost;
-                envBoost = true;
-            }
-            else {
-                envBL = customColor._colorLeft;
-            }
+        } else {
+            envBL = colorScheme[envColor[map.info._environmentName]]._envColorLeftBoost || customColor._colorLeft;
         }
         if (diff._customData._envColorRightBoost) {
             envBR = rgbaToHex(diff._customData._envColorRightBoost);
             envBoost = true;
+        } else {
+            envBR = colorScheme[envColor[map.info._environmentName]]._envColorRightBoost || customColor._colorRight;
         }
-        else {
-            if (colorScheme[envColor[mapInfo._environmentName]]._envColorRightBoost) {
-                envBR = colorScheme[envColor[mapInfo._environmentName]]._envColorRightBoost;
-                envBoost = true;
-            }
-            else {
-                envBR = customColor._colorRight;
-            }
-        }
+
         if (envBoost) {
             customColor._envColorLeftBoost = envBL;
             customColor._envColorRightBoost = envBR;
@@ -372,7 +518,6 @@ async function UICreateDiffInfo(charName, diff) {
         if (diff._customData._obstacleColor) {
             customColor._obstacleColor = rgbaToHex(diff._customData._obstacleColor);
         }
-        else customColor._obstacleColor = colorScheme[envColor[mapInfo._environmentName]]._obstacleColor;
     }
     if (diff._data._customData) {
         if (diff._data._customData._BPMChanges) BPMChanges = diff._data._customData._BPMChanges;
@@ -381,56 +526,65 @@ async function UICreateDiffInfo(charName, diff) {
     const bpmc = getBPMChangesTime(bpm, offset, BPMChanges);
     
     // general map stuff
-    let textMap = [];
-    textMap.push(`NJS: ${diff._noteJumpMovementSpeed} / ${round(diff._noteJumpStartBeatOffset, 3)}`);
-    textMap.push(`HJD: ${round(getHalfJumpDuration(bpm, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset), 3)}`);
-    textMap.push(`JD: ${round(getJumpDistance(bpm, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset), 3)}`);
-    textMap.push(`Reaction Time: ${Math.round(60 / bpm * getHalfJumpDuration(bpm, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset) * 1000)}ms`);
-    textMap.push('');
-    textMap.push(`Effective BPM: ${(findEffectiveBPM(diff._data._notes, bpm)).toFixed(2)}`);
-    textMap.push(`Effective BPM (swing): ${(findEffectiveBPMSwing(diff._data._notes, bpm)).toFixed(2)}`);
-    if (bpmc.length > 0) textMap.push(`BPM changes: ${bpmc.length}`);
+    let txtMap = [];
+    txtMap.push(`NJS: ${diff._noteJumpMovementSpeed} / ${round(diff._noteJumpStartBeatOffset, 3)}`);
+    txtMap.push(`HJD: ${round(getHalfJumpDuration(bpm, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset), 3)}`);
+    txtMap.push(`JD: ${round(getJumpDistance(bpm, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset), 3)}`);
+    txtMap.push(`Reaction Time: ${Math.round(60 / bpm * getHalfJumpDuration(bpm, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset) * 1000)}ms`);
+    txtMap.push('');
+    txtMap.push(`Effective BPM: ${(findEffectiveBPM(diff._data._notes, bpm)).toFixed(2)}`);
+    txtMap.push(`Effective BPM (swing): ${(findEffectiveBPMSwing(diff._data._notes, bpm)).toFixed(2)}`);
+    if (bpmc.length > 0) txtMap.push(`BPM changes: ${bpmc.length}`);
+    const mapSettings = {
+        bpm: map.info._beatsPerMinute,
+        bpmc: getBPMChangesTime(map.info._beatsPerMinute, offset, BPMChanges),
+        offset: offset,
+        njs: diff._noteJumpMovementSpeed,
+        njsOffset: diff._noteJumpStartBeatOffset
+    }
 
     // note
-    let textNote = [];
-    const note = countNote(diff._data._notes)
-    textNote.push(`Notes: ${note.red + note.blue}`);
-    textNote.push(`• Red: ${note.red}`);
-    textNote.push(`• Blue: ${note.blue}`);
-    textNote.push(`• R/B Ratio: ${round(note.blue ? note.red / note.blue : 0, 2)}`);
-    textNote.push('');
-    textNote.push(`SPS: ${swingPerSecondInfo(diff._data)}`);
-    textNote.push(`NPS: ${calcNPS(note.red + note.blue).toFixed(2)}`);
-    textNote.push(`• Mapped: ${calcNPSMapped(note.red + note.blue, diff._data._duration).toFixed(2)}`);
+    let txtNote = [];
+    const note = getNoteCount(diff._data._notes)
+    txtNote.push(`Notes: ${note.red + note.blue}`);
+    txtNote.push(`• Red: ${note.red}`);
+    txtNote.push(`• Blue: ${note.blue}`);
+    txtNote.push(`• R/B Ratio: ${round(note.blue ? note.red / note.blue : 0, 2)}`);
+    txtNote.push('');
+    txtNote.push(`SPS: ${swingPerSecondInfo(diff._data).toFixed(2)}`);
+    txtNote.push(`NPS: ${calcNPS(note.red + note.blue).toFixed(2)}`);
+    txtNote.push(`• Mapped: ${calcNPSMapped(note.red + note.blue, diff._data._duration).toFixed(2)}`);
 
-    let textObstacle = [];
+    let txtObstacle = [];
     // i know bomb isnt obstacle but this side doesnt have much so i merge this together
     // it now include row percentage; does not include bomb
-    textObstacle.push(`Top Row: ${note.blue || note.red ? round(countNoteLayer(diff._data._notes, 2) / (note.red + note.blue) * 100, 1) : 0}%`);
-    textObstacle.push(`Mid Row: ${note.blue || note.red ? round(countNoteLayer(diff._data._notes, 1) / (note.red + note.blue) * 100, 1) : 0}%`);
-    textObstacle.push(`Bot Row: ${note.blue || note.red ? round(countNoteLayer(diff._data._notes, 0) / (note.red + note.blue) * 100, 1) : 0}%`);
-    textObstacle.push('');
-    textObstacle.push(`Bombs: ${note.bomb}`);
-    textObstacle.push('');
-    textObstacle.push(`Obstacles: ${diff._data._obstacles.length}`);
-    textObstacle.push(`• Interactive: ${countInteractiveObstacle(diff._data._obstacles)}`);
+    txtObstacle.push(`Top Row: ${note.blue || note.red ? round(countNoteLayer(diff._data._notes, 2) / (note.red + note.blue) * 100, 1) : 0}%`);
+    txtObstacle.push(`Mid Row: ${note.blue || note.red ? round(countNoteLayer(diff._data._notes, 1) / (note.red + note.blue) * 100, 1) : 0}%`);
+    txtObstacle.push(`Bot Row: ${note.blue || note.red ? round(countNoteLayer(diff._data._notes, 0) / (note.red + note.blue) * 100, 1) : 0}%`);
+    txtObstacle.push('');
+    txtObstacle.push(`Bombs: ${note.bomb}`);
+    txtObstacle.push('');
+    txtObstacle.push(`Obstacles: ${diff._data._obstacles.length}`);
+    txtObstacle.push(`• Interactive: ${countInteractiveObstacle(diff._data._obstacles)}`);
+    let crouchWall = detectCrouchWall(diff._data, mapSettings)
+    if (crouchWall.length > 0) txtObstacle.push(`• Crouch: ${crouchWall.length}`);
 
     // event n stuff
-    let textEvent = [];
-    const event = countEvent(diff._data._events);
-    textEvent.push(`Events: ${diff._data._events.length}`);
-    textEvent.push(`• Lighting: ${event.light}`);
-    textEvent.push(`• Ring Rotation: ${event.rrotate}`);
-    textEvent.push(`• Ring Zoom: ${event.rzoom}`);
-    textEvent.push(`• Laser Rotation: ${event.laser}`);
+    let txtEvent = [];
+    const event = getEventCount(diff._data._events);
+    txtEvent.push(`Events: ${diff._data._events.length}`);
+    txtEvent.push(`• Lighting: ${event.light}`);
+    txtEvent.push(`• Ring Rotation: ${event.rrotate}`);
+    txtEvent.push(`• Ring Zoom: ${event.rzoom}`);
+    txtEvent.push(`• Laser Rotation: ${event.laser}`);
     if (event.chroma || event.ogc) {
-        textEvent.push('');
-        if (event.chroma) textEvent.push(hasChroma ? `• Chroma: ${event.chroma}` : `• Chroma: ${event.chroma} ⚠️ not suggested`);
-        if (event.ogc) textEvent.push(`• OG Chroma: ${event.ogc}`);
+        txtEvent.push('');
+        if (event.chroma) txtEvent.push(hasChroma ? `• Chroma: ${event.chroma}` : `• Chroma: ${event.chroma} ⚠️ not suggested`);
+        if (event.ogc) txtEvent.push(`• OG Chroma: ${event.ogc}`);
     }
     if (event.rot) {
-        textEvent.push('');
-        textEvent.push(`• Lane Rotation: ${charName == '90Degree' || charName == '360Degree' ? event.rot : `${event.rot} ⚠️ not 360/90 mode`}`);
+        txtEvent.push('');
+        txtEvent.push(`• Lane Rotation: ${charName === '90Degree' || charName === '360Degree' ? event.rot : `${event.rot} ⚠️ not 360/90 mode`}`);
     }
 
     // set header
@@ -451,14 +605,16 @@ async function UICreateDiffInfo(charName, diff) {
         class: 'diff-dot-container'
     });
     for (const k in customColor) {
-        let colorDot = $('<span>', {
-            class: 'diff-dot',
-            id: k,
-            css: {
-                'background-color': customColor[k]
-            }
-        });
-        colorDot.appendTo(diffDotContainer);
+        if (customColor[k] !== null) {
+            let colorDot = $('<span>', {
+                class: 'diff-dot',
+                id: k,
+                css: {
+                    'background-color': customColor[k]
+                }
+            });
+            colorDot.appendTo(diffDotContainer);
+        }
     }
     diffDotContainer.appendTo(diffHeader);
 
@@ -467,33 +623,33 @@ async function UICreateDiffInfo(charName, diff) {
     let diffPanelMap = $('<div>', {
         class: 'diff-panel',
         id: 'map',
-        html: textMap.join('<br>')
+        html: txtMap.join('<br>')
     });
 
     // note
     let diffPanelNote = $('<div>', {
         class: 'diff-panel',
         id: 'note',
-        html: textNote.join('<br>')
+        html: txtNote.join('<br>')
     });
     
     // obstacle
     let diffPanelObstacle = $('<div>', {
         class: 'diff-panel',
         id: 'obstacle',
-        html: textObstacle.join('<br>')
+        html: txtObstacle.join('<br>')
     });
-
     // event
     let diffPanelEvent = $('<div>', {
         class: 'diff-panel',
         id: 'event',
-        html: textEvent.join('<br>')
+        html: txtEvent.join('<br>')
     });
 
     // merge all panel into container
     let diffContainer = $('<div>', {
-        class: 'diff-container'
+        class: 'diff-container',
+        id: diff._difficulty
     });
     diffContainer.append(diffHeader);
     diffContainer.append(diffPanelMap);
@@ -505,7 +661,7 @@ async function UICreateDiffInfo(charName, diff) {
 }
 
 function UIOutputDisplay(cs, ds) {
-    let mapa = mapAnalysis.find(ma => ma.mapSet == cs && ma.diff == ds);
+    let mapa = map.analysis.find(ma => ma.mapSet === cs && ma.diff === ds);
     $('#output-box').empty();
     if (!mapa.text.length > 0) $('#output-box').text('No issue(s) found.')
     $('#output-box').append(mapa.text.join('<br>'));

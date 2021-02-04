@@ -5,6 +5,26 @@
 
 ## v1.2.2 [2021-01-28]
 ### Added
+* global.js - for global variable and settings
+* URL support
+* Speed pause detection (EXPERIMENTAL)
+* Crouch wall detection
+
+### Changed
+* Code refactored
+* Supported .bsl file
+* Tweaked UI including QOL stuff
+
+### Fixed
+* Colour dot not showing up when there is no custom data
+* Attempted to find outside playable object when there is no audio
+
+## v1.2.3 [2021-01-29]
+### Fixed
+* Invisible text for difficulty select
+
+## v1.2.2 [2021-01-28]
+### Added
 * Missing Chroma suggestion/requirement warning if contain Chroma event
 * Lane rotation event warning in non-360/90 mode
 

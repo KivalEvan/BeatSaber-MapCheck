@@ -1,59 +1,55 @@
  /* BEATMAP SCRIPT - beatmap.js
     load map and handle map related variable */
 
-let mapInfo, mapDiffSet, mapAnalysis = [];
-let mapBPMChange = [], mapMinBPM, mapMaxBPM;
-let songDuration;
-
 async function loadMap(mapZip) {
-    UILoadingStatus(0, 'Loading map info...');
+    UILoadingStatus('info', 'Loading map info...', 0);
     let infoFile = mapZip.file('Info.dat') || mapZip.file('info.dat');
     if (infoFile) {
         $('.settings').prop('disabled', true);
         let infoFileStr = await infoFile.async('string');
-        mapInfo = await JSON.parse(infoFileStr);
+        map.info = await JSON.parse(infoFileStr);
         
         UIUpdateMapInfo();
-        mapUpdateBPMRange(mapInfo._beatsPerMinute, mapInfo._beatsPerMinute);
+        mapUpdateBPMRange(map.info._beatsPerMinute, map.info._beatsPerMinute);
 
         // load cover image
-        UILoadingStatus(10.4375, 'Loading cover image...');
-        console.log('Loading image');
-        let imageFile = mapZip.file(mapInfo._coverImageFilename);
+        UILoadingStatus('info', 'Loading cover image...', 10.4375);
+        console.log('loading cover image');
+        let imageFile = mapZip.file(map.info._coverImageFilename);
         if (imageFile) {
             let imgBase64 = await imageFile.async('base64');
             $('#coverimg').attr('src', 'data:image;base64,' + imgBase64);
         }
-        else console.error(mapInfo._coverImageFilename + ' does not exists.');
+        else console.error(map.info._coverImageFilename + ' does not exists.');
         
         // load audio
-        UILoadingStatus(20.875, 'Loading audio...');
-        console.log('Loading audio');
-        let audioFile = mapZip.file(mapInfo._songFilename);
+        UILoadingStatus('info', 'Loading audio...', 20.875);
+        console.log('loading audio');
+        let audioFile = mapZip.file(map.info._songFilename);
         if (audioFile) {
             let audioBuffer = await audioFile.async('arraybuffer');
             let audioContext = new AudioContext();
             await audioContext.decodeAudioData(audioBuffer)
             .then(function(buffer) {
-                songDuration = buffer.duration;
-                $('#songduration').text(toMMSS(buffer.duration));
-                flagLoadAudio = true;
+                map.audio.duration = buffer.duration;
+                $('#song-duration').text(toMMSS(map.audio.duration));
+                flag.map.load.audioAudio = true;
             })
             .catch(function(err) {
                 console.error(err);
             });
         }
-        else console.error(mapInfo._songFilename + ' does not exist.');
+        else console.error(map.info._songFilename + ' does not exist.');
 
         // load diff map
-        UILoadingStatus(70, 'Loading difficulty...');
-        console.log('Loading difficulty');
-        mapDiffSet = mapInfo._difficultyBeatmapSets;
-        for (let i = mapDiffSet.length - 1; i >= 0; i--) {
-            let mapDiff = mapDiffSet[i]._difficultyBeatmaps;
+        UILoadingStatus('info', 'Loading difficulty...', 70);
+        console.log('loading difficulty');
+        map.set = map.info._difficultyBeatmapSets;
+        for (let i = map.set.length - 1; i >= 0; i--) {
+            let mapDiff = map.set[i]._difficultyBeatmaps;
             if (mapDiff.length === 0 || !mapDiff) { // how?
                 console.error('Empty difficulty set, removing...');
-                mapDiffSet.splice(i, 1);
+                map.set.splice(i, 1);
                 continue;
             }
 
@@ -62,14 +58,14 @@ async function loadMap(mapZip) {
                 let diffFile = mapZip.file(diff._beatmapFilename);
                 if (diffFile) {
                     let diffFileStr = await diffFile.async('string');
-                    mapDiffSet[i]._difficultyBeatmaps[j]._data = loadDifficulty(diffFileStr);
+                    map.set[i]._difficultyBeatmaps[j]._data = loadDifficulty(diffFileStr);
                 }
                 else {
-                    console.error('Missing ' + diff._beatmapFilename + ' file for ' + mapDiffSet[i]._beatmapCharacteristicName + ' ' + diff._difficulty + ', ignoring.');
-                    mapDiffSet[i]._difficultyBeatmaps.splice(j, 1);
-                    if (mapDiffSet[i]._difficultyBeatmaps.length < 1) {
-                        console.error(mapDiffSet[i]._beatmapCharacteristicName + ' difficulty set now empty, ignoring.')
-                        mapDiffSet.splice(i, 1);
+                    console.error('Missing ' + diff._beatmapFilename + ' file for ' + map.set[i]._beatmapCharacteristicName + ' ' + diff._difficulty + ', ignoring.');
+                    map.set[i]._difficultyBeatmaps.splice(j, 1);
+                    if (map.set[i]._difficultyBeatmaps.length < 1) {
+                        console.error(map.set[i]._beatmapCharacteristicName + ' difficulty set now empty, ignoring.')
+                        map.set.splice(i, 1);
                         continue;
                     }
                 }
@@ -80,44 +76,44 @@ async function loadMap(mapZip) {
         // could prolly had done this on previous so i dont have to re-loop
         // but i need it to be sorted specifically
         UIPopulateCharSelect();
-        UILoadingStatus(80, 'Adding map difficulty stats...');
-        console.log('Adding map stats');
-        for (let i = 0, len = mapDiffSet.length; i < len; i++) {
-            let mapDiff = mapDiffSet[i]._difficultyBeatmaps;
-            await UICreateDiffSet(mapDiffSet[i]._beatmapCharacteristicName);
+        UILoadingStatus('info', 'Adding map difficulty stats...', 80);
+        console.log('adding map stats');
+        for (let i = 0, len = map.set.length; i < len; i++) {
+            let mapDiff = map.set[i]._difficultyBeatmaps;
+            await UICreateDiffSet(map.set[i]._beatmapCharacteristicName);
             for (let j = mapDiff.length - 1; j >= 0; j--) {
                 let diff = mapDiff[j];
-                await UICreateDiffInfo(mapDiffSet[i]._beatmapCharacteristicName, diff);
+                await UICreateDiffInfo(map.set[i]._beatmapCharacteristicName, diff);
             }
         }
         
-        UILoadingStatus(90, 'Analysing map difficulty...');
-        for (let i = 0, len = mapDiffSet.length; i < len; i++) {
-            let mapDiff = mapDiffSet[i]._difficultyBeatmaps;
+        UILoadingStatus('info', 'Analysing map difficulty...', 90);
+        for (let i = 0, len = map.set.length; i < len; i++) {
+            let mapDiff = map.set[i]._difficultyBeatmaps;
             for (let j = mapDiff.length - 1; j >= 0; j--) {
                 let diff = mapDiff[j];
                 let mapObj = {
-                    mapSet: mapDiffSet[i]._beatmapCharacteristicName
+                    mapSet: map.set[i]._beatmapCharacteristicName
                 }
                 mapObj.diff = diff._difficulty;
-                mapObj.text = await mapTool(mapDiffSet[i]._beatmapCharacteristicName, diff);
-                mapAnalysis.push(mapObj);
+                mapObj.text = await mapTool(map.set[i]._beatmapCharacteristicName, diff);
+                map.analysis.push(mapObj);
             }
         }
-        UIOutputDisplay(charSelect, diffSelect);
+        UIOutputDisplay(tool.select.char, tool.select.diff);
 
-        $('#shranglemaxbeat').val(round(toBeatTime(shrAngleMax), 3));
-        $('#vblockminbeat').val(round(toBeatTime(vBlockMin), 3));
-        $('#vblockmaxbeat').val(round(toBeatTime(vBlockMax), 3));
-        $('#applythis').prop('disabled', false);
-        $('#applyall').prop('disabled', false);
+        $('#shrangle-max-beat').val(round(toBeatTime(tool.maxShrAngle), 3));
+        $('#speedpause-max-beat').val(round(toBeatTime(tool.maxSpeedPause), 3));
+        $('#vb-min-beat').val(round(toBeatTime(tool.vb.min), 3));
+        $('#vb-max-beat').val(round(toBeatTime(tool.vb.max), 3));
+        $('#apply-this').prop('disabled', false);
+        $('#apply-all').prop('disabled', false);
         $('.settings').prop('disabled', false);
-        flagLoaded = true;
-        UILoadingStatus(100, 'Map successfully loaded!');
+        flag.loaded = true;
+        UILoadingStatus('info', 'Map successfully loaded!');
     }
     else {
-        alert('Could not find Info.dat file.');
-        UILoadingStatus(0, 'No map loaded');
+        UILoadingStatus('info', 'Couldn\'t find Info.dat, try again', 0);
     }
 }
 
@@ -139,24 +135,24 @@ function loadDifficulty(str) {
         if (customData._BPMChanges) BPMChanges = customData._BPMChanges;
         else if (customData._bpmChanges) BPMChanges = customData._bpmChanges;
         if (BPMChanges && BPMChanges.length > 0) {
-            let curMinBPM = mapInfo._beatsPerMinute, curMaxBPM = mapInfo._beatsPerMinute;
+            let curMinBPM = map.info._beatsPerMinute, curMaxBPM = map.info._beatsPerMinute;
             for (let i = 0, len = BPMChanges.length; i < len; i++) {
                 if (BPMChanges[i]._BPM < curMinBPM) curMinBPM = BPMChanges[i]._BPM;
                 else if (BPMChanges[i]._BPM > curMaxBPM) curMaxBPM = BPMChanges[i]._BPM;
                 else if (BPMChanges[i]._bpm < curMinBPM) curMinBPM = BPMChanges[i]._bpm;
                 else if (BPMChanges[i]._bpm > curMaxBPM) curMaxBPM = BPMChanges[i]._bpm;
-                if (!flagBPMChanges) mapBPMChange.push(BPMChanges[i]);
+                if (!flag.map.bpm.change) map.bpm.change.push(BPMChanges[i]);
             } // TODO: actually write proper BPM change check between diff rather than based on min, max value lol
-            if (flagBPMChanges && (mapMinBPM != curMinBPM || mapMaxBPM != curMaxBPM)) flagOddBPM = true;
-            else if (mapMinBPM > curMinBPM || mapMaxBPM < curMaxBPM) flagBPMChanges = true;
+            if (flag.map.bpm.change && (map.bpm.min !== curMinBPM || map.bpm.max !== curMaxBPM)) flag.map.bpm.odd = true;
+            else if (map.bpm.min > curMinBPM || map.bpm.max < curMaxBPM) flag.map.bpm.change = true;
             mapUpdateBPMRange(curMinBPM, curMaxBPM);
-            UIUpdateMapInfoBPM(mapMinBPM, mapMaxBPM);
+            UIUpdateMapInfoBPM(map.bpm.min, map.bpm.max);
         }
     }
 
     if (diff._notes.length > 0 || diff._obstacles.length > 0) {
-        diff._duration = getLastInteractiveTime(diff._notes, diff._obstacles, mapInfo._beatsPerMinute);
-        if (!flagLoadAudio) calcMapDuration(mapInfo._beatsPerMinute, diff._notes, diff._obstacles);
+        diff._duration = getLastInteractiveTime(diff, map.info._beatsPerMinute);
+        if (!flag.map.load.audioAudio) calcMapDuration(diff._notes, diff._obstacles, map.info._beatsPerMinute);
     }
     return diff;
 }
@@ -168,62 +164,70 @@ async function mapTool(charName, diff) {
             offset = diff._customData._editorOffset / 1000;
     }
 
-    const bpm = mapInfo._beatsPerMinute;
     let BPMChanges;
     if (diff._data._customData) {
         if (diff._data._customData._BPMChanges) BPMChanges = diff._data._customData._BPMChanges;
         else if (diff._data._customData._bpmChanges) BPMChanges = diff._data._customData._bpmChanges;
     }
-    const bpmc = getBPMChangesTime(bpm, offset, BPMChanges);
-    const startTime = getFirstInteractiveTime(diff._data._notes, diff._data._obstacles, bpm);
+    const startTime = getFirstInteractiveTime(diff._data, map.info._beatsPerMinute);
+
+    const mapSettings = {
+        bpm: map.info._beatsPerMinute,
+        bpmc: getBPMChangesTime(map.info._beatsPerMinute, offset, BPMChanges),
+        offset: offset,
+        njs: diff._noteJumpMovementSpeed,
+        njsOffset: diff._noteJumpStartBeatOffset
+    }
 
     let arr = [];
-    console.log('Analysing', charName, diff._difficulty);
+    console.log('analysing', charName, diff._difficulty);
     if (startTime < 1.5) arr.push(outTxtBold('Hot start', `${round(startTime, 2)}s`));
     if (countEventLight10(diff._data._events) < 10) arr.push(outTxtBold('Lack of lighting events', '(<=10 events)'));
-    arr.push(outTxtBold(`>${maxEBPM}EBPM warning []`, getEffectiveBPMTime(diff._data._notes, bpm, offset, bpmc)));
-    arr.push(outTxtBold(`>${maxEBPMS}EBPM (swing) warning []`, getEffectiveBPMSwingTime(diff._data._notes, bpm, offset, bpmc)));
+    arr.push(outTxtBold(`>${tool.ebpm.th}EBPM warning []`, getEffectiveBPMTime(diff._data, mapSettings)));
+    arr.push(outTxtBold(`>${tool.ebpm.thSwing}EBPM (swing) warning []`, getEffectiveBPMSwingTime(diff._data, mapSettings)));
 
-    arr.push(outTxtBold('Note(s) before start time', findOutStartNote(diff._data._notes, mapInfo._beatsPerMinute)));
-    arr.push(outTxtBold('Note(s) after end time', findOutEndNote(diff._data._notes, mapInfo._beatsPerMinute)));
-    arr.push(outTxtBold('Event(s) before start time', findOutStartEvent(diff._data._events, mapInfo._beatsPerMinute)));
-    arr.push(outTxtBold('Event(s) after end time', findOutEndEvent(diff._data._events, mapInfo._beatsPerMinute)));
-    arr.push(outTxtBold('Obstacle(s) before start time', findOutStartObstacle(diff._data._obstacles, mapInfo._beatsPerMinute)));
-    arr.push(outTxtBold('Obstacle(s) after end time', findOutEndObstacle(diff._data._obstacles, mapInfo._beatsPerMinute)));
+    arr.push(outTxtBold('Note(s) before start time', findOutStartNote(diff._data, mapSettings)));
+    if (flag.map.load.audio) arr.push(outTxtBold('Note(s) after end time', findOutEndNote(diff._data, mapSettings)));
+    arr.push(outTxtBold('Event(s) before start time', findOutStartEvent(diff._data, mapSettings)));
+    if (flag.map.load.audio) arr.push(outTxtBold('Event(s) after end time', findOutEndEvent(diff._data, mapSettings)));
+    arr.push(outTxtBold('Obstacle(s) before start time', findOutStartObstacle(diff._data, mapSettings)));
+    if (flag.map.load.audio) arr.push(outTxtBold('Obstacle(s) after end time', findOutEndObstacle(diff._data, mapSettings)));
 
-    arr.push(outTxtBold('Zero width/duration wall []', detectZeroWall(diff._data._obstacles, bpm, offset, bpmc)));
-    arr.push(outTxtBold('Invalid wall []', detectInvalidWall(diff._data._obstacles, bpm, offset, bpmc)));
-    arr.push(outTxtBold('Negative wall []', detectNegativeWall(diff._data._obstacles, bpm, offset, bpmc)));
-    arr.push(outTxtBold('2-center wall []', detectCenterWall(diff._data._obstacles, bpm, offset, bpmc)));
-    arr.push(outTxtBold('<15ms wall []', detectShortWall(diff._data._obstacles, bpm, offset, bpmc)));
+    arr.push(outTxtBold('Zero width/duration wall []', detectZeroWall(diff._data, mapSettings)));
+    arr.push(outTxtBold('Invalid wall []', detectInvalidWall(diff._data, mapSettings)));
+    arr.push(outTxtBold('Negative wall []', detectNegativeWall(diff._data, mapSettings)));
+    arr.push(outTxtBold('2-center wall []', detectCenterWall(diff._data, mapSettings)));
+    arr.push(outTxtBold('<15ms wall []', detectShortWall(diff._data, mapSettings)));
+    // arr.push(outTxtBold('Crouch wall []', detectCrouchWall(diff._data, mapSettings)));
 
-    if (flagToolDD) arr.push(outTxtBold('Double-directional []', detectDoubleDirectional(diff._data._notes, bpm, offset, bpmc)));
-    if (flagToolvBlock) arr.push(outTxtBold('Vision blocked []', detectVisionBlock(diff._data._notes, bpm, offset, bpmc)));
-    arr.push(outTxtBold('Stacked note []', detectStackedNote(diff._data._notes, bpm, offset, bpmc)));
-    if (beatPrecision.length > 0) arr.push(outTxtBold('Off-beat precision []', detectOffPrecision(diff._data._notes, bpm, offset, bpmc)));
-    if (flagToolHBStair) arr.push(outTxtBold('Hitbox staircase []', detectHitboxStaircase(diff._data._notes, bpm, offset, bpmc)));
-    if (flagToolshrAngle) arr.push(outTxtBold('Shrado angle []', detectShrAngle(diff._data._notes, bpm, offset, bpmc)));
-    let text = arr.filter(function(x) {
-        return x != '';
+    if (flag.tool.dd) arr.push(outTxtBold('Double-directional []', detectDoubleDirectional(diff._data, mapSettings)));
+    if (flag.tool.vb.note) arr.push(outTxtBold('Vision blocked []', detectVisionBlock(diff._data, mapSettings)));
+    arr.push(outTxtBold('Stacked note []', detectStackedNote(diff._data, mapSettings)));
+    if (tool.beatPrec.length > 0) arr.push(outTxtBold('Off-beat precision []', detectOffPrecision(diff._data, mapSettings)));
+    if (flag.tool.hb.staircase) arr.push(outTxtBold('Hitbox staircase []', detectHitboxStaircase(diff._data, mapSettings)));
+    if (flag.tool.shrAngle) arr.push(outTxtBold('Shrado angle []', detectShrAngle(diff._data, mapSettings)));
+    if (flag.tool.speedPause) arr.push(outTxtBold('Speed pause []', detectSpeedPause(diff._data, mapSettings)));
+    let txt = arr.filter(function(x) {
+        return x !== '';
     });
-    return text;
+    return txt;
 }
 
 // fallback if audio loading didnt work
-function calcMapDuration(bpm, notes, obstacles) {
+function calcMapDuration(notes, obstacles, bpm) {
     let lastNoteTime = notes[notes.length - 1]._time / bpm * 60 || 0;
     let lastObstacleTime = 0;
     for (let i = obstacles.length - 1; i >= 0; i--)
         lastObstacleTime = Math.max(lastObstacleTime, (obstacles[i]._time + obstacles[i]._duration) / bpm * 60);
     let dur = Math.max(lastNoteTime, lastObstacleTime);
 
-    if (!songDuration) songDuration = dur;
-    else if (songDuration < dur) songDuration = dur;
-    $('#songduration').text(`${toMMSS(songDuration)} ⚠️ no audio, using map duration`);
+    if (!map.audio.duration) map.audio.duration = dur;
+    else if (map.audio.duration < dur) map.audio.duration = dur;
+    $('#song-duration').text(`${toMMSS(map.audio.duration)} ⚠️ no audio, using map duration`);
 }
 
 function mapUpdateBPMRange(min, max) {
-    if (!mapMinBPM || !mapMaxBPM) mapMinBPM = min, mapMaxBPM = max;
-    if (min < mapMinBPM) mapMinBPM = min;
-    if (max > mapMaxBPM) mapMaxBPM = max;
+    if (!map.bpm.min || !map.bpm.max) map.bpm.min = min, map.bpm.max = max;
+    if (min < map.bpm.min) map.bpm.min = min;
+    if (max > map.bpm.max) map.bpm.max = max;
 }
