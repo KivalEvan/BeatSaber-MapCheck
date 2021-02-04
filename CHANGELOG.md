@@ -1,12 +1,16 @@
 # Changelog
-## Unreleased
 ## v1.3.1 [2021-02-05]
 ### Changed
+* DD check now look after bomb (simple)
 * Changed default speed pause to 75ms
 * Ease colour gradient for accordion
+
 ### Fixed
 * Input error handling when map fails to load
 * Hitbox Staircase now potentially consistently look for the end of note (except dot note, fuck dot note)
+* NaN value for SPS for map without note
+
+## v1.3.0 [2021-02-04]
 ### Added
 * global.js - for global variable and settings
 * URL support
