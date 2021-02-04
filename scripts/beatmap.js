@@ -198,6 +198,7 @@ async function mapTool(charName, diff) {
     arr.push(outTxtBold('Negative wall []', detectNegativeWall(diff._data, mapSettings)));
     arr.push(outTxtBold('2-center wall []', detectCenterWall(diff._data, mapSettings)));
     arr.push(outTxtBold('<15ms wall []', detectShortWall(diff._data, mapSettings)));
+    // arr.push(outTxtBold('Crouch wall []', detectCrouchWall(diff._data, mapSettings)));
 
     if (flag.tool.dd) arr.push(outTxtBold('Double-directional []', detectDoubleDirectional(diff._data, mapSettings)));
     if (flag.tool.vb.note) arr.push(outTxtBold('Vision blocked []', detectVisionBlock(diff._data, mapSettings)));

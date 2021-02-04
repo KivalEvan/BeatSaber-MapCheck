@@ -493,6 +493,7 @@ function detectStackedNote(diff, mapSettings) {
 }
 
 // im having pain pls help
+// idk how this work but it does
 function detectSpeedPause(diff, mapSettings) {
     const { _notes: notes } = diff;
     const { bpm, bpmc, offset } = mapSettings;

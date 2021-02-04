@@ -535,6 +535,13 @@ async function UICreateDiffInfo(charName, diff) {
     txtMap.push(`Effective BPM: ${(findEffectiveBPM(diff._data._notes, bpm)).toFixed(2)}`);
     txtMap.push(`Effective BPM (swing): ${(findEffectiveBPMSwing(diff._data._notes, bpm)).toFixed(2)}`);
     if (bpmc.length > 0) txtMap.push(`BPM changes: ${bpmc.length}`);
+    const mapSettings = {
+        bpm: map.info._beatsPerMinute,
+        bpmc: getBPMChangesTime(map.info._beatsPerMinute, offset, BPMChanges),
+        offset: offset,
+        njs: diff._noteJumpMovementSpeed,
+        njsOffset: diff._noteJumpStartBeatOffset
+    }
 
     // note
     let txtNote = [];
@@ -559,6 +566,8 @@ async function UICreateDiffInfo(charName, diff) {
     txtObstacle.push('');
     txtObstacle.push(`Obstacles: ${diff._data._obstacles.length}`);
     txtObstacle.push(`• Interactive: ${countInteractiveObstacle(diff._data._obstacles)}`);
+    let crouchWall = detectCrouchWall(diff._data, mapSettings)
+    if (crouchWall.length > 0) txtObstacle.push(`• Crouch: ${crouchWall.length}`);
 
     // event n stuff
     let txtEvent = [];
@@ -630,7 +639,6 @@ async function UICreateDiffInfo(charName, diff) {
         id: 'obstacle',
         html: txtObstacle.join('<br>')
     });
-
     // event
     let diffPanelEvent = $('<div>', {
         class: 'diff-panel',

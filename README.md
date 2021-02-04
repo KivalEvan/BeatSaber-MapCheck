@@ -21,7 +21,6 @@ Visit the [github.io page](https://kivalevan.github.io/BeatSaber-MapCheck/) or d
 * Basic parity check
 * Basic unrankable hit check
 * Bomb reset detection
-* Crouch wall detection
 * More extensive stats
 
 ## Known Issues

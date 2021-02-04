@@ -4,6 +4,7 @@
 * global.js - for global variable and settings
 * URL support
 * Speed pause detection (EXPERIMENTAL)
+* Crouch wall detection
 
 ### Changed
 * Code refactored

@@ -69,16 +69,7 @@ function detectCenterWall(diff, mapSettings) {
     for (let i = 0, len = obstacles.length; i < len; i++) {
         const obstacle = obstacles[i];
         if (obstacle._type === 0) {
-            if (obstacle._width > 2) {
-                arr.push(adjustTime(obstacle._time, bpm, offset, bpmc));
-                if (wallLonger(obstacle, wallLFull)) {
-                    wallLFull = obstacle;
-                }
-                if (wallLonger(obstacle, wallRFull)) {
-                    wallRFull = obstacle;
-                }
-            }
-            else if (obstacle._width > 1 && obstacle._lineIndex === 1) {
+            if (obstacle._width > 2 || (obstacle._width > 1 && obstacle._lineIndex === 1)) {
                 arr.push(adjustTime(obstacle._time, bpm, offset, bpmc));
                 if (wallLonger(obstacle, wallLFull)) {
                     wallLFull = obstacle;
@@ -133,6 +124,7 @@ function detectCenterWall(diff, mapSettings) {
 
 // overly complicated stuff again
 // jfc i need to put these repetition in function or somethin
+// ok maybe i need to simplify it somehow
 // pain
 function detectShortWall(diff, mapSettings) {
     const { _obstacles: obstacles } = diff;
@@ -145,21 +137,7 @@ function detectShortWall(diff, mapSettings) {
     for (let i = 0, len = obstacles.length; i < len; i++) {
         const obstacle = obstacles[i];
         if (obstacle._type === 0 && obstacle._duration > 0) {
-            if (obstacle._width > 2) {
-                if (wallLonger(obstacle, wallLFull)) {
-                    if (isBelowTH(obstacle._duration, tool.obstacle.minDur)) {
-                        arr.push(adjustTime(obstacle._time, bpm, offset, bpmc));
-                    }
-                    wallLFull = obstacle;
-                }
-                if (wallLonger(obstacle, wallRFull)) {
-                    if (isBelowTH(obstacle._duration, tool.obstacle.minDur)) {
-                        arr.push(adjustTime(obstacle._time, bpm, offset, bpmc));
-                    }
-                    wallRFull = obstacle;
-                }
-            }
-            else if (obstacle._width > 1 && obstacle._lineIndex === 1) {
+            if (obstacle._width > 2 || (obstacle._width > 1 && obstacle._lineIndex === 1)) {
                 if (wallLonger(obstacle, wallLFull)) {
                     if (isBelowTH(obstacle._duration, tool.obstacle.minDur)) {
                         arr.push(adjustTime(obstacle._time, bpm, offset, bpmc));
@@ -211,21 +189,7 @@ function detectShortWall(diff, mapSettings) {
             }
         }
         else if (obstacle._type === 1 && obstacle._duration > 0) {
-            if (obstacle._width > 2) {
-                if (wallLonger(obstacle, wallLHalf)) {
-                    if (isBelowTH(obstacle._duration, tool.obstacle.minDur) && wallLonger2(obstacle, wallLFull) && wallLonger2(obstacle, wallLHalf)) {
-                        arr.push(adjustTime(obstacle._time, bpm, offset, bpmc));
-                    }
-                    wallLHalf = obstacle;
-                }
-                if (wallLonger(obstacle, wallRHalf)) {
-                    if (isBelowTH(obstacle._duration, tool.obstacle.minDur) && wallLonger2(obstacle, wallRFull) && wallLonger2(obstacle, wallRHalf)) {
-                        arr.push(adjustTime(obstacle._time, bpm, offset, bpmc));
-                    }
-                    wallRHalf = obstacle;
-                }
-            }
-            else if (obstacle._width > 1 && obstacle._lineIndex === 1) {
+            if (obstacle._width > 2 || (obstacle._width > 1 && obstacle._lineIndex === 1)) {
                 if (wallLonger(obstacle, wallLHalf)) {
                     if (isBelowTH(obstacle._duration, tool.obstacle.minDur) && wallLonger2(obstacle, wallLFull) && wallLonger2(obstacle, wallLHalf)) {
                         arr.push(adjustTime(obstacle._time, bpm, offset, bpmc));
@@ -275,9 +239,97 @@ function detectShortWall(diff, mapSettings) {
                     }
                 }
             }
-            else if (obstacle._width > 1 || obstacle._lineIndex === 1 || obstacle._lineIndex === 2) {
-                if (isBelowTH(obstacle._duration, tool.obstacle.minDur) && obstacle._time > 0) {
+        }
+    }
+    arr = arr.filter(function(x, i, ary) {
+        return !i || x !== ary[i - 1];
+    });
+    return arr;
+}
+
+// pain 2 electric boogaloo
+// need to figure out only when crouch happen
+function detectCrouchWall(diff, mapSettings) {
+    const { _obstacles: obstacles } = diff;
+    const { bpm, bpmc, offset } = mapSettings;
+    let arr = [];
+    let wallLFull = { _time: 0, _duration: 0 };
+    let wallRFull = { _time: 0, _duration: 0 };
+    let wallLHalf = { _time: 0, _duration: 0 };
+    let wallRHalf = { _time: 0, _duration: 0 };
+    for (let i = 0, len = obstacles.length; i < len; i++) {
+        const obstacle = obstacles[i];
+        if (obstacle._type === 0 && obstacle._duration > 0) {
+            if (obstacle._width > 2 || (obstacle._width > 1 && obstacle._lineIndex === 1)) {
+                if (wallLonger(obstacle, wallLFull)) {
+                    wallLFull = obstacle;
+                }
+                if (wallLonger(obstacle, wallRFull)) {
+                    wallRFull = obstacle;
+                }
+            }
+            else if (obstacle._width === 2) {
+                if (obstacle._lineIndex === 0) {
+                    if (wallLonger(obstacle, wallLFull)) {
+                        wallLFull = obstacle;
+                    }
+                }
+                else if (obstacle._lineIndex === 2) {
+                    if (wallLonger(obstacle, wallRFull)) {
+                        wallRFull = obstacle;
+                    }
+                }
+            }
+            else if (obstacle._width === 1) {
+                if (obstacle._lineIndex === 1) {
+                    if (wallLonger(obstacle, wallLFull)) {
+                        wallLFull = obstacle;
+                    }
+                }
+                else if (obstacle._lineIndex === 2) {
+                    if (wallLonger(obstacle, wallRFull)) {
+                        wallRFull = obstacle;
+                    }
+                }
+            }
+        }
+        else if (obstacle._type === 1 && obstacle._duration > 0) {
+            if (obstacle._width > 2 || (obstacle._width > 1 && obstacle._lineIndex === 1)) {
+                if (wallLonger(obstacle, wallLHalf)) {
                     arr.push(adjustTime(obstacle._time, bpm, offset, bpmc));
+                    wallLHalf = obstacle;
+                }
+                if (wallLonger(obstacle, wallRHalf)) {
+                    arr.push(adjustTime(obstacle._time, bpm, offset, bpmc));
+                    wallRHalf = obstacle;
+                }
+            }
+            else if (obstacle._width === 2) {
+                if (obstacle._lineIndex === 0) {
+                    if (wallLonger(obstacle, wallLHalf)) {
+                        arr.push(adjustTime(obstacle._time, bpm, offset, bpmc));
+                        wallLHalf = obstacle;
+                    }
+                }
+                else if (obstacle._lineIndex === 2) {
+                    if (wallLonger(obstacle, wallRHalf)) {
+                        arr.push(adjustTime(obstacle._time, bpm, offset, bpmc));
+                        wallRHalf = obstacle;
+                    }
+                }
+            }
+            else if (obstacle._width === 1) {
+                if (obstacle._lineIndex === 1) {
+                    if (wallLonger(obstacle, wallLHalf)) {
+                        arr.push(adjustTime(obstacle._time, bpm, offset, bpmc));
+                        wallLHalf = obstacle;
+                    }
+                }
+                else if (obstacle._lineIndex === 2) {
+                    if (wallLonger(obstacle, wallRHalf)) {
+                        arr.push(adjustTime(obstacle._time, bpm, offset, bpmc));
+                        wallRHalf = obstacle;
+                    }
                 }
             }
         }
