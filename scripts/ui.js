@@ -134,8 +134,12 @@ function downloadMap(url) {
 function readFile() {
     UILoadingStatus('info', 'Reading file input', 0);
     let file = this.files[0];
+    if (file === undefined) {
+        UILoadingStatus('info', 'No file input', 0);
+        throw new Error('No file input');
+    }
     const fr = new FileReader();
-    if (file.name.substr(-4) === '.zip' || file.name.substr(-4) === '.bsl') {
+    if (file && file.name.substr(-4) === '.zip' || file.name.substr(-4) === '.bsl') {
         fr.readAsArrayBuffer(file);
         fr.addEventListener('load', function(e) {
             extractZip(e.target.result);
@@ -153,13 +157,29 @@ async function extractZip(data) {
         mapZip = await JSZip.loadAsync(data);
         await loadMap(mapZip);
     } catch(err) {
-        flag.loading = false;
+        mapReset();
         $('.settings').prop('disabled', false);
-        $('.input').css('display', 'block');
+        $('.input').prop('disabled', false);
+        $('#input-container').css('display', 'block');
+        $('#input-file').css('display', 'none');
         $('.metadata').css('display', 'none');
         UILoadingStatus('error', 'Error while loading map!', 100);
         console.error(err);
     }
+}
+
+function mapReset() {
+    flag.loading = false;
+    flag.loaded = false;
+    map.id = null;
+    map.url = null;
+    map.set = null;
+    map.bpm.min = null;
+    map.bpm.max = null;
+    map.analysis = [];
+    flag.map.load.audio = false;
+    flag.map.bpm.change = false;
+    flag.map.bpm.odd = false;
 }
 
 $('#mapset').change(function() {
@@ -400,7 +420,7 @@ function UIUpdateMapInfo() {
     $('#level-author').text(`Mapped by  ${map.info._levelAuthorName}`);
     $('#environment').text(`${envName[map.info._environmentName]} Environment`);
     
-    $('.input').css('display', 'none');
+    $('#input-container').css('display', 'none');
     $('.metadata').css('display', 'block');
 }
 

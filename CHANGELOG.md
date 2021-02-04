@@ -1,5 +1,11 @@
 # Changelog
 ## Unreleased
+## v1.3.1 [2021-02-05]
+### Changed
+* Changed default speed pause to 75ms
+* Ease colour gradient for accordion
+### Fixed
+* Input error handling when map fails to load
 ### Added
 * global.js - for global variable and settings
 * URL support

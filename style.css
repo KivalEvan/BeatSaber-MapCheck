@@ -108,6 +108,7 @@ body {
     outline: none;
     font-size: 1.25em;
     text-align: left;
+    transition: background-color 0.25s ease;
 }
 .active, .accordion:hover {
   background-color: #444;
