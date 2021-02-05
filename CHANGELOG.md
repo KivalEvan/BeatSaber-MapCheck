@@ -1,7 +1,7 @@
 # Changelog
 ## v1.3.1 [2021-02-05]
 ### Added
-* Map link for URL or ID input
+* Map link for URL or ID input by the cover image
 
 ### Changed
 * DD check now look after bomb (simple)
@@ -19,6 +19,7 @@
 * URL support
 * Speed pause detection (EXPERIMENTAL)
 * Crouch wall detection
+* Web icon
 
 ### Changed
 * Code refactored

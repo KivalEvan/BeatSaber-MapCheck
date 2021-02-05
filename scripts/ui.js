@@ -2,20 +2,8 @@
     i dunno what to describe here
     it's fairly obvious; creating, manipulating, and deleting DOM element with JQuery */
 
-$('#input-url').keydown(function(event) {
-    if (event.which === 13) {
-        if (this.value !== '') {
-            downloadFromURL(this.value);
-        }
-    }
-});
-$('#input-id').keydown(function(event) {
-    if (event.which === 13) {
-        if (this.value !== '') {
-            downloadFromID(this.value);
-        }
-    }
-});
+$('#input-url').keydown(textInput);
+$('#input-id').keydown(textInput);
 $('#input-file').change(readFile);
 
 async function downloadFromURL(input) {
@@ -132,6 +120,14 @@ function downloadMap(url) {
 
         xhr.send();
     });
+}
+
+function textInput(event) {
+    if (event.which === 13) {
+        if (this.value !== '') {
+            downloadFromID(this.value);
+        }
+    }
 }
 
 function readFile() {
