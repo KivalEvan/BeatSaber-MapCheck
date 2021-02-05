@@ -10,7 +10,7 @@
 
 ### Fixed
 * Input error handling when map fails to load
-* Hitbox Staircase now potentially consistently look for the end of note (except dot note, fuck dot note)
+* Hitbox Staircase potentially consistently look for the end of note (except dot note, fuck dot note)
 * NaN value SPS for map without note
 
 ## v1.3.0 [2021-02-04]
