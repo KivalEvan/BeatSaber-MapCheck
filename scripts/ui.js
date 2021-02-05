@@ -2,20 +2,8 @@
     i dunno what to describe here
     it's fairly obvious; creating, manipulating, and deleting DOM element with JQuery */
 
-$('#input-url').keydown(function(event) {
-    if (event.which === 13) {
-        if (this.value !== '') {
-            downloadFromURL(this.value);
-        }
-    }
-});
-$('#input-id').keydown(function(event) {
-    if (event.which === 13) {
-        if (this.value !== '') {
-            downloadFromID(this.value);
-        }
-    }
-});
+$('#input-url').keydown(textInput);
+$('#input-id').keydown(textInput);
 $('#input-file').change(readFile);
 
 async function downloadFromURL(input) {
@@ -36,6 +24,7 @@ async function downloadFromURL(input) {
     try {
         // apparently i need cors proxy
         let res = await downloadMap('https://cors-anywhere.herokuapp.com/' + url);
+        map.url = url;
         extractZip(res);
     } catch(err) {
         $('.input').prop('disabled', false);
@@ -62,6 +51,8 @@ async function downloadFromID(input) {
     let url = 'https://beatsaver.com/api/download/key/' + id;
     try {
         let res = await downloadMap(url);
+        map.id = id;
+        map.url = 'https://beatsaver.com/beatmap/' + id;
         extractZip(res);
     } catch(err) {
         $('.input').prop('disabled', false);
@@ -131,11 +122,23 @@ function downloadMap(url) {
     });
 }
 
+function textInput(event) {
+    if (event.which === 13) {
+        if (this.value !== '') {
+            downloadFromID(this.value);
+        }
+    }
+}
+
 function readFile() {
     UILoadingStatus('info', 'Reading file input', 0);
     let file = this.files[0];
+    if (file === undefined) {
+        UILoadingStatus('info', 'No file input', 0);
+        throw new Error('No file input');
+    }
     const fr = new FileReader();
-    if (file.name.substr(-4) === '.zip' || file.name.substr(-4) === '.bsl') {
+    if (file && file.name.substr(-4) === '.zip' || file.name.substr(-4) === '.bsl') {
         fr.readAsArrayBuffer(file);
         fr.addEventListener('load', function(e) {
             extractZip(e.target.result);
@@ -153,13 +156,30 @@ async function extractZip(data) {
         mapZip = await JSZip.loadAsync(data);
         await loadMap(mapZip);
     } catch(err) {
-        flag.loading = false;
+        mapReset();
         $('.settings').prop('disabled', false);
-        $('.input').css('display', 'block');
-        $('.metadata').css('display', 'none');
         UILoadingStatus('error', 'Error while loading map!', 100);
         console.error(err);
     }
+}
+
+function mapReset() {
+    $('#map-link').text('').attr('href', '').css('display', 'none');
+    $('.input').prop('disabled', false);
+    $('#input-container').css('display', 'block');
+    $('#input-file').css('display', 'none');
+    $('.metadata').css('display', 'none');
+    flag.loading = false;
+    flag.loaded = false;
+    map.id = null;
+    map.url = null;
+    map.set = null;
+    map.bpm.min = null;
+    map.bpm.max = null;
+    map.analysis = [];
+    flag.map.load.audio = false;
+    flag.map.bpm.change = false;
+    flag.map.bpm.odd = false;
 }
 
 $('#mapset').change(function() {
@@ -397,10 +417,10 @@ function UIUpdateMapInfo() {
     $('#song-name').text(map.info._songName);
     $('#song-subname').text(map.info._songSubname);
     $('#song-bpm').text(`${round(map.info._beatsPerMinute, 3)} BPM`);
-    $('#level-author').text(`Mapped by  ${map.info._levelAuthorName}`);
+    $('#level-author').text(`Mapped by ${map.info._levelAuthorName ? map.info._levelAuthorName : 'Unknown Mapper'}`);
     $('#environment').text(`${envName[map.info._environmentName]} Environment`);
     
-    $('.input').css('display', 'none');
+    $('#input-container').css('display', 'none');
     $('.metadata').css('display', 'block');
 }
 

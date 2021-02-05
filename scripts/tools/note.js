@@ -212,6 +212,28 @@ function detectDoubleDirectional(diff, mapSettings) {
             }
             else lastBlueDir = note._cutDirection;
             lastBlue = note;
+        } else if (note._type === 3) {
+            // on bottom row
+            if (note._lineLayer === 0) {
+                //on right center
+                if (note._lineIndex === 1) {
+                    lastRedDir = 0
+                }
+                //on left center
+                if (note._lineIndex === 2) {
+                    lastBlueDir = 0
+                }
+            //on top row
+            } else if (note._lineLayer === 2) {
+                //on right center
+                if (note._lineIndex === 1) {
+                    lastRedDir = 1
+                }
+                //on left center
+                if (note._lineIndex === 2) {
+                    lastBlueDir = 1
+                }
+            }
         }
     }
     arr = arr.filter(function(x, i, ary) {
@@ -303,6 +325,50 @@ function checkPrec(nt) {
     return true;
 }
 
+function checkEndNote(n1, n2) {
+    // fuck u and ur dot note stack
+    if (n1._cutDirection === 8 && n2._cutDirection === 8) return false;
+    // if end note on right side
+    if (n1._lineIndex > n2._lineIndex) {
+        // check if end note is arrowed
+        if (n1._cutDirection === 5 || n1._cutDirection === 3 || n1._cutDirection === 7) {
+            return true;
+        }
+        // check if end note is dot and start arrow is pointing to it
+        if ((n2._cutDirection === 5 || n2._cutDirection === 3 || n2._cutDirection === 7) && n1._cutDirection === 8) {
+            return true;
+        }
+    }
+    // if end note on left side
+    if (n1._lineIndex < n2._lineIndex) {
+        if (n1._cutDirection === 6 || n1._cutDirection === 2 || n1._cutDirection === 4) {
+            return true;
+        }
+        if ((n2._cutDirection === 6 || n2._cutDirection === 2 || n2._cutDirection === 4) && n1._cutDirection === 8) {
+            return true;
+        }
+    }
+    // if end note is above
+    if (n1._lineLayer > n2._lineLayer) {
+        if (n1._cutDirection === 4 || n1._cutDirection === 0 || n1._cutDirection === 5) {
+            return true;
+        }
+        if ((n2._cutDirection === 4 || n2._cutDirection === 0 || n2._cutDirection === 5) && n1._cutDirection === 8) {
+            return true;
+        }
+    }
+    // if end note is below
+    if (n1._lineLayer < n2._lineLayer) {
+        if (n1._cutDirection === 6 || n1._cutDirection === 1 || n1._cutDirection === 7) {
+            return true;
+        }
+        if ((n2._cutDirection === 6 || n2._cutDirection === 1 || n2._cutDirection === 7) && n1._cutDirection === 8) {
+            return true;
+        }
+    }
+    return false;
+}
+
 // check if note occupies post-swing space
 // also fuck dot note
 // i need to rewrite this
@@ -321,35 +387,34 @@ function detectHitboxStaircase(diff, mapSettings) {
         if (note._type === 0) {
             if (lastRed) { // nested if moment
                 if (swingNext(note, lastRed)) {
-                    if (lastBlue) {
-                        if (note._time - lastBlue._time !== 0 && isBelowTH(note._time - lastBlue._time, tool.hitbox.staircase)) {
-                            if (note._lineIndex === blueIndexOccupy && note._lineLayer === blueLayerOccupy) {
-                                arr.push(adjustTime(note._time, bpm, offset, bpmc));
-                            }
+                    if (lastBlue && note._time - lastBlue._time !== 0 && isBelowTH(note._time - lastBlue._time, tool.hitbox.staircase)) {
+                        if (note._lineIndex === blueIndexOccupy && note._lineLayer === blueLayerOccupy) {
+                            arr.push(adjustTime(note._time, bpm, offset, bpmc));
                         }
                     }
-                } // honestly what the fuck am i doing?
-                if (note._cutDirection !== 8) {
-                    redIndexOccupy = note._lineIndex + swingCutDirectionSpace[note._cutDirection][0];
-                    redLayerOccupy = note._lineLayer + swingCutDirectionSpace[note._cutDirection][1];
-                }
-                else { // fuck dot note
-                    if (swingNext(note, lastRed)) {
+                    if (note._cutDirection !== 8) {
+                        redIndexOccupy = note._lineIndex + swingCutDirectionSpace[note._cutDirection][0];
+                        redLayerOccupy = note._lineLayer + swingCutDirectionSpace[note._cutDirection][1];
+                    } else { // no dot note >:(
                         redIndexOccupy = -1;
                         redLayerOccupy = -1;
                     }
-                    else {
+                }
+                else if (checkEndNote(note, lastRed)) {
+                    if (note._cutDirection !== 8) {
+                        redIndexOccupy = note._lineIndex + swingCutDirectionSpace[note._cutDirection][0];
+                        redLayerOccupy = note._lineLayer + swingCutDirectionSpace[note._cutDirection][1];
+                    }
+                    else { // re
                         redIndexOccupy = note._lineIndex + swingCutDirectionSpace[lastRed._cutDirection][0];
                         redLayerOccupy = note._lineLayer + swingCutDirectionSpace[lastRed._cutDirection][1];
                     }
                 }
-            }
-            else { // first note
+            } else {
                 if (note._cutDirection !== 8) {
                     redIndexOccupy = note._lineIndex + swingCutDirectionSpace[note._cutDirection][0];
                     redLayerOccupy = note._lineLayer + swingCutDirectionSpace[note._cutDirection][1];
-                }
-                else { // dot note is ambiguous
+                } else { // dot note is ambiguous
                     redIndexOccupy = -1;
                     redLayerOccupy = -1;
                 }
@@ -359,35 +424,34 @@ function detectHitboxStaircase(diff, mapSettings) {
         else if (note._type === 1) {
             if (lastBlue) {
                 if (swingNext(note, lastBlue)) {
-                    if (lastRed) {
-                        if (note._time - lastRed._time !== 0 && isBelowTH(note._time - lastRed._time, tool.hitbox.staircase)) {
-                            if (note._lineIndex === redIndexOccupy && note._lineLayer === redLayerOccupy) {
-                                arr.push(adjustTime(note._time, bpm, offset, bpmc));
-                            }
+                    if (lastRed && note._time - lastRed._time !== 0 && isBelowTH(note._time - lastRed._time, tool.hitbox.staircase)) {
+                        if (note._lineIndex === redIndexOccupy && note._lineLayer === redLayerOccupy) {
+                            arr.push(adjustTime(note._time, bpm, offset, bpmc));
                         }
                     }
-                }
-                if (note._cutDirection !== 8) {
-                    blueIndexOccupy = note._lineIndex + swingCutDirectionSpace[note._cutDirection][0];
-                    blueLayerOccupy = note._lineLayer + swingCutDirectionSpace[note._cutDirection][1];
-                }
-                else {
-                    if (swingNext(note, lastBlue)) {
+                    if (note._cutDirection !== 8) {
+                        blueIndexOccupy = note._lineIndex + swingCutDirectionSpace[note._cutDirection][0];
+                        blueLayerOccupy = note._lineLayer + swingCutDirectionSpace[note._cutDirection][1];
+                    } else {
                         blueIndexOccupy = -1;
                         blueLayerOccupy = -1;
+                    }
+                }
+                else if (checkEndNote(note, lastBlue)) {
+                    if (note._cutDirection !== 8) {
+                        blueIndexOccupy = note._lineIndex + swingCutDirectionSpace[note._cutDirection][0];
+                        blueLayerOccupy = note._lineLayer + swingCutDirectionSpace[note._cutDirection][1];
                     }
                     else {
                         blueIndexOccupy = note._lineIndex + swingCutDirectionSpace[lastBlue._cutDirection][0];
                         blueLayerOccupy = note._lineLayer + swingCutDirectionSpace[lastBlue._cutDirection][1];
                     }
                 }
-            }
-            else {
+            } else {
                 if (note._cutDirection !== 8) {
                     blueIndexOccupy = note._lineIndex + swingCutDirectionSpace[note._cutDirection][0];
                     blueLayerOccupy = note._lineLayer + swingCutDirectionSpace[note._cutDirection][1];
-                }
-                else {
+                } else {
                     blueIndexOccupy = -1;
                     blueLayerOccupy = -1;
                 }

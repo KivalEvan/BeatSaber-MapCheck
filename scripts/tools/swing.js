@@ -75,6 +75,7 @@ function swingPerSecondInfo(diff) {
     const interval = 10;
     const swing = swingCount(diff._notes, diff._duration);
     const swingTotal = swing.l.map(function(num, i) { return num + swing.r[i]; });
+    if (swingTotal.reduce((a, b) => a + b) === 0) return 0;
     let swingIntervalTotal = [];
     
     for (let i = 0, len = Math.ceil(swingTotal.length / interval); i < len; i++) {

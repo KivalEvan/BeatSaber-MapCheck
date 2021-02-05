@@ -10,6 +10,14 @@ async function loadMap(mapZip) {
         map.info = await JSON.parse(infoFileStr);
         
         UIUpdateMapInfo();
+        if (map.url !== null) {
+            if (map.id !== null) {
+                $('#map-link').text(`${map.id}`);
+            } else {
+                $('#map-link').text('Download Link');
+            }
+            $('#map-link').attr('href', map.url).css('display', 'block');
+        }
         mapUpdateBPMRange(map.info._beatsPerMinute, map.info._beatsPerMinute);
 
         // load cover image

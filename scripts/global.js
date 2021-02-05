@@ -2,7 +2,7 @@
     is it really a script if it's just holding a global variable? */
 
 const watermark = 'Kival Evan#5480';
-const version = 'v1.3.0';
+const version = 'v1.3.1';
 
 const flag = {
     loading: false,
@@ -53,7 +53,7 @@ const tool = {
 
     // misc
     maxShrAngle: 0.175,
-    maxSpeedPause: 0.125,
+    maxSpeedPause: 0.075,
 
     // part where no one can control... yet
     stack: 0.01,
@@ -71,6 +71,8 @@ const tool = {
 }
 
 const map = {
+    id: null,
+    url: null,
     info: null,
     set: null,
     bpm: {

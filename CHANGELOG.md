@@ -1,14 +1,25 @@
 # Changelog
-## v1.2.3 [2021-01-29]
-### Fixed
-* Invisible text for difficulty select
+## v1.3.1 [2021-02-05]
+### Added
+* Map link for URL or ID input by the cover image
 
-## v1.2.2 [2021-01-28]
+### Changed
+* DD check now look after bomb (simple)
+* Changed default speed pause to 75ms
+* Ease colour gradient for accordion
+
+### Fixed
+* Input error handling when map fails to load
+* Hitbox Staircase potentially consistently look for the end of note (except dot note, fuck dot note)
+* NaN value SPS for map without note
+
+## v1.3.0 [2021-02-04]
 ### Added
 * global.js - for global variable and settings
 * URL support
 * Speed pause detection (EXPERIMENTAL)
 * Crouch wall detection
+* Web icon
 
 ### Changed
 * Code refactored

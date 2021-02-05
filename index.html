@@ -13,18 +13,20 @@
     <div class="topbar">
       <div class="cover">
         <img id="coverimg" src="./assets/unknown.jpg" alt="No Cover Images">
+        <a id="map-link" href="" target="_blank"></a>
       </div>
       <div class="info">
-        <div class="metadata">
+        <div class="metadata" id="metadata-container">
           <span id="song-name" title="Song Name"></span>
           <span id="song-subname" title="Song Subname"></span><br>
           <span id="song-author" title="Song Author"></span><br>
           <span id="song-bpm" title="Song BPM"></span><br>
           <span id="song-duration" title="Song Duration"></span><br><br>
-          <span id="level-author" title="Level Author"></span><br>
+          <span id="level-author" title="Level Author"></span>
+          <br>
           <span id="environment" title="Environment"></span><br>
         </div>
-        <div class="input">
+        <div class="input" id="input-container">
           <span id="title">Beat Saber</span><br>
           <span id="subtitle">Map Check</span><br>
           <label class="input" for="input-url">Map zip link: </label>
@@ -70,7 +72,7 @@
           <br>
           <input type="checkbox" class="settings" id="speedpause" name="speedpause">
           <label for="speedpause">Speed pause (EXPERIMENTAL)</label><br>
-          <label for="speedpause-max">Stream precision (ms):</label>
+          <label for="speedpause-max">stream precision (ms):</label>
           <input type="number" class="settings" id="speedpause-max" name="speedpause-max" min="0">
           <label for="speedpause-max-beat">(beat):</label>
           <input type="number" class="settings" id="speedpause-max-beat" name="speedpause-max-beat" min="0" step="0.125">
