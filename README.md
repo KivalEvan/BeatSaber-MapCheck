@@ -13,7 +13,6 @@ Map tools to spot specific error, and map stats per each difficulty in one place
 Visit the [github.io page](https://kivalevan.github.io/BeatSaber-MapCheck/) or download a copy and run `index.html` locally on any browser. Tools available within collapsible.
 
 ## Limitations
-* DD check does not care about bomb reset
 * No map modification outside base game support (Mapping Extension, Noodle Extension, etc.)
 
 ## Planned
