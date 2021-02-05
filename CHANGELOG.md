@@ -1,5 +1,8 @@
 # Changelog
 ## v1.3.1 [2021-02-05]
+### Added
+* Map link for URL or ID input
+
 ### Changed
 * DD check now look after bomb (simple)
 * Changed default speed pause to 75ms
@@ -8,7 +11,7 @@
 ### Fixed
 * Input error handling when map fails to load
 * Hitbox Staircase now potentially consistently look for the end of note (except dot note, fuck dot note)
-* NaN value for SPS for map without note
+* NaN value SPS for map without note
 
 ## v1.3.0 [2021-02-04]
 ### Added

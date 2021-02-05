@@ -2,7 +2,7 @@
     is it really a script if it's just holding a global variable? */
 
 const watermark = 'Kival Evan#5480';
-const version = 'v1.3.0';
+const version = 'v1.3.1';
 
 const flag = {
     loading: false,
@@ -71,6 +71,8 @@ const tool = {
 }
 
 const map = {
+    id: null,
+    url: null,
     info: null,
     set: null,
     bpm: {

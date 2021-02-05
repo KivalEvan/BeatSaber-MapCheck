@@ -10,6 +10,7 @@ body {
     background-color: #efefef;
 }
 .cover {
+    position: relative;
     float: left;
     width: 200px;
     height: 200px;
@@ -17,6 +18,25 @@ body {
 .cover img {
     width: 200px;
     height: 200px;
+}
+#map-link, #map-link:visited {
+    position: absolute;
+    display: none;
+    width: 196px;
+    bottom: 0;
+    right: 0;
+    padding-bottom: 4px;
+    padding-right: 4px;
+    color: white;
+    opacity: 0;
+    text-decoration: none;
+    text-align: right;
+    transition: opacity 0.5s ease, background-color 0.25s ease;
+}
+#map-link:hover {
+    background-color: #0007;
+    opacity: 1;
+    text-decoration: underline;
 }
 .info {
     position: relative;

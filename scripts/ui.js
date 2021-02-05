@@ -36,6 +36,7 @@ async function downloadFromURL(input) {
     try {
         // apparently i need cors proxy
         let res = await downloadMap('https://cors-anywhere.herokuapp.com/' + url);
+        map.url = url;
         extractZip(res);
     } catch(err) {
         $('.input').prop('disabled', false);
@@ -62,6 +63,8 @@ async function downloadFromID(input) {
     let url = 'https://beatsaver.com/api/download/key/' + id;
     try {
         let res = await downloadMap(url);
+        map.id = id;
+        map.url = 'https://beatsaver.com/beatmap/' + id;
         extractZip(res);
     } catch(err) {
         $('.input').prop('disabled', false);
@@ -159,16 +162,17 @@ async function extractZip(data) {
     } catch(err) {
         mapReset();
         $('.settings').prop('disabled', false);
-        $('.input').prop('disabled', false);
-        $('#input-container').css('display', 'block');
-        $('#input-file').css('display', 'none');
-        $('.metadata').css('display', 'none');
         UILoadingStatus('error', 'Error while loading map!', 100);
         console.error(err);
     }
 }
 
 function mapReset() {
+    $('#map-link').text('').attr('href', '').css('display', 'none');
+    $('.input').prop('disabled', false);
+    $('#input-container').css('display', 'block');
+    $('#input-file').css('display', 'none');
+    $('.metadata').css('display', 'none');
     flag.loading = false;
     flag.loaded = false;
     map.id = null;
@@ -417,7 +421,7 @@ function UIUpdateMapInfo() {
     $('#song-name').text(map.info._songName);
     $('#song-subname').text(map.info._songSubname);
     $('#song-bpm').text(`${round(map.info._beatsPerMinute, 3)} BPM`);
-    $('#level-author').text(`Mapped by  ${map.info._levelAuthorName}`);
+    $('#level-author').text(`Mapped by ${map.info._levelAuthorName ? map.info._levelAuthorName : 'Unknown Mapper'}`);
     $('#environment').text(`${envName[map.info._environmentName]} Environment`);
     
     $('#input-container').css('display', 'none');
