@@ -1,7 +1,11 @@
 # Changelog
-## v1.3.2
+## v1.3.2 [2021-02-06]
+### Changed
+* Overrides event colour with note colour if not specificied
+
 ### Fixed
 * DD check bomb didn't look after dot note
+* Event boost takes note colour instead of event colour
 
 ## v1.3.1 [2021-02-05]
 ### Added
