@@ -1,4 +1,8 @@
 # Changelog
+## v1.3.2
+### Fixed
+* DD check bomb didn't look after dot note
+
 ## v1.3.1 [2021-02-05]
 ### Added
 * Map link for URL or ID input by the cover image

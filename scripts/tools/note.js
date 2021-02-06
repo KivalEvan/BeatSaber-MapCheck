@@ -2,7 +2,6 @@
     note pattern detection and stuff idk
     TODO: basic parity check
     TODO: basic unrankable hit
-    TODO: check for bomb reset
     TODO: rewrite staircase check */
 
 // smort
@@ -217,21 +216,25 @@ function detectDoubleDirectional(diff, mapSettings) {
             if (note._lineLayer === 0) {
                 //on right center
                 if (note._lineIndex === 1) {
-                    lastRedDir = 0
+                    lastRedDir = 0;
+                    startRedDot = null;
                 }
                 //on left center
                 if (note._lineIndex === 2) {
-                    lastBlueDir = 0
+                    lastBlueDir = 0;
+                    startBlueDot = null;
                 }
             //on top row
             } else if (note._lineLayer === 2) {
                 //on right center
                 if (note._lineIndex === 1) {
-                    lastRedDir = 1
+                    lastRedDir = 1;
+                    startRedDot = null;
                 }
                 //on left center
                 if (note._lineIndex === 2) {
-                    lastBlueDir = 1
+                    lastBlueDir = 1;
+                    startBlueDot = null;
                 }
             }
         }
