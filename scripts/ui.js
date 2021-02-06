@@ -508,10 +508,14 @@ async function UICreateDiffInfo(charName, diff) {
         
         if (diff._customData._envColorLeft) {
             customColor._envColorLeft = rgbaToHex(diff._customData._envColorLeft);
+        } else if (diff._customData._colorLeft) {
+            customColor._envColorLeft = customColor._colorLeft;
         }
         
         if (diff._customData._envColorRight) {
             customColor._envColorRight = rgbaToHex(diff._customData._envColorRight);
+        } else if (diff._customData._colorRight) {
+            customColor._envColorRight = customColor._colorRight;
         }
         
         // tricky stuff
@@ -521,13 +525,13 @@ async function UICreateDiffInfo(charName, diff) {
             envBL = rgbaToHex(diff._customData._envColorLeftBoost);
             envBoost = true;
         } else {
-            envBL = colorScheme[envColor[map.info._environmentName]]._envColorLeftBoost || customColor._colorLeft;
+            envBL = colorScheme[envColor[map.info._environmentName]]._envColorLeftBoost || customColor._envColorLeft;
         }
         if (diff._customData._envColorRightBoost) {
             envBR = rgbaToHex(diff._customData._envColorRightBoost);
             envBoost = true;
         } else {
-            envBR = colorScheme[envColor[map.info._environmentName]]._envColorRightBoost || customColor._colorRight;
+            envBR = colorScheme[envColor[map.info._environmentName]]._envColorRightBoost || customColor._envColorRight;
         }
 
         if (envBoost) {
