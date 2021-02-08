@@ -1,4 +1,11 @@
 # Changelog
+## v1.3.3
+### Added
+* Count chroma note and obstacle
+
+### Changed
+* Properly count for chroma event
+
 ## v1.3.2 [2021-02-06]
 ### Changed
 * Overrides event colour with note colour if not specificied

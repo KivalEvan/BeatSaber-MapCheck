@@ -574,6 +574,9 @@ async function UICreateDiffInfo(charName, diff) {
     txtNote.push(`• Red: ${note.red}`);
     txtNote.push(`• Blue: ${note.blue}`);
     txtNote.push(`• R/B Ratio: ${round(note.blue ? note.red / note.blue : 0, 2)}`);
+    if (note.chromaN) {
+        txtEvent.push(`• Chroma: ${note.chromaN} ${hasChroma ? '' : '⚠️ not suggested'}`);
+    }
     txtNote.push('');
     txtNote.push(`SPS: ${swingPerSecondInfo(diff._data).toFixed(2)}`);
     txtNote.push(`NPS: ${calcNPS(note.red + note.blue).toFixed(2)}`);
@@ -587,11 +590,18 @@ async function UICreateDiffInfo(charName, diff) {
     txtObstacle.push(`Bot Row: ${note.blue || note.red ? round(countNoteLayer(diff._data._notes, 0) / (note.red + note.blue) * 100, 1) : 0}%`);
     txtObstacle.push('');
     txtObstacle.push(`Bombs: ${note.bomb}`);
+    if (note.chromaB) {
+        txtObstacle.push(`• Chroma: ${note.chromaB} ${hasChroma ? '' : '⚠️ not suggested'}`);
+    }
     txtObstacle.push('');
     txtObstacle.push(`Obstacles: ${diff._data._obstacles.length}`);
     txtObstacle.push(`• Interactive: ${countInteractiveObstacle(diff._data._obstacles)}`);
-    let crouchWall = detectCrouchWall(diff._data, mapSettings)
+    let crouchWall = detectCrouchWall(diff._data, mapSettings);
     if (crouchWall.length > 0) txtObstacle.push(`• Crouch: ${crouchWall.length}`);
+    let chromaW = countChromaObstacle(diff._data._obstacles);
+    if (chromaW > 0) {
+        txtObstacle.push(`• Chroma: ${chromaW} ${hasChroma ? '' : '⚠️ not suggested'}`);
+    }
 
     // event n stuff
     let txtEvent = [];
@@ -603,7 +613,7 @@ async function UICreateDiffInfo(charName, diff) {
     txtEvent.push(`• Laser Rotation: ${event.laser}`);
     if (event.chroma || event.ogc) {
         txtEvent.push('');
-        if (event.chroma) txtEvent.push(hasChroma ? `• Chroma: ${event.chroma}` : `• Chroma: ${event.chroma} ⚠️ not suggested`);
+        if (event.chroma) txtEvent.push(`• Chroma: ${event.chroma} ${hasChroma ? '' : '⚠️ not suggested'}`);
         if (event.ogc) txtEvent.push(`• OG Chroma: ${event.ogc}`);
     }
     if (event.rot) {

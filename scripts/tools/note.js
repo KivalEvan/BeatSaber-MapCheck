@@ -9,12 +9,29 @@ function getNoteCount(notes) {
     let nr = 0;
     let nb = 0;
     let b = 0;
+    let cn = 0;
+    let cb = 0;
     for (let i = notes.length - 1; i >= 0; i--) {
-        if (notes[i]._type === 0) nr++;
-        else if (notes[i]._type === 1) nb++;
-        else b++;
+        if (notes[i]._type === 0) {
+            nr++;
+            if (notes[i]._type._customData?._color) {
+                cn++;
+            }
+        }
+        else if (notes[i]._type === 1) {
+            nb++;
+            if (notes[i]._type._customData?._color) {
+                cn++;
+            }
+        }
+        else if (notes[i]._type === 3) {
+            b++;
+            if (notes[i]._type._customData?._color) {
+                cb++;
+            }
+        }
     }
-    return {red: nr, blue: nb, bomb: b};
+    return {red: nr, blue: nb, bomb: b, chromaN: cn, chromaB: cb};
 }
 function countNoteLayer(notes, l) {
     let count = 0;
