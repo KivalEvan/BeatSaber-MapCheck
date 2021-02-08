@@ -10,6 +10,14 @@ function countInteractiveObstacle(obstacles) {
     return count;
 }
 
+function countChromaObstacle(obstacles) {
+    let count = 0;
+    for (let i = obstacles.length - 1; i >= 0; i--)
+        if (obstacles[i]._customData?._color)
+            count++;
+    return count;
+}
+
 function detectZeroWall(diff, mapSettings) {
     const { _obstacles: obstacles } = diff;
     const { bpm, bpmc, offset } = mapSettings;
