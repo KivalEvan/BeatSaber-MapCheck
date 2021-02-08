@@ -5,6 +5,7 @@
 
 ### Changed
 * Properly count for chroma event
+* Staircase no longer count a double note
 
 ## v1.3.2 [2021-02-06]
 ### Changed

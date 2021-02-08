@@ -389,6 +389,17 @@ function checkEndNote(n1, n2) {
     return false;
 }
 
+function checkForDouble(n1, notes, index) {
+    for (let i = index, len = notes.length; i < len; i++) {
+        if (notes[i]._time < n1._time + 0.01 && notes[i]._type != n1._type) {
+            return true;
+        }
+        else if (notes[i]._time > n1._time + 0.01) {
+            return false;
+        }
+    }
+}
+
 // check if note occupies post-swing space
 // also fuck dot note
 // i need to rewrite this
@@ -408,7 +419,7 @@ function detectHitboxStaircase(diff, mapSettings) {
             if (lastRed) { // nested if moment
                 if (swingNext(note, lastRed)) {
                     if (lastBlue && note._time - lastBlue._time !== 0 && isBelowTH(note._time - lastBlue._time, tool.hitbox.staircase)) {
-                        if (note._lineIndex === blueIndexOccupy && note._lineLayer === blueLayerOccupy) {
+                        if (note._lineIndex === blueIndexOccupy && note._lineLayer === blueLayerOccupy && !checkForDouble(note, notes, i)) {
                             arr.push(adjustTime(note._time, bpm, offset, bpmc));
                         }
                     }
@@ -445,7 +456,7 @@ function detectHitboxStaircase(diff, mapSettings) {
             if (lastBlue) {
                 if (swingNext(note, lastBlue)) {
                     if (lastRed && note._time - lastRed._time !== 0 && isBelowTH(note._time - lastRed._time, tool.hitbox.staircase)) {
-                        if (note._lineIndex === redIndexOccupy && note._lineLayer === redLayerOccupy) {
+                        if (note._lineIndex === redIndexOccupy && note._lineLayer === redLayerOccupy && !checkForDouble(note, notes, i)) {
                             arr.push(adjustTime(note._time, bpm, offset, bpmc));
                         }
                     }
