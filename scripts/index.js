@@ -3,7 +3,8 @@
     some general and other stuff that has no place yet
     also includes unused stuff that i may consider in the future */
 
-$('#watermark').text(`${watermark} - ${version}`)
+$('#watermark').text(`${watermark} | `);
+$('#version').text(version);
 
 // ui stuff
 if (flag.tool.dd) $('#dd').prop('checked', true);

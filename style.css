@@ -92,7 +92,7 @@ body {
 #subtitle {
     font-size: 1.5em;
 }
-#watermark {
+.watermark {
     position: absolute;
     bottom: 4px;
     right: 20px;
