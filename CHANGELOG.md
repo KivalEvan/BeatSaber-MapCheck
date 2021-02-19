@@ -1,6 +1,7 @@
 # Changelog
 ## Unreleased
 ### Added
+* Difficulty label length check
 * Wiki and changelog link
 
 ## v1.3.3 [2021-02-09]
