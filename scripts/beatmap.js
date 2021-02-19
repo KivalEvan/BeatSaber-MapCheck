@@ -166,10 +166,15 @@ function loadDifficulty(str) {
 }
 
 async function mapTool(charName, diff) {
+    let diffLabel = null;
     let offset = 0;
     if (diff._customData) {
-        if (diff._customData._editorOffset)
+        if (diff._customData._editorOffset) {
             offset = diff._customData._editorOffset / 1000;
+        }
+        if (diff._customData._difficultyLabel) {
+            diffLabel = diff._customData._difficultyLabel;
+        }
     }
 
     let BPMChanges;
@@ -189,6 +194,11 @@ async function mapTool(charName, diff) {
 
     let arr = [];
     console.log('analysing', charName, diff._difficulty);
+    if (diffLabel !== null) {
+        let status = checkLabelLength(charName, diffLabel);
+        if (status === 'error') arr.push(outTxtBold('Difficulty label too long', 'exceeded in-game display support'));
+        if (status === 'warn') arr.push(outTxtBold('Difficulty label possibly too long', 'may exceed in-game display support, check in-game to be sure'));
+    }
     if (startTime < 1.5) arr.push(outTxtBold('Hot start', `${round(startTime, 2)}s`));
     if (countEventLight10(diff._data._events) < 10) arr.push(outTxtBold('Lack of lighting events', '(<=10 events)'));
     arr.push(outTxtBold(`>${tool.ebpm.th}EBPM warning []`, getEffectiveBPMTime(diff._data, mapSettings)));
@@ -238,4 +248,32 @@ function mapUpdateBPMRange(min, max) {
     if (!map.bpm.min || !map.bpm.max) map.bpm.min = min, map.bpm.max = max;
     if (min < map.bpm.min) map.bpm.min = min;
     if (max > map.bpm.max) map.bpm.max = max;
+}
+
+// hardcoded stuff but whatever
+function checkLabelLength(mapChar, lbl) {
+    let char = map.info._difficultyBeatmapSets.find(c => c._beatmapCharacteristicName === mapChar);
+    diffCount = char._difficultyBeatmaps.length;
+    switch (diffCount) {
+        case 1:
+            if (lbl.length > 90) return 'error';
+            if (lbl.length > 39) return 'warn';
+            break;
+        case 2:
+            if (lbl.length > 42) return 'error';
+            if (lbl.length > 21) return 'warn';
+            break;
+        case 3:
+            if (lbl.length > 27) return 'error';
+            if (lbl.length > 15) return 'warn';
+            break;
+        case 4:
+            if (lbl.length > 20) return 'error';
+            if (lbl.length > 11) return 'warn';
+            break;
+        case 5:
+            if (lbl.length > 17) return 'error';
+            if (lbl.length > 8) return 'warn';
+            break;
+    }
 }
