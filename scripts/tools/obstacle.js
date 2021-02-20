@@ -1,6 +1,6 @@
  /* OBSTACLE SCRIPT - obstacle.js
     it's nothing, planned to expand further for obstacle related
-    TODO: crouch wall detection */
+    TODO: crouch obstacle detection */
 
 function countInteractiveObstacle(obstacles) {
     let count = 0;
@@ -18,7 +18,7 @@ function countChromaObstacle(obstacles) {
     return count;
 }
 
-function detectZeroWall(diff, mapSettings) {
+function detectZeroObstacle(diff, mapSettings) {
     const { _obstacles: obstacles } = diff;
     const { bpm, bpmc, offset } = mapSettings;
     let arr = [];
@@ -33,7 +33,7 @@ function detectZeroWall(diff, mapSettings) {
     return arr;
 }
 
-function detectInvalidWall(diff, mapSettings) {
+function detectInvalidObstacle(diff, mapSettings) {
     const { _obstacles: obstacles } = diff;
     const { bpm, bpmc, offset } = mapSettings;
     let arr = [];
@@ -54,7 +54,7 @@ function detectInvalidWall(diff, mapSettings) {
     return arr;
 }
 
-function detectNegativeWall(obstacles, bpm, offset, bpmc) {
+function detectNegativeObstacle(obstacles, bpm, offset, bpmc) {
     let arr = [];
     for (let i = 0, len = obstacles.length; i < len; i++) {
         if (obstacles[i]._width < 0 || obstacles[i]._duration < 0) {
@@ -68,57 +68,57 @@ function detectNegativeWall(obstacles, bpm, offset, bpmc) {
 }
 
 // god this was more complicated than i thought, but i dont think it should
-function detectCenterWall(diff, mapSettings) {
+function detectCenterObstacle(diff, mapSettings) {
     const { _obstacles: obstacles } = diff;
     const { bpm, bpmc, offset } = mapSettings;
     let arr = [];
-    let wallLFull = { _time: 0, _duration: 0 };
-    let wallRFull = { _time: 0, _duration: 0 };
+    let obstacleLFull = { _time: 0, _duration: 0 };
+    let obstacleRFull = { _time: 0, _duration: 0 };
     for (let i = 0, len = obstacles.length; i < len; i++) {
         const obstacle = obstacles[i];
         if (obstacle._type === 0) {
             if (obstacle._width > 2 || (obstacle._width > 1 && obstacle._lineIndex === 1)) {
                 arr.push(adjustTime(obstacle._time, bpm, offset, bpmc));
-                if (wallLonger(obstacle, wallLFull)) {
-                    wallLFull = obstacle;
+                if (obstacleLonger(obstacle, obstacleLFull)) {
+                    obstacleLFull = obstacle;
                 }
-                if (wallLonger(obstacle, wallRFull)) {
-                    wallRFull = obstacle;
+                if (obstacleLonger(obstacle, obstacleRFull)) {
+                    obstacleRFull = obstacle;
                 }
             }
             else if (obstacle._width === 2) {
                 if (obstacle._lineIndex === 0) {
-                    if (wallLonger(obstacle, wallLFull)) {
-                        if (isAboveTH(obstacle._time, toRealTime(wallRFull._time) - tool.obstacle.recovery) && isBelowTH(obstacle._time, toRealTime(wallRFull._time + wallRFull._duration) + tool.obstacle.recovery)) {
+                    if (obstacleLonger(obstacle, obstacleLFull)) {
+                        if (isAboveTH(obstacle._time, toRealTime(obstacleRFull._time) - tool.obstacle.recovery) && isBelowTH(obstacle._time, toRealTime(obstacleRFull._time + obstacleRFull._duration) + tool.obstacle.recovery)) {
                             arr.push(adjustTime(obstacle._time, bpm, offset, bpmc));
                         }
-                        wallLFull = obstacle;
+                        obstacleLFull = obstacle;
                     }
                 }
                 else if (obstacle._lineIndex === 2) {
-                    if (wallLonger(obstacle, wallRFull)) {
-                        if (isAboveTH(obstacle._time, toRealTime(wallLFull._time) - tool.obstacle.recovery) && isBelowTH(obstacle._time, toRealTime(wallLFull._time + wallLFull._duration) + tool.obstacle.recovery)) {
+                    if (obstacleLonger(obstacle, obstacleRFull)) {
+                        if (isAboveTH(obstacle._time, toRealTime(obstacleLFull._time) - tool.obstacle.recovery) && isBelowTH(obstacle._time, toRealTime(obstacleLFull._time + obstacleLFull._duration) + tool.obstacle.recovery)) {
                             arr.push(adjustTime(obstacle._time, bpm, offset, bpmc));
                         }
-                        wallRFull = obstacle;
+                        obstacleRFull = obstacle;
                     }
                 }
             }
             else if (obstacle._width === 1) {
                 if (obstacle._lineIndex === 1) {
-                    if (wallLonger(obstacle, wallLFull)) {
-                        if (isAboveTH(obstacle._time, toRealTime(wallRFull._time) - tool.obstacle.recovery) && isBelowTH(obstacle._time, toRealTime(wallRFull._time + wallRFull._duration) + tool.obstacle.recovery)) {
+                    if (obstacleLonger(obstacle, obstacleLFull)) {
+                        if (isAboveTH(obstacle._time, toRealTime(obstacleRFull._time) - tool.obstacle.recovery) && isBelowTH(obstacle._time, toRealTime(obstacleRFull._time + obstacleRFull._duration) + tool.obstacle.recovery)) {
                             arr.push(adjustTime(obstacle._time, bpm, offset, bpmc));
                         }
-                        wallLFull = obstacle;
+                        obstacleLFull = obstacle;
                     }
                 }
                 else if (obstacle._lineIndex === 2) {
-                    if (wallLonger(obstacle, wallRFull)) {
-                        if (isAboveTH(obstacle._time, toRealTime(wallLFull._time) - tool.obstacle.recovery) && isBelowTH(obstacle._time, toRealTime(wallLFull._time + wallLFull._duration) + tool.obstacle.recovery)) {
+                    if (obstacleLonger(obstacle, obstacleRFull)) {
+                        if (isAboveTH(obstacle._time, toRealTime(obstacleLFull._time) - tool.obstacle.recovery) && isBelowTH(obstacle._time, toRealTime(obstacleLFull._time + obstacleLFull._duration) + tool.obstacle.recovery)) {
                             arr.push(adjustTime(obstacle._time, bpm, offset, bpmc));
                         }
-                        wallRFull = obstacle;
+                        obstacleRFull = obstacle;
                     }
                 }
             }
@@ -134,116 +134,116 @@ function detectCenterWall(diff, mapSettings) {
 // jfc i need to put these repetition in function or somethin
 // ok maybe i need to simplify it somehow
 // pain
-function detectShortWall(diff, mapSettings) {
+function detectShortObstacle(diff, mapSettings) {
     const { _obstacles: obstacles } = diff;
     const { bpm, bpmc, offset } = mapSettings;
     let arr = [];
-    let wallLFull = { _time: 0, _duration: 0 };
-    let wallRFull = { _time: 0, _duration: 0 };
-    let wallLHalf = { _time: 0, _duration: 0 };
-    let wallRHalf = { _time: 0, _duration: 0 };
+    let obstacleLFull = { _time: 0, _duration: 0 };
+    let obstacleRFull = { _time: 0, _duration: 0 };
+    let obstacleLHalf = { _time: 0, _duration: 0 };
+    let obstacleRHalf = { _time: 0, _duration: 0 };
     for (let i = 0, len = obstacles.length; i < len; i++) {
         const obstacle = obstacles[i];
         if (obstacle._type === 0 && obstacle._duration > 0) {
             if (obstacle._width > 2 || (obstacle._width > 1 && obstacle._lineIndex === 1)) {
-                if (wallLonger(obstacle, wallLFull)) {
+                if (obstacleLonger(obstacle, obstacleLFull)) {
                     if (isBelowTH(obstacle._duration, tool.obstacle.minDur)) {
                         arr.push(adjustTime(obstacle._time, bpm, offset, bpmc));
                     }
-                    wallLFull = obstacle;
+                    obstacleLFull = obstacle;
                 }
-                if (wallLonger(obstacle, wallRFull)) {
+                if (obstacleLonger(obstacle, obstacleRFull)) {
                     if (isBelowTH(obstacle._duration, tool.obstacle.minDur)) {
                         arr.push(adjustTime(obstacle._time, bpm, offset, bpmc));
                     }
-                    wallRFull = obstacle;
+                    obstacleRFull = obstacle;
                 }
             }
             else if (obstacle._width === 2) {
                 if (obstacle._lineIndex === 0) {
-                    if (wallLonger(obstacle, wallLFull)) {
+                    if (obstacleLonger(obstacle, obstacleLFull)) {
                         if (isBelowTH(obstacle._duration, tool.obstacle.minDur)) {
                             arr.push(adjustTime(obstacle._time, bpm, offset, bpmc));
                         }
-                        wallLFull = obstacle;
+                        obstacleLFull = obstacle;
                     }
                 }
                 else if (obstacle._lineIndex === 2) {
-                    if (wallLonger(obstacle, wallRFull)) {
+                    if (obstacleLonger(obstacle, obstacleRFull)) {
                         if (isBelowTH(obstacle._duration, tool.obstacle.minDur)) {
                             arr.push(adjustTime(obstacle._time, bpm, offset, bpmc));
                         }
-                        wallRFull = obstacle;
+                        obstacleRFull = obstacle;
                     }
                 }
             }
             else if (obstacle._width === 1) {
                 if (obstacle._lineIndex === 1) {
-                    if (wallLonger(obstacle, wallLFull)) {
+                    if (obstacleLonger(obstacle, obstacleLFull)) {
                         if (isBelowTH(obstacle._duration, tool.obstacle.minDur)) {
                             arr.push(adjustTime(obstacle._time, bpm, offset, bpmc));
                         }
-                        wallLFull = obstacle;
+                        obstacleLFull = obstacle;
                     }
                 }
                 else if (obstacle._lineIndex === 2) {
-                    if (wallLonger(obstacle, wallRFull)) {
+                    if (obstacleLonger(obstacle, obstacleRFull)) {
                         if (isBelowTH(obstacle._duration, tool.obstacle.minDur)) {
                             arr.push(adjustTime(obstacle._time, bpm, offset, bpmc));
                         }
-                        wallRFull = obstacle;
+                        obstacleRFull = obstacle;
                     }
                 }
             }
         }
         else if (obstacle._type === 1 && obstacle._duration > 0) {
             if (obstacle._width > 2 || (obstacle._width > 1 && obstacle._lineIndex === 1)) {
-                if (wallLonger(obstacle, wallLHalf)) {
-                    if (isBelowTH(obstacle._duration, tool.obstacle.minDur) && wallLonger2(obstacle, wallLFull) && wallLonger2(obstacle, wallLHalf)) {
+                if (obstacleLonger(obstacle, obstacleLHalf)) {
+                    if (isBelowTH(obstacle._duration, tool.obstacle.minDur) && obstacleLonger2(obstacle, obstacleLFull) && obstacleLonger2(obstacle, obstacleLHalf)) {
                         arr.push(adjustTime(obstacle._time, bpm, offset, bpmc));
                     }
-                    wallLHalf = obstacle;
+                    obstacleLHalf = obstacle;
                 }
-                if (wallLonger(obstacle, wallRHalf)) {
-                    if (isBelowTH(obstacle._duration, tool.obstacle.minDur) && wallLonger2(obstacle, wallRFull) && wallLonger2(obstacle, wallRHalf)) {
+                if (obstacleLonger(obstacle, obstacleRHalf)) {
+                    if (isBelowTH(obstacle._duration, tool.obstacle.minDur) && obstacleLonger2(obstacle, obstacleRFull) && obstacleLonger2(obstacle, obstacleRHalf)) {
                         arr.push(adjustTime(obstacle._time, bpm, offset, bpmc));
                     }
-                    wallRHalf = obstacle;
+                    obstacleRHalf = obstacle;
                 }
             }
             else if (obstacle._width === 2) {
                 if (obstacle._lineIndex === 0) {
-                    if (wallLonger(obstacle, wallLHalf)) {
-                        if (isBelowTH(obstacle._duration, tool.obstacle.minDur) && wallLonger2(obstacle, wallLFull) && wallLonger2(obstacle, wallLHalf)) {
+                    if (obstacleLonger(obstacle, obstacleLHalf)) {
+                        if (isBelowTH(obstacle._duration, tool.obstacle.minDur) && obstacleLonger2(obstacle, obstacleLFull) && obstacleLonger2(obstacle, obstacleLHalf)) {
                             arr.push(adjustTime(obstacle._time, bpm, offset, bpmc));
                         }
-                        wallLHalf = obstacle;
+                        obstacleLHalf = obstacle;
                     }
                 }
                 else if (obstacle._lineIndex === 2) {
-                    if (wallLonger(obstacle, wallRHalf)) {
-                        if (isBelowTH(obstacle._duration, tool.obstacle.minDur) && wallLonger2(obstacle, wallRFull) && wallLonger2(obstacle, wallRHalf)) {
+                    if (obstacleLonger(obstacle, obstacleRHalf)) {
+                        if (isBelowTH(obstacle._duration, tool.obstacle.minDur) && obstacleLonger2(obstacle, obstacleRFull) && obstacleLonger2(obstacle, obstacleRHalf)) {
                             arr.push(adjustTime(obstacle._time, bpm, offset, bpmc));
                         }
-                        wallRHalf = obstacle;
+                        obstacleRHalf = obstacle;
                     }
                 }
             }
             else if (obstacle._width === 1) {
                 if (obstacle._lineIndex === 1) {
-                    if (wallLonger(obstacle, wallLHalf)) {
-                        if (isBelowTH(obstacle._duration, tool.obstacle.minDur) && wallLonger2(obstacle, wallLFull) && wallLonger2(obstacle, wallLHalf)) {
+                    if (obstacleLonger(obstacle, obstacleLHalf)) {
+                        if (isBelowTH(obstacle._duration, tool.obstacle.minDur) && obstacleLonger2(obstacle, obstacleLFull) && obstacleLonger2(obstacle, obstacleLHalf)) {
                             arr.push(adjustTime(obstacle._time, bpm, offset, bpmc));
                         }
-                        wallLHalf = obstacle;
+                        obstacleLHalf = obstacle;
                     }
                 }
                 else if (obstacle._lineIndex === 2) {
-                    if (wallLonger(obstacle, wallRHalf)) {
-                        if (isBelowTH(obstacle._duration, tool.obstacle.minDur) && wallLonger2(obstacle, wallRFull) && wallLonger2(obstacle, wallRHalf)) {
+                    if (obstacleLonger(obstacle, obstacleRHalf)) {
+                        if (isBelowTH(obstacle._duration, tool.obstacle.minDur) && obstacleLonger2(obstacle, obstacleRFull) && obstacleLonger2(obstacle, obstacleRHalf)) {
                             arr.push(adjustTime(obstacle._time, bpm, offset, bpmc));
                         }
-                        wallRHalf = obstacle;
+                        obstacleRHalf = obstacle;
                     }
                 }
             }
@@ -257,86 +257,86 @@ function detectShortWall(diff, mapSettings) {
 
 // pain 2 electric boogaloo
 // need to figure out only when crouch happen
-function detectCrouchWall(diff, mapSettings) {
+function detectCrouchObstacle(diff, mapSettings) {
     const { _obstacles: obstacles } = diff;
     const { bpm, bpmc, offset } = mapSettings;
     let arr = [];
-    let wallLFull = { _time: 0, _duration: 0 };
-    let wallRFull = { _time: 0, _duration: 0 };
-    let wallLHalf = { _time: 0, _duration: 0 };
-    let wallRHalf = { _time: 0, _duration: 0 };
+    let obstacleLFull = { _time: 0, _duration: 0 };
+    let obstacleRFull = { _time: 0, _duration: 0 };
+    let obstacleLHalf = { _time: 0, _duration: 0 };
+    let obstacleRHalf = { _time: 0, _duration: 0 };
     for (let i = 0, len = obstacles.length; i < len; i++) {
         const obstacle = obstacles[i];
         if (obstacle._type === 0 && obstacle._duration > 0) {
             if (obstacle._width > 2 || (obstacle._width > 1 && obstacle._lineIndex === 1)) {
-                if (wallLonger(obstacle, wallLFull)) {
-                    wallLFull = obstacle;
+                if (obstacleLonger(obstacle, obstacleLFull)) {
+                    obstacleLFull = obstacle;
                 }
-                if (wallLonger(obstacle, wallRFull)) {
-                    wallRFull = obstacle;
+                if (obstacleLonger(obstacle, obstacleRFull)) {
+                    obstacleRFull = obstacle;
                 }
             }
             else if (obstacle._width === 2) {
                 if (obstacle._lineIndex === 0) {
-                    if (wallLonger(obstacle, wallLFull)) {
-                        wallLFull = obstacle;
+                    if (obstacleLonger(obstacle, obstacleLFull)) {
+                        obstacleLFull = obstacle;
                     }
                 }
                 else if (obstacle._lineIndex === 2) {
-                    if (wallLonger(obstacle, wallRFull)) {
-                        wallRFull = obstacle;
+                    if (obstacleLonger(obstacle, obstacleRFull)) {
+                        obstacleRFull = obstacle;
                     }
                 }
             }
             else if (obstacle._width === 1) {
                 if (obstacle._lineIndex === 1) {
-                    if (wallLonger(obstacle, wallLFull)) {
-                        wallLFull = obstacle;
+                    if (obstacleLonger(obstacle, obstacleLFull)) {
+                        obstacleLFull = obstacle;
                     }
                 }
                 else if (obstacle._lineIndex === 2) {
-                    if (wallLonger(obstacle, wallRFull)) {
-                        wallRFull = obstacle;
+                    if (obstacleLonger(obstacle, obstacleRFull)) {
+                        obstacleRFull = obstacle;
                     }
                 }
             }
         }
         else if (obstacle._type === 1 && obstacle._duration > 0) {
             if (obstacle._width > 2 || (obstacle._width > 1 && obstacle._lineIndex === 1)) {
-                if (wallLonger(obstacle, wallLHalf)) {
+                if (obstacleLonger(obstacle, obstacleLHalf)) {
                     arr.push(adjustTime(obstacle._time, bpm, offset, bpmc));
-                    wallLHalf = obstacle;
+                    obstacleLHalf = obstacle;
                 }
-                if (wallLonger(obstacle, wallRHalf)) {
+                if (obstacleLonger(obstacle, obstacleRHalf)) {
                     arr.push(adjustTime(obstacle._time, bpm, offset, bpmc));
-                    wallRHalf = obstacle;
+                    obstacleRHalf = obstacle;
                 }
             }
             else if (obstacle._width === 2) {
                 if (obstacle._lineIndex === 0) {
-                    if (wallLonger(obstacle, wallLHalf)) {
+                    if (obstacleLonger(obstacle, obstacleLHalf)) {
                         arr.push(adjustTime(obstacle._time, bpm, offset, bpmc));
-                        wallLHalf = obstacle;
+                        obstacleLHalf = obstacle;
                     }
                 }
                 else if (obstacle._lineIndex === 2) {
-                    if (wallLonger(obstacle, wallRHalf)) {
+                    if (obstacleLonger(obstacle, obstacleRHalf)) {
                         arr.push(adjustTime(obstacle._time, bpm, offset, bpmc));
-                        wallRHalf = obstacle;
+                        obstacleRHalf = obstacle;
                     }
                 }
             }
             else if (obstacle._width === 1) {
                 if (obstacle._lineIndex === 1) {
-                    if (wallLonger(obstacle, wallLHalf)) {
+                    if (obstacleLonger(obstacle, obstacleLHalf)) {
                         arr.push(adjustTime(obstacle._time, bpm, offset, bpmc));
-                        wallLHalf = obstacle;
+                        obstacleLHalf = obstacle;
                     }
                 }
                 else if (obstacle._lineIndex === 2) {
-                    if (wallLonger(obstacle, wallRHalf)) {
+                    if (obstacleLonger(obstacle, obstacleRHalf)) {
                         arr.push(adjustTime(obstacle._time, bpm, offset, bpmc));
-                        wallRHalf = obstacle;
+                        obstacleRHalf = obstacle;
                     }
                 }
             }
@@ -348,11 +348,11 @@ function detectCrouchWall(diff, mapSettings) {
     return arr;
 }
 
-// check if current wall is longer than previous wall
-function wallLonger(w1, w2) {
+// check if current obstacle is longer than previous obstacle
+function obstacleLonger(w1, w2) {
     return isAboveTH(w1._time + w1._duration, toRealTime(w2._time + w2._duration))
 }
-// electric boogaloo; for <15ms wall
-function wallLonger2(w1, w2) {
+// electric boogaloo; for <15ms obstacle
+function obstacleLonger2(w1, w2) {
     return isAboveTH(w1._time + w1._duration, toRealTime(w2._time + w2._duration) + tool.obstacle.minDur)
 }
