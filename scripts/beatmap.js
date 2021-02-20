@@ -211,12 +211,12 @@ async function mapTool(charName, diff) {
     arr.push(outTxtBold('Obstacle(s) before start time', findOutStartObstacle(diff._data, mapSettings)));
     if (flag.map.load.audio) arr.push(outTxtBold('Obstacle(s) after end time', findOutEndObstacle(diff._data, mapSettings)));
 
-    arr.push(outTxtBold('Zero width/duration wall []', detectZeroWall(diff._data, mapSettings)));
-    arr.push(outTxtBold('Invalid wall []', detectInvalidWall(diff._data, mapSettings)));
-    arr.push(outTxtBold('Negative wall []', detectNegativeWall(diff._data, mapSettings)));
-    arr.push(outTxtBold('2-center wall []', detectCenterWall(diff._data, mapSettings)));
-    arr.push(outTxtBold('<15ms wall []', detectShortWall(diff._data, mapSettings)));
-    // arr.push(outTxtBold('Crouch wall []', detectCrouchWall(diff._data, mapSettings)));
+    arr.push(outTxtBold('Zero width/duration obstacle []', detectZeroObstacle(diff._data, mapSettings)));
+    arr.push(outTxtBold('Invalid obstacle []', detectInvalidObstacle(diff._data, mapSettings)));
+    arr.push(outTxtBold('Negative obstacle []', detectNegativeObstacle(diff._data, mapSettings)));
+    arr.push(outTxtBold('2-center obstacle []', detectCenterObstacle(diff._data, mapSettings)));
+    arr.push(outTxtBold('<15ms obstacle []', detectShortObstacle(diff._data, mapSettings)));
+    // arr.push(outTxtBold('Crouch obstacle []', detectCrouchObstacle(diff._data, mapSettings)));
 
     if (flag.tool.dd) arr.push(outTxtBold('Double-directional []', detectDoubleDirectional(diff._data, mapSettings)));
     if (flag.tool.vb.note) arr.push(outTxtBold('Vision blocked []', detectVisionBlock(diff._data, mapSettings)));

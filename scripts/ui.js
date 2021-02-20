@@ -596,8 +596,8 @@ async function UICreateDiffInfo(charName, diff) {
     txtObstacle.push('');
     txtObstacle.push(`Obstacles: ${diff._data._obstacles.length}`);
     txtObstacle.push(`• Interactive: ${countInteractiveObstacle(diff._data._obstacles)}`);
-    let crouchWall = detectCrouchWall(diff._data, mapSettings);
-    if (crouchWall.length > 0) txtObstacle.push(`• Crouch: ${crouchWall.length}`);
+    let crouchObstacle = detectCrouchObstacle(diff._data, mapSettings);
+    if (crouchObstacle.length > 0) txtObstacle.push(`• Crouch: ${crouchObstacle.length}`);
     let chromaW = countChromaObstacle(diff._data._obstacles);
     if (chromaW > 0) {
         txtObstacle.push(`• Chroma: ${chromaW} ${hasChroma ? '' : '⚠️ not suggested'}`);

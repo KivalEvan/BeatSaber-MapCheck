@@ -4,6 +4,9 @@
 * Difficulty label length check
 * Wiki and changelog link
 
+### Changed
+* Renamed wall to obstacle to maintain consistency
+
 ## v1.3.3 [2021-02-09]
 ### Added
 * Count chroma note and obstacle
