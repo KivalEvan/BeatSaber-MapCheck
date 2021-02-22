@@ -42,6 +42,11 @@ function countNoteIndex(notes, i) {
     notes.forEach(note => { if (note._type !== 3 && note._lineIndex === i) count++; });
     return count;
 }
+function countNoteIndexLayer(notes, i, l) {
+    let count = 0;
+    notes.forEach(note => { if (note._type !== 3 && note._lineIndex === i && note._lineLayer === l) count++; });
+    return count;
+}
 
 function findEffectiveBPM(notes, bpm) {
     let EBPM = 0;

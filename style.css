@@ -249,3 +249,13 @@ body {
 #statsheader {
     font-size: 1.25em;
 }
+td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    min-width: 3em;
+    vertical-align: top;
+    text-align: center;
+}
+.no-border {
+    border: 0;
+}

@@ -547,7 +547,16 @@ async function UICreateDiffInfo(charName, diff) {
         if (diff._data._customData._BPMChanges) BPMChanges = diff._data._customData._BPMChanges;
         else if (diff._data._customData._bpmChanges) BPMChanges = diff._data._customData._bpmChanges;
     }
+    const mapSettings = {
+        bpm: map.info._beatsPerMinute,
+        bpmc: getBPMChangesTime(map.info._beatsPerMinute, offset, BPMChanges),
+        offset: offset,
+        njs: diff._noteJumpMovementSpeed,
+        njsOffset: diff._noteJumpStartBeatOffset
+    }
     const bpmc = getBPMChangesTime(bpm, offset, BPMChanges);
+    const notes = getNoteCount(diff._data._notes);
+    const events = getEventCount(diff._data._events);
     
     // general map stuff
     let textMap = [];
@@ -556,39 +565,47 @@ async function UICreateDiffInfo(charName, diff) {
     textMap.push(`JD: ${round(getJumpDistance(bpm, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset), 3)}`);
     textMap.push(`Reaction Time: ${Math.round(60 / bpm * getHalfJumpDuration(bpm, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset) * 1000)}ms`);
     textMap.push('');
+    textMap.push(`SPS: ${swingPerSecondInfo(diff._data).toFixed(2)}`);
+    textMap.push(`NPS: ${calcNPS(notes.red + notes.blue).toFixed(2)}`);
+    textMap.push(`• Mapped: ${calcNPSMapped(notes.red + notes.blue, diff._data._duration).toFixed(2)}`);
+    textMap.push('');
     textMap.push(`Effective BPM: ${(findEffectiveBPM(diff._data._notes, bpm)).toFixed(2)}`);
     textMap.push(`Effective BPM (swing): ${(findEffectiveBPMSwing(diff._data._notes, bpm)).toFixed(2)}`);
     if (bpmc.length > 0) textMap.push(`BPM changes: ${bpmc.length}`);
-    const mapSettings = {
-        bpm: map.info._beatsPerMinute,
-        bpmc: getBPMChangesTime(map.info._beatsPerMinute, offset, BPMChanges),
-        offset: offset,
-        njs: diff._noteJumpMovementSpeed,
-        njsOffset: diff._noteJumpStartBeatOffset
-    }
 
     // notes
     let textNote = [];
-    const notes = getNoteCount(diff._data._notes)
     textNote.push(`Notes: ${notes.red + notes.blue}`);
     textNote.push(`• Red: ${notes.red}`);
     textNote.push(`• Blue: ${notes.blue}`);
     textNote.push(`• R/B Ratio: ${round(notes.blue ? notes.red / notes.blue : 0, 2)}`);
+    textNote.push('');
+    textNote.push('Note Placement:');
     if (notes.chromaN) {
         textEvent.push(`• Chroma: ${notes.chromaN} ${hasChroma ? '' : '⚠️ not suggested'}`);
     }
-    textNote.push('');
-    textNote.push(`SPS: ${swingPerSecondInfo(diff._data).toFixed(2)}`);
-    textNote.push(`NPS: ${calcNPS(notes.red + notes.blue).toFixed(2)}`);
-    textNote.push(`• Mapped: ${calcNPSMapped(notes.red + notes.blue, diff._data._duration).toFixed(2)}`);
+    // some hackish table creation, also pepega ui
+    let tableNoteIL = $('<table>', { class: 'note_table'});
+    // start from top
+    for (let layer = 2; layer >= 0; layer--) {
+        let tableLayer = $('<tr>');
+        for (let index = 0; index < 4; index++) {
+            tableLayer.append(`<td id="${index}_${layer}">${countNoteIndexLayer(diff._data._notes, index, layer)}</td>`);
+        }
+        tableLayer.append(`<td class="no-border">${notes.blue || notes.red ? round(countNoteLayer(diff._data._notes, layer) / (notes.red + notes.blue) * 100, 1) : 0}%</td>`);
+        tableNoteIL.append(tableLayer);
+    }
+    let tableLayer = $('<tr>');
+    for (let index = 0; index < 4; index++) {
+        tableLayer.append(`<td class="no-border">${notes.blue || notes.red ? round(countNoteIndex(diff._data._notes, index) / (notes.red + notes.blue) * 100, 1) : 0}%</td>`);
+    }
+    tableNoteIL.append(tableLayer);
 
     let textObstacle = [];
-    // i know bomb isnt obstacle but this side doesnt have much so i merge this together
-    // it now include row percentage; does not include bomb
-    textObstacle.push(`Top Row: ${notes.blue || notes.red ? round(countNoteLayer(diff._data._notes, 2) / (notes.red + notes.blue) * 100, 1) : 0}%`);
-    textObstacle.push(`Mid Row: ${notes.blue || notes.red ? round(countNoteLayer(diff._data._notes, 1) / (notes.red + notes.blue) * 100, 1) : 0}%`);
-    textObstacle.push(`Bot Row: ${notes.blue || notes.red ? round(countNoteLayer(diff._data._notes, 0) / (notes.red + notes.blue) * 100, 1) : 0}%`);
-    textObstacle.push('');
+    // i know bomb/note row isnt obstacle but this side doesnt have much so i merge this together with note
+    // textObstacle.push(`Top Row: ${notes.blue || notes.red ? round(countNoteLayer(diff._data._notes, 2) / (notes.red + notes.blue) * 100, 1) : 0}%`);
+    // textObstacle.push(`Mid Row: ${notes.blue || notes.red ? round(countNoteLayer(diff._data._notes, 1) / (notes.red + notes.blue) * 100, 1) : 0}%`);
+    // textObstacle.push(`Bot Row: ${notes.blue || notes.red ? round(countNoteLayer(diff._data._notes, 0) / (notes.red + notes.blue) * 100, 1) : 0}%`);
     textObstacle.push(`Bombs: ${notes.bomb}`);
     if (notes.chromaB) {
         textObstacle.push(`• Chroma: ${notes.chromaB} ${hasChroma ? '' : '⚠️ not suggested'}`);
@@ -605,7 +622,6 @@ async function UICreateDiffInfo(charName, diff) {
 
     // events n stuff
     let textEvent = [];
-    const events = getEventCount(diff._data._events);
     textEvent.push(`Events: ${diff._data._events.length}`);
     textEvent.push(`• Lighting: ${events.light}`);
     textEvent.push(`• Ring Rotation: ${events.rrotate}`);
@@ -666,13 +682,15 @@ async function UICreateDiffInfo(charName, diff) {
         id: 'notes',
         html: textNote.join('<br>')
     });
+    $('<div>').append(tableNoteIL).appendTo(diffPanelNote);
     
     // obstacle
     let diffPanelObstacle = $('<div>', {
         class: 'diff-panel',
-        id: 'obstacles',
-        html: textObstacle.join('<br>')
-    });
+        id: 'obstacles'
+    })
+    .append(textObstacle.join('<br>'));
+
     // event
     let diffPanelEvent = $('<div>', {
         class: 'diff-panel',
