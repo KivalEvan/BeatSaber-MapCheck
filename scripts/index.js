@@ -93,7 +93,7 @@ function round(num, d = 0) {
     return Math.round(num * Math.pow(10, d)) / Math.pow(10, d);
 }
 
-// thanks Top_Cat
+// thanks Top_Cat#1961
 function mod(x, m) {
     if (m < 0) m = -m; r = x % m;
     return r < 0 ? r + m : r;

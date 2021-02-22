@@ -221,6 +221,7 @@ async function mapTool(charName, diff) {
     if (flag.tool.dd) arr.push(outTxtBold('Double-directional []', detectDoubleDirectional(diff._data, mapSettings)));
     if (flag.tool.vb.note) arr.push(outTxtBold('Vision blocked []', detectVisionBlock(diff._data, mapSettings)));
     arr.push(outTxtBold('Stacked note []', detectStackedNote(diff._data, mapSettings)));
+    arr.push(outTxtBold('Stacked bomb (<20ms) []', detectStackedBomb(diff._data, mapSettings)));
     if (tool.beatPrec.length > 0) arr.push(outTxtBold('Off-beat precision []', detectOffPrecision(diff._data, mapSettings)));
     if (flag.tool.hb.staircase) arr.push(outTxtBold('Hitbox staircase []', detectHitboxStaircase(diff._data, mapSettings)));
     if (flag.tool.shrAngle) arr.push(outTxtBold('Shrado angle []', detectShrAngle(diff._data, mapSettings)));
@@ -250,7 +251,15 @@ function mapUpdateBPMRange(min, max) {
     if (max > map.bpm.max) map.bpm.max = max;
 }
 
-// hardcoded stuff but whatever
+ /* hardcoded stuff but whatever
+    thx XAce1337manX#9170 for the info
+    also modified a bit to be more reasonable
+              W  I
+    1 diff:  33 99
+    2 diffs: 16 50
+    3 diffs: 11 34
+    4 diffs:  8 25
+    5 diffs:  6 20 */
 function checkLabelLength(mapChar, lbl) {
     let char = map.info._difficultyBeatmapSets.find(c => c._beatmapCharacteristicName === mapChar);
     diffCount = char._difficultyBeatmaps.length;

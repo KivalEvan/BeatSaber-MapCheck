@@ -56,7 +56,10 @@ const tool = {
     maxSpeedPause: 0.075,
 
     // part where no one can control... yet
-    stack: 0.01,
+    stack: {
+        note: 0.01,
+        bomb: 0.02
+    },
     swing: {
         maxTol: 0.07,
         maxWindowTol: 0.08
