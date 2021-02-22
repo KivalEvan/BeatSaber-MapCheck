@@ -7,6 +7,7 @@
 * Wiki and changelog link
 
 ### Changed
+* Moved around some stats info to make space for table
 * Renamed wall to obstacle to maintain consistency
 * Something, something about code readability
 
