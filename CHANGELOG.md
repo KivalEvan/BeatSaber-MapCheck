@@ -1,12 +1,14 @@
 # Changelog
-## Unreleased
+## v1.3.4 [2021-02-22]
 ### Added
 * Difficulty label length check
 * Stacked bomb <20ms check
+* Note placement table stats
 * Wiki and changelog link
 
 ### Changed
 * Renamed wall to obstacle to maintain consistency
+* Something, something about code readability
 
 ## v1.3.3 [2021-02-09]
 ### Added
