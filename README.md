@@ -1,4 +1,4 @@
-<img align="left" src="https://cdn.discordapp.com/avatars/737840078281375894/975384f8ace8ab32c938cb34d8b5fdf8.png?size=256" height="176" width="176">
+<img align="left" src="https://github.com/KivalEvan/BeatSaber-MapCheck/blob/main/icon-large.png" height="176" width="176">
 
 # Beat Saber Map Check
 A small project to bring extensive overview of maps,
