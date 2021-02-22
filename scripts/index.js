@@ -102,7 +102,7 @@ function distance(a, b, m) {
     return Math.min(mod(a - b, m),mod(b - a, m));
 }
 
-function outTxtBold(arg1, arg2) {
+function printHTMLBold(arg1, arg2) {
     if (!Array.isArray(arg2)) {
         if (arg2 === '') return '';
         return `<b>${arg1}</b>: ${arg2}`
