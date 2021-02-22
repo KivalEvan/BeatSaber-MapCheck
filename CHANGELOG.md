@@ -2,6 +2,7 @@
 ## Unreleased
 ### Added
 * Difficulty label length check
+* Stacked bomb <20ms check
 * Wiki and changelog link
 
 ### Changed

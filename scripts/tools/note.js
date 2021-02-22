@@ -1,8 +1,7 @@
  /* NOTE SCRIPT - note.js
     note pattern detection and stuff idk
     TODO: basic parity check
-    TODO: basic unrankable hit
-    TODO: rewrite staircase check */
+    TODO: basic unrankable hit */
 
 // smort
 function getNoteCount(notes) {
@@ -69,7 +68,6 @@ function findEffectiveBPM(notes, bpm) {
     }
     return EBPM;
 }
-
 // i am very smart
 function findEffectiveBPMSwing(notes, bpm) {
     let EBPM = 0;
@@ -98,7 +96,6 @@ function findEffectiveBPMSwing(notes, bpm) {
     }
     return EBPM;
 }
-
 function getEffectiveBPMTime(diff, mapSettings) {
     const { _notes: notes } = diff;
     const { bpm, bpmc, offset } = mapSettings;
@@ -128,7 +125,6 @@ function getEffectiveBPMTime(diff, mapSettings) {
     }
     return arr;
 }
-
 function getEffectiveBPMSwingTime(diff, mapSettings) {
     const { _notes: notes } = diff;
     const { bpm, bpmc, offset } = mapSettings;
@@ -261,7 +257,6 @@ function detectDoubleDirectional(diff, mapSettings) {
     });
     return arr;
 }
-
 function checkDD(n1cd, n2cd) {
     if (n1cd === 8 || n2cd === 8) return false;
     if (distance(noteCutAngle[n1cd], noteCutAngle[n2cd], 360) <= 45) return true;
@@ -337,7 +332,6 @@ function detectOffPrecision(diff, mapSettings) {
     });
     return arr;
 }
-
 function checkPrec(nt) {
     if (!tool.beatPrec.length > 0) return false;
     for (let i = 0; i < tool.beatPrec.length; i++)
@@ -504,7 +498,6 @@ function detectShrAngle(diff, mapSettings) {
     });
     return arr;
 }
-
 function checkShrAngle(n1cd, n2cd) {
     if (n1cd === 8 || n2cd === 8) return false;
     if ((n2cd === 6 || n2cd === 7) && n1cd === 0) return true;
@@ -515,11 +508,32 @@ function detectStackedNote(diff, mapSettings) {
     const { _notes: notes } = diff;
     const { bpm, bpmc, offset } = mapSettings;
     let arr = [];
+    // to avoid multiple of stack popping up, ignore anything within this time
     let lastTime;
     for (let i = 0, len = notes.length; i < len; i++) {
-        if (toRealTime(notes[i]._time) < lastTime + tool.stack) continue;
+        if (toRealTime(notes[i]._time) < lastTime + tool.stack.note || notes[i]._type === 3) continue;
         for (let j = i+1; j < len; j++) {
-            if (toRealTime(notes[j]._time) > toRealTime(notes[i]._time) + tool.stack) break;
+            if (toRealTime(notes[j]._time) > toRealTime(notes[i]._time) + tool.stack.note) break;
+            if (notes[i]._lineLayer === notes[j]._lineLayer && notes[i]._lineIndex === notes[j]._lineIndex) {
+                arr.push(adjustTime(notes[i]._time, bpm, offset, bpmc));
+                lastTime = toRealTime(notes[i]._time);
+            }
+        }
+    }
+    arr = arr.filter(function(x, i, ary) {
+        return !i || x !== ary[i - 1];
+    });
+    return arr;
+}
+function detectStackedBomb(diff, mapSettings) {
+    const { _notes: notes } = diff;
+    const { bpm, bpmc, offset } = mapSettings;
+    let arr = [];
+    let lastTime;
+    for (let i = 0, len = notes.length; i < len; i++) {
+        if (toRealTime(notes[i]._time) < lastTime + tool.stack.bomb || notes[i]._type !== 3) continue;
+        for (let j = i+1; j < len; j++) {
+            if (toRealTime(notes[j]._time) > toRealTime(notes[i]._time) + tool.stack.bomb) break;
             if (notes[i]._lineLayer === notes[j]._lineLayer && notes[i]._lineIndex === notes[j]._lineIndex) {
                 arr.push(adjustTime(notes[i]._time, bpm, offset, bpmc));
                 lastTime = toRealTime(notes[i]._time);
