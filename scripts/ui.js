@@ -392,7 +392,7 @@ $('.accordion').click(function() {
     }
 });
 
-function UILoadingStatus(status, txt, progress = 100) {
+function UILoadingStatus(status, text, progress = 100) {
     switch (status) {
         case 'info': {
             $('#loadingbar').css('background-color', '#4060a0');
@@ -409,7 +409,7 @@ function UILoadingStatus(status, txt, progress = 100) {
         }
     }
     if (progress !== -1) $('#loadingbar').css('width', `${progress}%`);
-    if (txt !== '') $('#loadingtext').text(txt);
+    if (text !== '') $('#loadingtext').text(text);
 }
 
 function UIUpdateMapInfo() {
@@ -550,15 +550,15 @@ async function UICreateDiffInfo(charName, diff) {
     const bpmc = getBPMChangesTime(bpm, offset, BPMChanges);
     
     // general map stuff
-    let txtMap = [];
-    txtMap.push(`NJS: ${diff._noteJumpMovementSpeed} / ${round(diff._noteJumpStartBeatOffset, 3)}`);
-    txtMap.push(`HJD: ${round(getHalfJumpDuration(bpm, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset), 3)}`);
-    txtMap.push(`JD: ${round(getJumpDistance(bpm, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset), 3)}`);
-    txtMap.push(`Reaction Time: ${Math.round(60 / bpm * getHalfJumpDuration(bpm, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset) * 1000)}ms`);
-    txtMap.push('');
-    txtMap.push(`Effective BPM: ${(findEffectiveBPM(diff._data._notes, bpm)).toFixed(2)}`);
-    txtMap.push(`Effective BPM (swing): ${(findEffectiveBPMSwing(diff._data._notes, bpm)).toFixed(2)}`);
-    if (bpmc.length > 0) txtMap.push(`BPM changes: ${bpmc.length}`);
+    let textMap = [];
+    textMap.push(`NJS: ${diff._noteJumpMovementSpeed} / ${round(diff._noteJumpStartBeatOffset, 3)}`);
+    textMap.push(`HJD: ${round(getHalfJumpDuration(bpm, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset), 3)}`);
+    textMap.push(`JD: ${round(getJumpDistance(bpm, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset), 3)}`);
+    textMap.push(`Reaction Time: ${Math.round(60 / bpm * getHalfJumpDuration(bpm, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset) * 1000)}ms`);
+    textMap.push('');
+    textMap.push(`Effective BPM: ${(findEffectiveBPM(diff._data._notes, bpm)).toFixed(2)}`);
+    textMap.push(`Effective BPM (swing): ${(findEffectiveBPMSwing(diff._data._notes, bpm)).toFixed(2)}`);
+    if (bpmc.length > 0) textMap.push(`BPM changes: ${bpmc.length}`);
     const mapSettings = {
         bpm: map.info._beatsPerMinute,
         bpmc: getBPMChangesTime(map.info._beatsPerMinute, offset, BPMChanges),
@@ -568,57 +568,57 @@ async function UICreateDiffInfo(charName, diff) {
     }
 
     // notes
-    let txtNote = [];
+    let textNote = [];
     const notes = getNoteCount(diff._data._notes)
-    txtNote.push(`Notes: ${notes.red + notes.blue}`);
-    txtNote.push(`• Red: ${notes.red}`);
-    txtNote.push(`• Blue: ${notes.blue}`);
-    txtNote.push(`• R/B Ratio: ${round(notes.blue ? notes.red / notes.blue : 0, 2)}`);
+    textNote.push(`Notes: ${notes.red + notes.blue}`);
+    textNote.push(`• Red: ${notes.red}`);
+    textNote.push(`• Blue: ${notes.blue}`);
+    textNote.push(`• R/B Ratio: ${round(notes.blue ? notes.red / notes.blue : 0, 2)}`);
     if (notes.chromaN) {
-        txtEvent.push(`• Chroma: ${notes.chromaN} ${hasChroma ? '' : '⚠️ not suggested'}`);
+        textEvent.push(`• Chroma: ${notes.chromaN} ${hasChroma ? '' : '⚠️ not suggested'}`);
     }
-    txtNote.push('');
-    txtNote.push(`SPS: ${swingPerSecondInfo(diff._data).toFixed(2)}`);
-    txtNote.push(`NPS: ${calcNPS(notes.red + notes.blue).toFixed(2)}`);
-    txtNote.push(`• Mapped: ${calcNPSMapped(notes.red + notes.blue, diff._data._duration).toFixed(2)}`);
+    textNote.push('');
+    textNote.push(`SPS: ${swingPerSecondInfo(diff._data).toFixed(2)}`);
+    textNote.push(`NPS: ${calcNPS(notes.red + notes.blue).toFixed(2)}`);
+    textNote.push(`• Mapped: ${calcNPSMapped(notes.red + notes.blue, diff._data._duration).toFixed(2)}`);
 
-    let txtObstacle = [];
+    let textObstacle = [];
     // i know bomb isnt obstacle but this side doesnt have much so i merge this together
     // it now include row percentage; does not include bomb
-    txtObstacle.push(`Top Row: ${notes.blue || notes.red ? round(countNoteLayer(diff._data._notes, 2) / (notes.red + notes.blue) * 100, 1) : 0}%`);
-    txtObstacle.push(`Mid Row: ${notes.blue || notes.red ? round(countNoteLayer(diff._data._notes, 1) / (notes.red + notes.blue) * 100, 1) : 0}%`);
-    txtObstacle.push(`Bot Row: ${notes.blue || notes.red ? round(countNoteLayer(diff._data._notes, 0) / (notes.red + notes.blue) * 100, 1) : 0}%`);
-    txtObstacle.push('');
-    txtObstacle.push(`Bombs: ${notes.bomb}`);
+    textObstacle.push(`Top Row: ${notes.blue || notes.red ? round(countNoteLayer(diff._data._notes, 2) / (notes.red + notes.blue) * 100, 1) : 0}%`);
+    textObstacle.push(`Mid Row: ${notes.blue || notes.red ? round(countNoteLayer(diff._data._notes, 1) / (notes.red + notes.blue) * 100, 1) : 0}%`);
+    textObstacle.push(`Bot Row: ${notes.blue || notes.red ? round(countNoteLayer(diff._data._notes, 0) / (notes.red + notes.blue) * 100, 1) : 0}%`);
+    textObstacle.push('');
+    textObstacle.push(`Bombs: ${notes.bomb}`);
     if (notes.chromaB) {
-        txtObstacle.push(`• Chroma: ${notes.chromaB} ${hasChroma ? '' : '⚠️ not suggested'}`);
+        textObstacle.push(`• Chroma: ${notes.chromaB} ${hasChroma ? '' : '⚠️ not suggested'}`);
     }
-    txtObstacle.push('');
-    txtObstacle.push(`Obstacles: ${diff._data._obstacles.length}`);
-    txtObstacle.push(`• Interactive: ${countInteractiveObstacle(diff._data._obstacles)}`);
+    textObstacle.push('');
+    textObstacle.push(`Obstacles: ${diff._data._obstacles.length}`);
+    textObstacle.push(`• Interactive: ${countInteractiveObstacle(diff._data._obstacles)}`);
     let crouchObstacle = detectCrouchObstacle(diff._data, mapSettings);
-    if (crouchObstacle.length > 0) txtObstacle.push(`• Crouch: ${crouchObstacle.length}`);
+    if (crouchObstacle.length > 0) textObstacle.push(`• Crouch: ${crouchObstacle.length}`);
     let chromaW = countChromaObstacle(diff._data._obstacles);
     if (chromaW > 0) {
-        txtObstacle.push(`• Chroma: ${chromaW} ${hasChroma ? '' : '⚠️ not suggested'}`);
+        textObstacle.push(`• Chroma: ${chromaW} ${hasChroma ? '' : '⚠️ not suggested'}`);
     }
 
     // events n stuff
-    let txtEvent = [];
+    let textEvent = [];
     const events = getEventCount(diff._data._events);
-    txtEvent.push(`Events: ${diff._data._events.length}`);
-    txtEvent.push(`• Lighting: ${events.light}`);
-    txtEvent.push(`• Ring Rotation: ${events.rrotate}`);
-    txtEvent.push(`• Ring Zoom: ${events.rzoom}`);
-    txtEvent.push(`• Laser Rotation: ${events.laser}`);
+    textEvent.push(`Events: ${diff._data._events.length}`);
+    textEvent.push(`• Lighting: ${events.light}`);
+    textEvent.push(`• Ring Rotation: ${events.rrotate}`);
+    textEvent.push(`• Ring Zoom: ${events.rzoom}`);
+    textEvent.push(`• Laser Rotation: ${events.laser}`);
     if (events.chroma || events.ogc) {
-        txtEvent.push('');
-        if (events.chroma) txtEvent.push(`• Chroma: ${events.chroma} ${hasChroma ? '' : '⚠️ not suggested'}`);
-        if (events.ogc) txtEvent.push(`• OG Chroma: ${events.ogc}`);
+        textEvent.push('');
+        if (events.chroma) textEvent.push(`• Chroma: ${events.chroma} ${hasChroma ? '' : '⚠️ not suggested'}`);
+        if (events.ogc) textEvent.push(`• OG Chroma: ${events.ogc}`);
     }
     if (events.rot) {
-        txtEvent.push('');
-        txtEvent.push(`• Lane Rotation: ${charName === '90Degree' || charName === '360Degree' ? events.rot : `${events.rot} ⚠️ not 360/90 mode`}`);
+        textEvent.push('');
+        textEvent.push(`• Lane Rotation: ${charName === '90Degree' || charName === '360Degree' ? events.rot : `${events.rot} ⚠️ not 360/90 mode`}`);
     }
 
     // set header
@@ -657,27 +657,27 @@ async function UICreateDiffInfo(charName, diff) {
     let diffPanelMap = $('<div>', {
         class: 'diff-panel',
         id: 'map',
-        html: txtMap.join('<br>')
+        html: textMap.join('<br>')
     });
 
     // note
     let diffPanelNote = $('<div>', {
         class: 'diff-panel',
         id: 'notes',
-        html: txtNote.join('<br>')
+        html: textNote.join('<br>')
     });
     
     // obstacle
     let diffPanelObstacle = $('<div>', {
         class: 'diff-panel',
         id: 'obstacles',
-        html: txtObstacle.join('<br>')
+        html: textObstacle.join('<br>')
     });
     // event
     let diffPanelEvent = $('<div>', {
         class: 'diff-panel',
         id: 'events',
-        html: txtEvent.join('<br>')
+        html: textEvent.join('<br>')
     });
 
     // merge all panel into container

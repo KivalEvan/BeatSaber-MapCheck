@@ -196,40 +196,40 @@ async function mapTool(charName, diff) {
     console.log('analysing', charName, diff._difficulty);
     if (diffLabel !== null) {
         let status = checkLabelLength(charName, diffLabel);
-        if (status === 'error') arr.push(outTxtBold('Difficulty label too long', 'exceeded in-game display support'));
-        if (status === 'warn') arr.push(outTxtBold('Difficulty label possibly too long', 'may exceed in-game display support, check in-game to be sure'));
+        if (status === 'error') arr.push(printHTMLBold('Difficulty label too long', 'exceeded in-game display support'));
+        if (status === 'warn') arr.push(printHTMLBold('Difficulty label possibly too long', 'may exceed in-game display support, check in-game to be sure'));
     }
-    if (startTime < 1.5) arr.push(outTxtBold('Hot start', `${round(startTime, 2)}s`));
-    if (countEventLight10(diff._data._events) < 10) arr.push(outTxtBold('Lack of lighting events', '(<=10 events)'));
-    arr.push(outTxtBold(`>${tool.ebpm.th}EBPM warning []`, getEffectiveBPMTime(diff._data, mapSettings)));
-    arr.push(outTxtBold(`>${tool.ebpm.thSwing}EBPM (swing) warning []`, getEffectiveBPMSwingTime(diff._data, mapSettings)));
+    if (startTime < 1.5) arr.push(printHTMLBold('Hot start', `${round(startTime, 2)}s`));
+    if (countEventLight10(diff._data._events) < 10) arr.push(printHTMLBold('Lack of lighting events', '(<=10 events)'));
+    arr.push(printHTMLBold(`>${tool.ebpm.th}EBPM warning []`, getEffectiveBPMTime(diff._data, mapSettings)));
+    arr.push(printHTMLBold(`>${tool.ebpm.thSwing}EBPM (swing) warning []`, getEffectiveBPMSwingTime(diff._data, mapSettings)));
 
-    arr.push(outTxtBold('Note(s) before start time', findOutStartNote(diff._data, mapSettings)));
-    if (flag.map.load.audio) arr.push(outTxtBold('Note(s) after end time', findOutEndNote(diff._data, mapSettings)));
-    arr.push(outTxtBold('Event(s) before start time', findOutStartEvent(diff._data, mapSettings)));
-    if (flag.map.load.audio) arr.push(outTxtBold('Event(s) after end time', findOutEndEvent(diff._data, mapSettings)));
-    arr.push(outTxtBold('Obstacle(s) before start time', findOutStartObstacle(diff._data, mapSettings)));
-    if (flag.map.load.audio) arr.push(outTxtBold('Obstacle(s) after end time', findOutEndObstacle(diff._data, mapSettings)));
+    arr.push(printHTMLBold('Note(s) before start time', findOutStartNote(diff._data, mapSettings)));
+    if (flag.map.load.audio) arr.push(printHTMLBold('Note(s) after end time', findOutEndNote(diff._data, mapSettings)));
+    arr.push(printHTMLBold('Event(s) before start time', findOutStartEvent(diff._data, mapSettings)));
+    if (flag.map.load.audio) arr.push(printHTMLBold('Event(s) after end time', findOutEndEvent(diff._data, mapSettings)));
+    arr.push(printHTMLBold('Obstacle(s) before start time', findOutStartObstacle(diff._data, mapSettings)));
+    if (flag.map.load.audio) arr.push(printHTMLBold('Obstacle(s) after end time', findOutEndObstacle(diff._data, mapSettings)));
 
-    arr.push(outTxtBold('Zero width/duration obstacle []', detectZeroObstacle(diff._data, mapSettings)));
-    arr.push(outTxtBold('Invalid obstacle []', detectInvalidObstacle(diff._data, mapSettings)));
-    arr.push(outTxtBold('Negative obstacle []', detectNegativeObstacle(diff._data, mapSettings)));
-    arr.push(outTxtBold('2-center obstacle []', detectCenterObstacle(diff._data, mapSettings)));
-    arr.push(outTxtBold('<15ms obstacle []', detectShortObstacle(diff._data, mapSettings)));
-    // arr.push(outTxtBold('Crouch obstacle []', detectCrouchObstacle(diff._data, mapSettings)));
+    arr.push(printHTMLBold('Zero width/duration obstacle []', detectZeroObstacle(diff._data, mapSettings)));
+    arr.push(printHTMLBold('Invalid obstacle []', detectInvalidObstacle(diff._data, mapSettings)));
+    arr.push(printHTMLBold('Negative obstacle []', detectNegativeObstacle(diff._data, mapSettings)));
+    arr.push(printHTMLBold('2-center obstacle []', detectCenterObstacle(diff._data, mapSettings)));
+    arr.push(printHTMLBold('<15ms obstacle []', detectShortObstacle(diff._data, mapSettings)));
+    // arr.push(printHTMLBold('Crouch obstacle []', detectCrouchObstacle(diff._data, mapSettings)));
 
-    if (flag.tool.dd) arr.push(outTxtBold('Double-directional []', detectDoubleDirectional(diff._data, mapSettings)));
-    if (flag.tool.vb.note) arr.push(outTxtBold('Vision blocked []', detectVisionBlock(diff._data, mapSettings)));
-    arr.push(outTxtBold('Stacked note []', detectStackedNote(diff._data, mapSettings)));
-    arr.push(outTxtBold('Stacked bomb (<20ms) []', detectStackedBomb(diff._data, mapSettings)));
-    if (tool.beatPrec.length > 0) arr.push(outTxtBold('Off-beat precision []', detectOffPrecision(diff._data, mapSettings)));
-    if (flag.tool.hb.staircase) arr.push(outTxtBold('Hitbox staircase []', detectHitboxStaircase(diff._data, mapSettings)));
-    if (flag.tool.shrAngle) arr.push(outTxtBold('Shrado angle []', detectShrAngle(diff._data, mapSettings)));
-    if (flag.tool.speedPause) arr.push(outTxtBold('Speed pause []', detectSpeedPause(diff._data, mapSettings)));
-    let txt = arr.filter(function(x) {
+    if (flag.tool.dd) arr.push(printHTMLBold('Double-directional []', detectDoubleDirectional(diff._data, mapSettings)));
+    if (flag.tool.vb.note) arr.push(printHTMLBold('Vision blocked []', detectVisionBlock(diff._data, mapSettings)));
+    arr.push(printHTMLBold('Stacked note []', detectStackedNote(diff._data, mapSettings)));
+    arr.push(printHTMLBold('Stacked bomb (<20ms) []', detectStackedBomb(diff._data, mapSettings)));
+    if (tool.beatPrec.length > 0) arr.push(printHTMLBold('Off-beat precision []', detectOffPrecision(diff._data, mapSettings)));
+    if (flag.tool.hb.staircase) arr.push(printHTMLBold('Hitbox staircase []', detectHitboxStaircase(diff._data, mapSettings)));
+    if (flag.tool.shrAngle) arr.push(printHTMLBold('Shrado angle []', detectShrAngle(diff._data, mapSettings)));
+    if (flag.tool.speedPause) arr.push(printHTMLBold('Speed pause []', detectSpeedPause(diff._data, mapSettings)));
+    let html = arr.filter(function(x) {
         return x !== '';
     });
-    return txt;
+    return html;
 }
 
 // fallback if audio loading didnt work
