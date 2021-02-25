@@ -4,21 +4,28 @@
 
 function countInteractiveObstacle(obstacles) {
     let count = 0;
-    for (let i = obstacles.length - 1; i >= 0; i--)
-        if (obstacles[i]._width > 1 || obstacles[i]._lineIndex === 1 || obstacles[i]._lineIndex === 2) count++;
+    for (let i = obstacles.length - 1; i >= 0; i--) {
+        if (obstacles[i]._width > 1 || obstacles[i]._lineIndex === 1 || obstacles[i]._lineIndex === 2) {
+            count++;
+        }
+    }
     return count;
 }
 
 function countChromaObstacle(obstacles) {
     let count = 0;
-    for (let i = obstacles.length - 1; i >= 0; i--) if (obstacles[i]._customData?._color) count++;
+    for (let i = obstacles.length - 1; i >= 0; i--) {
+        if (obstacles[i]._customData?._color) {
+            count++;
+        }
+    }
     return count;
 }
 
 function detectZeroObstacle(diff, mapSettings) {
     const { _obstacles: obstacles } = diff;
     const { bpm, bpmc, offset } = mapSettings;
-    let arr = [];
+    const arr = [];
     for (let i = 0, len = obstacles.length; i < len; i++) {
         if (obstacles[i]._width === 0 || (toRealTime(obstacles[i]._duration) < 0.001 && !obstacles[i]._duration < 0)) {
             arr.push(adjustTime(obstacles[i]._time, bpm, offset, bpmc));
@@ -32,7 +39,7 @@ function detectZeroObstacle(diff, mapSettings) {
 function detectInvalidObstacle(diff, mapSettings) {
     const { _obstacles: obstacles } = diff;
     const { bpm, bpmc, offset } = mapSettings;
-    let arr = [];
+    const arr = [];
     for (let i = 0, len = obstacles.length; i < len; i++) {
         if (
             obstacles[i]._width > 4 ||
@@ -56,7 +63,7 @@ function detectInvalidObstacle(diff, mapSettings) {
 }
 
 function detectNegativeObstacle(obstacles, bpm, offset, bpmc) {
-    let arr = [];
+    const arr = [];
     for (let i = 0, len = obstacles.length; i < len; i++) {
         if (obstacles[i]._width < 0 || obstacles[i]._duration < 0) {
             arr.push(adjustTime(obstacles._time, bpm, offset, bpmc));
@@ -71,7 +78,7 @@ function detectNegativeObstacle(obstacles, bpm, offset, bpmc) {
 function detectCenterObstacle(diff, mapSettings) {
     const { _obstacles: obstacles } = diff;
     const { bpm, bpmc, offset } = mapSettings;
-    let arr = [];
+    const arr = [];
     let obstacleLFull = { _time: 0, _duration: 0 };
     let obstacleRFull = { _time: 0, _duration: 0 };
     for (let i = 0, len = obstacles.length; i < len; i++) {
@@ -156,7 +163,7 @@ function detectCenterObstacle(diff, mapSettings) {
 function detectShortObstacle(diff, mapSettings) {
     const { _obstacles: obstacles } = diff;
     const { bpm, bpmc, offset } = mapSettings;
-    let arr = [];
+    const arr = [];
     let obstacleLFull = { _time: 0, _duration: 0 };
     let obstacleRFull = { _time: 0, _duration: 0 };
     let obstacleLHalf = { _time: 0, _duration: 0 };
@@ -293,7 +300,7 @@ function detectShortObstacle(diff, mapSettings) {
 function detectCrouchObstacle(diff, mapSettings) {
     const { _obstacles: obstacles } = diff;
     const { bpm, bpmc, offset } = mapSettings;
-    let arr = [];
+    const arr = [];
     let obstacleLFull = { _time: 0, _duration: 0 };
     let obstacleRFull = { _time: 0, _duration: 0 };
     let obstacleLHalf = { _time: 0, _duration: 0 };

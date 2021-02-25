@@ -41,7 +41,9 @@ if ($.urlParam('url') !== null) {
 }
 
 function toMMSS(num) {
-    if (!num) return '0:00';
+    if (!num) {
+        return '0:00';
+    }
     let numr = Math.round(num);
     let min = Math.floor(numr / 60);
     let sec = numr % 60;
@@ -64,8 +66,11 @@ function getBPMChangesTime(bpm, offset = 0, bpmc = []) {
             bpm: bpmc[i]._BPM || bpmc[i]._bpm,
             jsonTime: bpmc[i]._time,
         };
-        if (temp) curBPMC.newTime = Math.ceil(((curBPMC.jsonTime - temp.jsonTime) / bpm) * temp.bpm + temp.newTime - 0.01);
-        else curBPMC.newTime = Math.ceil(curBPMC.jsonTime - (offset * bpm) / 60 - 0.01);
+        if (temp) {
+            curBPMC.newTime = Math.ceil(((curBPMC.jsonTime - temp.jsonTime) / bpm) * temp.bpm + temp.newTime - 0.01);
+        } else {
+            curBPMC.newTime = Math.ceil(curBPMC.jsonTime - (offset * bpm) / 60 - 0.01);
+        }
         BPMChanges.push(curBPMC);
         temp = curBPMC;
     }
@@ -87,14 +92,18 @@ function offsetBegone(beat, bpm, offset) {
 
 // just to make rounding with decimal easier
 function round(num, d = 0) {
-    if (!d > 0) return Math.round(num);
+    if (!d > 0) {
+        return Math.round(num);
+    }
     // return parseFloat(num.toFixed(d));
     return Math.round(num * Math.pow(10, d)) / Math.pow(10, d);
 }
 
 // thanks Top_Cat#1961
 function mod(x, m) {
-    if (m < 0) m = -m;
+    if (m < 0) {
+        m = -m;
+    }
     r = x % m;
     return r < 0 ? r + m : r;
 }
@@ -104,11 +113,17 @@ function distance(a, b, m) {
 
 function printHTMLBold(arg1, arg2) {
     if (!Array.isArray(arg2)) {
-        if (arg2 === '') return '';
+        if (arg2 === '') {
+            return '';
+        }
         return `<b>${arg1}</b>: ${arg2}`;
     }
-    if (arg2.length === 0) return '';
-    if (arg1.search(/\[\]/g) !== -1 && arg2.length > 0) arg1 = arg1.replaceAll(/\[\]/g, `[${arg2.length}]`);
+    if (arg2.length === 0) {
+        return '';
+    }
+    if (arg1.search(/\[\]/g) !== -1 && arg2.length > 0) {
+        arg1 = arg1.replaceAll(/\[\]/g, `[${arg2.length}]`);
+    }
     return `<b>${arg1}</b>: ${arg2.join(', ')}`;
 }
 

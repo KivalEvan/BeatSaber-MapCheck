@@ -11,7 +11,9 @@ function swingNext(n1, n2) {
 
 function swingNoteEnd(n1, n2) {
     // fuck u and ur dot note stack
-    if (n1._cutDirection === 8 && n2._cutDirection === 8) return false;
+    if (n1._cutDirection === 8 && n2._cutDirection === 8) {
+        return false;
+    }
     // if end note on right side
     if (n1._lineIndex > n2._lineIndex) {
         // check if end note is arrowed
@@ -71,7 +73,9 @@ function maybeWindowed(n1, n2) {
 }
 
 function swingCount(notes, duration) {
-    if (notes.length === 0) return { l: [0], r: [0] };
+    if (notes.length === 0) {
+        return { l: [0], r: [0] };
+    }
 
     let swingCountRed = new Array(Math.floor(duration + 1)).fill(0);
     let swingCountBlue = new Array(Math.floor(duration + 1)).fill(0);
@@ -85,14 +89,18 @@ function swingCount(notes, duration) {
                 if (swingNext(note, lastRed)) {
                     swingCountRed[Math.floor(realTime)] += 1;
                 }
-            } else swingCountRed[Math.floor(realTime)] += 1;
+            } else {
+                swingCountRed[Math.floor(realTime)] += 1;
+            }
             lastRed = note;
         } else if (note._type === 1) {
             if (lastBlue) {
                 if (swingNext(note, lastBlue)) {
                     swingCountBlue[Math.floor(realTime)] += 1;
                 }
-            } else swingCountBlue[Math.floor(realTime)] += 1;
+            } else {
+                swingCountBlue[Math.floor(realTime)] += 1;
+            }
             lastBlue = note;
         }
     }
@@ -100,9 +108,11 @@ function swingCount(notes, duration) {
 }
 
 function swingGetRange(swingArray, x, y) {
-    let array = [];
+    const array = [];
     for (let i = x, len = x + y; i < len; i++) {
-        if (swingArray[i] === undefined) break;
+        if (swingArray[i] === undefined) {
+            break;
+        }
         array.push(swingArray[i]);
     }
     return array;
@@ -111,8 +121,9 @@ function swingGetRange(swingArray, x, y) {
 // unused; prolly will be in the future
 function calcMaxRollingSPS(swingArray, x) {
     if (swingArray.length === 0) return 0;
-    if (swingArray.length < x)
-        return Math.round((swingArray.reduce((a, b) => a + b) / swingArray.length) * 10 + Number.EPSILON) / 10;
+    if (swingArray.length < x) {
+        return round((swingArray.reduce((a, b) => a + b) / swingArray.length) * 10 + Number.EPSILON) / 10;
+    }
 
     let currentSPS = swingArray.slice(0, x).reduce((a, b) => a + b);
     let maxSPS = currentSPS;
@@ -121,7 +132,7 @@ function calcMaxRollingSPS(swingArray, x) {
         maxSPS = Math.max(maxSPS, currentSPS);
     }
 
-    return Math.round((maxSPS / x) * 10 + Number.EPSILON) / 10;
+    return round((maxSPS / x) * 10 + Number.EPSILON) / 10;
 }
 
 function swingPerSecondInfo(diff) {
@@ -130,20 +141,24 @@ function swingPerSecondInfo(diff) {
     const swingTotal = swing.l.map(function (num, i) {
         return num + swing.r[i];
     });
-    if (swingTotal.reduce((a, b) => a + b) === 0) return 0;
+    if (swingTotal.reduce((a, b) => a + b) === 0) {
+        return 0;
+    }
     let swingIntervalTotal = [];
 
     for (let i = 0, len = Math.ceil(swingTotal.length / interval); i < len; i++) {
         const sliceStart = i * interval;
         let maxInterval = interval;
-        if (maxInterval + sliceStart > swingTotal.length) maxInterval = swingTotal.length - sliceStart;
+        if (maxInterval + sliceStart > swingTotal.length) {
+            maxInterval = swingTotal.length - sliceStart;
+        }
         const sliceTotal = swingGetRange(swingTotal, sliceStart, interval);
-        const spsTotal = Math.round((sliceTotal.reduce((a, b) => a + b) / maxInterval) * 10 + Number.EPSILON) / 10;
+        const spsTotal = round((sliceTotal.reduce((a, b) => a + b) / maxInterval) * 10 + Number.EPSILON) / 10;
         swingIntervalTotal.push(spsTotal);
     }
 
     const duration = diff._duration - getFirstInteractiveTime(diff, map.info._beatsPerMinute);
-    const swingTotalOverall = Math.round((swingTotal.reduce((a, b) => a + b) / duration) * 100 + Number.EPSILON) / 100;
+    const swingTotalOverall = round((swingTotal.reduce((a, b) => a + b) / duration) * 100 + Number.EPSILON) / 100;
 
     return swingTotalOverall;
 }

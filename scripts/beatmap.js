@@ -27,7 +27,9 @@ async function loadMap(mapZip) {
         if (imageFile) {
             let imgBase64 = await imageFile.async('base64');
             $('#coverimg').attr('src', 'data:image;base64,' + imgBase64);
-        } else console.error(map.info._coverImageFilename + ' does not exists.');
+        } else {
+            console.error(map.info._coverImageFilename + ' does not exists.');
+        }
 
         // load audio
         UILoadingStatus('info', 'Loading audio...', 20.875);
@@ -46,7 +48,9 @@ async function loadMap(mapZip) {
                 .catch(function (err) {
                     console.error(err);
                 });
-        } else console.error(map.info._songFilename + ' does not exist.');
+        } else {
+            console.error(map.info._songFilename + ' does not exist.');
+        }
 
         // load diff map
         UILoadingStatus('info', 'Loading difficulty...', 70);
@@ -148,20 +152,33 @@ function loadDifficulty(str) {
         // TODO: need to find ways to convert object key to lowercase for compatibility and less pepega
         let customData = diff._customData,
             BPMChanges;
-        if (customData._BPMChanges) BPMChanges = customData._BPMChanges;
-        else if (customData._bpmChanges) BPMChanges = customData._bpmChanges;
+        if (customData._BPMChanges) {
+            BPMChanges = customData._BPMChanges;
+        } else if (customData._bpmChanges) {
+            BPMChanges = customData._bpmChanges;
+        }
         if (BPMChanges && BPMChanges.length > 0) {
             let curMinBPM = map.info._beatsPerMinute,
                 curMaxBPM = map.info._beatsPerMinute;
             for (let i = 0, len = BPMChanges.length; i < len; i++) {
-                if (BPMChanges[i]._BPM < curMinBPM) curMinBPM = BPMChanges[i]._BPM;
-                else if (BPMChanges[i]._BPM > curMaxBPM) curMaxBPM = BPMChanges[i]._BPM;
-                else if (BPMChanges[i]._bpm < curMinBPM) curMinBPM = BPMChanges[i]._bpm;
-                else if (BPMChanges[i]._bpm > curMaxBPM) curMaxBPM = BPMChanges[i]._bpm;
-                if (!flag.map.bpm.change) map.bpm.change.push(BPMChanges[i]);
+                if (BPMChanges[i]._BPM < curMinBPM) {
+                    curMinBPM = BPMChanges[i]._BPM;
+                } else if (BPMChanges[i]._BPM > curMaxBPM) {
+                    curMaxBPM = BPMChanges[i]._BPM;
+                } else if (BPMChanges[i]._bpm < curMinBPM) {
+                    curMinBPM = BPMChanges[i]._bpm;
+                } else if (BPMChanges[i]._bpm > curMaxBPM) {
+                    curMaxBPM = BPMChanges[i]._bpm;
+                }
+                if (!flag.map.bpm.change) {
+                    map.bpm.change.push(BPMChanges[i]);
+                }
             } // TODO: actually write proper BPM change check between diff rather than based on min, max value lol
-            if (flag.map.bpm.change && (map.bpm.min !== curMinBPM || map.bpm.max !== curMaxBPM)) flag.map.bpm.odd = true;
-            else if (map.bpm.min > curMinBPM || map.bpm.max < curMaxBPM) flag.map.bpm.change = true;
+            if (flag.map.bpm.change && (map.bpm.min !== curMinBPM || map.bpm.max !== curMaxBPM)) {
+                flag.map.bpm.odd = true;
+            } else if (map.bpm.min > curMinBPM || map.bpm.max < curMaxBPM) {
+                flag.map.bpm.change = true;
+            }
             mapUpdateBPMRange(curMinBPM, curMaxBPM);
             UIUpdateMapInfoBPM(map.bpm.min, map.bpm.max);
         }
@@ -169,7 +186,9 @@ function loadDifficulty(str) {
 
     if (diff._notes.length > 0 || diff._obstacles.length > 0) {
         diff._duration = getLastInteractiveTime(diff, map.info._beatsPerMinute);
-        if (!flag.map.load.audioAudio) calcMapDuration(diff._notes, diff._obstacles, map.info._beatsPerMinute);
+        if (!flag.map.load.audioAudio) {
+            calcMapDuration(diff._notes, diff._obstacles, map.info._beatsPerMinute);
+        }
     }
     return diff;
 }
@@ -188,8 +207,11 @@ async function mapTool(charName, diff) {
 
     let BPMChanges;
     if (diff._data._customData) {
-        if (diff._data._customData._BPMChanges) BPMChanges = diff._data._customData._BPMChanges;
-        else if (diff._data._customData._bpmChanges) BPMChanges = diff._data._customData._bpmChanges;
+        if (diff._data._customData._BPMChanges) {
+            BPMChanges = diff._data._customData._BPMChanges;
+        } else if (diff._data._customData._bpmChanges) {
+            BPMChanges = diff._data._customData._bpmChanges;
+        }
     }
     const startTime = getFirstInteractiveTime(diff._data, map.info._beatsPerMinute);
     const mapSettings = {
@@ -203,17 +225,24 @@ async function mapTool(charName, diff) {
     let arr = [];
     if (diffLabel !== null) {
         let status = checkLabelLength(charName, diffLabel);
-        if (status === 'error') arr.push(printHTMLBold('Difficulty label too long', 'exceeded in-game display support'));
-        if (status === 'warn')
+        if (status === 'error') {
+            arr.push(printHTMLBold('Difficulty label too long', 'exceeded in-game display support'));
+        }
+        if (status === 'warn') {
             arr.push(
                 printHTMLBold(
                     'Difficulty label possibly too long',
                     'may exceed in-game display support, check in-game to be sure'
                 )
             );
+        }
     }
-    if (startTime < 1.5) arr.push(printHTMLBold('Hot start', `${round(startTime, 2)}s`));
-    if (countEventLight10(diff._data._events) < 10) arr.push(printHTMLBold('Lack of lighting events', '(<=10 events)'));
+    if (startTime < 1.5) {
+        arr.push(printHTMLBold('Hot start', `${round(startTime, 2)}s`));
+    }
+    if (countEventLight10(diff._data._events) < 10) {
+        arr.push(printHTMLBold('Lack of lighting events', '(<=10 events)'));
+    }
     arr.push(printHTMLBold(`>${tool.ebpm.th}EBPM warning []`, getEffectiveBPMTime(diff._data, mapSettings)));
     arr.push(printHTMLBold(`>${tool.ebpm.thSwing}EBPM (swing) warning []`, getEffectiveBPMSwingTime(diff._data, mapSettings)));
 
@@ -233,36 +262,57 @@ async function mapTool(charName, diff) {
     arr.push(printHTMLBold('<15ms obstacle []', detectShortObstacle(diff._data, mapSettings)));
     // arr.push(printHTMLBold('Crouch obstacle []', detectCrouchObstacle(diff._data, mapSettings)));
 
-    if (flag.tool.dd) arr.push(printHTMLBold('Double-directional []', detectDoubleDirectional(diff._data, mapSettings)));
-    if (flag.tool.vb.note) arr.push(printHTMLBold('Vision blocked []', detectVisionBlock(diff._data, mapSettings)));
+    if (flag.tool.dd) {
+        arr.push(printHTMLBold('Double-directional []', detectDoubleDirectional(diff._data, mapSettings)));
+    }
+    if (flag.tool.vb.note) {
+        arr.push(printHTMLBold('Vision blocked []', detectVisionBlock(diff._data, mapSettings)));
+    }
     arr.push(printHTMLBold('Stacked note []', detectStackedNote(diff._data, mapSettings)));
     arr.push(printHTMLBold('Stacked bomb (<20ms) []', detectStackedBomb(diff._data, mapSettings)));
-    if (tool.beatPrec.length > 0)
+    if (tool.beatPrec.length > 0) {
         arr.push(printHTMLBold('Off-beat precision []', detectOffPrecision(diff._data, mapSettings)));
-    if (flag.tool.hb.staircase) arr.push(printHTMLBold('Hitbox staircase []', detectHitboxStaircase(diff._data, mapSettings)));
-    if (flag.tool.shrAngle) arr.push(printHTMLBold('Shrado angle []', detectShrAngle(diff._data, mapSettings)));
-    if (flag.tool.speedPause) arr.push(printHTMLBold('Speed pause []', detectSpeedPause(diff._data, mapSettings)));
-    let html = arr.filter(function (x) {
+    }
+    if (flag.tool.hb.staircase) {
+        arr.push(printHTMLBold('Hitbox staircase []', detectHitboxStaircase(diff._data, mapSettings)));
+    }
+    if (flag.tool.shrAngle) {
+        arr.push(printHTMLBold('Shrado angle []', detectShrAngle(diff._data, mapSettings)));
+    }
+    if (flag.tool.speedPause) {
+        arr.push(printHTMLBold('Speed pause []', detectSpeedPause(diff._data, mapSettings)));
+    }
+    return arr.filter(function (x) {
         return x !== '';
     });
-    return html;
 }
 
 // fallback if audio loading didnt work
 function calcMapDuration(notes, obstacles, bpm) {
     let lastNoteTime = (notes[notes.length - 1]._time / bpm) * 60 || 0;
     let lastObstacleTime = 0;
-    for (let i = obstacles.length - 1; i >= 0; i--)
+    for (let i = obstacles.length - 1; i >= 0; i--) {
         lastObstacleTime = Math.max(lastObstacleTime, ((obstacles[i]._time + obstacles[i]._duration) / bpm) * 60);
+    }
     let dur = Math.max(lastNoteTime, lastObstacleTime);
 
-    if (!map.audio.duration) map.audio.duration = dur;
-    else if (map.audio.duration < dur) map.audio.duration = dur;
+    if (!map.audio.duration) {
+        map.audio.duration = dur;
+    } else if (map.audio.duration < dur) {
+        map.audio.duration = dur;
+    }
     $('#song-duration').text(`${toMMSS(map.audio.duration)} ⚠️ no audio, using map duration`);
 }
 
 function mapUpdateBPMRange(min, max) {
-    if (!map.bpm.min || !map.bpm.max) (map.bpm.min = min), (map.bpm.max = max);
-    if (min < map.bpm.min) map.bpm.min = min;
-    if (max > map.bpm.max) map.bpm.max = max;
+    if (!map.bpm.min || !map.bpm.max) {
+        map.bpm.min = min;
+        map.bpm.max = max;
+    }
+    if (min < map.bpm.min) {
+        map.bpm.min = min;
+    }
+    if (max > map.bpm.max) {
+        map.bpm.max = max;
+    }
 }

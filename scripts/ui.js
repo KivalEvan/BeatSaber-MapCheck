@@ -75,7 +75,9 @@ function sanitizeURL(url) {
     }
     if (regexURL.test(url)) {
         return url;
-    } else throw new Error('Invalid URL');
+    } else {
+        throw new Error('Invalid URL');
+    }
 }
 
 function sanitizeBeatSaverID(id) {
@@ -86,7 +88,9 @@ function sanitizeBeatSaverID(id) {
     }
     if (regexID.test(id)) {
         return id;
-    } else throw new Error('Invalid ID');
+    } else {
+        throw new Error('Invalid ID');
+    }
 }
 
 function downloadMap(url) {
@@ -374,7 +378,7 @@ $('#apply-this').click(async function () {
     mapObj.diff = tool.select.diff;
     mapObj.text = await mapTool(tool.select.char, diff);
 
-    let arr = [mapObj]; // this is dumb
+    const arr = [mapObj]; // this is dumb
     map.analysis = map.analysis.map((ma) => arr.find((obj) => obj.mapSet === ma.mapSet && obj.diff === ma.diff) || ma);
     UIOutputDisplay(tool.select.char, tool.select.diff);
     UILoadingStatus('', `Re-analysed ${tool.select.char} ${tool.select.diff}`);
@@ -510,7 +514,6 @@ function UICreateDiffSet(charName) {
 }
 
 async function UICreateDiffInfo(charName, diff) {
-    const bpm = map.info._beatsPerMinute;
     let diffName = diffRename[diff._difficulty] || diff._difficulty;
     let offset = 0;
     let BPMChanges;
@@ -592,28 +595,40 @@ async function UICreateDiffInfo(charName, diff) {
         njs: diff._noteJumpMovementSpeed,
         njsOffset: diff._noteJumpStartBeatOffset,
     };
-    const bpmc = getBPMChangesTime(bpm, offset, BPMChanges);
     const notes = getNoteCount(diff._data._notes);
     const events = getEventCount(diff._data._events);
 
     // general map stuff
     let textMap = [];
     textMap.push(`NJS: ${diff._noteJumpMovementSpeed} / ${round(diff._noteJumpStartBeatOffset, 3)}`);
-    textMap.push(`HJD: ${round(getHalfJumpDuration(bpm, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset), 3)}`);
-    textMap.push(`JD: ${round(getJumpDistance(bpm, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset), 3)}`);
     textMap.push(
-        `Reaction Time: ${Math.round(
-            (60 / bpm) * getHalfJumpDuration(bpm, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset) * 1000
+        `HJD: ${round(getHalfJumpDuration(mapSettings.bpm, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset), 3)}`
+    );
+    textMap.push(
+        `JD: ${round(getJumpDistance(mapSettings.bpm, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset), 3)}`
+    );
+    textMap.push(
+        `Reaction Time: ${round(
+            (60 / mapSettings.bpm) *
+                getHalfJumpDuration(mapSettings.bpm, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset) *
+                1000
         )}ms`
     );
+    // textMap.push(
+    //     `Reaction Time: ${round(
+    //         (getJumpDistance(mapSettings.bpm, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset) /
+    //             (mapSettings.njs * 2)) *
+    //             1000
+    //     )}ms`
+    // ); this formula give the same result as above, idk why i needed this
     textMap.push('');
     textMap.push(`SPS: ${swingPerSecondInfo(diff._data).toFixed(2)}`);
     textMap.push(`NPS: ${calcNPS(notes.red + notes.blue).toFixed(2)}`);
     textMap.push(`• Mapped: ${calcNPSMapped(notes.red + notes.blue, diff._data._duration).toFixed(2)}`);
     textMap.push('');
-    textMap.push(`Effective BPM: ${findEffectiveBPM(diff._data._notes, bpm).toFixed(2)}`);
-    textMap.push(`Effective BPM (swing): ${findEffectiveBPMSwing(diff._data._notes, bpm).toFixed(2)}`);
-    if (bpmc.length > 0) textMap.push(`BPM changes: ${bpmc.length}`);
+    textMap.push(`Effective BPM: ${findEffectiveBPM(diff._data._notes, mapSettings.bpm).toFixed(2)}`);
+    textMap.push(`Effective BPM (swing): ${findEffectiveBPMSwing(diff._data._notes, mapSettings.bpm).toFixed(2)}`);
+    if (mapSettings.bpmc.length > 0) textMap.push(`BPM changes: ${mapSettings.bpmc.length}`);
 
     // notes
     let textNote = [];
