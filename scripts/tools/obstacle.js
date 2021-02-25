@@ -24,10 +24,9 @@ function detectZeroObstacle(diff, mapSettings) {
             arr.push(adjustTime(obstacles[i]._time, bpm, offset, bpmc));
         }
     }
-    arr = arr.filter(function (x, i, ary) {
+    return arr.filter(function (x, i, ary) {
         return !i || x !== ary[i - 1];
     });
-    return arr;
 }
 
 function detectInvalidObstacle(diff, mapSettings) {
@@ -51,10 +50,9 @@ function detectInvalidObstacle(diff, mapSettings) {
             arr.push(adjustTime(obstacles[i]._time, bpm, offset, bpmc));
         }
     }
-    arr = arr.filter(function (x, i, ary) {
+    return arr.filter(function (x, i, ary) {
         return !i || x !== ary[i - 1];
     });
-    return arr;
 }
 
 function detectNegativeObstacle(obstacles, bpm, offset, bpmc) {
@@ -64,10 +62,9 @@ function detectNegativeObstacle(obstacles, bpm, offset, bpmc) {
             arr.push(adjustTime(obstacles._time, bpm, offset, bpmc));
         }
     }
-    arr = arr.filter(function (x, i, ary) {
+    return arr.filter(function (x, i, ary) {
         return !i || x !== ary[i - 1];
     });
-    return arr;
 }
 
 // god this was more complicated than i thought, but i dont think it should
@@ -147,10 +144,9 @@ function detectCenterObstacle(diff, mapSettings) {
             }
         }
     }
-    arr = arr.filter(function (x, i, ary) {
+    return arr.filter(function (x, i, ary) {
         return !i || x !== ary[i - 1];
     });
-    return arr;
 }
 
 // overly complicated stuff again
@@ -287,10 +283,9 @@ function detectShortObstacle(diff, mapSettings) {
             }
         }
     }
-    arr = arr.filter(function (x, i, ary) {
+    return arr.filter(function (x, i, ary) {
         return !i || x !== ary[i - 1];
     });
-    return arr;
 }
 
 // pain 2 electric boogaloo
@@ -371,10 +366,9 @@ function detectCrouchObstacle(diff, mapSettings) {
             }
         }
     }
-    arr = arr.filter(function (x, i, ary) {
+    return arr.filter(function (x, i, ary) {
         return !i || x !== ary[i - 1];
     });
-    return arr;
 }
 
 // check if current obstacle is longer than previous obstacle

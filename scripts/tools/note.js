@@ -248,10 +248,9 @@ function detectDoubleDirectional(diff, mapSettings) {
             }
         }
     }
-    arr = arr.filter(function (x, i, ary) {
+    return arr.filter(function (x, i, ary) {
         return !i || x !== ary[i - 1];
     });
-    return arr;
 }
 function checkDD(n1cd, n2cd) {
     if (n1cd === 8 || n2cd === 8) return false;
@@ -282,10 +281,9 @@ function detectVisionBlock(diff, mapSettings) {
         if (note._lineLayer === 1 && note._lineIndex === 1) lastMidL = note;
         else if (note._lineLayer === 1 && note._lineIndex === 2) lastMidR = note;
     }
-    arr = arr.filter(function (x, i, ary) {
+    return arr.filter(function (x, i, ary) {
         return !i || x !== ary[i - 1];
     });
-    return arr;
 }
 
 function detectOffPrecision(diff, mapSettings) {
@@ -319,10 +317,9 @@ function detectOffPrecision(diff, mapSettings) {
             }
         }
     }
-    arr = arr.filter(function (x, i, ary) {
+    return arr.filter(function (x, i, ary) {
         return !i || x !== ary[i - 1];
     });
-    return arr;
 }
 function checkPrec(nt) {
     if (!tool.beatPrec.length > 0) return false;
@@ -505,10 +502,9 @@ function detectShrAngle(diff, mapSettings) {
             lastBlue = note;
         }
     }
-    arr = arr.filter(function (x, i, ary) {
+    return arr.filter(function (x, i, ary) {
         return !i || x !== ary[i - 1];
     });
-    return arr;
 }
 function checkShrAngle(n1cd, n2cd) {
     if (n1cd === 8 || n2cd === 8) return false;
@@ -532,10 +528,9 @@ function detectStackedNote(diff, mapSettings) {
             }
         }
     }
-    arr = arr.filter(function (x, i, ary) {
+    return arr.filter(function (x, i, ary) {
         return !i || x !== ary[i - 1];
     });
-    return arr;
 }
 function detectStackedBomb(diff, mapSettings) {
     const { _notes: notes } = diff;
@@ -552,10 +547,9 @@ function detectStackedBomb(diff, mapSettings) {
             }
         }
     }
-    arr = arr.filter(function (x, i, ary) {
+    return arr.filter(function (x, i, ary) {
         return !i || x !== ary[i - 1];
     });
-    return arr;
 }
 
 // im having pain pls help
