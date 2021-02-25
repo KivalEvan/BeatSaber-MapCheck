@@ -129,18 +129,8 @@ async function loadMap(mapZip) {
     }
 }
 
-// TODO: filter invalid note & obstacle
 function loadDifficulty(diffFile, str) {
     let diff = JSON.parse(str);
-
-    // sort map in-case of some fucky wucky
-    diff._notes.sort(function (a, b) {
-        return a._time - b._time;
-    });
-    diff._obstacles.sort(function (a, b) {
-        return a._time - b._time;
-    });
-    // not gonna sort event, going to assume event is always sorted because it'll take way too long to load multiple big event map
 
     // null error handling while parsing map
     diff._notes.forEach((note) => {
@@ -164,6 +154,15 @@ function loadDifficulty(diffFile, str) {
             }
         }
     });
+
+    // sort map in-case of some fucky wucky
+    diff._notes.sort(function (a, b) {
+        return a._time - b._time;
+    });
+    diff._obstacles.sort(function (a, b) {
+        return a._time - b._time;
+    });
+    // not gonna sort event, going to assume event is always sorted because it'll take way too long to load multiple big event map
 
     if (diff._customData) {
         // TODO: need to find ways to convert object key to lowercase for compatibility and less pepega
