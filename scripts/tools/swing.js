@@ -1,9 +1,12 @@
- /* SWING SCRIPT - swing.js
+/* SWING SCRIPT - swing.js
     determine swing, bomb reset, note position, etc.
     could use better name */
 
 function swingNext(n1, n2) {
-    return (maybeWindowed(n1, n2) && isAboveTH(n1._time - n2._time, tool.swing.maxWindowTol)) || isAboveTH(n1._time - n2._time, tool.swing.maxTol);
+    return (
+        (maybeWindowed(n1, n2) && isAboveTH(n1._time - n2._time, tool.swing.maxWindowTol)) ||
+        isAboveTH(n1._time - n2._time, tool.swing.maxTol)
+    );
 }
 
 function swingNoteEnd(n1, n2) {
@@ -54,8 +57,7 @@ function swingNoteDouble(n1, notes, index) {
     for (let i = index, len = notes.length; i < len; i++) {
         if (notes[i]._time < n1._time + 0.01 && notes[i]._type != n1._type) {
             return true;
-        }
-        else if (notes[i]._time > n1._time + 0.01) {
+        } else if (notes[i]._time > n1._time + 0.01) {
             return false;
         }
     }
@@ -69,8 +71,8 @@ function maybeWindowed(n1, n2) {
 }
 
 function swingCount(notes, duration) {
-    if (notes.length === 0) return {l: [0], r:[0]};
-    
+    if (notes.length === 0) return { l: [0], r: [0] };
+
     let swingCountRed = new Array(Math.floor(duration + 1)).fill(0);
     let swingCountBlue = new Array(Math.floor(duration + 1)).fill(0);
     let lastRed;
@@ -83,21 +85,18 @@ function swingCount(notes, duration) {
                 if (swingNext(note, lastRed)) {
                     swingCountRed[Math.floor(realTime)] += 1;
                 }
-            }
-            else swingCountRed[Math.floor(realTime)] += 1;
+            } else swingCountRed[Math.floor(realTime)] += 1;
             lastRed = note;
-        }
-        else if (note._type === 1) {
+        } else if (note._type === 1) {
             if (lastBlue) {
                 if (swingNext(note, lastBlue)) {
                     swingCountBlue[Math.floor(realTime)] += 1;
                 }
-            }
-            else swingCountBlue[Math.floor(realTime)] += 1;
+            } else swingCountBlue[Math.floor(realTime)] += 1;
             lastBlue = note;
         }
     }
-    return {l: swingCountRed, r: swingCountBlue};
+    return { l: swingCountRed, r: swingCountBlue };
 }
 
 function swingGetRange(swingArray, x, y) {
@@ -111,11 +110,10 @@ function swingGetRange(swingArray, x, y) {
 
 // unused; prolly will be in the future
 function calcMaxRollingSPS(swingArray, x) {
-    if (swingArray.length === 0)
-        return 0;
+    if (swingArray.length === 0) return 0;
     if (swingArray.length < x)
         return Math.round((swingArray.reduce((a, b) => a + b) / swingArray.length) * 10 + Number.EPSILON) / 10;
-    
+
     let currentSPS = swingArray.slice(0, x).reduce((a, b) => a + b);
     let maxSPS = currentSPS;
     for (let i = 0; i < swingArray.length - x; i++) {
@@ -123,21 +121,22 @@ function calcMaxRollingSPS(swingArray, x) {
         maxSPS = Math.max(maxSPS, currentSPS);
     }
 
-    return Math.round(maxSPS / x * 10 + Number.EPSILON) / 10;
+    return Math.round((maxSPS / x) * 10 + Number.EPSILON) / 10;
 }
 
 function swingPerSecondInfo(diff) {
     const interval = 10;
     const swing = swingCount(diff._notes, diff._duration);
-    const swingTotal = swing.l.map(function(num, i) { return num + swing.r[i]; });
+    const swingTotal = swing.l.map(function (num, i) {
+        return num + swing.r[i];
+    });
     if (swingTotal.reduce((a, b) => a + b) === 0) return 0;
     let swingIntervalTotal = [];
-    
+
     for (let i = 0, len = Math.ceil(swingTotal.length / interval); i < len; i++) {
         const sliceStart = i * interval;
         let maxInterval = interval;
-        if (maxInterval + sliceStart > swingTotal.length)
-            maxInterval = swingTotal.length - sliceStart;
+        if (maxInterval + sliceStart > swingTotal.length) maxInterval = swingTotal.length - sliceStart;
         const sliceTotal = swingGetRange(swingTotal, sliceStart, interval);
         const spsTotal = Math.round((sliceTotal.reduce((a, b) => a + b) / maxInterval) * 10 + Number.EPSILON) / 10;
         swingIntervalTotal.push(spsTotal);

@@ -1,4 +1,4 @@
- /* NOTE SCRIPT - note.js
+/* NOTE SCRIPT - note.js
     note pattern detection and stuff idk
     TODO: basic parity check
     TODO: basic unrankable hit */
@@ -16,35 +16,39 @@ function getNoteCount(notes) {
             if (notes[i]._type._customData?._color) {
                 cn++;
             }
-        }
-        else if (notes[i]._type === 1) {
+        } else if (notes[i]._type === 1) {
             nb++;
             if (notes[i]._type._customData?._color) {
                 cn++;
             }
-        }
-        else if (notes[i]._type === 3) {
+        } else if (notes[i]._type === 3) {
             b++;
             if (notes[i]._type._customData?._color) {
                 cb++;
             }
         }
     }
-    return {red: nr, blue: nb, bomb: b, chromaN: cn, chromaB: cb};
+    return { red: nr, blue: nb, bomb: b, chromaN: cn, chromaB: cb };
 }
 function countNoteLayer(notes, l) {
     let count = 0;
-    notes.forEach(note => { if (note._type !== 3 && note._lineLayer === l) count++; });
+    notes.forEach((note) => {
+        if (note._type !== 3 && note._lineLayer === l) count++;
+    });
     return count;
 }
 function countNoteIndex(notes, i) {
     let count = 0;
-    notes.forEach(note => { if (note._type !== 3 && note._lineIndex === i) count++; });
+    notes.forEach((note) => {
+        if (note._type !== 3 && note._lineIndex === i) count++;
+    });
     return count;
 }
 function countNoteIndexLayer(notes, i, l) {
     let count = 0;
-    notes.forEach(note => { if (note._type !== 3 && note._lineIndex === i && note._lineLayer === l) count++; });
+    notes.forEach((note) => {
+        if (note._type !== 3 && note._lineIndex === i && note._lineLayer === l) count++;
+    });
     return count;
 }
 
@@ -57,15 +61,14 @@ function findEffectiveBPM(notes, bpm) {
         if (note._type === 0) {
             if (lastRed) {
                 if (swingNext(note, lastRed)) {
-                    EBPM = Math.max(EBPM, (bpm / ((note._time - lastRed._time) * 2)));
+                    EBPM = Math.max(EBPM, bpm / ((note._time - lastRed._time) * 2));
                 }
             }
             lastRed = note;
-        }
-        else if (note._type === 1) {
+        } else if (note._type === 1) {
             if (lastBlue) {
                 if (swingNext(note, lastBlue)) {
-                    EBPM = Math.max(EBPM, (bpm / ((note._time - lastBlue._time) * 2)));
+                    EBPM = Math.max(EBPM, bpm / ((note._time - lastBlue._time) * 2));
                 }
             }
             lastBlue = note;
@@ -86,17 +89,14 @@ function findEffectiveBPMSwing(notes, bpm) {
                     EBPM = Math.max(EBPM, bpm / ((note._time - lastRed._time) * 2));
                     lastRed = note;
                 }
-            }
-            else lastRed = note;
-        }
-        else if (note._type === 1) {
+            } else lastRed = note;
+        } else if (note._type === 1) {
             if (lastBlue) {
                 if (swingNext(note, lastBlue)) {
                     EBPM = Math.max(EBPM, bpm / ((note._time - lastBlue._time) * 2));
                     lastBlue = note;
                 }
-            }
-            else lastBlue = note;
+            } else lastBlue = note;
         }
     }
     return EBPM;
@@ -117,8 +117,7 @@ function getEffectiveBPMTime(diff, mapSettings) {
                 }
             }
             lastRed = note;
-        }
-        else if (note._type === 1) {
+        } else if (note._type === 1) {
             if (lastBlue) {
                 if (swingNext(note, lastBlue)) {
                     EBPM = bpm / ((note._time - lastBlue._time) * 2);
@@ -145,17 +144,14 @@ function getEffectiveBPMSwingTime(diff, mapSettings) {
                     EBPM = bpm / ((note._time - lastRed._time) * 2);
                     lastRed = note;
                 }
-            }
-            else lastRed = note;
-        }
-        else if (note._type === 1) {
+            } else lastRed = note;
+        } else if (note._type === 1) {
             if (lastBlue) {
                 if (swingNext(note, lastBlue)) {
                     EBPM = bpm / ((note._time - lastBlue._time) * 2);
                     lastBlue = note;
                 }
-            }
-            else lastBlue = note;
+            } else lastBlue = note;
         }
         if (EBPM > tool.ebpm.thSwing) arr.push(adjustTime(note._time, bpm, offset, bpmc));
     }
@@ -186,8 +182,7 @@ function detectDoubleDirectional(diff, mapSettings) {
                     }
                     if (note._cutDirection === 8) startRedDot = note;
                     else lastRedDir = note._cutDirection;
-                }
-                else {
+                } else {
                     if (startRedDot && checkDD(note._cutDirection, lastRedDir)) {
                         arr.push(adjustTime(startRedDot._time, bpm, offset, bpmc));
                         startRedDot = null;
@@ -196,13 +191,11 @@ function detectDoubleDirectional(diff, mapSettings) {
                     if (note._cutDirection !== 8) {
                         startRedDot = null;
                         lastRedDir = note._cutDirection;
-                    };
+                    }
                 }
-            }
-            else lastRedDir = note._cutDirection;
+            } else lastRedDir = note._cutDirection;
             lastRed = note;
-        }
-        else if (note._type === 1) {
+        } else if (note._type === 1) {
             if (lastBlue) {
                 if (swingNext(note, lastBlue)) {
                     if (startBlueDot) {
@@ -214,8 +207,7 @@ function detectDoubleDirectional(diff, mapSettings) {
                     }
                     if (note._cutDirection === 8) startBlueDot = note;
                     else lastBlueDir = note._cutDirection;
-                }
-                else {
+                } else {
                     if (startBlueDot && checkDD(note._cutDirection, lastBlueDir)) {
                         arr.push(adjustTime(startBlueDot._time, bpm, offset, bpmc));
                         startBlueDot = null;
@@ -226,8 +218,7 @@ function detectDoubleDirectional(diff, mapSettings) {
                         lastBlueDir = note._cutDirection;
                     }
                 }
-            }
-            else lastBlueDir = note._cutDirection;
+            } else lastBlueDir = note._cutDirection;
             lastBlue = note;
         } else if (note._type === 3) {
             // on bottom row
@@ -242,7 +233,7 @@ function detectDoubleDirectional(diff, mapSettings) {
                     lastBlueDir = 0;
                     startBlueDot = null;
                 }
-            //on top row
+                //on top row
             } else if (note._lineLayer === 2) {
                 //on right center
                 if (note._lineIndex === 1) {
@@ -257,7 +248,7 @@ function detectDoubleDirectional(diff, mapSettings) {
             }
         }
     }
-    arr = arr.filter(function(x, i, ary) {
+    arr = arr.filter(function (x, i, ary) {
         return !i || x !== ary[i - 1];
     });
     return arr;
@@ -286,13 +277,12 @@ function detectVisionBlock(diff, mapSettings) {
         if (lastMidR) {
             if (isAboveTH(note._time - lastMidR._time, tool.vb.min) && isBelowTH(note._time - lastMidR._time, tool.vb.max)) {
                 if (note._lineIndex > 1) arr.push(adjustTime(note._time, bpm, offset, bpmc));
-            }
-            else if (toRealTime(note._time - lastMidR._time) >= tool.vb.max) lastMidR = null;
+            } else if (toRealTime(note._time - lastMidR._time) >= tool.vb.max) lastMidR = null;
         }
         if (note._lineLayer === 1 && note._lineIndex === 1) lastMidL = note;
         else if (note._lineLayer === 1 && note._lineIndex === 2) lastMidR = note;
     }
-    arr = arr.filter(function(x, i, ary) {
+    arr = arr.filter(function (x, i, ary) {
         return !i || x !== ary[i - 1];
     });
     return arr;
@@ -313,34 +303,30 @@ function detectOffPrecision(diff, mapSettings) {
                     if (checkPrec(noteTime)) arr.push(noteTime);
                     lastRed = note;
                 }
-            }
-            else {
+            } else {
                 if (checkPrec(noteTime)) arr.push(noteTime);
                 lastRed = note;
             }
-        }
-        else if (note._type === 1) {
+        } else if (note._type === 1) {
             if (lastBlue) {
                 if (swingNext(note, lastBlue)) {
                     if (checkPrec(noteTime)) arr.push(noteTime);
                     lastBlue = note;
                 }
-            }
-            else {
+            } else {
                 if (checkPrec(noteTime)) arr.push(noteTime);
                 lastBlue = note;
             }
         }
     }
-    arr = arr.filter(function(x, i, ary) {
+    arr = arr.filter(function (x, i, ary) {
         return !i || x !== ary[i - 1];
     });
     return arr;
 }
 function checkPrec(nt) {
     if (!tool.beatPrec.length > 0) return false;
-    for (let i = 0; i < tool.beatPrec.length; i++)
-        if ((nt + 0.001) % (1/tool.beatPrec[i]) < 0.01) return false;
+    for (let i = 0; i < tool.beatPrec.length; i++) if ((nt + 0.001) % (1 / tool.beatPrec[i]) < 0.01) return false;
     return true;
 }
 
@@ -360,27 +346,36 @@ function detectHitboxStaircase(diff, mapSettings) {
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         if (note._type === 0) {
-            if (lastRed) { // nested if moment
+            if (lastRed) {
+                // nested if moment
                 if (swingNext(note, lastRed)) {
-                    if (lastBlue && note._time - lastBlue._time !== 0 && isBelowTH(note._time - lastBlue._time, tool.hitbox.staircase)) {
-                        if (note._lineIndex === blueIndexOccupy && note._lineLayer === blueLayerOccupy && !swingNoteDouble(note, notes, i)) {
+                    if (
+                        lastBlue &&
+                        note._time - lastBlue._time !== 0 &&
+                        isBelowTH(note._time - lastBlue._time, tool.hitbox.staircase)
+                    ) {
+                        if (
+                            note._lineIndex === blueIndexOccupy &&
+                            note._lineLayer === blueLayerOccupy &&
+                            !swingNoteDouble(note, notes, i)
+                        ) {
                             arr.push(adjustTime(note._time, bpm, offset, bpmc));
                         }
                     }
                     if (note._cutDirection !== 8) {
                         redIndexOccupy = note._lineIndex + swingCutDirectionSpace[note._cutDirection][0];
                         redLayerOccupy = note._lineLayer + swingCutDirectionSpace[note._cutDirection][1];
-                    } else { // no dot note >:(
+                    } else {
+                        // no dot note >:(
                         redIndexOccupy = -1;
                         redLayerOccupy = -1;
                     }
-                }
-                else if (swingNoteEnd(note, lastRed)) {
+                } else if (swingNoteEnd(note, lastRed)) {
                     if (note._cutDirection !== 8) {
                         redIndexOccupy = note._lineIndex + swingCutDirectionSpace[note._cutDirection][0];
                         redLayerOccupy = note._lineLayer + swingCutDirectionSpace[note._cutDirection][1];
-                    }
-                    else { // re
+                    } else {
+                        // re
                         redIndexOccupy = note._lineIndex + swingCutDirectionSpace[lastRed._cutDirection][0];
                         redLayerOccupy = note._lineLayer + swingCutDirectionSpace[lastRed._cutDirection][1];
                     }
@@ -389,18 +384,26 @@ function detectHitboxStaircase(diff, mapSettings) {
                 if (note._cutDirection !== 8) {
                     redIndexOccupy = note._lineIndex + swingCutDirectionSpace[note._cutDirection][0];
                     redLayerOccupy = note._lineLayer + swingCutDirectionSpace[note._cutDirection][1];
-                } else { // dot note is ambiguous
+                } else {
+                    // dot note is ambiguous
                     redIndexOccupy = -1;
                     redLayerOccupy = -1;
                 }
             }
             lastRed = note;
-        }
-        else if (note._type === 1) {
+        } else if (note._type === 1) {
             if (lastBlue) {
                 if (swingNext(note, lastBlue)) {
-                    if (lastRed && note._time - lastRed._time !== 0 && isBelowTH(note._time - lastRed._time, tool.hitbox.staircase)) {
-                        if (note._lineIndex === redIndexOccupy && note._lineLayer === redLayerOccupy && !swingNoteDouble(note, notes, i)) {
+                    if (
+                        lastRed &&
+                        note._time - lastRed._time !== 0 &&
+                        isBelowTH(note._time - lastRed._time, tool.hitbox.staircase)
+                    ) {
+                        if (
+                            note._lineIndex === redIndexOccupy &&
+                            note._lineLayer === redLayerOccupy &&
+                            !swingNoteDouble(note, notes, i)
+                        ) {
                             arr.push(adjustTime(note._time, bpm, offset, bpmc));
                         }
                     }
@@ -411,13 +414,11 @@ function detectHitboxStaircase(diff, mapSettings) {
                         blueIndexOccupy = -1;
                         blueLayerOccupy = -1;
                     }
-                }
-                else if (swingNoteEnd(note, lastBlue)) {
+                } else if (swingNoteEnd(note, lastBlue)) {
                     if (note._cutDirection !== 8) {
                         blueIndexOccupy = note._lineIndex + swingCutDirectionSpace[note._cutDirection][0];
                         blueLayerOccupy = note._lineLayer + swingCutDirectionSpace[note._cutDirection][1];
-                    }
-                    else {
+                    } else {
                         blueIndexOccupy = note._lineIndex + swingCutDirectionSpace[lastBlue._cutDirection][0];
                         blueLayerOccupy = note._lineLayer + swingCutDirectionSpace[lastBlue._cutDirection][1];
                     }
@@ -456,24 +457,28 @@ function detectShrAngle(diff, mapSettings) {
                         startRedDot = null;
                         lastRedDir = flipCutDir[lastRedDir];
                     }
-                    if (checkShrAngle(note._cutDirection, lastRedDir) && isBelowTH(note._time - lastRed._time, tool.maxShrAngle + 0.01)) {
+                    if (
+                        checkShrAngle(note._cutDirection, lastRedDir) &&
+                        isBelowTH(note._time - lastRed._time, tool.maxShrAngle + 0.01)
+                    ) {
                         arr.push(adjustTime(note._time, bpm, offset, bpmc));
                     }
                     if (note._cutDirection === 8) startRedDot = note;
                     else lastRedDir = note._cutDirection;
-                }
-                else {
-                    if (startRedDot && checkShrAngle(note._cutDirection, lastRedDir) && isBelowTH(note._time - lastRed._time, tool.maxShrAngle + 0.01)) {
+                } else {
+                    if (
+                        startRedDot &&
+                        checkShrAngle(note._cutDirection, lastRedDir) &&
+                        isBelowTH(note._time - lastRed._time, tool.maxShrAngle + 0.01)
+                    ) {
                         arr.push(adjustTime(startRedDot._time, bpm, offset, bpmc));
                         startRedDot = null;
                     }
                     if (note._cutDirection !== 8) lastRedDir = note._cutDirection;
                 }
-            }
-            else lastRedDir = note._cutDirection;
+            } else lastRedDir = note._cutDirection;
             lastRed = note;
-        }
-        else if (note._type === 1) {
+        } else if (note._type === 1) {
             if (lastBlue) {
                 if (swingNext(note, lastBlue)) {
                     if (startBlueDot) {
@@ -485,20 +490,22 @@ function detectShrAngle(diff, mapSettings) {
                     }
                     if (note._cutDirection === 8) startBlueDot = note;
                     else lastBlueDir = note._cutDirection;
-                }
-                else {
-                    if (startBlueDot && checkShrAngle(note._cutDirection, lastBlueDir) && isBelowTH(note, lastBlue, tool.maxShrAngle + 0.01)) {
+                } else {
+                    if (
+                        startBlueDot &&
+                        checkShrAngle(note._cutDirection, lastBlueDir) &&
+                        isBelowTH(note, lastBlue, tool.maxShrAngle + 0.01)
+                    ) {
                         arr.push(adjustTime(startBlueDot._time, bpm, offset, bpmc));
                         startBlueDot = null;
                     }
                     if (note._cutDirection !== 8) lastBlueDir = note._cutDirection;
                 }
-            }
-            else lastBlueDir = note._cutDirection;
+            } else lastBlueDir = note._cutDirection;
             lastBlue = note;
         }
     }
-    arr = arr.filter(function(x, i, ary) {
+    arr = arr.filter(function (x, i, ary) {
         return !i || x !== ary[i - 1];
     });
     return arr;
@@ -517,7 +524,7 @@ function detectStackedNote(diff, mapSettings) {
     let lastTime;
     for (let i = 0, len = notes.length; i < len; i++) {
         if (toRealTime(notes[i]._time) < lastTime + tool.stack.note || notes[i]._type === 3) continue;
-        for (let j = i+1; j < len; j++) {
+        for (let j = i + 1; j < len; j++) {
             if (toRealTime(notes[j]._time) > toRealTime(notes[i]._time) + tool.stack.note) break;
             if (notes[i]._lineLayer === notes[j]._lineLayer && notes[i]._lineIndex === notes[j]._lineIndex) {
                 arr.push(adjustTime(notes[i]._time, bpm, offset, bpmc));
@@ -525,7 +532,7 @@ function detectStackedNote(diff, mapSettings) {
             }
         }
     }
-    arr = arr.filter(function(x, i, ary) {
+    arr = arr.filter(function (x, i, ary) {
         return !i || x !== ary[i - 1];
     });
     return arr;
@@ -537,7 +544,7 @@ function detectStackedBomb(diff, mapSettings) {
     let lastTime;
     for (let i = 0, len = notes.length; i < len; i++) {
         if (toRealTime(notes[i]._time) < lastTime + tool.stack.bomb || notes[i]._type !== 3) continue;
-        for (let j = i+1; j < len; j++) {
+        for (let j = i + 1; j < len; j++) {
             if (toRealTime(notes[j]._time) > toRealTime(notes[i]._time) + tool.stack.bomb) break;
             if (notes[i]._lineLayer === notes[j]._lineLayer && notes[i]._lineIndex === notes[j]._lineIndex) {
                 arr.push(adjustTime(notes[i]._time, bpm, offset, bpmc));
@@ -545,7 +552,7 @@ function detectStackedBomb(diff, mapSettings) {
             }
         }
     }
-    arr = arr.filter(function(x, i, ary) {
+    arr = arr.filter(function (x, i, ary) {
         return !i || x !== ary[i - 1];
     });
     return arr;
@@ -569,7 +576,11 @@ function detectSpeedPause(diff, mapSettings) {
             if (lastRed) {
                 if (swingNext(note, lastRed)) {
                     if (isBelowTH(note._time - lastRed._time, tool.maxSpeedPause * 2 + 0.01)) {
-                        if (maybePauseBlue && maybePauseRed && isBelowTH(lastRed._time - lastRedPause._time, tool.maxSpeedPause * 3 + 0.01)) {
+                        if (
+                            maybePauseBlue &&
+                            maybePauseRed &&
+                            isBelowTH(lastRed._time - lastRedPause._time, tool.maxSpeedPause * 3 + 0.01)
+                        ) {
                             arr.push(adjustTime(lastRed._time, bpm, offset, bpmc));
                         }
                         maybePauseRed = false;
@@ -579,14 +590,16 @@ function detectSpeedPause(diff, mapSettings) {
                     }
                     lastRed = note;
                 }
-            }
-            else lastRed = note;
-        }
-        else if (note._type === 1) {
+            } else lastRed = note;
+        } else if (note._type === 1) {
             if (lastBlue) {
                 if (swingNext(note, lastBlue)) {
                     if (isBelowTH(note._time - lastBlue._time, tool.maxSpeedPause * 2 + 0.01)) {
-                        if (maybePauseBlue && maybePauseRed && isBelowTH(lastBlue._time - lastBluePause._time, tool.maxSpeedPause * 3 + 0.01)) {
+                        if (
+                            maybePauseBlue &&
+                            maybePauseRed &&
+                            isBelowTH(lastBlue._time - lastBluePause._time, tool.maxSpeedPause * 3 + 0.01)
+                        ) {
                             arr.push(adjustTime(lastBlue._time, bpm, offset, bpmc));
                         }
                         maybePauseBlue = false;
@@ -596,8 +609,7 @@ function detectSpeedPause(diff, mapSettings) {
                     }
                     lastBlue = note;
                 }
-            }
-            else lastBlue = note;
+            } else lastBlue = note;
         }
     }
     return arr;

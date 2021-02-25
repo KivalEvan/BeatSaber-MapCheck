@@ -1,4 +1,8 @@
 # Changelog
+## Unreleased
+### Changed
+* Code prettified
+
 ## v1.3.4 [2021-02-22]
 ### Added
 * Difficulty label length check
