@@ -170,7 +170,7 @@ async function extractZip(data) {
     } catch (err) {
         mapReset();
         $('.settings').prop('disabled', false);
-        UILoadingStatus('error', 'Error while loading map!', 100);
+        UILoadingStatus('error', err, 100);
         console.error(err);
     }
 }

@@ -19,7 +19,8 @@ body {
     width: 200px;
     height: 200px;
 }
-#map-link, #map-link:visited {
+#map-link,
+#map-link:visited {
     position: absolute;
     display: none;
     width: 196px;
@@ -67,7 +68,8 @@ body {
 .input {
     padding: 0 0.75em;
 }
-.input label, .input input {
+.input label,
+.input input {
     padding: 0;
 }
 #input-url {
@@ -113,7 +115,7 @@ body {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform:translate(-50%, -50%);
+    transform: translate(-50%, -50%);
     margin: auto;
     text-align: center;
     color: white;
@@ -130,8 +132,9 @@ body {
     text-align: left;
     transition: background-color 0.25s ease;
 }
-.active, .accordion:hover {
-  background-color: #444;
+.active,
+.accordion:hover {
+    background-color: #444;
 }
 .accordion:after {
     content: '\002B';
@@ -140,7 +143,7 @@ body {
     padding: 0px 12px 0px 4px;
 }
 .active:after {
-  content: '\2212';
+    content: '\2212';
 }
 .collapsible {
     background-color: #fff;
@@ -164,20 +167,20 @@ body {
 #settings select {
     min-width: 120px;
 }
-#settings input[type=number] {
+#settings input[type='number'] {
     width: 48px;
 }
-#settings input[type=text] {
+#settings input[type='text'] {
     width: 48px;
 }
-#settings input[type=button] {
+#settings input[type='button'] {
     border: 1px solid #aaa;
     display: inline-block;
     padding: 2px 6px;
     margin-right: 2px;
     cursor: pointer;
 }
-#settings input[type=button]:disabled {
+#settings input[type='button']:disabled {
     cursor: not-allowed;
 }
 #output-container {
@@ -225,7 +228,7 @@ body {
     background-color: #777;
     border-left: 4px solid #222;
     height: 100%;
-    padding: 0 1%
+    padding: 0 1%;
 }
 .diff-dot {
     display: inline-block;

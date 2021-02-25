@@ -70,20 +70,14 @@ async function loadMap(mapZip) {
                 let diffFile = mapZip.file(diff._beatmapFilename);
                 if (diffFile) {
                     let diffFileStr = await diffFile.async('string');
-                    map.set[i]._difficultyBeatmaps[j]._data = loadDifficulty(diffFileStr);
+                    map.set[i]._difficultyBeatmaps[j]._data = loadDifficulty(diff._beatmapFilename, diffFileStr);
                 } else {
                     console.error(
-                        'Missing ' +
-                            diff._beatmapFilename +
-                            ' file for ' +
-                            map.set[i]._beatmapCharacteristicName +
-                            ' ' +
-                            diff._difficulty +
-                            ', ignoring.'
+                        `Missing ${diff._beatmapFilename} file for ${map.set[i]._beatmapCharacteristicName} ${diff._difficulty}, ignoring.`
                     );
                     map.set[i]._difficultyBeatmaps.splice(j, 1);
                     if (map.set[i]._difficultyBeatmaps.length < 1) {
-                        console.error(map.set[i]._beatmapCharacteristicName + ' difficulty set now empty, ignoring.');
+                        console.error(`${map.set[i]._beatmapCharacteristicName} difficulty set now empty, ignoring.`);
                         map.set.splice(i, 1);
                         continue;
                     }
@@ -136,7 +130,7 @@ async function loadMap(mapZip) {
 }
 
 // TODO: filter invalid note & obstacle
-function loadDifficulty(str) {
+function loadDifficulty(diffFile, str) {
     let diff = JSON.parse(str);
 
     // sort map in-case of some fucky wucky
@@ -147,6 +141,29 @@ function loadDifficulty(str) {
         return a._time - b._time;
     });
     // not gonna sort event, going to assume event is always sorted because it'll take way too long to load multiple big event map
+
+    // null error handling while parsing map
+    diff._notes.forEach((note) => {
+        for (const x in note) {
+            if (note[x] === null || note[x] === undefined) {
+                throw new Error(`${diffFile} contain null or undefined value in _notes object`);
+            }
+        }
+    });
+    diff._obstacles.forEach((note) => {
+        for (const x in note) {
+            if (note[x] === null || note[x] === undefined) {
+                throw new Error(`${diffFile} contain null or undefined value in _obstacles object`);
+            }
+        }
+    });
+    diff._events.forEach((note) => {
+        for (const x in note) {
+            if (note[x] === null || note[x] === undefined) {
+                throw new Error(`${diffFile} contain null or undefined value in _events object`);
+            }
+        }
+    });
 
     if (diff._customData) {
         // TODO: need to find ways to convert object key to lowercase for compatibility and less pepega
