@@ -28,7 +28,7 @@ async function loadMap(mapZip) {
             let imgBase64 = await imageFile.async('base64');
             $('#coverimg').attr('src', 'data:image;base64,' + imgBase64);
         } else {
-            console.error(map.info._coverImageFilename + ' does not exists.');
+            console.error(`${map.info._coverImageFilename} does not exists.`);
         }
 
         // load audio
@@ -49,7 +49,7 @@ async function loadMap(mapZip) {
                     console.error(err);
                 });
         } else {
-            console.error(map.info._songFilename + ' does not exist.');
+            console.error(`${map.info._songFilename} does not exist.`);
         }
 
         // load diff map

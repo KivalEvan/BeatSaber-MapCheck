@@ -691,20 +691,35 @@ async function UICreateDiffInfo(charName, diff) {
 
     // events n stuff
     let textEvent = [];
-    textEvent.push(`Events: ${diff._data._events.length}`);
-    textEvent.push(`• Lighting: ${events.light}`);
+    if (events.rot) textEvent.push(`Events: ${diff._data._events.length}`);
+    textEvent.push(
+        `Lighting: ${
+            events.light.backTop +
+            events.light.ring +
+            events.light.leftLaser +
+            events.light.rightLaser +
+            events.light.center +
+            events.rrotate +
+            events.rzoom +
+            events.laser
+        }`
+    );
+    textEvent.push(`• Back Top Lasers: ${events.light.backTop}`);
+    textEvent.push(`• Ring Lights: ${events.light.ring}`);
+    textEvent.push(`• Left Lasers: ${events.light.leftLaser}`);
+    textEvent.push(`• Right Lasers: ${events.light.rightLaser}`);
+    textEvent.push(`• Center Lights: ${events.light.center}`);
     textEvent.push(`• Ring Rotation: ${events.rrotate}`);
     textEvent.push(`• Ring Zoom: ${events.rzoom}`);
     textEvent.push(`• Laser Rotation: ${events.laser}`);
     if (events.chroma || events.ogc) {
-        textEvent.push('');
         if (events.chroma) textEvent.push(`• Chroma: ${events.chroma} ${hasChroma ? '' : '⚠️ not suggested'}`);
         if (events.ogc) textEvent.push(`• OG Chroma: ${events.ogc}`);
     }
     if (events.rot) {
         textEvent.push('');
         textEvent.push(
-            `• Lane Rotation: ${
+            `Lane Rotation: ${
                 charName === '90Degree' || charName === '360Degree' ? events.rot : `${events.rot} ⚠️ not 360/90 mode`
             }`
         );

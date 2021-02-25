@@ -3,7 +3,13 @@
     TODO: more extensive lighting stats? */
 
 function getEventCount(events) {
-    let light = 0;
+    let light = {
+        backTop: 0,
+        ring: 0,
+        leftLaser: 0,
+        rightLaser: 0,
+        center: 0,
+    };
     let boost = 0;
     let rrotate = 0;
     let rzoom = 0;
@@ -13,7 +19,17 @@ function getEventCount(events) {
     let ogc = 0;
     for (let i = events.length - 1; i >= 0; i--) {
         if (events[i]._type >= 0 && events[i]._type < 5) {
-            light++;
+            if (events[i]._type === 0) {
+                light.backTop++;
+            } else if (events[i]._type === 1) {
+                light.ring++;
+            } else if (events[i]._type === 2) {
+                light.leftLaser++;
+            } else if (events[i]._type === 3) {
+                light.rightLaser++;
+            } else if (events[i]._type === 4) {
+                light.center++;
+            }
             if (
                 events[i]._customData?._color ||
                 events[i]._customData?._lightID ||
