@@ -681,3 +681,19 @@ function detectSpeedPause(diff, mapSettings) {
     }
     return arr;
 }
+
+function detectInvalidNote(diff, mapSettings) {
+    const { _notes: notes } = diff;
+    const { bpm, bpmc, offset } = mapSettings;
+    const arr = [];
+    for (let i = 0, len = notes.length; i < len; i++) {
+        for (let j = i + 1; j < len; j++) {
+            if (notes[i]._lineLayer < 0 || notes[i]._lineLayer > 2 || notes[i]._lineIndex < 0 || notes[j]._lineIndex > 3) {
+                arr.push(adjustTime(notes[i]._time, bpm, offset, bpmc));
+            }
+        }
+    }
+    return arr.filter(function (x, i, ary) {
+        return !i || x !== ary[i - 1];
+    });
+}

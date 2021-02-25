@@ -220,7 +220,6 @@ async function mapTool(charName, diff) {
             diffLabel = diff._customData._difficultyLabel;
         }
     }
-
     let BPMChanges;
     if (diff._data._customData) {
         if (diff._data._customData._BPMChanges) {
@@ -243,8 +242,7 @@ async function mapTool(charName, diff) {
         let status = checkLabelLength(charName, diffLabel);
         if (status === 'error') {
             arr.push(printHTMLBold('Difficulty label too long', 'exceeded in-game display support'));
-        }
-        if (status === 'warn') {
+        } else if (status === 'warn') {
             arr.push(
                 printHTMLBold(
                     'Difficulty label possibly too long',
@@ -278,6 +276,7 @@ async function mapTool(charName, diff) {
     arr.push(printHTMLBold('<15ms obstacle []', detectShortObstacle(diff._data, mapSettings)));
     // arr.push(printHTMLBold('Crouch obstacle []', detectCrouchObstacle(diff._data, mapSettings)));
 
+    arr.push(printHTMLBold('Invalid note []', detectInvalidNote(diff._data, mapSettings)));
     if (flag.tool.dd) {
         arr.push(printHTMLBold('Double-directional []', detectDoubleDirectional(diff._data, mapSettings)));
     }
