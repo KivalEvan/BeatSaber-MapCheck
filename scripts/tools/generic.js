@@ -77,6 +77,55 @@ function calcNPSMapped(nc, dur) {
     return nc / dur;
 }
 
+ /* hardcoded stuff but whatever
+    thx XAce1337manX#9170 for the info
+    also modified a bit to be more reasonable
+              W  I
+    1 diff:  33 99
+    2 diffs: 16 50
+    3 diffs: 11 34
+    4 diffs:  8 25
+    5 diffs:  6 20 */
+function checkLabelLength(mapChar, lbl) {
+    let char = map.info._difficultyBeatmapSets.find(c => c._beatmapCharacteristicName === mapChar);
+    diffCount = char._difficultyBeatmaps.length;
+    switch (diffCount) {
+        case 1:
+            if (lbl.length > 90) return 'error';
+            if (lbl.length > 39) return 'warn';
+            break;
+        case 2:
+            if (lbl.length > 42) return 'error';
+            if (lbl.length > 21) return 'warn';
+            break;
+        case 3:
+            if (lbl.length > 27) return 'error';
+            if (lbl.length > 15) return 'warn';
+            break;
+        case 4:
+            if (lbl.length > 20) return 'error';
+            if (lbl.length > 11) return 'warn';
+            break;
+        case 5:
+            if (lbl.length > 17) return 'error';
+            if (lbl.length > 8) return 'warn';
+            break;
+    }
+}
+
+function checkObjectNullValue(diff, mapSettings) {
+    const { _notes: notes, _obstacles: obstacles, _events: events } = diff;
+    const { bpm, bpmc, offset } = mapSettings;
+    for (let i = events.length - 1; i >= 0; i--) {
+        if (events[i]._value === null || events[i]._type === null || events[i]._time === null) {
+            light++;
+            if (events[i]._customData?._color || events[i]._customData?._lightID || events[i]._customData?._propID || events[i]._customData?._lightGradient) {
+                chroma++;
+            }
+        }
+    }
+}
+
 // unlike map duration, this starts from the first interactive object
 // had to be done, thx Uninstaller
 function getFirstInteractiveTime(diff, bpm) {

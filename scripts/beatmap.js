@@ -250,39 +250,3 @@ function mapUpdateBPMRange(min, max) {
     if (min < map.bpm.min) map.bpm.min = min;
     if (max > map.bpm.max) map.bpm.max = max;
 }
-
- /* hardcoded stuff but whatever
-    thx XAce1337manX#9170 for the info
-    also modified a bit to be more reasonable
-              W  I
-    1 diff:  33 99
-    2 diffs: 16 50
-    3 diffs: 11 34
-    4 diffs:  8 25
-    5 diffs:  6 20 */
-function checkLabelLength(mapChar, lbl) {
-    let char = map.info._difficultyBeatmapSets.find(c => c._beatmapCharacteristicName === mapChar);
-    diffCount = char._difficultyBeatmaps.length;
-    switch (diffCount) {
-        case 1:
-            if (lbl.length > 90) return 'error';
-            if (lbl.length > 39) return 'warn';
-            break;
-        case 2:
-            if (lbl.length > 42) return 'error';
-            if (lbl.length > 21) return 'warn';
-            break;
-        case 3:
-            if (lbl.length > 27) return 'error';
-            if (lbl.length > 15) return 'warn';
-            break;
-        case 4:
-            if (lbl.length > 20) return 'error';
-            if (lbl.length > 11) return 'warn';
-            break;
-        case 5:
-            if (lbl.length > 17) return 'error';
-            if (lbl.length > 8) return 'warn';
-            break;
-    }
-}
