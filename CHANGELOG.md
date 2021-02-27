@@ -4,10 +4,13 @@
 
 ### Added
 
+-   More extensive light stats
+-   Mapping utility link
 -   Couple of error handling
 
 ### Changed
 
+-   CSS stuff
 -   Code prettified
 
 ## v1.3.4 [2021-02-22]
