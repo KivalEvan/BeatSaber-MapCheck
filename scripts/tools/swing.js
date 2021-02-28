@@ -18,7 +18,7 @@ function swingVertical(n1, n2) {
 }
 
 function swingDiagonal(n1, n2) {
-    Math.abs(n1._lineIndex - n2._lineIndex) !== Math.abs(n1._lineLayer - n2._lineLayer);
+    Math.abs(n1._lineIndex - n2._lineIndex) === Math.abs(n1._lineLayer - n2._lineLayer);
 }
 
 function swingNoteEnd(n1, n2) {
