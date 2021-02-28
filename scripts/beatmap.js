@@ -125,7 +125,7 @@ async function loadMap(mapZip) {
         flag.loaded = true;
         UILoadingStatus('info', 'Map successfully loaded!');
     } else {
-        UILoadingStatus('info', "Couldn't find Info.dat, try again", 0);
+        throw new Error("Couldn't find Info.dat");
     }
 }
 
