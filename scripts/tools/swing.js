@@ -4,9 +4,21 @@
 
 function swingNext(n1, n2) {
     return (
-        (maybeWindowed(n1, n2) && isAboveTH(n1._time - n2._time, tool.swing.maxWindowTol)) ||
+        (swingWindow(n1, n2) && isAboveTH(n1._time - n2._time, tool.swing.maxWindowTol)) ||
         isAboveTH(n1._time - n2._time, tool.swing.maxTol)
     );
+}
+
+function swingHorizontal(n1, n2) {
+    return Math.abs(n1._lineLayer - n2._lineLayer) === 0;
+}
+
+function swingVertical(n1, n2) {
+    return Math.abs(n1._lineIndex - n2._lineIndex) === 0;
+}
+
+function swingDiagonal(n1, n2) {
+    Math.abs(n1._lineIndex - n2._lineIndex) !== Math.abs(n1._lineLayer - n2._lineLayer);
 }
 
 function swingNoteEnd(n1, n2) {
@@ -68,7 +80,7 @@ function swingNoteDouble(n1, notes, index) {
 // derived from Uninstaller's Swings Per Second tool
 // some variable or function may have been modified
 // translating from Python to Javascript is hard
-function maybeWindowed(n1, n2) {
+function swingWindow(n1, n2) {
     return Math.max(Math.abs(n1._lineIndex - n2._lineIndex), Math.abs(n1._lineLayer - n2._lineLayer)) >= 2;
 }
 

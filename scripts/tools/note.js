@@ -745,14 +745,6 @@ function detectImproperWindowSnap(diff, mapSettings) {
     });
 }
 
-// look at this long boi
-// lineLayer or lineIndex must not be 0 (is horizontal or vertical)
-// both lineLayer or lineIndex must not be equal (is 45 diagonal)
 function isSlantedWindow(n1, n2) {
-    return (
-        maybeWindowed(n1, n2) &&
-        Math.abs(n1._lineIndex - n2._lineIndex) !== Math.abs(n1._lineLayer - n2._lineLayer) &&
-        Math.abs(n1._lineIndex - n2._lineIndex) !== 0 &&
-        Math.abs(n1._lineLayer - n2._lineLayer) !== 0
-    );
+    return swingWindow(n1, n2) && !swingDiagonal(n1, n2) && !swingHorizontal(n1, n2) && !swingVertical(n1, n2);
 }
