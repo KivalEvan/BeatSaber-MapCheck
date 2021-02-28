@@ -136,8 +136,8 @@ function downloadMap(url) {
 
 function textInput(event) {
     if (event.which === 13) {
-        if (this.value !== '') {
-            downloadFromID(this.value);
+        if (this.value.toString() !== '') {
+            downloadFromID(this.value.toString());
         }
     }
 }
@@ -205,17 +205,18 @@ $('#mapdiff').change(function () {
 
 // effective bpm
 $('#ebpm').change(function () {
-    tool.ebpm.th = Math.abs(this.value);
+    tool.ebpm.th = Math.abs(parseFloat(this.value)) || 0;
     $('#ebpm').val(tool.ebpm.th);
 });
 $('#ebpms').change(function () {
-    tool.ebpm.thSwing = Math.abs(this.value);
+    tool.ebpm.thSwing = Math.abs(parseFloat(this.value)) || 0;
     $('#ebpms').val(tool.ebpm.thSwing);
 });
 
 // beat precision
 $('#beatprec').change(function () {
     tool.beatPrec = this.value
+        .toString()
         .split(' ')
         .map(function (x) {
             return parseInt(x);
@@ -244,13 +245,13 @@ $('#shrangle').click(function () {
     }
 });
 $('#shrangle-max').change(function () {
-    tool.maxShrAngle = round(Math.abs(this.value) / 1000, 3);
+    tool.maxShrAngle = round(Math.abs(parseFloat(this.value)) / 1000, 3) || 0;
     $('#shrangle-max').val(round(tool.maxShrAngle * 1000, 3));
     if (flag.loaded) $('#shrangle-max-beat').val(round(toBeatTime(tool.maxShrAngle), 3));
 });
 $('#shrangle-max-beat').change(function () {
     if (flag.loaded) {
-        let val = round(Math.abs(this.value), 3);
+        let val = round(Math.abs(parseFloat(this.value)), 3) || 0;
         tool.maxShrAngle = round(toRealTime(val), 3);
         $('#shrangle-max').val(round(tool.maxShrAngle * 1000, 3));
         $('#shrangle-max-beat').val(val);
@@ -268,13 +269,13 @@ $('#speedpause').click(function () {
     }
 });
 $('#speedpause-max').change(function () {
-    tool.maxSpeedPause = round(Math.abs(this.value) / 1000, 3);
+    tool.maxSpeedPause = round(Math.abs(parseFloat(this.value)) / 1000, 3) || 0;
     $('#speedpause-max').val(round(tool.maxSpeedPause * 1000, 3));
     if (flag.loaded) $('#speedpause-max-beat').val(round(toBeatTime(tool.maxSpeedPause), 3));
 });
 $('#speedpause-max-beat').change(function () {
     if (flag.loaded) {
-        let val = round(Math.abs(this.value), 3);
+        let val = round(Math.abs(parseFloat(this.value)), 3) || 0;
         tool.maxSpeedPause = round(toRealTime(val), 3);
         $('#speedpause-max').val(round(tool.maxSpeedPause * 1000, 3));
         $('#speedpause-max-beat').val(val);
@@ -301,7 +302,7 @@ $('#vb-note').click(function () {
     }
 });
 $('#vb-min').change(function () {
-    tool.vb.min = round(Math.abs(this.value) / 1000, 3);
+    tool.vb.min = round(Math.abs(parseFloat(this.value)) / 1000, 3) || 0;
     $('#vb-min').val(round(tool.vb.min * 1000));
     if (flag.loaded) $('#vb-min-beat').val(round(toBeatTime(tool.vb.min), 3));
     if (tool.vb.min > tool.vb.max) {
@@ -312,7 +313,7 @@ $('#vb-min').change(function () {
 });
 $('#vb-min-beat').change(function () {
     if (flag.loaded) {
-        let val = round(Math.abs(this.value), 3);
+        let val = round(Math.abs(parseFloat(this.value)), 3) || 0;
         tool.vb.min = round(toRealTime(val), 3);
         $('#vb-min').val(round(tool.vb.min * 1000));
         $('#vb-min-beat').val(val);
@@ -326,13 +327,13 @@ $('#vb-min-beat').change(function () {
     }
 });
 $('#vb-max').change(function () {
-    tool.vb.max = round(Math.abs(this.value) / 1000, 3);
+    tool.vb.max = round(Math.abs(parseFloat(this.value)) / 1000, 3) || 0;
     $('#vb-max').val(round(tool.vb.max * 1000));
     if (flag.loaded) $('#vb-max-beat').val(round(toBeatTime(tool.vb.max), 3));
 });
 $('#vb-max-beat').change(function () {
     if (flag.loaded) {
-        let val = round(Math.abs(this.value), 3);
+        let val = round(Math.abs(parseFloat(this.value)), 3) || 0;
         tool.vb.max = round(toRealTime(val), 3);
         $('#vb-max').val(round(tool.vb.max * 1000));
         $('#vb-max-beat').val(val);
@@ -599,7 +600,7 @@ async function UICreateDiffInfo(charName, diff) {
     const events = getEventCount(diff._data._events);
 
     // general map stuff
-    let textMap = [];
+    const textMap = [];
     textMap.push(`NJS: ${diff._noteJumpMovementSpeed} / ${round(diff._noteJumpStartBeatOffset, 3)}`);
     textMap.push(
         `HJD: ${round(getHalfJumpDuration(mapSettings.bpm, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset), 3)}`
@@ -631,7 +632,7 @@ async function UICreateDiffInfo(charName, diff) {
     if (mapSettings.bpmc.length > 0) textMap.push(`BPM changes: ${mapSettings.bpmc.length}`);
 
     // notes
-    let textNote = [];
+    const textNote = [];
     textNote.push(`Notes: ${notes.red + notes.blue}`);
     textNote.push(`• Red: ${notes.red}`);
     textNote.push(`• Blue: ${notes.blue}`);
@@ -670,7 +671,7 @@ async function UICreateDiffInfo(charName, diff) {
     }
     tableNoteIL.append(tableLayer);
 
-    let textObstacle = [];
+    const textObstacle = [];
     // i know bomb/note row isnt obstacle but this side doesnt have much so i merge this together with note
     // textObstacle.push(`Top Row: ${notes.blue || notes.red ? round(countNoteLayer(diff._data._notes, 2) / (notes.red + notes.blue) * 100, 1) : 0}%`);
     // textObstacle.push(`Mid Row: ${notes.blue || notes.red ? round(countNoteLayer(diff._data._notes, 1) / (notes.red + notes.blue) * 100, 1) : 0}%`);
@@ -690,7 +691,7 @@ async function UICreateDiffInfo(charName, diff) {
     }
 
     // events n stuff
-    let textEvent = [];
+    const textEvent = [];
     if (events.rot) textEvent.push(`Events: ${diff._data._events.length}`);
     textEvent.push(
         `Lighting: ${
