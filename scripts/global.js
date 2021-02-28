@@ -56,6 +56,8 @@ const tool = {
     maxSpeedPause: 0.075,
 
     // part where no one can control... yet
+    // this is way less than i expected
+    windowSnapTolerance: 0.00001,
     stack: {
         note: 0.01,
         bomb: 0.02,

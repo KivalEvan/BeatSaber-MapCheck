@@ -60,7 +60,7 @@ function toBeatTime(num) {
 
 function getBPMChangesTime(bpm, offset = 0, bpmc = []) {
     let temp;
-    let BPMChanges = [];
+    const BPMChanges = [];
     for (let i = 0; i < bpmc.length; i++) {
         let curBPMC = {
             bpm: bpmc[i]._BPM || bpmc[i]._bpm,

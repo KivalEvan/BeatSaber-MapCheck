@@ -237,7 +237,7 @@ async function mapTool(charName, diff) {
         njsOffset: diff._noteJumpStartBeatOffset,
     };
 
-    let arr = [];
+    const arr = [];
     if (diffLabel !== null) {
         let status = checkLabelLength(charName, diffLabel);
         if (status === 'error') {
@@ -291,6 +291,7 @@ async function mapTool(charName, diff) {
     if (flag.tool.hb.staircase) {
         arr.push(printHTMLBold('Hitbox staircase []', detectHitboxStaircase(diff._data, mapSettings)));
     }
+    arr.push(printHTMLBold('Improper window snap []', detectImproperWindowSnap(diff._data, mapSettings)));
     if (flag.tool.shrAngle) {
         arr.push(printHTMLBold('Shrado angle []', detectShrAngle(diff._data, mapSettings)));
     }

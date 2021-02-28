@@ -144,7 +144,7 @@ function swingPerSecondInfo(diff) {
     if (swingTotal.reduce((a, b) => a + b) === 0) {
         return 0;
     }
-    let swingIntervalTotal = [];
+    const swingIntervalTotal = [];
 
     for (let i = 0, len = Math.ceil(swingTotal.length / interval); i < len; i++) {
         const sliceStart = i * interval;

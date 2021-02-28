@@ -697,3 +697,62 @@ function detectInvalidNote(diff, mapSettings) {
         return !i || x !== ary[i - 1];
     });
 }
+
+function detectImproperWindowSnap(diff, mapSettings) {
+    const { _notes: notes } = diff;
+    const { bpm, bpmc, offset } = mapSettings;
+    const arr = [];
+    let lastRed;
+    let lastBlue;
+    for (let i = 0, len = notes.length; i < len; i++) {
+        const note = notes[i];
+        if (note._type === 0) {
+            if (lastRed) {
+                if (swingNext(note, lastRed)) {
+                    lastRed = note;
+                } else if (
+                    isSlantedWindow(note, lastRed) &&
+                    isAboveTH(note._time - lastRed._time, tool.windowSnapTolerance) &&
+                    note._cutDirection === lastRed._cutDirection &&
+                    note._cutDirection !== 8 &&
+                    lastRed._cutDirection !== 8
+                ) {
+                    arr.push(adjustTime(lastRed._time, bpm, offset, bpmc));
+                }
+            } else {
+                lastRed = note;
+            }
+        } else if (note._type === 1) {
+            if (lastBlue) {
+                if (swingNext(note, lastBlue)) {
+                    lastBlue = note;
+                } else if (
+                    isSlantedWindow(note, lastBlue) &&
+                    isAboveTH(note._time - lastBlue._time, tool.windowSnapTolerance) &&
+                    note._cutDirection === lastBlue._cutDirection &&
+                    note._cutDirection !== 8 &&
+                    lastBlue._cutDirection !== 8
+                ) {
+                    arr.push(adjustTime(lastBlue._time, bpm, offset, bpmc));
+                }
+            } else {
+                lastBlue = note;
+            }
+        }
+    }
+    return arr.filter(function (x, i, ary) {
+        return !i || x !== ary[i - 1];
+    });
+}
+
+// look at this long boi
+// lineLayer or lineIndex must not be 0 (is horizontal or vertical)
+// both lineLayer or lineIndex must not be equal (is 45 diagonal)
+function isSlantedWindow(n1, n2) {
+    return (
+        maybeWindowed(n1, n2) &&
+        Math.abs(n1._lineIndex - n2._lineIndex) !== Math.abs(n1._lineLayer - n2._lineLayer) &&
+        Math.abs(n1._lineIndex - n2._lineIndex) !== 0 &&
+        Math.abs(n1._lineLayer - n2._lineLayer) !== 0
+    );
+}

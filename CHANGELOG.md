@@ -4,6 +4,7 @@
 
 ### Added
 
+-   Improper window snap check
 -   More extensive light stats
 -   Mapping utility link
 -   Couple of error handling
