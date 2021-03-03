@@ -3,6 +3,7 @@
 
 async function loadMap(mapZip) {
     UILoadingStatus('info', 'Loading map info...', 0);
+    console.log('loading map info');
     let infoFile = mapZip.file('Info.dat') || mapZip.file('info.dat');
     if (infoFile) {
         $('.settings').prop('disabled', true);
@@ -54,7 +55,6 @@ async function loadMap(mapZip) {
 
         // load diff map
         UILoadingStatus('info', 'Loading difficulty...', 70);
-        console.log('loading difficulty');
         map.set = map.info._difficultyBeatmapSets;
         for (let i = map.set.length - 1; i >= 0; i--) {
             let mapDiff = map.set[i]._difficultyBeatmaps;
@@ -69,6 +69,7 @@ async function loadMap(mapZip) {
                 let diff = mapDiff[j];
                 let diffFile = mapZip.file(diff._beatmapFilename);
                 if (diffFile) {
+                    console.log(`loading ${map.set[i]._beatmapCharacteristicName} ${diff._difficulty}`);
                     let diffFileStr = await diffFile.async('string');
                     map.set[i]._difficultyBeatmaps[j]._data = loadDifficulty(diff._beatmapFilename, diffFileStr);
                 } else {
@@ -210,6 +211,7 @@ function loadDifficulty(diffFile, str) {
 }
 
 async function mapTool(charName, diff) {
+    console.log(`analysing ${charName} ${diff._difficulty}`);
     let diffLabel = null;
     let offset = 0;
     if (diff._customData) {
