@@ -156,6 +156,8 @@ function swingPerSecondInfo(diff) {
     if (swingTotal.reduce((a, b) => a + b) === 0) {
         return 0;
     }
+    const swingIntervalRed = [];
+    const swingIntervalBlue = [];
     const swingIntervalTotal = [];
 
     for (let i = 0, len = Math.ceil(swingTotal.length / interval); i < len; i++) {
@@ -164,13 +166,27 @@ function swingPerSecondInfo(diff) {
         if (maxInterval + sliceStart > swingTotal.length) {
             maxInterval = swingTotal.length - sliceStart;
         }
+        const sliceRed = swingGetRange(swing.l, sliceStart, interval);
+        const sliceBlue = swingGetRange(swing.r, sliceStart, interval);
         const sliceTotal = swingGetRange(swingTotal, sliceStart, interval);
-        const spsTotal = round((sliceTotal.reduce((a, b) => a + b) / maxInterval) * 10 + Number.EPSILON) / 10;
-        swingIntervalTotal.push(spsTotal);
+        swingIntervalRed.push(round(sliceRed.reduce((a, b) => a + b) / maxInterval, 1));
+        swingIntervalBlue.push(round(sliceBlue.reduce((a, b) => a + b) / maxInterval, 1));
+        swingIntervalTotal.push(round(sliceTotal.reduce((a, b) => a + b) / maxInterval, 1));
     }
-
     const duration = diff._duration - getFirstInteractiveTime(diff, map.info._beatsPerMinute);
-    const swingTotalOverall = round((swingTotal.reduce((a, b) => a + b) / duration) * 100 + Number.EPSILON) / 100;
+    const swingTotalRed = round(swing.l.reduce((a, b) => a + b) / duration, 2);
+    const swingTotalRedPeak = calcMaxRollingSPS(swing.l, interval);
+    const swingTotalRedMedian = median(swingIntervalRed);
+    const swingTotalBlue = round(swing.r.reduce((a, b) => a + b) / duration, 2);
+    const swingTotalBluePeak = calcMaxRollingSPS(swing.r, interval);
+    const swingTotalBlueMedian = median(swingIntervalBlue);
+    const swingTotalOverall = round(swingTotal.reduce((a, b) => a + b) / duration, 2);
+    const swingTotalOverallPeak = calcMaxRollingSPS(swingTotal, interval);
+    const swingTotalOverallMedian = median(swingIntervalTotal);
 
-    return swingTotalOverall;
+    return {
+        red: { overall: swingTotalRed, peak: swingTotalRedPeak, median: swingTotalRedMedian },
+        blue: { overall: swingTotalBlue, peak: swingTotalBluePeak, median: swingTotalBlueMedian },
+        total: { overall: swingTotalOverall, peak: swingTotalOverallPeak, median: swingTotalOverallMedian },
+    };
 }

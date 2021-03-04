@@ -605,11 +605,12 @@ async function UICreateDiffInfo(charName, diff) {
     if (sliderSpeed.max > sliderSpeed.min) {
         sliderSpeed.max = 0;
     }
+    const sps = swingPerSecondInfo(diff._data);
 
     // general map stuff
     const textMap = [];
     let tableNJS = $('<table>');
-    $('<caption>').append(`Map settings:`).appendTo(tableNJS);
+    $('<caption>').append(`Map Settings:`).appendTo(tableNJS);
     $('<tr>')
         .append(`<th>NJS / Offset</th><td>${diff._noteJumpMovementSpeed} / ${round(diff._noteJumpStartBeatOffset, 3)}</td>`)
         .appendTo(tableNJS);
@@ -638,10 +639,6 @@ async function UICreateDiffInfo(charName, diff) {
             )}ms</td>`
         )
         .appendTo(tableNJS);
-    textMap.push(`SPS: ${swingPerSecondInfo(diff._data).toFixed(2)}`);
-    textMap.push(`Total NPS: ${calcNPS(notes.red + notes.blue).toFixed(2)}`);
-    textMap.push(`Mapped NPS: ${calcNPSMapped(notes.red + notes.blue, diff._data._duration).toFixed(2)}`);
-    textMap.push('');
     if (mapSettings.bpmc.length > 0) {
         textMap.push(`BPM changes: ${mapSettings.bpmc.length}`);
     }
@@ -651,6 +648,52 @@ async function UICreateDiffInfo(charName, diff) {
         textMap.push(`Min. Slider Speed: ${round(sliderSpeed.min * 1000, 1)}ms`);
         textMap.push(`Max. Slider Speed: ${round(sliderSpeed.max * 1000, 1)}ms`);
     }
+
+    // nps and sps
+    let tableNPS = $('<table>');
+    $('<caption>').append('Note Per Second (NPS):').appendTo(tableNPS);
+    $('<tr>')
+        .append(`<th colspan="2">Overall</th><td>${calcNPS(notes.red + notes.blue).toFixed(2)}</td>`)
+        .appendTo(tableNPS);
+    $('<tr>')
+        .append(
+            `<th colspan="2">Mapped</th><td>${calcNPSMapped(notes.red + notes.blue, diff._data._duration).toFixed(2)}</td>`
+        )
+        .appendTo(tableNPS);
+    $('<tr>')
+        .append(`<th rowspan="3">Peak</th><th>16-beat</th><td>${calcPeakNPS(diff._data._notes, 16).toFixed(2)}</td>`)
+        .appendTo(tableNPS);
+    $('<tr>')
+        .append(`<th>8-beat</th><td>${calcPeakNPS(diff._data._notes, 8).toFixed(2)}</td>`)
+        .appendTo(tableNPS);
+    $('<tr>')
+        .append(`<<th>4-beat</th><td>${calcPeakNPS(diff._data._notes, 4).toFixed(2)}</td>`)
+        .appendTo(tableNPS);
+
+    let tableSPS = $('<table>');
+    $('<caption>').append('Swing Per Second (SPS):').appendTo(tableSPS);
+    $('<tr>').append(`<th></th><th>Total</th><th>Red</th><th>Blue</th>`).appendTo(tableSPS);
+    $('<tr>')
+        .append(
+            `<th>Overall</th><td>${sps.total.overall.toFixed(2)}</td><td>${sps.red.overall.toFixed(
+                2
+            )}</td><td>${sps.blue.overall.toFixed(2)}</td>`
+        )
+        .appendTo(tableSPS);
+    $('<tr>')
+        .append(
+            `<th>Peak</th><td>${sps.total.peak.toFixed(1)}</td><td>${sps.red.peak.toFixed(1)}</td><td>${sps.blue.peak.toFixed(
+                1
+            )}</td>`
+        )
+        .appendTo(tableSPS);
+    $('<tr>')
+        .append(
+            `<th>Median</th><td>${sps.total.median.toFixed(1)}</td><td>${sps.red.median.toFixed(
+                1
+            )}</td><td>${sps.blue.median.toFixed(1)}</td>`
+        )
+        .appendTo(tableSPS);
 
     // notes
     let tableNote = $('<table>');
@@ -667,24 +710,27 @@ async function UICreateDiffInfo(charName, diff) {
         .appendTo(tableNote);
     if (notes.chromaN) {
         $('<tr>')
-            .append(`<th colspan=2>Chroma Note${hasChroma ? '' : '<br>⚠️ not suggested'}</th><td>${notes.chromaN}</td>`)
+            .append(`<th colspan="2">Chroma Note${hasChroma ? '' : '<br>⚠️ not suggested'}</th><td>${notes.chromaN}</td>`)
             .appendTo(tableNote);
     }
     if (notes.chromaB) {
         $('<tr>')
-            .append(`<th colspan=2>Chroma Bomb${hasChroma ? '' : '<br>⚠️ not suggested'}</th><td>${notes.chromaB}</td>`)
+            .append(`<th colspan="2">Chroma Bomb${hasChroma ? '' : '<br>⚠️ not suggested'}</th><td>${notes.chromaB}</td>`)
             .appendTo(tableNote);
     }
+
     let tableNoteIL = $('<table>');
     $('<caption>').append('Note Placement:').appendTo(tableNoteIL);
     // start from top
     for (let layer = 2; layer >= 0; layer--) {
         let tableLayer = $('<tr>');
         for (let index = 0; index < 4; index++) {
-            tableLayer.append(`<td id="${index}_${layer}">${countNoteIndexLayer(diff._data._notes, index, layer)}</td>`);
+            tableLayer.append(
+                `<td id="${index}_${layer}" style="padding: 0">${countNoteIndexLayer(diff._data._notes, index, layer)}</td>`
+            );
         }
         tableLayer.append(
-            `<td class="no-border">${
+            `<td class="no-border" style="font-size: 0.875em; vertical-align: middle">${
                 notes.blue || notes.red
                     ? round((countNoteLayer(diff._data._notes, layer) / (notes.red + notes.blue)) * 100, 1)
                     : 0
@@ -695,7 +741,7 @@ async function UICreateDiffInfo(charName, diff) {
     let tableLayer = $('<tr>');
     for (let index = 0; index < 4; index++) {
         tableLayer.append(
-            `<td class="no-border">${
+            `<td class="no-border" style="font-size: 0.875em; vertical-align: middle">${
                 notes.blue || notes.red
                     ? round((countNoteIndex(diff._data._notes, index) / (notes.red + notes.blue)) * 100, 1)
                     : 0
@@ -704,8 +750,6 @@ async function UICreateDiffInfo(charName, diff) {
     }
     tableNoteIL.append(tableLayer);
 
-    // obstacles
-    // ngl still pepega
     let tableObstacle = $('<table>');
     $('<caption>').append(`Obstacles: ${diff._data._obstacles.length}`).appendTo(tableObstacle);
     let interactiveObstacle = countInteractiveObstacle(diff._data._obstacles);
@@ -769,10 +813,6 @@ async function UICreateDiffInfo(charName, diff) {
         );
     }
 
-    console.log(tableNote);
-    console.log(tableNoteIL);
-    console.log(tableObstacle);
-    console.log(tableLighting);
     // set header
     let diffHeader = $('<div>', {
         class: 'diff-header',
@@ -814,21 +854,25 @@ async function UICreateDiffInfo(charName, diff) {
     $('<br>').appendTo(diffPanelMap);
     diffPanelMap.append(textMap.join('<br>'));
 
-    // note
-    let diffPanelNote = $('<div>', {
+    // stats
+    let diffPanelStats = $('<div>', {
         class: 'diff-panel',
-        id: 'notes',
+        id: 'stats',
     });
-    $('<div>').append(tableNote).appendTo(diffPanelNote);
-    $('<br>').appendTo(diffPanelNote);
-    $('<div>').append(tableNoteIL).appendTo(diffPanelNote);
+    $('<div>').append(tableNPS).appendTo(diffPanelStats);
+    $('<br>').appendTo(diffPanelStats);
+    $('<div>').append(tableSPS).appendTo(diffPanelStats);
 
-    // obstacle
-    let diffPanelObstacle = $('<div>', {
+    // object
+    let diffPanelObject = $('<div>', {
         class: 'diff-panel',
-        id: 'obstacles',
+        id: 'objects',
     });
-    $('<div>').append(tableObstacle).appendTo(diffPanelObstacle);
+    $('<div>').append(tableNote).appendTo(diffPanelObject);
+    $('<br>').appendTo(diffPanelObject);
+    $('<div>').append(tableNoteIL).appendTo(diffPanelObject);
+    $('<br>').appendTo(diffPanelObject);
+    $('<div>').append(tableObstacle).appendTo(diffPanelObject);
 
     // event
     let diffPanelEvent = $('<div>', {
@@ -845,8 +889,8 @@ async function UICreateDiffInfo(charName, diff) {
     });
     diffContainer.append(diffHeader);
     diffContainer.append(diffPanelMap);
-    diffContainer.append(diffPanelNote);
-    diffContainer.append(diffPanelObstacle);
+    diffContainer.append(diffPanelStats);
+    diffContainer.append(diffPanelObject);
     diffContainer.append(diffPanelEvent);
 
     $(`#${charName}`).append(diffContainer);

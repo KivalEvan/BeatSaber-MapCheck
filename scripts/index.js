@@ -151,3 +151,14 @@ function rgbaToHex(colorObj) {
     }
     return `#${compToHex(color.r)}${compToHex(color.g)}${compToHex(color.b)}${color.a > 0 ? compToHex(c.a) : ''}`;
 }
+
+function median(numArr) {
+    if (numArr.length === 0) return 0;
+    numArr.sort(function (a, b) {
+        return a - b;
+    });
+
+    const mid = Math.floor(numArr.length / 2);
+    if (numArr.length % 2) return numArr[mid];
+    return (numArr[mid - 1] + numArr[mid]) / 2;
+}

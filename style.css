@@ -262,7 +262,7 @@ table {
     border-collapse: collapse;
 }
 caption {
-    min-width: 8em;
+    min-width: 11em;
     padding: 0.0625em 0;
     text-align: left;
 }
@@ -276,7 +276,7 @@ td {
     border: 1px solid black;
     border-collapse: collapse;
     padding: 0 0.125em;
-    min-width: 3em;
+    min-width: 2.75em;
     vertical-align: top;
     text-align: center;
 }

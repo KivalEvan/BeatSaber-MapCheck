@@ -92,16 +92,30 @@ function findOutEndEvent(events, bpm) {
 function calcNPS(nc) {
     return nc / map.audio.duration;
 }
-
 function calcNPSMapped(nc, dur) {
     if (!dur) {
         return 0;
     }
     return nc / dur;
 }
+// thanks Rabbit#0001 for formula
+function calcPeakNPS(nc, dur) {
+    const notes = nc.filter((note) => note._type === 0 || note._type === 1);
+    let peakNPS = 0;
+    let currentSectionStart = 0;
+
+    for (let i = 0; i < notes.length; i++) {
+        while (notes[i]._time - notes[currentSectionStart]._time > dur) {
+            currentSectionStart++;
+        }
+        peakNPS = Math.max(peakNPS, (i - currentSectionStart + 1) / ((dur / map.info._beatsPerMinute) * 60));
+    }
+
+    return peakNPS;
+}
 
 /* hardcoded stuff but whatever
-    thx XAce1337manX#9170 for the info
+    thanks XAce1337manX#9170 for the info
     also modified a bit to be more reasonable
               W  I
     1 diff:  33 99
