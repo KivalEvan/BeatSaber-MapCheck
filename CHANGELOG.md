@@ -11,6 +11,7 @@
 
 ### Changed
 
+-   Reworked Stats UI
 -   CSS stuff
 -   Code prettified
 

@@ -248,14 +248,27 @@ body {
     display: inline-block;
     vertical-align: top;
     color: black;
+    padding-top: 0.25%;
+    padding-bottom: 1%;
     padding-left: 1%;
     padding-right: 1%;
-    padding-bottom: 1%;
     width: 23%;
     margin: 0px;
 }
 #statsheader {
     font-size: 1.25em;
+}
+table {
+    border-collapse: collapse;
+}
+caption {
+    padding: 0.0625em 0;
+    text-align: left;
+}
+th {
+    border: 1px solid black;
+    border-collapse: collapse;
+    text-align: left;
 }
 td {
     border: 1px solid black;

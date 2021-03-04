@@ -632,18 +632,30 @@ async function UICreateDiffInfo(charName, diff) {
     if (mapSettings.bpmc.length > 0) textMap.push(`BPM changes: ${mapSettings.bpmc.length}`);
 
     // notes
-    const textNote = [];
-    textNote.push(`Notes: ${notes.red + notes.blue}`);
-    textNote.push(`• Red: ${notes.red}`);
-    textNote.push(`• Blue: ${notes.blue}`);
-    textNote.push(`• R/B Ratio: ${round(notes.blue ? notes.red / notes.blue : 0, 2)}`);
-    textNote.push('');
-    textNote.push('Note Placement:');
+    let tableNote = $('<table>');
+    $('<caption>')
+        .append(`Notes: ${notes.red + notes.blue}<br>Bombs: ${notes.bomb}`)
+        .appendTo(tableNote);
+    $('<tr>')
+        .append(
+            `<th style="text-align: center">Red</th><th style="text-align: center">Blue</th><th style="text-align: center">R/B Ratio</th>`
+        )
+        .appendTo(tableNote);
+    $('<tr>')
+        .append(`<td>${notes.red}</td><td>${notes.blue}</td><td>${round(notes.blue ? notes.red / notes.blue : 0, 2)}</td>`)
+        .appendTo(tableNote);
     if (notes.chromaN) {
-        textEvent.push(`• Chroma: ${notes.chromaN} ${hasChroma ? '' : '⚠️ not suggested'}`);
+        $('<tr>')
+            .append(`<th colspan=2>Chroma Note${hasChroma ? '' : '<br>⚠️ not suggested'}</th><td>${notes.chromaN}</td>`)
+            .appendTo(tableNote);
     }
-    // some hackish table creation, also pepega ui
-    let tableNoteIL = $('<table>', { class: 'note_table' });
+    if (notes.chromaB) {
+        $('<tr>')
+            .append(`<th colspan=2>Chroma Bomb${hasChroma ? '' : '<br>⚠️ not suggested'}</th><td>${notes.chromaB}</td>`)
+            .appendTo(tableNote);
+    }
+    let tableNoteIL = $('<table>');
+    $('<caption>').append('Note Placement:').appendTo(tableNoteIL);
     // start from top
     for (let layer = 2; layer >= 0; layer--) {
         let tableLayer = $('<tr>');
@@ -671,51 +683,58 @@ async function UICreateDiffInfo(charName, diff) {
     }
     tableNoteIL.append(tableLayer);
 
-    const textObstacle = [];
-    // i know bomb/note row isnt obstacle but this side doesnt have much so i merge this together with note
-    // textObstacle.push(`Top Row: ${notes.blue || notes.red ? round(countNoteLayer(diff._data._notes, 2) / (notes.red + notes.blue) * 100, 1) : 0}%`);
-    // textObstacle.push(`Mid Row: ${notes.blue || notes.red ? round(countNoteLayer(diff._data._notes, 1) / (notes.red + notes.blue) * 100, 1) : 0}%`);
-    // textObstacle.push(`Bot Row: ${notes.blue || notes.red ? round(countNoteLayer(diff._data._notes, 0) / (notes.red + notes.blue) * 100, 1) : 0}%`);
-    textObstacle.push(`Bombs: ${notes.bomb}`);
-    if (notes.chromaB) {
-        textObstacle.push(`• Chroma: ${notes.chromaB} ${hasChroma ? '' : '⚠️ not suggested'}`);
-    }
-    textObstacle.push('');
-    textObstacle.push(`Obstacles: ${diff._data._obstacles.length}`);
-    textObstacle.push(`• Interactive: ${countInteractiveObstacle(diff._data._obstacles)}`);
+    // obstacles
+    let tableObstacle = $('<table>');
+    $('<caption>').append(`Obstacles: ${diff._data._obstacles.length}`).appendTo(tableObstacle);
+    $('<tr>')
+        .append(`<th>Interactive</th><td>${countInteractiveObstacle(diff._data._obstacles)}</td>`)
+        .appendTo(tableObstacle);
     let crouchObstacle = detectCrouchObstacle(diff._data, mapSettings);
-    if (crouchObstacle.length > 0) textObstacle.push(`• Crouch: ${crouchObstacle.length}`);
+    if (crouchObstacle.length > 0) {
+        $('<tr>').append(`<th>Crouch</th><td>${crouchObstacle.length}</td>`).appendTo(tableObstacle);
+    }
     let chromaW = countChromaObstacle(diff._data._obstacles);
     if (chromaW > 0) {
-        textObstacle.push(`• Chroma: ${chromaW} ${hasChroma ? '' : '⚠️ not suggested'}`);
+        $('<tr>')
+            .append(`<th>Chroma${hasChroma ? '' : '<br>⚠️ not suggested'}</th><td>${chromaW}</td>`)
+            .appendTo(tableObstacle);
     }
 
     // events n stuff
     const textEvent = [];
     if (events.rot) textEvent.push(`Events: ${diff._data._events.length}`);
-    textEvent.push(
-        `Lighting: ${
-            events.light.backTop +
-            events.light.ring +
-            events.light.leftLaser +
-            events.light.rightLaser +
-            events.light.center +
-            events.rrotate +
-            events.rzoom +
-            events.laser
-        }`
-    );
-    textEvent.push(`• Back Top Lasers: ${events.light.backTop}`);
-    textEvent.push(`• Ring Lights: ${events.light.ring}`);
-    textEvent.push(`• Left Lasers: ${events.light.leftLaser}`);
-    textEvent.push(`• Right Lasers: ${events.light.rightLaser}`);
-    textEvent.push(`• Center Lights: ${events.light.center}`);
-    textEvent.push(`• Ring Rotation: ${events.rrotate}`);
-    textEvent.push(`• Ring Zoom: ${events.rzoom}`);
-    textEvent.push(`• Laser Rotation: ${events.laser}`);
+    let tableLighting = $('<table>');
+    $('<caption>')
+        .append(
+            `Lighting: ${
+                events.light.backTop +
+                events.light.ring +
+                events.light.leftLaser +
+                events.light.rightLaser +
+                events.light.center +
+                events.rrotate +
+                events.rzoom +
+                events.laser
+            }`
+        )
+        .appendTo(tableLighting);
+    $('<tr>').append(`<th>Back Top Lasers</th><td>${events.light.backTop}</td>`).appendTo(tableLighting);
+    $('<tr>').append(`<th>Ring Lights</th><td>${events.light.ring}</td>`).appendTo(tableLighting);
+    $('<tr>').append(`<th>Left Lasers</th><td>${events.light.leftLaser}</td>`).appendTo(tableLighting);
+    $('<tr>').append(`<th>Right Lasers</th><td>${events.light.rightLaser}</td>`).appendTo(tableLighting);
+    $('<tr>').append(`<th>Center Lights</th><td>${events.light.center}</td>`).appendTo(tableLighting);
+    $('<tr>').append(`<th>Ring Rotation</th><td>${events.rrotate}</td>`).appendTo(tableLighting);
+    $('<tr>').append(`<th>Ring Zoom</th><td>${events.rzoom}</td>`).appendTo(tableLighting);
+    $('<tr>').append(`<th>Laser Rotation</th><td>${events.laser}</td>`).appendTo(tableLighting);
     if (events.chroma || events.ogc) {
-        if (events.chroma) textEvent.push(`• Chroma: ${events.chroma} ${hasChroma ? '' : '⚠️ not suggested'}`);
-        if (events.ogc) textEvent.push(`• OG Chroma: ${events.ogc}`);
+        if (events.chroma) {
+            $('<tr>')
+                .append(`<th>Chroma${hasChroma ? '' : '<br>⚠️ not suggested'}</th><td>${events.chroma}</td>`)
+                .appendTo(tableLighting);
+        }
+        if (events.ogc) {
+            $('<tr>').append(`<th>OG Chroma</th><td>${events.ogc}</td>`).appendTo(tableLighting);
+        }
     }
     if (events.rot) {
         textEvent.push('');
@@ -726,6 +745,10 @@ async function UICreateDiffInfo(charName, diff) {
         );
     }
 
+    console.log(tableNote);
+    console.log(tableNoteIL);
+    console.log(tableObstacle);
+    console.log(tableLighting);
     // set header
     let diffHeader = $('<div>', {
         class: 'diff-header',
@@ -769,15 +792,17 @@ async function UICreateDiffInfo(charName, diff) {
     let diffPanelNote = $('<div>', {
         class: 'diff-panel',
         id: 'notes',
-        html: textNote.join('<br>'),
     });
+    $('<div>').append(tableNote).appendTo(diffPanelNote);
+    $('<br>').appendTo(diffPanelNote);
     $('<div>').append(tableNoteIL).appendTo(diffPanelNote);
 
     // obstacle
     let diffPanelObstacle = $('<div>', {
         class: 'diff-panel',
         id: 'obstacles',
-    }).append(textObstacle.join('<br>'));
+    });
+    $('<div>').append(tableObstacle).appendTo(diffPanelObstacle);
 
     // event
     let diffPanelEvent = $('<div>', {
@@ -785,6 +810,7 @@ async function UICreateDiffInfo(charName, diff) {
         id: 'events',
         html: textEvent.join('<br>'),
     });
+    $('<div>').append(tableLighting).appendTo(diffPanelEvent);
 
     // merge all panel into container
     let diffContainer = $('<div>', {
