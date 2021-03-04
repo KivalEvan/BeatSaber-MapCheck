@@ -1,6 +1,5 @@
 /* EVENT SCRIPT - event.js
-    look after event duh
-    TODO: more extensive lighting stats? */
+    look after event duh */
 
 function getEventCount(events) {
     let light = {

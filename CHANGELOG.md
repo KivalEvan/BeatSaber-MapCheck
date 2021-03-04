@@ -6,7 +6,8 @@
 
 -   Improper window snap check
 -   Slider speed stats
--   More extensive light stats
+-   NPS and SPS stats
+-   Extensive light stats
 -   Mapping utility link
 -   Couple of error handling
 
