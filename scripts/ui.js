@@ -782,6 +782,7 @@ async function UICreateDiffInfo(charName, diff) {
                 events.light.leftLaser +
                 events.light.rightLaser +
                 events.light.center +
+                events.boost +
                 events.rrotate +
                 events.rzoom +
                 events.laser
@@ -793,6 +794,9 @@ async function UICreateDiffInfo(charName, diff) {
     $('<tr>').append(`<th>Left Lasers</th><td>${events.light.leftLaser}</td>`).appendTo(tableLighting);
     $('<tr>').append(`<th>Right Lasers</th><td>${events.light.rightLaser}</td>`).appendTo(tableLighting);
     $('<tr>').append(`<th>Center Lights</th><td>${events.light.center}</td>`).appendTo(tableLighting);
+    if (events.boost > 0) {
+        $('<tr>').append(`<th>Colour Boost</th><td>${events.boost}</td>`).appendTo(tableLighting);
+    }
     $('<tr>').append(`<th>Ring Rotation</th><td>${events.rrotate}</td>`).appendTo(tableLighting);
     $('<tr>').append(`<th>Ring Zoom</th><td>${events.rzoom}</td>`).appendTo(tableLighting);
     $('<tr>').append(`<th>Laser Rotation</th><td>${events.laser}</td>`).appendTo(tableLighting);

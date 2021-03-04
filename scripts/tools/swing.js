@@ -134,7 +134,7 @@ function swingGetRange(swingArray, x, y) {
 function calcMaxRollingSPS(swingArray, x) {
     if (swingArray.length === 0) return 0;
     if (swingArray.length < x) {
-        return round((swingArray.reduce((a, b) => a + b) / swingArray.length) * 10 + Number.EPSILON) / 10;
+        return round(swingArray.reduce((a, b) => a + b) / swingArray.length, 1);
     }
 
     let currentSPS = swingArray.slice(0, x).reduce((a, b) => a + b);
@@ -144,7 +144,7 @@ function calcMaxRollingSPS(swingArray, x) {
         maxSPS = Math.max(maxSPS, currentSPS);
     }
 
-    return round((maxSPS / x) * 10 + Number.EPSILON) / 10;
+    return round(maxSPS / x, 1);
 }
 
 function swingPerSecondInfo(diff) {
@@ -154,7 +154,11 @@ function swingPerSecondInfo(diff) {
         return num + swing.r[i];
     });
     if (swingTotal.reduce((a, b) => a + b) === 0) {
-        return 0;
+        return {
+            red: { overall: 0, peak: 0, median: 0 },
+            blue: { overall: 0, peak: 0, median: 0 },
+            total: { overall: 0, peak: 0, median: 0 },
+        };
     }
     const swingIntervalRed = [];
     const swingIntervalBlue = [];
