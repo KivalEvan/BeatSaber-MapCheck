@@ -5,6 +5,7 @@
 ### Added
 
 -   Improper window snap check
+-   Slider speed stats
 -   More extensive light stats
 -   Mapping utility link
 -   Couple of error handling

@@ -165,6 +165,78 @@ function getEffectiveBPMSwingTime(diff, mapSettings) {
     }
     return arr;
 }
+function getMinSliderSpeed(notes) {
+    let speed = 0;
+    let lastRed;
+    let lastBlue;
+    for (let i = 0, len = notes.length; i < len; i++) {
+        const note = notes[i];
+        if (note._type === 0) {
+            if (lastRed) {
+                if (swingNext(note, lastRed)) {
+                    lastRed = note;
+                } else if (swingWindow(note, lastRed)) {
+                    speed = Math.max(speed, toRealTime(note._time - lastRed._time) / 2);
+                } else {
+                    speed = Math.max(speed, toRealTime(note._time - lastRed._time));
+                }
+            } else {
+                lastRed = note;
+            }
+        } else if (note._type === 1) {
+            if (lastBlue) {
+                if (swingNext(note, lastBlue)) {
+                    lastBlue = note;
+                } else if (swingWindow(note, lastBlue)) {
+                    speed = Math.max(speed, toRealTime(note._time - lastBlue._time) / 2);
+                } else {
+                    speed = Math.max(speed, toRealTime(note._time - lastBlue._time));
+                }
+            } else {
+                lastBlue = note;
+            }
+        }
+    }
+    return speed;
+}
+function getMaxSliderSpeed(notes) {
+    let speed = Number.MAX_SAFE_INTEGER;
+    let lastRed;
+    let lastBlue;
+    for (let i = 0, len = notes.length; i < len; i++) {
+        const note = notes[i];
+        if (note._type === 0) {
+            if (lastRed) {
+                if (swingNext(note, lastRed)) {
+                    lastRed = note;
+                } else if (toRealTime(note._time - lastRed._time) > 0.001) {
+                    if (swingWindow(note, lastRed)) {
+                        speed = Math.min(speed, toRealTime(note._time - lastRed._time) / 2);
+                    } else {
+                        speed = Math.min(speed, toRealTime(note._time - lastRed._time));
+                    }
+                }
+            } else {
+                lastRed = note;
+            }
+        } else if (note._type === 1) {
+            if (lastBlue) {
+                if (swingNext(note, lastBlue)) {
+                    lastBlue = note;
+                } else if (toRealTime(note._time - lastBlue._time) > 0.001) {
+                    if (swingWindow(note, lastBlue)) {
+                        speed = Math.min(speed, toRealTime(note._time - lastBlue._time) / 2);
+                    } else {
+                        speed = Math.min(speed, toRealTime(note._time - lastBlue._time));
+                    }
+                }
+            } else {
+                lastBlue = note;
+            }
+        }
+    }
+    return speed;
+}
 
 function detectDoubleDirectional(diff, mapSettings) {
     const { _notes: notes } = diff;

@@ -598,6 +598,13 @@ async function UICreateDiffInfo(charName, diff) {
     };
     const notes = getNoteCount(diff._data._notes);
     const events = getEventCount(diff._data._events);
+    const sliderSpeed = {
+        min: getMinSliderSpeed(diff._data._notes),
+        max: getMaxSliderSpeed(diff._data._notes),
+    };
+    if (sliderSpeed.max > sliderSpeed.min) {
+        sliderSpeed.max = 0;
+    }
 
     // general map stuff
     const textMap = [];
@@ -624,12 +631,18 @@ async function UICreateDiffInfo(charName, diff) {
     // ); this formula give the same result as above, idk why i needed this
     textMap.push('');
     textMap.push(`SPS: ${swingPerSecondInfo(diff._data).toFixed(2)}`);
-    textMap.push(`NPS: ${calcNPS(notes.red + notes.blue).toFixed(2)}`);
-    textMap.push(`• Mapped: ${calcNPSMapped(notes.red + notes.blue, diff._data._duration).toFixed(2)}`);
+    textMap.push(`Total NPS: ${calcNPS(notes.red + notes.blue).toFixed(2)}`);
+    textMap.push(`Mapped NPS: ${calcNPSMapped(notes.red + notes.blue, diff._data._duration).toFixed(2)}`);
     textMap.push('');
+    if (mapSettings.bpmc.length > 0) {
+        textMap.push(`BPM changes: ${mapSettings.bpmc.length}`);
+    }
     textMap.push(`Effective BPM: ${findEffectiveBPM(diff._data._notes, mapSettings.bpm).toFixed(2)}`);
     textMap.push(`Effective BPM (swing): ${findEffectiveBPMSwing(diff._data._notes, mapSettings.bpm).toFixed(2)}`);
-    if (mapSettings.bpmc.length > 0) textMap.push(`BPM changes: ${mapSettings.bpmc.length}`);
+    if (sliderSpeed.min > 0) {
+        textMap.push(`Min. Slider Speed: ${round(sliderSpeed.min * 1000, 1)}ms`);
+        textMap.push(`Max. Slider Speed: ${round(sliderSpeed.max * 1000, 1)}ms`);
+    }
 
     // notes
     let tableNote = $('<table>');
@@ -702,7 +715,9 @@ async function UICreateDiffInfo(charName, diff) {
 
     // events n stuff
     const textEvent = [];
-    if (events.rot) textEvent.push(`Events: ${diff._data._events.length}`);
+    if (events.rot) {
+        textEvent.push(`Events: ${diff._data._events.length}`);
+    }
     let tableLighting = $('<table>');
     $('<caption>')
         .append(
