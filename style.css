@@ -19,7 +19,8 @@ body {
     width: 200px;
     height: 200px;
 }
-#map-link, #map-link:visited {
+#map-link,
+#map-link:visited {
     position: absolute;
     display: none;
     width: 196px;
@@ -67,7 +68,8 @@ body {
 .input {
     padding: 0 0.75em;
 }
-.input label, .input input {
+.input label,
+.input input {
     padding: 0;
 }
 #input-url {
@@ -85,6 +87,11 @@ body {
     padding: 6px 12px;
     margin-top: 0.25em;
     cursor: pointer;
+    transition: background-color ease 0.2s, border-color ease 0.2s;
+}
+#input-button:hover {
+    border-color: #777;
+    background-color: #ddd;
 }
 #title {
     font-size: 2.5em;
@@ -113,7 +120,7 @@ body {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform:translate(-50%, -50%);
+    transform: translate(-50%, -50%);
     margin: auto;
     text-align: center;
     color: white;
@@ -130,8 +137,9 @@ body {
     text-align: left;
     transition: background-color 0.25s ease;
 }
-.active, .accordion:hover {
-  background-color: #444;
+.active,
+.accordion:hover {
+    background-color: #444;
 }
 .accordion:after {
     content: '\002B';
@@ -140,7 +148,7 @@ body {
     padding: 0px 12px 0px 4px;
 }
 .active:after {
-  content: '\2212';
+    content: '\2212';
 }
 .collapsible {
     background-color: #fff;
@@ -164,20 +172,20 @@ body {
 #settings select {
     min-width: 120px;
 }
-#settings input[type=number] {
+#settings input[type='number'] {
     width: 48px;
 }
-#settings input[type=text] {
+#settings input[type='text'] {
     width: 48px;
 }
-#settings input[type=button] {
+#settings input[type='button'] {
     border: 1px solid #aaa;
     display: inline-block;
     padding: 2px 6px;
     margin-right: 2px;
     cursor: pointer;
 }
-#settings input[type=button]:disabled {
+#settings input[type='button']:disabled {
     cursor: not-allowed;
 }
 #output-container {
@@ -225,7 +233,7 @@ body {
     background-color: #777;
     border-left: 4px solid #222;
     height: 100%;
-    padding: 0 1%
+    padding: 0 1%;
 }
 .diff-dot {
     display: inline-block;
@@ -240,22 +248,44 @@ body {
     display: inline-block;
     vertical-align: top;
     color: black;
+    padding-top: 0.25%;
+    padding-bottom: 1%;
     padding-left: 1%;
     padding-right: 1%;
-    padding-bottom: 1%;
     width: 23%;
     margin: 0px;
 }
-#statsheader {
-    font-size: 1.25em;
+table {
+    border-collapse: collapse;
+}
+caption {
+    min-width: 11em;
+    padding: 0.0625em 0;
+    text-align: left;
+}
+th {
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 0 0.25em;
+    text-align: left;
 }
 td {
     border: 1px solid black;
     border-collapse: collapse;
-    min-width: 3em;
+    padding: 0 0.125em;
+    min-width: 2.75em;
     vertical-align: top;
     text-align: center;
 }
 .no-border {
     border: 0;
+}
+a,
+a:visited {
+    text-decoration: none;
+    color: rgb(0, 64, 255);
+    transition: color ease 0.2s;
+}
+a:hover {
+    color: rgb(255, 32, 0);
 }

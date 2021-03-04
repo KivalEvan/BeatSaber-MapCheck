@@ -1,9 +1,14 @@
- /* EVENT SCRIPT - event.js
-    look after event duh
-    TODO: more extensive lighting stats? */
+/* EVENT SCRIPT - event.js
+    look after event duh */
 
 function getEventCount(events) {
-    let light = 0;
+    let light = {
+        backTop: 0,
+        ring: 0,
+        leftLaser: 0,
+        rightLaser: 0,
+        center: 0,
+    };
     let boost = 0;
     let rrotate = 0;
     let rzoom = 0;
@@ -13,35 +18,50 @@ function getEventCount(events) {
     let ogc = 0;
     for (let i = events.length - 1; i >= 0; i--) {
         if (events[i]._type >= 0 && events[i]._type < 5) {
-            light++;
-            if (events[i]._customData?._color || events[i]._customData?._lightID || events[i]._customData?._propID || events[i]._customData?._lightGradient) {
+            if (events[i]._type === 0) {
+                light.backTop++;
+            } else if (events[i]._type === 1) {
+                light.ring++;
+            } else if (events[i]._type === 2) {
+                light.leftLaser++;
+            } else if (events[i]._type === 3) {
+                light.rightLaser++;
+            } else if (events[i]._type === 4) {
+                light.center++;
+            }
+            if (
+                events[i]._customData?._color ||
+                events[i]._customData?._lightID ||
+                events[i]._customData?._propID ||
+                events[i]._customData?._lightGradient
+            ) {
                 chroma++;
             }
-        }
-        else if (events[i]._type === 5) {
+        } else if (events[i]._type === 5) {
             boost++;
-        }
-        else if (events[i]._type === 8) {
+        } else if (events[i]._type === 8) {
             rrotate++;
-            if (events[i]._customData) { // lmao fuck this has a lot
+            if (events[i]._customData) {
+                // lmao fuck this has a lot
                 chroma++;
             }
-        }
-        else if (events[i]._type === 9) {
+        } else if (events[i]._type === 9) {
             rzoom++;
-        }
-        else if (events[i]._type === 12 || events[i]._type === 13) {
+        } else if (events[i]._type === 12 || events[i]._type === 13) {
             laser++;
-            if (events[i]._customData?._lockPosition || events[i]._customData?._preciseSpeed || events[i]._customData?._direction) {
+            if (
+                events[i]._customData?._lockPosition ||
+                events[i]._customData?._preciseSpeed ||
+                events[i]._customData?._direction
+            ) {
                 chroma++;
             }
-        }
-        else if (events[i]._type === 14 || events[i]._type === 15) rot++;
+        } else if (events[i]._type === 14 || events[i]._type === 15) rot++;
         if (events[i]._value > 2000000000) {
             ogc++;
         }
     }
-    return {light: light, boost: boost, rrotate: rrotate, rzoom: rzoom, laser: laser, rot: rot, chroma: chroma, ogc: ogc};
+    return { light: light, boost: boost, rrotate: rrotate, rzoom: rzoom, laser: laser, rot: rot, chroma: chroma, ogc: ogc };
 }
 
 function countEventLight10(events) {
@@ -49,7 +69,9 @@ function countEventLight10(events) {
     for (let i = events.length - 1; i >= 0; i--) {
         if (events[i]._type >= 0 && events[i]._type < 5 && events[i]._value !== 0) {
             count++;
-            if (count > 10) break;
+            if (count > 10) {
+                break;
+            }
         }
     }
     return count;

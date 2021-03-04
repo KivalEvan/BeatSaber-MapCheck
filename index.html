@@ -1,121 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8"/>
-    <link rel="stylesheet" href="style.css">
-    <link rel="shortcut icon" type="image/jpg" href="favicon.png"/>
-    <title>BS Map Check</title>
 
-    <script src="./scripts/libs/jquery.min.js"></script>
-    <script src="./scripts/libs/jszip.min.js"></script>
-  </head>
-  <body>
-    <div class="topbar">
-      <div class="cover">
-        <img id="coverimg" src="./assets/unknown.jpg" alt="No Cover Images">
-        <a id="map-link" href="" target="_blank"></a>
-      </div>
-      <div class="info">
-        <div class="metadata" id="metadata-container">
-          <span id="song-name" title="Song Name"></span>
-          <span id="song-subname" title="Song Subname"></span><br>
-          <span id="song-author" title="Song Author"></span><br>
-          <span id="song-bpm" title="Song BPM"></span><br>
-          <span id="song-duration" title="Song Duration"></span><br><br>
-          <span id="level-author" title="Level Author"></span>
-          <br>
-          <span id="environment" title="Environment"></span><br>
-        </div>
-        <div class="input" id="input-container">
-          <span id="title">Beat Saber</span><br>
-          <span id="subtitle">Map Check</span><br>
-          <label class="input" for="input-url">Map zip link: </label>
-          <input type="text" class="input" id="input-url" name="input-url" placeholder="https://example.com/map.zip"></br>
-          <label class="input" for="input-id">BeatSaver ID: </label>
-          <input type="text" class="input" id="input-id" name="input-id" placeholder="10b39"></br>
-          <label class="input" id="input-button" for="input-file">Upload Map</label>
-          <input type="file" class="input" id="input-file" name="input-file" accept=".zip,.bsl"></br>
-        </div>
-        <div class="watermark">
-          <span id="watermark"></span>
-          <a id="version" href="https://github.com/KivalEvan/BeatSaber-MapCheck/blob/main/CHANGELOG.md" target="_blank"></a>
-          <a id="wiki" href="https://github.com/KivalEvan/BeatSaber-MapCheck/wiki" target="_blank">wiki</a>
-        </div>
-      </div>
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="style.css">
+  <link rel="shortcut icon" type="image/jpg" href="favicon.png" />
+  <title>BS Map Check</title>
+
+  <script src="./scripts/libs/jquery.slim.min.js"></script>
+  <script src="./scripts/libs/jszip.min.js"></script>
+</head>
+
+<body>
+  <div class="topbar">
+    <div class="cover">
+      <img id="coverimg" src="./assets/unknown.jpg" alt="No Cover Images">
+      <a id="map-link" href="" target="_blank"></a>
     </div>
-    <div class="loading">
-      <div id="loadingbar"></div>
-      <span id="loadingtext">No map loaded</span>
-    </div>
-    <button class="accordion">Tools</button>
-    <div class="collapsible">
-      <div id="tools">
-        <div class="settings" id="settings">
-          <label for="mapset">Characteristic select:</label>
-          <select class="settings" id="mapset"><option disabled selected>-</option></select><br>
-          <label for="mapdiff">Difficulty select:</label>
-          <select class="settings" id="mapdiff"><option disabled selected>-</option></select><br>
-          <hr>
-          <label for="ebpm">Effective BPM threshold:</label>
-          <input type="number" class="settings" id="ebpm" name="ebpm" min="0">
-          <label for="ebpms">(swing):</label>
-          <input type="number" class="settings" id="ebpms" name="ebpms" min="0">
-          <br>
-          <label for="beatprec">Acceptable beat precision:</label>
-          <input type="text" class="settings" id="beatprec" name="beatprec" placeholder="4 3">
-          <br>
-          <input type="checkbox" class="settings" id="hb-stair" name="hb-stair">
-          <label for="hb-stair">Hitbox staircase</label>
-          <br>
-          <input type="checkbox" class="settings" id="shrangle" name="shrangle">
-          <label for="shrangle">Shrado angle</label><br>
-          <label for="shrangle-max">max time (ms):</label>
-          <input type="number" class="settings" id="shrangle-max" name="shrangle-max" min="0">
-          <label for="shrangle-max-beat">(beat):</label>
-          <input type="number" class="settings" id="shrangle-max-beat" name="shrangle-max-beat" min="0" step="0.125">
-          <br>
-          <input type="checkbox" class="settings" id="speedpause" name="speedpause">
-          <label for="speedpause">Speed pause (EXPERIMENTAL)</label><br>
-          <label for="speedpause-max">stream precision (ms):</label>
-          <input type="number" class="settings" id="speedpause-max" name="speedpause-max" min="0">
-          <label for="speedpause-max-beat">(beat):</label>
-          <input type="number" class="settings" id="speedpause-max-beat" name="speedpause-max-beat" min="0" step="0.125">
-          <br>
-          <input type="checkbox" class="settings" id="dd" name="dd">
-          <label for="dd">Double-directional</label>
-          <br>
-          <input type="checkbox" class="settings" id="vb-note" name="vb-note">
-          <label for="vb-note">Vision block</label><br>
-          <label for="vb-min">min time (ms):</label>
-          <input type="number" class="settings" id="vb-min" name="vb-min" min="0">
-          <label for="vb-min-beat">(beat):</label>
-          <input type="number" class="settings" id="vb-min-beat" name="vb-min-beat" min="0" step="0.125"><br>
-          <label for="vb-max">max time (ms):</label>
-          <input type="number" class="settings" id="vb-max" name="vb-max" min="0">
-          <label for="vb-max-beat">(beat):</label>
-          <input type="number" class="settings" id="vb-max-beat" name="vb-max-beat" min="0" step="0.125">
-          <br>
-          <input type="button" class="settings" id="vb-hjd" value="Set by HJD">
-          <input type="button" class="settings" id="vb-optimal" value="Set by optimal reaction time">
-          <br><hr>
-          Apply changes to:
-          <input type="button" id="apply-this" value="This difficulty" disabled>
-          <input type="button" id="apply-all" value="All difficulties" disabled>
-        </div>
-        <div id="output-container">
-          <div id="output-box">No output.</div>
-        </div>
+    <div class="info">
+      <div class="metadata" id="metadata-container">
+        <span id="song-name" title="Song Name"></span>
+        <span id="song-subname" title="Song Subname"></span><br>
+        <span id="song-author" title="Song Author"></span><br>
+        <span id="song-bpm" title="Song BPM"></span><br>
+        <span id="song-duration" title="Song Duration"></span><br><br>
+        <span id="level-author" title="Level Author"></span>
+        <br>
+        <span id="environment" title="Environment"></span><br>
+      </div>
+      <div class="input" id="input-container">
+        <span id="title">Beat Saber</span><br>
+        <span id="subtitle">Map Check</span><br>
+        <label class="input" for="input-url">Map zip link: </label>
+        <input type="text" class="input" id="input-url" name="input-url" placeholder="https://example.com/map.zip"></br>
+        <label class="input" for="input-id">BeatSaver ID: </label>
+        <input type="text" class="input" id="input-id" name="input-id" placeholder="10b39"></br>
+        <label class="input" id="input-button" for="input-file">Upload Map</label>
+        <input type="file" class="input" id="input-file" name="input-file" accept=".zip,.bsl"></br>
+      </div>
+      <div class="watermark">
+        <span id="watermark"></span>
+        <a id="version" href="https://github.com/KivalEvan/BeatSaber-MapCheck/blob/main/CHANGELOG.md"
+          target="_blank"></a>
+        <a id="wiki" href="https://github.com/KivalEvan/BeatSaber-MapCheck/wiki" target="_blank">wiki</a>
+        <a id="wiki" href="https://kivalevan.github.io/BeatSaber-MappingUtility/" target="_blank">utility</a>
       </div>
     </div>
-    <div class="stats" id="stats"></div>
-    <script src="./scripts/global.js" defer></script>
-    <script src="./scripts/ui.js" defer></script>
-    <script src="./scripts/beatmap.js" defer></script>
-    <script src="./scripts/tools/generic.js" defer></script>
-    <script src="./scripts/tools/note.js" defer></script>
-    <script src="./scripts/tools/obstacle.js" defer></script>
-    <script src="./scripts/tools/event.js" defer></script>
-    <script src="./scripts/tools/swing.js" defer></script>
-    <script src="./scripts/index.js" defer></script>
-  </body>
+  </div>
+  <div class="loading">
+    <div id="loadingbar"></div>
+    <span id="loadingtext">No map loaded</span>
+  </div>
+  <button class="accordion">Tools</button>
+  <div class="collapsible">
+    <div id="tools">
+      <div class="settings" id="settings">
+        <label for="mapset">Characteristic select:</label>
+        <select class="settings" id="mapset">
+          <option disabled selected>-</option>
+        </select><br>
+        <label for="mapdiff">Difficulty select:</label>
+        <select class="settings" id="mapdiff">
+          <option disabled selected>-</option>
+        </select><br>
+        <hr>
+        <label for="ebpm">Effective BPM threshold:</label>
+        <input type="number" class="settings" id="ebpm" name="ebpm" min="0">
+        <label for="ebpms">(swing):</label>
+        <input type="number" class="settings" id="ebpms" name="ebpms" min="0">
+        <br>
+        <label for="beatprec">Acceptable beat precision:</label>
+        <input type="text" class="settings" id="beatprec" name="beatprec" placeholder="4 3">
+        <br>
+        <input type="checkbox" class="settings" id="hb-stair" name="hb-stair">
+        <label for="hb-stair">Hitbox staircase</label>
+        <br>
+        <input type="checkbox" class="settings" id="shrangle" name="shrangle">
+        <label for="shrangle">Shrado angle</label><br>
+        <label for="shrangle-max">max time (ms):</label>
+        <input type="number" class="settings" id="shrangle-max" name="shrangle-max" min="0">
+        <label for="shrangle-max-beat">(beat):</label>
+        <input type="number" class="settings" id="shrangle-max-beat" name="shrangle-max-beat" min="0" step="0.125">
+        <br>
+        <input type="checkbox" class="settings" id="speedpause" name="speedpause">
+        <label for="speedpause">Speed pause (EXPERIMENTAL)</label><br>
+        <label for="speedpause-max">stream precision (ms):</label>
+        <input type="number" class="settings" id="speedpause-max" name="speedpause-max" min="0">
+        <label for="speedpause-max-beat">(beat):</label>
+        <input type="number" class="settings" id="speedpause-max-beat" name="speedpause-max-beat" min="0" step="0.125">
+        <br>
+        <input type="checkbox" class="settings" id="dd" name="dd">
+        <label for="dd">Double-directional</label>
+        <br>
+        <input type="checkbox" class="settings" id="vb-note" name="vb-note">
+        <label for="vb-note">Vision block</label><br>
+        <label for="vb-min">min time (ms):</label>
+        <input type="number" class="settings" id="vb-min" name="vb-min" min="0">
+        <label for="vb-min-beat">(beat):</label>
+        <input type="number" class="settings" id="vb-min-beat" name="vb-min-beat" min="0" step="0.125"><br>
+        <label for="vb-max">max time (ms):</label>
+        <input type="number" class="settings" id="vb-max" name="vb-max" min="0">
+        <label for="vb-max-beat">(beat):</label>
+        <input type="number" class="settings" id="vb-max-beat" name="vb-max-beat" min="0" step="0.125">
+        <br>
+        <input type="button" class="settings" id="vb-hjd" value="Set by HJD">
+        <input type="button" class="settings" id="vb-optimal" value="Set by optimal reaction time">
+        <br>
+        <hr>
+        Apply changes to:
+        <input type="button" id="apply-this" value="This difficulty" disabled>
+        <input type="button" id="apply-all" value="All difficulties" disabled>
+      </div>
+      <div id="output-container">
+        <div id="output-box">No output.</div>
+      </div>
+    </div>
+  </div>
+  <div class="stats" id="stats"></div>
+  <script src="./scripts/global.js" defer></script>
+  <script src="./scripts/ui.js" defer></script>
+  <script src="./scripts/beatmap.js" defer></script>
+  <script src="./scripts/tools/generic.js" defer></script>
+  <script src="./scripts/tools/note.js" defer></script>
+  <script src="./scripts/tools/obstacle.js" defer></script>
+  <script src="./scripts/tools/event.js" defer></script>
+  <script src="./scripts/tools/swing.js" defer></script>
+  <script src="./scripts/index.js" defer></script>
+</body>
+
 </html>
