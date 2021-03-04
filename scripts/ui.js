@@ -608,20 +608,36 @@ async function UICreateDiffInfo(charName, diff) {
 
     // general map stuff
     const textMap = [];
-    textMap.push(`NJS: ${diff._noteJumpMovementSpeed} / ${round(diff._noteJumpStartBeatOffset, 3)}`);
-    textMap.push(
-        `HJD: ${round(getHalfJumpDuration(mapSettings.bpm, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset), 3)}`
-    );
-    textMap.push(
-        `JD: ${round(getJumpDistance(mapSettings.bpm, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset), 3)}`
-    );
-    textMap.push(
-        `Reaction Time: ${round(
-            (60 / mapSettings.bpm) *
-                getHalfJumpDuration(mapSettings.bpm, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset) *
-                1000
-        )}ms`
-    );
+    let tableNJS = $('<table>');
+    $('<caption>').append(`Map settings:`).appendTo(tableNJS);
+    $('<tr>')
+        .append(`<th>NJS / Offset</th><td>${diff._noteJumpMovementSpeed} / ${round(diff._noteJumpStartBeatOffset, 3)}</td>`)
+        .appendTo(tableNJS);
+    $('<tr>')
+        .append(
+            `<th>HJD</th><td>${round(
+                getHalfJumpDuration(mapSettings.bpm, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset),
+                3
+            )}</td>`
+        )
+        .appendTo(tableNJS);
+    $('<tr>')
+        .append(
+            `<th>Jump Distance</th><td>${round(
+                getJumpDistance(mapSettings.bpm, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset),
+                3
+            )}</td>`
+        )
+        .appendTo(tableNJS);
+    $('<tr>')
+        .append(
+            `<th>Reaction Time</th><td>${round(
+                (60 / mapSettings.bpm) *
+                    getHalfJumpDuration(mapSettings.bpm, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset) *
+                    1000
+            )}ms</td>`
+        )
+        .appendTo(tableNJS);
     // textMap.push(
     //     `Reaction Time: ${round(
     //         (getJumpDistance(mapSettings.bpm, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset) /
@@ -800,8 +816,9 @@ async function UICreateDiffInfo(charName, diff) {
     let diffPanelMap = $('<div>', {
         class: 'diff-panel',
         id: 'map',
-        html: textMap.join('<br>'),
     });
+    $('<div>').append(tableNJS).appendTo(diffPanelMap);
+    diffPanelMap.append(textMap.join('<br>'));
 
     // note
     let diffPanelNote = $('<div>', {

@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## v1.4.0 [2021-03-0#]
 
 ### Added
 
@@ -12,7 +12,7 @@
 
 ### Changed
 
--   Reworked Stats UI
+-   Stats UI reworked
 -   CSS stuff
 -   Code prettified
 
