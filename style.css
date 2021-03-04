@@ -262,6 +262,7 @@ table {
     border-collapse: collapse;
 }
 caption {
+    min-width: 8em;
     padding: 0.0625em 0;
     text-align: left;
 }

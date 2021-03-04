@@ -12,6 +12,7 @@
 
 ### Changed
 
+-   Updated JQuery 3.5.1 to JQuery 3.6.0 Slim
 -   Stats UI reworked
 -   CSS stuff
 -   Code prettified

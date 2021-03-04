@@ -638,14 +638,6 @@ async function UICreateDiffInfo(charName, diff) {
             )}ms</td>`
         )
         .appendTo(tableNJS);
-    // textMap.push(
-    //     `Reaction Time: ${round(
-    //         (getJumpDistance(mapSettings.bpm, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset) /
-    //             (mapSettings.njs * 2)) *
-    //             1000
-    //     )}ms`
-    // ); this formula give the same result as above, idk why i needed this
-    textMap.push('');
     textMap.push(`SPS: ${swingPerSecondInfo(diff._data).toFixed(2)}`);
     textMap.push(`Total NPS: ${calcNPS(notes.red + notes.blue).toFixed(2)}`);
     textMap.push(`Mapped NPS: ${calcNPSMapped(notes.red + notes.blue, diff._data._duration).toFixed(2)}`);
@@ -713,11 +705,13 @@ async function UICreateDiffInfo(charName, diff) {
     tableNoteIL.append(tableLayer);
 
     // obstacles
+    // ngl still pepega
     let tableObstacle = $('<table>');
     $('<caption>').append(`Obstacles: ${diff._data._obstacles.length}`).appendTo(tableObstacle);
-    $('<tr>')
-        .append(`<th>Interactive</th><td>${countInteractiveObstacle(diff._data._obstacles)}</td>`)
-        .appendTo(tableObstacle);
+    let interactiveObstacle = countInteractiveObstacle(diff._data._obstacles);
+    if (interactiveObstacle > 0) {
+        $('<tr>').append(`<th>Interactive</th><td>${interactiveObstacle}</td>`).appendTo(tableObstacle);
+    }
     let crouchObstacle = detectCrouchObstacle(diff._data, mapSettings);
     if (crouchObstacle.length > 0) {
         $('<tr>').append(`<th>Crouch</th><td>${crouchObstacle.length}</td>`).appendTo(tableObstacle);
@@ -768,7 +762,6 @@ async function UICreateDiffInfo(charName, diff) {
         }
     }
     if (events.rot) {
-        textEvent.push('');
         textEvent.push(
             `Lane Rotation: ${
                 charName === '90Degree' || charName === '360Degree' ? events.rot : `${events.rot} ⚠️ not 360/90 mode`
@@ -818,6 +811,7 @@ async function UICreateDiffInfo(charName, diff) {
         id: 'map',
     });
     $('<div>').append(tableNJS).appendTo(diffPanelMap);
+    $('<br>').appendTo(diffPanelMap);
     diffPanelMap.append(textMap.join('<br>'));
 
     // note
