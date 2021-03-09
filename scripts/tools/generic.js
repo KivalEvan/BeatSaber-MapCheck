@@ -23,7 +23,9 @@ function getJumpDistance(bpm, njs, offset) {
     return njs * (60 / bpm) * getHalfJumpDuration(bpm, njs, offset) * 2;
 }
 
-function findOutStartNote(notes, bpm) {
+function findOutStartNote(diff, mapSettings) {
+    const { _notes: notes } = diff;
+    const { bpm } = mapSettings;
     if (!notes.length > 0) {
         return '';
     }
@@ -33,7 +35,9 @@ function findOutStartNote(notes, bpm) {
     return '';
 }
 
-function findOutEndNote(notes, bpm) {
+function findOutEndNote(diff, mapSettings) {
+    const { _notes: notes } = diff;
+    const { bpm } = mapSettings;
     if (!notes.length > 0) {
         return '';
     }
@@ -44,7 +48,9 @@ function findOutEndNote(notes, bpm) {
     return '';
 }
 
-function findOutStartObstacle(obstacles, bpm) {
+function findOutStartObstacle(diff, mapSettings) {
+    const { _obstacles: obstacles } = diff;
+    const { bpm } = mapSettings;
     if (!obstacles.length > 0) {
         return '';
     }
@@ -54,7 +60,9 @@ function findOutStartObstacle(obstacles, bpm) {
     return '';
 }
 
-function findOutEndObstacle(obstacles, bpm) {
+function findOutEndObstacle(diff, mapSettings) {
+    const { _obstacles: obstacles } = diff;
+    const { bpm } = mapSettings;
     if (!obstacles.length > 0) {
         return '';
     }
@@ -68,7 +76,9 @@ function findOutEndObstacle(obstacles, bpm) {
     return '';
 }
 
-function findOutStartEvent(events, bpm) {
+function findOutStartEvent(diff, mapSettings) {
+    const { _events: events } = diff;
+    const { bpm } = mapSettings;
     if (!events.length > 0) {
         return '';
     }
@@ -78,7 +88,9 @@ function findOutStartEvent(events, bpm) {
     return '';
 }
 
-function findOutEndEvent(events, bpm) {
+function findOutEndEvent(diff, mapSettings) {
+    const { _events: events } = diff;
+    const { bpm } = mapSettings;
     if (!events.length > 0) {
         return '';
     }
