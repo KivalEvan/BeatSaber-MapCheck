@@ -2,7 +2,8 @@
     for map related that has no place or general map stuff
     the more i look at this the more pepega it becomes */
 
-function getHalfJumpDuration(bpm, njs, offset) {
+function getHalfJumpDuration(mapSettings) {
+    const { njs, njsOffset, bpm } = mapSettings;
     const maxHalfJump = 18;
 
     const noteJumpMovementSpeed = (njs * bpm) / bpm;
@@ -11,7 +12,7 @@ function getHalfJumpDuration(bpm, njs, offset) {
     while (noteJumpMovementSpeed * num * hjd > maxHalfJump) {
         hjd /= 2;
     }
-    hjd += offset;
+    hjd += njsOffset;
     if (hjd < 1) {
         hjd = 1;
     }
@@ -19,8 +20,9 @@ function getHalfJumpDuration(bpm, njs, offset) {
     return hjd;
 }
 
-function getJumpDistance(bpm, njs, offset) {
-    return njs * (60 / bpm) * getHalfJumpDuration(bpm, njs, offset) * 2;
+function getJumpDistance(mapSettings) {
+    const { njs, bpm } = mapSettings;
+    return njs * (60 / bpm) * getHalfJumpDuration(mapSettings) * 2;
 }
 
 function findOutStartNote(diff, mapSettings) {

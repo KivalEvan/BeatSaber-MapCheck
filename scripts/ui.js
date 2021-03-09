@@ -616,29 +616,13 @@ async function UICreateDiffInfo(charName, diff) {
         .append(`<th>Offset</th><td>${round(diff._noteJumpStartBeatOffset, 3)}</td>`)
         .appendTo(tableNJS);
     $('<tr>')
-        .append(
-            `<th>HJD</th><td>${round(
-                getHalfJumpDuration(mapSettings.bpm, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset),
-                3
-            )}</td>`
-        )
+        .append(`<th>HJD</th><td>${round(getHalfJumpDuration(mapSettings), 3)}</td>`)
         .appendTo(tableNJS);
     $('<tr>')
-        .append(
-            `<th>Jump Distance</th><td>${round(
-                getJumpDistance(mapSettings.bpm, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset),
-                3
-            )}</td>`
-        )
+        .append(`<th>Jump Distance</th><td>${round(getJumpDistance(mapSettings), 3)}</td>`)
         .appendTo(tableNJS);
     $('<tr>')
-        .append(
-            `<th>Reaction Time</th><td>${round(
-                (60 / mapSettings.bpm) *
-                    getHalfJumpDuration(mapSettings.bpm, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset) *
-                    1000
-            )}ms</td>`
-        )
+        .append(`<th>Reaction Time</th><td>${round((60 / mapSettings.bpm) * getHalfJumpDuration(mapSettings) * 1000)}ms</td>`)
         .appendTo(tableNJS);
     if (mapSettings.bpmc.length > 0) {
         textMap.push(`BPM changes: ${mapSettings.bpmc.length}`);
