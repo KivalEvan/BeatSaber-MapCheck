@@ -667,17 +667,20 @@ async function UICreateDiffInfo(charName, diff) {
         .appendTo(tableSPS);
     $('<tr>')
         .append(
+            `<th>Median</th><td>${sps.total.median.toFixed(1)}</td><td>${sps.red.median.toFixed(
+                1
+            )}</td><td>${sps.blue.median.toFixed(1)}</td>`
+        )
+        .appendTo(tableSPS);
+    $('<tr>')
+        .append(
             `<th>Peak</th><td>${sps.total.peak.toFixed(1)}</td><td>${sps.red.peak.toFixed(1)}</td><td>${sps.blue.peak.toFixed(
                 1
             )}</td>`
         )
         .appendTo(tableSPS);
     $('<tr>')
-        .append(
-            `<th>Median</th><td>${sps.total.median.toFixed(1)}</td><td>${sps.red.median.toFixed(
-                1
-            )}</td><td>${sps.blue.median.toFixed(1)}</td>`
-        )
+        .append(`<th>Total</th><td>${sps.total.total}</td><td>${sps.red.total}</td><td>${sps.blue.total}</td>`)
         .appendTo(tableSPS);
 
     // notes

@@ -155,9 +155,9 @@ function swingPerSecondInfo(diff) {
     });
     if (swingTotal.reduce((a, b) => a + b) === 0) {
         return {
-            red: { overall: 0, peak: 0, median: 0 },
-            blue: { overall: 0, peak: 0, median: 0 },
-            total: { overall: 0, peak: 0, median: 0 },
+            red: { overall: 0, peak: 0, median: 0, total: 0 },
+            blue: { overall: 0, peak: 0, median: 0, total: 0 },
+            total: { overall: 0, peak: 0, median: 0, total: 0 },
         };
     }
     const swingIntervalRed = [];
@@ -189,8 +189,23 @@ function swingPerSecondInfo(diff) {
     const swingTotalOverallMedian = median(swingIntervalTotal);
 
     return {
-        red: { overall: swingTotalRed, peak: swingTotalRedPeak, median: swingTotalRedMedian },
-        blue: { overall: swingTotalBlue, peak: swingTotalBluePeak, median: swingTotalBlueMedian },
-        total: { overall: swingTotalOverall, peak: swingTotalOverallPeak, median: swingTotalOverallMedian },
+        red: {
+            overall: swingTotalRed,
+            peak: swingTotalRedPeak,
+            median: swingTotalRedMedian,
+            total: swing.l.reduce((a, b) => a + b),
+        },
+        blue: {
+            overall: swingTotalBlue,
+            peak: swingTotalBluePeak,
+            median: swingTotalBlueMedian,
+            total: swing.r.reduce((a, b) => a + b),
+        },
+        total: {
+            overall: swingTotalOverall,
+            peak: swingTotalOverallPeak,
+            median: swingTotalOverallMedian,
+            total: swingTotal.reduce((a, b) => a + b),
+        },
     };
 }
