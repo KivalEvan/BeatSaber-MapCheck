@@ -2,7 +2,8 @@
     for map related that has no place or general map stuff
     the more i look at this the more pepega it becomes */
 
-function getHalfJumpDuration(bpm, njs, offset) {
+function getHalfJumpDuration(mapSettings) {
+    const { njs, njsOffset, bpm } = mapSettings;
     const maxHalfJump = 18;
 
     const noteJumpMovementSpeed = (njs * bpm) / bpm;
@@ -11,7 +12,7 @@ function getHalfJumpDuration(bpm, njs, offset) {
     while (noteJumpMovementSpeed * num * hjd > maxHalfJump) {
         hjd /= 2;
     }
-    hjd += offset;
+    hjd += njsOffset;
     if (hjd < 1) {
         hjd = 1;
     }
@@ -19,11 +20,14 @@ function getHalfJumpDuration(bpm, njs, offset) {
     return hjd;
 }
 
-function getJumpDistance(bpm, njs, offset) {
-    return njs * (60 / bpm) * getHalfJumpDuration(bpm, njs, offset) * 2;
+function getJumpDistance(mapSettings) {
+    const { njs, bpm } = mapSettings;
+    return njs * (60 / bpm) * getHalfJumpDuration(mapSettings) * 2;
 }
 
-function findOutStartNote(notes, bpm) {
+function findOutStartNote(diff, mapSettings) {
+    const { _notes: notes } = diff;
+    const { bpm } = mapSettings;
     if (!notes.length > 0) {
         return '';
     }
@@ -33,7 +37,9 @@ function findOutStartNote(notes, bpm) {
     return '';
 }
 
-function findOutEndNote(notes, bpm) {
+function findOutEndNote(diff, mapSettings) {
+    const { _notes: notes } = diff;
+    const { bpm } = mapSettings;
     if (!notes.length > 0) {
         return '';
     }
@@ -44,7 +50,9 @@ function findOutEndNote(notes, bpm) {
     return '';
 }
 
-function findOutStartObstacle(obstacles, bpm) {
+function findOutStartObstacle(diff, mapSettings) {
+    const { _obstacles: obstacles } = diff;
+    const { bpm } = mapSettings;
     if (!obstacles.length > 0) {
         return '';
     }
@@ -54,7 +62,9 @@ function findOutStartObstacle(obstacles, bpm) {
     return '';
 }
 
-function findOutEndObstacle(obstacles, bpm) {
+function findOutEndObstacle(diff, mapSettings) {
+    const { _obstacles: obstacles } = diff;
+    const { bpm } = mapSettings;
     if (!obstacles.length > 0) {
         return '';
     }
@@ -68,7 +78,9 @@ function findOutEndObstacle(obstacles, bpm) {
     return '';
 }
 
-function findOutStartEvent(events, bpm) {
+function findOutStartEvent(diff, mapSettings) {
+    const { _events: events } = diff;
+    const { bpm } = mapSettings;
     if (!events.length > 0) {
         return '';
     }
@@ -78,7 +90,9 @@ function findOutStartEvent(events, bpm) {
     return '';
 }
 
-function findOutEndEvent(events, bpm) {
+function findOutEndEvent(diff, mapSettings) {
+    const { _events: events } = diff;
+    const { bpm } = mapSettings;
     if (!events.length > 0) {
         return '';
     }

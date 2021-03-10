@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.4.1
+
+### Added
+
+-   Total swing count
+
+### Fixed
+
+-   Missing subname display
+-   Outside object not being detected
+
 ## v1.4.0 [2021-03-04]
 
 ### Added

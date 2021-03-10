@@ -437,7 +437,7 @@ function UILoadingStatus(status, text, progress = 100) {
 function UIUpdateMapInfo() {
     $('#song-author').text(map.info._songAuthorName);
     $('#song-name').text(map.info._songName);
-    $('#song-subname').text(map.info._songSubname);
+    $('#song-subname').text(map.info._songSubName);
     $('#song-bpm').text(`${round(map.info._beatsPerMinute, 3)} BPM`);
     $('#level-author').text(`Mapped by ${map.info._levelAuthorName ? map.info._levelAuthorName : 'Unknown Mapper'}`);
     $('#environment').text(`${envName[map.info._environmentName]} Environment`);
@@ -616,29 +616,13 @@ async function UICreateDiffInfo(charName, diff) {
         .append(`<th>Offset</th><td>${round(diff._noteJumpStartBeatOffset, 3)}</td>`)
         .appendTo(tableNJS);
     $('<tr>')
-        .append(
-            `<th>HJD</th><td>${round(
-                getHalfJumpDuration(mapSettings.bpm, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset),
-                3
-            )}</td>`
-        )
+        .append(`<th>HJD</th><td>${round(getHalfJumpDuration(mapSettings), 3)}</td>`)
         .appendTo(tableNJS);
     $('<tr>')
-        .append(
-            `<th>Jump Distance</th><td>${round(
-                getJumpDistance(mapSettings.bpm, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset),
-                3
-            )}</td>`
-        )
+        .append(`<th>Jump Distance</th><td>${round(getJumpDistance(mapSettings), 3)}</td>`)
         .appendTo(tableNJS);
     $('<tr>')
-        .append(
-            `<th>Reaction Time</th><td>${round(
-                (60 / mapSettings.bpm) *
-                    getHalfJumpDuration(mapSettings.bpm, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset) *
-                    1000
-            )}ms</td>`
-        )
+        .append(`<th>Reaction Time</th><td>${round((60 / mapSettings.bpm) * getHalfJumpDuration(mapSettings) * 1000)}ms</td>`)
         .appendTo(tableNJS);
     if (mapSettings.bpmc.length > 0) {
         textMap.push(`BPM changes: ${mapSettings.bpmc.length}`);
@@ -683,17 +667,20 @@ async function UICreateDiffInfo(charName, diff) {
         .appendTo(tableSPS);
     $('<tr>')
         .append(
+            `<th>Median</th><td>${sps.total.median.toFixed(1)}</td><td>${sps.red.median.toFixed(
+                1
+            )}</td><td>${sps.blue.median.toFixed(1)}</td>`
+        )
+        .appendTo(tableSPS);
+    $('<tr>')
+        .append(
             `<th>Peak</th><td>${sps.total.peak.toFixed(1)}</td><td>${sps.red.peak.toFixed(1)}</td><td>${sps.blue.peak.toFixed(
                 1
             )}</td>`
         )
         .appendTo(tableSPS);
     $('<tr>')
-        .append(
-            `<th>Median</th><td>${sps.total.median.toFixed(1)}</td><td>${sps.red.median.toFixed(
-                1
-            )}</td><td>${sps.blue.median.toFixed(1)}</td>`
-        )
+        .append(`<th>Total</th><td>${sps.total.total}</td><td>${sps.red.total}</td><td>${sps.blue.total}</td>`)
         .appendTo(tableSPS);
 
     // notes
