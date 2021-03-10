@@ -437,7 +437,7 @@ function UILoadingStatus(status, text, progress = 100) {
 function UIUpdateMapInfo() {
     $('#song-author').text(map.info._songAuthorName);
     $('#song-name').text(map.info._songName);
-    $('#song-subname').text(map.info._songSubname);
+    $('#song-subname').text(map.info._songSubName);
     $('#song-bpm').text(`${round(map.info._beatsPerMinute, 3)} BPM`);
     $('#level-author').text(`Mapped by ${map.info._levelAuthorName ? map.info._levelAuthorName : 'Unknown Mapper'}`);
     $('#environment').text(`${envName[map.info._environmentName]} Environment`);
