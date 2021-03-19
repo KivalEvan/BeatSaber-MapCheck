@@ -2,6 +2,10 @@
 
 ## v1.4.2 [2021-03-20]
 
+### Changed
+
+-   Link no longer have target
+
 ### Fixed
 
 -   Unknown environment no longer crashes on load
