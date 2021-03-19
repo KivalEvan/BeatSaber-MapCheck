@@ -1,6 +1,12 @@
 # Changelog
 
-## v1.4.1
+## v1.4.2 [2021-03-20]
+
+### Fixed
+
+-   Unknown environment no longer crashes on load
+
+## v1.4.1 [2021-03-11]
 
 ### Added
 

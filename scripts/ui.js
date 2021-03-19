@@ -440,7 +440,7 @@ function UIUpdateMapInfo() {
     $('#song-subname').text(map.info._songSubName);
     $('#song-bpm').text(`${round(map.info._beatsPerMinute, 3)} BPM`);
     $('#level-author').text(`Mapped by ${map.info._levelAuthorName ? map.info._levelAuthorName : 'Unknown Mapper'}`);
-    $('#environment').text(`${envName[map.info._environmentName]} Environment`);
+    $('#environment').text(`${envName[map.info._environmentName] || 'Unknown'} Environment`);
 
     $('#input-container').css('display', 'none');
     $('.metadata').css('display', 'block');
@@ -519,13 +519,13 @@ async function UICreateDiffInfo(charName, diff) {
     let offset = 0;
     let BPMChanges;
     let customColor = {
-        _colorLeft: colorScheme[envColor[map.info._environmentName]]._colorLeft,
-        _colorRight: colorScheme[envColor[map.info._environmentName]]._colorRight,
-        _envColorLeft: colorScheme[envColor[map.info._environmentName]]._envColorLeft,
-        _envColorRight: colorScheme[envColor[map.info._environmentName]]._envColorRight,
-        _envColorLeftBoost: colorScheme[envColor[map.info._environmentName]]._envColorLeftBoost || null,
-        _envColorRightBoost: colorScheme[envColor[map.info._environmentName]]._envColorRightBoost || null,
-        _obstacleColor: colorScheme[envColor[map.info._environmentName]]._obstacleColor,
+        _colorLeft: colorScheme[envColor[map.info._environmentName]]?._colorLeft || null,
+        _colorRight: colorScheme[envColor[map.info._environmentName]]?._colorRight || null,
+        _envColorLeft: colorScheme[envColor[map.info._environmentName]]?._envColorLeft || null,
+        _envColorRight: colorScheme[envColor[map.info._environmentName]]?._envColorRight || null,
+        _envColorLeftBoost: colorScheme[envColor[map.info._environmentName]]?._envColorLeftBoost || null,
+        _envColorRightBoost: colorScheme[envColor[map.info._environmentName]]?._envColorRightBoost || null,
+        _obstacleColor: colorScheme[envColor[map.info._environmentName]]?._obstacleColor || null,
     };
     let hasChroma = false;
     if (diff._customData) {
@@ -567,13 +567,13 @@ async function UICreateDiffInfo(charName, diff) {
             envBL = rgbaToHex(diff._customData._envColorLeftBoost);
             envBoost = true;
         } else {
-            envBL = colorScheme[envColor[map.info._environmentName]]._envColorLeftBoost || customColor._envColorLeft;
+            envBL = colorScheme[envColor[map.info._environmentName]]?._envColorLeftBoost || customColor._envColorLeft;
         }
         if (diff._customData._envColorRightBoost) {
             envBR = rgbaToHex(diff._customData._envColorRightBoost);
             envBoost = true;
         } else {
-            envBR = colorScheme[envColor[map.info._environmentName]]._envColorRightBoost || customColor._envColorRight;
+            envBR = colorScheme[envColor[map.info._environmentName]]?._envColorRightBoost || customColor._envColorRight;
         }
 
         if (envBoost) {
