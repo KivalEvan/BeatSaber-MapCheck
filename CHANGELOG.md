@@ -1,9 +1,10 @@
 # Changelog
 
-## v1.4.2 [2021-03-20]
+## v1.4.2 [2021-03-26]
 
 ### Changed
 
+-   Updated color scheme
 -   Link no longer have target
 
 ### Fixed
