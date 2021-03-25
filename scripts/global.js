@@ -165,6 +165,7 @@ const envName = {
     FitBeatEnvironment: 'FitBeat',
     LinkinParkEnvironment: 'Linkin Park',
     BTSEnvironment: 'BTS',
+    KaleidoscopeEnvironment: 'Kaleidoscope',
     GlassDesertEnvironment: 'Glass Desert',
 };
 
@@ -187,23 +188,24 @@ const envColor = {
     FitBeatEnvironment: 'FitBeat',
     LinkinParkEnvironment: 'Linkin Park',
     BTSEnvironment: 'BTS',
-    GlassDesertEnvironment: 'Origins',
+    KaleidoscopeEnvironment: 'Kaleidoscope',
+    GlassDesertEnvironment: 'Glass Desert',
 };
 
 const colorScheme = {
     'The First': {
         _colorLeft: '#c81414',
-        _colorRight: '#0074d2',
-        _envColorLeft: '#c81414',
-        _envColorRight: '#3098ff',
+        _colorRight: '#288ed2',
+        _envColorLeft: '#d91616',
+        _envColorRight: '#30acff',
         _obstacleColor: '#ff3030',
     },
     Origins: {
         _colorLeft: '#ad9200',
         _colorRight: '#b40089',
-        _envColorLeft: '#396c87',
-        _envColorRight: '#0b9fe7',
-        _obstacleColor: '#0b4865',
+        _envColorLeft: '#7dafb3',
+        _envColorRight: '#0aafe7',
+        _obstacleColor: '#104965',
     },
     KDA: {
         _colorLeft: '#a84028',
@@ -228,10 +230,10 @@ const colorScheme = {
     },
     Rocket: {
         _colorLeft: '#ff7f00',
-        _colorRight: '#0088ff',
-        _envColorLeft: '#ac5d3c',
-        _envColorRight: '#309eff',
-        _obstacleColor: '#509cb9',
+        _colorRight: '#0087ff',
+        _envColorLeft: '#e67c53',
+        _envColorRight: '#66b7ff',
+        _obstacleColor: '#519cb9',
     },
     'Green Day': {
         _colorLeft: '#40c800',
@@ -242,17 +244,17 @@ const colorScheme = {
     },
     Timbaland: {
         _colorLeft: '#808080',
-        _colorRight: '#0080ff',
-        _envColorLeft: '#0080ff',
-        _envColorRight: '#0080ff',
+        _colorRight: '#1a8dff',
+        _envColorLeft: '#1a8dff',
+        _envColorRight: '#1a8dff',
         _obstacleColor: '#808080',
     },
     FitBeat: {
-        _colorLeft: '#cc9b24',
-        _colorRight: '#ca28ae',
-        _envColorLeft: '#664646',
-        _envColorRight: '#464666',
-        _obstacleColor: '#464666',
+        _colorLeft: '#cc9b28',
+        _colorRight: '#ca29ae',
+        _envColorLeft: '#cc8f8f',
+        _envColorRight: '#8f8fcc',
+        _obstacleColor: '#474766',
     },
     'Linkin Park': {
         _colorLeft: '#a92a2b',
@@ -272,6 +274,22 @@ const colorScheme = {
         _envColorRightBoost: '#e68aff',
         _obstacleColor: '#ab2e8d',
     },
+    Kaleidoscope: {
+        _colorLeft: '#a82020',
+        _colorRight: '#484848',
+        _envColorLeft: '#a82020',
+        _envColorRight: '#787878',
+        _envColorLeftBoost: '#800000',
+        _envColorRightBoost: '#7e0089',
+        _obstacleColor: '#404040',
+    },
+	'Glass Desert': {
+        _colorLeft: '#ad9200',
+        _colorRight: '#b40089',
+        _envColorLeft: '#3a6e87',
+        _envColorRight: '#6b6b99',
+        _obstacleColor: '#104965',
+	}
 };
 
 /**  REFERENCES  **
