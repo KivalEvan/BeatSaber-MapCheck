@@ -1,6 +1,17 @@
 # Changelog
 
-## v1.4.1
+## v1.4.2 [2021-03-26]
+
+### Changed
+
+-   Updated color scheme
+-   Link no longer have target
+
+### Fixed
+
+-   Unknown environment no longer crashes on load
+
+## v1.4.1 [2021-03-11]
 
 ### Added
 
