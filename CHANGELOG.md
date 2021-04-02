@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.4.3 [2021-04-03]
+
+### Changed
+
+-   Restrictive difficulty label check
+
+### Fixed
+
+-   Fixed BTS light colour being the same
+
 ## v1.4.2 [2021-03-26]
 
 ### Changed
