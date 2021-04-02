@@ -2,7 +2,7 @@
     is it really a script if it's just holding a global variable? */
 
 const watermark = 'Kival Evan#5480';
-const version = 'v1.4.2';
+const version = 'v1.4.3';
 
 const flag = {
     loading: false,
@@ -271,7 +271,7 @@ const colorScheme = {
         _envColorLeft: '#c82080',
         _envColorRight: '#b120dd',
         _envColorLeftBoost: '#e68aff',
-        _envColorRightBoost: '#e68aff',
+        _envColorRightBoost: '#59ceff',
         _obstacleColor: '#ab2e8d',
     },
     Kaleidoscope: {
@@ -283,13 +283,13 @@ const colorScheme = {
         _envColorRightBoost: '#7e0089',
         _obstacleColor: '#404040',
     },
-	'Glass Desert': {
+    'Glass Desert': {
         _colorLeft: '#ad9200',
         _colorRight: '#b40089',
         _envColorLeft: '#3a6e87',
         _envColorRight: '#6b6b99',
         _obstacleColor: '#104965',
-	}
+    },
 };
 
 /**  REFERENCES  **

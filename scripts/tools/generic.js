@@ -128,9 +128,8 @@ function calcPeakNPS(nc, dur) {
     return peakNPS;
 }
 
-/* hardcoded stuff but whatever
+/*  hardcoded stuff but whatever
     thanks XAce1337manX#9170 for the info
-    also modified a bit to be more reasonable
               W  I
     1 diff:  33 99
     2 diffs: 16 50
@@ -142,24 +141,24 @@ function checkLabelLength(mapChar, lbl) {
     diffCount = char._difficultyBeatmaps.length;
     switch (diffCount) {
         case 1:
-            if (lbl.length > 90) return 'error';
-            if (lbl.length > 39) return 'warn';
+            if (lbl.length > 99) return 'error';
+            if (lbl.length > 33) return 'warn';
             break;
         case 2:
-            if (lbl.length > 42) return 'error';
-            if (lbl.length > 21) return 'warn';
+            if (lbl.length > 50) return 'error';
+            if (lbl.length > 16) return 'warn';
             break;
         case 3:
-            if (lbl.length > 27) return 'error';
-            if (lbl.length > 15) return 'warn';
-            break;
-        case 4:
-            if (lbl.length > 20) return 'error';
+            if (lbl.length > 34) return 'error';
             if (lbl.length > 11) return 'warn';
             break;
-        case 5:
-            if (lbl.length > 17) return 'error';
+        case 4:
+            if (lbl.length > 25) return 'error';
             if (lbl.length > 8) return 'warn';
+            break;
+        case 5:
+            if (lbl.length > 20) return 'error';
+            if (lbl.length > 6) return 'warn';
             break;
     }
 }
