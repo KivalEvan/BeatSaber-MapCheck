@@ -2,9 +2,10 @@
     is it really a script if it's just holding a global variable? */
 
 const watermark = 'Kival Evan#5480';
-const version = 'v1.4.3';
+const version = 'v1.5.0';
 
 const flag = {
+    noAudio: false,
     loading: false,
     loaded: false,
     map: {
@@ -19,12 +20,10 @@ const flag = {
     },
     tool: {
         dd: true,
-        hb: {
-            staircase: true,
-        },
-        vb: {
-            note: true,
-        },
+        slowSlider: true,
+        hbStaircase: true,
+        vbSpecific: 'diff',
+        vbNote: true,
         shrAngle: false,
         speedPause: false,
     },
@@ -52,8 +51,9 @@ const tool = {
     },
 
     // misc
-    maxShrAngle: 0.175,
+    maxShrAngle: 0.15,
     maxSpeedPause: 0.075,
+    minSliderSpeed: 0.025,
 
     // part where no one can control... yet
     // this is way less than i expected

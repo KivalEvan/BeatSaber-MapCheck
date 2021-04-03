@@ -1,5 +1,27 @@
 # Changelog
 
+## v1.5.0 [2021-##-##]
+
+### Added
+
+-   Map error output
+-   Slow slider check
+-   Time & difficulty specific vision block
+-   No audio option (disable audio loading to speed up)
+-   Link to my web on watermark
+
+### Changed
+
+-   UI overhaul
+-   Reduced default Shrado angle max time to 150ms
+-   Couple of code refactoring and cleanup
+
+## v1.4.4 [2021-04-03]
+
+### Fixed
+
+-   Swing diagonal not returning boolean
+
 ## v1.4.3 [2021-04-03]
 
 ### Changed

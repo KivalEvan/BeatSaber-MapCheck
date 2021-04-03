@@ -36,7 +36,7 @@ async function loadMap(mapZip) {
         UILoadingStatus('info', 'Loading audio...', 20.875);
         console.log('loading audio');
         let audioFile = mapZip.file(map.info._songFilename);
-        if (audioFile) {
+        if (!flag.noAudio && audioFile) {
             let audioBuffer = await audioFile.async('arraybuffer');
             let audioContext = new AudioContext();
             await audioContext
@@ -118,6 +118,7 @@ async function loadMap(mapZip) {
 
         $('#shrangle-max-beat').val(round(toBeatTime(tool.maxShrAngle), 3));
         $('#speedpause-max-beat').val(round(toBeatTime(tool.maxSpeedPause), 3));
+        $('#slowslider-min-prec').val(round(1 / toBeatTime(tool.minSliderSpeed), 3));
         $('#vb-min-beat').val(round(toBeatTime(tool.vb.min), 3));
         $('#vb-max-beat').val(round(toBeatTime(tool.vb.max), 3));
         $('#apply-this').prop('disabled', false);
@@ -282,7 +283,7 @@ async function mapTool(charName, diff) {
     if (flag.tool.dd) {
         arr.push(printHTMLBold('Double-directional []', detectDoubleDirectional(diff._data, mapSettings)));
     }
-    if (flag.tool.vb.note) {
+    if (flag.tool.vbNote) {
         arr.push(printHTMLBold('Vision blocked []', detectVisionBlock(diff._data, mapSettings)));
     }
     arr.push(printHTMLBold('Stacked note []', detectStackedNote(diff._data, mapSettings)));
@@ -290,7 +291,7 @@ async function mapTool(charName, diff) {
     if (tool.beatPrec.length > 0) {
         arr.push(printHTMLBold('Off-beat precision []', detectOffPrecision(diff._data, mapSettings)));
     }
-    if (flag.tool.hb.staircase) {
+    if (flag.tool.hbStaircase) {
         arr.push(printHTMLBold('Hitbox staircase []', detectHitboxStaircase(diff._data, mapSettings)));
     }
     arr.push(printHTMLBold('Improper window snap []', detectImproperWindowSnap(diff._data, mapSettings)));

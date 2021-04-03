@@ -3,18 +3,23 @@
     some general and other stuff that has no place yet
     also includes unused stuff that i may consider in the future */
 
-$('#watermark').text(`${watermark} | `);
+$('#watermark').text(`${watermark}`);
 $('#version').text(version);
 
 // ui stuff
 if (flag.tool.dd) $('#dd').prop('checked', true);
-if (flag.tool.hb.staircase) $('#hb-stair').prop('checked', true);
-if (flag.tool.vb.note) $('#vb-note').prop('checked', true);
+if (flag.tool.hbStaircase) $('#hb-stair').prop('checked', true);
+if (flag.tool.vbSpecific === 'time') $('#vb-specific-time').prop('checked', true);
+if (flag.tool.vbSpecific === 'diff') $('#vb-specific-diff').prop('checked', true);
+if (flag.tool.vbNote) $('#vb-note').prop('checked', true);
 if (flag.tool.shrAngle) $('#shrangle').prop('checked', true);
 if (flag.tool.speedPause) $('#speedpause').prop('checked', true);
+if (flag.tool.slowSlider) $('#slowslider').prop('checked', true);
 
 $('#ebpm').val(tool.ebpm.th);
 $('#ebpms').val(tool.ebpm.thSwing);
+$('#slowslider-min').val(tool.minSliderSpeed * 1000);
+$('#slowslider-min-prec').val(0);
 $('#shrangle-max').val(tool.maxShrAngle * 1000);
 $('#shrangle-max-beat').val(0);
 $('#speedpause-max').val(tool.maxSpeedPause * 1000);
@@ -38,6 +43,10 @@ if ($.urlParam('url') !== null) {
     downloadFromURL($.urlParam('url'));
 } else if ($.urlParam('id') !== null) {
     downloadFromID($.urlParam('id'));
+}
+// used for debugging, skipping audio process
+if ($.urlParam('noaudio') !== null) {
+    flag.noAudio = $.urlParam('noaudio') === 'true' ? true : false;
 }
 
 function toMMSS(num) {

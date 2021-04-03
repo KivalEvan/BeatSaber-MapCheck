@@ -6,6 +6,14 @@ $('#input-url').keydown(textInput);
 $('#input-id').keydown(textInput);
 $('#input-file').change(readFile);
 
+function textInput(event) {
+    if (event.which === 13) {
+        if (this.value.toString() !== '') {
+            downloadFromID(this.value.toString());
+        }
+    }
+}
+
 async function downloadFromURL(input) {
     // sanitize & validate url
     let url;
@@ -134,14 +142,6 @@ function downloadMap(url) {
     });
 }
 
-function textInput(event) {
-    if (event.which === 13) {
-        if (this.value.toString() !== '') {
-            downloadFromID(this.value.toString());
-        }
-    }
-}
-
 function readFile() {
     UILoadingStatus('info', 'Reading file input', 0);
     let file = this.files[0];
@@ -228,22 +228,10 @@ $('#beatprec').change(function () {
 });
 
 // hitbox staircase
-$('#hb-stair').click(function () {
-    if ($(this).prop('checked')) {
-        flag.tool.hb.staircase = true;
-    } else {
-        flag.tool.hb.staircase = false;
-    }
-});
+$('#hb-stair').click(UIToolCheckbox);
 
 // shrado angle
-$('#shrangle').click(function () {
-    if ($(this).prop('checked')) {
-        flag.tool.shrAngle = true;
-    } else {
-        flag.tool.shrAngle = false;
-    }
-});
+$('#shrangle').click(UIToolCheckbox);
 $('#shrangle-max').change(function () {
     tool.maxShrAngle = round(Math.abs(parseFloat(this.value)) / 1000, 3) || 0;
     $('#shrangle-max').val(round(tool.maxShrAngle * 1000, 3));
@@ -261,13 +249,7 @@ $('#shrangle-max-beat').change(function () {
 });
 
 // speed pause
-$('#speedpause').click(function () {
-    if ($(this).prop('checked')) {
-        flag.tool.speedPause = true;
-    } else {
-        flag.tool.speedPause = false;
-    }
-});
+$('#speedpause').click(UIToolCheckbox);
 $('#speedpause-max').change(function () {
     tool.maxSpeedPause = round(Math.abs(parseFloat(this.value)) / 1000, 3) || 0;
     $('#speedpause-max').val(round(tool.maxSpeedPause * 1000, 3));
@@ -285,22 +267,12 @@ $('#speedpause-max-beat').change(function () {
 });
 
 // dd
-$('#dd').click(function () {
-    if ($(this).prop('checked')) {
-        flag.tool.dd = true;
-    } else {
-        flag.tool.dd = false;
-    }
-});
+$('#dd').click(UIToolCheckbox);
 
 // vision block
-$('#vb-note').click(function () {
-    if ($(this).prop('checked')) {
-        flag.tool.vb.note = true;
-    } else {
-        flag.tool.vb.note = false;
-    }
-});
+$('#vb-note').click(UIToolCheckbox);
+$('#vb-specific-time').click(UIToolVBSpecific);
+$('#vb-specific-diff').click(UIToolVBSpecific);
 $('#vb-min').change(function () {
     tool.vb.min = round(Math.abs(parseFloat(this.value)) / 1000, 3) || 0;
     $('#vb-min').val(round(tool.vb.min * 1000));
@@ -412,6 +384,14 @@ $('.accordion').click(function () {
         panel.style.maxHeight = panel.scrollHeight + 16 + 'px';
     }
 });
+
+function UIToolCheckbox() {
+    flag.tool[this.value] = this.checked;
+}
+
+function UIToolVBSpecific() {
+    flag.tool.vbSpecific = this.value;
+}
 
 function UILoadingStatus(status, text, progress = 100) {
     switch (status) {
@@ -890,7 +870,6 @@ async function UICreateDiffInfo(charName, diff) {
 
 function UIOutputDisplay(cs, ds) {
     let mapa = map.analysis.find((ma) => ma.mapSet === cs && ma.diff === ds);
-    $('#output-box').empty();
-    if (!mapa.text.length > 0) $('#output-box').text('No issue(s) found.');
-    $('#output-box').append(mapa.text.join('<br>'));
+    if (!mapa.text.length > 0) $('#output-diff').text('No issue(s) found.');
+    $('#output-diff').html(mapa.text.join('<br>'));
 }
