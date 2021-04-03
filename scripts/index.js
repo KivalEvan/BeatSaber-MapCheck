@@ -101,11 +101,9 @@ function offsetBegone(beat, bpm, offset) {
 
 // just to make rounding with decimal easier
 function round(num, d = 0) {
-    if (!d > 0) {
-        return Math.round(num);
-    }
+    const place = Math.pow(10, d);
     // return parseFloat(num.toFixed(d));
-    return Math.round(num * Math.pow(10, d)) / Math.pow(10, d);
+    return Math.round(num * place) / place;
 }
 
 // thanks Top_Cat#1961

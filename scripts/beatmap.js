@@ -233,12 +233,15 @@ async function mapTool(charName, diff) {
     }
     const startTime = getFirstInteractiveTime(diff._data, map.info._beatsPerMinute);
     const mapSettings = {
+        charName: charName,
+        diffName: diff._difficulty,
         bpm: map.info._beatsPerMinute,
         bpmc: getBPMChangesTime(map.info._beatsPerMinute, offset, BPMChanges),
         offset: offset,
         njs: diff._noteJumpMovementSpeed,
         njsOffset: diff._noteJumpStartBeatOffset,
     };
+    mapSettings.hjd = getHalfJumpDuration(mapSettings);
 
     const arr = [];
     if (diffLabel !== null) {

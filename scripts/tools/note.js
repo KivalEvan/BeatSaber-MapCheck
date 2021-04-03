@@ -350,29 +350,55 @@ function checkDD(n1cd, n2cd) {
 
 function detectVisionBlock(diff, mapSettings) {
     const { _notes: notes } = diff;
-    const { bpm, bpmc, offset } = mapSettings;
+    const { diffName, hjd, bpm, bpmc, offset } = mapSettings;
     const arr = [];
     let lastMidL;
     let lastMidR;
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         if (lastMidL) {
-            if (isAboveTH(note._time - lastMidL._time, tool.vb.min) && isBelowTH(note._time - lastMidL._time, tool.vb.max)) {
+            if (
+                isAboveTH(
+                    note._time - lastMidL._time,
+                    flag.tool.vbSpecific === 'time' ? tool.vb.min : tool.vb.diff[diffName].min
+                ) &&
+                isBelowTH(
+                    note._time - lastMidL._time,
+                    flag.tool.vbSpecific === 'time' ? tool.vb.max : Math.min(toRealTime(hjd), tool.vb.diff[diffName].max)
+                )
+            ) {
                 if (note._lineIndex < 2) {
                     arr.push(adjustTime(note._time, bpm, offset, bpmc));
                 }
             }
             // yeet the last note if nothing else found so we dont have to perform check every note
-            else if (toRealTime(note._time - lastMidL._time) >= tool.vb.max) {
+            else if (
+                toRealTime(note._time - lastMidL._time) >= flag.tool.vbSpecific === 'time'
+                    ? tool.vb.max
+                    : Math.min(toRealTime(hjd), tool.vb.diff[diffName].max)
+            ) {
                 lastMidL = null;
             }
         }
         if (lastMidR) {
-            if (isAboveTH(note._time - lastMidR._time, tool.vb.min) && isBelowTH(note._time - lastMidR._time, tool.vb.max)) {
+            if (
+                isAboveTH(
+                    note._time - lastMidR._time,
+                    flag.tool.vbSpecific === 'time' ? tool.vb.min : tool.vb.diff[diffName].min
+                ) &&
+                isBelowTH(
+                    note._time - lastMidR._time,
+                    flag.tool.vbSpecific === 'time' ? tool.vb.max : Math.min(toRealTime(hjd), tool.vb.diff[diffName].max)
+                )
+            ) {
                 if (note._lineIndex > 1) {
                     arr.push(adjustTime(note._time, bpm, offset, bpmc));
                 }
-            } else if (toRealTime(note._time - lastMidR._time) >= tool.vb.max) {
+            } else if (
+                toRealTime(note._time - lastMidR._time) >= flag.tool.vbSpecific === 'time'
+                    ? tool.vb.max
+                    : Math.min(toRealTime(hjd), tool.vb.diff[diffName].max)
+            ) {
                 lastMidR = null;
             }
         }

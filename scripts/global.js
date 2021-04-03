@@ -48,6 +48,28 @@ const tool = {
     vb: {
         min: 0.1,
         max: 0.5,
+        diff: {
+            Easy: {
+                min: 0.025,
+                max: 1.5,
+            },
+            Normal: {
+                min: 0.05,
+                max: 1.2,
+            },
+            Hard: {
+                min: 0.08,
+                max: 1,
+            },
+            Expert: {
+                min: 0.1,
+                max: 0.75,
+            },
+            ExpertPlus: {
+                min: 0.1,
+                max: 0.5,
+            },
+        },
     },
 
     // misc
