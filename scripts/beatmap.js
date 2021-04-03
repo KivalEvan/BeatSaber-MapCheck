@@ -116,9 +116,9 @@ async function loadMap(mapZip) {
         }
         UIOutputDisplay(tool.select.char, tool.select.diff);
 
-        $('#shrangle-max-beat').val(round(toBeatTime(tool.maxShrAngle), 3));
-        $('#speedpause-max-beat').val(round(toBeatTime(tool.maxSpeedPause), 3));
         $('#slowslider-min-prec').val(round(1 / toBeatTime(tool.minSliderSpeed), 3));
+        $('#shrangle-max-prec').val(round(1 / toBeatTime(tool.maxShrAngle), 3));
+        $('#speedpause-max-prec').val(round(1 / toBeatTime(tool.maxSpeedPause), 3));
         $('#vb-min-beat').val(round(toBeatTime(tool.vb.min), 3));
         $('#vb-max-beat').val(round(toBeatTime(tool.vb.max), 3));
         $('#apply-this').prop('disabled', false);

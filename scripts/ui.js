@@ -7,10 +7,8 @@ $('#input-id').keydown(textInput);
 $('#input-file').change(readFile);
 
 function textInput(event) {
-    if (event.which === 13) {
-        if (this.value.toString() !== '') {
-            downloadFromID(this.value.toString());
-        }
+    if (event.which === 13 && this.value.toString() !== '') {
+        downloadFromID(this.value.toString());
     }
 }
 
@@ -242,7 +240,7 @@ $('#slowslider-min-prec').change(function () {
         let val = round(Math.abs(parseFloat(this.value)), 3) || 1;
         tool.minSliderSpeed = round(toRealTime(1 / val), 3);
         $('#slowslider-min').val(round(tool.minSliderSpeed * 1000, 3));
-        $('#slowslider-min-prec').val(round(val, 3));
+        $('#slowslider-min-prec').val(val);
     } else {
         $('#slowslider-min-prec').val(0);
     }
@@ -253,16 +251,16 @@ $('#shrangle').click(UIToolCheckbox);
 $('#shrangle-max').change(function () {
     tool.maxShrAngle = round(Math.abs(parseFloat(this.value)) / 1000, 3) || 0;
     $('#shrangle-max').val(round(tool.maxShrAngle * 1000, 3));
-    if (flag.loaded) $('#shrangle-max-beat').val(round(toBeatTime(tool.maxShrAngle), 3));
+    if (flag.loaded) $('#shrangle-max-prec').val(round(toBeatTime(tool.maxShrAngle), 3));
 });
-$('#shrangle-max-beat').change(function () {
+$('#shrangle-max-prec').change(function () {
     if (flag.loaded) {
-        let val = round(Math.abs(parseFloat(this.value)), 3) || 0;
-        tool.maxShrAngle = round(toRealTime(val), 3);
+        let val = round(Math.abs(parseFloat(this.value)), 3) || 1;
+        tool.maxShrAngle = round(toRealTime(1 / val), 3);
         $('#shrangle-max').val(round(tool.maxShrAngle * 1000, 3));
-        $('#shrangle-max-beat').val(val);
+        $('#shrangle-max-prec').val(val);
     } else {
-        $('#shrangle-max-beat').val(0);
+        $('#shrangle-max-prec').val(0);
     }
 });
 
@@ -271,16 +269,16 @@ $('#speedpause').click(UIToolCheckbox);
 $('#speedpause-max').change(function () {
     tool.maxSpeedPause = round(Math.abs(parseFloat(this.value)) / 1000, 3) || 0;
     $('#speedpause-max').val(round(tool.maxSpeedPause * 1000, 3));
-    if (flag.loaded) $('#speedpause-max-beat').val(round(toBeatTime(tool.maxSpeedPause), 3));
+    if (flag.loaded) $('#speedpause-max-prec').val(round(toBeatTime(tool.maxSpeedPause), 3));
 });
-$('#speedpause-max-beat').change(function () {
+$('#speedpause-max-prec').change(function () {
     if (flag.loaded) {
-        let val = round(Math.abs(parseFloat(this.value)), 3) || 0;
-        tool.maxSpeedPause = round(toRealTime(val), 3);
+        let val = round(Math.abs(parseFloat(this.value)), 3) || 1;
+        tool.maxSpeedPause = round(toRealTime(1 / val), 3);
         $('#speedpause-max').val(round(tool.maxSpeedPause * 1000, 3));
-        $('#speedpause-max-beat').val(val);
+        $('#speedpause-max-prec').val(val);
     } else {
-        $('#speedpause-max-beat').val(0);
+        $('#speedpause-max-prec').val(0);
     }
 });
 
