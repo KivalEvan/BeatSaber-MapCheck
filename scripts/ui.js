@@ -239,10 +239,10 @@ $('#slowslider-min').change(function () {
 });
 $('#slowslider-min-prec').change(function () {
     if (flag.loaded) {
-        let val = round(Math.abs(parseFloat(this.value)), 3) || 0;
-        tool.minSliderSpeed = round(toRealTime(val), 3);
+        let val = round(Math.abs(parseFloat(this.value)), 3) || 1;
+        tool.minSliderSpeed = round(toRealTime(1 / val), 3);
         $('#slowslider-min').val(round(tool.minSliderSpeed * 1000, 3));
-        $('#slowslider-min-prec').val(round(1 / val, 3));
+        $('#slowslider-min-prec').val(round(val, 3));
     } else {
         $('#slowslider-min-prec').val(0);
     }
