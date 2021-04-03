@@ -166,7 +166,8 @@ function getEffectiveBPMSwingTime(diff, mapSettings) {
     return arr;
 }
 function getMinSliderSpeed(notes) {
-    let speed = 0;
+    let speedR = 0;
+    let speedB = 0;
     let lastRed;
     let lastBlue;
     for (let i = 0, len = notes.length; i < len; i++) {
@@ -176,9 +177,9 @@ function getMinSliderSpeed(notes) {
                 if (swingNext(note, lastRed)) {
                     lastRed = note;
                 } else if (swingWindow(note, lastRed)) {
-                    speed = Math.max(speed, toRealTime(note._time - lastRed._time) / 2);
+                    speedR = Math.max(speedR, toRealTime(note._time - lastRed._time) / 2);
                 } else {
-                    speed = Math.max(speed, toRealTime(note._time - lastRed._time));
+                    speedR = Math.max(speedR, toRealTime(note._time - lastRed._time));
                 }
             } else {
                 lastRed = note;
@@ -188,19 +189,20 @@ function getMinSliderSpeed(notes) {
                 if (swingNext(note, lastBlue)) {
                     lastBlue = note;
                 } else if (swingWindow(note, lastBlue)) {
-                    speed = Math.max(speed, toRealTime(note._time - lastBlue._time) / 2);
+                    speedB = Math.max(speedB, toRealTime(note._time - lastBlue._time) / 2);
                 } else {
-                    speed = Math.max(speed, toRealTime(note._time - lastBlue._time));
+                    speedB = Math.max(speedB, toRealTime(note._time - lastBlue._time));
                 }
             } else {
                 lastBlue = note;
             }
         }
     }
-    return speed;
+    return Math.max(speedR, speedB);
 }
 function getMaxSliderSpeed(notes) {
-    let speed = Number.MAX_SAFE_INTEGER;
+    let speedR = Number.MAX_SAFE_INTEGER;
+    let speedB = Number.MAX_SAFE_INTEGER;
     let lastRed;
     let lastBlue;
     for (let i = 0, len = notes.length; i < len; i++) {
@@ -211,9 +213,9 @@ function getMaxSliderSpeed(notes) {
                     lastRed = note;
                 } else if (toRealTime(note._time - lastRed._time) > 0.001) {
                     if (swingWindow(note, lastRed)) {
-                        speed = Math.min(speed, toRealTime(note._time - lastRed._time) / 2);
+                        speedR = Math.min(speedR, toRealTime(note._time - lastRed._time) / 2);
                     } else {
-                        speed = Math.min(speed, toRealTime(note._time - lastRed._time));
+                        speedR = Math.min(speedR, toRealTime(note._time - lastRed._time));
                     }
                 }
             } else {
@@ -225,9 +227,9 @@ function getMaxSliderSpeed(notes) {
                     lastBlue = note;
                 } else if (toRealTime(note._time - lastBlue._time) > 0.001) {
                     if (swingWindow(note, lastBlue)) {
-                        speed = Math.min(speed, toRealTime(note._time - lastBlue._time) / 2);
+                        speedB = Math.min(speedB, toRealTime(note._time - lastBlue._time) / 2);
                     } else {
-                        speed = Math.min(speed, toRealTime(note._time - lastBlue._time));
+                        speedB = Math.min(speedB, toRealTime(note._time - lastBlue._time));
                     }
                 }
             } else {
@@ -235,7 +237,7 @@ function getMaxSliderSpeed(notes) {
             }
         }
     }
-    return speed;
+    return Math.min(speedR, speedB);
 }
 
 function detectDoubleDirectional(diff, mapSettings) {
@@ -845,4 +847,53 @@ function detectImproperWindowSnap(diff, mapSettings) {
 
 function isSlantedWindow(n1, n2) {
     return swingWindow(n1, n2) && !swingDiagonal(n1, n2) && !swingHorizontal(n1, n2) && !swingVertical(n1, n2);
+}
+
+function detectSlowSlider(diff, mapSettings) {
+    const { _notes: notes } = diff;
+    const { bpm, bpmc, offset } = mapSettings;
+    const arr = [];
+    let speedR = 0;
+    let speedB = 0;
+    let lastRed;
+    let lastBlue;
+    for (let i = 0, len = notes.length; i < len; i++) {
+        const note = notes[i];
+        if (note._type === 0) {
+            if (lastRed) {
+                if (swingNext(note, lastRed)) {
+                    speedR = 0;
+                    lastRed = note;
+                } else if (swingWindow(note, lastRed)) {
+                    speedR = Math.max(speedR, toRealTime(note._time - lastRed._time) / 2);
+                } else {
+                    speedR = Math.max(speedR, toRealTime(note._time - lastRed._time));
+                }
+                if (speedR > tool.minSliderSpeed) {
+                    arr.push(adjustTime(lastRed._time, bpm, offset, bpmc));
+                }
+            } else {
+                lastRed = note;
+            }
+        } else if (note._type === 1) {
+            if (lastBlue) {
+                if (swingNext(note, lastBlue)) {
+                    speedB = 0;
+                    lastBlue = note;
+                } else if (swingWindow(note, lastBlue)) {
+                    speedB = Math.max(speedB, toRealTime(note._time - lastBlue._time) / 2);
+                } else {
+                    speedB = Math.max(speedB, toRealTime(note._time - lastBlue._time));
+                }
+                if (speedB > tool.minSliderSpeed) {
+                    arr.push(adjustTime(lastBlue._time, bpm, offset, bpmc));
+                }
+            } else {
+                lastBlue = note;
+            }
+        }
+    }
+    return arr.filter(function (x, i, ary) {
+        return !i || x !== ary[i - 1];
+    });
 }

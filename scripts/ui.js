@@ -230,6 +230,24 @@ $('#beatprec').change(function () {
 // hitbox staircase
 $('#hb-stair').click(UIToolCheckbox);
 
+// slow slider
+$('#slowslider').click(UIToolCheckbox);
+$('#slowslider-min').change(function () {
+    tool.minSliderSpeed = round(Math.abs(parseFloat(this.value)) / 1000, 3) || 0;
+    $('#slowslider-min').val(round(tool.minSliderSpeed * 1000, 3));
+    if (flag.loaded) $('#slowslider-min-prec').val(round(1 / toBeatTime(tool.minSliderSpeed), 3));
+});
+$('#slowslider-min-prec').change(function () {
+    if (flag.loaded) {
+        let val = round(Math.abs(parseFloat(this.value)), 3) || 0;
+        tool.minSliderSpeed = round(toRealTime(val), 3);
+        $('#slowslider-min').val(round(tool.minSliderSpeed * 1000, 3));
+        $('#slowslider-min-prec').val(round(1 / val, 3));
+    } else {
+        $('#slowslider-min-prec').val(0);
+    }
+});
+
 // shrado angle
 $('#shrangle').click(UIToolCheckbox);
 $('#shrangle-max').change(function () {

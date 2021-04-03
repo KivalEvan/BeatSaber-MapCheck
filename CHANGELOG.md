@@ -16,6 +16,10 @@
 -   Reduced default Shrado angle max time to 150ms
 -   Couple of code refactoring and cleanup
 
+### Fixed
+
+-   Potential issue with missing slider calculation on doubles
+
 ## v1.4.4 [2021-04-03]
 
 ### Fixed

@@ -298,6 +298,11 @@ async function mapTool(charName, diff) {
         arr.push(printHTMLBold('Hitbox staircase []', detectHitboxStaircase(diff._data, mapSettings)));
     }
     arr.push(printHTMLBold('Improper window snap []', detectImproperWindowSnap(diff._data, mapSettings)));
+    if (flag.tool.slowSlider) {
+        arr.push(
+            printHTMLBold(`Slow slider (>${tool.minSliderSpeed * 1000}ms) []`, detectSlowSlider(diff._data, mapSettings))
+        );
+    }
     if (flag.tool.shrAngle) {
         arr.push(printHTMLBold('Shrado angle []', detectShrAngle(diff._data, mapSettings)));
     }
