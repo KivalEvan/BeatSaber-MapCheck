@@ -1,5 +1,17 @@
 # Changelog
 
+## v1.4.5 [2021-04-05]
+
+### Fixed
+
+-   Audio flag typo (should look for end object now)
+
+## v1.4.4 [2021-04-03]
+
+### Fixed
+
+-   Swing diagonal not returning boolean
+
 ## v1.4.3 [2021-04-03]
 
 ### Changed
