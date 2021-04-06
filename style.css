@@ -119,8 +119,13 @@ header {
 .watermark {
     position: absolute;
     bottom: 4px;
-    right: 20px;
+    right: 16px;
     color: #777;
+}
+#reset-button {
+    position: absolute;
+    top: 8px;
+    right: 16px;
 }
 .loading {
     position: relative;

@@ -14,7 +14,7 @@
 
 ### Changed
 
--   UI overhaul
+-   UI tweak
 -   Reduced default Shrado angle max time to 150ms
 -   Couple of code refactoring and cleanup
 

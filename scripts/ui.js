@@ -203,6 +203,7 @@ function mapReset() {
     $('#input-container').css('display', 'block');
     $('#input-file').css('display', 'none');
     $('.metadata').css('display', 'none');
+    UILoadingStatus('info', 'No map loaded', 0);
     flag.loading = false;
     flag.loaded = false;
     map.id = null;
@@ -607,8 +608,12 @@ async function UICreateDiffInfo(charName, diff) {
         }
     }
     if (diff._data._customData) {
-        if (diff._data._customData._BPMChanges) BPMChanges = diff._data._customData._BPMChanges;
-        else if (diff._data._customData._bpmChanges) BPMChanges = diff._data._customData._bpmChanges;
+        if (diff._data._customData._BPMChanges) {
+            BPMChanges = diff._data._customData._BPMChanges;
+        }
+        if (diff._data._customData._bpmChanges) {
+            BPMChanges = diff._data._customData._bpmChanges;
+        }
     }
     const mapSettings = {
         bpm: map.info._beatsPerMinute,
