@@ -1,5 +1,6 @@
 :root {
     --site-width: 64em;
+    --site-width-min: 56em;
     --header-height: 12em;
 }
 
@@ -7,6 +8,7 @@ body {
     display: block;
     margin: 0 auto;
     max-width: var(--site-width);
+    min-width: var(--site-width-min);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #000;
     background: #171717;
@@ -51,6 +53,7 @@ header {
 }
 .info {
     display: inline-block;
+    width: 100%;
     height: inherit;
 }
 .info:after {
@@ -79,6 +82,12 @@ header {
 .input label,
 .input input {
     padding: 0;
+}
+#input-container {
+    position: relative;
+    height: 100%;
+    background-color: #fff;
+    transition: background-color ease 0.25s;
 }
 #input-url {
     width: 25em;

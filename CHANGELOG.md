@@ -4,11 +4,13 @@
 
 ### Added
 
+-   Drag & drop function
+-   Reset button
 -   Map error output
 -   Slow slider check
 -   Time & difficulty specific vision block
--   No audio option (disable audio loading to speed up)
--   Link to my web on watermark
+-   No audio option (disable audio loading to speed up process)
+-   Link to my website on watermark
 
 ### Changed
 
@@ -19,6 +21,12 @@
 ### Fixed
 
 -   Potential issue with missing slider calculation on doubles
+
+## v1.4.5 [2021-04-05]
+
+### Fixed
+
+-   Audio flag typo (should look for end object now)
 
 ## v1.4.4 [2021-04-03]
 

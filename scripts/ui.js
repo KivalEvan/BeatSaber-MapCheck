@@ -2,16 +2,39 @@
     i dunno what to describe here
     it's fairly obvious; creating, manipulating, and deleting DOM element with JQuery */
 
-$('#input-url').keydown(textInput);
-$('#input-id').keydown(textInput);
-$('#input-file').change(readFile);
+$('#input-url').keydown(textInputHandler);
+$('#input-id').keydown(textInputHandler);
+$('#input-file').change(fileInputHandler);
+$('#reset-button').click(mapReset);
 
-function textInput(event) {
+function dropHandler(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (event.dataTransfer.items) {
+        if (event.dataTransfer.items[0].kind === 'file') {
+            let file = event.dataTransfer.items[0].getAsFile();
+            if (file && (file.name.substr(-4) === '.zip' || file.name.substr(-4) === '.bsl')) {
+                const fr = new FileReader();
+                fr.readAsArrayBuffer(file);
+                fr.addEventListener('load', function (e) {
+                    extractZip(e.target.result);
+                });
+            } else {
+                UILoadingStatus('info', 'Unsupported file format, please enter zip file', 0);
+            }
+        }
+    }
+}
+function dragOverHandler(event) {
+    event.preventDefault();
+    event.stopPropagation();
+}
+
+function textInputHandler(event) {
     if (event.which === 13 && this.value.toString() !== '') {
         downloadFromID(this.value.toString());
     }
 }
-
 async function downloadFromURL(input) {
     // sanitize & validate url
     let url;
@@ -40,7 +63,6 @@ async function downloadFromURL(input) {
         }, 3000);
     }
 }
-
 async function downloadFromID(input) {
     // sanitize & validate id
     let id;
@@ -71,7 +93,6 @@ async function downloadFromID(input) {
         }, 3000);
     }
 }
-
 function sanitizeURL(url) {
     // regex from stackoverflow from another source
     let regexURL = /^(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/;
@@ -85,7 +106,6 @@ function sanitizeURL(url) {
         throw new Error('Invalid URL');
     }
 }
-
 function sanitizeBeatSaverID(id) {
     let regexID = /^[0-9a-fA-F]{1,6}$/;
     id = id.trim();
@@ -98,7 +118,6 @@ function sanitizeBeatSaverID(id) {
         throw new Error('Invalid ID');
     }
 }
-
 function downloadMap(url) {
     return new Promise(function (resolve, reject) {
         let xhr = new XMLHttpRequest();
@@ -140,15 +159,15 @@ function downloadMap(url) {
     });
 }
 
-function readFile() {
+function fileInputHandler() {
     UILoadingStatus('info', 'Reading file input', 0);
     let file = this.files[0];
     if (file === undefined) {
         UILoadingStatus('info', 'No file input', 0);
         throw new Error('No file input');
     }
-    const fr = new FileReader();
     if (file && (file.name.substr(-4) === '.zip' || file.name.substr(-4) === '.bsl')) {
+        const fr = new FileReader();
         fr.readAsArrayBuffer(file);
         fr.addEventListener('load', function (e) {
             extractZip(e.target.result);
@@ -174,6 +193,11 @@ async function extractZip(data) {
 }
 
 function mapReset() {
+    $('#mapset').empty();
+    $('#mapdiff').empty();
+    $('.stats').empty();
+    $('#output-diff').html('No output.');
+    $('#output-map').html('No output.');
     $('#map-link').text('').attr('href', '').css('display', 'none');
     $('.input').prop('disabled', false);
     $('#input-container').css('display', 'block');
@@ -186,6 +210,7 @@ function mapReset() {
     map.set = null;
     map.bpm.min = null;
     map.bpm.max = null;
+    map.stats = [];
     map.analysis = [];
     flag.map.load.audio = false;
     flag.map.bpm.change = false;
@@ -886,6 +911,8 @@ async function UICreateDiffInfo(charName, diff) {
 
 function UIOutputDisplay(cs, ds) {
     let mapa = map.analysis.find((ma) => ma.mapSet === cs && ma.diff === ds);
-    if (!mapa.text.length > 0) $('#output-diff').text('No issue(s) found.');
     $('#output-diff').html(mapa.text.join('<br>'));
+    if (!mapa.text.length > 0) {
+        $('#output-diff').html('No issue(s) found.');
+    }
 }
