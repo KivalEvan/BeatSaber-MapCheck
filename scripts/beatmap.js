@@ -217,7 +217,9 @@ function loadDifficulty(diffFile, str) {
 }
 
 async function analyseMap() {
-    map.analysis.sps.sort();
+    map.analysis.sps.sort(function (a, b) {
+        return a - b;
+    });
     const arrText = [];
     if (flag.noAudio) {
         arrText.push(
@@ -283,13 +285,14 @@ function getSPSMinPercDrop() {
     return spsPerc;
 }
 function getSPSTotalPercDrop() {
-    let spsPerc = Number.MAX_SAFE_INTEGER;
-    let highest = null;
-    let lowest = null;
+    let highest = 0;
+    let lowest = Number.MAX_SAFE_INTEGER;
     map.analysis.sps.forEach((sps) => {
-        if (spsCurr > 0 && sps > 0) {
-            spsPerc = Math.min(spsPerc, (1 - spsCurr / sps) * 100);
+        if (sps > 0) {
+            highest = Math.max(highest, sps);
+            lowest = Math.min(lowest, sps);
         }
+        spsCurr = sps > 0 ? sps : spsCurr;
     });
     return highest || (highest && lowest) ? (1 - lowest / highest) * 100 : 0;
 }
