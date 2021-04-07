@@ -107,10 +107,9 @@ const map = {
         min: null,
         max: null,
     },
-    stats: [],
-    analysis: [],
+    analysis: { sps: [], missing: {}, diff: [] },
     audio: {
-        dur: 0,
+        duration: 0,
     },
 };
 

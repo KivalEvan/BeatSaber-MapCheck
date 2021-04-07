@@ -86,7 +86,6 @@ header {
 #input-container {
     position: relative;
     height: 100%;
-    background-color: #fff;
     transition: background-color ease 0.25s;
 }
 #input-url {

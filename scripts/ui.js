@@ -211,8 +211,9 @@ function mapReset() {
     map.set = null;
     map.bpm.min = null;
     map.bpm.max = null;
-    map.stats = [];
-    map.analysis = [];
+    map.analysis.sps = [];
+    map.analysis.missing = {};
+    map.analysis.diff = [];
     flag.map.load.audio = false;
     flag.map.bpm.change = false;
     flag.map.bpm.odd = false;
@@ -259,11 +260,11 @@ $('#slowslider').click(UIToolCheckbox);
 $('#slowslider-min').change(function () {
     tool.minSliderSpeed = round(Math.abs(parseFloat(this.value)) / 1000, 3) || 0;
     $('#slowslider-min').val(round(tool.minSliderSpeed * 1000, 3));
-    if (flag.loaded) $('#slowslider-min-prec').val(round(1 / toBeatTime(tool.minSliderSpeed), 3));
+    if (flag.loaded) $('#slowslider-min-prec').val(round(1 / toBeatTime(tool.minSliderSpeed), 2));
 });
 $('#slowslider-min-prec').change(function () {
     if (flag.loaded) {
-        let val = round(Math.abs(parseFloat(this.value)), 3) || 1;
+        let val = round(Math.abs(parseFloat(this.value)), 2) || 1;
         tool.minSliderSpeed = round(toRealTime(1 / val), 3);
         $('#slowslider-min').val(round(tool.minSliderSpeed * 1000, 3));
         $('#slowslider-min-prec').val(val);
@@ -277,11 +278,11 @@ $('#shrangle').click(UIToolCheckbox);
 $('#shrangle-max').change(function () {
     tool.maxShrAngle = round(Math.abs(parseFloat(this.value)) / 1000, 3) || 0;
     $('#shrangle-max').val(round(tool.maxShrAngle * 1000, 3));
-    if (flag.loaded) $('#shrangle-max-prec').val(round(toBeatTime(tool.maxShrAngle), 3));
+    if (flag.loaded) $('#shrangle-max-prec').val(round(toBeatTime(tool.maxShrAngle), 2));
 });
 $('#shrangle-max-prec').change(function () {
     if (flag.loaded) {
-        let val = round(Math.abs(parseFloat(this.value)), 3) || 1;
+        let val = round(Math.abs(parseFloat(this.value)), 2) || 1;
         tool.maxShrAngle = round(toRealTime(1 / val), 3);
         $('#shrangle-max').val(round(tool.maxShrAngle * 1000, 3));
         $('#shrangle-max-prec').val(val);
@@ -295,11 +296,11 @@ $('#speedpause').click(UIToolCheckbox);
 $('#speedpause-max').change(function () {
     tool.maxSpeedPause = round(Math.abs(parseFloat(this.value)) / 1000, 3) || 0;
     $('#speedpause-max').val(round(tool.maxSpeedPause * 1000, 3));
-    if (flag.loaded) $('#speedpause-max-prec').val(round(toBeatTime(tool.maxSpeedPause), 3));
+    if (flag.loaded) $('#speedpause-max-prec').val(round(toBeatTime(tool.maxSpeedPause), 2));
 });
 $('#speedpause-max-prec').change(function () {
     if (flag.loaded) {
-        let val = round(Math.abs(parseFloat(this.value)), 3) || 1;
+        let val = round(Math.abs(parseFloat(this.value)), 2) || 1;
         tool.maxSpeedPause = round(toRealTime(1 / val), 3);
         $('#speedpause-max').val(round(tool.maxSpeedPause * 1000, 3));
         $('#speedpause-max-prec').val(val);
@@ -394,13 +395,15 @@ $('#apply-this').click(async function () {
     mapObj.text = await analyseDifficulty(tool.select.char, diff);
 
     const arr = [mapObj]; // this is dumb
-    map.analysis = map.analysis.map((ma) => arr.find((obj) => obj.mapSet === ma.mapSet && obj.diff === ma.diff) || ma);
+    map.analysis.diff = map.analysis.diff.map(
+        (ma) => arr.find((obj) => obj.mapSet === ma.mapSet && obj.diff === ma.diff) || ma
+    );
     UIOutputDisplay(tool.select.char, tool.select.diff);
     UILoadingStatus('', `Re-analysed ${tool.select.char} ${tool.select.diff}`);
 });
 $('#apply-all').click(async function () {
     UILoadingStatus('', `Re-analysing all difficulties`);
-    map.analysis = [];
+    map.analysis.diff = [];
     for (let i = 0, len = map.set.length; i < len; i++) {
         let mapDiff = map.set[i]._difficultyBeatmaps;
         for (let j = mapDiff.length - 1; j >= 0; j--) {
@@ -410,7 +413,7 @@ $('#apply-all').click(async function () {
             };
             mapObj.diff = diff._difficulty;
             mapObj.text = await analyseDifficulty(map.set[i]._beatmapCharacteristicName, diff);
-            map.analysis.push(mapObj);
+            map.analysis.diff.push(mapObj);
         }
     }
     UIOutputDisplay(tool.select.char, tool.select.diff);
@@ -624,6 +627,7 @@ async function UICreateDiffInfo(charName, diff) {
     };
     const notes = getNoteCount(diff._data._notes);
     const events = getEventCount(diff._data._events);
+    let chromaW = countChromaObstacle(diff._data._obstacles);
     const sliderSpeed = {
         min: getMinSliderSpeed(diff._data._notes),
         max: getMaxSliderSpeed(diff._data._notes),
@@ -632,7 +636,12 @@ async function UICreateDiffInfo(charName, diff) {
         sliderSpeed.max = 0;
     }
     const sps = swingPerSecondInfo(diff._data);
-
+    if (charName === 'Standard') {
+        map.analysis.sps.push(sps.total.overall);
+    }
+    if (!hasChroma && (chromaW || notes.chromaN || notes.chromaB || events.chroma)) {
+        map.analysis.missing.chroma = true;
+    }
     // general map stuff
     const textMap = [];
     let tableNJS = $('<table>');
@@ -774,7 +783,6 @@ async function UICreateDiffInfo(charName, diff) {
     if (crouchObstacle.length > 0) {
         $('<tr>').append(`<th>Crouch</th><td>${crouchObstacle.length}</td>`).appendTo(tableObstacle);
     }
-    let chromaW = countChromaObstacle(diff._data._obstacles);
     if (chromaW > 0) {
         $('<tr>')
             .append(`<th>Chroma${hasChroma ? '' : '<br>⚠️ not suggested'}</th><td>${chromaW}</td>`)
@@ -915,7 +923,7 @@ async function UICreateDiffInfo(charName, diff) {
 }
 
 function UIOutputDisplay(cs, ds) {
-    let mapa = map.analysis.find((ma) => ma.mapSet === cs && ma.diff === ds);
+    let mapa = map.analysis.diff.find((ma) => ma.mapSet === cs && ma.diff === ds);
     $('#output-diff').html(mapa.text.join('<br>'));
     if (!mapa.text.length > 0) {
         $('#output-diff').html('No issue(s) found.');

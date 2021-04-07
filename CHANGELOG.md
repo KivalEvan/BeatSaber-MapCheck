@@ -4,7 +4,7 @@
 
 ### Added
 
--   Drag & drop function
+-   File drag & drop function
 -   Reset button
 -   Map error output
 -   Slow slider check
