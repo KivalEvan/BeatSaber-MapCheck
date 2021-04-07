@@ -6,6 +6,7 @@ const version = 'v1.5.0';
 
 const flag = {
     noAudio: false,
+    noStats: false,
     loading: false,
     loaded: false,
     map: {

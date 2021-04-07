@@ -48,6 +48,11 @@ if ($.urlParam('url') !== null) {
 if ($.urlParam('noaudio') !== null) {
     flag.noAudio = $.urlParam('noaudio') === 'true' ? true : false;
 }
+if ($.urlParam('nostats') !== null) {
+    flag.noStats = $.urlParam('nostats') === 'true' ? true : false;
+    $('#stats').css({ display: 'none' });
+    $('.accordion').trigger('click');
+}
 
 function toMMSS(num) {
     if (!num) {

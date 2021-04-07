@@ -195,7 +195,7 @@ async function extractZip(data) {
 function mapReset() {
     $('#mapset').empty();
     $('#mapdiff').empty();
-    $('.stats').empty();
+    $('#stats').empty();
     $('#output-diff').html('No output.');
     $('#output-map').html('No output.');
     $('#map-link').text('').attr('href', '').css('display', 'none');
@@ -873,8 +873,7 @@ async function UICreateDiffInfo(charName, diff) {
     // set subpanel
     // map
     let diffPanelMap = $('<div>', {
-        class: 'diff-panel',
-        id: 'map',
+        class: 'diff-panel map',
     });
     $('<div>').append(tableNJS).appendTo(diffPanelMap);
     $('<br>').appendTo(diffPanelMap);
@@ -882,8 +881,7 @@ async function UICreateDiffInfo(charName, diff) {
 
     // stats
     let diffPanelStats = $('<div>', {
-        class: 'diff-panel',
-        id: 'stats',
+        class: 'diff-panel stats',
     });
     $('<div>').append(tableNPS).appendTo(diffPanelStats);
     $('<br>').appendTo(diffPanelStats);
@@ -891,8 +889,7 @@ async function UICreateDiffInfo(charName, diff) {
 
     // object
     let diffPanelObject = $('<div>', {
-        class: 'diff-panel',
-        id: 'objects',
+        class: 'diff-panel objects',
     });
     $('<div>').append(tableNote).appendTo(diffPanelObject);
     $('<br>').appendTo(diffPanelObject);
@@ -902,16 +899,14 @@ async function UICreateDiffInfo(charName, diff) {
 
     // event
     let diffPanelEvent = $('<div>', {
-        class: 'diff-panel',
-        id: 'events',
+        class: 'diff-panel events',
         html: textEvent.join('<br>'),
     });
     $('<div>').append(tableLighting).appendTo(diffPanelEvent);
 
     // merge all panel into container
     let diffContainer = $('<div>', {
-        class: 'diff-container',
-        id: diff._difficulty,
+        class: `diff-container ${diff._difficulty}`,
     });
     diffContainer.append(diffHeader);
     diffContainer.append(diffPanelMap);
