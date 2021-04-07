@@ -3,7 +3,6 @@
     --site-width-min: 56em;
     --header-height: 12em;
 }
-
 body {
     display: block;
     margin: 0 auto;
@@ -61,6 +60,7 @@ header {
 }
 .metadata {
     display: none;
+    max-height: var(--header-height);
     overflow: auto;
     padding: 0 0.75em;
 }
@@ -211,7 +211,10 @@ header {
 }
 #output-container {
     width: 50%;
+    max-height: 100%;
     padding: 8px;
+    overflow: auto;
+    object-fit: contain;
 }
 .output-box {
     padding: 0.5em;
@@ -221,12 +224,12 @@ header {
     overflow: auto;
 }
 .output-box#output-diff {
-    height: 60%;
-    max-height: 60%;
+    height: 16em;
+    max-height: 16em;
 }
 .output-box#output-map {
-    height: 20%;
-    max-height: 20%;
+    height: 8em;
+    max-height: 6em;
 }
 .stats {
     background-color: white;

@@ -5,30 +5,26 @@
 
 // smort
 function getNoteCount(notes) {
-    let nr = 0;
-    let nb = 0;
-    let b = 0;
-    let cn = 0;
-    let cb = 0;
+    const noteCount = { red: 0, blue: 0, bomb: 0, chromaN: 0, chromaB: 0 };
     for (let i = notes.length - 1; i >= 0; i--) {
         if (notes[i]._type === 0) {
-            nr++;
+            noteCount.red++;
             if (notes[i]._type._customData?._color) {
-                cn++;
+                noteCount.chromaN++;
             }
         } else if (notes[i]._type === 1) {
-            nb++;
+            noteCount.blue++;
             if (notes[i]._type._customData?._color) {
-                cn++;
+                noteCount.chromaN++;
             }
         } else if (notes[i]._type === 3) {
-            b++;
+            noteCount.bomb++;
             if (notes[i]._type._customData?._color) {
-                cb++;
+                noteCount.chromaB++;
             }
         }
     }
-    return { red: nr, blue: nb, bomb: b, chromaN: cn, chromaB: cb };
+    return noteCount;
 }
 function countNoteLayer(notes, l) {
     let count = 0;
@@ -174,25 +170,19 @@ function getMinSliderSpeed(notes) {
         const note = notes[i];
         if (note._type === 0) {
             if (lastRed) {
-                if (swingNext(note, lastRed)) {
-                    lastRed = note;
-                } else if (swingWindow(note, lastRed)) {
-                    speedR = Math.max(speedR, toRealTime(note._time - lastRed._time) / 2);
-                } else {
-                    speedR = Math.max(speedR, toRealTime(note._time - lastRed._time));
+                if (!swingNext(note, lastRed)) {
+                    speedR = Math.max(speedR, toRealTime(note._time - lastRed._time) / (swingWindow(note, lastRed) ? 2 : 1));
                 }
+                lastRed = note;
             } else {
                 lastRed = note;
             }
         } else if (note._type === 1) {
             if (lastBlue) {
-                if (swingNext(note, lastBlue)) {
-                    lastBlue = note;
-                } else if (swingWindow(note, lastBlue)) {
-                    speedB = Math.max(speedB, toRealTime(note._time - lastBlue._time) / 2);
-                } else {
-                    speedB = Math.max(speedB, toRealTime(note._time - lastBlue._time));
+                if (!swingNext(note, lastBlue)) {
+                    speedB = Math.max(speedB, toRealTime(note._time - lastBlue._time) / (swingWindow(note, lastBlue) ? 2 : 1));
                 }
+                lastBlue = note;
             } else {
                 lastBlue = note;
             }
@@ -209,29 +199,19 @@ function getMaxSliderSpeed(notes) {
         const note = notes[i];
         if (note._type === 0) {
             if (lastRed) {
-                if (swingNext(note, lastRed)) {
-                    lastRed = note;
-                } else if (toRealTime(note._time - lastRed._time) > 0.001) {
-                    if (swingWindow(note, lastRed)) {
-                        speedR = Math.min(speedR, toRealTime(note._time - lastRed._time) / 2);
-                    } else {
-                        speedR = Math.min(speedR, toRealTime(note._time - lastRed._time));
-                    }
+                if (!swingNext(note, lastRed) && toRealTime(note._time - lastRed._time) > 0.001) {
+                    speedR = Math.min(speedR, toRealTime(note._time - lastRed._time) / (swingWindow(note, lastRed) ? 2 : 1));
                 }
+                lastRed = note;
             } else {
                 lastRed = note;
             }
         } else if (note._type === 1) {
             if (lastBlue) {
-                if (swingNext(note, lastBlue)) {
-                    lastBlue = note;
-                } else if (toRealTime(note._time - lastBlue._time) > 0.001) {
-                    if (swingWindow(note, lastBlue)) {
-                        speedB = Math.min(speedB, toRealTime(note._time - lastBlue._time) / 2);
-                    } else {
-                        speedB = Math.min(speedB, toRealTime(note._time - lastBlue._time));
-                    }
+                if (!swingNext(note, lastBlue) && toRealTime(note._time - lastBlue._time) > 0.001) {
+                    speedB = Math.min(speedB, toRealTime(note._time - lastBlue._time) / (swingWindow(note, lastBlue) ? 2 : 1));
                 }
+                lastBlue = note;
             } else {
                 lastBlue = note;
             }
@@ -855,6 +835,8 @@ function detectSlowSlider(diff, mapSettings) {
     const arr = [];
     let speedR = 0;
     let speedB = 0;
+    let lastRedTime;
+    let lastBlueTime;
     let lastRed;
     let lastBlue;
     for (let i = 0, len = notes.length; i < len; i++) {
@@ -863,30 +845,29 @@ function detectSlowSlider(diff, mapSettings) {
             if (lastRed) {
                 if (swingNext(note, lastRed)) {
                     speedR = 0;
-                    lastRed = note;
-                } else if (swingWindow(note, lastRed)) {
-                    speedR = Math.max(speedR, toRealTime(note._time - lastRed._time) / 2);
+                    lastRedTime = note._time;
                 } else {
-                    speedR = Math.max(speedR, toRealTime(note._time - lastRed._time));
+                    speedR = Math.max(speedR, toRealTime(note._time - lastRed._time) / (swingWindow(note, lastRed) ? 2 : 1));
                 }
+                lastRed = note;
                 if (speedR > tool.minSliderSpeed) {
-                    arr.push(adjustTime(lastRed._time, bpm, offset, bpmc));
+                    arr.push(adjustTime(lastRedTime, bpm, offset, bpmc));
                 }
             } else {
                 lastRed = note;
             }
-        } else if (note._type === 1) {
+        }
+        if (note._type === 1) {
             if (lastBlue) {
                 if (swingNext(note, lastBlue)) {
                     speedB = 0;
-                    lastBlue = note;
-                } else if (swingWindow(note, lastBlue)) {
-                    speedB = Math.max(speedB, toRealTime(note._time - lastBlue._time) / 2);
+                    lastBlueTime = note._time;
                 } else {
-                    speedB = Math.max(speedB, toRealTime(note._time - lastBlue._time));
+                    speedB = Math.max(speedB, toRealTime(note._time - lastBlue._time) / (swingWindow(note, lastBlue) ? 2 : 1));
                 }
+                lastBlue = note;
                 if (speedB > tool.minSliderSpeed) {
-                    arr.push(adjustTime(lastBlue._time, bpm, offset, bpmc));
+                    arr.push(adjustTime(lastBlueTime, bpm, offset, bpmc));
                 }
             } else {
                 lastBlue = note;

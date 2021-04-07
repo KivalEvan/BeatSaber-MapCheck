@@ -51,19 +51,19 @@ const tool = {
         diff: {
             Easy: {
                 min: 0.025,
-                max: 1.5,
+                max: 1.2,
             },
             Normal: {
                 min: 0.05,
-                max: 1.2,
+                max: 1,
             },
             Hard: {
                 min: 0.08,
-                max: 1,
+                max: 0.75,
             },
             Expert: {
                 min: 0.1,
-                max: 0.75,
+                max: 0.625,
             },
             ExpertPlus: {
                 min: 0.1,

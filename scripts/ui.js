@@ -391,7 +391,7 @@ $('#apply-this').click(async function () {
         mapSet: tool.select.char,
     };
     mapObj.diff = tool.select.diff;
-    mapObj.text = await mapTool(tool.select.char, diff);
+    mapObj.text = await analyseDifficulty(tool.select.char, diff);
 
     const arr = [mapObj]; // this is dumb
     map.analysis = map.analysis.map((ma) => arr.find((obj) => obj.mapSet === ma.mapSet && obj.diff === ma.diff) || ma);
@@ -409,7 +409,7 @@ $('#apply-all').click(async function () {
                 mapSet: map.set[i]._beatmapCharacteristicName,
             };
             mapObj.diff = diff._difficulty;
-            mapObj.text = await mapTool(map.set[i]._beatmapCharacteristicName, diff);
+            mapObj.text = await analyseDifficulty(map.set[i]._beatmapCharacteristicName, diff);
             map.analysis.push(mapObj);
         }
     }

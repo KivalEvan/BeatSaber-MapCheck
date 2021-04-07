@@ -110,7 +110,7 @@ async function loadMap(mapZip) {
                     mapSet: map.set[i]._beatmapCharacteristicName,
                 };
                 mapObj.diff = diff._difficulty;
-                mapObj.text = await mapTool(map.set[i]._beatmapCharacteristicName, diff);
+                mapObj.text = await analyseDifficulty(map.set[i]._beatmapCharacteristicName, diff);
                 map.analysis.push(mapObj);
             }
         }
@@ -211,7 +211,9 @@ function loadDifficulty(diffFile, str) {
     return diff;
 }
 
-async function mapTool(charName, diff) {
+async function analyseMap() {}
+
+async function analyseDifficulty(charName, diff) {
     console.log(`analysing ${charName} ${diff._difficulty}`);
     let diffLabel = null;
     let offset = 0;
@@ -260,7 +262,7 @@ async function mapTool(charName, diff) {
     if (startTime < 1.5) {
         arr.push(printHTMLBold('Hot start', `${round(startTime, 2)}s`));
     }
-    if (countEventLight10(diff._data._events) < 10) {
+    if (countEventLightLess(diff._data._events) < 10) {
         arr.push(printHTMLBold('Lack of lighting events', '(<=10 events)'));
     }
     arr.push(printHTMLBold(`>${tool.ebpm.th}EBPM warning []`, getEffectiveBPMTime(diff._data, mapSettings)));
