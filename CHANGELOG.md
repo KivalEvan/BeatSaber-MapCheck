@@ -10,7 +10,8 @@
 -   Slow slider check
 -   Time & difficulty specific vision block
 -   No audio option (disable audio loading to speed up process)
--   No stats option (hide stats and automatically opens up tools)
+-   No stats option (hide stats)
+-   Tools option (automatically open tools on startup)
 -   Link to my website on watermark
 
 ### Changed

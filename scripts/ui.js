@@ -203,6 +203,7 @@ function mapReset() {
     $('#input-container').css('display', 'block');
     $('#input-file').css('display', 'none');
     $('.metadata').css('display', 'none');
+    $('#coverimg').attr('src', './assets/unknown.jpg');
     UILoadingStatus('info', 'No map loaded', 0);
     flag.loading = false;
     flag.loaded = false;
@@ -214,7 +215,9 @@ function mapReset() {
     map.analysis.sps = [];
     map.analysis.missing = {};
     map.analysis.diff = [];
+    map.audio.duration = 0;
     flag.map.load.audio = false;
+    flag.map.load.image = false;
     flag.map.bpm.change = false;
     flag.map.bpm.odd = false;
 }

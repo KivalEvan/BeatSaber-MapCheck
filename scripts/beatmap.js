@@ -227,6 +227,9 @@ async function analyseMap() {
     if (!flag.map.load.image) {
         arrText.push(printHTMLBold('No cover image', 'Could not be loaded or not found'));
     }
+    if (map.info._previewStartTime === 12 && map.info._previewDuration === 10) {
+        arrText.push(printHTMLBold('Default preview time', "please set them where you want audience's 1st impression"));
+    }
     if (map.analysis.missing?.chroma) {
         arrText.push(printHTMLBold('Missing suggestion', 'Chroma'));
     }
@@ -234,7 +237,8 @@ async function analyseMap() {
         if (
             flag.map.load.audio &&
             map.audio.duration < 240 &&
-            Math.min(map.analysis.sps) > (map.audio.duration < 120 ? 3.2 : 4.2)
+            Math.min(map.analysis.sps) > (map.audio.duration < 120 ? 3.2 : 4.2) &&
+            getSPSTotalPercDrop() < 60
         ) {
             console.log(map.analysis.sps);
             arrText.push(
@@ -244,10 +248,10 @@ async function analyseMap() {
                 )
             );
         }
-        if (getSPSMaxPercDrop() > 40) {
+        if (getSPSMaxPercDrop() > 40 && map.audio.duration < 240) {
             arrText.push(printHTMLBold('Violates progression criteria', `SPS has exceeded 40% drop`));
         }
-        if (getSPSMinPercDrop() < 10) {
+        if (getSPSMinPercDrop() < 10 && map.audio.duration < 240) {
             arrText.push(printHTMLBold('Violates progression criteria', `SPS has less than 10% drop`));
         }
     }
@@ -277,6 +281,17 @@ function getSPSMinPercDrop() {
         spsCurr = sps > 0 ? sps : spsCurr;
     });
     return spsPerc;
+}
+function getSPSTotalPercDrop() {
+    let spsPerc = Number.MAX_SAFE_INTEGER;
+    let highest = null;
+    let lowest = null;
+    map.analysis.sps.forEach((sps) => {
+        if (spsCurr > 0 && sps > 0) {
+            spsPerc = Math.min(spsPerc, (1 - spsCurr / sps) * 100);
+        }
+    });
+    return highest || (highest && lowest) ? (1 - lowest / highest) * 100 : 0;
 }
 async function analyseDifficulty(charName, diff) {
     console.log(`analysing ${charName} ${diff._difficulty}`);

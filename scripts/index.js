@@ -51,7 +51,12 @@ if ($.urlParam('noaudio') !== null) {
 if ($.urlParam('nostats') !== null) {
     flag.noStats = $.urlParam('nostats') === 'true' ? true : false;
     $('#stats').css({ display: 'none' });
-    $('.accordion').trigger('click');
+}
+if ($.urlParam('tools') !== null) {
+    flag.noStats = $.urlParam('tools') === 'true' ? true : false;
+    setTimeout(function () {
+        $('.accordion').trigger('click');
+    }, 100);
 }
 
 function toMMSS(num) {
