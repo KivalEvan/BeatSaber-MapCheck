@@ -28,6 +28,7 @@ async function loadMap(mapZip) {
         if (imageFile) {
             let imgBase64 = await imageFile.async('base64');
             $('#coverimg').attr('src', 'data:image;base64,' + imgBase64);
+            flag.map.load.image = true;
         } else {
             console.error(`${map.info._coverImageFilename} does not exists.`);
         }
@@ -36,7 +37,7 @@ async function loadMap(mapZip) {
         UILoadingStatus('info', 'Loading audio...', 20.875);
         console.log('loading audio');
         let audioFile = mapZip.file(map.info._songFilename);
-        if (audioFile) {
+        if (!flag.noAudio && audioFile) {
             let audioBuffer = await audioFile.async('arraybuffer');
             let audioContext = new AudioContext();
             await audioContext
@@ -101,7 +102,11 @@ async function loadMap(mapZip) {
             }
         }
 
-        UILoadingStatus('info', 'Analysing map difficulty...', 90);
+        UILoadingStatus('info', 'Analysing map...', 85);
+        console.log('analysing map');
+        analyseMap();
+
+        UILoadingStatus('info', 'Analysing difficulty...', 90);
         for (let i = 0, len = map.set.length; i < len; i++) {
             let mapDiff = map.set[i]._difficultyBeatmaps;
             for (let j = mapDiff.length - 1; j >= 0; j--) {
@@ -110,14 +115,15 @@ async function loadMap(mapZip) {
                     mapSet: map.set[i]._beatmapCharacteristicName,
                 };
                 mapObj.diff = diff._difficulty;
-                mapObj.text = await mapTool(map.set[i]._beatmapCharacteristicName, diff);
-                map.analysis.push(mapObj);
+                mapObj.text = await analyseDifficulty(map.set[i]._beatmapCharacteristicName, diff);
+                map.analysis.diff.push(mapObj);
             }
         }
         UIOutputDisplay(tool.select.char, tool.select.diff);
 
-        $('#shrangle-max-beat').val(round(toBeatTime(tool.maxShrAngle), 3));
-        $('#speedpause-max-beat').val(round(toBeatTime(tool.maxSpeedPause), 3));
+        $('#slowslider-min-prec').val(round(1 / toBeatTime(tool.minSliderSpeed), 2));
+        $('#shrangle-max-prec').val(round(1 / toBeatTime(tool.maxShrAngle), 2));
+        $('#speedpause-max-prec').val(round(1 / toBeatTime(tool.maxSpeedPause), 2));
         $('#vb-min-beat').val(round(toBeatTime(tool.vb.min), 3));
         $('#vb-max-beat').val(round(toBeatTime(tool.vb.max), 3));
         $('#apply-this').prop('disabled', false);
@@ -210,7 +216,87 @@ function loadDifficulty(diffFile, str) {
     return diff;
 }
 
-async function mapTool(charName, diff) {
+async function analyseMap() {
+    map.analysis.sps.sort(function (a, b) {
+        return a - b;
+    });
+    const arrText = [];
+    if (flag.noAudio) {
+        arrText.push(
+            printHTMLBold('No audio loaded', flag.noAudio ? 'No audio mode is enabled' : 'Could not be loaded or not found')
+        );
+    }
+    if (!flag.map.load.image) {
+        arrText.push(printHTMLBold('No cover image', 'Could not be loaded or not found'));
+    }
+    if (map.info._previewStartTime === 12 && map.info._previewDuration === 10) {
+        arrText.push(printHTMLBold('Default preview time', "please set them where you want audience's 1st impression"));
+    }
+    if (map.analysis.missing?.chroma) {
+        arrText.push(printHTMLBold('Missing suggestion', 'Chroma'));
+    }
+    if (map.analysis.sps.length > 0) {
+        if (
+            flag.map.load.audio &&
+            map.audio.duration < 240 &&
+            map.analysis.sps[0] > (map.audio.duration < 120 ? 3.2 : 4.2) &&
+            getSPSTotalPercDrop() < 60
+        ) {
+            console.log(map.analysis.sps);
+            arrText.push(
+                printHTMLBold(
+                    `Minimum SPS not met (<${map.audio.duration < 120 ? '3.2' : '4.2'})`,
+                    `lowest is ${map.analysis.sps[0]}`
+                )
+            );
+        }
+        if (getSPSMaxPercDrop() > 40 && map.audio.duration < 240) {
+            arrText.push(printHTMLBold('Violates progression criteria', `SPS has exceeded 40% drop`));
+        }
+        if (getSPSMinPercDrop() < 10 && map.audio.duration < 240) {
+            arrText.push(printHTMLBold('Violates progression criteria', `SPS has less than 10% drop`));
+        }
+    }
+    $('#output-map').html(arrText.join('<br>'));
+    if (!arrText.length > 0) {
+        $('#output-map').html('No issue(s) found.');
+    }
+}
+function getSPSMaxPercDrop() {
+    let spsPerc = 0;
+    let spsCurr = 0;
+    map.analysis.sps.forEach((sps) => {
+        if (spsCurr > 0 && sps > 0) {
+            spsPerc = Math.max(spsPerc, (1 - spsCurr / sps) * 100);
+        }
+        spsCurr = sps > 0 ? sps : spsCurr;
+    });
+    return spsPerc;
+}
+function getSPSMinPercDrop() {
+    let spsPerc = Number.MAX_SAFE_INTEGER;
+    let spsCurr = 0;
+    map.analysis.sps.forEach((sps) => {
+        if (spsCurr > 0 && sps > 0) {
+            spsPerc = Math.min(spsPerc, (1 - spsCurr / sps) * 100);
+        }
+        spsCurr = sps > 0 ? sps : spsCurr;
+    });
+    return spsPerc;
+}
+function getSPSTotalPercDrop() {
+    let highest = 0;
+    let lowest = Number.MAX_SAFE_INTEGER;
+    map.analysis.sps.forEach((sps) => {
+        if (sps > 0) {
+            highest = Math.max(highest, sps);
+            lowest = Math.min(lowest, sps);
+        }
+        spsCurr = sps > 0 ? sps : spsCurr;
+    });
+    return highest || (highest && lowest) ? (1 - lowest / highest) * 100 : 0;
+}
+async function analyseDifficulty(charName, diff) {
     console.log(`analysing ${charName} ${diff._difficulty}`);
     let diffLabel = null;
     let offset = 0;
@@ -232,20 +318,23 @@ async function mapTool(charName, diff) {
     }
     const startTime = getFirstInteractiveTime(diff._data, map.info._beatsPerMinute);
     const mapSettings = {
+        charName: charName,
+        diffName: diff._difficulty,
         bpm: map.info._beatsPerMinute,
         bpmc: getBPMChangesTime(map.info._beatsPerMinute, offset, BPMChanges),
         offset: offset,
-        njs: diff._noteJumpMovementSpeed,
+        njs: diff._noteJumpMovementSpeed || fallbackNJS[diff._difficulty],
         njsOffset: diff._noteJumpStartBeatOffset,
     };
+    mapSettings.hjd = getHalfJumpDuration(mapSettings);
 
-    const arr = [];
+    const arrText = [];
     if (diffLabel !== null) {
         let status = checkLabelLength(charName, diffLabel);
         if (status === 'error') {
-            arr.push(printHTMLBold('Difficulty label too long', 'exceeded in-game display support'));
+            arrText.push(printHTMLBold('Difficulty label too long', 'exceeded in-game display support'));
         } else if (status === 'warn') {
-            arr.push(
+            arrText.push(
                 printHTMLBold(
                     'Difficulty label possibly too long',
                     'may exceed in-game display support, check in-game to be sure'
@@ -254,53 +343,66 @@ async function mapTool(charName, diff) {
         }
     }
     if (startTime < 1.5) {
-        arr.push(printHTMLBold('Hot start', `${round(startTime, 2)}s`));
+        arrText.push(printHTMLBold('Hot start', `${round(startTime, 2)}s`));
     }
-    if (countEventLight10(diff._data._events) < 10) {
-        arr.push(printHTMLBold('Lack of lighting events', '(<=10 events)'));
+    if (countEventLightLess(diff._data._events) < 10) {
+        arrText.push(printHTMLBold('Lack of lighting events', '(<=10 events)'));
     }
-    arr.push(printHTMLBold(`>${tool.ebpm.th}EBPM warning []`, getEffectiveBPMTime(diff._data, mapSettings)));
-    arr.push(printHTMLBold(`>${tool.ebpm.thSwing}EBPM (swing) warning []`, getEffectiveBPMSwingTime(diff._data, mapSettings)));
+    if (diff._noteJumpMovementSpeed === 0) {
+        arrText.push(printHTMLBold('Unset NJS', 'fallback NJS is used'));
+    }
+    if (getHalfJumpDurationNoOffset(mapSettings) + mapSettings.njsOffset < mapSettings.hjd) {
+        arrText.push(printHTMLBold('Unnecessary negative NJS offset', 'HJD could not go below 1'));
+    }
+    arrText.push(printHTMLBold(`>${tool.ebpm.th}EBPM warning []`, getEffectiveBPMTime(diff._data, mapSettings)));
+    arrText.push(
+        printHTMLBold(`>${tool.ebpm.thSwing}EBPM (swing) warning []`, getEffectiveBPMSwingTime(diff._data, mapSettings))
+    );
 
-    arr.push(printHTMLBold('Note(s) before start time', findOutStartNote(diff._data, mapSettings)));
-    arr.push(printHTMLBold('Obstacle(s) before start time', findOutStartObstacle(diff._data, mapSettings)));
-    arr.push(printHTMLBold('Event(s) before start time', findOutStartEvent(diff._data, mapSettings)));
+    arrText.push(printHTMLBold('Note(s) before start time', findOutStartNote(diff._data, mapSettings)));
+    arrText.push(printHTMLBold('Obstacle(s) before start time', findOutStartObstacle(diff._data, mapSettings)));
+    arrText.push(printHTMLBold('Event(s) before start time', findOutStartEvent(diff._data, mapSettings)));
     if (flag.map.load.audio) {
-        arr.push(printHTMLBold('Note(s) after end time', findOutEndNote(diff._data, mapSettings)));
-        arr.push(printHTMLBold('Obstacle(s) after end time', findOutEndObstacle(diff._data, mapSettings)));
-        arr.push(printHTMLBold('Event(s) after end time', findOutEndEvent(diff._data, mapSettings)));
+        arrText.push(printHTMLBold('Note(s) after end time', findOutEndNote(diff._data, mapSettings)));
+        arrText.push(printHTMLBold('Obstacle(s) after end time', findOutEndObstacle(diff._data, mapSettings)));
+        arrText.push(printHTMLBold('Event(s) after end time', findOutEndEvent(diff._data, mapSettings)));
     }
 
-    arr.push(printHTMLBold('Zero width/duration obstacle []', detectZeroObstacle(diff._data, mapSettings)));
-    arr.push(printHTMLBold('Invalid obstacle []', detectInvalidObstacle(diff._data, mapSettings)));
-    arr.push(printHTMLBold('Negative obstacle []', detectNegativeObstacle(diff._data, mapSettings)));
-    arr.push(printHTMLBold('2-center obstacle []', detectCenterObstacle(diff._data, mapSettings)));
-    arr.push(printHTMLBold('<15ms obstacle []', detectShortObstacle(diff._data, mapSettings)));
+    arrText.push(printHTMLBold('Zero width/duration obstacle []', detectZeroObstacle(diff._data, mapSettings)));
+    arrText.push(printHTMLBold('Invalid obstacle []', detectInvalidObstacle(diff._data, mapSettings)));
+    arrText.push(printHTMLBold('Negative obstacle []', detectNegativeObstacle(diff._data, mapSettings)));
+    arrText.push(printHTMLBold('2-center obstacle []', detectCenterObstacle(diff._data, mapSettings)));
+    arrText.push(printHTMLBold('<15ms obstacle []', detectShortObstacle(diff._data, mapSettings)));
     // arr.push(printHTMLBold('Crouch obstacle []', detectCrouchObstacle(diff._data, mapSettings)));
 
-    arr.push(printHTMLBold('Invalid note []', detectInvalidNote(diff._data, mapSettings)));
+    arrText.push(printHTMLBold('Invalid note []', detectInvalidNote(diff._data, mapSettings)));
     if (flag.tool.dd) {
-        arr.push(printHTMLBold('Double-directional []', detectDoubleDirectional(diff._data, mapSettings)));
+        arrText.push(printHTMLBold('Double-directional []', detectDoubleDirectional(diff._data, mapSettings)));
     }
-    if (flag.tool.vb.note) {
-        arr.push(printHTMLBold('Vision blocked []', detectVisionBlock(diff._data, mapSettings)));
+    if (flag.tool.vbNote) {
+        arrText.push(printHTMLBold('Vision blocked []', detectVisionBlock(diff._data, mapSettings)));
     }
-    arr.push(printHTMLBold('Stacked note []', detectStackedNote(diff._data, mapSettings)));
-    arr.push(printHTMLBold('Stacked bomb (<20ms) []', detectStackedBomb(diff._data, mapSettings)));
+    arrText.push(printHTMLBold('Stacked note []', detectStackedNote(diff._data, mapSettings)));
+    arrText.push(printHTMLBold('Stacked bomb (<20ms) []', detectStackedBomb(diff._data, mapSettings)));
     if (tool.beatPrec.length > 0) {
-        arr.push(printHTMLBold('Off-beat precision []', detectOffPrecision(diff._data, mapSettings)));
+        arrText.push(printHTMLBold('Off-beat precision []', detectOffPrecision(diff._data, mapSettings)));
     }
-    if (flag.tool.hb.staircase) {
-        arr.push(printHTMLBold('Hitbox staircase []', detectHitboxStaircase(diff._data, mapSettings)));
+    if (flag.tool.hbStaircase) {
+        arrText.push(printHTMLBold('Hitbox staircase []', detectHitboxStaircase(diff._data, mapSettings)));
     }
-    arr.push(printHTMLBold('Improper window snap []', detectImproperWindowSnap(diff._data, mapSettings)));
+    arrText.push(printHTMLBold('Improper window snap []', detectImproperWindowSnap(diff._data, mapSettings)));
+    if (flag.tool.slowSlider) {
+        arrText.push(
+            printHTMLBold(`Slow slider (>${tool.minSliderSpeed * 1000}ms) []`, detectSlowSlider(diff._data, mapSettings))
+        );
+    }
     if (flag.tool.shrAngle) {
-        arr.push(printHTMLBold('Shrado angle []', detectShrAngle(diff._data, mapSettings)));
+        arrText.push(printHTMLBold('Shrado angle []', detectShrAngle(diff._data, mapSettings)));
     }
     if (flag.tool.speedPause) {
-        arr.push(printHTMLBold('Speed pause []', detectSpeedPause(diff._data, mapSettings)));
+        arrText.push(printHTMLBold('Speed pause []', detectSpeedPause(diff._data, mapSettings)));
     }
-    return arr.filter(function (x) {
+    return arrText.filter(function (x) {
         return x !== '';
     });
 }

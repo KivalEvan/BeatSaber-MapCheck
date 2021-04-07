@@ -1,5 +1,30 @@
 # Changelog
 
+## v1.5.0 [2021-04-08]
+
+### Added
+
+-   File drag & drop function
+-   Reset button
+-   Map error output
+-   Slow slider check
+-   Time & difficulty specific vision block
+-   No audio option (disable audio loading to speed up process)
+-   No stats option (hide stats)
+-   Tools option (automatically open tools on startup)
+-   Link to my website on watermark
+-   Couple of other check (NJS, offset)
+
+### Changed
+
+-   UI tweak
+-   Reduced default Shrado angle max time to 150ms
+-   Couple of code refactoring and cleanup
+
+### Fixed
+
+-   Potential issue with missing slider calculation on doubles
+
 ## v1.4.5 [2021-04-05]
 
 ### Fixed

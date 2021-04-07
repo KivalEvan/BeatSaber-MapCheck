@@ -2,10 +2,39 @@
     i dunno what to describe here
     it's fairly obvious; creating, manipulating, and deleting DOM element with JQuery */
 
-$('#input-url').keydown(textInput);
-$('#input-id').keydown(textInput);
-$('#input-file').change(readFile);
+$('#input-url').keydown(textInputHandler);
+$('#input-id').keydown(textInputHandler);
+$('#input-file').change(fileInputHandler);
+$('#reset-button').click(mapReset);
 
+function dropHandler(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (event.dataTransfer.items) {
+        if (event.dataTransfer.items[0].kind === 'file') {
+            let file = event.dataTransfer.items[0].getAsFile();
+            if (file && (file.name.substr(-4) === '.zip' || file.name.substr(-4) === '.bsl')) {
+                const fr = new FileReader();
+                fr.readAsArrayBuffer(file);
+                fr.addEventListener('load', function (e) {
+                    extractZip(e.target.result);
+                });
+            } else {
+                UILoadingStatus('info', 'Unsupported file format, please enter zip file', 0);
+            }
+        }
+    }
+}
+function dragOverHandler(event) {
+    event.preventDefault();
+    event.stopPropagation();
+}
+
+function textInputHandler(event) {
+    if (event.which === 13 && this.value.toString() !== '') {
+        downloadFromID(this.value.toString());
+    }
+}
 async function downloadFromURL(input) {
     // sanitize & validate url
     let url;
@@ -34,7 +63,6 @@ async function downloadFromURL(input) {
         }, 3000);
     }
 }
-
 async function downloadFromID(input) {
     // sanitize & validate id
     let id;
@@ -65,7 +93,6 @@ async function downloadFromID(input) {
         }, 3000);
     }
 }
-
 function sanitizeURL(url) {
     // regex from stackoverflow from another source
     let regexURL = /^(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/;
@@ -79,7 +106,6 @@ function sanitizeURL(url) {
         throw new Error('Invalid URL');
     }
 }
-
 function sanitizeBeatSaverID(id) {
     let regexID = /^[0-9a-fA-F]{1,6}$/;
     id = id.trim();
@@ -92,7 +118,6 @@ function sanitizeBeatSaverID(id) {
         throw new Error('Invalid ID');
     }
 }
-
 function downloadMap(url) {
     return new Promise(function (resolve, reject) {
         let xhr = new XMLHttpRequest();
@@ -134,23 +159,15 @@ function downloadMap(url) {
     });
 }
 
-function textInput(event) {
-    if (event.which === 13) {
-        if (this.value.toString() !== '') {
-            downloadFromID(this.value.toString());
-        }
-    }
-}
-
-function readFile() {
+function fileInputHandler() {
     UILoadingStatus('info', 'Reading file input', 0);
     let file = this.files[0];
     if (file === undefined) {
         UILoadingStatus('info', 'No file input', 0);
         throw new Error('No file input');
     }
-    const fr = new FileReader();
     if (file && (file.name.substr(-4) === '.zip' || file.name.substr(-4) === '.bsl')) {
+        const fr = new FileReader();
         fr.readAsArrayBuffer(file);
         fr.addEventListener('load', function (e) {
             extractZip(e.target.result);
@@ -176,11 +193,18 @@ async function extractZip(data) {
 }
 
 function mapReset() {
+    $('#mapset').empty();
+    $('#mapdiff').empty();
+    $('#stats').empty();
+    $('#output-diff').html('No output.');
+    $('#output-map').html('No output.');
     $('#map-link').text('').attr('href', '').css('display', 'none');
     $('.input').prop('disabled', false);
     $('#input-container').css('display', 'block');
     $('#input-file').css('display', 'none');
     $('.metadata').css('display', 'none');
+    $('#coverimg').attr('src', './assets/unknown.jpg');
+    UILoadingStatus('info', 'No map loaded', 0);
     flag.loading = false;
     flag.loaded = false;
     map.id = null;
@@ -188,8 +212,12 @@ function mapReset() {
     map.set = null;
     map.bpm.min = null;
     map.bpm.max = null;
-    map.analysis = [];
+    map.analysis.sps = [];
+    map.analysis.missing = {};
+    map.analysis.diff = [];
+    map.audio.duration = 0;
     flag.map.load.audio = false;
+    flag.map.load.image = false;
     flag.map.bpm.change = false;
     flag.map.bpm.odd = false;
 }
@@ -228,79 +256,69 @@ $('#beatprec').change(function () {
 });
 
 // hitbox staircase
-$('#hb-stair').click(function () {
-    if ($(this).prop('checked')) {
-        flag.tool.hb.staircase = true;
+$('#hb-stair').click(UIToolCheckbox);
+
+// slow slider
+$('#slowslider').click(UIToolCheckbox);
+$('#slowslider-min').change(function () {
+    tool.minSliderSpeed = round(Math.abs(parseFloat(this.value)) / 1000, 3) || 0;
+    $('#slowslider-min').val(round(tool.minSliderSpeed * 1000, 3));
+    if (flag.loaded) $('#slowslider-min-prec').val(round(1 / toBeatTime(tool.minSliderSpeed), 2));
+});
+$('#slowslider-min-prec').change(function () {
+    if (flag.loaded) {
+        let val = round(Math.abs(parseFloat(this.value)), 2) || 1;
+        tool.minSliderSpeed = round(toRealTime(1 / val), 3);
+        $('#slowslider-min').val(round(tool.minSliderSpeed * 1000, 3));
+        $('#slowslider-min-prec').val(val);
     } else {
-        flag.tool.hb.staircase = false;
+        $('#slowslider-min-prec').val(0);
     }
 });
 
 // shrado angle
-$('#shrangle').click(function () {
-    if ($(this).prop('checked')) {
-        flag.tool.shrAngle = true;
-    } else {
-        flag.tool.shrAngle = false;
-    }
-});
+$('#shrangle').click(UIToolCheckbox);
 $('#shrangle-max').change(function () {
     tool.maxShrAngle = round(Math.abs(parseFloat(this.value)) / 1000, 3) || 0;
     $('#shrangle-max').val(round(tool.maxShrAngle * 1000, 3));
-    if (flag.loaded) $('#shrangle-max-beat').val(round(toBeatTime(tool.maxShrAngle), 3));
+    if (flag.loaded) $('#shrangle-max-prec').val(round(toBeatTime(tool.maxShrAngle), 2));
 });
-$('#shrangle-max-beat').change(function () {
+$('#shrangle-max-prec').change(function () {
     if (flag.loaded) {
-        let val = round(Math.abs(parseFloat(this.value)), 3) || 0;
-        tool.maxShrAngle = round(toRealTime(val), 3);
+        let val = round(Math.abs(parseFloat(this.value)), 2) || 1;
+        tool.maxShrAngle = round(toRealTime(1 / val), 3);
         $('#shrangle-max').val(round(tool.maxShrAngle * 1000, 3));
-        $('#shrangle-max-beat').val(val);
+        $('#shrangle-max-prec').val(val);
     } else {
-        $('#shrangle-max-beat').val(0);
+        $('#shrangle-max-prec').val(0);
     }
 });
 
 // speed pause
-$('#speedpause').click(function () {
-    if ($(this).prop('checked')) {
-        flag.tool.speedPause = true;
-    } else {
-        flag.tool.speedPause = false;
-    }
-});
+$('#speedpause').click(UIToolCheckbox);
 $('#speedpause-max').change(function () {
     tool.maxSpeedPause = round(Math.abs(parseFloat(this.value)) / 1000, 3) || 0;
     $('#speedpause-max').val(round(tool.maxSpeedPause * 1000, 3));
-    if (flag.loaded) $('#speedpause-max-beat').val(round(toBeatTime(tool.maxSpeedPause), 3));
+    if (flag.loaded) $('#speedpause-max-prec').val(round(toBeatTime(tool.maxSpeedPause), 2));
 });
-$('#speedpause-max-beat').change(function () {
+$('#speedpause-max-prec').change(function () {
     if (flag.loaded) {
-        let val = round(Math.abs(parseFloat(this.value)), 3) || 0;
-        tool.maxSpeedPause = round(toRealTime(val), 3);
+        let val = round(Math.abs(parseFloat(this.value)), 2) || 1;
+        tool.maxSpeedPause = round(toRealTime(1 / val), 3);
         $('#speedpause-max').val(round(tool.maxSpeedPause * 1000, 3));
-        $('#speedpause-max-beat').val(val);
+        $('#speedpause-max-prec').val(val);
     } else {
-        $('#speedpause-max-beat').val(0);
+        $('#speedpause-max-prec').val(0);
     }
 });
 
 // dd
-$('#dd').click(function () {
-    if ($(this).prop('checked')) {
-        flag.tool.dd = true;
-    } else {
-        flag.tool.dd = false;
-    }
-});
+$('#dd').click(UIToolCheckbox);
 
 // vision block
-$('#vb-note').click(function () {
-    if ($(this).prop('checked')) {
-        flag.tool.vb.note = true;
-    } else {
-        flag.tool.vb.note = false;
-    }
-});
+$('#vb-note').click(UIToolCheckbox);
+$('#vb-specific-time').click(UIToolVBSpecific);
+$('#vb-specific-diff').click(UIToolVBSpecific);
 $('#vb-min').change(function () {
     tool.vb.min = round(Math.abs(parseFloat(this.value)) / 1000, 3) || 0;
     $('#vb-min').val(round(tool.vb.min * 1000));
@@ -346,7 +364,11 @@ $('#vb-hjd').click(function () {
         let char = map.info._difficultyBeatmapSets.find((c) => c._beatmapCharacteristicName === tool.select.char);
         let diff = char._difficultyBeatmaps.find((d) => d._difficulty === tool.select.diff);
         let hjd = round(
-            getHalfJumpDuration(map.info._beatsPerMinute, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset),
+            getHalfJumpDuration(
+                map.info._beatsPerMinute,
+                diff._noteJumpMovementSpeed || fallbackNJS[diff._difficulty],
+                diff._noteJumpStartBeatOffset
+            ),
             3
         );
         tool.vb.min = round((60 / map.info._beatsPerMinute) * 0.25, 3);
@@ -377,16 +399,18 @@ $('#apply-this').click(async function () {
         mapSet: tool.select.char,
     };
     mapObj.diff = tool.select.diff;
-    mapObj.text = await mapTool(tool.select.char, diff);
+    mapObj.text = await analyseDifficulty(tool.select.char, diff);
 
     const arr = [mapObj]; // this is dumb
-    map.analysis = map.analysis.map((ma) => arr.find((obj) => obj.mapSet === ma.mapSet && obj.diff === ma.diff) || ma);
+    map.analysis.diff = map.analysis.diff.map(
+        (ma) => arr.find((obj) => obj.mapSet === ma.mapSet && obj.diff === ma.diff) || ma
+    );
     UIOutputDisplay(tool.select.char, tool.select.diff);
     UILoadingStatus('', `Re-analysed ${tool.select.char} ${tool.select.diff}`);
 });
 $('#apply-all').click(async function () {
     UILoadingStatus('', `Re-analysing all difficulties`);
-    map.analysis = [];
+    map.analysis.diff = [];
     for (let i = 0, len = map.set.length; i < len; i++) {
         let mapDiff = map.set[i]._difficultyBeatmaps;
         for (let j = mapDiff.length - 1; j >= 0; j--) {
@@ -395,8 +419,8 @@ $('#apply-all').click(async function () {
                 mapSet: map.set[i]._beatmapCharacteristicName,
             };
             mapObj.diff = diff._difficulty;
-            mapObj.text = await mapTool(map.set[i]._beatmapCharacteristicName, diff);
-            map.analysis.push(mapObj);
+            mapObj.text = await analyseDifficulty(map.set[i]._beatmapCharacteristicName, diff);
+            map.analysis.diff.push(mapObj);
         }
     }
     UIOutputDisplay(tool.select.char, tool.select.diff);
@@ -412,6 +436,14 @@ $('.accordion').click(function () {
         panel.style.maxHeight = panel.scrollHeight + 16 + 'px';
     }
 });
+
+function UIToolCheckbox() {
+    flag.tool[this.value] = this.checked;
+}
+
+function UIToolVBSpecific() {
+    flag.tool.vbSpecific = this.value;
+}
 
 function UILoadingStatus(status, text, progress = 100) {
     switch (status) {
@@ -586,18 +618,23 @@ async function UICreateDiffInfo(charName, diff) {
         }
     }
     if (diff._data._customData) {
-        if (diff._data._customData._BPMChanges) BPMChanges = diff._data._customData._BPMChanges;
-        else if (diff._data._customData._bpmChanges) BPMChanges = diff._data._customData._bpmChanges;
+        if (diff._data._customData._BPMChanges) {
+            BPMChanges = diff._data._customData._BPMChanges;
+        }
+        if (diff._data._customData._bpmChanges) {
+            BPMChanges = diff._data._customData._bpmChanges;
+        }
     }
     const mapSettings = {
         bpm: map.info._beatsPerMinute,
         bpmc: getBPMChangesTime(map.info._beatsPerMinute, offset, BPMChanges),
         offset: offset,
-        njs: diff._noteJumpMovementSpeed,
+        njs: diff._noteJumpMovementSpeed || fallbackNJS[diff._difficulty],
         njsOffset: diff._noteJumpStartBeatOffset,
     };
     const notes = getNoteCount(diff._data._notes);
     const events = getEventCount(diff._data._events);
+    let chromaW = countChromaObstacle(diff._data._obstacles);
     const sliderSpeed = {
         min: getMinSliderSpeed(diff._data._notes),
         max: getMaxSliderSpeed(diff._data._notes),
@@ -606,7 +643,12 @@ async function UICreateDiffInfo(charName, diff) {
         sliderSpeed.max = 0;
     }
     const sps = swingPerSecondInfo(diff._data);
-
+    if (charName === 'Standard') {
+        map.analysis.sps.push(sps.total.overall);
+    }
+    if (!hasChroma && (chromaW || notes.chromaN || notes.chromaB || events.chroma)) {
+        map.analysis.missing.chroma = true;
+    }
     // general map stuff
     const textMap = [];
     let tableNJS = $('<table>');
@@ -748,7 +790,6 @@ async function UICreateDiffInfo(charName, diff) {
     if (crouchObstacle.length > 0) {
         $('<tr>').append(`<th>Crouch</th><td>${crouchObstacle.length}</td>`).appendTo(tableObstacle);
     }
-    let chromaW = countChromaObstacle(diff._data._obstacles);
     if (chromaW > 0) {
         $('<tr>')
             .append(`<th>Chroma${hasChroma ? '' : '<br>⚠️ not suggested'}</th><td>${chromaW}</td>`)
@@ -839,8 +880,7 @@ async function UICreateDiffInfo(charName, diff) {
     // set subpanel
     // map
     let diffPanelMap = $('<div>', {
-        class: 'diff-panel',
-        id: 'map',
+        class: 'diff-panel map',
     });
     $('<div>').append(tableNJS).appendTo(diffPanelMap);
     $('<br>').appendTo(diffPanelMap);
@@ -848,8 +888,7 @@ async function UICreateDiffInfo(charName, diff) {
 
     // stats
     let diffPanelStats = $('<div>', {
-        class: 'diff-panel',
-        id: 'stats',
+        class: 'diff-panel stats',
     });
     $('<div>').append(tableNPS).appendTo(diffPanelStats);
     $('<br>').appendTo(diffPanelStats);
@@ -857,8 +896,7 @@ async function UICreateDiffInfo(charName, diff) {
 
     // object
     let diffPanelObject = $('<div>', {
-        class: 'diff-panel',
-        id: 'objects',
+        class: 'diff-panel objects',
     });
     $('<div>').append(tableNote).appendTo(diffPanelObject);
     $('<br>').appendTo(diffPanelObject);
@@ -868,16 +906,14 @@ async function UICreateDiffInfo(charName, diff) {
 
     // event
     let diffPanelEvent = $('<div>', {
-        class: 'diff-panel',
-        id: 'events',
+        class: 'diff-panel events',
         html: textEvent.join('<br>'),
     });
     $('<div>').append(tableLighting).appendTo(diffPanelEvent);
 
     // merge all panel into container
     let diffContainer = $('<div>', {
-        class: 'diff-container',
-        id: diff._difficulty,
+        class: `diff-container ${diff._difficulty}`,
     });
     diffContainer.append(diffHeader);
     diffContainer.append(diffPanelMap);
@@ -889,8 +925,9 @@ async function UICreateDiffInfo(charName, diff) {
 }
 
 function UIOutputDisplay(cs, ds) {
-    let mapa = map.analysis.find((ma) => ma.mapSet === cs && ma.diff === ds);
-    $('#output-box').empty();
-    if (!mapa.text.length > 0) $('#output-box').text('No issue(s) found.');
-    $('#output-box').append(mapa.text.join('<br>'));
+    let mapa = map.analysis.diff.find((ma) => ma.mapSet === cs && ma.diff === ds);
+    $('#output-diff').html(mapa.text.join('<br>'));
+    if (!mapa.text.length > 0) {
+        $('#output-diff').html('No issue(s) found.');
+    }
 }

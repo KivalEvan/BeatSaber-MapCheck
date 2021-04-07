@@ -2,9 +2,11 @@
     is it really a script if it's just holding a global variable? */
 
 const watermark = 'Kival Evan#5480';
-const version = 'v1.4.5';
+const version = 'v1.5.0';
 
 const flag = {
+    noAudio: false,
+    noStats: false,
     loading: false,
     loaded: false,
     map: {
@@ -19,12 +21,10 @@ const flag = {
     },
     tool: {
         dd: true,
-        hb: {
-            staircase: true,
-        },
-        vb: {
-            note: true,
-        },
+        slowSlider: true,
+        hbStaircase: true,
+        vbSpecific: 'diff',
+        vbNote: true,
         shrAngle: false,
         speedPause: false,
     },
@@ -49,11 +49,34 @@ const tool = {
     vb: {
         min: 0.1,
         max: 0.5,
+        diff: {
+            Easy: {
+                min: 0.025,
+                max: 1.2,
+            },
+            Normal: {
+                min: 0.05,
+                max: 1,
+            },
+            Hard: {
+                min: 0.08,
+                max: 0.75,
+            },
+            Expert: {
+                min: 0.1,
+                max: 0.625,
+            },
+            ExpertPlus: {
+                min: 0.1,
+                max: 0.5,
+            },
+        },
     },
 
     // misc
-    maxShrAngle: 0.175,
+    maxShrAngle: 0.15,
     maxSpeedPause: 0.075,
+    minSliderSpeed: 0.025,
 
     // part where no one can control... yet
     // this is way less than i expected
@@ -85,9 +108,9 @@ const map = {
         min: null,
         max: null,
     },
-    analysis: [],
+    analysis: { sps: [], missing: {}, diff: [] },
     audio: {
-        dur: 0,
+        duration: 0,
     },
 };
 
@@ -144,6 +167,14 @@ const diffColor = {
     Hard: '#ff6347',
     Normal: '#59b0f4',
     Easy: '#3cb371',
+};
+
+const fallbackNJS = {
+    ExpertPlus: 16,
+    Expert: 12,
+    Hard: 10,
+    Normal: 10,
+    Easy: 10,
 };
 
 const envName = {
