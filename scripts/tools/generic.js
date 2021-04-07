@@ -20,6 +20,20 @@ function getHalfJumpDuration(mapSettings) {
     return hjd;
 }
 
+function getHalfJumpDurationNoOffset(mapSettings) {
+    const { njs, bpm } = mapSettings;
+    const maxHalfJump = 18;
+
+    const noteJumpMovementSpeed = (njs * bpm) / bpm;
+    const num = 60 / bpm;
+    let hjd = 4;
+    while (noteJumpMovementSpeed * num * hjd > maxHalfJump) {
+        hjd /= 2;
+    }
+
+    return hjd;
+}
+
 function getJumpDistance(mapSettings) {
     const { njs, bpm } = mapSettings;
     return njs * (60 / bpm) * getHalfJumpDuration(mapSettings) * 2;

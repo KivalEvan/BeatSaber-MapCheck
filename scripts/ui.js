@@ -364,7 +364,11 @@ $('#vb-hjd').click(function () {
         let char = map.info._difficultyBeatmapSets.find((c) => c._beatmapCharacteristicName === tool.select.char);
         let diff = char._difficultyBeatmaps.find((d) => d._difficulty === tool.select.diff);
         let hjd = round(
-            getHalfJumpDuration(map.info._beatsPerMinute, diff._noteJumpMovementSpeed, diff._noteJumpStartBeatOffset),
+            getHalfJumpDuration(
+                map.info._beatsPerMinute,
+                diff._noteJumpMovementSpeed || fallbackNJS[diff._difficulty],
+                diff._noteJumpStartBeatOffset
+            ),
             3
         );
         tool.vb.min = round((60 / map.info._beatsPerMinute) * 0.25, 3);
@@ -625,7 +629,7 @@ async function UICreateDiffInfo(charName, diff) {
         bpm: map.info._beatsPerMinute,
         bpmc: getBPMChangesTime(map.info._beatsPerMinute, offset, BPMChanges),
         offset: offset,
-        njs: diff._noteJumpMovementSpeed,
+        njs: diff._noteJumpMovementSpeed || fallbackNJS[diff._difficulty],
         njsOffset: diff._noteJumpStartBeatOffset,
     };
     const notes = getNoteCount(diff._data._notes);

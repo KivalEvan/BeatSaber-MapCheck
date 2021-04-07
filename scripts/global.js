@@ -169,6 +169,14 @@ const diffColor = {
     Easy: '#3cb371',
 };
 
+const fallbackNJS = {
+    ExpertPlus: 16,
+    Expert: 12,
+    Hard: 10,
+    Normal: 10,
+    Easy: 10,
+};
+
 const envName = {
     DefaultEnvironment: 'The First',
     OriginsEnvironment: 'Origins',

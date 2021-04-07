@@ -239,14 +239,14 @@ async function analyseMap() {
         if (
             flag.map.load.audio &&
             map.audio.duration < 240 &&
-            Math.min(map.analysis.sps) > (map.audio.duration < 120 ? 3.2 : 4.2) &&
+            map.analysis.sps[0] > (map.audio.duration < 120 ? 3.2 : 4.2) &&
             getSPSTotalPercDrop() < 60
         ) {
             console.log(map.analysis.sps);
             arrText.push(
                 printHTMLBold(
                     `Minimum SPS not met (<${map.audio.duration < 120 ? '3.2' : '4.2'})`,
-                    `lowest is ${Math.min(map.analysis.sps)}`
+                    `lowest is ${map.analysis.sps[0]}`
                 )
             );
         }
@@ -323,7 +323,7 @@ async function analyseDifficulty(charName, diff) {
         bpm: map.info._beatsPerMinute,
         bpmc: getBPMChangesTime(map.info._beatsPerMinute, offset, BPMChanges),
         offset: offset,
-        njs: diff._noteJumpMovementSpeed,
+        njs: diff._noteJumpMovementSpeed || fallbackNJS[diff._difficulty],
         njsOffset: diff._noteJumpStartBeatOffset,
     };
     mapSettings.hjd = getHalfJumpDuration(mapSettings);
@@ -347,6 +347,12 @@ async function analyseDifficulty(charName, diff) {
     }
     if (countEventLightLess(diff._data._events) < 10) {
         arrText.push(printHTMLBold('Lack of lighting events', '(<=10 events)'));
+    }
+    if (diff._noteJumpMovementSpeed === 0) {
+        arrText.push(printHTMLBold('Unset NJS', 'fallback NJS is used'));
+    }
+    if (getHalfJumpDurationNoOffset(mapSettings) + mapSettings.njsOffset < mapSettings.hjd) {
+        arrText.push(printHTMLBold('Unnecessary negative NJS offset', 'HJD could not go below 1'));
     }
     arrText.push(printHTMLBold(`>${tool.ebpm.th}EBPM warning []`, getEffectiveBPMTime(diff._data, mapSettings)));
     arrText.push(

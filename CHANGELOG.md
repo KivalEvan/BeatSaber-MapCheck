@@ -1,6 +1,6 @@
 # Changelog
 
-## v1.5.0 [2021-##-##]
+## v1.5.0 [2021-04-08]
 
 ### Added
 
@@ -13,6 +13,7 @@
 -   No stats option (hide stats)
 -   Tools option (automatically open tools on startup)
 -   Link to my website on watermark
+-   Couple of other check (NJS, offset)
 
 ### Changed
 
