@@ -144,11 +144,11 @@ function printHTMLBold(arg1, arg2) {
     return `<b>${arg1}</b>: ${arg2.join(', ')}`;
 }
 
-function isAboveTime(t, rt) {
+function isAboveThres(t, rt) {
     return toRealTime(t) > rt;
 }
 
-function isBelowTime(t, rt) {
+function isBelowThres(t, rt) {
     return toRealTime(t) < rt;
 }
 

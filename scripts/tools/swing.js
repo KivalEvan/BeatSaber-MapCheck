@@ -4,8 +4,8 @@
 
 function swingNext(n1, n2) {
     return (
-        (swingWindow(n1, n2) && isAboveTime(n1._time - n2._time, tool.swing.maxWindowTol)) ||
-        isAboveTime(n1._time - n2._time, tool.swing.maxTol)
+        (swingWindow(n1, n2) && isAboveThres(n1._time - n2._time, tool.swing.maxWindowTol)) ||
+        isAboveThres(n1._time - n2._time, tool.swing.maxTol)
     );
 }
 
