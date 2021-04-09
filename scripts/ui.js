@@ -364,11 +364,11 @@ $('#vb-hjd').click(function () {
         let char = map.info._difficultyBeatmapSets.find((c) => c._beatmapCharacteristicName === tool.select.char);
         let diff = char._difficultyBeatmaps.find((d) => d._difficulty === tool.select.diff);
         let hjd = round(
-            getHalfJumpDuration(
-                map.info._beatsPerMinute,
-                diff._noteJumpMovementSpeed || fallbackNJS[diff._difficulty],
-                diff._noteJumpStartBeatOffset
-            ),
+            getHalfJumpDuration({
+                bpm: map.info._beatsPerMinute,
+                njs: diff._noteJumpMovementSpeed || fallbackNJS[diff._difficulty],
+                njsOffset: diff._noteJumpStartBeatOffset,
+            }),
             3
         );
         tool.vb.min = round((60 / map.info._beatsPerMinute) * 0.25, 3);

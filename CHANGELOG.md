@@ -10,6 +10,10 @@
 
 -   Hitbox staircase check now look for swing speed to determine the next potential staircase
 
+### Fixed
+
+-   Set by HJD not setting max time
+
 ## v1.5.0 [2021-04-08]
 
 ### Added
