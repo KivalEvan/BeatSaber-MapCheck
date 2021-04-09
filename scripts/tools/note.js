@@ -340,11 +340,11 @@ function detectVisionBlock(diff, mapSettings) {
         const note = notes[i];
         if (lastMidL) {
             if (
-                isAboveTH(
+                isAboveThres(
                     note._time - lastMidL._time,
                     flag.tool.vbSpecific === 'time' ? tool.vb.min : tool.vb.diff[diffName].min
                 ) &&
-                isBelowTH(
+                isBelowThres(
                     note._time - lastMidL._time,
                     flag.tool.vbSpecific === 'time' ? tool.vb.max : Math.min(toRealTime(hjd), tool.vb.diff[diffName].max)
                 )
@@ -364,11 +364,11 @@ function detectVisionBlock(diff, mapSettings) {
         }
         if (lastMidR) {
             if (
-                isAboveTH(
+                isAboveThres(
                     note._time - lastMidR._time,
                     flag.tool.vbSpecific === 'time' ? tool.vb.min : tool.vb.diff[diffName].min
                 ) &&
-                isBelowTH(
+                isBelowThres(
                     note._time - lastMidR._time,
                     flag.tool.vbSpecific === 'time' ? tool.vb.max : Math.min(toRealTime(hjd), tool.vb.diff[diffName].max)
                 )
@@ -459,6 +459,8 @@ function detectHitboxStaircase(diff, mapSettings) {
     const arr = [];
     let lastRed;
     let lastBlue;
+    let lastSpeedRed = 0;
+    let lastSpeedBlue = 0;
     let redIndexOccupy;
     let redLayerOccupy;
     let blueIndexOccupy;
@@ -469,10 +471,11 @@ function detectHitboxStaircase(diff, mapSettings) {
             if (lastRed) {
                 // nested if moment
                 if (swingNext(note, lastRed)) {
+                    lastSpeedRed = toRealTime(note._time - lastRed._time);
                     if (
                         lastBlue &&
                         note._time - lastBlue._time !== 0 &&
-                        isBelowTH(note._time - lastBlue._time, tool.hitbox.staircase)
+                        isBelowThres(note._time - lastBlue._time, Math.min(tool.hitbox.staircase, lastSpeedBlue))
                     ) {
                         if (
                             note._lineIndex === blueIndexOccupy &&
@@ -514,10 +517,11 @@ function detectHitboxStaircase(diff, mapSettings) {
         } else if (note._type === 1) {
             if (lastBlue) {
                 if (swingNext(note, lastBlue)) {
+                    lastSpeedBlue = toRealTime(note._time - lastBlue._time);
                     if (
                         lastRed &&
                         note._time - lastRed._time !== 0 &&
-                        isBelowTH(note._time - lastRed._time, tool.hitbox.staircase)
+                        isBelowThres(note._time - lastRed._time, Math.min(tool.hitbox.staircase, lastSpeedRed))
                     ) {
                         if (
                             note._lineIndex === redIndexOccupy &&
@@ -579,7 +583,7 @@ function detectShrAngle(diff, mapSettings) {
                     }
                     if (
                         checkShrAngle(note._cutDirection, lastRedDir) &&
-                        isBelowTH(note._time - lastRed._time, tool.maxShrAngle + 0.01)
+                        isBelowThres(note._time - lastRed._time, tool.maxShrAngle + 0.01)
                     ) {
                         arr.push(adjustTime(note._time, bpm, offset, bpmc));
                     }
@@ -592,7 +596,7 @@ function detectShrAngle(diff, mapSettings) {
                     if (
                         startRedDot &&
                         checkShrAngle(note._cutDirection, lastRedDir) &&
-                        isBelowTH(note._time - lastRed._time, tool.maxShrAngle + 0.01)
+                        isBelowThres(note._time - lastRed._time, tool.maxShrAngle + 0.01)
                     ) {
                         arr.push(adjustTime(startRedDot._time, bpm, offset, bpmc));
                         startRedDot = null;
@@ -612,7 +616,10 @@ function detectShrAngle(diff, mapSettings) {
                         startBlueDot = null;
                         lastBlueDir = flipCutDir[lastBlueDir];
                     }
-                    if (checkShrAngle(note._cutDirection, lastBlueDir) && isBelowTH(note, lastBlue, tool.maxShrAngle + 0.01)) {
+                    if (
+                        checkShrAngle(note._cutDirection, lastBlueDir) &&
+                        isBelowThres(note, lastBlue, tool.maxShrAngle + 0.01)
+                    ) {
                         arr.push(adjustTime(note._time, bpm, offset, bpmc));
                     }
                     if (note._cutDirection === 8) {
@@ -624,7 +631,7 @@ function detectShrAngle(diff, mapSettings) {
                     if (
                         startBlueDot &&
                         checkShrAngle(note._cutDirection, lastBlueDir) &&
-                        isBelowTH(note, lastBlue, tool.maxShrAngle + 0.01)
+                        isBelowThres(note, lastBlue, tool.maxShrAngle + 0.01)
                     ) {
                         arr.push(adjustTime(startBlueDot._time, bpm, offset, bpmc));
                         startBlueDot = null;
@@ -718,11 +725,11 @@ function detectSpeedPause(diff, mapSettings) {
         if (note._type === 0) {
             if (lastRed) {
                 if (swingNext(note, lastRed)) {
-                    if (isBelowTH(note._time - lastRed._time, tool.maxSpeedPause * 2 + 0.01)) {
+                    if (isBelowThres(note._time - lastRed._time, tool.maxSpeedPause * 2 + 0.01)) {
                         if (
                             maybePauseBlue &&
                             maybePauseRed &&
-                            isBelowTH(lastRed._time - lastRedPause._time, tool.maxSpeedPause * 3 + 0.01)
+                            isBelowThres(lastRed._time - lastRedPause._time, tool.maxSpeedPause * 3 + 0.01)
                         ) {
                             arr.push(adjustTime(lastRed._time, bpm, offset, bpmc));
                         }
@@ -739,11 +746,11 @@ function detectSpeedPause(diff, mapSettings) {
         } else if (note._type === 1) {
             if (lastBlue) {
                 if (swingNext(note, lastBlue)) {
-                    if (isBelowTH(note._time - lastBlue._time, tool.maxSpeedPause * 2 + 0.01)) {
+                    if (isBelowThres(note._time - lastBlue._time, tool.maxSpeedPause * 2 + 0.01)) {
                         if (
                             maybePauseBlue &&
                             maybePauseRed &&
-                            isBelowTH(lastBlue._time - lastBluePause._time, tool.maxSpeedPause * 3 + 0.01)
+                            isBelowThres(lastBlue._time - lastBluePause._time, tool.maxSpeedPause * 3 + 0.01)
                         ) {
                             arr.push(adjustTime(lastBlue._time, bpm, offset, bpmc));
                         }
@@ -792,7 +799,7 @@ function detectImproperWindowSnap(diff, mapSettings) {
                     lastRed = note;
                 } else if (
                     isSlantedWindow(note, lastRed) &&
-                    isAboveTH(note._time - lastRed._time, tool.windowSnapTolerance) &&
+                    isAboveThres(note._time - lastRed._time, tool.windowSnapTolerance) &&
                     note._cutDirection === lastRed._cutDirection &&
                     note._cutDirection !== 8 &&
                     lastRed._cutDirection !== 8
@@ -808,7 +815,7 @@ function detectImproperWindowSnap(diff, mapSettings) {
                     lastBlue = note;
                 } else if (
                     isSlantedWindow(note, lastBlue) &&
-                    isAboveTH(note._time - lastBlue._time, tool.windowSnapTolerance) &&
+                    isAboveThres(note._time - lastBlue._time, tool.windowSnapTolerance) &&
                     note._cutDirection === lastBlue._cutDirection &&
                     note._cutDirection !== 8 &&
                     lastBlue._cutDirection !== 8
@@ -854,6 +861,7 @@ function detectSlowSlider(diff, mapSettings) {
                     arr.push(adjustTime(lastRedTime, bpm, offset, bpmc));
                 }
             } else {
+                lastRedTime = note._time;
                 lastRed = note;
             }
         }
@@ -870,6 +878,7 @@ function detectSlowSlider(diff, mapSettings) {
                     arr.push(adjustTime(lastBlueTime, bpm, offset, bpmc));
                 }
             } else {
+                lastBlueTime = note._time;
                 lastBlue = note;
             }
         }

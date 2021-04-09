@@ -96,8 +96,8 @@ function detectCenterObstacle(diff, mapSettings) {
                 if (obstacle._lineIndex === 0) {
                     if (obstacleLonger(obstacle, obstacleLFull)) {
                         if (
-                            isAboveTH(obstacle._time, toRealTime(obstacleRFull._time) - tool.obstacle.recovery) &&
-                            isBelowTH(
+                            isAboveThres(obstacle._time, toRealTime(obstacleRFull._time) - tool.obstacle.recovery) &&
+                            isBelowThres(
                                 obstacle._time,
                                 toRealTime(obstacleRFull._time + obstacleRFull._duration) + tool.obstacle.recovery
                             )
@@ -109,8 +109,8 @@ function detectCenterObstacle(diff, mapSettings) {
                 } else if (obstacle._lineIndex === 2) {
                     if (obstacleLonger(obstacle, obstacleRFull)) {
                         if (
-                            isAboveTH(obstacle._time, toRealTime(obstacleLFull._time) - tool.obstacle.recovery) &&
-                            isBelowTH(
+                            isAboveThres(obstacle._time, toRealTime(obstacleLFull._time) - tool.obstacle.recovery) &&
+                            isBelowThres(
                                 obstacle._time,
                                 toRealTime(obstacleLFull._time + obstacleLFull._duration) + tool.obstacle.recovery
                             )
@@ -124,8 +124,8 @@ function detectCenterObstacle(diff, mapSettings) {
                 if (obstacle._lineIndex === 1) {
                     if (obstacleLonger(obstacle, obstacleLFull)) {
                         if (
-                            isAboveTH(obstacle._time, toRealTime(obstacleRFull._time) - tool.obstacle.recovery) &&
-                            isBelowTH(
+                            isAboveThres(obstacle._time, toRealTime(obstacleRFull._time) - tool.obstacle.recovery) &&
+                            isBelowThres(
                                 obstacle._time,
                                 toRealTime(obstacleRFull._time + obstacleRFull._duration) + tool.obstacle.recovery
                             )
@@ -137,8 +137,8 @@ function detectCenterObstacle(diff, mapSettings) {
                 } else if (obstacle._lineIndex === 2) {
                     if (obstacleLonger(obstacle, obstacleRFull)) {
                         if (
-                            isAboveTH(obstacle._time, toRealTime(obstacleLFull._time) - tool.obstacle.recovery) &&
-                            isBelowTH(
+                            isAboveThres(obstacle._time, toRealTime(obstacleLFull._time) - tool.obstacle.recovery) &&
+                            isBelowThres(
                                 obstacle._time,
                                 toRealTime(obstacleLFull._time + obstacleLFull._duration) + tool.obstacle.recovery
                             )
@@ -173,13 +173,13 @@ function detectShortObstacle(diff, mapSettings) {
         if (obstacle._type === 0 && obstacle._duration > 0) {
             if (obstacle._width > 2 || (obstacle._width > 1 && obstacle._lineIndex === 1)) {
                 if (obstacleLonger(obstacle, obstacleLFull)) {
-                    if (isBelowTH(obstacle._duration, tool.obstacle.minDur)) {
+                    if (isBelowThres(obstacle._duration, tool.obstacle.minDur)) {
                         arr.push(adjustTime(obstacle._time, bpm, offset, bpmc));
                     }
                     obstacleLFull = obstacle;
                 }
                 if (obstacleLonger(obstacle, obstacleRFull)) {
-                    if (isBelowTH(obstacle._duration, tool.obstacle.minDur)) {
+                    if (isBelowThres(obstacle._duration, tool.obstacle.minDur)) {
                         arr.push(adjustTime(obstacle._time, bpm, offset, bpmc));
                     }
                     obstacleRFull = obstacle;
@@ -187,14 +187,14 @@ function detectShortObstacle(diff, mapSettings) {
             } else if (obstacle._width === 2) {
                 if (obstacle._lineIndex === 0) {
                     if (obstacleLonger(obstacle, obstacleLFull)) {
-                        if (isBelowTH(obstacle._duration, tool.obstacle.minDur)) {
+                        if (isBelowThres(obstacle._duration, tool.obstacle.minDur)) {
                             arr.push(adjustTime(obstacle._time, bpm, offset, bpmc));
                         }
                         obstacleLFull = obstacle;
                     }
                 } else if (obstacle._lineIndex === 2) {
                     if (obstacleLonger(obstacle, obstacleRFull)) {
-                        if (isBelowTH(obstacle._duration, tool.obstacle.minDur)) {
+                        if (isBelowThres(obstacle._duration, tool.obstacle.minDur)) {
                             arr.push(adjustTime(obstacle._time, bpm, offset, bpmc));
                         }
                         obstacleRFull = obstacle;
@@ -203,14 +203,14 @@ function detectShortObstacle(diff, mapSettings) {
             } else if (obstacle._width === 1) {
                 if (obstacle._lineIndex === 1) {
                     if (obstacleLonger(obstacle, obstacleLFull)) {
-                        if (isBelowTH(obstacle._duration, tool.obstacle.minDur)) {
+                        if (isBelowThres(obstacle._duration, tool.obstacle.minDur)) {
                             arr.push(adjustTime(obstacle._time, bpm, offset, bpmc));
                         }
                         obstacleLFull = obstacle;
                     }
                 } else if (obstacle._lineIndex === 2) {
                     if (obstacleLonger(obstacle, obstacleRFull)) {
-                        if (isBelowTH(obstacle._duration, tool.obstacle.minDur)) {
+                        if (isBelowThres(obstacle._duration, tool.obstacle.minDur)) {
                             arr.push(adjustTime(obstacle._time, bpm, offset, bpmc));
                         }
                         obstacleRFull = obstacle;
@@ -221,7 +221,7 @@ function detectShortObstacle(diff, mapSettings) {
             if (obstacle._width > 2 || (obstacle._width > 1 && obstacle._lineIndex === 1)) {
                 if (obstacleLonger(obstacle, obstacleLHalf)) {
                     if (
-                        isBelowTH(obstacle._duration, tool.obstacle.minDur) &&
+                        isBelowThres(obstacle._duration, tool.obstacle.minDur) &&
                         obstacleLonger2(obstacle, obstacleLFull) &&
                         obstacleLonger2(obstacle, obstacleLHalf)
                     ) {
@@ -231,7 +231,7 @@ function detectShortObstacle(diff, mapSettings) {
                 }
                 if (obstacleLonger(obstacle, obstacleRHalf)) {
                     if (
-                        isBelowTH(obstacle._duration, tool.obstacle.minDur) &&
+                        isBelowThres(obstacle._duration, tool.obstacle.minDur) &&
                         obstacleLonger2(obstacle, obstacleRFull) &&
                         obstacleLonger2(obstacle, obstacleRHalf)
                     ) {
@@ -243,7 +243,7 @@ function detectShortObstacle(diff, mapSettings) {
                 if (obstacle._lineIndex === 0) {
                     if (obstacleLonger(obstacle, obstacleLHalf)) {
                         if (
-                            isBelowTH(obstacle._duration, tool.obstacle.minDur) &&
+                            isBelowThres(obstacle._duration, tool.obstacle.minDur) &&
                             obstacleLonger2(obstacle, obstacleLFull) &&
                             obstacleLonger2(obstacle, obstacleLHalf)
                         ) {
@@ -254,7 +254,7 @@ function detectShortObstacle(diff, mapSettings) {
                 } else if (obstacle._lineIndex === 2) {
                     if (obstacleLonger(obstacle, obstacleRHalf)) {
                         if (
-                            isBelowTH(obstacle._duration, tool.obstacle.minDur) &&
+                            isBelowThres(obstacle._duration, tool.obstacle.minDur) &&
                             obstacleLonger2(obstacle, obstacleRFull) &&
                             obstacleLonger2(obstacle, obstacleRHalf)
                         ) {
@@ -267,7 +267,7 @@ function detectShortObstacle(diff, mapSettings) {
                 if (obstacle._lineIndex === 1) {
                     if (obstacleLonger(obstacle, obstacleLHalf)) {
                         if (
-                            isBelowTH(obstacle._duration, tool.obstacle.minDur) &&
+                            isBelowThres(obstacle._duration, tool.obstacle.minDur) &&
                             obstacleLonger2(obstacle, obstacleLFull) &&
                             obstacleLonger2(obstacle, obstacleLHalf)
                         ) {
@@ -278,7 +278,7 @@ function detectShortObstacle(diff, mapSettings) {
                 } else if (obstacle._lineIndex === 2) {
                     if (obstacleLonger(obstacle, obstacleRHalf)) {
                         if (
-                            isBelowTH(obstacle._duration, tool.obstacle.minDur) &&
+                            isBelowThres(obstacle._duration, tool.obstacle.minDur) &&
                             obstacleLonger2(obstacle, obstacleRFull) &&
                             obstacleLonger2(obstacle, obstacleRHalf)
                         ) {
@@ -380,9 +380,9 @@ function detectCrouchObstacle(diff, mapSettings) {
 
 // check if current obstacle is longer than previous obstacle
 function obstacleLonger(w1, w2) {
-    return isAboveTH(w1._time + w1._duration, toRealTime(w2._time + w2._duration));
+    return isAboveThres(w1._time + w1._duration, toRealTime(w2._time + w2._duration));
 }
 // electric boogaloo; for <15ms obstacle
 function obstacleLonger2(w1, w2) {
-    return isAboveTH(w1._time + w1._duration, toRealTime(w2._time + w2._duration) + tool.obstacle.minDur);
+    return isAboveThres(w1._time + w1._duration, toRealTime(w2._time + w2._duration) + tool.obstacle.minDur);
 }

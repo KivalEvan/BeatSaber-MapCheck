@@ -221,13 +221,21 @@ async function analyseMap() {
         return a - b;
     });
     const arrText = [];
+    let img = new Image();
+    img.src = $('#coverimg').attr('src');
+    if (flag.map.load.image && img.width !== img.height) {
+        arrText.push(printHTMLBold('Cover image not square', 'require equal width and height'));
+    }
+    if (flag.map.load.image && (img.width < 256 || img.height < 256)) {
+        arrText.push(printHTMLBold('Cover image too small', 'need at least 256x256'));
+    }
+    if (!flag.map.load.image) {
+        arrText.push(printHTMLBold('No cover image', 'Could not be loaded or not found'));
+    }
     if (flag.noAudio) {
         arrText.push(
             printHTMLBold('No audio loaded', flag.noAudio ? 'No audio mode is enabled' : 'Could not be loaded or not found')
         );
-    }
-    if (!flag.map.load.image) {
-        arrText.push(printHTMLBold('No cover image', 'Could not be loaded or not found'));
     }
     if (map.info._previewStartTime === 12 && map.info._previewDuration === 10) {
         arrText.push(printHTMLBold('Default preview time', "please set them where you want audience's 1st impression"));

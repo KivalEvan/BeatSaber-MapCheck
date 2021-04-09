@@ -1,5 +1,21 @@
 # Changelog
 
+## v1.5.1 [2021-04-10]
+
+### Added
+
+-   Simulated in-game difficulty label
+-   Cover image dimension check
+
+### Changed
+
+-   Hitbox staircase check now look for swing speed to determine the next potential staircase
+
+### Fixed
+
+-   Set by HJD not setting max time
+-   Slow slider returning NaN time for very first note
+
 ## v1.5.0 [2021-04-08]
 
 ### Added

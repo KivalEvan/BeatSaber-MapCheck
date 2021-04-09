@@ -208,6 +208,31 @@ header {
 #settings input[type='button']:disabled {
     cursor: not-allowed;
 }
+.diff-labels {
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    font-family: 'Teko';
+    font-size: 1.25em;
+    font-weight: bold;
+}
+.diff-count-1 {
+    width: 20.79em;
+}
+.diff-count-2 {
+    width: 10.5em;
+}
+.diff-count-3 {
+    width: 6.9375em;
+}
+.diff-count-4 {
+    width: 5.25em;
+}
+.diff-count-5 {
+    width: 4.2em;
+}
 #output-container {
     width: 50%;
     max-height: 100%;
@@ -223,11 +248,11 @@ header {
     overflow: auto;
 }
 .output-box#output-diff {
-    height: 16em;
-    max-height: 16em;
+    height: 14em;
+    max-height: 14em;
 }
 .output-box#output-map {
-    height: 8em;
+    height: 6em;
     max-height: 6em;
 }
 .stats {
