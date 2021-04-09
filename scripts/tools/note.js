@@ -459,6 +459,8 @@ function detectHitboxStaircase(diff, mapSettings) {
     const arr = [];
     let lastRed;
     let lastBlue;
+    let lastSpeedRed = 0;
+    let lastSpeedBlue = 0;
     let redIndexOccupy;
     let redLayerOccupy;
     let blueIndexOccupy;
@@ -469,10 +471,11 @@ function detectHitboxStaircase(diff, mapSettings) {
             if (lastRed) {
                 // nested if moment
                 if (swingNext(note, lastRed)) {
+                    lastSpeedRed = toRealTime(note._time - lastRed._time);
                     if (
                         lastBlue &&
                         note._time - lastBlue._time !== 0 &&
-                        isBelowThres(note._time - lastBlue._time, tool.hitbox.staircase)
+                        isBelowThres(note._time - lastBlue._time, Math.min(tool.hitbox.staircase, lastSpeedBlue))
                     ) {
                         if (
                             note._lineIndex === blueIndexOccupy &&
@@ -514,10 +517,11 @@ function detectHitboxStaircase(diff, mapSettings) {
         } else if (note._type === 1) {
             if (lastBlue) {
                 if (swingNext(note, lastBlue)) {
+                    lastSpeedBlue = toRealTime(note._time - lastBlue._time);
                     if (
                         lastRed &&
                         note._time - lastRed._time !== 0 &&
-                        isBelowThres(note._time - lastRed._time, tool.hitbox.staircase)
+                        isBelowThres(note._time - lastRed._time, Math.min(tool.hitbox.staircase, lastSpeedRed))
                     ) {
                         if (
                             note._lineIndex === redIndexOccupy &&

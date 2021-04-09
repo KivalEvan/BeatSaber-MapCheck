@@ -1,10 +1,14 @@
 # Changelog
 
-## v1.5.1 [2021-04-09]
+## v1.5.1 [2021-04-10]
 
 ### Added
 
 -   Cover image dimension check
+
+### Changed
+
+-   Hitbox staircase check now look for swing speed to determine the next potential staircase
 
 ## v1.5.0 [2021-04-08]
 
