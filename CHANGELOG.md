@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.5.1 [2021-04-09]
+
+### Added
+
+-   Cover image dimension check
+
 ## v1.5.0 [2021-04-08]
 
 ### Added

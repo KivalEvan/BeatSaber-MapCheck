@@ -31,6 +31,7 @@ const flag = {
 };
 
 const tool = {
+    epsilon: 'e-5',
     select: {
         char: '',
         diff: '',

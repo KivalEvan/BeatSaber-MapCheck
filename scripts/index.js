@@ -144,12 +144,12 @@ function printHTMLBold(arg1, arg2) {
     return `<b>${arg1}</b>: ${arg2.join(', ')}`;
 }
 
-function isAboveTH(t, th) {
-    return toRealTime(t) > th;
+function isAboveTime(t, rt) {
+    return toRealTime(t) > rt;
 }
 
-function isBelowTH(t, th) {
-    return toRealTime(t) < th;
+function isBelowTime(t, rt) {
+    return toRealTime(t) < rt;
 }
 
 function compToHex(c) {
