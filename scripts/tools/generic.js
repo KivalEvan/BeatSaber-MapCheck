@@ -147,7 +147,7 @@ function calcPeakNPS(nc, dur) {
               W  I
     1 diff:  33 99
     2 diffs: 16 50
-    3 diffs: 11 34
+    3 diffs: 11 33
     4 diffs:  8 25
     5 diffs:  6 20 */
 function checkLabelLength(mapChar, lbl) {

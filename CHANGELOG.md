@@ -4,6 +4,7 @@
 
 ### Added
 
+-   Simulated in-game difficulty label
 -   Cover image dimension check
 
 ### Changed
@@ -13,7 +14,7 @@
 ### Fixed
 
 -   Set by HJD not setting max time
--   Slow slider returning NaN time
+-   Slow slider returning NaN time for very first note
 
 ## v1.5.0 [2021-04-08]
 

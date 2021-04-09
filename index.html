@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
   <link rel="shortcut icon" type="image/jpg" href="favicon.png">
+  <link href='https://fonts.googleapis.com/css?family=Teko' rel='stylesheet'>
   <title>BS Map Check</title>
   <script src="./scripts/libs/jquery.slim.min.js"></script>
   <script src="./scripts/libs/jszip.min.js"></script>
@@ -130,7 +131,10 @@
           <input type="button" id="apply-all" value="All difficulties" disabled>
         </div>
         <div id="output-container">
-          <span>Difficulty:</span><br>
+          <span>Difficulty: <span id="output-difficulty-name"></span></span>
+          <br>
+          <span class="diff-labels" id="output-difficulty-label">Difficulty Label</span>
+          <br>
           <div class="output-box" id="output-diff">No output.</div>
           <span>Map:</span><br>
           <div class="output-box" id="output-map">No output.</div>

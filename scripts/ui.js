@@ -196,6 +196,8 @@ function mapReset() {
     $('#mapset').empty();
     $('#mapdiff').empty();
     $('#stats').empty();
+    $('#output-difficulty-name').html('');
+    $('#output-difficulty-label').attr('class', `diff-labels`).html('Difficulty Label');
     $('#output-diff').html('No output.');
     $('#output-map').html('No output.');
     $('#map-link').text('').attr('href', '').css('display', 'none');
@@ -926,6 +928,12 @@ async function UICreateDiffInfo(charName, diff) {
 
 function UIOutputDisplay(cs, ds) {
     let mapa = map.analysis.diff.find((ma) => ma.mapSet === cs && ma.diff === ds);
+    let char = map.info._difficultyBeatmapSets.find((c) => c._beatmapCharacteristicName === cs);
+    let diff = char._difficultyBeatmaps.find((d) => d._difficulty === ds);
+    $('#output-difficulty-name').html(diffRename[ds] || ds);
+    $('#output-difficulty-label')
+        .attr('class', `diff-labels diff-count-${char._difficultyBeatmaps.length}`)
+        .html(diff._customData?._difficultyLabel || diffRename[ds] || ds);
     $('#output-diff').html(mapa.text.join('<br>'));
     if (!mapa.text.length > 0) {
         $('#output-diff').html('No issue(s) found.');
