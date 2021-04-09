@@ -13,6 +13,7 @@
 ### Fixed
 
 -   Set by HJD not setting max time
+-   Slow slider returning NaN time
 
 ## v1.5.0 [2021-04-08]
 

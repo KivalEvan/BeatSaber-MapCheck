@@ -858,9 +858,11 @@ function detectSlowSlider(diff, mapSettings) {
                 }
                 lastRed = note;
                 if (speedR > tool.minSliderSpeed) {
+                    console.log(lastRedTime);
                     arr.push(adjustTime(lastRedTime, bpm, offset, bpmc));
                 }
             } else {
+                lastRedTime = note._time;
                 lastRed = note;
             }
         }
@@ -874,9 +876,11 @@ function detectSlowSlider(diff, mapSettings) {
                 }
                 lastBlue = note;
                 if (speedB > tool.minSliderSpeed) {
+                    console.log(lastBlueTime, 'blue');
                     arr.push(adjustTime(lastBlueTime, bpm, offset, bpmc));
                 }
             } else {
+                lastBlueTime = note._time;
                 lastBlue = note;
             }
         }
