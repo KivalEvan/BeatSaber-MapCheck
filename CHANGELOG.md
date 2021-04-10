@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.5.2 [2021-04-##]
+
+### Added
+
+-   Basic jump distance check
+
+### Fixed
+
+-   Decimal NJS not rounded for statas
+
 ## v1.5.1 [2021-04-10]
 
 ### Added

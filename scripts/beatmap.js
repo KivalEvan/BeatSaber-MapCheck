@@ -259,10 +259,10 @@ async function analyseMap() {
             );
         }
         if (getSPSMaxPercDrop() > 40 && map.audio.duration < 240) {
-            arrText.push(printHTMLBold('Violates progression criteria', `SPS has exceeded 40% drop`));
+            arrText.push(printHTMLBold('Violates progression criteria', `exceeded 40% SPS drop`));
         }
         if (getSPSMinPercDrop() < 10 && map.audio.duration < 240) {
-            arrText.push(printHTMLBold('Violates progression criteria', `SPS has less than 10% drop`));
+            arrText.push(printHTMLBold('Violates progression criteria', `less than 10% SPS drop`));
         }
     }
     $('#output-map').html(arrText.join('<br>'));
@@ -335,6 +335,7 @@ async function analyseDifficulty(charName, diff) {
         njsOffset: diff._noteJumpStartBeatOffset,
     };
     mapSettings.hjd = getHalfJumpDuration(mapSettings);
+    mapSettings.jd = getJumpDistance(mapSettings);
 
     const arrText = [];
     if (diffLabel !== null) {
@@ -358,6 +359,12 @@ async function analyseDifficulty(charName, diff) {
     }
     if (diff._noteJumpMovementSpeed === 0) {
         arrText.push(printHTMLBold('Unset NJS', 'fallback NJS is used'));
+    }
+    if (mapSettings.jd < 18) {
+        arrText.push(printHTMLBold('Very low jump distance', `${mapSettings.jd}`));
+    }
+    if (mapSettings.jd > 36) {
+        arrText.push(printHTMLBold('Very high jump distance', `${mapSettings.jd}`));
     }
     if (getHalfJumpDurationNoOffset(mapSettings) + mapSettings.njsOffset < mapSettings.hjd) {
         arrText.push(printHTMLBold('Unnecessary negative NJS offset', 'HJD could not go below 1'));
