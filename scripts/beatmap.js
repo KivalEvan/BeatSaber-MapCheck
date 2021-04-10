@@ -341,7 +341,12 @@ async function analyseDifficulty(charName, diff) {
     if (diffLabel !== null) {
         let status = checkLabelLength(charName, diffLabel);
         if (diffLabel.length > 30) {
-            arrText.push(printHTMLBold('Difficulty label too long', 'max characters by ranking criteria is 30'));
+            arrText.push(
+                printHTMLBold(
+                    'Difficulty label too long',
+                    `exceeded 30 max characters by ranking criteria (contain ${diffLabel.length})`
+                )
+            );
         } else if (status === 'error') {
             arrText.push(printHTMLBold('Difficulty label too long', 'exceeded in-game display support'));
         } else if (status === 'warn') {

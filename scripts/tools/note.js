@@ -582,7 +582,7 @@ function detectShrAngle(diff, mapSettings) {
                         lastRedDir = flipCutDir[lastRedDir];
                     }
                     if (
-                        checkShrAngle(note._cutDirection, lastRedDir) &&
+                        checkShrAngle(note._cutDirection, lastRedDir, note._type) &&
                         isBelowThres(note._time - lastRed._time, tool.maxShrAngle + 0.01)
                     ) {
                         arr.push(adjustTime(note._time, bpm, offset, bpmc));
@@ -595,7 +595,7 @@ function detectShrAngle(diff, mapSettings) {
                 } else {
                     if (
                         startRedDot &&
-                        checkShrAngle(note._cutDirection, lastRedDir) &&
+                        checkShrAngle(note._cutDirection, lastRedDir, note._type) &&
                         isBelowThres(note._time - lastRed._time, tool.maxShrAngle + 0.01)
                     ) {
                         arr.push(adjustTime(startRedDot._time, bpm, offset, bpmc));
@@ -617,7 +617,7 @@ function detectShrAngle(diff, mapSettings) {
                         lastBlueDir = flipCutDir[lastBlueDir];
                     }
                     if (
-                        checkShrAngle(note._cutDirection, lastBlueDir) &&
+                        checkShrAngle(note._cutDirection, lastBlueDir, note._type) &&
                         isBelowThres(note, lastBlue, tool.maxShrAngle + 0.01)
                     ) {
                         arr.push(adjustTime(note._time, bpm, offset, bpmc));
@@ -630,7 +630,7 @@ function detectShrAngle(diff, mapSettings) {
                 } else {
                     if (
                         startBlueDot &&
-                        checkShrAngle(note._cutDirection, lastBlueDir) &&
+                        checkShrAngle(note._cutDirection, lastBlueDir, note._type) &&
                         isBelowThres(note, lastBlue, tool.maxShrAngle + 0.01)
                     ) {
                         arr.push(adjustTime(startBlueDot._time, bpm, offset, bpmc));
@@ -650,11 +650,11 @@ function detectShrAngle(diff, mapSettings) {
         return !i || x !== ary[i - 1];
     });
 }
-function checkShrAngle(n1cd, n2cd) {
+function checkShrAngle(n1cd, n2cd, ntype) {
     if (n1cd === 8 || n2cd === 8) {
         return false;
     }
-    if ((n2cd === 6 || n2cd === 7) && n1cd === 0) {
+    if ((ntype === 0 ? n2cd === 6 : n2cd === 7) && n1cd === 0) {
         return true;
     }
     return false;
