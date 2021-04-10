@@ -147,16 +147,16 @@ function loadDifficulty(diffFile, str) {
             }
         }
     });
-    diff._obstacles.forEach((note) => {
-        for (const x in note) {
-            if (note[x] === null || note[x] === undefined) {
+    diff._obstacles.forEach((obstacle) => {
+        for (const x in obstacle) {
+            if (obstacle[x] === null || obstacle[x] === undefined) {
                 throw new Error(`${diffFile} contain null or undefined value in _obstacles object`);
             }
         }
     });
-    diff._events.forEach((note) => {
-        for (const x in note) {
-            if (note[x] === null || note[x] === undefined) {
+    diff._events.forEach((event) => {
+        for (const x in event) {
+            if (event[x] === null || event[x] === undefined) {
                 throw new Error(`${diffFile} contain null or undefined value in _events object`);
             }
         }
