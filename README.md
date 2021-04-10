@@ -24,8 +24,6 @@ Visit the [github.io page](https://kivalevan.github.io/BeatSaber-MapCheck/) or d
 -   Rewrite swing detection
 -   Basic parity check
 -   Basic unrankable hit check
--   Bomb reset detection
--   More extensive stats
 
 ## Known Issues
 

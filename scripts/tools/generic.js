@@ -39,6 +39,11 @@ function getJumpDistance(mapSettings) {
     return njs * (60 / bpm) * getHalfJumpDuration(mapSettings) * 2;
 }
 
+function getJumpDistanceOptimalHigh(mapSettings) {
+    const { njs } = mapSettings;
+    return 18 * (1 / 1.07) ** njs + 18;
+}
+
 function findOutStartNote(diff, mapSettings) {
     const { _notes: notes } = diff;
     const { bpm } = mapSettings;

@@ -147,16 +147,16 @@ function loadDifficulty(diffFile, str) {
             }
         }
     });
-    diff._obstacles.forEach((note) => {
-        for (const x in note) {
-            if (note[x] === null || note[x] === undefined) {
+    diff._obstacles.forEach((obstacle) => {
+        for (const x in obstacle) {
+            if (obstacle[x] === null || obstacle[x] === undefined) {
                 throw new Error(`${diffFile} contain null or undefined value in _obstacles object`);
             }
         }
     });
-    diff._events.forEach((note) => {
-        for (const x in note) {
-            if (note[x] === null || note[x] === undefined) {
+    diff._events.forEach((event) => {
+        for (const x in event) {
+            if (event[x] === null || event[x] === undefined) {
                 throw new Error(`${diffFile} contain null or undefined value in _events object`);
             }
         }
@@ -259,10 +259,10 @@ async function analyseMap() {
             );
         }
         if (getSPSMaxPercDrop() > 40 && map.audio.duration < 240) {
-            arrText.push(printHTMLBold('Violates progression criteria', `SPS has exceeded 40% drop`));
+            arrText.push(printHTMLBold('Violates progression criteria', `exceeded 40% SPS drop`));
         }
         if (getSPSMinPercDrop() < 10 && map.audio.duration < 240) {
-            arrText.push(printHTMLBold('Violates progression criteria', `SPS has less than 10% drop`));
+            arrText.push(printHTMLBold('Violates progression criteria', `less than 10% SPS drop`));
         }
     }
     $('#output-map').html(arrText.join('<br>'));
@@ -335,6 +335,7 @@ async function analyseDifficulty(charName, diff) {
         njsOffset: diff._noteJumpStartBeatOffset,
     };
     mapSettings.hjd = getHalfJumpDuration(mapSettings);
+    mapSettings.jd = getJumpDistance(mapSettings);
 
     const arrText = [];
     if (diffLabel !== null) {
@@ -359,6 +360,30 @@ async function analyseDifficulty(charName, diff) {
     if (diff._noteJumpMovementSpeed === 0) {
         arrText.push(printHTMLBold('Unset NJS', 'fallback NJS is used'));
     }
+    if (mapSettings.njs > 23) {
+        arrText.push(printHTMLBold(`NJS is too high (${round(mapSettings.njs, 2)})`, 'consider using lower if possible'));
+    }
+    if (mapSettings.jd < 18) {
+        arrText.push(printHTMLBold('Very low jump distance', `${mapSettings.jd}`));
+    }
+    if (mapSettings.jd > 36) {
+        arrText.push(printHTMLBold('Very high jump distance', `${mapSettings.jd}`));
+    } else if (mapSettings.jd > getJumpDistanceOptimalHigh(mapSettings)) {
+        arrText.push(
+            printHTMLBold(
+                `High jump distance warning (>${round(getJumpDistanceOptimalHigh(mapSettings), 2)})`,
+                `${round(mapSettings.jd, 2)} given ${round(mapSettings.njs, 2)} NJS may be uncomfortable to play`
+            )
+        );
+    }
+    if (toRealTime(mapSettings.hjd) < 0.45) {
+        arrText.push(
+            printHTMLBold(
+                `Very quick reaction time (${round(toRealTime(mapSettings.hjd) * 1000)}ms)`,
+                'may lead to suboptimal gameplay'
+            )
+        );
+    }
     if (getHalfJumpDurationNoOffset(mapSettings) + mapSettings.njsOffset < mapSettings.hjd) {
         arrText.push(printHTMLBold('Unnecessary negative NJS offset', 'HJD could not go below 1'));
     }
@@ -381,7 +406,7 @@ async function analyseDifficulty(charName, diff) {
     arrText.push(printHTMLBold('Negative obstacle []', detectNegativeObstacle(diff._data, mapSettings)));
     arrText.push(printHTMLBold('2-center obstacle []', detectCenterObstacle(diff._data, mapSettings)));
     arrText.push(printHTMLBold('<15ms obstacle []', detectShortObstacle(diff._data, mapSettings)));
-    // arr.push(printHTMLBold('Crouch obstacle []', detectCrouchObstacle(diff._data, mapSettings)));
+    // arrText.push(printHTMLBold('Crouch obstacle []', detectCrouchObstacle(diff._data, mapSettings)));
 
     arrText.push(printHTMLBold('Invalid note []', detectInvalidNote(diff._data, mapSettings)));
     if (flag.tool.dd) {

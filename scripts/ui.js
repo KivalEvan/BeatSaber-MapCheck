@@ -655,7 +655,9 @@ async function UICreateDiffInfo(charName, diff) {
     const textMap = [];
     let tableNJS = $('<table>');
     $('<caption>').append(`Map Settings:`).appendTo(tableNJS);
-    $('<tr>').append(`<th>NJS</th><td>${diff._noteJumpMovementSpeed}</td>`).appendTo(tableNJS);
+    $('<tr>')
+        .append(`<th>NJS</th><td>${round(diff._noteJumpMovementSpeed, 3)}</td>`)
+        .appendTo(tableNJS);
     $('<tr>')
         .append(`<th>Offset</th><td>${round(diff._noteJumpStartBeatOffset, 3)}</td>`)
         .appendTo(tableNJS);

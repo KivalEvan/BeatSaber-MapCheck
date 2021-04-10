@@ -1,5 +1,17 @@
 # Changelog
 
+## v1.5.2 [2021-04-11]
+
+### Added
+
+-   NJS check
+-   Jump distance check
+-   Reaction time check
+
+### Fixed
+
+-   Decimal NJS not rounded for stats
+
 ## v1.5.1 [2021-04-10]
 
 ### Added
