@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.5.3 [2021-04-##]
+
+### Changed
+
+-   Difficulty label check max up to 30 characters
+
 ## v1.5.2 [2021-04-11]
 
 ### Added
