@@ -73,9 +73,10 @@ function swingWindow(n1, n2) {
 
 function swingNoteDouble(n1, notes, index) {
     for (let i = index, len = notes.length; i < len; i++) {
-        if (notes[i]._time < n1._time + 0.01 && notes[i]._type != n1._type) {
+        if (notes[i]._time < n1._time + 0.01 && notes[i]._type !== n1._type) {
             return true;
-        } else if (notes[i]._time > n1._time + 0.01) {
+        }
+        if (notes[i]._time > n1._time + 0.01) {
             return false;
         }
     }

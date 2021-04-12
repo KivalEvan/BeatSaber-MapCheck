@@ -1,11 +1,15 @@
 # Changelog
 
-## v1.5.3 [2021-04-##]
+## v1.5.3 [2021-04-13]
 
 ### Changed
 
 -   Difficulty label check max up to 30 characters
 -   Shrado angle now looks for specifically the angle instead of both diagonal
+
+### Fixed
+
+-   Staircase hitbox not being detected on certain case
 
 ## v1.5.2 [2021-04-11]
 
