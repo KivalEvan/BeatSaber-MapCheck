@@ -472,19 +472,6 @@ function detectHitboxStaircase(diff, mapSettings) {
                 // nested if moment
                 if (swingNext(note, lastRed)) {
                     lastSpeedRed = toRealTime(note._time - lastRed._time);
-                    if (
-                        lastBlue &&
-                        note._time - lastBlue._time !== 0 &&
-                        isBelowThres(note._time - lastBlue._time, Math.min(tool.hitbox.staircase, lastSpeedBlue))
-                    ) {
-                        if (
-                            note._lineIndex === blueIndexOccupy &&
-                            note._lineLayer === blueLayerOccupy &&
-                            !swingNoteDouble(note, notes, i)
-                        ) {
-                            arr.push(adjustTime(note._time, bpm, offset, bpmc));
-                        }
-                    }
                     if (note._cutDirection !== 8) {
                         redIndexOccupy = note._lineIndex + swingCutDirectionSpace[note._cutDirection][0];
                         redLayerOccupy = note._lineLayer + swingCutDirectionSpace[note._cutDirection][1];
@@ -503,6 +490,19 @@ function detectHitboxStaircase(diff, mapSettings) {
                         redLayerOccupy = note._lineLayer + swingCutDirectionSpace[lastRed._cutDirection][1];
                     }
                 }
+                if (
+                    lastBlue &&
+                    note._time - lastBlue._time !== 0 &&
+                    isBelowThres(note._time - lastBlue._time, Math.min(tool.hitbox.staircase, lastSpeedBlue))
+                ) {
+                    if (
+                        note._lineIndex === blueIndexOccupy &&
+                        note._lineLayer === blueLayerOccupy &&
+                        !swingNoteDouble(note, notes, i)
+                    ) {
+                        arr.push(adjustTime(note._time, bpm, offset, bpmc));
+                    }
+                }
             } else {
                 if (note._cutDirection !== 8) {
                     redIndexOccupy = note._lineIndex + swingCutDirectionSpace[note._cutDirection][0];
@@ -518,19 +518,6 @@ function detectHitboxStaircase(diff, mapSettings) {
             if (lastBlue) {
                 if (swingNext(note, lastBlue)) {
                     lastSpeedBlue = toRealTime(note._time - lastBlue._time);
-                    if (
-                        lastRed &&
-                        note._time - lastRed._time !== 0 &&
-                        isBelowThres(note._time - lastRed._time, Math.min(tool.hitbox.staircase, lastSpeedRed))
-                    ) {
-                        if (
-                            note._lineIndex === redIndexOccupy &&
-                            note._lineLayer === redLayerOccupy &&
-                            !swingNoteDouble(note, notes, i)
-                        ) {
-                            arr.push(adjustTime(note._time, bpm, offset, bpmc));
-                        }
-                    }
                     if (note._cutDirection !== 8) {
                         blueIndexOccupy = note._lineIndex + swingCutDirectionSpace[note._cutDirection][0];
                         blueLayerOccupy = note._lineLayer + swingCutDirectionSpace[note._cutDirection][1];
@@ -545,6 +532,19 @@ function detectHitboxStaircase(diff, mapSettings) {
                     } else {
                         blueIndexOccupy = note._lineIndex + swingCutDirectionSpace[lastBlue._cutDirection][0];
                         blueLayerOccupy = note._lineLayer + swingCutDirectionSpace[lastBlue._cutDirection][1];
+                    }
+                }
+                if (
+                    lastRed &&
+                    note._time - lastRed._time !== 0 &&
+                    isBelowThres(note._time - lastRed._time, Math.min(tool.hitbox.staircase, lastSpeedRed))
+                ) {
+                    if (
+                        note._lineIndex === redIndexOccupy &&
+                        note._lineLayer === redLayerOccupy &&
+                        !swingNoteDouble(note, notes, i)
+                    ) {
+                        arr.push(adjustTime(note._time, bpm, offset, bpmc));
                     }
                 }
             } else {
@@ -582,7 +582,7 @@ function detectShrAngle(diff, mapSettings) {
                         lastRedDir = flipCutDir[lastRedDir];
                     }
                     if (
-                        checkShrAngle(note._cutDirection, lastRedDir) &&
+                        checkShrAngle(note._cutDirection, lastRedDir, note._type) &&
                         isBelowThres(note._time - lastRed._time, tool.maxShrAngle + 0.01)
                     ) {
                         arr.push(adjustTime(note._time, bpm, offset, bpmc));
@@ -595,7 +595,7 @@ function detectShrAngle(diff, mapSettings) {
                 } else {
                     if (
                         startRedDot &&
-                        checkShrAngle(note._cutDirection, lastRedDir) &&
+                        checkShrAngle(note._cutDirection, lastRedDir, note._type) &&
                         isBelowThres(note._time - lastRed._time, tool.maxShrAngle + 0.01)
                     ) {
                         arr.push(adjustTime(startRedDot._time, bpm, offset, bpmc));
@@ -617,7 +617,7 @@ function detectShrAngle(diff, mapSettings) {
                         lastBlueDir = flipCutDir[lastBlueDir];
                     }
                     if (
-                        checkShrAngle(note._cutDirection, lastBlueDir) &&
+                        checkShrAngle(note._cutDirection, lastBlueDir, note._type) &&
                         isBelowThres(note, lastBlue, tool.maxShrAngle + 0.01)
                     ) {
                         arr.push(adjustTime(note._time, bpm, offset, bpmc));
@@ -630,7 +630,7 @@ function detectShrAngle(diff, mapSettings) {
                 } else {
                     if (
                         startBlueDot &&
-                        checkShrAngle(note._cutDirection, lastBlueDir) &&
+                        checkShrAngle(note._cutDirection, lastBlueDir, note._type) &&
                         isBelowThres(note, lastBlue, tool.maxShrAngle + 0.01)
                     ) {
                         arr.push(adjustTime(startBlueDot._time, bpm, offset, bpmc));
@@ -650,11 +650,11 @@ function detectShrAngle(diff, mapSettings) {
         return !i || x !== ary[i - 1];
     });
 }
-function checkShrAngle(n1cd, n2cd) {
+function checkShrAngle(n1cd, n2cd, ntype) {
     if (n1cd === 8 || n2cd === 8) {
         return false;
     }
-    if ((n2cd === 6 || n2cd === 7) && n1cd === 0) {
+    if ((ntype === 0 ? n2cd === 7 : n2cd === 6) && n1cd === 0) {
         return true;
     }
     return false;
