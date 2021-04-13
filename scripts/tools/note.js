@@ -26,77 +26,69 @@ function getNoteCount(notes) {
     }
     return noteCount;
 }
-function countNoteLayer(notes, l) {
-    let count = 0;
-    notes.forEach((note) => {
-        if (note._type !== 3 && note._lineLayer === l) count++;
-    });
-    return count;
-}
 function countNoteIndex(notes, i) {
     let count = 0;
     notes.forEach((note) => {
-        if (note._type !== 3 && note._lineIndex === i) count++;
+        if (note._type !== 3 && note._lineIndex === i) {
+            count++;
+        }
+    });
+    return count;
+}
+function countNoteLayer(notes, l) {
+    let count = 0;
+    notes.forEach((note) => {
+        if (note._type !== 3 && note._lineLayer === l) {
+            count++;
+        }
     });
     return count;
 }
 function countNoteIndexLayer(notes, i, l) {
     let count = 0;
     notes.forEach((note) => {
-        if (note._type !== 3 && note._lineIndex === i && note._lineLayer === l) count++;
+        if (note._type !== 3 && note._lineIndex === i && note._lineLayer === l) {
+            count++;
+        }
     });
     return count;
 }
 
 function findEffectiveBPM(notes, bpm) {
     let EBPM = 0;
-    let lastRed;
-    let lastBlue;
+    const lastNote = {
+        0: null,
+        1: null,
+        3: null,
+    };
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
-        if (note._type === 0) {
-            if (lastRed) {
-                if (swingNext(note, lastRed)) {
-                    EBPM = Math.max(EBPM, bpm / ((note._time - lastRed._time) * 2));
-                }
+        if ((note._type === 0 || note._type === 1) && lastNote[note._type]) {
+            if (swingNext(note, lastNote[note._type])) {
+                EBPM = Math.max(EBPM, bpm / ((note._time - lastNote[note._type]._time) * 2));
             }
-            lastRed = note;
-        } else if (note._type === 1) {
-            if (lastBlue) {
-                if (swingNext(note, lastBlue)) {
-                    EBPM = Math.max(EBPM, bpm / ((note._time - lastBlue._time) * 2));
-                }
-            }
-            lastBlue = note;
         }
+        lastNote[note._type] = note;
     }
     return EBPM;
 }
 // i am very smart
 function findEffectiveBPMSwing(notes, bpm) {
     let EBPM = 0;
-    let lastRed;
-    let lastBlue;
+    const lastNote = {
+        0: null,
+        1: null,
+        3: null,
+    };
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
-        if (note._type === 0) {
-            if (lastRed) {
-                if (swingNext(note, lastRed)) {
-                    EBPM = Math.max(EBPM, bpm / ((note._time - lastRed._time) * 2));
-                    lastRed = note;
-                }
-            } else {
-                lastRed = note;
+        if ((note._type === 0 || note._type === 1) && lastNote[note._type]) {
+            if (swingNext(note, lastNote[note._type])) {
+                EBPM = Math.max(EBPM, bpm / ((note._time - lastNote[note._type]._time) * 2));
+                lastNote[note._type] = note;
             }
-        } else if (note._type === 1) {
-            if (lastBlue) {
-                if (swingNext(note, lastBlue)) {
-                    EBPM = Math.max(EBPM, bpm / ((note._time - lastBlue._time) * 2));
-                    lastBlue = note;
-                }
-            } else {
-                lastBlue = note;
-            }
+        } else {
+            lastNote[note._type] = note;
         }
     }
     return EBPM;
@@ -105,27 +97,23 @@ function getEffectiveBPMTime(diff, mapSettings) {
     const { _notes: notes } = diff;
     const { bpm, bpmc, offset } = mapSettings;
     const arr = [];
-    let lastRed;
-    let lastBlue;
+    const lastNote = {
+        0: null,
+        1: null,
+        3: null,
+    };
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         let EBPM = 0;
-        if (note._type === 0) {
-            if (lastRed) {
-                if (swingNext(note, lastRed)) {
-                    EBPM = bpm / ((note._time - lastRed._time) * 2);
-                }
+        if ((note._type === 0 || note._type === 1) && lastNote[note._type]) {
+            if (swingNext(note, lastNote[note._type])) {
+                EBPM = bpm / ((note._time - lastNote[note._type]._time) * 2);
             }
-            lastRed = note;
-        } else if (note._type === 1) {
-            if (lastBlue) {
-                if (swingNext(note, lastBlue)) {
-                    EBPM = bpm / ((note._time - lastBlue._time) * 2);
-                }
-            }
-            lastBlue = note;
         }
-        if (EBPM > tool.ebpm.th) arr.push(adjustTime(note._time, bpm, offset, bpmc));
+        lastNote[note._type] = note;
+        if (EBPM > tool.ebpm.th) {
+            arr.push(adjustTime(note._time, bpm, offset, bpmc));
+        }
     }
     return arr;
 }
@@ -133,185 +121,158 @@ function getEffectiveBPMSwingTime(diff, mapSettings) {
     const { _notes: notes } = diff;
     const { bpm, bpmc, offset } = mapSettings;
     const arr = [];
-    let lastRed;
-    let lastBlue;
+    const lastNote = {
+        0: null,
+        1: null,
+        3: null,
+    };
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         let EBPM = 0;
-        if (note._type === 0) {
-            if (lastRed) {
-                if (swingNext(note, lastRed)) {
-                    EBPM = bpm / ((note._time - lastRed._time) * 2);
-                    lastRed = note;
-                }
-            } else {
-                lastRed = note;
+        if ((note._type === 0 || note._type === 1) && lastNote[note._type]) {
+            if (swingNext(note, lastNote[note._type])) {
+                EBPM = bpm / ((note._time - lastNote[note._type]._time) * 2);
+                lastNote[note._type] = note;
             }
-        } else if (note._type === 1) {
-            if (lastBlue) {
-                if (swingNext(note, lastBlue)) {
-                    EBPM = bpm / ((note._time - lastBlue._time) * 2);
-                    lastBlue = note;
-                }
-            } else {
-                lastBlue = note;
-            }
+        } else {
+            lastNote[note._type] = note;
         }
-        if (EBPM > tool.ebpm.thSwing) arr.push(adjustTime(note._time, bpm, offset, bpmc));
+        if (EBPM > tool.ebpm.thSwing) {
+            arr.push(adjustTime(note._time, bpm, offset, bpmc));
+        }
     }
     return arr;
 }
 function getMinSliderSpeed(notes) {
-    let speedR = 0;
-    let speedB = 0;
-    let lastRed;
-    let lastBlue;
+    const sliderSpeed = {
+        0: 0,
+        1: 0,
+        3: 0,
+    };
+    const lastNote = {
+        0: null,
+        1: null,
+        3: null,
+    };
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
-        if (note._type === 0) {
-            if (lastRed) {
-                if (!swingNext(note, lastRed)) {
-                    speedR = Math.max(speedR, toRealTime(note._time - lastRed._time) / (swingWindow(note, lastRed) ? 2 : 1));
-                }
-                lastRed = note;
-            } else {
-                lastRed = note;
+        if ((note._type === 0 || note._type === 1) && lastNote[note._type]) {
+            if (!swingNext(note, lastNote[note._type])) {
+                sliderSpeed[note._type] = Math.max(
+                    sliderSpeed[note._type],
+                    toRealTime(note._time - lastNote[note._type]._time) / (swingWindow(note, lastNote[note._type]) ? 2 : 1)
+                );
             }
-        } else if (note._type === 1) {
-            if (lastBlue) {
-                if (!swingNext(note, lastBlue)) {
-                    speedB = Math.max(speedB, toRealTime(note._time - lastBlue._time) / (swingWindow(note, lastBlue) ? 2 : 1));
-                }
-                lastBlue = note;
-            } else {
-                lastBlue = note;
-            }
+            lastNote[note._type] = note;
+        } else {
+            lastNote[note._type] = note;
         }
+        lastNote[note._type] = note;
     }
-    return Math.max(speedR, speedB);
+    return Math.max(sliderSpeed[0], sliderSpeed[1]);
 }
 function getMaxSliderSpeed(notes) {
-    let speedR = Number.MAX_SAFE_INTEGER;
-    let speedB = Number.MAX_SAFE_INTEGER;
-    let lastRed;
-    let lastBlue;
+    const sliderSpeed = {
+        0: Number.MAX_SAFE_INTEGER,
+        1: Number.MAX_SAFE_INTEGER,
+        3: Number.MAX_SAFE_INTEGER,
+    };
+    const lastNote = {
+        0: null,
+        1: null,
+        3: null,
+    };
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
-        if (note._type === 0) {
-            if (lastRed) {
-                if (!swingNext(note, lastRed) && toRealTime(note._time - lastRed._time) > 0.001) {
-                    speedR = Math.min(speedR, toRealTime(note._time - lastRed._time) / (swingWindow(note, lastRed) ? 2 : 1));
-                }
-                lastRed = note;
-            } else {
-                lastRed = note;
+        if ((note._type === 0 || note._type === 1) && lastNote[note._type]) {
+            if (!swingNext(note, lastNote[note._type]) && toRealTime(note._time - lastNote[note._type]._time) > 0.001) {
+                sliderSpeed[note._type] = Math.min(
+                    sliderSpeed[note._type],
+                    toRealTime(note._time - lastNote[note._type]._time) / (swingWindow(note, lastNote[note._type]) ? 2 : 1)
+                );
             }
-        } else if (note._type === 1) {
-            if (lastBlue) {
-                if (!swingNext(note, lastBlue) && toRealTime(note._time - lastBlue._time) > 0.001) {
-                    speedB = Math.min(speedB, toRealTime(note._time - lastBlue._time) / (swingWindow(note, lastBlue) ? 2 : 1));
-                }
-                lastBlue = note;
-            } else {
-                lastBlue = note;
-            }
+            lastNote[note._type] = note;
+        } else {
+            lastNote[note._type] = note;
         }
     }
-    return Math.min(speedR, speedB);
+    return Math.min(sliderSpeed[0], sliderSpeed[1]);
 }
 
 function detectDoubleDirectional(diff, mapSettings) {
     const { _notes: notes } = diff;
     const { bpm, bpmc, offset } = mapSettings;
     const arr = [];
-    let lastRed;
-    let lastRedDir;
-    let startRedDot;
-    let lastBlue;
-    let lastBlueDir;
-    let startBlueDot;
+    const lastNote = {
+        0: null,
+        1: null,
+        3: null,
+    };
+    const lastNoteDirection = {
+        0: null,
+        1: null,
+        3: null,
+    };
+    const startNoteDot = {
+        0: null,
+        1: null,
+        3: null,
+    };
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
-        if (note._type === 0) {
-            if (lastRed) {
-                if (swingNext(note, lastRed)) {
-                    if (startRedDot) {
-                        startRedDot = null;
-                        lastRedDir = flipCutDir[lastRedDir];
-                    }
-                    if (checkDD(note._cutDirection, lastRedDir)) {
-                        arr.push(adjustTime(note._time, bpm, offset, bpmc));
-                    }
-                    if (note._cutDirection === 8) {
-                        startRedDot = note;
-                    } else {
-                        lastRedDir = note._cutDirection;
-                    }
-                } else {
-                    if (startRedDot && checkDD(note._cutDirection, lastRedDir)) {
-                        arr.push(adjustTime(startRedDot._time, bpm, offset, bpmc));
-                        startRedDot = null;
-                        lastRedDir = note._cutDirection;
-                    }
-                    if (note._cutDirection !== 8) {
-                        startRedDot = null;
-                        lastRedDir = note._cutDirection;
-                    }
+        if ((note._type === 0 || note._type === 1) && lastNote[note._type]) {
+            if (swingNext(note, lastNote[note._type])) {
+                if (startNoteDot[note._type]) {
+                    startNoteDot[note._type] = null;
+                    lastNoteDirection[note._type] = flipCutDir[lastNoteDirection[note._type]];
                 }
-            } else lastRedDir = note._cutDirection;
-            lastRed = note;
-        } else if (note._type === 1) {
-            if (lastBlue) {
-                if (swingNext(note, lastBlue)) {
-                    if (startBlueDot) {
-                        startBlueDot = null;
-                        lastBlueDir = flipCutDir[lastBlueDir];
-                    }
-                    if (checkDD(note._cutDirection, lastBlueDir)) {
-                        arr.push(adjustTime(note._time, bpm, offset, bpmc));
-                    }
-                    if (note._cutDirection === 8) {
-                        startBlueDot = note;
-                    } else {
-                        lastBlueDir = note._cutDirection;
-                    }
-                } else {
-                    if (startBlueDot && checkDD(note._cutDirection, lastBlueDir)) {
-                        arr.push(adjustTime(startBlueDot._time, bpm, offset, bpmc));
-                        startBlueDot = null;
-                        lastBlueDir = note._cutDirection;
-                    }
-                    if (note._cutDirection !== 8) {
-                        startBlueDot = null;
-                        lastBlueDir = note._cutDirection;
-                    }
+                if (checkDD(note._cutDirection, lastNoteDirection[note._type])) {
+                    arr.push(adjustTime(note._time, bpm, offset, bpmc));
                 }
-            } else lastBlueDir = note._cutDirection;
-            lastBlue = note;
-        } else if (note._type === 3) {
+                if (note._cutDirection === 8) {
+                    startNoteDot[note._type] = note;
+                } else {
+                    lastNoteDirection[note._type] = note._cutDirection;
+                }
+            } else {
+                if (startNoteDot[note._type] && checkDD(note._cutDirection, lastNoteDirection[note._type])) {
+                    arr.push(adjustTime(startNoteDot[note._type]._time, bpm, offset, bpmc));
+                    startNoteDot[note._type] = null;
+                    lastNoteDirection[note._type] = note._cutDirection;
+                }
+                if (note._cutDirection !== 8) {
+                    startNoteDot[note._type] = null;
+                    lastNoteDirection[note._type] = note._cutDirection;
+                }
+            }
+        } else {
+            lastNoteDirection[note._type] = note._cutDirection;
+        }
+        lastNote[note._type] = note;
+        if (note._type === 3) {
             // on bottom row
             if (note._lineLayer === 0) {
                 //on right center
                 if (note._lineIndex === 1) {
-                    lastRedDir = 0;
-                    startRedDot = null;
+                    lastNoteDirection[0] = 0;
+                    startNoteDot[0] = null;
                 }
                 //on left center
                 if (note._lineIndex === 2) {
-                    lastBlueDir = 0;
-                    startBlueDot = null;
+                    lastNoteDirection[1] = 0;
+                    startNoteDot[1] = null;
                 }
                 //on top row
             } else if (note._lineLayer === 2) {
                 //on right center
                 if (note._lineIndex === 1) {
-                    lastRedDir = 1;
-                    startRedDot = null;
+                    lastNoteDirection[0] = 1;
+                    startNoteDot[0] = null;
                 }
                 //on left center
                 if (note._lineIndex === 2) {
-                    lastBlueDir = 1;
-                    startBlueDot = null;
+                    lastNoteDirection[1] = 1;
+                    startNoteDot[1] = null;
                 }
             }
         }
@@ -386,7 +347,8 @@ function detectVisionBlock(diff, mapSettings) {
         }
         if (note._lineLayer === 1 && note._lineIndex === 1) {
             lastMidL = note;
-        } else if (note._lineLayer === 1 && note._lineIndex === 2) {
+        }
+        if (note._lineLayer === 1 && note._lineIndex === 2) {
             lastMidR = note;
         }
     }
@@ -399,39 +361,26 @@ function detectOffPrecision(diff, mapSettings) {
     const { _notes: notes } = diff;
     const { bpm, bpmc, offset } = mapSettings;
     const arr = [];
-    let lastRed;
-    let lastBlue;
+    const lastNote = {
+        0: null,
+        1: null,
+        3: null,
+    };
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         const noteTime = adjustTime(note._time, bpm, offset, bpmc);
-        if (note._type === 0) {
-            if (lastRed) {
-                if (swingNext(note, lastRed)) {
-                    if (checkPrec(noteTime)) {
-                        arr.push(noteTime);
-                    }
-                    lastRed = note;
-                }
-            } else {
+        if ((note._type === 0 || note._type === 1) && lastNote[note._type]) {
+            if (swingNext(note, lastNote[note._type])) {
                 if (checkPrec(noteTime)) {
                     arr.push(noteTime);
                 }
-                lastRed = note;
+                lastNote[note._type] = note;
             }
-        } else if (note._type === 1) {
-            if (lastBlue) {
-                if (swingNext(note, lastBlue)) {
-                    if (checkPrec(noteTime)) {
-                        arr.push(noteTime);
-                    }
-                    lastBlue = note;
-                }
-            } else {
-                if (checkPrec(noteTime)) {
-                    arr.push(noteTime);
-                }
-                lastBlue = note;
+        } else {
+            if ((note._type === 0 || note._type === 1) && checkPrec(noteTime)) {
+                arr.push(noteTime);
             }
+            lastNote[note._type] = note;
         }
     }
     return arr.filter(function (x, i, ary) {
@@ -566,85 +515,57 @@ function detectShrAngle(diff, mapSettings) {
     const { _notes: notes } = diff;
     const { bpm, bpmc, offset } = mapSettings;
     const arr = [];
-    let lastRed;
-    let lastRedDir;
-    let startRedDot;
-    let lastBlue;
-    let lastBlueDir;
-    let startBlueDot;
+    const lastNote = {
+        0: null,
+        1: null,
+        3: null,
+    };
+    const lastNoteDirection = {
+        0: null,
+        1: null,
+        3: null,
+    };
+    const startNoteDot = {
+        0: null,
+        1: null,
+        3: null,
+    };
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
-        if (note._type === 0) {
-            if (lastRed) {
-                if (swingNext(note, lastRed)) {
-                    if (startRedDot) {
-                        startRedDot = null;
-                        lastRedDir = flipCutDir[lastRedDir];
-                    }
-                    if (
-                        checkShrAngle(note._cutDirection, lastRedDir, note._type) &&
-                        isBelowThres(note._time - lastRed._time, tool.maxShrAngle + 0.01)
-                    ) {
-                        arr.push(adjustTime(note._time, bpm, offset, bpmc));
-                    }
-                    if (note._cutDirection === 8) {
-                        startRedDot = note;
-                    } else {
-                        lastRedDir = note._cutDirection;
-                    }
+        if ((note._type === 0 || note._type === 1) && lastNote[note._type]) {
+            if (swingNext(note, lastNote[note._type])) {
+                if (startNoteDot[note._type]) {
+                    startNoteDot[note._type] = null;
+                    lastNoteDirection[note._type] = flipCutDir[lastNoteDirection[note._type]];
+                }
+                if (
+                    checkShrAngle(note._cutDirection, lastNoteDirection[note._type], note._type) &&
+                    isBelowThres(note._time - lastNote[note._type]._time, tool.maxShrAngle + 0.01)
+                ) {
+                    arr.push(adjustTime(note._time, bpm, offset, bpmc));
+                }
+                if (note._cutDirection === 8) {
+                    startNoteDot[note._type] = note;
                 } else {
-                    if (
-                        startRedDot &&
-                        checkShrAngle(note._cutDirection, lastRedDir, note._type) &&
-                        isBelowThres(note._time - lastRed._time, tool.maxShrAngle + 0.01)
-                    ) {
-                        arr.push(adjustTime(startRedDot._time, bpm, offset, bpmc));
-                        startRedDot = null;
-                    }
-                    if (note._cutDirection !== 8) {
-                        lastRedDir = note._cutDirection;
-                    }
+                    lastNoteDirection[note._type] = note._cutDirection;
                 }
             } else {
-                lastRedDir = note._cutDirection;
-            }
-            lastRed = note;
-        } else if (note._type === 1) {
-            if (lastBlue) {
-                if (swingNext(note, lastBlue)) {
-                    if (startBlueDot) {
-                        startBlueDot = null;
-                        lastBlueDir = flipCutDir[lastBlueDir];
-                    }
-                    if (
-                        checkShrAngle(note._cutDirection, lastBlueDir, note._type) &&
-                        isBelowThres(note, lastBlue, tool.maxShrAngle + 0.01)
-                    ) {
-                        arr.push(adjustTime(note._time, bpm, offset, bpmc));
-                    }
-                    if (note._cutDirection === 8) {
-                        startBlueDot = note;
-                    } else {
-                        lastBlueDir = note._cutDirection;
-                    }
-                } else {
-                    if (
-                        startBlueDot &&
-                        checkShrAngle(note._cutDirection, lastBlueDir, note._type) &&
-                        isBelowThres(note, lastBlue, tool.maxShrAngle + 0.01)
-                    ) {
-                        arr.push(adjustTime(startBlueDot._time, bpm, offset, bpmc));
-                        startBlueDot = null;
-                    }
-                    if (note._cutDirection !== 8) {
-                        lastBlueDir = note._cutDirection;
-                    }
+                if (
+                    startNoteDot[note._type] &&
+                    checkShrAngle(note._cutDirection, lastNoteDirection[note._type], note._type) &&
+                    isBelowThres(note._time - lastNote[note._type]._time, tool.maxShrAngle + 0.01)
+                ) {
+                    arr.push(adjustTime(startNoteDot[note._type]._time, bpm, offset, bpmc));
+                    startNoteDot[note._type] = null;
                 }
-            } else {
-                lastBlueDir = note._cutDirection;
+                if (note._cutDirection !== 8) {
+                    lastNoteDirection[note._type] = note._cutDirection;
+                }
             }
-            lastBlue = note;
+        } else {
+            lastNoteDirection[note._type] = note._cutDirection;
         }
+        lastNote[note._type] = note;
     }
     return arr.filter(function (x, i, ary) {
         return !i || x !== ary[i - 1];
@@ -714,56 +635,45 @@ function detectSpeedPause(diff, mapSettings) {
     const { _notes: notes } = diff;
     const { bpm, bpmc, offset } = mapSettings;
     const arr = [];
-    let lastRed;
-    let lastRedPause;
-    let lastBlue;
-    let lastBluePause;
-    let maybePauseRed = false;
-    let maybePauseBlue = false;
+    const lastNote = {
+        0: null,
+        1: null,
+        3: null,
+    };
+    const lastNotePause = {
+        0: null,
+        1: null,
+        3: null,
+    };
+    const maybePause = {
+        0: false,
+        1: false,
+        3: false,
+    };
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
-        if (note._type === 0) {
-            if (lastRed) {
-                if (swingNext(note, lastRed)) {
-                    if (isBelowThres(note._time - lastRed._time, tool.maxSpeedPause * 2 + 0.01)) {
-                        if (
-                            maybePauseBlue &&
-                            maybePauseRed &&
-                            isBelowThres(lastRed._time - lastRedPause._time, tool.maxSpeedPause * 3 + 0.01)
-                        ) {
-                            arr.push(adjustTime(lastRed._time, bpm, offset, bpmc));
-                        }
-                        maybePauseRed = false;
-                    } else if (!maybePauseRed) {
-                        maybePauseRed = true;
-                        lastRedPause = lastRed;
+        if ((note._type === 0 || note._type === 1) && lastNote[note._type]) {
+            if (swingNext(note, lastNote[note._type])) {
+                if (isBelowThres(note._time - lastNote[note._type]._time, tool.maxSpeedPause * 2 + 0.01)) {
+                    if (
+                        maybePause[0] &&
+                        maybePause[1] &&
+                        isBelowThres(
+                            lastNote[note._type]._time - lastNotePause[note._type]._time,
+                            tool.maxSpeedPause * 3 + 0.01
+                        )
+                    ) {
+                        arr.push(adjustTime(lastNote[note._type]._time, bpm, offset, bpmc));
                     }
-                    lastRed = note;
+                    maybePause[note._type] = false;
+                } else if (!maybePause[note._type]) {
+                    maybePause[note._type] = true;
+                    lastNotePause[note._type] = lastNote[note._type];
                 }
-            } else {
-                lastRed = note;
+                lastNote[note._type] = note;
             }
-        } else if (note._type === 1) {
-            if (lastBlue) {
-                if (swingNext(note, lastBlue)) {
-                    if (isBelowThres(note._time - lastBlue._time, tool.maxSpeedPause * 2 + 0.01)) {
-                        if (
-                            maybePauseBlue &&
-                            maybePauseRed &&
-                            isBelowThres(lastBlue._time - lastBluePause._time, tool.maxSpeedPause * 3 + 0.01)
-                        ) {
-                            arr.push(adjustTime(lastBlue._time, bpm, offset, bpmc));
-                        }
-                        maybePauseBlue = false;
-                    } else if (!maybePauseBlue) {
-                        maybePauseBlue = true;
-                        lastBluePause = lastBlue;
-                    }
-                    lastBlue = note;
-                }
-            } else {
-                lastBlue = note;
-            }
+        } else {
+            lastNote[note._type] = note;
         }
     }
     return arr;
@@ -789,49 +699,33 @@ function detectImproperWindowSnap(diff, mapSettings) {
     const { _notes: notes } = diff;
     const { bpm, bpmc, offset } = mapSettings;
     const arr = [];
-    let lastRed;
-    let lastBlue;
+    const lastNote = {
+        0: null,
+        1: null,
+        3: null,
+    };
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
-        if (note._type === 0) {
-            if (lastRed) {
-                if (swingNext(note, lastRed)) {
-                    lastRed = note;
-                } else if (
-                    isSlantedWindow(note, lastRed) &&
-                    isAboveThres(note._time - lastRed._time, tool.windowSnapTolerance) &&
-                    note._cutDirection === lastRed._cutDirection &&
-                    note._cutDirection !== 8 &&
-                    lastRed._cutDirection !== 8
-                ) {
-                    arr.push(adjustTime(lastRed._time, bpm, offset, bpmc));
-                }
-            } else {
-                lastRed = note;
+        if ((note._type === 0 || note._type === 1) && lastNote[note._type]) {
+            if (swingNext(note, lastNote[note._type])) {
+                lastNote[note._type] = note;
+            } else if (
+                isSlantedWindow(note, lastNote[note._type]) &&
+                isAboveThres(note._time - lastNote[note._type]._time, tool.windowSnapTolerance) &&
+                note._cutDirection === lastNote[note._type]._cutDirection &&
+                note._cutDirection !== 8 &&
+                lastNote[note._type]._cutDirection !== 8
+            ) {
+                arr.push(adjustTime(lastNote[note._type]._time, bpm, offset, bpmc));
             }
-        } else if (note._type === 1) {
-            if (lastBlue) {
-                if (swingNext(note, lastBlue)) {
-                    lastBlue = note;
-                } else if (
-                    isSlantedWindow(note, lastBlue) &&
-                    isAboveThres(note._time - lastBlue._time, tool.windowSnapTolerance) &&
-                    note._cutDirection === lastBlue._cutDirection &&
-                    note._cutDirection !== 8 &&
-                    lastBlue._cutDirection !== 8
-                ) {
-                    arr.push(adjustTime(lastBlue._time, bpm, offset, bpmc));
-                }
-            } else {
-                lastBlue = note;
-            }
+        } else {
+            lastNote[note._type] = note;
         }
     }
     return arr.filter(function (x, i, ary) {
         return !i || x !== ary[i - 1];
     });
 }
-
 function isSlantedWindow(n1, n2) {
     return swingWindow(n1, n2) && !swingDiagonal(n1, n2) && !swingHorizontal(n1, n2) && !swingVertical(n1, n2);
 }
@@ -840,47 +734,40 @@ function detectSlowSlider(diff, mapSettings) {
     const { _notes: notes } = diff;
     const { bpm, bpmc, offset } = mapSettings;
     const arr = [];
-    let speedR = 0;
-    let speedB = 0;
-    let lastRedTime;
-    let lastBlueTime;
-    let lastRed;
-    let lastBlue;
+    const lastNote = {
+        0: null,
+        1: null,
+        3: null,
+    };
+    const lastNoteTime = {
+        0: null,
+        1: null,
+        3: null,
+    };
+    const sliderSpeed = {
+        0: 0,
+        1: 0,
+        3: 0,
+    };
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
-        if (note._type === 0) {
-            if (lastRed) {
-                if (swingNext(note, lastRed)) {
-                    speedR = 0;
-                    lastRedTime = note._time;
-                } else {
-                    speedR = Math.max(speedR, toRealTime(note._time - lastRed._time) / (swingWindow(note, lastRed) ? 2 : 1));
-                }
-                lastRed = note;
-                if (speedR > tool.minSliderSpeed) {
-                    arr.push(adjustTime(lastRedTime, bpm, offset, bpmc));
-                }
+        if ((note._type === 0 || note._type === 1) && lastNote[note._type]) {
+            if (swingNext(note, lastNote[note._type])) {
+                sliderSpeed[note._type] = 0;
+                lastNoteTime[note._type] = note._time;
             } else {
-                lastRedTime = note._time;
-                lastRed = note;
+                sliderSpeed[note._type] = Math.max(
+                    sliderSpeed[note._type],
+                    toRealTime(note._time - lastNote[note._type]._time) / (swingWindow(note, lastNote[note._type]) ? 2 : 1)
+                );
             }
-        }
-        if (note._type === 1) {
-            if (lastBlue) {
-                if (swingNext(note, lastBlue)) {
-                    speedB = 0;
-                    lastBlueTime = note._time;
-                } else {
-                    speedB = Math.max(speedB, toRealTime(note._time - lastBlue._time) / (swingWindow(note, lastBlue) ? 2 : 1));
-                }
-                lastBlue = note;
-                if (speedB > tool.minSliderSpeed) {
-                    arr.push(adjustTime(lastBlueTime, bpm, offset, bpmc));
-                }
-            } else {
-                lastBlueTime = note._time;
-                lastBlue = note;
+            lastNote[note._type] = note;
+            if (sliderSpeed[note._type] > tool.minSliderSpeed) {
+                arr.push(adjustTime(lastNoteTime[note._type], bpm, offset, bpmc));
             }
+        } else {
+            lastNoteTime[note._type] = note._time;
+            lastNote[note._type] = note;
         }
     }
     return arr.filter(function (x, i, ary) {
