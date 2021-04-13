@@ -158,7 +158,6 @@ function downloadMap(url) {
         xhr.send();
     });
 }
-
 function fileInputHandler() {
     UILoadingStatus('info', 'Reading file input', 0);
     let file = this.files[0];
@@ -176,7 +175,6 @@ function fileInputHandler() {
         UILoadingStatus('info', 'Unsupported file format, please enter zip file', 0);
     }
 }
-
 async function extractZip(data) {
     UILoadingStatus('info', 'Extracting zip', 0);
     let mapZip = new JSZip();
@@ -191,7 +189,6 @@ async function extractZip(data) {
         console.error(err);
     }
 }
-
 function mapReset() {
     $('#mapset').empty();
     $('#mapdiff').empty();
@@ -293,6 +290,24 @@ $('#shrangle-max-prec').change(function () {
         $('#shrangle-max-prec').val(val);
     } else {
         $('#shrangle-max-prec').val(0);
+    }
+});
+
+// inline angle
+$('#inlineangle').click(UIToolCheckbox);
+$('#inlineangle-max').change(function () {
+    tool.maxInlineAngle = round(Math.abs(parseFloat(this.value)) / 1000, 3) || 0;
+    $('#inlineangle-max').val(round(tool.maxInlineAngle * 1000, 3));
+    if (flag.loaded) $('#inlineangle-max-prec').val(round(toBeatTime(tool.maxInlineAngle), 2));
+});
+$('#inlineangle-max-prec').change(function () {
+    if (flag.loaded) {
+        let val = round(Math.abs(parseFloat(this.value)), 2) || 1;
+        tool.maxInlineAngle = round(toRealTime(1 / val), 3);
+        $('#inlineangle-max').val(round(tool.maxInlineAngle * 1000, 3));
+        $('#inlineangle-max-prec').val(val);
+    } else {
+        $('#inlineangle-max-prec').val(0);
     }
 });
 

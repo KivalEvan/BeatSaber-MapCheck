@@ -23,6 +23,7 @@ const flag = {
         dd: true,
         slowSlider: true,
         hbStaircase: true,
+        inlineAngle: true,
         vbSpecific: 'diff',
         vbNote: true,
         shrAngle: false,
@@ -74,9 +75,10 @@ const tool = {
     },
 
     // misc
+    minSliderSpeed: 0.025,
     maxShrAngle: 0.15,
     maxSpeedPause: 0.075,
-    minSliderSpeed: 0.025,
+    maxInlineAngle: 0.1,
 
     // part where no one can control... yet
     // this is way less than i expected

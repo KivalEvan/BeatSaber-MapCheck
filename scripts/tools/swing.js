@@ -150,16 +150,17 @@ function calcMaxRollingSPS(swingArray, x) {
 
 function swingPerSecondInfo(diff) {
     const interval = 10;
+    const spsInfo = {
+        red: { overall: 0, peak: 0, median: 0, total: 0 },
+        blue: { overall: 0, peak: 0, median: 0, total: 0 },
+        total: { overall: 0, peak: 0, median: 0, total: 0 },
+    };
     const swing = swingCount(diff._notes, diff._duration);
     const swingTotal = swing.l.map(function (num, i) {
         return num + swing.r[i];
     });
     if (swingTotal.reduce((a, b) => a + b) === 0) {
-        return {
-            red: { overall: 0, peak: 0, median: 0, total: 0 },
-            blue: { overall: 0, peak: 0, median: 0, total: 0 },
-            total: { overall: 0, peak: 0, median: 0, total: 0 },
-        };
+        return spsInfo;
     }
     const swingIntervalRed = [];
     const swingIntervalBlue = [];
@@ -179,34 +180,18 @@ function swingPerSecondInfo(diff) {
         swingIntervalTotal.push(round(sliceTotal.reduce((a, b) => a + b) / maxInterval, 1));
     }
     const duration = diff._duration - getFirstInteractiveTime(diff, map.info._beatsPerMinute);
-    const swingTotalRed = round(swing.l.reduce((a, b) => a + b) / duration, 2);
-    const swingTotalRedPeak = calcMaxRollingSPS(swing.l, interval);
-    const swingTotalRedMedian = median(swingIntervalRed);
-    const swingTotalBlue = round(swing.r.reduce((a, b) => a + b) / duration, 2);
-    const swingTotalBluePeak = calcMaxRollingSPS(swing.r, interval);
-    const swingTotalBlueMedian = median(swingIntervalBlue);
-    const swingTotalOverall = round(swingTotal.reduce((a, b) => a + b) / duration, 2);
-    const swingTotalOverallPeak = calcMaxRollingSPS(swingTotal, interval);
-    const swingTotalOverallMedian = median(swingIntervalTotal);
+    spsInfo.red.overall = round(swing.l.reduce((a, b) => a + b) / duration, 2);
+    spsInfo.red.peak = calcMaxRollingSPS(swing.l, interval);
+    spsInfo.red.median = median(swingIntervalRed);
+    spsInfo.red.total = swing.l.reduce((a, b) => a + b);
+    spsInfo.blue.overall = round(swing.r.reduce((a, b) => a + b) / duration, 2);
+    spsInfo.blue.peak = calcMaxRollingSPS(swing.r, interval);
+    spsInfo.blue.median = median(swingIntervalBlue);
+    spsInfo.blue.total = swing.r.reduce((a, b) => a + b);
+    spsInfo.total.overall = round(swingTotal.reduce((a, b) => a + b) / duration, 2);
+    spsInfo.total.peak = calcMaxRollingSPS(swingTotal, interval);
+    spsInfo.total.median = median(swingIntervalTotal);
+    spsInfo.total.total = spsInfo.red.total + spsInfo.blue.total;
 
-    return {
-        red: {
-            overall: swingTotalRed,
-            peak: swingTotalRedPeak,
-            median: swingTotalRedMedian,
-            total: swing.l.reduce((a, b) => a + b),
-        },
-        blue: {
-            overall: swingTotalBlue,
-            peak: swingTotalBluePeak,
-            median: swingTotalBlueMedian,
-            total: swing.r.reduce((a, b) => a + b),
-        },
-        total: {
-            overall: swingTotalOverall,
-            peak: swingTotalOverallPeak,
-            median: swingTotalOverallMedian,
-            total: swingTotal.reduce((a, b) => a + b),
-        },
-    };
+    return spsInfo;
 }
