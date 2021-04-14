@@ -7,7 +7,6 @@ function isNote(note) {
     return note._type === 0 || note._type === 1;
 }
 
-// smort
 function getNoteCount(notes) {
     const noteCount = { red: 0, blue: 0, bomb: 0, chromaN: 0, chromaB: 0 };
     for (let i = notes.length - 1; i >= 0; i--) {
@@ -76,7 +75,6 @@ function findEffectiveBPM(notes, bpm) {
     }
     return EBPM;
 }
-// i am very smart
 function findEffectiveBPMSwing(notes, bpm) {
     let EBPM = 0;
     const lastNote = {
@@ -397,112 +395,82 @@ function checkPrec(nt) {
 
 // check if note occupies post-swing space
 // also fuck dot note
-// i need to rewrite this
 function detectHitboxStaircase(diff, mapSettings) {
     const { _notes: notes } = diff;
     const { bpm, bpmc, offset } = mapSettings;
     const arr = [];
-    let lastRed;
-    let lastBlue;
-    let lastSpeedRed = 0;
-    let lastSpeedBlue = 0;
-    let redIndexOccupy;
-    let redLayerOccupy;
-    let blueIndexOccupy;
-    let blueLayerOccupy;
+    const lastNote = {
+        0: null,
+        1: null,
+        3: null,
+    };
+    const lastNoteDirection = {
+        0: null,
+        1: null,
+        3: null,
+    };
+    const lastSpeed = {
+        0: null,
+        1: null,
+        3: null,
+    };
+    const noteOccupy = {
+        0: { _lineIndex: 0, _lineLayer: 0 },
+        1: { _lineIndex: 0, _lineLayer: 0 },
+        3: { _lineIndex: 0, _lineLayer: 0 },
+    };
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
-        if (note._type === 0) {
-            if (lastRed) {
-                // nested if moment
-                if (swingNext(note, lastRed)) {
-                    lastSpeedRed = toRealTime(note._time - lastRed._time);
-                    if (note._cutDirection !== 8) {
-                        redIndexOccupy = note._lineIndex + swingCutDirectionSpace[note._cutDirection][0];
-                        redLayerOccupy = note._lineLayer + swingCutDirectionSpace[note._cutDirection][1];
-                    } else {
-                        // no dot note >:(
-                        redIndexOccupy = -1;
-                        redLayerOccupy = -1;
-                    }
-                } else if (swingNoteEnd(note, lastRed)) {
-                    if (note._cutDirection !== 8) {
-                        redIndexOccupy = note._lineIndex + swingCutDirectionSpace[note._cutDirection][0];
-                        redLayerOccupy = note._lineLayer + swingCutDirectionSpace[note._cutDirection][1];
-                    } else {
-                        // re
-                        redIndexOccupy = note._lineIndex + swingCutDirectionSpace[lastRed._cutDirection][0];
-                        redLayerOccupy = note._lineLayer + swingCutDirectionSpace[lastRed._cutDirection][1];
-                    }
-                }
-                if (
-                    lastBlue &&
-                    note._time - lastBlue._time !== 0 &&
-                    isBelowThres(note._time - lastBlue._time, Math.min(tool.hitbox.staircase, lastSpeedBlue))
-                ) {
-                    if (
-                        note._lineIndex === blueIndexOccupy &&
-                        note._lineLayer === blueLayerOccupy &&
-                        !swingNoteDouble(note, notes, i)
-                    ) {
-                        arr.push(adjustTime(note._time, bpm, offset, bpmc));
-                    }
-                }
-            } else {
+        if (isNote(note) && lastNote[note._type]) {
+            if (swingNext(note, lastNote[note._type])) {
+                lastSpeed[note._type] = toRealTime(note._time - lastNote[note._type]._time);
                 if (note._cutDirection !== 8) {
-                    redIndexOccupy = note._lineIndex + swingCutDirectionSpace[note._cutDirection][0];
-                    redLayerOccupy = note._lineLayer + swingCutDirectionSpace[note._cutDirection][1];
+                    noteOccupy[note._type]._lineIndex = note._lineIndex + swingCutDirectionSpace[note._cutDirection][0];
+                    noteOccupy[note._type]._lineLayer = note._lineLayer + swingCutDirectionSpace[note._cutDirection][1];
                 } else {
-                    // dot note is ambiguous
-                    redIndexOccupy = -1;
-                    redLayerOccupy = -1;
+                    noteOccupy[note._type]._lineIndex = -1;
+                    noteOccupy[note._type]._lineLayer = -1;
+                }
+                lastNoteDirection[note._type] = note._cutDirection;
+            } else if (swingNoteEnd(note, lastNote[note._type], lastNoteDirection[note._type])) {
+                if (note._cutDirection !== 8) {
+                    noteOccupy[note._type]._lineIndex = note._lineIndex + swingCutDirectionSpace[note._cutDirection][0];
+                    noteOccupy[note._type]._lineLayer = note._lineLayer + swingCutDirectionSpace[note._cutDirection][1];
+                    lastNoteDirection[note._type] = note._cutDirection;
+                } else {
+                    noteOccupy[note._type]._lineIndex =
+                        note._lineIndex + swingCutDirectionSpace[lastNoteDirection[note._type]][0];
+                    noteOccupy[note._type]._lineLayer =
+                        note._lineLayer + swingCutDirectionSpace[lastNoteDirection[note._type]][1];
                 }
             }
-            lastRed = note;
-        } else if (note._type === 1) {
-            if (lastBlue) {
-                if (swingNext(note, lastBlue)) {
-                    lastSpeedBlue = toRealTime(note._time - lastBlue._time);
-                    if (note._cutDirection !== 8) {
-                        blueIndexOccupy = note._lineIndex + swingCutDirectionSpace[note._cutDirection][0];
-                        blueLayerOccupy = note._lineLayer + swingCutDirectionSpace[note._cutDirection][1];
-                    } else {
-                        blueIndexOccupy = -1;
-                        blueLayerOccupy = -1;
-                    }
-                } else if (swingNoteEnd(note, lastBlue)) {
-                    if (note._cutDirection !== 8) {
-                        blueIndexOccupy = note._lineIndex + swingCutDirectionSpace[note._cutDirection][0];
-                        blueLayerOccupy = note._lineLayer + swingCutDirectionSpace[note._cutDirection][1];
-                    } else {
-                        blueIndexOccupy = note._lineIndex + swingCutDirectionSpace[lastBlue._cutDirection][0];
-                        blueLayerOccupy = note._lineLayer + swingCutDirectionSpace[lastBlue._cutDirection][1];
-                    }
-                }
+            if (
+                lastNote[(note._type + 1) % 2] &&
+                note._time - lastNote[(note._type + 1) % 2]._time !== 0 &&
+                isBelowThres(
+                    note._time - lastNote[(note._type + 1) % 2]._time,
+                    Math.min(tool.hitbox.staircase, lastSpeed[(note._type + 1) % 2])
+                )
+            ) {
                 if (
-                    lastRed &&
-                    note._time - lastRed._time !== 0 &&
-                    isBelowThres(note._time - lastRed._time, Math.min(tool.hitbox.staircase, lastSpeedRed))
+                    note._lineIndex === noteOccupy[(note._type + 1) % 2]._lineIndex &&
+                    note._lineLayer === noteOccupy[(note._type + 1) % 2]._lineLayer &&
+                    !swingNoteDouble(note, notes, i)
                 ) {
-                    if (
-                        note._lineIndex === redIndexOccupy &&
-                        note._lineLayer === redLayerOccupy &&
-                        !swingNoteDouble(note, notes, i)
-                    ) {
-                        arr.push(adjustTime(note._time, bpm, offset, bpmc));
-                    }
-                }
-            } else {
-                if (note._cutDirection !== 8) {
-                    blueIndexOccupy = note._lineIndex + swingCutDirectionSpace[note._cutDirection][0];
-                    blueLayerOccupy = note._lineLayer + swingCutDirectionSpace[note._cutDirection][1];
-                } else {
-                    blueIndexOccupy = -1;
-                    blueLayerOccupy = -1;
+                    arr.push(adjustTime(note._time, bpm, offset, bpmc));
                 }
             }
-            lastBlue = note;
+        } else {
+            if (note._cutDirection !== 8) {
+                noteOccupy[note._type]._lineIndex = note._lineIndex + swingCutDirectionSpace[note._cutDirection][0];
+                noteOccupy[note._type]._lineLayer = note._lineLayer + swingCutDirectionSpace[note._cutDirection][1];
+            } else {
+                noteOccupy[note._type]._lineIndex = -1;
+                noteOccupy[note._type]._lineLayer = -1;
+            }
+            lastNoteDirection[note._type] = note._cutDirection;
         }
+        lastNote[note._type] = note;
     }
     return arr;
 }

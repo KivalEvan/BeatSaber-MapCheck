@@ -25,7 +25,7 @@ async function loadMap(mapZip) {
         UILoadingStatus('info', 'Loading cover image...', 10.4375);
         console.log('loading cover image');
         let imageFile = mapZip.file(map.info._coverImageFilename);
-        if (imageFile) {
+        if (!flag.noImage && imageFile) {
             let imgBase64 = await imageFile.async('base64');
             $('#coverimg').attr('src', 'data:image;base64,' + imgBase64);
             flag.map.load.image = true;
@@ -231,11 +231,13 @@ async function analyseMap() {
         arrText.push(printHTMLBold('Cover image too small', 'need at least 256x256'));
     }
     if (!flag.map.load.image) {
-        arrText.push(printHTMLBold('No cover image', 'could not be loaded or not found'));
-    }
-    if (flag.noAudio) {
         arrText.push(
-            printHTMLBold('No audio loaded', flag.noAudio ? 'no audio mode is enabled' : 'Could not be loaded or not found')
+            printHTMLBold('No cover image', flag.noAudio ? 'no image mode is enabled' : 'could not be loaded or not found')
+        );
+    }
+    if (!flag.map.load.audio) {
+        arrText.push(
+            printHTMLBold('No audio loaded', flag.noAudio ? 'no audio mode is enabled' : 'could not be loaded or not found')
         );
     }
     if (map.info._previewStartTime === 12 && map.info._previewDuration === 10) {

@@ -19,7 +19,6 @@ function getHalfJumpDuration(mapSettings) {
 
     return hjd;
 }
-
 function getHalfJumpDurationNoOffset(mapSettings) {
     const { njs, bpm } = mapSettings;
     const maxHalfJump = 18;
@@ -33,15 +32,32 @@ function getHalfJumpDurationNoOffset(mapSettings) {
 
     return hjd;
 }
-
 function getJumpDistance(mapSettings) {
     const { njs, bpm } = mapSettings;
     return njs * (60 / bpm) * getHalfJumpDuration(mapSettings) * 2;
 }
-
 function getJumpDistanceOptimalHigh(mapSettings) {
     const { njs } = mapSettings;
     return 18 * (1 / 1.07) ** njs + 18;
+}
+
+// i have no formula for this but whatever
+function getMapScore(nc, score = 115) {
+    let total = 0;
+    let multiplier = 1;
+    for (let i = 0; i < nc; i++) {
+        if (i === 1) {
+            multiplier = 2;
+        }
+        if (i === 5) {
+            multiplier = 4;
+        }
+        if (i === 13) {
+            multiplier = 8;
+        }
+        total += score * multiplier;
+    }
+    return total;
 }
 
 function findOutStartNote(diff, mapSettings) {
@@ -55,7 +71,6 @@ function findOutStartNote(diff, mapSettings) {
     }
     return '';
 }
-
 function findOutEndNote(diff, mapSettings) {
     const { _notes: notes } = diff;
     const { bpm } = mapSettings;
@@ -68,7 +83,6 @@ function findOutEndNote(diff, mapSettings) {
     }
     return '';
 }
-
 function findOutStartObstacle(diff, mapSettings) {
     const { _obstacles: obstacles } = diff;
     const { bpm } = mapSettings;
@@ -80,7 +94,6 @@ function findOutStartObstacle(diff, mapSettings) {
     }
     return '';
 }
-
 function findOutEndObstacle(diff, mapSettings) {
     const { _obstacles: obstacles } = diff;
     const { bpm } = mapSettings;
@@ -96,7 +109,6 @@ function findOutEndObstacle(diff, mapSettings) {
     }
     return '';
 }
-
 function findOutStartEvent(diff, mapSettings) {
     const { _events: events } = diff;
     const { bpm } = mapSettings;
@@ -108,7 +120,6 @@ function findOutStartEvent(diff, mapSettings) {
     }
     return '';
 }
-
 function findOutEndEvent(diff, mapSettings) {
     const { _events: events } = diff;
     const { bpm } = mapSettings;
@@ -193,7 +204,6 @@ function getFirstInteractiveTime(diff, bpm) {
     const firstInteractiveObstacleTime = findFirstInteractiveObstacleTime(obstacles, bpm);
     return Math.min(firstNoteTime, firstInteractiveObstacleTime);
 }
-
 function getLastInteractiveTime(diff, bpm) {
     const { _notes: notes, _obstacles: obstacles } = diff;
     let lastNoteTime = 0;
@@ -203,7 +213,6 @@ function getLastInteractiveTime(diff, bpm) {
     const lastInteractiveObstacleTime = findLastInteractiveObstacleTime(obstacles, bpm);
     return Math.max(lastNoteTime, lastInteractiveObstacleTime);
 }
-
 function findFirstInteractiveObstacleTime(obstacles, bpm) {
     for (let i = 0, len = obstacles.length; i < len; i++) {
         if (obstacles[i]._width >= 2 || obstacles[i]._lineIndex === 1 || obstacles[i]._lineIndex === 2) {
@@ -212,7 +221,6 @@ function findFirstInteractiveObstacleTime(obstacles, bpm) {
     }
     return Number.MAX_VALUE;
 }
-
 function findLastInteractiveObstacleTime(obstacles, bpm) {
     let obstacleEnd = 0;
     for (let i = obstacles.length - 1; i >= 0; i--) {

@@ -280,7 +280,7 @@ $('#shrangle').click(UIToolCheckbox);
 $('#shrangle-max').change(function () {
     tool.maxShrAngle = round(Math.abs(parseFloat(this.value)) / 1000, 3) || 0;
     $('#shrangle-max').val(round(tool.maxShrAngle * 1000, 3));
-    if (flag.loaded) $('#shrangle-max-prec').val(round(toBeatTime(tool.maxShrAngle), 2));
+    if (flag.loaded) $('#shrangle-max-prec').val(round(1 / toBeatTime(tool.maxShrAngle), 2));
 });
 $('#shrangle-max-prec').change(function () {
     if (flag.loaded) {
@@ -298,7 +298,7 @@ $('#inlineangle').click(UIToolCheckbox);
 $('#inlineangle-max').change(function () {
     tool.maxInlineAngle = round(Math.abs(parseFloat(this.value)) / 1000, 3) || 0;
     $('#inlineangle-max').val(round(tool.maxInlineAngle * 1000, 3));
-    if (flag.loaded) $('#inlineangle-max-prec').val(round(toBeatTime(tool.maxInlineAngle), 2));
+    if (flag.loaded) $('#inlineangle-max-prec').val(round(1 / toBeatTime(tool.maxInlineAngle), 2));
 });
 $('#inlineangle-max-prec').change(function () {
     if (flag.loaded) {
@@ -316,7 +316,7 @@ $('#speedpause').click(UIToolCheckbox);
 $('#speedpause-max').change(function () {
     tool.maxSpeedPause = round(Math.abs(parseFloat(this.value)) / 1000, 3) || 0;
     $('#speedpause-max').val(round(tool.maxSpeedPause * 1000, 3));
-    if (flag.loaded) $('#speedpause-max-prec').val(round(toBeatTime(tool.maxSpeedPause), 2));
+    if (flag.loaded) $('#speedpause-max-prec').val(round(1 / toBeatTime(tool.maxSpeedPause), 2));
 });
 $('#speedpause-max-prec').change(function () {
     if (flag.loaded) {
@@ -688,6 +688,7 @@ async function UICreateDiffInfo(charName, diff) {
     if (mapSettings.bpmc.length > 0) {
         textMap.push(`BPM changes: ${mapSettings.bpmc.length}`);
     }
+    textMap.push(`Max Score: ${formatNumber(getMapScore(notes.red + notes.blue))}`);
     textMap.push(`Effective BPM: ${findEffectiveBPM(diff._data._notes, mapSettings.bpm).toFixed(2)}`);
     textMap.push(`Effective BPM (swing): ${findEffectiveBPMSwing(diff._data._notes, mapSettings.bpm).toFixed(2)}`);
     if (sliderSpeed.min > 0) {
