@@ -122,6 +122,7 @@ async function loadMap(mapZip) {
         UIOutputDisplay(tool.select.char, tool.select.diff);
 
         $('#slowslider-min-prec').val(round(1 / toBeatTime(tool.minSliderSpeed), 2));
+        $('#inlineangle-max-prec').val(round(1 / toBeatTime(tool.maxInlineAngle), 2));
         $('#shrangle-max-prec').val(round(1 / toBeatTime(tool.maxShrAngle), 2));
         $('#speedpause-max-prec').val(round(1 / toBeatTime(tool.maxSpeedPause), 2));
         $('#vb-min-beat').val(round(toBeatTime(tool.vb.min), 3));
@@ -230,11 +231,11 @@ async function analyseMap() {
         arrText.push(printHTMLBold('Cover image too small', 'need at least 256x256'));
     }
     if (!flag.map.load.image) {
-        arrText.push(printHTMLBold('No cover image', 'Could not be loaded or not found'));
+        arrText.push(printHTMLBold('No cover image', 'could not be loaded or not found'));
     }
     if (flag.noAudio) {
         arrText.push(
-            printHTMLBold('No audio loaded', flag.noAudio ? 'No audio mode is enabled' : 'Could not be loaded or not found')
+            printHTMLBold('No audio loaded', flag.noAudio ? 'no audio mode is enabled' : 'Could not be loaded or not found')
         );
     }
     if (map.info._previewStartTime === 12 && map.info._previewDuration === 10) {
@@ -442,6 +443,7 @@ async function analyseDifficulty(charName, diff) {
     if (flag.tool.speedPause) {
         arrText.push(printHTMLBold('Speed pause []', detectSpeedPause(diff._data, mapSettings)));
     }
+    arrText.push(printHTMLBold('Sharp inline angle []', detectInlineAngle(diff._data, mapSettings)));
     return arrText.filter(function (x) {
         return x !== '';
     });

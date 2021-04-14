@@ -1,5 +1,19 @@
 # Changelog
 
+## v1.5.4 [2021-04-##]
+
+### Added
+
+-   Inline rotation check
+
+### Changed
+
+-   Refactored note related function (there may be unintended side effect, please let me know if you find them)
+
+### Fixed
+
+-   Shrado angle not detecting blue note
+
 ## v1.5.3 [2021-04-13]
 
 ### Changed

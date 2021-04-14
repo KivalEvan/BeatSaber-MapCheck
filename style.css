@@ -248,8 +248,8 @@ header {
     overflow: auto;
 }
 .output-box#output-diff {
-    height: 14em;
-    max-height: 14em;
+    height: 16em;
+    max-height: 16em;
 }
 .output-box#output-map {
     height: 6em;

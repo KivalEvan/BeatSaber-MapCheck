@@ -13,6 +13,7 @@ if (flag.tool.vbSpecific === 'time') $('#vb-specific-time').prop('checked', true
 if (flag.tool.vbSpecific === 'diff') $('#vb-specific-diff').prop('checked', true);
 if (flag.tool.vbNote) $('#vb-note').prop('checked', true);
 if (flag.tool.shrAngle) $('#shrangle').prop('checked', true);
+if (flag.tool.inlineAngle) $('#inlineangle').prop('checked', true);
 if (flag.tool.speedPause) $('#speedpause').prop('checked', true);
 if (flag.tool.slowSlider) $('#slowslider').prop('checked', true);
 
@@ -20,6 +21,8 @@ $('#ebpm').val(tool.ebpm.th);
 $('#ebpms').val(tool.ebpm.thSwing);
 $('#slowslider-min').val(tool.minSliderSpeed * 1000);
 $('#slowslider-min-prec').val(0);
+$('#inlineangle-max').val(tool.maxInlineAngle * 1000);
+$('#inlineangle-max-prec').val(0);
 $('#shrangle-max').val(tool.maxShrAngle * 1000);
 $('#shrangle-max-prec').val(0);
 $('#speedpause-max').val(tool.maxSpeedPause * 1000);
@@ -121,10 +124,10 @@ function mod(x, m) {
     if (m < 0) {
         m = -m;
     }
-    r = x % m;
+    let r = x % m;
     return r < 0 ? r + m : r;
 }
-function distance(a, b, m) {
+function shortRotDistance(a, b, m) {
     return Math.min(mod(a - b, m), mod(b - a, m));
 }
 
