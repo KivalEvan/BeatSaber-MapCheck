@@ -21,10 +21,33 @@ function swingDiagonal(n1, n2) {
     return Math.abs(n1._lineIndex - n2._lineIndex) === Math.abs(n1._lineLayer - n2._lineLayer);
 }
 
-function swingNoteEnd(n1, n2) {
+function swingNoteEnd(n1, n2, cutDir = 8) {
     // fuck u and ur dot note stack
-    if (n1._cutDirection === 8 && n2._cutDirection === 8) {
-        return false;
+    if (n1._cutDirection === 8 && n2._cutDirection === 8 && cutDir !== 8) {
+        // if end note on right side
+        if (n1._lineIndex > n2._lineIndex) {
+            if (cutDir === 5 || cutDir === 3 || cutDir === 7) {
+                return true;
+            }
+        }
+        // if end note on left side
+        if (n1._lineIndex < n2._lineIndex) {
+            if (cutDir === 6 || cutDir === 2 || cutDir === 4) {
+                return true;
+            }
+        }
+        // if end note is above
+        if (n1._lineLayer > n2._lineLayer) {
+            if (cutDir === 4 || cutDir === 0 || cutDir === 5) {
+                return true;
+            }
+        }
+        // if end note is below
+        if (n1._lineLayer < n2._lineLayer) {
+            if (cutDir === 6 || cutDir === 1 || cutDir === 7) {
+                return true;
+            }
+        }
     }
     // if end note on right side
     if (n1._lineIndex > n2._lineIndex) {

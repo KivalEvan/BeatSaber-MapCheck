@@ -48,6 +48,9 @@ if ($.urlParam('url') !== null) {
     downloadFromID($.urlParam('id'));
 }
 // used for debugging, skipping audio process
+if ($.urlParam('noimage') !== null) {
+    flag.noImage = $.urlParam('noimage') === 'true' ? true : false;
+}
 if ($.urlParam('noaudio') !== null) {
     flag.noAudio = $.urlParam('noaudio') === 'true' ? true : false;
 }
@@ -72,10 +75,13 @@ function toMMSS(num) {
     return `${min}:${sec > 9 ? sec : `0${sec}`}`;
 }
 
+function formatNumber(num) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
 function toRealTime(beat) {
     return (beat / map.info._beatsPerMinute) * 60;
 }
-
 function toBeatTime(num) {
     return (num * map.info._beatsPerMinute) / 60;
 }
@@ -98,7 +104,6 @@ function getBPMChangesTime(bpm, offset = 0, bpmc = []) {
     }
     return BPMChanges;
 }
-
 function adjustTime(beat, bpm, offset = 0, bpmc = []) {
     for (let i = bpmc.length - 1; i >= 0; i--) {
         if (beat > bpmc[i].jsonTime) {
@@ -107,7 +112,6 @@ function adjustTime(beat, bpm, offset = 0, bpmc = []) {
     }
     return offsetBegone(beat, bpm, offset);
 }
-
 function offsetBegone(beat, bpm, offset) {
     return round(((toRealTime(beat) - offset) * bpm) / 60, 3);
 }
@@ -150,7 +154,6 @@ function printHTMLBold(arg1, arg2) {
 function isAboveThres(t, rt) {
     return toRealTime(t) > rt;
 }
-
 function isBelowThres(t, rt) {
     return toRealTime(t) < rt;
 }
@@ -159,11 +162,9 @@ function compToHex(c) {
     let hex = c.toString(16);
     return hex.length === 1 ? '0' + hex : hex;
 }
-
 function cDenorm(c) {
     return c > 1 && !c < 0 ? 255 : round(c * 255);
 }
-
 function rgbaToHex(colorObj) {
     let color = {};
     for (const c in colorObj) {

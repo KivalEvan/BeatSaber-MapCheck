@@ -1,6 +1,18 @@
 # Changelog
 
-## v1.5.4 [2021-04-##]
+## v1.5.5 [2021-04-15]
+
+### Added
+
+-   Max score stats
+-   No image option (disable image loading)
+
+### Fixed
+
+-   Staircase hitbox not counting consecutive dot note
+-   Time to precision calculation error in tools
+
+## v1.5.4 [2021-04-14]
 
 ### Added
 
