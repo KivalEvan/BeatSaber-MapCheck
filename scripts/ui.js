@@ -32,7 +32,12 @@ function dragOverHandler(event) {
 
 function textInputHandler(event) {
     if (event.which === 13 && this.value.toString() !== '') {
-        downloadFromID(this.value.toString());
+        if (this.id === 'input-url') {
+            downloadFromURL(this.value.toString());
+        }
+        if (this.id === 'input-id') {
+            downloadFromID(this.value.toString());
+        }
     }
 }
 async function downloadFromURL(input) {
