@@ -685,10 +685,10 @@ async function UICreateDiffInfo(charName, diff) {
     $('<tr>')
         .append(`<th>Reaction Time</th><td>${round((60 / mapSettings.bpm) * getHalfJumpDuration(mapSettings) * 1000)}ms</td>`)
         .appendTo(tableNJS);
-    if (mapSettings.bpmc.length > 0) {
-        textMap.push(`BPM changes: ${mapSettings.bpmc.length}`);
-    }
     textMap.push(`Max Score: ${formatNumber(getMapScore(notes.red + notes.blue))}`);
+    if (mapSettings.bpmc.length > 0) {
+        textMap.push(`BPM Changes: ${mapSettings.bpmc.length}`);
+    }
     textMap.push(`Effective BPM: ${findEffectiveBPM(diff._data._notes, mapSettings.bpm).toFixed(2)}`);
     textMap.push(`Effective BPM (swing): ${findEffectiveBPMSwing(diff._data._notes, mapSettings.bpm).toFixed(2)}`);
     if (sliderSpeed.min > 0) {

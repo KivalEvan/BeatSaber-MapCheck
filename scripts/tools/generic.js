@@ -41,19 +41,16 @@ function getJumpDistanceOptimalHigh(mapSettings) {
     return 18 * (1 / 1.07) ** njs + 18;
 }
 
-// i have no formula for this but whatever
+// maybe there's better formula
+// i = 1, 2x multiplier
+// i = 5, 4x multiplier
+// i = 13, 8x multiplier
 function getMapScore(nc, score = 115) {
     let total = 0;
     let multiplier = 1;
     for (let i = 0; i < nc; i++) {
-        if (i === 1) {
-            multiplier = 2;
-        }
-        if (i === 5) {
-            multiplier = 4;
-        }
-        if (i === 13) {
-            multiplier = 8;
+        if (multiplier < 8 && i === -3 + multiplier * 4) {
+            multiplier *= 2;
         }
         total += score * multiplier;
     }
