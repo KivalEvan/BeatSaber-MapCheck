@@ -78,7 +78,7 @@ const tool = {
     minSliderSpeed: 0.025,
     maxShrAngle: 0.15,
     maxSpeedPause: 0.075,
-    maxInlineAngle: 0.1,
+    maxInlineAngle: 0.15,
 
     // part where no one can control... yet
     // this is way less than i expected
