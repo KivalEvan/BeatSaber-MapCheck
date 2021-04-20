@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.5.6 [2021-04-20]
+
+### Fixed
+
+-   Map containing rotation event stops map from loading
+-   URL input attempt to download as BeatSaver ID
+
 ## v1.5.5 [2021-04-15]
 
 ### Added

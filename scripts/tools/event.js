@@ -58,7 +58,9 @@ function getEventCount(events) {
             ) {
                 eventCount.chroma++;
             }
-        } else if (events[i]._type === 14 || events[i]._type === 15) rot++;
+        } else if (events[i]._type === 14 || events[i]._type === 15) {
+            eventCount.rot++;
+        }
         if (events[i]._value > 2000000000) {
             eventCount.ogc++;
         }
