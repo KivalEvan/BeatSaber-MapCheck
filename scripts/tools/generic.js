@@ -1,3 +1,4 @@
+'use strict';
 /* GENERIC SCRIPT - generic.js
     for map related that has no place or general map stuff
     the more i look at this the more pepega it becomes */
@@ -165,7 +166,7 @@ function calcPeakNPS(nc, dur) {
     5 diffs:  6 20 */
 function checkLabelLength(mapChar, lbl) {
     let char = map.info._difficultyBeatmapSets.find((c) => c._beatmapCharacteristicName === mapChar);
-    diffCount = char._difficultyBeatmaps.length;
+    let diffCount = char._difficultyBeatmaps.length;
     switch (diffCount) {
         case 1:
             if (lbl.length > 99) return 'error';

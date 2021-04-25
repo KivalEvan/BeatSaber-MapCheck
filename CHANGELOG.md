@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.5.7 [2021-04-26]
+
+### Changed
+
+-   Progression warning now mention which difficulty violates progression
+-   Progression warning ignores for SPS requirement below minimum
+-   Applied 'use strict' in code for future development reason
+
 ## v1.5.6 [2021-04-20]
 
 ### Fixed

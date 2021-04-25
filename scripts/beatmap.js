@@ -1,3 +1,4 @@
+'use strict';
 /* BEATMAP SCRIPT - beatmap.js
     load map and handle map related variable */
 
@@ -218,9 +219,10 @@ function loadDifficulty(diffFile, str) {
 }
 
 async function analyseMap() {
-    map.analysis.sps.sort(function (a, b) {
-        return a - b;
+    map.analysis.sps.sort((a, b) => {
+        return diffOrder[a.difficulty] - diffOrder[b.difficulty];
     });
+    console.log(map.analysis.sps);
     const arrText = [];
     let img = new Image();
     img.src = $('#coverimg').attr('src');
@@ -246,26 +248,37 @@ async function analyseMap() {
     if (map.analysis.missing?.chroma) {
         arrText.push(printHTMLBold('Missing suggestion', 'Chroma'));
     }
-    if (map.analysis.sps.length > 0) {
+    if (Object.keys(map.analysis.sps).length > 0) {
         if (
-            flag.map.load.audio &&
             map.audio.duration < 240 &&
-            map.analysis.sps[0] > (map.audio.duration < 120 ? 3.2 : 4.2) &&
+            getSPSLowest() > (map.audio.duration < 120 ? 3.2 : 4.2) &&
             getSPSTotalPercDrop() < 60
         ) {
             console.log(map.analysis.sps);
             arrText.push(
                 printHTMLBold(
                     `Minimum SPS not met (<${map.audio.duration < 120 ? '3.2' : '4.2'})`,
-                    `lowest is ${map.analysis.sps[0]}`
+                    `lowest is ${getSPSLowest()}`
                 )
             );
         }
-        if (getSPSMaxPercDrop() > 40 && map.audio.duration < 240) {
-            arrText.push(printHTMLBold('Violates progression criteria', `exceeded 40% SPS drop`));
+        const progMax = getProgressionMax();
+        const progMin = getProgressionMin();
+        if (progMax && map.audio.duration < 240) {
+            arrText.push(
+                printHTMLBold(
+                    'Violates progression',
+                    `${diffRename[progMax.difficulty] || progMax.difficulty} exceeded 40% SPS drop`
+                )
+            );
         }
-        if (getSPSMinPercDrop() < 10 && map.audio.duration < 240) {
-            arrText.push(printHTMLBold('Violates progression criteria', `less than 10% SPS drop`));
+        if (progMin && map.audio.duration < 240) {
+            arrText.push(
+                printHTMLBold(
+                    'Violates progression',
+                    `${diffRename[progMin.difficulty] || progMin.difficulty} less than 10% SPS drop`
+                )
+            );
         }
     }
     $('#output-map').html(arrText.join('<br>'));
@@ -273,40 +286,59 @@ async function analyseMap() {
         $('#output-map').html('No issue(s) found.');
     }
 }
-function getSPSMaxPercDrop() {
+function getProgressionMax() {
     let spsPerc = 0;
     let spsCurr = 0;
-    map.analysis.sps.forEach((sps) => {
-        if (spsCurr > 0 && sps > 0) {
-            spsPerc = Math.max(spsPerc, (1 - spsCurr / sps) * 100);
+    let prevDiff = null;
+    for (const diff of map.analysis.sps) {
+        if (spsCurr > 0 && diff.sps > 0) {
+            spsPerc = (1 - spsCurr / diff.sps) * 100;
         }
-        spsCurr = sps > 0 ? sps : spsCurr;
-    });
-    return spsPerc;
+        spsCurr = diff.sps > 0 ? diff.sps : spsCurr;
+        if (spsCurr > (map.audio.duration < 120 ? 3.2 : 4.2) && spsPerc > 40) {
+            return prevDiff;
+        }
+        prevDiff = diff;
+    }
+    return false;
 }
-function getSPSMinPercDrop() {
+function getProgressionMin() {
     let spsPerc = Number.MAX_SAFE_INTEGER;
     let spsCurr = 0;
-    map.analysis.sps.forEach((sps) => {
-        if (spsCurr > 0 && sps > 0) {
-            spsPerc = Math.min(spsPerc, (1 - spsCurr / sps) * 100);
+    let prevDiff = null;
+    for (const diff of map.analysis.sps) {
+        if (spsCurr > 0 && diff.sps > 0) {
+            spsPerc = (1 - spsCurr / diff.sps) * 100;
         }
-        spsCurr = sps > 0 ? sps : spsCurr;
-    });
-    return spsPerc;
+        spsCurr = diff.sps > 0 ? diff.sps : spsCurr;
+        if (spsCurr > (map.audio.duration < 120 ? 3.2 : 4.2) && spsPerc < 10) {
+            return prevDiff;
+        }
+        prevDiff = diff;
+    }
+    return false;
 }
 function getSPSTotalPercDrop() {
     let highest = 0;
     let lowest = Number.MAX_SAFE_INTEGER;
-    map.analysis.sps.forEach((sps) => {
-        if (sps > 0) {
-            highest = Math.max(highest, sps);
-            lowest = Math.min(lowest, sps);
+    map.analysis.sps.forEach((diff) => {
+        if (diff.sps > 0) {
+            highest = Math.max(highest, diff.sps);
+            lowest = Math.min(lowest, diff.sps);
         }
-        spsCurr = sps > 0 ? sps : spsCurr;
     });
     return highest || (highest && lowest) ? (1 - lowest / highest) * 100 : 0;
 }
+function getSPSLowest() {
+    let lowest = Number.MAX_SAFE_INTEGER;
+    map.analysis.sps.forEach((diff) => {
+        if (diff.sps > 0) {
+            lowest = Math.min(lowest, diff.sps);
+        }
+    });
+    return lowest;
+}
+
 async function analyseDifficulty(charName, diff) {
     console.log(`analysing ${charName} ${diff._difficulty}`);
     let diffLabel = null;

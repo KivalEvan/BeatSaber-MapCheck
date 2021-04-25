@@ -1,8 +1,9 @@
+'use strict';
 /* GLOBAL SCRIPT - global.js
     is it really a script if it's just holding a global variable? */
 
 const watermark = 'Kival Evan#5480';
-const version = 'v1.5.6';
+const version = 'v1.5.7';
 
 const flag = {
     noImage: false,
@@ -158,6 +159,14 @@ const modeRename = {
     NoArrows: 'No Arrows',
     '360Degree': '360 Degree',
     '90Degree': '90 Degree',
+};
+
+const diffOrder = {
+    Easy: 1,
+    Normal: 3,
+    Hard: 5,
+    Expert: 7,
+    ExpertPlus: 9,
 };
 
 const diffRename = {

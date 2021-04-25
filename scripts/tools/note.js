@@ -1,3 +1,4 @@
+'use strict';
 /* NOTE SCRIPT - note.js
     note pattern detection and stuff idk
     TODO: basic parity check
