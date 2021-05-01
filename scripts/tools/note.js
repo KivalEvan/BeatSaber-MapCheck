@@ -799,6 +799,34 @@ function detectInlineAngle(diff, mapSettings) {
             lastTime = note._time - toBeatTime(tool.maxInlineAngle - 0.01);
             lastIndex = i;
         }
+        if (note._type === 3) {
+            // on bottom row
+            if (note._lineLayer === 0) {
+                //on right center
+                if (note._lineIndex === 1) {
+                    lastNoteDirection[0] = 0;
+                    startNoteDot[0] = null;
+                }
+                //on left center
+                if (note._lineIndex === 2) {
+                    lastNoteDirection[1] = 0;
+                    startNoteDot[1] = null;
+                }
+                //on top row
+            }
+            if (note._lineLayer === 2) {
+                //on right center
+                if (note._lineIndex === 1) {
+                    lastNoteDirection[0] = 1;
+                    startNoteDot[0] = null;
+                }
+                //on left center
+                if (note._lineIndex === 2) {
+                    lastNoteDirection[1] = 1;
+                    startNoteDot[1] = null;
+                }
+            }
+        }
     }
     return arr.filter(function (x, i, ary) {
         return !i || x !== ary[i - 1];

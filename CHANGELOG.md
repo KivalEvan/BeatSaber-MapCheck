@@ -10,6 +10,10 @@
 -   Progression warning ignores for SPS requirement below minimum
 -   Applied 'use strict' in code for future development reason
 
+### Fixed
+
+-   Inline angle check doesn't account for bomb reset
+
 ### Deprecated
 
 -   Difficulty label ellipsis check
