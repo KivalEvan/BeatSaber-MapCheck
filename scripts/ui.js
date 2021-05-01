@@ -1,3 +1,4 @@
+'use strict';
 /* USER INTERFACE SCRIPT - ui.js
     i dunno what to describe here
     it's fairly obvious; creating, manipulating, and deleting DOM element with JQuery */
@@ -666,7 +667,7 @@ async function UICreateDiffInfo(charName, diff) {
     }
     const sps = swingPerSecondInfo(diff._data);
     if (charName === 'Standard') {
-        map.analysis.sps.push(sps.total.overall);
+        map.analysis.sps.push({ mode: charName, difficulty: diff._difficulty, sps: sps.total.overall });
     }
     if (!hasChroma && (chromaW || notes.chromaN || notes.chromaB || events.chroma)) {
         map.analysis.missing.chroma = true;

@@ -1,3 +1,4 @@
+'use strict';
 /* GENERAL SCRIPT - index.js
     initialise stuff here
     some general and other stuff that has no place yet

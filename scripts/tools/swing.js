@@ -1,3 +1,4 @@
+'use strict';
 /* SWING SCRIPT - swing.js
     determine swing, bomb reset, note position, etc.
     could use better name */

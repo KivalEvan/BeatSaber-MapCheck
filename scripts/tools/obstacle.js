@@ -1,3 +1,4 @@
+'use strict';
 /* OBSTACLE SCRIPT - obstacle.js
     it's nothing, planned to expand further for obstacle related
     TODO: crouch obstacle detection */
