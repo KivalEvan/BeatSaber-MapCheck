@@ -373,6 +373,7 @@ async function analyseDifficulty(charName, diff) {
     mapSettings.jd = getJumpDistance(mapSettings);
 
     const arrText = [];
+
     if (diffLabel !== null) {
         let status = checkLabelLength(charName, diffLabel);
         if (diffLabel.length > 30) {
@@ -382,7 +383,10 @@ async function analyseDifficulty(charName, diff) {
                     `exceeded 30 max characters by ranking criteria (contain ${diffLabel.length})`
                 )
             );
-        } else if (status === 'error') {
+        }
+        /* DEPRECATED
+         * no longer used as ellipsis is fixed, may revive again in the future
+        else if (status === 'error') {
             arrText.push(printHTMLBold('Difficulty label too long', 'exceeded in-game display support'));
         } else if (status === 'warn') {
             arrText.push(
@@ -391,7 +395,7 @@ async function analyseDifficulty(charName, diff) {
                     'may exceed in-game display support, check in-game to be sure'
                 )
             );
-        }
+        }*/
     }
     if (startTime < 1.5) {
         arrText.push(printHTMLBold('Hot start', `${round(startTime, 2)}s`));

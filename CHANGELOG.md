@@ -1,12 +1,18 @@
 # Changelog
 
-## v1.5.7 [2021-04-26]
+## v1.5.7 [2021-05-01]
 
 ### Changed
 
+-   Difficulty label no longer ellipsis
+-   Difficulty label now expands downward
 -   Progression warning now mention which difficulty violates progression
 -   Progression warning ignores for SPS requirement below minimum
 -   Applied 'use strict' in code for future development reason
+
+### Deprecated
+
+-   Difficulty label ellipsis check
 
 ## v1.5.6 [2021-04-20]
 

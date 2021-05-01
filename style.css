@@ -210,7 +210,7 @@ header {
 }
 .diff-labels {
     display: inline-block;
-    white-space: nowrap;
+    white-space: normal;
     overflow: hidden;
     text-overflow: ellipsis;
     text-transform: uppercase;
