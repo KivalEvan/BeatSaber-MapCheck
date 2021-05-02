@@ -65,12 +65,19 @@ function findEffectiveBPM(notes, bpm) {
         1: null,
         3: null,
     };
+    const swingNoteArray = {
+        0: [],
+        1: [],
+        3: [],
+    };
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         if (isNote(note) && lastNote[note._type]) {
-            if (swingNext(note, lastNote[note._type])) {
+            if (swingNext(note, lastNote[note._type], swingNoteArray[note._type])) {
                 EBPM = Math.max(EBPM, bpm / ((note._time - lastNote[note._type]._time) * 2));
+                swingNoteArray[note._type] = [];
             }
+            swingNoteArray[note._type].push(note);
         }
         lastNote[note._type] = note;
     }
@@ -83,13 +90,20 @@ function findEffectiveBPMSwing(notes, bpm) {
         1: null,
         3: null,
     };
+    const swingNoteArray = {
+        0: [],
+        1: [],
+        3: [],
+    };
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         if (isNote(note) && lastNote[note._type]) {
-            if (swingNext(note, lastNote[note._type])) {
+            if (swingNext(note, lastNote[note._type], swingNoteArray[note._type])) {
                 EBPM = Math.max(EBPM, bpm / ((note._time - lastNote[note._type]._time) * 2));
                 lastNote[note._type] = note;
+                swingNoteArray[note._type] = [];
             }
+            swingNoteArray[note._type].push(note);
         } else {
             lastNote[note._type] = note;
         }
@@ -105,13 +119,20 @@ function getEffectiveBPMTime(diff, mapSettings) {
         1: null,
         3: null,
     };
+    const swingNoteArray = {
+        0: [],
+        1: [],
+        3: [],
+    };
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         let EBPM = 0;
         if (isNote(note) && lastNote[note._type]) {
-            if (swingNext(note, lastNote[note._type])) {
+            if (swingNext(note, lastNote[note._type], swingNoteArray[note._type])) {
                 EBPM = bpm / ((note._time - lastNote[note._type]._time) * 2);
+                swingNoteArray[note._type] = [];
             }
+            swingNoteArray[note._type].push(note);
         }
         lastNote[note._type] = note;
         if (EBPM > tool.ebpm.th) {
@@ -129,14 +150,21 @@ function getEffectiveBPMSwingTime(diff, mapSettings) {
         1: null,
         3: null,
     };
+    const swingNoteArray = {
+        0: [],
+        1: [],
+        3: [],
+    };
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         let EBPM = 0;
         if (isNote(note) && lastNote[note._type]) {
-            if (swingNext(note, lastNote[note._type])) {
+            if (swingNext(note, lastNote[note._type], swingNoteArray[note._type])) {
                 EBPM = bpm / ((note._time - lastNote[note._type]._time) * 2);
                 lastNote[note._type] = note;
+                swingNoteArray[note._type] = [];
             }
+            swingNoteArray[note._type].push(note);
         } else {
             lastNote[note._type] = note;
         }
@@ -157,16 +185,24 @@ function getMinSliderSpeed(notes) {
         1: null,
         3: null,
     };
+    const swingNoteArray = {
+        0: [],
+        1: [],
+        3: [],
+    };
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         if (isNote(note) && lastNote[note._type]) {
-            if (!swingNext(note, lastNote[note._type])) {
+            if (!swingNext(note, lastNote[note._type], swingNoteArray[note._type])) {
                 sliderSpeed[note._type] = Math.max(
                     sliderSpeed[note._type],
                     toRealTime(note._time - lastNote[note._type]._time) / (swingWindow(note, lastNote[note._type]) ? 2 : 1)
                 );
+            } else {
+                swingNoteArray[note._type] = [];
             }
             lastNote[note._type] = note;
+            swingNoteArray[note._type].push(note);
         } else {
             lastNote[note._type] = note;
         }
@@ -185,16 +221,27 @@ function getMaxSliderSpeed(notes) {
         1: null,
         3: null,
     };
+    const swingNoteArray = {
+        0: [],
+        1: [],
+        3: [],
+    };
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         if (isNote(note) && lastNote[note._type]) {
-            if (!swingNext(note, lastNote[note._type]) && toRealTime(note._time - lastNote[note._type]._time) > 0.001) {
+            if (
+                !swingNext(note, lastNote[note._type], swingNoteArray[note._type]) &&
+                toRealTime(note._time - lastNote[note._type]._time) > 0.001
+            ) {
                 sliderSpeed[note._type] = Math.min(
                     sliderSpeed[note._type],
                     toRealTime(note._time - lastNote[note._type]._time) / (swingWindow(note, lastNote[note._type]) ? 2 : 1)
                 );
+            } else {
+                swingNoteArray[note._type] = [];
             }
             lastNote[note._type] = note;
+            swingNoteArray[note._type].push(note);
         } else {
             lastNote[note._type] = note;
         }
@@ -221,10 +268,15 @@ function detectDoubleDirectional(diff, mapSettings) {
         1: null,
         3: null,
     };
+    const swingNoteArray = {
+        0: [],
+        1: [],
+        3: [],
+    };
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         if (isNote(note) && lastNote[note._type]) {
-            if (swingNext(note, lastNote[note._type])) {
+            if (swingNext(note, lastNote[note._type], swingNoteArray[note._type])) {
                 if (startNoteDot[note._type]) {
                     startNoteDot[note._type] = null;
                     lastNoteDirection[note._type] = flipCutDir[lastNoteDirection[note._type]];
@@ -237,6 +289,7 @@ function detectDoubleDirectional(diff, mapSettings) {
                 } else {
                     lastNoteDirection[note._type] = note._cutDirection;
                 }
+                swingNoteArray[note._type] = [];
             } else {
                 if (startNoteDot[note._type] && checkAngle(note._cutDirection, lastNoteDirection[note._type], 45)) {
                     arr.push(adjustTime(startNoteDot[note._type]._time, bpm, offset, bpmc));
@@ -248,6 +301,7 @@ function detectDoubleDirectional(diff, mapSettings) {
                     lastNoteDirection[note._type] = note._cutDirection;
                 }
             }
+            swingNoteArray[note._type].push(note);
         } else {
             lastNoteDirection[note._type] = note._cutDirection;
         }
@@ -361,16 +415,23 @@ function detectOffPrecision(diff, mapSettings) {
         1: null,
         3: null,
     };
+    const swingNoteArray = {
+        0: [],
+        1: [],
+        3: [],
+    };
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         const noteTime = adjustTime(note._time, bpm, offset, bpmc);
         if (isNote(note) && lastNote[note._type]) {
-            if (swingNext(note, lastNote[note._type])) {
+            if (swingNext(note, lastNote[note._type], swingNoteArray[note._type])) {
                 if (checkPrec(noteTime)) {
                     arr.push(noteTime);
                 }
                 lastNote[note._type] = note;
+                swingNoteArray[note._type] = [];
             }
+            swingNoteArray[note._type].push(note);
         } else {
             if (isNote(note) && checkPrec(noteTime)) {
                 arr.push(noteTime);
@@ -415,6 +476,11 @@ function detectHitboxStaircase(diff, mapSettings) {
         1: null,
         3: null,
     };
+    const swingNoteArray = {
+        0: [],
+        1: [],
+        3: [],
+    };
     const noteOccupy = {
         0: { _lineIndex: 0, _lineLayer: 0 },
         1: { _lineIndex: 0, _lineLayer: 0 },
@@ -423,7 +489,7 @@ function detectHitboxStaircase(diff, mapSettings) {
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         if (isNote(note) && lastNote[note._type]) {
-            if (swingNext(note, lastNote[note._type])) {
+            if (swingNext(note, lastNote[note._type], swingNoteArray[note._type])) {
                 lastSpeed[note._type] = toRealTime(note._time - lastNote[note._type]._time);
                 if (note._cutDirection !== 8) {
                     noteOccupy[note._type]._lineIndex = note._lineIndex + swingCutDirectionSpace[note._cutDirection][0];
@@ -432,6 +498,7 @@ function detectHitboxStaircase(diff, mapSettings) {
                     noteOccupy[note._type]._lineIndex = -1;
                     noteOccupy[note._type]._lineLayer = -1;
                 }
+                swingNoteArray[note._type] = [];
                 lastNoteDirection[note._type] = note._cutDirection;
             } else if (swingNoteEnd(note, lastNote[note._type], lastNoteDirection[note._type])) {
                 if (note._cutDirection !== 8) {
@@ -445,6 +512,7 @@ function detectHitboxStaircase(diff, mapSettings) {
                         note._lineLayer + swingCutDirectionSpace[lastNoteDirection[note._type]][1];
                 }
             }
+            swingNoteArray[note._type].push(note);
             if (
                 lastNote[(note._type + 1) % 2] &&
                 note._time - lastNote[(note._type + 1) % 2]._time !== 0 &&
@@ -495,10 +563,15 @@ function detectShrAngle(diff, mapSettings) {
         1: null,
         3: null,
     };
+    const swingNoteArray = {
+        0: [],
+        1: [],
+        3: [],
+    };
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         if (isNote(note) && lastNote[note._type]) {
-            if (swingNext(note, lastNote[note._type])) {
+            if (swingNext(note, lastNote[note._type], swingNoteArray[note._type])) {
                 if (startNoteDot[note._type]) {
                     startNoteDot[note._type] = null;
                     lastNoteDirection[note._type] = flipCutDir[lastNoteDirection[note._type]];
@@ -514,6 +587,7 @@ function detectShrAngle(diff, mapSettings) {
                 } else {
                     lastNoteDirection[note._type] = note._cutDirection;
                 }
+                swingNoteArray[note._type] = [];
             } else {
                 if (
                     startNoteDot[note._type] &&
@@ -527,6 +601,7 @@ function detectShrAngle(diff, mapSettings) {
                     lastNoteDirection[note._type] = note._cutDirection;
                 }
             }
+            swingNoteArray[note._type].push(note);
         } else {
             lastNoteDirection[note._type] = note._cutDirection;
         }
@@ -615,10 +690,15 @@ function detectSpeedPause(diff, mapSettings) {
         1: false,
         3: false,
     };
+    const swingNoteArray = {
+        0: [],
+        1: [],
+        3: [],
+    };
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         if (isNote(note) && lastNote[note._type]) {
-            if (swingNext(note, lastNote[note._type])) {
+            if (swingNext(note, lastNote[note._type], swingNoteArray[note._type])) {
                 if (isBelowThres(note._time - lastNote[note._type]._time, tool.maxSpeedPause * 2 + 0.01)) {
                     if (
                         maybePause[0] &&
@@ -635,8 +715,10 @@ function detectSpeedPause(diff, mapSettings) {
                     maybePause[note._type] = true;
                     lastNotePause[note._type] = lastNote[note._type];
                 }
+                swingNoteArray[note._type] = [];
                 lastNote[note._type] = note;
             }
+            swingNoteArray[note._type].push(note);
         } else {
             lastNote[note._type] = note;
         }
@@ -669,11 +751,17 @@ function detectImproperWindowSnap(diff, mapSettings) {
         1: null,
         3: null,
     };
+    const swingNoteArray = {
+        0: [],
+        1: [],
+        3: [],
+    };
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         if (isNote(note) && lastNote[note._type]) {
-            if (swingNext(note, lastNote[note._type])) {
+            if (swingNext(note, lastNote[note._type], swingNoteArray[note._type])) {
                 lastNote[note._type] = note;
+                swingNoteArray[note._type] = [];
             } else if (
                 isSlantedWindow(note, lastNote[note._type]) &&
                 isAboveThres(note._time - lastNote[note._type]._time, tool.windowSnapTolerance) &&
@@ -683,6 +771,7 @@ function detectImproperWindowSnap(diff, mapSettings) {
             ) {
                 arr.push(adjustTime(lastNote[note._type]._time, bpm, offset, bpmc));
             }
+            swingNoteArray[note._type].push(note);
         } else {
             lastNote[note._type] = note;
         }
@@ -714,12 +803,18 @@ function detectSlowSlider(diff, mapSettings) {
         1: 0,
         3: 0,
     };
+    const swingNoteArray = {
+        0: [],
+        1: [],
+        3: [],
+    };
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         if (isNote(note) && lastNote[note._type]) {
-            if (swingNext(note, lastNote[note._type])) {
+            if (swingNext(note, lastNote[note._type], swingNoteArray[note._type])) {
                 sliderSpeed[note._type] = 0;
                 lastNoteTime[note._type] = note._time;
+                swingNoteArray[note._type] = [];
             } else {
                 sliderSpeed[note._type] = Math.max(
                     sliderSpeed[note._type],
@@ -727,6 +822,7 @@ function detectSlowSlider(diff, mapSettings) {
                 );
             }
             lastNote[note._type] = note;
+            swingNoteArray[note._type].push(note);
             if (sliderSpeed[note._type] > tool.minSliderSpeed) {
                 arr.push(adjustTime(lastNoteTime[note._type], bpm, offset, bpmc));
             }
@@ -760,12 +856,17 @@ function detectInlineAngle(diff, mapSettings) {
         1: null,
         3: null,
     };
+    const swingNoteArray = {
+        0: [],
+        1: [],
+        3: [],
+    };
     let lastTime = 0;
     let lastIndex = 0;
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         if (isNote(note) && lastNote[note._type]) {
-            if (swingNext(note, lastNote[note._type])) {
+            if (swingNext(note, lastNote[note._type], swingNoteArray[note._type])) {
                 if (startNoteDot[note._type]) {
                     startNoteDot[note._type] = null;
                     lastNoteDirection[note._type] = flipCutDir[lastNoteDirection[note._type]];
@@ -778,6 +879,7 @@ function detectInlineAngle(diff, mapSettings) {
                 } else {
                     lastNoteDirection[note._type] = note._cutDirection;
                 }
+                swingNoteArray[note._type] = [];
             } else {
                 if (
                     startNoteDot[note._type] &&
@@ -791,6 +893,7 @@ function detectInlineAngle(diff, mapSettings) {
                     lastNoteDirection[note._type] = note._cutDirection;
                 }
             }
+            swingNoteArray[note._type].push(note);
         } else {
             lastNoteDirection[note._type] = note._cutDirection;
         }
@@ -844,11 +947,15 @@ function checkInline(note, notes, index) {
     }
     return false;
 }
-function checkAngle(n1cd, n2cd, angle) {
+function checkAngle(n1cd, n2cd, angle, invert = false) {
     if (n1cd === 8 || n2cd === 8) {
         return false;
     }
-    if (shortRotDistance(noteCutAngle[n1cd], noteCutAngle[n2cd], 360) <= angle) {
+    if (
+        !invert
+            ? shortRotDistance(noteCutAngle[n1cd], noteCutAngle[n2cd], 360) <= angle
+            : shortRotDistance(noteCutAngle[n1cd], noteCutAngle[n2cd], 360) >= angle
+    ) {
         return true;
     }
     return false;

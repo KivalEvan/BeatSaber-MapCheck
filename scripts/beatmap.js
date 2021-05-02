@@ -222,7 +222,6 @@ async function analyseMap() {
     map.analysis.sps.sort((a, b) => {
         return diffOrder[a.difficulty] - diffOrder[b.difficulty];
     });
-    console.log(map.analysis.sps);
     const arrText = [];
     let img = new Image();
     img.src = $('#coverimg').attr('src');

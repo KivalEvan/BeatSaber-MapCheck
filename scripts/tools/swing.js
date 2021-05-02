@@ -3,7 +3,28 @@
     determine swing, bomb reset, note position, etc.
     could use better name */
 
-function swingNext(n1, n2) {
+// Thanks Qwasyx#3000 for improved swing detection
+function swingNext(n1, n2, context = null) {
+    if (
+        context &&
+        context.length > 0 &&
+        toRealTime(n2._time) + tool.swing.maxHitTol < toRealTime(n1._time) &&
+        n1._cutDirection !== 8
+    ) {
+        for (const n of context) {
+            if (n1._time >= 103.5 && n1._time <= 104 && n1._type === 0)
+                if (n._cutDirection !== 8 && checkAngle(n1._cutDirection, n._cutDirection, 90, true)) {
+                    return true;
+                }
+        }
+    }
+    if (context && context.length > 0) {
+        for (const other of context) {
+            if (Math.max(Math.abs(other._lineIndex - n1._lineIndex), Math.abs(other._lineLayer - n1._lineLayer)) < 1) {
+                return true;
+            }
+        }
+    }
     return (
         (swingWindow(n1, n2) && isAboveThres(n1._time - n2._time, tool.swing.maxWindowTol)) ||
         isAboveThres(n1._time - n2._time, tool.swing.maxTol)
