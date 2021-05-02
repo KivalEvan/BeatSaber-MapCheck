@@ -995,3 +995,41 @@ function detectReverseStaircase(diff, mapSettings) {
     }
     return arr;
 }
+
+function detectInlineHitbox(diff, mapSettings) {
+    const { _notes: notes } = diff;
+    const { njs, bpm, bpmc, offset } = mapSettings;
+    const arr = [];
+    const lastNote = {
+        0: null,
+        1: null,
+        3: null,
+    };
+    const swingNoteArray = {
+        0: [],
+        1: [],
+        3: [],
+    };
+    for (let i = 0, len = notes.length; i < len; i++) {
+        const note = notes[i];
+        if (isNote(note) && lastNote[note._type]) {
+            if (swingNext(note, lastNote[note._type], swingNoteArray[note._type])) {
+                swingNoteArray[note._type] = [];
+            }
+        }
+        for (const other of swingNoteArray[(note._type + 1) % 2]) {
+            // magic number 1.425 from saber length + good/bad hitbox
+            if (
+                !(njs > (1.425 * bpm) / (120 * (note._time - other._time))) &&
+                note._lineIndex === other._lineIndex &&
+                note._lineLayer === other._lineLayer
+            ) {
+                arr.push(adjustTime(note._time, bpm, offset, bpmc));
+                break;
+            }
+        }
+        lastNote[note._type] = note;
+        swingNoteArray[note._type].push(note);
+    }
+    return arr;
+}

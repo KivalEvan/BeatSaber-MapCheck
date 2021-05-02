@@ -468,6 +468,7 @@ async function analyseDifficulty(charName, diff) {
         arrText.push(printHTMLBold('Hitbox staircase []', detectHitboxStaircase(diff._data, mapSettings)));
     }
     arrText.push(printHTMLBold('Hitbox reverse staircase []', detectReverseStaircase(diff._data, mapSettings)));
+    arrText.push(printHTMLBold('Hitbox inline []', detectInlineHitbox(diff._data, mapSettings)));
     arrText.push(printHTMLBold('Improper window snap []', detectImproperWindowSnap(diff._data, mapSettings)));
     if (flag.tool.slowSlider) {
         arrText.push(
