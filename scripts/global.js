@@ -3,7 +3,7 @@
     is it really a script if it's just holding a global variable? */
 
 const watermark = 'Kival Evan#5480';
-const version = 'v1.5.7';
+const version = 'v1.5.8';
 
 const flag = {
     noImage: false,
@@ -90,6 +90,7 @@ const tool = {
         bomb: 0.02,
     },
     swing: {
+        maxHitTol: 0.005,
         maxTol: 0.07,
         maxWindowTol: 0.08,
     },

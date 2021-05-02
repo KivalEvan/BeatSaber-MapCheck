@@ -1,5 +1,17 @@
 # Changelog
 
+## v1.5.8 [2021-05-03]
+
+### Added
+
+-   Reverse staircase hitbox check
+-   Inline hitbox check
+
+### Changed
+
+-   Improved swing detection
+-   Cleaned up note function
+
 ## v1.5.7 [2021-05-01]
 
 ### Changed

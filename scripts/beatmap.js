@@ -222,7 +222,6 @@ async function analyseMap() {
     map.analysis.sps.sort((a, b) => {
         return diffOrder[a.difficulty] - diffOrder[b.difficulty];
     });
-    console.log(map.analysis.sps);
     const arrText = [];
     let img = new Image();
     img.src = $('#coverimg').attr('src');
@@ -254,7 +253,6 @@ async function analyseMap() {
             getSPSLowest() > (map.audio.duration < 120 ? 3.2 : 4.2) &&
             getSPSTotalPercDrop() < 60
         ) {
-            console.log(map.analysis.sps);
             arrText.push(
                 printHTMLBold(
                     `Minimum SPS not met (<${map.audio.duration < 120 ? '3.2' : '4.2'})`,
@@ -469,6 +467,8 @@ async function analyseDifficulty(charName, diff) {
     if (flag.tool.hbStaircase) {
         arrText.push(printHTMLBold('Hitbox staircase []', detectHitboxStaircase(diff._data, mapSettings)));
     }
+    arrText.push(printHTMLBold('Hitbox reverse staircase []', detectReverseStaircase(diff._data, mapSettings)));
+    arrText.push(printHTMLBold('Hitbox inline []', detectInlineHitbox(diff._data, mapSettings)));
     arrText.push(printHTMLBold('Improper window snap []', detectImproperWindowSnap(diff._data, mapSettings)));
     if (flag.tool.slowSlider) {
         arrText.push(
