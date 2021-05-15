@@ -193,13 +193,13 @@ function getMinSliderSpeed(notes) {
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         if (isNote(note) && lastNote[note._type]) {
-            if (!swingNext(note, lastNote[note._type], swingNoteArray[note._type])) {
+            if (swingNext(note, lastNote[note._type], swingNoteArray[note._type])) {
+                swingNoteArray[note._type] = [];
+            } else {
                 sliderSpeed[note._type] = Math.max(
                     sliderSpeed[note._type],
                     toRealTime(note._time - lastNote[note._type]._time) / (swingWindow(note, lastNote[note._type]) ? 2 : 1)
                 );
-            } else {
-                swingNoteArray[note._type] = [];
             }
         }
         lastNote[note._type] = note;
@@ -819,8 +819,6 @@ function detectSlowSlider(diff, mapSettings) {
             if (sliderSpeed[note._type] > tool.minSliderSpeed) {
                 arr.push(adjustTime(lastNoteTime[note._type], bpm, offset, bpmc));
             }
-        } else {
-            lastNoteTime[note._type] = note._time;
         }
         lastNote[note._type] = note;
         swingNoteArray[note._type].push(note);

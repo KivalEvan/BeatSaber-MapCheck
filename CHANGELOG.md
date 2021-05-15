@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.5.9 [2021-05-16]
+
+### Fixed
+
+-   Minor fix and clean up (not sure if this affects anything, there was leftover code for debug purpose)
+
 ## v1.5.8 [2021-05-03]
 
 ### Added
