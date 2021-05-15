@@ -12,10 +12,9 @@ function swingNext(n1, n2, context = null) {
         n1._cutDirection !== 8
     ) {
         for (const n of context) {
-            if (n1._time >= 103.5 && n1._time <= 104 && n1._type === 0)
-                if (n._cutDirection !== 8 && checkAngle(n1._cutDirection, n._cutDirection, 90, true)) {
-                    return true;
-                }
+            if (n._cutDirection !== 8 && checkAngle(n1._cutDirection, n._cutDirection, 90, true)) {
+                return true;
+            }
         }
     }
     if (context && context.length > 0) {
