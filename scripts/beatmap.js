@@ -242,7 +242,7 @@ async function analyseMap() {
         );
     }
     if (map.info._previewStartTime === 12 && map.info._previewDuration === 10) {
-        arrText.push(printHTMLBold('Default preview time', "please set them where you want audience's 1st impression"));
+        arrText.push(printHTMLBold('Default preview time', "please set them for audience's 1st impression"));
     }
     if (map.analysis.missing?.chroma) {
         arrText.push(printHTMLBold('Missing suggestion', 'Chroma'));

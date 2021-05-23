@@ -13,17 +13,17 @@ function getNoteCount(notes) {
     for (let i = notes.length - 1; i >= 0; i--) {
         if (notes[i]._type === 0) {
             noteCount.red++;
-            if (notes[i]._type._customData?._color) {
+            if (notes[i]._customData?._color) {
                 noteCount.chromaN++;
             }
         } else if (notes[i]._type === 1) {
             noteCount.blue++;
-            if (notes[i]._type._customData?._color) {
+            if (notes[i]._customData?._color) {
                 noteCount.chromaN++;
             }
         } else if (notes[i]._type === 3) {
             noteCount.bomb++;
-            if (notes[i]._type._customData?._color) {
+            if (notes[i]._customData?._color) {
                 noteCount.chromaB++;
             }
         }
@@ -943,14 +943,9 @@ function checkAngle(n1cd, n2cd, angle, invert = false) {
     if (n1cd === 8 || n2cd === 8) {
         return false;
     }
-    if (
-        !invert
-            ? shortRotDistance(noteCutAngle[n1cd], noteCutAngle[n2cd], 360) <= angle
-            : shortRotDistance(noteCutAngle[n1cd], noteCutAngle[n2cd], 360) >= angle
-    ) {
-        return true;
-    }
-    return false;
+    return invert
+        ? shortRotDistance(noteCutAngle[n1cd], noteCutAngle[n2cd], 360) >= angle
+        : shortRotDistance(noteCutAngle[n1cd], noteCutAngle[n2cd], 360) <= angle;
 }
 
 function detectReverseStaircase(diff, mapSettings) {

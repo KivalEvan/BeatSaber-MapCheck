@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.5.10 [2021-05-23]
+
+### Changed
+
+-   Minor change to note function
+
+### Fixed
+
+-   Chroma note not displaying in stats
+
 ## v1.5.9 [2021-05-16]
 
 ### Fixed
