@@ -1,5 +1,17 @@
 # Changelog
 
+## v1.5.11 [2021-06-13]
+
+### Added
+
+-   Varying swing speed check
+-   Interscope environment support
+-   Other event count
+
+### Changed
+
+-   Renamed "Shrado angle" to "shrado angle"
+
 ## v1.5.10 [2021-05-23]
 
 ### Changed

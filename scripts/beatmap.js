@@ -470,13 +470,14 @@ async function analyseDifficulty(charName, diff) {
     arrText.push(printHTMLBold('Hitbox reverse staircase []', detectReverseStaircase(diff._data, mapSettings)));
     arrText.push(printHTMLBold('Hitbox inline []', detectInlineHitbox(diff._data, mapSettings)));
     arrText.push(printHTMLBold('Improper window snap []', detectImproperWindowSnap(diff._data, mapSettings)));
+    arrText.push(printHTMLBold('Varying swing speed []', detectVaryingSwingSpeed(diff._data, mapSettings)));
     if (flag.tool.slowSlider) {
         arrText.push(
             printHTMLBold(`Slow slider (>${tool.minSliderSpeed * 1000}ms) []`, detectSlowSlider(diff._data, mapSettings))
         );
     }
     if (flag.tool.shrAngle) {
-        arrText.push(printHTMLBold('Shrado angle []', detectShrAngle(diff._data, mapSettings)));
+        arrText.push(printHTMLBold('shrado angle []', detectShrAngle(diff._data, mapSettings)));
     }
     if (flag.tool.speedPause) {
         arrText.push(printHTMLBold('Speed pause []', detectSpeedPause(diff._data, mapSettings)));

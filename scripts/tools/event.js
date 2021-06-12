@@ -18,18 +18,23 @@ function getEventCount(events) {
         rot: 0,
         chroma: 0,
         ogc: 0,
+        other: 0,
     };
     for (let i = events.length - 1; i >= 0; i--) {
         if (events[i]._type >= 0 && events[i]._type < 5) {
             if (events[i]._type === 0) {
                 eventCount.light.backTop++;
-            } else if (events[i]._type === 1) {
+            }
+            if (events[i]._type === 1) {
                 eventCount.light.ring++;
-            } else if (events[i]._type === 2) {
+            }
+            if (events[i]._type === 2) {
                 eventCount.light.leftLaser++;
-            } else if (events[i]._type === 3) {
+            }
+            if (events[i]._type === 3) {
                 eventCount.light.rightLaser++;
-            } else if (events[i]._type === 4) {
+            }
+            if (events[i]._type === 4) {
                 eventCount.light.center++;
             }
             if (
@@ -40,17 +45,21 @@ function getEventCount(events) {
             ) {
                 eventCount.chroma++;
             }
-        } else if (events[i]._type === 5) {
+        }
+        if (events[i]._type === 5) {
             eventCount.boost++;
-        } else if (events[i]._type === 8) {
+        }
+        if (events[i]._type === 8) {
             eventCount.rrotate++;
             if (events[i]._customData) {
                 // lmao fuck this has a lot
                 eventCount.chroma++;
             }
-        } else if (events[i]._type === 9) {
+        }
+        if (events[i]._type === 9) {
             eventCount.rzoom++;
-        } else if (events[i]._type === 12 || events[i]._type === 13) {
+        }
+        if (events[i]._type === 12 || events[i]._type === 13) {
             eventCount.laser++;
             if (
                 events[i]._customData?._lockPosition ||
@@ -59,13 +68,23 @@ function getEventCount(events) {
             ) {
                 eventCount.chroma++;
             }
-        } else if (events[i]._type === 14 || events[i]._type === 15) {
+        }
+        if (events[i]._type === 14 || events[i]._type === 15) {
             eventCount.rot++;
         }
         if (events[i]._value > 2000000000) {
             eventCount.ogc++;
         }
+        eventCount.other++;
     }
+    eventCount.other -=
+        Object.values(eventCount.light).reduce((t, n) => t + n) +
+        eventCount.boost +
+        eventCount.rrotate +
+        eventCount.rzoom +
+        eventCount.laser +
+        eventCount.rot +
+        eventCount.ogc;
     return eventCount;
 }
 
