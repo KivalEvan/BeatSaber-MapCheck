@@ -57,6 +57,21 @@ function countNoteIndexLayer(notes, i, l) {
     });
     return count;
 }
+function detectInvalidNote(diff, mapSettings) {
+    const { _notes: notes } = diff;
+    const { bpm, bpmc, offset } = mapSettings;
+    const arr = [];
+    for (let i = 0, len = notes.length; i < len; i++) {
+        for (let j = i + 1; j < len; j++) {
+            if (notes[i]._lineLayer < 0 || notes[i]._lineLayer > 2 || notes[i]._lineIndex < 0 || notes[j]._lineIndex > 3) {
+                arr.push(adjustTime(notes[i]._time, bpm, offset, bpmc));
+            }
+        }
+    }
+    return arr.filter(function (x, i, ary) {
+        return !i || x !== ary[i - 1];
+    });
+}
 
 function findEffectiveBPM(notes, bpm) {
     let EBPM = 0;
@@ -721,22 +736,6 @@ function detectSpeedPause(diff, mapSettings) {
     return arr;
 }
 
-function detectInvalidNote(diff, mapSettings) {
-    const { _notes: notes } = diff;
-    const { bpm, bpmc, offset } = mapSettings;
-    const arr = [];
-    for (let i = 0, len = notes.length; i < len; i++) {
-        for (let j = i + 1; j < len; j++) {
-            if (notes[i]._lineLayer < 0 || notes[i]._lineLayer > 2 || notes[i]._lineIndex < 0 || notes[j]._lineIndex > 3) {
-                arr.push(adjustTime(notes[i]._time, bpm, offset, bpmc));
-            }
-        }
-    }
-    return arr.filter(function (x, i, ary) {
-        return !i || x !== ary[i - 1];
-    });
-}
-
 function detectImproperWindowSnap(diff, mapSettings) {
     const { _notes: notes } = diff;
     const { bpm, bpmc, offset } = mapSettings;
@@ -818,6 +817,61 @@ function detectSlowSlider(diff, mapSettings) {
             }
             if (sliderSpeed[note._type] > tool.minSliderSpeed) {
                 arr.push(adjustTime(lastNoteTime[note._type], bpm, offset, bpmc));
+            }
+        }
+        lastNote[note._type] = note;
+        swingNoteArray[note._type].push(note);
+    }
+    return arr.filter(function (x, i, ary) {
+        return !i || x !== ary[i - 1];
+    });
+}
+function detectVaryingSwingSpeed(diff, mapSettings) {
+    const { _notes: notes } = diff;
+    const { bpm, bpmc, offset } = mapSettings;
+    const arr = [];
+    const lastNote = {
+        0: null,
+        1: null,
+        3: null,
+    };
+    const lastNoteTime = {
+        0: null,
+        1: null,
+        3: null,
+    };
+    const sliderSpeed = {
+        0: 0,
+        1: 0,
+        3: 0,
+    };
+    const swingNoteArray = {
+        0: [],
+        1: [],
+        3: [],
+    };
+    for (let i = 0, len = notes.length; i < len; i++) {
+        const note = notes[i];
+        if (isNote(note) && lastNote[note._type]) {
+            if (swingNext(note, lastNote[note._type], swingNoteArray[note._type])) {
+                sliderSpeed[note._type] = 0;
+                lastNoteTime[note._type] = note._time;
+                swingNoteArray[note._type] = [];
+            } else {
+                if (
+                    swingNoteArray[note._type].length > 1 &&
+                    Math.abs(
+                        toRealTime(
+                            note._time - lastNote[note._type]._time / (swingWindow(note, lastNote[note._type]) ? 2 : 1)
+                        ) - sliderSpeed[note._type]
+                    ) > tool.swing.varySwingTol
+                ) {
+                    arr.push(adjustTime(lastNoteTime[note._type], bpm, offset, bpmc));
+                }
+                sliderSpeed[note._type] = Math.max(
+                    sliderSpeed[note._type],
+                    toRealTime(note._time - lastNote[note._type]._time) / (swingWindow(note, lastNote[note._type]) ? 2 : 1)
+                );
             }
         }
         lastNote[note._type] = note;

@@ -3,7 +3,7 @@
     is it really a script if it's just holding a global variable? */
 
 const watermark = 'Kival Evan#5480';
-const version = 'v1.5.10';
+const version = 'v1.5.11';
 
 const flag = {
     noImage: false,
@@ -90,6 +90,7 @@ const tool = {
         bomb: 0.02,
     },
     swing: {
+        varySwingTol: 0.003,
         maxHitTol: 0.005,
         maxTol: 0.07,
         maxWindowTol: 0.08,
@@ -210,6 +211,7 @@ const envName = {
     LinkinParkEnvironment: 'Linkin Park',
     BTSEnvironment: 'BTS',
     KaleidoscopeEnvironment: 'Kaleidoscope',
+    InterscopeEnvironment: 'Interscope',
     GlassDesertEnvironment: 'Glass Desert',
 };
 
@@ -233,6 +235,7 @@ const envColor = {
     LinkinParkEnvironment: 'Linkin Park',
     BTSEnvironment: 'BTS',
     KaleidoscopeEnvironment: 'Kaleidoscope',
+    InterscopeEnvironment: 'Interscope',
     GlassDesertEnvironment: 'Glass Desert',
 };
 
@@ -326,6 +329,15 @@ const colorScheme = {
         _envColorLeftBoost: '#800000',
         _envColorRightBoost: '#7e0089',
         _obstacleColor: '#404040',
+    },
+    Interscope: {
+        _colorLeft: '#b9a050',
+        _colorRight: '#964cb8',
+        _envColorLeft: '#b952e9',
+        _envColorRight: '#c3c2e9',
+        _envColorLeftBoost: '#ca6e6e',
+        _envColorRightBoost: '#b3b7c3',
+        _obstacleColor: '#964cb8',
     },
     'Glass Desert': {
         _colorLeft: '#ad9200',
