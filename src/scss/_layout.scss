@@ -26,24 +26,20 @@ body {
     margin: 0 auto;
 }
 .panel {
+    position: relative;
     &__tiny {
-        position: relative;
         width: $sz-panel-tiny;
     }
     &__small {
-        position: relative;
         width: $sz-panel-small;
     }
     &__medium {
-        position: relative;
         width: $sz-panel-medium;
     }
     &__large {
-        position: relative;
         width: $sz-panel-large;
     }
     &__max {
-        position: relative;
         width: 100%;
     }
     &__offset {

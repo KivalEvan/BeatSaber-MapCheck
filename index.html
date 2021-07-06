@@ -21,7 +21,7 @@
         </a>
       </div>
       <div class="container">
-        <div class="metadata panel__offset hidden">
+        <div class="metadata panel panel__offset hidden">
           <span class="metadata__song-name" title="Song Name">Song Name</span>
           <span class="metadata__song-subname" title="Song Subname">Song Subname</span><br>
           <span class="metadata__song-author" title="Song Author">Song Author</span><br>
@@ -31,8 +31,8 @@
         </div>
         <div class="intro">
           <div class="intro__container">
-            <div class="panel__small">
-              <div class="panel__offset">
+            <div class="panel panel__small">
+              <div class="panel panel__offset">
                 <span class="intro__title">Beat Saber</span><br>
                 <span class="intro__subtitle">Map Check</span><br>
                 <label for="input__url">Map zip link: </label>
@@ -44,10 +44,10 @@
                   value="Get Link/ID">
               </div>
             </div>
-            <div class="panel__large">
-              <div class="panel__offset--half">
+            <div class="panel panel__large">
+              <div class="panel panel__offset--half">
                 <input type="file" class="input input__file input--toggle" id="input__file" accept=".zip,.bsl">
-                <label class="input input__file__zone" for="input__file">
+                <label class="input input__file-zone" for="input__file">
                   <span>UPLOAD ZIP FILE HERE<br>DRAG & DROP ZONE</span>
                 </label>
               </div>
@@ -65,20 +65,20 @@
       <input type="checkbox" class="accordion__button" id="accordion__info">
       <label class="accordion__label unselectable" for="accordion__info"><span>Information</span></label>
       <div class="accordion__collapsible">
-        <div class="panel__tiny">
-          <div class="panel__offset--half">
+        <div class="panel panel__tiny">
+          <div class="panel panel__offset--half">
             <span id="level-author" title="Level Author">Level Author</span><br>
             <span id="environment" title="Environment">Environment</span><br>
           </div>
         </div>
-        <div class="panel__tiny">
-          <div class="panel__offset--half">
+        <div class="panel panel__tiny">
+          <div class="panel panel__offset--half">
             <span>Contributors</span><br>
             <span>Editors</span>
           </div>
         </div>
-        <div class="panel__medium">
-          <div class="panel__offset--half">
+        <div class="panel panel__medium">
+          <div class="panel panel__offset--half">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam explicabo eum at quod
             modi corporis porro magni, pariatur aut ipsa quisquam. Possimus corrupti, vitae deserunt quam magni maiores
             optio deleniti.
@@ -92,13 +92,35 @@
         <span>Tools</span>
       </label>
       <div class="accordion__collapsible">
-        <div class="panel__medium">
-          <div class="panel__offset--half">
-            w
+        <div class="panel panel__medium">
+          <div class="tools panel panel__offset--half">
+            <input type="radio" class="tools__radio tools__note" id="tools__note" name="tools__radio" value="note">
+            <input type="radio" class="tools__radio tools__obstacle" id="tools__obstacle" name="tools__radio"
+              value="obstacle">
+            <input type="radio" class="tools__radio tools__event" id="tools__event" name="tools__radio" value="event">
+            <input type="radio" class="tools__radio tools__other" id="tools__other" name="tools__radio" value="other">
+            <div class="tools__nav">
+              <label class="tools__label tools__label-note unselectable" for="tools__note">Note</label>
+              <label class="tools__label tools__label-obstacle unselectable" for="tools__obstacle">Obstacle</label>
+              <label class="tools__label tools__label-event unselectable" for="tools__event">Event</label>
+              <label class="tools__label tools__label-other unselectable" for="tools__other">Other</label>
+            </div>
+            <div class="tools__tab" id="tools__note-content">
+              note content
+            </div>
+            <div class="tools__tab" id="tools__obstacle-content">
+              obstacle content
+            </div>
+            <div class="tools__tab" id="tools__event-content">
+              event content
+            </div>
+            <div class="tools__tab" id="tools__other-content">
+              other content
+            </div>
           </div>
         </div>
-        <div class="panel__medium">
-          <div class="panel__offset--half">
+        <div class="panel panel__medium">
+          <div class="panel panel__offset--half">
             <span>Difficulty: <span id="output-difficulty-name"></span></span>
             <br>
             <span class="diff-label" id="output-difficulty-label">Difficulty Label</span>
@@ -129,54 +151,63 @@
         <span>Settings</span>
       </label>
       <div class="accordion__collapsible">
-        <div class="panel__medium">
-          <div class="panel__offset--half">
+        <div class="panel panel__medium">
+          <div class="panel panel__offset--half">
             <span>Map Loading</span><br>
-            <input type="checkbox" id="settings__noaudio">
+            <input type="checkbox" class="settings__noaudio" id="settings__noaudio">
             <label for="settings__noaudio">
               <span>Disable Audio Loading</span>
             </label><br>
-            <input type="checkbox" id="settings__noimage">
+            <input type="checkbox" class="settings__noimage" id="settings__noimage">
             <label for="settings__noimage">
               <span>Disable Image Loading</span>
             </label><br>
-            <input type="checkbox" id="settings__nosort">
+            <input type="checkbox" class="settings__nosort" id="settings__nosort">
             <label for="settings__nosort">
               <span>Disable Sorting</span>
             </label><br>
-            <input type="checkbox" id="settings__nocustom">
+            <input type="checkbox" class="settings__nocustom" id="settings__nocustom">
             <label for="settings__nocustom">
               <span>No Custom Data Check</span>
             </label><br>
             <label for="settings__beat-numbering">
               <span>Beat Numbering:</span>
             </label>
-            <select id="settings__beat-numbering">
+            <select class="settings__beat-numbering" id="settings__beat-numbering">
               <option value="mmtime">ChroMapper</option>
               <option value="cmtime">MediocreMapper</option>
               <option value="jsontime">JSON Time</option>
               <option value="realtime">Real Time</option>
-            </select>
+            </select><br>
+            <label for="settings__rounding">
+              <span>Rounding:</span>
+            </label>
+            <input type="number" class="settings__rounding" id="settings__rounding">
           </div>
         </div>
-        <div class="panel__medium">
-          <div class="panel__offset--half">
+        <div class="panel panel__medium">
+          <div class="panel panel__offset--half">
             <span>Preferences</span><br>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi repudiandae id exercitationem quibusdam
-            debitis
-            ratione esse ipsa, totam unde odio harum, veniam, impedit porro culpa? Corporis nulla nesciunt error
-            laboriosam.
+            <label for="settings__theme">
+              <span>Theme:</span>
+            </label>
+            <select class="settings__theme" id="settings__theme">
+              <option value="dark">Dark</option>
+              <option value="light">Light</option>
+              <option value="monochrome">Monochrome</option>
+            </select><br>
           </div>
         </div>
       </div>
     </div>
     <footer>
-      <div class="watermark">
-        <a id="watermark" href="https://kivalevan.github.io/">watermark</a>
+      <div>
+        <a class="link link__watermark" href="https://kivalevan.github.io/">watermark</a>
         <span> | </span>
-        <a id="version" href="https://github.com/KivalEvan/BeatSaber-MapCheck/blob/main/CHANGELOG.md">version</a>
-        <a id="link-wiki" href="https://github.com/KivalEvan/BeatSaber-MapCheck/wiki">wiki</a>
-        <a id="link-utility" href="https://kivalevan.github.io/BeatSaber-MappingUtility/">utility</a>
+        <a class="link link__version"
+          href="https://github.com/KivalEvan/BeatSaber-MapCheck/blob/main/CHANGELOG.md">version</a>
+        <a class="link link__wiki" href="https://github.com/KivalEvan/BeatSaber-MapCheck/wiki">wiki</a>
+        <a class="link link__utility" href="https://kivalevan.github.io/BeatSaber-MappingUtility/">utility</a>
       </div>
     </footer>
   </div>
