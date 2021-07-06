@@ -1,0 +1,63 @@
+$bg-diff-easy-color: hsl(147, 50%, 47%);
+$bg-diff-normal-color: hsl(206, 88%, 65%);
+$bg-diff-hard-color: hsl(9, 100%, 64%);
+$bg-diff-expert-color: hsl(350, 64%, 46%);
+$bg-diff-expertplus-color: hsl(269, 67%, 57%);
+$bg-loading-base: hsl(220, 43%, 44%);
+$bg-loading-error: hsl(0, 80%, 40%);
+$bg-accordion-base: hsl(0, 0%, 15%);
+$bg-accordion-base-hover: hsl(0, 0%, 20%);
+$bg-accordion-checked: hsl(0, 0%, 25%);
+$bg-accordion-checked-hover: hsl(0, 0%, 30%);
+$c-link-base: hsl(210, 100%, 50%);
+$c-link-hover: hsl(0, 100%, 50%);
+$font-monospace: Monaco, monospace;
+$font-sans-serif: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+:root {
+    --font-monospace: #{$font-monospace};
+    --font-sans-serif: #{$font-sans-serif};
+    --bg-loading-base: #{$bg-loading-base};
+    --bg-loading-error: #{$bg-loading-error};
+    --bg-accordion-base: #{$bg-accordion-base};
+    --bg-accordion-base-hover: #{$bg-accordion-base-hover};
+    --bg-accordion-checked: #{$bg-accordion-checked};
+    --bg-accordion-checked-hover: #{$bg-accordion-checked-hover};
+    --c-link-base: #{$c-link-base};
+    --c-link-hover: #{$c-link-hover};
+}
+.shadow {
+    box-shadow: 0 0 1rem black;
+}
+.hidden {
+    display: none;
+}
+.disabled {
+    pointer-events: none;
+    cursor: default;
+}
+.unselectable {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.bg- {
+    &diff-easy {
+        background-color: $bg-diff-easy-color;
+    }
+    &diff-normal {
+        background-color: $bg-diff-normal-color;
+    }
+    &diff-hard {
+        background-color: $bg-diff-hard-color;
+    }
+    &diff-expert {
+        background-color: $bg-diff-expert-color;
+    }
+    &diff-expertplus {
+        background-color: $bg-diff-expertplus-color;
+    }
+}

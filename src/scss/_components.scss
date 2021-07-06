@@ -1,0 +1,177 @@
+a {
+    padding: 0.125rem 0.25rem;
+    font-size: 1em;
+    text-decoration: none;
+    color: var(--c-link-base);
+    transition: color ease 0.125s;
+    &:hover {
+        color: var(--c-link-hover);
+    }
+}
+.cover {
+    display: block;
+    width: var(--header-height);
+    height: var(--header-height);
+    &__link {
+        display: block;
+        position: relative;
+        width: inherit;
+        height: inherit;
+        padding: 0;
+        &:not(.disabled):hover {
+            opacity: 0.5;
+        }
+    }
+    &__image {
+        position: absolute;
+        width: inherit;
+        height: inherit;
+    }
+}
+.container {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: inherit;
+}
+.intro {
+    position: relative;
+    height: 100%;
+    &__container {
+        display: flex;
+        align-items: stretch;
+        justify-content: center;
+    }
+    &__title {
+        font-size: 2em;
+        font-weight: 600;
+        line-height: 0.5;
+    }
+    &__subtitle {
+        font-size: 1.5em;
+        font-weight: 500;
+    }
+}
+
+.metadata {
+    &__song-name {
+        font-weight: 500;
+        font-size: 2em;
+        line-height: 0.5;
+    }
+    &__song-subname {
+        font-weight: 400;
+    }
+    &__song-author {
+        font-weight: 400;
+        font-size: 1.375em;
+    }
+    &__song-bpm {
+        font-family: var(--font-monospace);
+    }
+    &__song-duration {
+        font-family: var(--font-monospace);
+    }
+}
+.input {
+    &__file {
+        position: absolute;
+        left: -9999px;
+        &__zone {
+            display: block;
+            position: relative;
+            cursor: pointer;
+            height: calc(var(--header-height) - var(--panel-offset) * 1.5);
+            border: 0.125em dashed #808080;
+            border-radius: 0.5em;
+            background-color: #ccc;
+            transition: background-color 0.1s ease;
+            &:hover {
+                background-color: #d8d8d8;
+            }
+            span {
+                position: absolute;
+                width: 100%;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                margin: auto;
+                text-align: center;
+            }
+        }
+        &:focus + &__zone {
+            background-color: #aaa;
+        }
+    }
+    &__url {
+        width: 100%;
+    }
+    &__id {
+        width: 4em;
+    }
+    &__reset-button {
+        position: absolute;
+        top: 1em;
+        right: 1.5em;
+    }
+}
+.accordion {
+    position: relative;
+    width: 100%;
+    &__button {
+        position: absolute;
+        width: 0;
+        height: 0;
+        left: -9999px;
+        & {
+            + .accordion__label {
+                + .accordion__collapsible {
+                    display: none;
+                }
+            }
+            + .accordion__label::before {
+                content: '\002B';
+                font-weight: bold;
+                float: left;
+                padding: 0 0.75em 0 0.25em;
+            }
+        }
+        &:checked {
+            + .accordion__label {
+                background-color: var(--bg-accordion-checked);
+                &:hover {
+                    background-color: var(--bg-accordion-checked-hover);
+                }
+                + .accordion__collapsible {
+                    display: flex;
+                }
+            }
+            + .accordion__label::before {
+                content: '\2212';
+            }
+        }
+        &:focus + .accordion__label {
+            outline: 1px dashed #777;
+            outline-offset: -1px;
+        }
+    }
+    &__label {
+        display: block;
+        cursor: pointer;
+        font-size: 1.25em;
+        padding: 0.5em;
+        background-color: var(--bg-accordion-base);
+        color: white;
+        text-transform: uppercase;
+        transition: background-color 0.125s ease;
+        &:hover {
+            background-color: var(--bg-accordion-base-hover);
+        }
+    }
+    &__collapsible {
+        flex-wrap: wrap;
+        align-items: stretch;
+        overflow: hidden;
+        background-color: white;
+    }
+}

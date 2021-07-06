@@ -1,0 +1,105 @@
+$max-width: 64em;
+$sz-panel-tiny: 25%;
+$sz-panel-small: 33.33%;
+$sz-panel-medium: 50%;
+$sz-panel-large: 66.66%;
+$sz-panel-offset: 0.75em;
+$header-height: 12em;
+
+:root {
+    --header-height: #{$header-height};
+    --panel-offset: #{$sz-panel-offset};
+}
+html {
+    height: 100%;
+    font-size: 1em;
+    font-family: var(--font-sans-serif);
+}
+body {
+    color: #000;
+    background: #171717;
+    margin: 0;
+    padding-bottom: 3em;
+}
+.wrapper {
+    max-width: $max-width;
+    margin: 0 auto;
+}
+.panel {
+    &__tiny {
+        position: relative;
+        width: $sz-panel-tiny;
+    }
+    &__small {
+        position: relative;
+        width: $sz-panel-small;
+    }
+    &__medium {
+        position: relative;
+        width: $sz-panel-medium;
+    }
+    &__large {
+        position: relative;
+        width: $sz-panel-large;
+    }
+    &__max {
+        position: relative;
+        width: 100%;
+    }
+    &__offset {
+        margin: $sz-panel-offset;
+        &--half {
+            margin: calc(#{$sz-panel-offset} / 2);
+        }
+    }
+}
+header {
+    display: flex;
+    position: relative;
+    height: $header-height;
+    background-color: #efefef;
+}
+
+.loading {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 2em;
+    &__bar {
+        background-color: var(--bg-loading-base);
+        width: 0%;
+        height: 100%;
+        transition: width 0.2s ease-out, background-color 0.1s linear;
+        &--error {
+            background-color: var(--bg-loading-error);
+        }
+    }
+    &__text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        margin: auto;
+        text-align: center;
+        color: white;
+    }
+}
+footer {
+    display: flex;
+    position: fixed;
+    bottom: 1em;
+    right: 1em;
+    background-image: linear-gradient(
+        to left,
+        #20202000,
+        #202020cc,
+        #202020cc,
+        #202020cc,
+        #20202000
+    );
+    color: white;
+    transform: scale(2, 2);
+    div {
+        transform: scale(0.5, 0.5);
+    }
+}

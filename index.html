@@ -1,164 +1,186 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+  <meta name="description" content="Beat Saber Map Check by Kival Evan">
+  <link rel="stylesheet" href="./dist/main.css">
   <link rel="shortcut icon" type="image/jpg" href="favicon.png">
   <link href='https://fonts.googleapis.com/css?family=Teko' rel='stylesheet'>
   <title>BS Map Check</title>
-  <script src="./scripts/libs/jquery.slim.min.js"></script>
-  <script src="./scripts/libs/jszip.min.js"></script>
 </head>
 
 <body>
-  <div id="main">
+  <div class="wrapper shadow">
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <header>
       <div class="cover">
-        <img id="coverimg" src="./assets/unknown.jpg" alt="No Cover Images">
-        <a id="map-link" href="#" target="_blank"></a>
+        <a class="cover__link disabled" id="map-link" href="#" target="_blank">
+          <img class="cover__image" src="./assets/unknown.jpg" alt="cover image">
+        </a>
       </div>
-      <div class="info">
-        <div class="metadata" id="metadata-container">
-          <span id="song-name" title="Song Name"></span>
-          <span id="song-subname" title="Song Subname"></span><br>
-          <span id="song-author" title="Song Author"></span><br>
-          <span id="song-bpm" title="Song BPM"></span><br>
-          <span id="song-duration" title="Song Duration"></span><br><br>
-          <span id="level-author" title="Level Author"></span>
-          <br>
-          <span id="environment" title="Environment"></span><br>
+      <div class="container">
+        <div class="metadata panel__offset hidden">
+          <span class="metadata__song-name" title="Song Name">Song Name</span>
+          <span class="metadata__song-subname" title="Song Subname">Song Subname</span><br>
+          <span class="metadata__song-author" title="Song Author">Song Author</span><br>
+          <span class="metadata__song-bpm" title="Song BPM">Song BPM</span><br>
+          <span class="metadata__song-duration" title="Song Duration">Song Duration</span><br>
+          <audio></audio>
         </div>
-        <div class="input" id="input-container" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
-          <span id="title">Beat Saber</span><br>
-          <span id="subtitle">Map Check</span><br>
-          <label class="input" for="input-url">Map zip link: </label>
-          <input type="text" class="input" id="input-url" name="input-url"
-            placeholder="https://example.com/map.zip"><br>
-          <label class="input" for="input-id">BeatSaver ID: </label>
-          <input type="text" class="input" id="input-id" name="input-id" placeholder="10b39"><br>
-          <label class="input" id="input-button" for="input-file">Upload Map</label>
-          <input type="file" class="input" id="input-file" name="input-file" accept=".zip,.bsl">
-          <span>or drag & drop the zip file here</span>
-          <br>
+        <div class="intro">
+          <div class="intro__container">
+            <div class="panel__small">
+              <div class="panel__offset">
+                <span class="intro__title">Beat Saber</span><br>
+                <span class="intro__subtitle">Map Check</span><br>
+                <label for="input__url">Map zip link: </label>
+                <input type="text" class="input input__url input--toggle" id="input__url"
+                  placeholder="https://example.com/map.zip"><br>
+                <label for="input__id">BeatSaver ID: </label>
+                <input type="text" class="input input__id input--toggle" id="input__id" placeholder="10b39"><br>
+                <input type="button" class="input input__search-button  input--toggle" id="input__search-button"
+                  value="Get Link/ID">
+              </div>
+            </div>
+            <div class="panel__large">
+              <div class="panel__offset--half">
+                <input type="file" class="input input__file input--toggle" id="input__file" accept=".zip,.bsl">
+                <label class="input input__file__zone" for="input__file">
+                  <span>UPLOAD ZIP FILE HERE<br>DRAG & DROP ZONE</span>
+                </label>
+              </div>
+            </div>
+          </div>
         </div>
-        <input type="button" class="settings" id="reset-button" value="Reset">
-        <div class="watermark">
-          <a id="watermark" href="https://kivalevan.github.io/"></a><span> | </span>
-          <a id="version" href="https://github.com/KivalEvan/BeatSaber-MapCheck/blob/main/CHANGELOG.md"></a>
-          <a id="link-wiki" href="https://github.com/KivalEvan/BeatSaber-MapCheck/wiki">wiki</a>
-          <a id="link-utility" href="https://kivalevan.github.io/BeatSaber-MappingUtility/">utility</a>
-        </div>
+        <input type="button" class="input input__reset-button input--toggle" id="input__reset-button" value="Reset">
       </div>
     </header>
     <div class="loading">
-      <div id="loadingbar"></div>
-      <span id="loadingtext">No map loaded</span>
+      <div class="loading__bar"></div>
+      <span class="loading__text">No map loaded</span>
     </div>
-    <button class="accordion">Tools</button>
-    <div class="collapsible">
-      <div id="tools">
-        <div class="settings" id="settings">
-          <label for="mapset">Characteristic select:</label>
-          <select class="settings" id="mapset">
-            <option disabled selected>-</option>
-          </select><br>
-          <label for="mapdiff">Difficulty select:</label>
-          <select class="settings" id="mapdiff">
-            <option disabled selected>-</option>
-          </select><br>
-          <hr>
-          <label for="ebpm">Effective BPM threshold:</label>
-          <input type="number" class="settings" id="ebpm" name="ebpm" min="0">
-          <label for="ebpms">(swing):</label>
-          <input type="number" class="settings" id="ebpms" name="ebpms" min="0">
-          <br>
-          <label for="beatprec">Acceptable beat precision:</label>
-          <input type="text" class="settings" id="beatprec" name="beatprec" placeholder="4 3">
-          <br>
-          <input type="checkbox" class="settings" id="hb-stair" name="hb-stair" value="hbStaircase">
-          <label for="hb-stair">Hitbox staircase</label>
-          <br>
-          <input type="checkbox" class="settings" id="slowslider" name="slowslider" value="slowSlider">
-          <label for="slowslider">Slow slider</label><br>
-          <label for="slowslider-min">min speed (ms):</label>
-          <input type="number" class="settings" id="slowslider-min" name="slowslider-min" min="0">
-          <label for="slowslider-min-prec">(prec):</label>
-          <input type="number" class="settings" id="slowslider-min-prec" name="slowslider-min-prec" min="0">
-          <br>
-          <input type="checkbox" class="settings" id="inlineangle" name="inlineangle" value="inlineAngle">
-          <label for="inlineangle">Inline sharp angle</label><br>
-          <label for="inlineangle-max">max time (ms):</label>
-          <input type="number" class="settings" id="inlineangle-max" name="inlineangle-max" min="0">
-          <label for="inlineangle-max-prec">(prec):</label>
-          <input type="number" class="settings" id="inlineangle-max-prec" name="inlineangle-max-prec" min="0">
-          <br>
-          <input type="checkbox" class="settings" id="shrangle" name="shrangle" value="shrAngle">
-          <label for="shrangle">Shrado angle</label><br>
-          <label for="shrangle-max">max time (ms):</label>
-          <input type="number" class="settings" id="shrangle-max" name="shrangle-max" min="0">
-          <label for="shrangle-max-prec">(prec):</label>
-          <input type="number" class="settings" id="shrangle-max-prec" name="shrangle-max-prec" min="0">
-          <br>
-          <input type="checkbox" class="settings" id="speedpause" name="speedpause" value="speedPause">
-          <label for="speedpause">Speed pause (EXPERIMENTAL)</label><br>
-          <label for="speedpause-max">stream precision (ms):</label>
-          <input type="number" class="settings" id="speedpause-max" name="speedpause-max" min="0">
-          <label for="speedpause-max-prec">(prec):</label>
-          <input type="number" class="settings" id="speedpause-max-prec" name="speedpause-max-prec" min="0">
-          <br>
-          <input type="checkbox" class="settings" id="dd" name="dd" value="dd">
-          <label for="dd">Double-directional</label>
-          <br>
-          <input type="checkbox" class="settings" id="vb-note" name="vb-note" value="vbNote">
-          <label for="vb-note">Vision block</label>
-          <br>
-          <input type="radio" class="settings" id="vb-specific-time" name="vb-specific" value="time">
-          <label for="vb-specific-time">Time specific</label>
-          <input type="radio" class="settings" id="vb-specific-diff" name="vb-specific" value="diff">
-          <label for="vb-specific-diff">Diff specific</label>
-          <br>
-          <label for="vb-min">min time (ms):</label>
-          <input type="number" class="settings" id="vb-min" name="vb-min" min="0">
-          <label for="vb-min-beat">(beat):</label>
-          <input type="number" class="settings" id="vb-min-beat" name="vb-min-beat" min="0" step="0.125"><br>
-          <label for="vb-max">max time (ms):</label>
-          <input type="number" class="settings" id="vb-max" name="vb-max" min="0">
-          <label for="vb-max-beat">(beat):</label>
-          <input type="number" class="settings" id="vb-max-beat" name="vb-max-beat" min="0" step="0.125">
-          <br>
-          <input type="button" class="settings" id="vb-hjd" value="Set by HJD">
-          <input type="button" class="settings" id="vb-optimal" value="Set by optimal reaction time">
-          <br>
-          <hr>
-          Apply changes to:
-          <input type="button" id="apply-this" value="This difficulty" disabled>
-          <input type="button" id="apply-all" value="All difficulties" disabled>
+    <div class="accordion" id="info">
+      <input type="checkbox" class="accordion__button" id="accordion__info">
+      <label class="accordion__label unselectable" for="accordion__info"><span>Information</span></label>
+      <div class="accordion__collapsible">
+        <div class="panel__tiny">
+          <div class="panel__offset--half">
+            <span id="level-author" title="Level Author">Level Author</span><br>
+            <span id="environment" title="Environment">Environment</span><br>
+          </div>
         </div>
-        <div id="output-container">
-          <span>Difficulty: <span id="output-difficulty-name"></span></span>
-          <br>
-          <span class="diff-labels" id="output-difficulty-label">Difficulty Label</span>
-          <br>
-          <div class="output-box" id="output-diff">No output.</div>
-          <span>Map:</span><br>
-          <div class="output-box" id="output-map">No output.</div>
+        <div class="panel__tiny">
+          <div class="panel__offset--half">
+            <span>Contributors</span><br>
+            <span>Editors</span>
+          </div>
+        </div>
+        <div class="panel__medium">
+          <div class="panel__offset--half">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam explicabo eum at quod
+            modi corporis porro magni, pariatur aut ipsa quisquam. Possimus corrupti, vitae deserunt quam magni maiores
+            optio deleniti.
+          </div>
         </div>
       </div>
     </div>
-    <div class="stats" id="stats"></div>
+    <div class="accordion" id="tools">
+      <input type="checkbox" class="accordion__button" id="accordion__tools">
+      <label class="accordion__label unselectable" for="accordion__tools">
+        <span>Tools</span>
+      </label>
+      <div class="accordion__collapsible">
+        <div class="panel__medium">
+          <div class="panel__offset--half">
+            w
+          </div>
+        </div>
+        <div class="panel__medium">
+          <div class="panel__offset--half">
+            <span>Difficulty: <span id="output-difficulty-name"></span></span>
+            <br>
+            <span class="diff-label" id="output-difficulty-label">Difficulty Label</span>
+            <br>
+            <div class="output-box" id="output-diff">No output.</div>
+            <span>Map:</span><br>
+            <div class="output-box" id="output-map">No output.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="accordion" id="stats">
+      <input type="checkbox" class="accordion__button" id="accordion__stats">
+      <label class="accordion__label unselectable" for="accordion__stats">
+        <span>Stats</span>
+      </label>
+      <div class="accordion__collapsible">
+        <div>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur, amet asperiores modi voluptate
+          voluptates cupiditate! Omnis, atque illo earum pariatur officia et eaque soluta expedita officiis. Doloribus
+          quasi cum voluptatum.
+        </div>
+      </div>
+    </div>
+    <div class="accordion" id="settings">
+      <input type="checkbox" class="accordion__button" id="accordion__settings">
+      <label class="accordion__label unselectable" for="accordion__settings">
+        <span>Settings</span>
+      </label>
+      <div class="accordion__collapsible">
+        <div class="panel__medium">
+          <div class="panel__offset--half">
+            <span>Map Loading</span><br>
+            <input type="checkbox" id="settings__noaudio">
+            <label for="settings__noaudio">
+              <span>Disable Audio Loading</span>
+            </label><br>
+            <input type="checkbox" id="settings__noimage">
+            <label for="settings__noimage">
+              <span>Disable Image Loading</span>
+            </label><br>
+            <input type="checkbox" id="settings__nosort">
+            <label for="settings__nosort">
+              <span>Disable Sorting</span>
+            </label><br>
+            <input type="checkbox" id="settings__nocustom">
+            <label for="settings__nocustom">
+              <span>No Custom Data Check</span>
+            </label><br>
+            <label for="settings__beat-numbering">
+              <span>Beat Numbering:</span>
+            </label>
+            <select id="settings__beat-numbering">
+              <option value="mmtime">ChroMapper</option>
+              <option value="cmtime">MediocreMapper</option>
+              <option value="jsontime">JSON Time</option>
+              <option value="realtime">Real Time</option>
+            </select>
+          </div>
+        </div>
+        <div class="panel__medium">
+          <div class="panel__offset--half">
+            <span>Preferences</span><br>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi repudiandae id exercitationem quibusdam
+            debitis
+            ratione esse ipsa, totam unde odio harum, veniam, impedit porro culpa? Corporis nulla nesciunt error
+            laboriosam.
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer>
+      <div class="watermark">
+        <a id="watermark" href="https://kivalevan.github.io/">watermark</a>
+        <span> | </span>
+        <a id="version" href="https://github.com/KivalEvan/BeatSaber-MapCheck/blob/main/CHANGELOG.md">version</a>
+        <a id="link-wiki" href="https://github.com/KivalEvan/BeatSaber-MapCheck/wiki">wiki</a>
+        <a id="link-utility" href="https://kivalevan.github.io/BeatSaber-MappingUtility/">utility</a>
+      </div>
+    </footer>
   </div>
-  <script defer src="./scripts/global.js"></script>
-  <script defer src="./scripts/ui.js"></script>
-  <script defer src="./scripts/beatmap.js"></script>
-  <script defer src="./scripts/tools/generic.js"></script>
-  <script defer src="./scripts/tools/note.js"></script>
-  <script defer src="./scripts/tools/obstacle.js"></script>
-  <script defer src="./scripts/tools/event.js"></script>
-  <script defer src="./scripts/tools/swing.js"></script>
-  <script defer src="./scripts/index.js"></script>
+  <script defer src="./dist/bundle.js"></script>
 </body>
 
 </html>
