@@ -21,7 +21,7 @@ const tool: Tool = {
     run: check,
 };
 
-function check(mapSettings: MapSettings, mapData: BeatmapData) {
+function check(mapSettings: MapSettings, mapData: BeatmapData): number {
     return 0;
 }
 
