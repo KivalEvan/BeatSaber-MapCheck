@@ -52,7 +52,6 @@
         font-weight: 500;
     }
 }
-
 .metadata {
     &__song-name {
         font-weight: 500;
@@ -167,6 +166,7 @@
         }
     }
     &__collapsible {
+        display: flex;
         flex-wrap: wrap;
         align-items: stretch;
         overflow: hidden;
@@ -175,7 +175,12 @@
 }
 // this makes me cri
 .tools {
-    display: block;
+    &__container {
+        display: flex;
+        height: calc(100% - var(--panel-offset));
+        flex-direction: column;
+        justify-content: space-between;
+    }
     &__nav {
         display: flex;
         justify-content: space-evenly;
@@ -212,30 +217,52 @@
         }
     }
     &__label {
-        padding: 0 0.25em;
-        margin: 0 0.75em;
-        text-align: center;
-        line-height: 1.5;
-        cursor: pointer;
-        border-bottom: 1px solid black;
-        transition: margin 0.125s ease, padding 0.125s ease;
-        &:hover {
-            padding: 0 1em;
-            margin: 0;
-            border-bottom: 1px solid red;
+        &-tab {
+            padding: 0 0.25em;
+            margin: 0 0.75em;
+            cursor: pointer;
+            text-align: center;
+            line-height: 1.5;
+            border-bottom: 1px solid black;
+            transition: margin 0.125s ease, padding 0.125s ease;
+            &:hover {
+                padding: 0 1em;
+                margin: 0;
+                border-bottom: 1px solid red;
+            }
+        }
+        &-select {
+            padding: 0 0.25em;
         }
     }
     &__tab {
         display: none;
+    }
+    &__select {
+        cursor: pointer;
+        width: 100%;
+    }
+    &__output {
+        &-text {
+            margin: 0 0.25em;
+            padding: 0 0.25em;
+        }
+        &-box {
+            border: 1px solid gray;
+            border-radius: 4px;
+            margin: 0.25em;
+            padding: 0.25em;
+        }
     }
     &__input[type='checkbox'] {
     }
 }
 .difficulty {
     &__label {
-        display: inline-block;
+        display: block;
         white-space: normal;
         overflow: hidden;
+        text-align: center;
         text-overflow: ellipsis;
         text-transform: uppercase;
         font-family: 'Teko';
@@ -256,5 +283,84 @@
     }
     &--count-5 {
         width: 4.2em;
+    }
+}
+.stats {
+    &__container {
+        position: relative;
+        width: 100%;
+    }
+    &__button {
+        position: absolute;
+        width: 0;
+        height: 0;
+        left: -9999px;
+        & {
+            + .stats__label + .stats__collapsible {
+                display: none;
+            }
+            + .stats__label::before {
+                content: '=';
+                font-weight: bold;
+                float: left;
+                padding: 0 0.75em 0 0.25em;
+            }
+        }
+        &:checked {
+            + .stats__label {
+                background-color: var(--bg-accordion-checked);
+                &:hover {
+                    background-color: var(--bg-accordion-checked-hover);
+                }
+                + .stats__collapsible {
+                    display: flex;
+                }
+            }
+            + .stats__label::before {
+                content: '>';
+            }
+        }
+        &:focus + .stats__label {
+            outline: 1px dashed #777;
+            outline-offset: -1px;
+        }
+    }
+    &__label {
+        display: block;
+        cursor: pointer;
+        width: 100%;
+        font-size: 1.125em;
+        padding: 0.375em;
+        background-color: var(--bg-accordion-base);
+        color: white;
+        text-transform: uppercase;
+        transition: background-color 0.125s ease;
+        &:hover {
+            background-color: var(--bg-accordion-base-hover);
+        }
+    }
+    &__collapsible {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: stretch;
+        overflow: hidden;
+        background-color: white;
+    }
+}
+.bg {
+    &--difficulty-easy {
+        background-color: var(--bg-diff-easy);
+    }
+    &--difficulty-normal {
+        background-color: var(--bg-diff-normal);
+    }
+    &--difficulty-hard {
+        background-color: var(--bg-diff-hard);
+    }
+    &--difficulty-expert {
+        background-color: var(--bg-diff-expert);
+    }
+    &--difficulty-expertplus {
+        background-color: var(--bg-diff-expertplus);
     }
 }

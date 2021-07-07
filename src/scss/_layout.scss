@@ -48,6 +48,9 @@ body {
             margin: calc(#{$sz-panel-offset} / 2);
         }
     }
+    &--flex {
+        display: flex;
+    }
 }
 header {
     display: flex;

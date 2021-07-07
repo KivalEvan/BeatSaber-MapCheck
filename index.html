@@ -40,7 +40,7 @@
                   placeholder="https://example.com/map.zip"><br>
                 <label for="input__id">BeatSaver ID: </label>
                 <input type="text" class="input input__id input--toggle" id="input__id" placeholder="10b39"><br>
-                <input type="button" class="input input__search-button  input--toggle" id="input__search-button"
+                <input type="button" class="input input__search-button input--toggle" id="input__search-button"
                   value="Get Link/ID">
               </div>
             </div>
@@ -79,9 +79,33 @@
         </div>
         <div class="panel panel__medium">
           <div class="panel panel__offset--half">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam explicabo eum at quod
-            modi corporis porro magni, pariatur aut ipsa quisquam. Possimus corrupti, vitae deserunt quam magni maiores
-            optio deleniti.
+            <div class="panel panel__max panel--flex">
+              <div class="panel__medium panel--flex">
+                <label class="info__label info__label-select" for="info__select-mode">
+                  <span>Characteristic:</span>
+                </label>
+                <select class="info__select" id="info__select-mode">
+                </select>
+              </div>
+              <div class="panel__medium panel--flex">
+                <label class="info__label info__label-select" for="info__select-difficulty">
+                  <span>Difficulty:</span>
+                </label>
+                <select class="info__select" id="info__select-difficulty">
+                </select>
+              </div>
+            </div>
+            <div class="panel panel__max">
+              <span class="difficulty__label" id="output-difficulty-label">Difficulty Label</span>
+            </div>
+            <div class="panel panel__max">
+              <span>requirement</span><br>
+              <span>suggestion</span><br>
+              <span>information</span><br>
+              <span>warning</span><br>
+              <span>bookmark</span><br>
+              <span>time spend</span><br>
+            </div>
           </div>
         </div>
       </div>
@@ -93,17 +117,20 @@
       </label>
       <div class="accordion__collapsible">
         <div class="panel panel__medium">
-          <div class="tools panel panel__offset--half">
+          <div class="tools__container panel panel__offset--half">
             <input type="radio" class="tools__radio tools__note" id="tools__note" name="tools__radio" value="note">
             <input type="radio" class="tools__radio tools__obstacle" id="tools__obstacle" name="tools__radio"
               value="obstacle">
             <input type="radio" class="tools__radio tools__event" id="tools__event" name="tools__radio" value="event">
             <input type="radio" class="tools__radio tools__other" id="tools__other" name="tools__radio" value="other">
             <div class="tools__nav">
-              <label class="tools__label tools__label-note unselectable" for="tools__note">Note</label>
-              <label class="tools__label tools__label-obstacle unselectable" for="tools__obstacle">Obstacle</label>
-              <label class="tools__label tools__label-event unselectable" for="tools__event">Event</label>
-              <label class="tools__label tools__label-other unselectable" for="tools__other">Other</label>
+              <label class="tools__label tools__label-tab tools__label-note unselectable" for="tools__note">Note</label>
+              <label class="tools__label tools__label-tab tools__label-obstacle unselectable"
+                for="tools__obstacle">Obstacle</label>
+              <label class="tools__label tools__label-tab tools__label-event unselectable"
+                for="tools__event">Event</label>
+              <label class="tools__label tools__label-tab tools__label-other unselectable"
+                for="tools__other">Other</label>
             </div>
             <div class="tools__tab" id="tools__note-content">
               note content
@@ -117,17 +144,39 @@
             <div class="tools__tab" id="tools__other-content">
               other content
             </div>
+            <div>
+              <span>Apply changes to:</span>
+              <input type="button" class="input input--toggle" id="tools__apply-this" value="This difficulty">
+              <input type="button" class="input input--toggle" id="tools__apply-this" value="All difficulty">
+            </div>
           </div>
         </div>
         <div class="panel panel__medium">
           <div class="panel panel__offset--half">
-            <span>Difficulty: <span id="output-difficulty-name"></span></span>
-            <br>
-            <span class="diff-label" id="output-difficulty-label">Difficulty Label</span>
-            <br>
-            <div class="output-box" id="output-diff">No output.</div>
-            <span>Map:</span><br>
-            <div class="output-box" id="output-map">No output.</div>
+            <div class="panel panel__max panel--flex">
+              <div class="panel__medium panel--flex">
+                <label class="tools__label tools__label-select" for="tools__select-mode">
+                  <span>Characteristic:</span>
+                </label>
+                <select class="tools__select" id="tools__select-mode">
+                </select>
+              </div>
+              <div class="panel__medium panel--flex">
+                <label class="tools__label tools__label-select" for="tools__select-difficulty">
+                  <span>Difficulty:</span>
+                </label>
+                <select class="tools__select" id="tools__select-difficulty">
+                </select>
+              </div>
+            </div>
+            <span class="tools__output-text">Map:</span><br>
+            <div class="tools__output-box" id="tools__output-diff">
+              No output.
+            </div>
+            <span class="tools__output-text">General:</span><br>
+            <div class="tools__output-box" id="tools__output-map">
+              No output.
+            </div>
           </div>
         </div>
       </div>
@@ -137,11 +186,22 @@
       <label class="accordion__label unselectable" for="accordion__stats">
         <span>Stats</span>
       </label>
-      <div class="accordion__collapsible">
-        <div>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur, amet asperiores modi voluptate
-          voluptates cupiditate! Omnis, atque illo earum pariatur officia et eaque soluta expedita officiis. Doloribus
-          quasi cum voluptatum.
+      <div class="stats__container accordion__collapsible">
+        <input type="checkbox" class="stats__button" id="stats__mode-standard">
+        <label class="stats__label unselectable" for="stats__mode-standard">
+          <span>Standard</span>
+        </label>
+        <div class="stats__container stats__collapsible" id="stats__mode-standard-content">
+          <input type="checkbox" class="stats__button" id="stats__mode-standard-expertplus">
+          <label class="stats__label unselectable bg--difficulty-expertplus" for="stats__mode-standard-expertplus">
+            <span>Expert+</span>
+          </label>
+          <div class="stats__container stats__collapsible" id="stats__mode-standard-expertplus-content">
+            <div class="panel panel__tiny">hi</div>
+            <div class="panel panel__tiny">hi</div>
+            <div class="panel panel__tiny">hi</div>
+            <div class="panel panel__tiny">hi</div>
+          </div>
         </div>
       </div>
     </div>
@@ -156,22 +216,22 @@
             <span>Map Loading</span><br>
             <input type="checkbox" class="settings__noaudio" id="settings__noaudio">
             <label for="settings__noaudio">
-              <span>Disable Audio Loading</span>
+              <span>Disable audio loading</span>
             </label><br>
             <input type="checkbox" class="settings__noimage" id="settings__noimage">
             <label for="settings__noimage">
-              <span>Disable Image Loading</span>
+              <span>Disable image loading</span>
             </label><br>
             <input type="checkbox" class="settings__nosort" id="settings__nosort">
             <label for="settings__nosort">
-              <span>Disable Sorting</span>
+              <span>Disable sorting</span>
             </label><br>
             <input type="checkbox" class="settings__nocustom" id="settings__nocustom">
             <label for="settings__nocustom">
-              <span>No Custom Data Check</span>
+              <span>No custom data check</span>
             </label><br>
             <label for="settings__beat-numbering">
-              <span>Beat Numbering:</span>
+              <span>Beat numbering:</span>
             </label>
             <select class="settings__beat-numbering" id="settings__beat-numbering">
               <option value="mmtime">ChroMapper</option>

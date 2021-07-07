@@ -23,6 +23,11 @@ $font-sans-serif: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     --bg-accordion-base-hover: #{$bg-accordion-base-hover};
     --bg-accordion-checked: #{$bg-accordion-checked};
     --bg-accordion-checked-hover: #{$bg-accordion-checked-hover};
+    --bg-diff-easy: #{$bg-diff-easy-color};
+    --bg-diff-normal: #{$bg-diff-normal-color};
+    --bg-diff-hard: #{$bg-diff-hard-color};
+    --bg-diff-expert: #{$bg-diff-expert-color};
+    --bg-diff-expertplus: #{$bg-diff-expertplus-color};
     --c-link-base: #{$c-link-base};
     --c-link-hover: #{$c-link-hover};
 }
@@ -43,21 +48,4 @@ $font-sans-serif: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-}
-.bg- {
-    &diff-easy {
-        background-color: $bg-diff-easy-color;
-    }
-    &diff-normal {
-        background-color: $bg-diff-normal-color;
-    }
-    &diff-hard {
-        background-color: $bg-diff-hard-color;
-    }
-    &diff-expert {
-        background-color: $bg-diff-expert-color;
-    }
-    &diff-expertplus {
-        background-color: $bg-diff-expertplus-color;
-    }
 }
