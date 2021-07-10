@@ -1,6 +1,6 @@
 .link {
     padding: 0.125rem 0.25rem;
-    font-size: 1em;
+    font-size: 1rem;
     text-decoration: none;
     color: var(--c-link-base);
     transition: color ease 0.125s;
@@ -32,30 +32,30 @@
     display: block;
     position: relative;
     width: 100%;
-    height: inherit;
+    height: var(--header-height);
 }
 .intro {
     position: relative;
     height: 100%;
     &__container {
         display: flex;
+        height: 100%;
         align-items: stretch;
-        justify-content: center;
     }
     &__title {
-        font-size: 2em;
+        font-size: 2rem;
         font-weight: 600;
         line-height: 0.5;
     }
     &__subtitle {
-        font-size: 1.5em;
+        font-size: 1.5rem;
         font-weight: 500;
     }
 }
 .metadata {
     &__song-name {
         font-weight: 500;
-        font-size: 2em;
+        font-size: 2rem;
         line-height: 0.5;
     }
     &__song-subname {
@@ -63,7 +63,7 @@
     }
     &__song-author {
         font-weight: 400;
-        font-size: 1.375em;
+        font-size: 1.375rem;
     }
     &__song-bpm {
         font-family: var(--font-monospace);
@@ -79,8 +79,9 @@
         &-zone {
             display: block;
             position: relative;
+            box-sizing: border-box;
             cursor: pointer;
-            height: calc(var(--header-height) - var(--panel-offset) * 1.5);
+            height: 100%;
             border: 0.125em dashed #808080;
             border-radius: 0.5em;
             background-color: #ccc;
@@ -88,7 +89,7 @@
             &:hover {
                 background-color: #d8d8d8;
             }
-            span {
+            &-span {
                 position: absolute;
                 width: 100%;
                 top: 50%;
@@ -98,7 +99,7 @@
                 text-align: center;
             }
         }
-        &:focus + &__zone {
+        &:focus + &-zone {
             background-color: #aaa;
         }
     }
@@ -123,68 +124,82 @@
         height: 0;
         left: -9999px;
         & {
-            + .accordion__label + .accordion__collapsible {
-                display: none;
-            }
-            + .accordion__label::before {
-                content: '\002B';
-                font-weight: bold;
-                float: left;
-                padding: 0 0.75em 0 0.25em;
+            + .accordion__label {
+                &::before {
+                    content: '\002B';
+                    font-weight: bold;
+                    float: left;
+                    padding: 0 0.75em 0 0.25em;
+                }
+                + .accordion__collapsible {
+                    display: none;
+                }
             }
         }
         &:checked {
             + .accordion__label {
-                background-color: var(--bg-accordion-checked);
+                filter: contrast(120%) brightness(1.1);
                 &:hover {
-                    background-color: var(--bg-accordion-checked-hover);
+                    filter: contrast(130%) brightness(1.15);
+                }
+                &::before {
+                    content: '\2212';
                 }
                 + .accordion__collapsible {
-                    display: flex;
+                    display: block;
+                    &-flex {
+                        display: flex;
+                    }
                 }
-            }
-            + .accordion__label::before {
-                content: '\2212';
             }
         }
         &:focus + .accordion__label {
-            outline: 1px dashed #777;
+            outline: 1px dashed var(--c-outline-focus-accordion);
             outline-offset: -1px;
         }
     }
     &__label {
         display: block;
         cursor: pointer;
-        font-size: 1.125em;
+        font-size: 1.125rem;
         padding: 0.375em;
         background-color: var(--bg-accordion-base);
         color: white;
         text-transform: uppercase;
-        transition: background-color 0.125s ease;
+        transition: filter 0.125s ease;
         &:hover {
-            background-color: var(--bg-accordion-base-hover);
+            filter: contrast(110%) brightness(1.05);
+        }
+        &--medium {
+            font-size: 1.25rem;
+        }
+        &--large {
+            font-size: 1.375rem;
         }
     }
     &__collapsible {
-        display: flex;
-        flex-wrap: wrap;
+        display: block;
         align-items: stretch;
-        overflow: hidden;
         background-color: white;
+        &-flex {
+            @extend .accordion__collapsible;
+            display: flex;
+        }
     }
 }
 // this makes me cri
 .tools {
     &__container {
         display: flex;
-        height: calc(100% - var(--panel-offset));
+        height: 100%;
+        box-sizing: border-box;
         flex-direction: column;
         justify-content: space-between;
     }
     &__nav {
         display: flex;
-        justify-content: space-evenly;
         width: 100%;
+        justify-content: space-evenly;
     }
     &__radio {
         position: absolute;
@@ -212,7 +227,7 @@
             }
         }
         &:focus {
-            outline: 1px dashed #777;
+            outline: 1px dashed var(--c-outline-focus-accordion);
             outline-offset: -1px;
         }
     }
@@ -238,6 +253,9 @@
     &__tab {
         display: none;
     }
+    &__apply {
+        margin-top: auto;
+    }
     &__select {
         cursor: pointer;
         width: 100%;
@@ -257,6 +275,13 @@
     &__input[type='checkbox'] {
     }
 }
+.stats {
+    &__mode {
+        box-sizing: border-box;
+        padding: 0.375em;
+        font-size: 1.375rem;
+    }
+}
 .difficulty {
     &__label {
         display: block;
@@ -266,7 +291,7 @@
         text-overflow: ellipsis;
         text-transform: uppercase;
         font-family: 'Teko';
-        font-size: 1.25em;
+        font-size: 1.25rem;
         font-weight: bold;
     }
     &--count-1 {
@@ -283,68 +308,6 @@
     }
     &--count-5 {
         width: 4.2em;
-    }
-}
-.stats {
-    &__container {
-        position: relative;
-        width: 100%;
-    }
-    &__button {
-        position: absolute;
-        width: 0;
-        height: 0;
-        left: -9999px;
-        & {
-            + .stats__label + .stats__collapsible {
-                display: none;
-            }
-            + .stats__label::before {
-                content: '=';
-                font-weight: bold;
-                float: left;
-                padding: 0 0.75em 0 0.25em;
-            }
-        }
-        &:checked {
-            + .stats__label {
-                background-color: var(--bg-accordion-checked);
-                &:hover {
-                    background-color: var(--bg-accordion-checked-hover);
-                }
-                + .stats__collapsible {
-                    display: flex;
-                }
-            }
-            + .stats__label::before {
-                content: '>';
-            }
-        }
-        &:focus + .stats__label {
-            outline: 1px dashed #777;
-            outline-offset: -1px;
-        }
-    }
-    &__label {
-        display: block;
-        cursor: pointer;
-        width: 100%;
-        font-size: 1.125em;
-        padding: 0.375em;
-        background-color: var(--bg-accordion-base);
-        color: white;
-        text-transform: uppercase;
-        transition: background-color 0.125s ease;
-        &:hover {
-            background-color: var(--bg-accordion-base-hover);
-        }
-    }
-    &__collapsible {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: stretch;
-        overflow: hidden;
-        background-color: white;
     }
 }
 .bg {

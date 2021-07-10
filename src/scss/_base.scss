@@ -3,14 +3,17 @@ $bg-diff-normal-color: hsl(206, 88%, 65%);
 $bg-diff-hard-color: hsl(9, 100%, 64%);
 $bg-diff-expert-color: hsl(350, 64%, 46%);
 $bg-diff-expertplus-color: hsl(269, 67%, 57%);
-$bg-loading-base: hsl(220, 43%, 44%);
+$bg-loading-base: hsl(0, 0%, 20%);
+$bg-loading-info: hsl(220, 43%, 44%);
 $bg-loading-error: hsl(0, 80%, 40%);
 $bg-accordion-base: hsl(0, 0%, 15%);
-$bg-accordion-base-hover: hsl(0, 0%, 20%);
-$bg-accordion-checked: hsl(0, 0%, 25%);
-$bg-accordion-checked-hover: hsl(0, 0%, 30%);
+$bg-file-zone: hsl(0, 0%, 20%);
 $c-link-base: hsl(210, 100%, 50%);
 $c-link-hover: hsl(0, 100%, 50%);
+$c-outline-focus-accordion: hsl(0, 0%, 50%);
+$c-text-primary: hsl(0, 0%, 10%);
+$c-text-secondary: hsl(0, 0%, 90%);
+$c-text-tertiary: hsl(0, 90%, 60%);
 $font-monospace: Monaco, monospace;
 $font-sans-serif: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 
@@ -20,9 +23,7 @@ $font-sans-serif: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     --bg-loading-base: #{$bg-loading-base};
     --bg-loading-error: #{$bg-loading-error};
     --bg-accordion-base: #{$bg-accordion-base};
-    --bg-accordion-base-hover: #{$bg-accordion-base-hover};
-    --bg-accordion-checked: #{$bg-accordion-checked};
-    --bg-accordion-checked-hover: #{$bg-accordion-checked-hover};
+    --bg-file-zone: #{$bg-file-zone};
     --bg-diff-easy: #{$bg-diff-easy-color};
     --bg-diff-normal: #{$bg-diff-normal-color};
     --bg-diff-hard: #{$bg-diff-hard-color};
@@ -30,9 +31,7 @@ $font-sans-serif: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     --bg-diff-expertplus: #{$bg-diff-expertplus-color};
     --c-link-base: #{$c-link-base};
     --c-link-hover: #{$c-link-hover};
-}
-.shadow {
-    box-shadow: 0 0 1rem black;
+    --c-outline-focus-accordion: #{$c-outline-focus-accordion};
 }
 .hidden {
     display: none;

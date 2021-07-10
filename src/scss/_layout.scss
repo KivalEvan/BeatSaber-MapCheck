@@ -24,32 +24,40 @@ body {
 .wrapper {
     max-width: $max-width;
     margin: 0 auto;
+    &--shadow {
+        box-shadow: 0 0 1rem black;
+    }
 }
 .panel {
     position: relative;
-    &__tiny {
+    box-sizing: border-box;
+    &--tiny {
         width: $sz-panel-tiny;
     }
-    &__small {
+    &--small {
         width: $sz-panel-small;
     }
-    &__medium {
+    &--medium {
         width: $sz-panel-medium;
     }
-    &__large {
+    &--large {
         width: $sz-panel-large;
     }
-    &__max {
+    &--max {
         width: 100%;
     }
-    &__offset {
+    &--offset {
         margin: $sz-panel-offset;
-        &--half {
+        &-half {
             margin: calc(#{$sz-panel-offset} / 2);
         }
     }
     &--flex {
         display: flex;
+        &-column {
+            display: flex;
+            flex-direction: column;
+        }
     }
 }
 header {
