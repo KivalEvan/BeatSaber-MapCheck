@@ -8,6 +8,33 @@
         color: var(--c-link-hover);
     }
 }
+.loading {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 2em;
+    &__bar {
+        background-color: var(--bg-loading-base);
+        width: 0%;
+        height: 100%;
+        transition: width 0.2s ease-out, background-color 0.1s linear;
+        &--download {
+            background-color: var(--bg-loading-download);
+        }
+        &--error {
+            background-color: var(--bg-loading-error);
+        }
+    }
+    &__text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        margin: auto;
+        text-align: center;
+        color: white;
+    }
+}
 .cover {
     display: block;
     width: var(--header-height);
@@ -103,11 +130,13 @@
             background-color: #aaa;
         }
     }
-    &__url {
-        width: 100%;
-    }
-    &__id {
-        width: 4em;
+    &__intro {
+        &-url {
+            width: 100%;
+        }
+        &-id {
+            width: 4em;
+        }
     }
     &__reset-button {
         position: absolute;

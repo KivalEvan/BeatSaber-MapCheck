@@ -39,3 +39,28 @@ export const median = (numArr: number[]): number => {
     }
     return (numArr[mid - 1] + numArr[mid]) / 2;
 };
+
+export const sanitizeURL = (url: string): string => {
+    // regex from stackoverflow from another source
+    let regexURL =
+        /^(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/;
+    url = url.trim();
+    if (/^http:\/\//.test(url)) {
+        url = url.replace('http://', 'https://');
+    }
+    if (regexURL.test(url)) {
+        return url;
+    }
+    throw new Error('Invalid URL');
+};
+export const sanitizeBeatSaverID = (id: string): string => {
+    let regexID = /^[0-9a-fA-F]{1,6}$/;
+    id = id.trim();
+    if (/^!bsr /.test(id)) {
+        id = id.replace('!bsr ', '');
+    }
+    if (regexID.test(id)) {
+        return id;
+    }
+    throw new Error('Invalid ID');
+};

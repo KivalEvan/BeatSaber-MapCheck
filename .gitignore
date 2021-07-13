@@ -3,6 +3,7 @@ test
 jest*
 *.pdn
 *.old.*
+.vscode
 
 # Logs
 logs
