@@ -1,43 +1,6 @@
 import { BPMChange } from './bpm';
-
-export interface Note {
-    _time: number;
-    _lineIndex: number;
-    _lineLayer: number;
-    _type: number;
-    _cutDirection: number;
-    _customData?: CustomData;
-    [key: string]: any;
-}
-export interface Event {
-    _time: number;
-    _type: number;
-    _value: number;
-    _customData?: CustomData;
-    [key: string]: any;
-}
-export interface Obstacle {
-    _time: number;
-    _lineIndex: number;
-    _type: number;
-    _duration: number;
-    _width: number;
-    _customData?: CustomData;
-    [key: string]: any;
-}
-export interface Waypoint {
-    [key: string]: any;
-}
-
-export interface BeatmapData {
-    _version: string;
-    _notes: Note[];
-    _obstacles: Obstacle[];
-    _events: Event[];
-    _waypoints?: Waypoint[];
-    _customData?: CustomData;
-    _information?: CustomData;
-}
+import { DifficultyName } from './difficulty';
+import { BeatmapData } from './map';
 
 export const parseMap = (
     difficultyData: BeatmapData,

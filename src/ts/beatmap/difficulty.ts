@@ -1,4 +1,5 @@
 export type DifficultyName = 'Easy' | 'Normal' | 'Hard' | 'Expert' | 'ExpertPlus';
+
 export enum DifficultyRank {
     'Easy' = 1,
     'Normal' = 3,

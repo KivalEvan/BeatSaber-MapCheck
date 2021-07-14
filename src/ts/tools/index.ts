@@ -1,6 +1,8 @@
-import BeatPerMinute from '../bpm';
-import NoteJumpSpeed from '../njs';
-import { CharacteristicName, DifficultyName, BeatmapData } from '../beatmap';
+import BeatPerMinute from '../beatmap/bpm';
+import { CharacteristicName } from '../beatmap/characteristic';
+import { DifficultyName } from '../beatmap/difficulty';
+import { BeatmapData } from '../beatmap/map';
+import NoteJumpSpeed from '../beatmap/njs';
 
 export interface MapSettings {
     _mode: CharacteristicName;

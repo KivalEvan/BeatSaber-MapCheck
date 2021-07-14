@@ -6,6 +6,7 @@ export type CharacteristicName =
     | '90Degree'
     | 'Lightshow'
     | 'Lawless';
+
 // for ordering reason
 export enum CharacteristicOrder {
     'Standard',
