@@ -1,4 +1,4 @@
-import { Color } from './colors';
+import { Color } from '../colors';
 
 export interface ColorScheme {
     _colorLeft?: Color;

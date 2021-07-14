@@ -1,6 +1,7 @@
 import version from '../version';
 import { round, sanitizeBeatSaverID, sanitizeURL } from '../utils';
-import { loadingStatus, toggleInput } from './global';
+import { loadingStatus } from './loading';
+import { toggleInput } from './input';
 
 const _htmlWatermark = document.querySelectorAll<HTMLElement>('.link__watermark');
 const _htmlVersion = document.querySelectorAll<HTMLElement>('.link__version');

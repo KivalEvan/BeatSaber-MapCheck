@@ -1,5 +1,5 @@
 import JSZip from 'jszip';
-import { loadingStatus } from './ui/global';
+import { loadingStatus } from './ui/loading';
 
 export const extractZip = async () => {
     loadingStatus('info', 'Extracting zip', 0);

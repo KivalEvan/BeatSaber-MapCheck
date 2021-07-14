@@ -1,6 +1,5 @@
 type LoadingStatusType = 'info' | 'download' | 'error';
 
-const inputToggle = document.querySelectorAll<HTMLInputElement>('.input-toggle');
 const loadingBar = document.querySelectorAll<HTMLElement>('.loading__bar');
 const loadingBarError = 'loading__bar--error';
 const loadingBarDownload = 'loading__bar--download';
@@ -20,11 +19,5 @@ export const loadingStatus = (
         statusType === 'download'
             ? elem.classList.add(loadingBarDownload)
             : elem.classList.remove(loadingBarDownload);
-    });
-};
-
-export const toggleInput = (bool: boolean) => {
-    inputToggle.forEach((input) => {
-        input.disabled = bool;
     });
 };
