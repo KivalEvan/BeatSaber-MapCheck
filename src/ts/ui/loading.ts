@@ -1,23 +1,23 @@
 type LoadingStatusType = 'info' | 'download' | 'error';
 
-const loadingBar = document.querySelectorAll<HTMLElement>('.loading__bar');
-const loadingBarError = 'loading__bar--error';
-const loadingBarDownload = 'loading__bar--download';
-const loadingText = document.querySelectorAll<HTMLElement>('.loading__text');
+const htmlLoadingBar = document.querySelectorAll<HTMLElement>('.loading__bar');
+const htmlLoadingBarError = 'loading__bar--error';
+const htmlLoadingBarDownload = 'loading__bar--download';
+const htmlLoadingText = document.querySelectorAll<HTMLElement>('.loading__text');
 
 export const loadingStatus = (
     statusType: LoadingStatusType,
     statusString: string,
     percentage: number
 ): void => {
-    loadingText.forEach((elem) => (elem.textContent = statusString));
-    loadingBar.forEach((elem) => {
+    htmlLoadingText.forEach((elem) => (elem.textContent = statusString));
+    htmlLoadingBar.forEach((elem) => {
         elem.style.width = `${percentage}%`;
         statusType === 'error'
-            ? elem.classList.add(loadingBarError)
-            : elem.classList.remove(loadingBarError);
+            ? elem.classList.add(htmlLoadingBarError)
+            : elem.classList.remove(htmlLoadingBarError);
         statusType === 'download'
-            ? elem.classList.add(loadingBarDownload)
-            : elem.classList.remove(loadingBarDownload);
+            ? elem.classList.add(htmlLoadingBarDownload)
+            : elem.classList.remove(htmlLoadingBarDownload);
     });
 };

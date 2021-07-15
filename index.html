@@ -21,7 +21,7 @@
         </a>
       </div>
       <div class="container">
-        <div class="panel panel--offset hidden">
+        <div class="metadata panel panel--offset hidden">
           <span class="metadata__song-name" title="Song Name">Song Name</span>
           <span class="metadata__song-subname" title="Song Subname">Song Subname</span><br>
           <span class="metadata__song-author" title="Song Author">Song Author</span><br>
@@ -196,7 +196,7 @@
       </label>
       <div class="accordion__collapsible-flex">
         <div class="panel panel--medium panel--offset-half">
-          <span>Map Loading</span><br>
+          <span>Map Loading/Output</span><br>
           <input type="checkbox" class="settings__checkbox" id="settings__noaudio">
           <label for="settings__noaudio">
             <span>Disable audio loading</span>
@@ -238,22 +238,23 @@
             <option value="monochrome">Monochrome</option>
           </select><br>
           <span>Collapse on start:</span><br>
-          <input type="checkbox" class="settings__checkbox" id="settings__info">
-          <label for="settings__info">
+          <input type="checkbox" class="settings__checkbox settings__show" id="settings__show-info">
+          <label for="settings__show-info">
             <span>Information</span>
           </label><br>
-          <input type="checkbox" class="settings__checkbox" id="settings__tools">
-          <label for="settings__tools">
+          <input type="checkbox" class="settings__checkbox settings__show" id="settings__show-tools">
+          <label for="settings__show-tools">
             <span>Tools</span>
           </label><br>
-          <input type="checkbox" class="settings__checkbox" id="settings__stats">
-          <label for="settings__stats">
+          <input type="checkbox" class="settings__checkbox settings__show" id="settings__show-stats">
+          <label for="settings__show-stats">
             <span>Stats</span>
           </label><br>
-          <input type="checkbox" class="settings__checkbox" id="settings__settings">
-          <label for="settings__settings">
+          <input type="checkbox" class="settings__checkbox settings__show" id="settings__show-settings">
+          <label for="settings__show-settings">
             <span>Settings</span>
           </label><br>
+          <input type="button" class="input__clear-button input-toggle" id="input__clear-button" value="Clear Settings">
         </div>
       </div>
     </div>

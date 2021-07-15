@@ -1,7 +1,7 @@
-const inputToggle = document.querySelectorAll<HTMLInputElement>('.input-toggle');
+const htmlInputToggle = document.querySelectorAll<HTMLInputElement>('.input-toggle');
 
-export const toggleInput = (bool: boolean) => {
-    inputToggle.forEach((input) => {
+export const disableInput = (bool: boolean) => {
+    htmlInputToggle.forEach((input) => {
         input.disabled = bool;
     });
 };

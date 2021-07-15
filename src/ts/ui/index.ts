@@ -1,14 +1,17 @@
 import version from '../version';
 import { round, sanitizeBeatSaverID, sanitizeURL } from '../utils';
 import { loadingStatus } from './loading';
-import { toggleInput } from './input';
+import { disableInput } from './input';
+import settings from '../settings';
 
-const _htmlWatermark = document.querySelectorAll<HTMLElement>('.link__watermark');
-const _htmlVersion = document.querySelectorAll<HTMLElement>('.link__version');
-const _inputIntroURL = document.querySelectorAll<HTMLInputElement>('.input__intro-url');
-const _inputIntroID = document.querySelectorAll<HTMLInputElement>('.input__intro-id');
-const _inputSearchButton = document.querySelectorAll<HTMLInputElement>('.input__search-button');
-const _inputFileZone = document.querySelectorAll<HTMLInputElement>('.input__file-zone');
+const htmlWatermark = document.querySelectorAll<HTMLElement>('.link__watermark');
+const htmlVersion = document.querySelectorAll<HTMLElement>('.link__version');
+const htmlCoverLink = document.querySelectorAll<HTMLLinkElement>('.cover__link');
+const htmlInputIntroURL = document.querySelectorAll<HTMLInputElement>('.input__intro-url');
+const htmlInputIntroID = document.querySelectorAll<HTMLInputElement>('.input__intro-id');
+const htmlInputSearchButton = document.querySelectorAll<HTMLInputElement>('.input__search-button');
+const htmlInputFileZone = document.querySelectorAll<HTMLInputElement>('.input__file-zone');
+const htmlAccordion = document.querySelectorAll<HTMLInputElement>('.accordion__button');
 
 export const init = (function () {
     let executed = false;
@@ -16,22 +19,29 @@ export const init = (function () {
         if (!executed) {
             console.log('user interface initialised');
             executed = true;
-            _htmlWatermark.forEach((elem) => (elem.innerText = version.watermark));
-            _htmlVersion.forEach((elem) => (elem.innerText = version.value));
-            _inputIntroURL.forEach((elem) =>
+            htmlWatermark.forEach((elem) => (elem.innerText = version.watermark));
+            htmlVersion.forEach((elem) => (elem.innerText = version.value));
+            htmlInputIntroURL.forEach((elem) =>
                 elem.addEventListener('keydown', introInputTextHandler)
             );
-            _inputIntroID.forEach((elem) =>
+            htmlInputIntroID.forEach((elem) =>
                 elem.addEventListener('keydown', introInputTextHandler)
             );
-            _inputFileZone.forEach((elem) => {
+            htmlInputFileZone.forEach((elem) => {
                 elem.addEventListener('change', inputFileHandler);
                 elem.addEventListener('dragover', dragOverHandler);
                 elem.addEventListener('drop', inputFileDropHandler);
             });
-            _inputSearchButton.forEach((elem) =>
+            htmlInputSearchButton.forEach((elem) =>
                 elem.addEventListener('click', introButtonTextHandler)
             );
+            htmlAccordion.forEach((elem) => {
+                for (const id in settings.show) {
+                    if (elem.id.endsWith(id)) {
+                        elem.checked = settings.show[id];
+                    }
+                }
+            });
         }
     };
 })();
@@ -47,13 +57,13 @@ function introInputTextHandler(ev: KeyboardEvent): void {
     }
 }
 function introButtonTextHandler(ev: Event): void {
-    for (const elem of _inputIntroURL) {
+    for (const elem of htmlInputIntroURL) {
         if (elem.value !== '') {
             downloadFromURL(elem.value);
             return;
         }
     }
-    for (const elem of _inputIntroID) {
+    for (const elem of htmlInputIntroID) {
         if (elem.value !== '') {
             downloadFromID(elem.value);
             return;
@@ -119,7 +129,7 @@ export async function downloadFromURL(input: string) {
         return;
     }
 
-    toggleInput(true);
+    disableInput(true);
     loadingStatus('info', 'Requesting download from link', 0);
 
     console.log(`downloading from ${url}`);
@@ -130,7 +140,7 @@ export async function downloadFromURL(input: string) {
         return res;
         // extractZip(res);
     } catch (err) {
-        toggleInput(false);
+        disableInput(false);
         loadingStatus('error', err, 100);
         // setTimeout(function () {
         //     if (!flag.loading)
@@ -149,7 +159,7 @@ export async function downloadFromID(input: string) {
         throw new Error(err);
     }
 
-    toggleInput(true);
+    disableInput(true);
     loadingStatus('info', 'Requesting download from BeatSaver', 0);
 
     console.log(`downloading from BeatSaver for map ID ${id}`);
@@ -160,7 +170,7 @@ export async function downloadFromID(input: string) {
         // map.url = 'https://beatsaver.com/beatmap/' + id;
         // extractZip(res);
     } catch (err) {
-        toggleInput(false);
+        disableInput(false);
         loadingStatus('error', err, 100);
         console.error(err);
         // setTimeout(function () {
@@ -214,3 +224,12 @@ async function downloadMap(url: string): Promise<Blob> {
 }
 function clearStats(): void {}
 function clearToolsOutput(): void {}
+
+// if (map.url !== null) {
+//     if (map.id !== null) {
+//         $('#map-link').text(`${map.id}`);
+//     } else {
+//         $('#map-link').text('Download Link');
+//     }
+//     $('#map-link').attr('href', map.url).css('display', 'block');
+// }

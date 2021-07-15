@@ -1,7 +1,14 @@
+// TODO: include type of easing available
 type Array2DPoint = [number, number];
 type Array3DPoint = [number, number, number];
+type ArrayPercentPointDefinition = [number, number, string?];
+type ArrayColorPointDefinition = [number, number, number, number, number, string?];
 type Array2DPointDefinition = [number, number, number, string?, string?];
 type Array3DPointDefinition = [number, number, number, number, string?, string?];
+type ArrayPointDefinition =
+    | Array2DPointDefinition[]
+    | Array3DPointDefinition[]
+    | ArrayColorPointDefinition[];
 type EventType =
     | 'AnimateTrack'
     | 'AssignPathAnimation'
@@ -17,6 +24,7 @@ interface NEObject {
     _fake?: boolean;
     _interactable?: boolean;
     _track?: string;
+    _animation?: NEAnimation;
 }
 
 export interface NENote extends NEObject {
@@ -34,14 +42,72 @@ export interface NEEvent {
     _rotation?: number;
 }
 
-// TODO: do stuff for data
 export interface NECustomEvent {
     _time: number;
     _type: EventType;
-    _data: { [key: string]: any };
+    _data: NECustomEventData;
 }
 
 export interface NEPointDefinition {
     _name: number;
-    _points: Array2DPointDefinition[] | Array3DPointDefinition[];
+    _points: ArrayPointDefinition[];
 }
+
+export interface NECustomEventDataBase {
+    _track: string;
+}
+
+// lmao wtf
+export interface NECustomEventDataAnimateTrack extends NECustomEventDataBase {
+    _duration: number;
+    _easing?: string;
+    _position?: string | Array3DPointDefinition[];
+    _rotation?: string | Array3DPointDefinition[];
+    _localRotation?: string | Array3DPointDefinition[];
+    _scale?: string | Array3DPointDefinition[];
+    _dissolve?: string | ArrayPercentPointDefinition[];
+    _dissolveArrow?: string | ArrayPercentPointDefinition[];
+    _color?: string | ArrayColorPointDefinition[];
+    _interactable?: string | ArrayPercentPointDefinition[];
+    _time?: string | ArrayPercentPointDefinition[];
+}
+
+export interface NECustomEventDataAssignPathAnimation extends NECustomEventDataBase {
+    _duration: number;
+    _easing?: string;
+    _position?: string | Array3DPointDefinition[];
+    _rotation?: string | Array3DPointDefinition[];
+    _localRotation?: string | Array3DPointDefinition[];
+    _scale?: string | Array3DPointDefinition[];
+    _dissolve?: string | ArrayPercentPointDefinition[];
+    _dissolveArrow?: string | ArrayPercentPointDefinition[];
+    _color?: string | ArrayColorPointDefinition[];
+    _interactable?: string | ArrayPercentPointDefinition[];
+    _definitePosition?: string | Array3DPointDefinition[];
+}
+
+export interface NECustomEventDataAssignTrackParent {
+    _childrenTracks: string[];
+    _parentTrack: string;
+}
+
+export interface NECustomEventDataAssignPlayerToTrack extends NECustomEventDataBase {}
+
+export interface NEAnimation {
+    _position?: string | Array3DPointDefinition[];
+    _rotation?: string | Array3DPointDefinition[];
+    _localRotation?: string | Array3DPointDefinition[];
+    _scale?: string | Array3DPointDefinition[];
+    _dissolve?: string | ArrayPercentPointDefinition[];
+    _dissolveArrow?: string | ArrayPercentPointDefinition[];
+    _color?: string | ArrayColorPointDefinition[];
+    _interactable?: string | ArrayPercentPointDefinition[];
+    _definitePosition?: string | Array3DPointDefinition[];
+    _time?: string | ArrayPercentPointDefinition[];
+}
+
+export type NECustomEventData =
+    | NECustomEventDataAnimateTrack
+    | NECustomEventDataAssignPathAnimation
+    | NECustomEventDataAssignPathAnimation
+    | NECustomEventDataAssignPlayerToTrack;

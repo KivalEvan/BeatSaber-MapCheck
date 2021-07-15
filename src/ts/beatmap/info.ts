@@ -2,7 +2,7 @@ import { CharacteristicName } from './characteristic';
 import { CustomDataInfo, CustomDataInfoDifficulty } from './customData';
 import { DifficultyName, DifficultyRank } from './difficulty';
 
-export interface MapInfo {
+export interface BeatmapInfo {
     _version: string;
     _songName: string;
     _songSubName: string;
@@ -19,9 +19,9 @@ export interface MapInfo {
     _allDirectionsEnvironmentName: string;
     _songTimeOffset: number;
     _customData?: CustomDataInfo;
-    _difficultyBeatmapSets: BeatmapSets[];
+    _difficultyBeatmapSets: BeatmapSet[];
 }
-export interface BeatmapSets {
+export interface BeatmapSet {
     _beatmapCharacteristicName: CharacteristicName;
     _difficultyBeatmaps: Beatmap[];
 }
