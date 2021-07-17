@@ -1,0 +1,39 @@
+$-c-text-primary: hsl(0, 0%, 10%);
+$-c-text-secondary: hsl(0, 0%, 90%);
+$-c-text-tertiary: hsl(0, 90%, 60%);
+$-c-link-base: hsl(210, 100%, 50%);
+$-c-link-hover: hsl(0, 100%, 50%);
+$-bg-accordion-base: hsl(0, 0%, 20%);
+$-c-accordion-text: hsl(0, 0%, 90%);
+$-bg-loading-base: hsl(220, 43%, 44%);
+$-bg-loading-download: hsl(100, 80%, 40%);
+$-bg-loading-error: hsl(0, 80%, 40%);
+$-c-loading-text: hsl(0, 0%, 80%);
+$-bg-file-zone: hsl(0, 0%, 20%);
+$-bg-diff-easy-color: hsl(147, 50%, 47%);
+$-bg-diff-normal-color: hsl(206, 88%, 65%);
+$-bg-diff-hard-color: hsl(9, 100%, 64%);
+$-bg-diff-expert-color: hsl(350, 64%, 46%);
+$-bg-diff-expertplus-color: hsl(269, 67%, 57%);
+$-c-outline-focus-accordion: hsl(0, 0%, 50%);
+
+%theme-base {
+    --c-text-primary: #{$-c-text-primary};
+    --c-text-secondary: #{$-c-text-secondary};
+    --c-text-tertiary: #{$-c-text-tertiary};
+    --c-link-base: #{$-c-link-base};
+    --c-link-hover: #{$-c-link-hover};
+    --bg-accordion-base: #{$-bg-accordion-base};
+    --c-accordion-text: #{$-c-accordion-text};
+    --bg-loading-base: #{$-bg-loading-base};
+    --bg-loading-download: #{$-bg-loading-download};
+    --bg-loading-error: #{$-bg-loading-error};
+    --c-loading-text: #{$-c-loading-text};
+    --bg-file-zone: #{$-bg-file-zone};
+    --bg-diff-easy: #{$-bg-diff-easy-color};
+    --bg-diff-normal: #{$-bg-diff-normal-color};
+    --bg-diff-hard: #{$-bg-diff-hard-color};
+    --bg-diff-expert: #{$-bg-diff-expert-color};
+    --bg-diff-expertplus: #{$-bg-diff-expertplus-color};
+    --c-outline-focus-accordion: #{$-c-outline-focus-accordion};
+}

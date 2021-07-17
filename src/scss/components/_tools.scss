@@ -1,0 +1,84 @@
+.tools {
+    &__container {
+        display: flex;
+        height: 100%;
+        box-sizing: border-box;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    &__nav {
+        display: flex;
+        width: 100%;
+        justify-content: space-evenly;
+    }
+    &__radio {
+        position: absolute;
+        width: 0;
+        height: 0;
+        left: -9999px;
+        &:checked {
+            &[id='tools__note'] ~ .tools__nav .tools__label-note,
+            &[id='tools__obstacle'] ~ .tools__nav .tools__label-obstacle,
+            &[id='tools__event'] ~ .tools__nav .tools__label-event,
+            &[id='tools__other'] ~ .tools__nav .tools__label-other {
+                padding: 0 1em;
+                margin: 0;
+                border-bottom: 1px solid var(--bg-tools-tab-select);
+            }
+            + .tools__tab,
+            &[id='tools__note'] ~ #tools__note-content,
+            &[id='tools__obstacle'] ~ #tools__obstacle-content,
+            &[id='tools__event'] ~ #tools__event-content,
+            &[id='tools__other'] ~ #tools__other-content {
+                display: block;
+            }
+        }
+        &:focus {
+            outline: 1px dashed var(--c-outline-focus-accordion);
+            outline-offset: -1px;
+        }
+    }
+    &__label {
+        &-tab {
+            padding: 0 0.25em;
+            margin: 0 0.75em;
+            cursor: pointer;
+            text-align: center;
+            line-height: 1.5;
+            border-bottom: 1px solid var(--bg-tools-tab);
+            transition: margin 0.125s ease, padding 0.125s ease;
+            &:hover {
+                padding: 0 1em;
+                margin: 0;
+                border-bottom: 1px solid var(--bg-tools-tab-select);
+            }
+        }
+        &-select {
+            padding: 0 0.25em;
+        }
+    }
+    &__tab {
+        display: none;
+    }
+    &__apply {
+        margin-top: auto;
+    }
+    &__select {
+        cursor: pointer;
+        width: 100%;
+    }
+    &__output {
+        &-text {
+            margin: 0 0.25em;
+            padding: 0 0.25em;
+        }
+        &-box {
+            border: 1px solid gray;
+            border-radius: 4px;
+            margin: 0.25em;
+            padding: 0.25em;
+        }
+    }
+    &__input[type='checkbox'] {
+    }
+}

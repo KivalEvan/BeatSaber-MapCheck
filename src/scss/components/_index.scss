@@ -1,0 +1,70 @@
+@forward 'header';
+@forward 'loading';
+@forward 'accordion';
+@forward 'tools';
+@forward 'input';
+
+.link {
+    padding: 0.125rem 0.25rem;
+    font-size: 1rem;
+    text-decoration: none;
+    color: var(--c-link-base);
+    transition: color ease 0.125s;
+    &:hover {
+        color: var(--c-link-hover);
+    }
+}
+
+// this makes me cri
+.stats {
+    &__mode {
+        box-sizing: border-box;
+        padding: 0.375em;
+        font-size: 1.375rem;
+    }
+}
+.difficulty {
+    &__label {
+        display: block;
+        white-space: normal;
+        overflow: hidden;
+        text-align: center;
+        text-overflow: ellipsis;
+        text-transform: uppercase;
+        font-family: 'Teko';
+        font-size: 1.25rem;
+        font-weight: bold;
+    }
+    &--count-1 {
+        width: 20.79em;
+    }
+    &--count-2 {
+        width: 10.5em;
+    }
+    &--count-3 {
+        width: 6.9375em;
+    }
+    &--count-4 {
+        width: 5.25em;
+    }
+    &--count-5 {
+        width: 4.2em;
+    }
+}
+.bg {
+    &--difficulty-easy {
+        background-color: var(--bg-diff-easy);
+    }
+    &--difficulty-normal {
+        background-color: var(--bg-diff-normal);
+    }
+    &--difficulty-hard {
+        background-color: var(--bg-diff-hard);
+    }
+    &--difficulty-expert {
+        background-color: var(--bg-diff-expert);
+    }
+    &--difficulty-expertplus {
+        background-color: var(--bg-diff-expertplus);
+    }
+}

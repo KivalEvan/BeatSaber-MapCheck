@@ -1,0 +1,72 @@
+.accordion {
+    position: relative;
+    width: 100%;
+    &__button {
+        position: absolute;
+        width: 0;
+        height: 0;
+        left: -9999px;
+        & {
+            + .accordion__label {
+                &::before {
+                    content: '\002B';
+                    font-weight: bold;
+                    float: left;
+                    padding: 0 0.75em 0 0.25em;
+                }
+                + .accordion__collapsible {
+                    display: none;
+                }
+            }
+        }
+        &:checked {
+            + .accordion__label {
+                filter: contrast(120%) brightness(1.1);
+                &:hover {
+                    filter: contrast(130%) brightness(1.15);
+                }
+                &::before {
+                    content: '\2212';
+                }
+                + .accordion__collapsible {
+                    display: block;
+                    &-flex {
+                        display: flex;
+                    }
+                }
+            }
+        }
+        &:focus + .accordion__label {
+            outline: 1px dashed var(--c-outline-focus-accordion);
+            outline-offset: -1px;
+        }
+    }
+    &__label {
+        display: block;
+        cursor: pointer;
+        font-size: 1.125rem;
+        padding: 0.375em;
+        background-color: var(--bg-accordion-base);
+        color: var(--c-accordion-text);
+        text-transform: uppercase;
+        transition: filter 0.125s ease;
+        &:hover {
+            filter: contrast(110%) brightness(1.05);
+        }
+        &--medium {
+            font-size: 1.25rem;
+        }
+        &--large {
+            font-size: 1.375rem;
+        }
+    }
+    &__collapsible {
+        display: block;
+        align-items: stretch;
+        background-color: var(--bg-accordion-collapsible);
+        &-flex {
+            @extend .accordion__collapsible;
+            display: flex;
+        }
+    }
+}

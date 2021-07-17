@@ -16,8 +16,8 @@ html {
     font-family: var(--font-sans-serif);
 }
 body {
-    color: #000;
-    background: #171717;
+    color: var(--c-text-primary);
+    background: var(--bg-body);
     margin: 0;
     padding-bottom: 3em;
 }
@@ -64,7 +64,7 @@ header {
     display: flex;
     position: relative;
     height: $header-height;
-    background-color: #efefef;
+    background-color: var(--bg-header);
 }
 footer {
     display: flex;
