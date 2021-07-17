@@ -3,6 +3,7 @@ import { Contributor } from '../beatmap/contributor';
 import { EnvironmentName } from '../beatmap/environment';
 import { BeatmapInfo } from '../beatmap/info';
 
+const htmlCoverLink = document.querySelectorAll<HTMLLinkElement>('.cover__link');
 const htmlCoverImage = document.querySelectorAll<HTMLImageElement>('.cover__image');
 const htmlMetadataSongName = document.querySelectorAll<HTMLElement>('.metadata__song-name');
 const htmlMetadataSongSubname = document.querySelectorAll<HTMLElement>('.metadata__song-subname');
@@ -18,6 +19,24 @@ export const updateCoverImage = (src: string): void => {
     htmlCoverImage.forEach((elem) => (elem.src = src));
 };
 
+export const updateCoverLink = (url?: string, id?: string): void => {
+    if (url == null && id == null) {
+        htmlCoverLink.forEach((elem) => {
+            elem.textContent = '';
+            elem.href = '';
+            elem.classList.add('disabled');
+        });
+        return;
+    }
+    if (url !== null) {
+        htmlCoverLink.forEach((elem) => {
+            elem.textContent = id ?? 'Download Link';
+            elem.href = url;
+            elem.classList.add('disabled');
+        });
+    }
+};
+
 export const updateSongName = (str: string): void => {
     htmlMetadataSongName.forEach((elem) => (elem.textContent = str));
 };
@@ -30,9 +49,18 @@ export const updateSongAuthor = (str: string): void => {
     htmlMetadataSongAuthor.forEach((elem) => (elem.textContent = str));
 };
 
-// TODO: add bpm changes
-export const updateSongBPM = (num: number): void => {
-    htmlMetadataSongBPM.forEach((elem) => (elem.textContent = round(num, 2).toString()));
+// TODO: some way to save bpm change
+export const updateSongBPM = (num: number, minBPM?: number, maxBPM?: number): void => {
+    if ((minBPM === null || minBPM === undefined) && typeof maxBPM === 'number') {
+        minBPM = Math.min(num, maxBPM);
+    }
+    if ((maxBPM === null || maxBPM === undefined) && typeof minBPM === 'number') {
+        maxBPM = Math.max(num, minBPM);
+    }
+    let text = round(num, 2).toString();
+    if (minBPM && maxBPM) {
+    }
+    htmlMetadataSongBPM.forEach((elem) => (elem.textContent = text));
 };
 
 export const updateSongDuration = (num: number): void => {
@@ -63,4 +91,19 @@ export const updateInfo = (mapInfo: BeatmapInfo): void => {
     updateSongAuthor(mapInfo._songAuthorName);
     updateSongBPM(mapInfo._beatsPerMinute);
     updateLevelAuthor(mapInfo._levelAuthorName);
+};
+
+export default {
+    updateCoverImage,
+    updateCoverLink,
+    updateSongName,
+    updateSongSubname,
+    updateSongAuthor,
+    updateSongBPM,
+    updateSongDuration,
+    updateLevelAuthor,
+    updateEnvironment,
+    updateContributors,
+    updateTimeSpend,
+    updateInfo,
 };

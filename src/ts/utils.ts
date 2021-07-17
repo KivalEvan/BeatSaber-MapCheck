@@ -53,6 +53,7 @@ export const sanitizeURL = (url: string): string => {
     }
     throw new Error('Invalid URL');
 };
+
 export const sanitizeBeatSaverID = (id: string): string => {
     let regexID = /^[0-9a-fA-F]{1,6}$/;
     id = id.trim();

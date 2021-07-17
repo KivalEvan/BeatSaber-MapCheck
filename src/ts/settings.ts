@@ -1,81 +1,112 @@
-class Settings {
-    private _load = {
+type SettingsFlag = { [key: string]: boolean };
+export type BeatNumbering = 'ChroMapper' | 'MediocreMapper' | 'JSON Time' | 'Real Time';
+export type Theme = 'Dark' | 'Light' | 'Monochrome';
+
+interface SettingsProperty {
+    _load: SettingsPropertyLoad;
+    _sorting: boolean;
+    _beatNumbering: BeatNumbering;
+    _rounding: number;
+    _theme: Theme;
+    _show: SettingsPropertyShow;
+}
+
+interface SettingsPropertyLoad extends SettingsFlag {
+    audio: boolean;
+    image: boolean;
+}
+
+interface SettingsPropertyShow extends SettingsFlag {
+    info: boolean;
+    tools: boolean;
+    stats: boolean;
+    settings: boolean;
+}
+
+const settingsDefault: SettingsProperty = {
+    _load: {
         audio: false,
         image: false,
         customData: false,
-    };
-    private _sorting = false;
-    private _beatNumbering = 'ChroMapper';
-    private _rounding = 3;
-    private _theme = 'Dark';
-    private _show = {
+    },
+    _sorting: false,
+    _beatNumbering: 'ChroMapper',
+    _rounding: 3,
+    _theme: 'Dark',
+    _show: {
         info: false,
         tools: false,
         stats: false,
         settings: false,
-    };
+    },
+};
+
+class Settings {
+    private _property: SettingsProperty = JSON.parse(JSON.stringify(settingsDefault));
 
     constructor() {
         this.init();
     }
 
-    get load() {
-        return this._load;
+    get load(): SettingsPropertyLoad {
+        return this._property._load;
     }
     get sorting(): boolean {
-        return this._sorting;
+        return this._property._sorting;
     }
     set sorting(val: boolean) {
-        this._sorting = val;
+        this._property._sorting = val;
     }
-    get beatNumbering(): string {
-        return this._beatNumbering;
+    get beatNumbering(): BeatNumbering {
+        return this._property._beatNumbering;
     }
-    set beatNumbering(val: string) {
-        this._beatNumbering = val;
+    set beatNumbering(val: BeatNumbering) {
+        this._property._beatNumbering = val;
     }
     get rounding(): number {
-        return this._rounding;
+        return this._property._rounding;
     }
     set rounding(val: number) {
-        this._rounding = val;
+        this._property._rounding = val;
     }
-    get theme(): string {
-        return this._theme;
+    get theme(): Theme {
+        return this._property._theme;
     }
-    set theme(val: string) {
-        this._theme = val;
+    set theme(val: Theme) {
+        this._property._theme = val;
     }
-    get show() {
-        return this._show;
+    get show(): SettingsPropertyShow {
+        return this._property._show;
     }
 
-    // TODO: prolly make this better
     private stringify = (): string => {
         return JSON.stringify({
-            _load: this._load,
-            _sorting: this._sorting,
-            _beatNumbering: this._beatNumbering,
-            _rounding: this._rounding,
-            _theme: this._theme,
-            _show: this._show,
+            _property: this._property,
         });
     };
     private init = (): void => {
+        if (localStorage == null) {
+            return;
+        }
         const storage = localStorage.getItem('settings');
         if (storage) {
             const temp = JSON.parse(storage);
-            this._load = temp._load;
-            this._sorting = temp._sorting;
-            this._beatNumbering = temp._beatNumbering;
-            this._rounding = temp._rounding;
-            this._theme = temp._theme;
-            this._show = temp._show;
+            this._property = temp._property ?? this._property;
+            this.save();
         }
-        this.save();
     };
     public save = (): void => {
-        localStorage.setItem('settings', this.stringify());
+        if (localStorage) {
+            localStorage.setItem('settings', this.stringify());
+        }
+    };
+    public clear = (): void => {
+        if (localStorage) {
+            localStorage.clear();
+        }
+    };
+    public reset = (): void => {
+        this._property = JSON.parse(JSON.stringify(settingsDefault));
     };
 }
 

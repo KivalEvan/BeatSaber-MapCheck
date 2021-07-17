@@ -1,6 +1,18 @@
 import { BPMChange } from './bpm';
+import { CharacteristicOrder } from './characteristic';
 import { DifficultyName } from './difficulty';
+import { BeatmapInfo, BeatmapSet } from './info';
 import { BeatmapData } from './map';
+
+// TODO: more error check
+export const parseInfo = (mapInfo: BeatmapInfo): BeatmapInfo => {
+    mapInfo._difficultyBeatmapSets.sort(
+        (a, b) =>
+            CharacteristicOrder[a._beatmapCharacteristicName] -
+            CharacteristicOrder[b._beatmapCharacteristicName]
+    );
+    return mapInfo;
+};
 
 export const parseMap = (
     difficultyData: BeatmapData,
@@ -61,3 +73,15 @@ export const parseMap = (
     }
     return difficultyData;
 };
+
+interface MapData {
+    mapInfo: BeatmapInfo | Object;
+    mapDifficulty: BeatmapSet | Object;
+}
+
+const mapData: MapData = {
+    mapInfo: {},
+    mapDifficulty: {},
+};
+
+export default mapData;

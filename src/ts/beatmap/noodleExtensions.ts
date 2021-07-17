@@ -1,8 +1,8 @@
 // TODO: include type of easing available
 type Array2DPoint = [number, number];
 type Array3DPoint = [number, number, number];
-type ArrayPercentPointDefinition = [number, number, string?];
 type ArrayColorPointDefinition = [number, number, number, number, number, string?];
+type ArrayPercentPointDefinition = [number, number, string?];
 type Array2DPointDefinition = [number, number, number, string?, string?];
 type Array3DPointDefinition = [number, number, number, number, string?, string?];
 type ArrayPointDefinition =

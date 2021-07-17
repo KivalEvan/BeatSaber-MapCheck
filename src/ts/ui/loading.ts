@@ -8,7 +8,7 @@ const htmlLoadingText = document.querySelectorAll<HTMLElement>('.loading__text')
 export const loadingStatus = (
     statusType: LoadingStatusType,
     statusString: string,
-    percentage: number
+    percentage: number = 100
 ): void => {
     htmlLoadingText.forEach((elem) => (elem.textContent = statusString));
     htmlLoadingBar.forEach((elem) => {
