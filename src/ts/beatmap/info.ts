@@ -23,9 +23,9 @@ export interface BeatmapInfo {
 }
 export interface BeatmapSet {
     _beatmapCharacteristicName: CharacteristicName;
-    _difficultyBeatmaps: Beatmap[];
+    _difficultyBeatmaps: BeatmapSetDifficulty[];
 }
-export interface Beatmap {
+export interface BeatmapSetDifficulty {
     _difficulty: DifficultyName;
     _difficultyRank: DifficultyRank;
     _beatmapFilename: string;

@@ -57,6 +57,11 @@ export interface NECustomEventDataBase {
     _track: string;
 }
 
+export interface NECustomData {
+    _customEvents?: NECustomEvent[];
+    _pointDefinitions?: NEPointDefinition[];
+}
+
 // lmao wtf
 export interface NECustomEventDataAnimateTrack extends NECustomEventDataBase {
     _duration: number;

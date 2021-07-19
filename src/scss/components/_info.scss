@@ -1,0 +1,45 @@
+.info {
+    &__contributors {
+        &-card {
+            display: block;
+            padding: 0.5em;
+        }
+        &-image {
+            display: inline-block;
+            width: 6em;
+            height: 6em;
+        }
+        &-content {
+            display: inline-block;
+            vertical-align: top;
+            padding-left: 0.5em;
+        }
+        &-name {
+            font-size: 1.5rem;
+            line-height: 1.25rem;
+        }
+        &-role {
+            font-size: 1rem;
+        }
+    }
+    &__table {
+        width: 100%;
+        &-body,
+        &-row {
+            width: 100%;
+        }
+        &-header {
+            width: 8em;
+            text-align: right;
+            vertical-align: top;
+            &::after {
+                content: ':';
+            }
+        }
+        &-element {
+            display: block;
+            max-height: 4rem;
+            overflow: auto;
+        }
+    }
+}

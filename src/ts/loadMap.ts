@@ -1,14 +1,17 @@
 import JSZip from 'jszip';
-import { loadingStatus } from './ui/loading';
+import UILoading from './ui/loading';
 import { disableInput } from './ui/input';
 import UIInfo from './ui/info';
 import UITools from './ui/tools';
-import { parseInfo, parseMap } from './beatmap';
+import UIStats from './ui/stats';
+import { parseInfo, parseMap } from './beatmap/parse';
 import { BeatmapInfo } from './beatmap/info';
 import { BeatmapData } from './beatmap/map';
+import analyse from './tools/analyse';
 import { round, sanitizeBeatSaverID, sanitizeURL } from './utils';
 import settings from './settings';
 import flag from './flag';
+import savedData from './savedData';
 
 export const downloadFromURL = async (input: string) => {
     // sanitize & validate url
@@ -16,29 +19,31 @@ export const downloadFromURL = async (input: string) => {
     try {
         url = sanitizeURL(input);
     } catch (err) {
-        loadingStatus('info', err, 0);
+        UILoading.status('info', err, 0);
         console.error(err);
         return;
     }
 
     disableInput(true);
-    loadingStatus('info', 'Requesting download from link', 0);
+    UILoading.status('info', 'Requesting download from link', 0);
 
     console.log(`downloading from ${url}`);
     try {
         // apparently i need cors proxy
         let res = await downloadMap('https://cors-anywhere.herokuapp.com/' + url);
-        // map.url = url;
+        UIInfo.setCoverLink(url);
+        UIInfo.switchHeader(true);
+        extractZip(res);
         return res;
-        // extractZip(res);
     } catch (err) {
         disableInput(false);
-        loadingStatus('error', err, 100);
+        UILoading.status('error', err, 100);
         // setTimeout(function () {
         //     if (!flag.loading)
         //         $('#loadingbar').css('background-color', '#111').css('width', '0%');
         // }, 3000);
     }
+    return;
 };
 
 export const downloadFromID = async (input: string) => {
@@ -47,24 +52,24 @@ export const downloadFromID = async (input: string) => {
     try {
         id = sanitizeBeatSaverID(input);
     } catch (err) {
-        loadingStatus('info', err, 0);
+        UILoading.status('info', err, 0);
         console.error(err);
         throw new Error(err);
     }
 
     disableInput(true);
-    loadingStatus('info', 'Requesting download from BeatSaver', 0);
+    UILoading.status('info', 'Requesting download from BeatSaver', 0);
 
     console.log(`downloading from BeatSaver for map ID ${id}`);
-    let url = 'https://beatsaver.com/api/download/key/' + id;
+    const url = 'https://beatsaver.com/api/download/key/' + id;
     try {
-        let res = await downloadMap(url);
-        // map.id = id;
-        // map.url = 'https://beatsaver.com/beatmap/' + id;
-        // extractZip(res);
+        const res = await downloadMap(url);
+        UIInfo.setCoverLink('https://beatsaver.com/beatmap/' + id, id);
+        UIInfo.switchHeader(true);
+        extractZip(res);
     } catch (err) {
         disableInput(false);
-        loadingStatus('error', err, 100);
+        UILoading.status('error', err, 100);
         console.error(err);
         // setTimeout(function () {
         //     if (!flag.loading)
@@ -83,7 +88,7 @@ export const downloadMap = async (url: string): Promise<ArrayBuffer> => {
         let startTime = Date.now();
         xhr.onprogress = (e) => {
             xhr.timeout += Date.now() - startTime;
-            loadingStatus(
+            UILoading.status(
                 'download',
                 `Downloading map: ${round(e.loaded / 1024 / 1024, 1)}MB / ${round(
                     e.total / 1024 / 1024,
@@ -120,7 +125,7 @@ export const downloadMap = async (url: string): Promise<ArrayBuffer> => {
 
 // TODO: error handling here
 export const extractZip = async (data: ArrayBuffer) => {
-    loadingStatus('info', 'Extracting zip', 0);
+    UILoading.status('info', 'Extracting zip', 0);
     let mapZip = new JSZip();
     try {
         mapZip = await JSZip.loadAsync(data);
@@ -128,39 +133,57 @@ export const extractZip = async (data: ArrayBuffer) => {
     } catch (err) {
         // mapReset();
         disableInput(false);
-        loadingStatus('error', err, 100);
+        UILoading.status('error', err, 100);
         console.error(err);
     }
 };
 
 export const loadMap = async (mapZip: JSZip) => {
-    loadingStatus('info', 'Loading map info...', 0);
+    UILoading.status('info', 'Parsing map info...', 0);
     console.log('loading map info');
-    let infoFile = mapZip.file('Info.dat') || mapZip.file('info.dat');
-    if (infoFile) {
+    let fileInfo = mapZip.file('Info.dat') || mapZip.file('info.dat');
+    if (fileInfo) {
         disableInput(true);
-        let infoFileStr = await infoFile.async('string');
-        const mapInfo: BeatmapInfo = await JSON.parse(infoFileStr);
-        parseInfo(mapInfo);
+        let infoFileStr = await fileInfo.async('string');
+        savedData._mapInfo = (await JSON.parse(infoFileStr)) as BeatmapInfo;
 
-        UIInfo.updateInfo(mapInfo);
+        parseInfo(savedData._mapInfo);
+        UIInfo.setInfo(savedData._mapInfo);
 
         // load cover image
-        loadingStatus('info', 'Loading cover image...', 10.4375);
+        UILoading.status('info', 'Loading image...', 10.4375);
         console.log('loading cover image');
-        let imageFile = mapZip.file(mapInfo._coverImageFilename);
+        let imageFile = mapZip.file(savedData._mapInfo._coverImageFilename);
         if (!settings.load.image && imageFile) {
             let imgBase64 = await imageFile.async('base64');
-            UIInfo.updateCoverImage('data:image;base64,' + imgBase64);
+            UIInfo.setCoverImage('data:image;base64,' + imgBase64);
             flag.map.load.image = true;
         } else {
-            console.error(`${mapInfo._coverImageFilename} does not exists.`);
+            console.error(`${savedData._mapInfo._coverImageFilename} does not exists.`);
         }
 
+        savedData._contributors = [];
+        let counter = savedData._mapInfo._customData?._contributors?.length || 0;
+        savedData._mapInfo._customData?._contributors?.forEach(async (elem) => {
+            imageFile = mapZip.file(elem._iconPath);
+            let contr = elem;
+            if (!settings.load.image && imageFile) {
+                contr._base64 = await imageFile.async('base64');
+            } else {
+                console.error(`${elem._iconPath} does not exists.`);
+            }
+            // how is this going to be undefined??? i just defined u up there
+            savedData._contributors?.push(contr);
+            counter--;
+            if (counter === 0) {
+                UIInfo.populateContributors(savedData._contributors);
+            }
+        });
+
         // load audio
-        loadingStatus('info', 'Loading audio...', 20.875);
+        UILoading.status('info', 'Loading audio...', 20.875);
         console.log('loading audio');
-        let audioFile = mapZip.file(mapInfo._songFilename);
+        let audioFile = mapZip.file(savedData._mapInfo._songFilename);
         if (!settings.load.audio && audioFile) {
             let audioBuffer = await audioFile.async('arraybuffer');
             let audioContext = new AudioContext();
@@ -168,46 +191,52 @@ export const loadMap = async (mapZip: JSZip) => {
                 .decodeAudioData(audioBuffer)
                 .then(function (buffer) {
                     let duration = buffer.duration;
-                    UIInfo.updateSongDuration(duration);
+                    UIInfo.setSongDuration(duration);
                     flag.map.load.audio = true;
                 })
                 .catch(function (err) {
                     console.error(err);
                 });
         } else {
-            console.error(`${mapInfo._songFilename} does not exist.`);
+            console.error(`${savedData._mapInfo._songFilename} does not exist.`);
         }
 
         // load diff map
-        loadingStatus('info', 'Loading difficulty...', 70);
-        const mapSet = mapInfo._difficultyBeatmapSets;
+        UILoading.status('info', 'Parsing difficulty...', 70);
+        savedData._mapData = [];
+        const mapSet = savedData._mapInfo._difficultyBeatmapSets;
         for (let i = mapSet.length - 1; i >= 0; i--) {
             const mapDiff = mapSet[i]._difficultyBeatmaps;
             if (mapDiff.length === 0 || !mapDiff) {
-                // how?
                 console.error('Empty difficulty set, removing...');
                 mapSet.splice(i, 1);
                 continue;
             }
-
-            for (let j = mapDiff.length - 1; j >= 0; j--) {
-                let diff = mapDiff[j];
-                let diffFile = mapZip.file(diff._beatmapFilename);
+            for (let j = 0; j < mapDiff.length; j++) {
+                const diffInfo = mapDiff[j];
+                const diffFile = mapZip.file(diffInfo._beatmapFilename);
                 if (diffFile) {
                     console.log(
-                        `loading ${mapSet[i]._beatmapCharacteristicName} ${diff._difficulty}`
+                        `loading ${mapSet[i]._beatmapCharacteristicName} ${diffInfo._difficulty}`
                     );
                     let diffFileStr: BeatmapData = JSON.parse(await diffFile.async('string'));
-                    mapSet[i]._difficultyBeatmaps[j]._data = parseMap(
+                    const mapData = parseMap(
                         diffFileStr,
-                        diff._difficulty,
-                        mapInfo._beatsPerMinute
+                        diffInfo._difficulty,
+                        savedData._mapInfo._beatsPerMinute
                     );
+                    savedData._mapData?.push({
+                        _mode: mapSet[i]._beatmapCharacteristicName,
+                        _difficulty: diffInfo._difficulty,
+                        _info: diffInfo,
+                        _data: mapData,
+                    });
                 } else {
                     console.error(
-                        `Missing ${diff._beatmapFilename} file for ${mapSet[i]._beatmapCharacteristicName} ${diff._difficulty}, ignoring.`
+                        `Missing ${diffInfo._beatmapFilename} file for ${mapSet[i]._beatmapCharacteristicName} ${diffInfo._difficulty}, ignoring.`
                     );
                     mapSet[i]._difficultyBeatmaps.splice(j, 1);
+                    j--;
                     if (mapSet[i]._difficultyBeatmaps.length < 1) {
                         console.error(
                             `${mapSet[i]._beatmapCharacteristicName} difficulty set now empty, ignoring.`
@@ -219,42 +248,22 @@ export const loadMap = async (mapZip: JSZip) => {
             }
         }
 
-        // create & update UI
-        // could prolly had done this on previous so i dont have to re-loop
-        // but i need it to be sorted specifically
-        UITools.populateSelectMode(mapInfo);
-        loadingStatus('info', 'Adding map difficulty stats...', 80);
+        UITools.populateSelect(savedData._mapInfo);
+        UILoading.status('info', 'Adding map difficulty stats...', 80);
         console.log('adding map stats');
-        for (let i = 0, len = mapSet.length; i < len; i++) {
-            let mapDiff = mapSet[i]._difficultyBeatmaps;
-            await UICreateDiffSet(mapSet[i]._beatmapCharacteristicName);
-            for (let j = mapDiff.length - 1; j >= 0; j--) {
-                let diff = mapDiff[j];
-                await UICreateDiffInfo(mapSet[i]._beatmapCharacteristicName, diff);
-            }
-        }
+        UIStats.populateMode();
+        UIStats.populateDiff();
 
-        loadingStatus('info', 'Analysing map...', 85);
+        UILoading.status('info', 'Analysing map...', 85);
         console.log('analysing map');
-        analyseMap();
+        analyse.general();
 
-        loadingStatus('info', 'Analysing difficulty...', 90);
-        for (let i = 0, len = mapSet.length; i < len; i++) {
-            let mapDiff = mapSet[i]._difficultyBeatmaps;
-            for (let j = mapDiff.length - 1; j >= 0; j--) {
-                let diff = mapDiff[j];
-                let mapObj = {
-                    mapSet: mapSet[i]._beatmapCharacteristicName,
-                };
-                mapObj.diff = diff._difficulty;
-                mapObj.text = await analyseDifficulty(mapSet[i]._beatmapCharacteristicName, diff);
-                map.analysis.diff.push(mapObj);
-            }
-        }
-        UITools.displayOutput(tool.select.char, tool.select.diff);
+        UILoading.status('info', 'Analysing difficulty...', 90);
+        analyse.difficulty();
+        UITools.displayOutput();
 
         disableInput(false);
-        loadingStatus('info', 'Map successfully loaded!');
+        UILoading.status('info', 'Map successfully loaded!');
     } else {
         throw new Error("Couldn't find Info.dat");
     }

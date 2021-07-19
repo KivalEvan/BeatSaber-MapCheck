@@ -22,6 +22,7 @@
         &:checked {
             + .accordion__label {
                 filter: contrast(120%) brightness(1.1);
+                box-shadow: 0 0.125rem 0.25rem -0.125rem black;
                 &:hover {
                     filter: contrast(130%) brightness(1.15);
                 }

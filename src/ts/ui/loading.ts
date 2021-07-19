@@ -5,7 +5,7 @@ const htmlLoadingBarError = 'loading__bar--error';
 const htmlLoadingBarDownload = 'loading__bar--download';
 const htmlLoadingText = document.querySelectorAll<HTMLElement>('.loading__text');
 
-export const loadingStatus = (
+export const status = (
     statusType: LoadingStatusType,
     statusString: string,
     percentage: number = 100
@@ -20,4 +20,11 @@ export const loadingStatus = (
             ? elem.classList.add(htmlLoadingBarDownload)
             : elem.classList.remove(htmlLoadingBarDownload);
     });
+};
+
+export const reset = (): void => {};
+
+export default {
+    status,
+    reset,
 };

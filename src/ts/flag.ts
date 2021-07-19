@@ -1,4 +1,5 @@
-const flag = {
+export default {
+    loading: false,
     map: {
         load: {
             image: false,
@@ -6,5 +7,3 @@ const flag = {
         },
     },
 };
-
-export default flag;

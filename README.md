@@ -1,4 +1,4 @@
-<img align="left" src="https://github.com/KivalEvan/BeatSaber-MapCheck/blob/main/icon-large.png" height="176" width="176">
+<img align="left" src="https://github.com/KivalEvan/BeatSaber-MapCheck/blob/main/assets/icon-large.png" height="176" width="176">
 
 # Beat Saber Map Check
 

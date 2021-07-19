@@ -1,7 +1,7 @@
 import version from '../version';
-import { loadingStatus } from './loading';
+import UILoading from './loading';
+import UISettings from './settings';
 import settings from '../settings';
-import { settingsSetTheme, settingsShowSetCheck } from './settings';
 import { downloadFromID, downloadFromURL } from '../loadMap';
 
 const htmlWatermark = document.querySelectorAll<HTMLElement>('.link__watermark');
@@ -34,12 +34,12 @@ export const init = (function () {
             htmlInputSearchButton.forEach((elem) =>
                 elem.addEventListener('click', introButtonTextHandler)
             );
-            settingsSetTheme(settings.theme);
+            UISettings.setTheme(settings.theme);
             htmlAccordion.forEach((elem) => {
                 for (const id in settings.show) {
                     if (elem.id.endsWith(id)) {
                         elem.checked = settings.show[id];
-                        settingsShowSetCheck(id, settings.show[id]);
+                        UISettings.setShowCheck(id, settings.show[id]);
                     }
                 }
             });
@@ -77,10 +77,10 @@ function introButtonTextHandler(ev: Event): void {
 // TODO: maybe break up into individual function
 function inputFileHandler(ev: Event): void {
     const target = ev.target as HTMLInputElement;
-    loadingStatus('info', 'Reading file input', 0);
+    UILoading.status('info', 'Reading file input', 0);
     const file = target.files ? target.files[0] : null;
     if (file === undefined || file === null) {
-        loadingStatus('info', 'No file input', 0);
+        UILoading.status('info', 'No file input', 0);
         throw new Error('No file input');
     }
     if (file && (file.name.substr(-4) === '.zip' || file.name.substr(-4) === '.bsl')) {
@@ -90,7 +90,7 @@ function inputFileHandler(ev: Event): void {
             // extractZip(target.result);
         });
     } else {
-        loadingStatus('info', 'Unsupported file format, please enter zip file', 0);
+        UILoading.status('info', 'Unsupported file format, please enter zip file', 0);
     }
 }
 
@@ -111,7 +111,7 @@ function inputFileDropHandler(ev: DragEvent): void {
                         // extractZip(e.target.result);
                     });
                 } else {
-                    loadingStatus('info', 'Unsupported file format, please enter zip file', 0);
+                    UILoading.status('info', 'Unsupported file format, please enter zip file', 0);
                 }
             }
         }

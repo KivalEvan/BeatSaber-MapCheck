@@ -8,14 +8,23 @@
         width: inherit;
         height: inherit;
         padding: 0;
+        font-size: 1.5rem;
+        font-family: var(--font-monospace);
+        text-indent: 0.5rem;
+        text-decoration: none;
+        text-shadow: 0 0 0.25rem black;
+        line-height: 2rem;
+        color: white;
+        transition: background-color 0.125s ease;
         &:not(.disabled):hover {
-            opacity: 0.5;
+            background-color: #000000c0;
         }
     }
     &__image {
         position: absolute;
         width: inherit;
         height: inherit;
+        box-shadow: 0.125em 0 0.5em -0.125em black;
     }
 }
 .container {

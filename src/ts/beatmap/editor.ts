@@ -1,4 +1,9 @@
+export interface EditorInfo {
+    version?: string;
+    [key: string]: any;
+}
+
 export interface Editor {
     _lastEditedBy?: string;
-    [key: string]: string | { version?: string; [key: string]: any } | undefined;
+    [key: string]: EditorInfo | string | undefined;
 }

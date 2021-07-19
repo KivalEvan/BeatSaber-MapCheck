@@ -2,3 +2,7 @@ const htmlResetButton = document.querySelectorAll<HTMLInputElement>('.input__res
 htmlResetButton.forEach((elem) => elem.addEventListener('click', resetUI));
 
 export function resetUI(): void {}
+
+export default {
+    resetUI,
+};

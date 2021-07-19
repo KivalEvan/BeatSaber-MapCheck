@@ -1,4 +1,10 @@
-import { CustomData, CustomDataEvent, CustomDataNote, CustomDataObstacle } from './customData';
+import {
+    CustomData,
+    CustomDataDifficulty,
+    CustomDataEvent,
+    CustomDataNote,
+    CustomDataObstacle,
+} from './customData';
 
 export interface Note {
     _time: number;
@@ -39,6 +45,6 @@ export interface BeatmapData {
     _obstacles: Obstacle[];
     _events: Event[];
     _waypoints?: Waypoint[];
-    _customData?: CustomData;
+    _customData?: CustomDataDifficulty;
     _information?: CustomData;
 }

@@ -1,14 +1,14 @@
-$max-width: 64em;
-$sz-panel-tiny: 25%;
-$sz-panel-small: 33.33%;
-$sz-panel-medium: 50%;
-$sz-panel-large: 66.66%;
-$sz-panel-offset: 0.75em;
-$header-height: 12em;
+$-max-width: 64em;
+$-sz-header-height: 12em;
+$-sz-panel-tiny: 25%;
+$-sz-panel-small: 33.33%;
+$-sz-panel-medium: 50%;
+$-sz-panel-large: 66.66%;
+$-sz-panel-offset: 0.75em;
 
 :root {
-    --header-height: #{$header-height};
-    --panel-offset: #{$sz-panel-offset};
+    --header-height: #{$-sz-header-height};
+    --panel-offset: #{$-sz-panel-offset};
 }
 html {
     height: 100%;
@@ -22,7 +22,7 @@ body {
     padding-bottom: 3em;
 }
 .wrapper {
-    max-width: $max-width;
+    max-width: $-max-width;
     margin: 0 auto;
     &--shadow {
         box-shadow: 0 0 1rem black;
@@ -32,24 +32,24 @@ body {
     position: relative;
     box-sizing: border-box;
     &--tiny {
-        width: $sz-panel-tiny;
+        width: $-sz-panel-tiny;
     }
     &--small {
-        width: $sz-panel-small;
+        width: $-sz-panel-small;
     }
     &--medium {
-        width: $sz-panel-medium;
+        width: $-sz-panel-medium;
     }
     &--large {
-        width: $sz-panel-large;
+        width: $-sz-panel-large;
     }
     &--max {
         width: 100%;
     }
     &--offset {
-        margin: $sz-panel-offset;
+        margin: $-sz-panel-offset;
         &-half {
-            margin: calc(#{$sz-panel-offset} / 2);
+            margin: calc(#{$-sz-panel-offset} / 2);
         }
     }
     &--flex {
@@ -63,7 +63,7 @@ body {
 header {
     display: flex;
     position: relative;
-    height: $header-height;
+    height: $-sz-header-height;
     background-color: var(--bg-header);
 }
 footer {
