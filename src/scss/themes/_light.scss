@@ -1,55 +1,28 @@
-$-bg-body: hsl(0, 0%, 90%);
-$-c-text-primary: hsl(0, 0%, 10%);
-$-c-text-secondary: hsl(0, 0%, 90%);
-$-c-text-tertiary: hsl(0, 90%, 60%);
-$-c-link-base: hsl(210, 100%, 50%);
-$-c-link-hover: hsl(0, 100%, 50%);
-$-bg-header: hsl(0, 0%, 95%);
-$-c-header-text: hsl(0, 0%, 100%);
-$-bg-file-zone: hsl(0, 0%, 80%);
-$-bg-file-zone-border: hsl(0, 0%, 50%);
-$-bg-accordion-base: hsl(0, 0%, 85%);
-$-bg-accordion-collapsible: hsl(0, 0%, 95%);
-$-c-accordion-text: hsl(0, 0%, 0%);
-$-bg-loading-base: hsl(0, 0%, 80%);
-$-bg-loading-info: hsl(220, 94%, 67%);
-$-bg-loading-download: hsl(118, 84%, 58%);
-$-bg-loading-error: hsl(0, 100%, 65%);
-$-c-loading-text: hsl(0, 0%, 0%);
-$-bg-tools-tab: hsl(0, 0%, 20%);
-$-bg-tools-tab-select: hsl(0, 80%, 55%);
-$-bg-diff-easy: hsl(147, 50%, 47%);
-$-bg-diff-normal: hsl(206, 88%, 65%);
-$-bg-diff-hard: hsl(9, 100%, 64%);
-$-bg-diff-expert: hsl(350, 64%, 46%);
-$-bg-diff-expertplus: hsl(269, 67%, 57%);
-$-c-outline-focus-accordion: hsl(0, 0%, 50%);
-
-.theme-light {
-    --bg-body: #{$-bg-body};
-    --c-text-primary: #{$-c-text-primary};
-    --c-text-secondary: #{$-c-text-secondary};
-    --c-text-tertiary: #{$-c-text-tertiary};
-    --c-link-base: #{$-c-link-base};
-    --c-link-hover: #{$-c-link-hover};
-    --bg-header: #{$-bg-header};
-    --c-header-text: #{$-c-header-text};
-    --bg-file-zone: #{$-bg-file-zone};
-    --bg-file-zone-border: #{$-bg-file-zone-border};
-    --bg-loading-base: #{$-bg-loading-base};
-    --bg-loading-info: #{$-bg-loading-info};
-    --bg-loading-download: #{$-bg-loading-download};
-    --bg-loading-error: #{$-bg-loading-error};
-    --c-loading-text: #{$-c-loading-text};
-    --bg-accordion-base: #{$-bg-accordion-base};
-    --bg-accordion-collapsible: #{$-bg-accordion-collapsible};
-    --c-accordion-text: #{$-c-accordion-text};
-    --bg-tools-tab: #{$-bg-tools-tab};
-    --bg-tools-tab-select: #{$-bg-tools-tab-select};
-    --bg-diff-easy: #{$-bg-diff-easy};
-    --bg-diff-normal: #{$-bg-diff-normal};
-    --bg-diff-hard: #{$-bg-diff-hard};
-    --bg-diff-expert: #{$-bg-diff-expert};
-    --bg-diff-expertplus: #{$-bg-diff-expertplus};
-    --c-outline-focus-accordion: #{$-c-outline-focus-accordion};
-}
+$theme: (
+    bg-body: hsl(0, 0%, 90%),
+    c-text-primary: hsl(0, 0%, 10%),
+    c-text-secondary: hsl(0, 0%, 90%),
+    c-text-tertiary: hsl(0, 90%, 60%),
+    c-link-base: hsl(210, 100%, 50%),
+    c-link-hover: hsl(0, 100%, 50%),
+    bg-header: hsl(0, 0%, 95%),
+    c-header-text: hsl(0, 0%, 100%),
+    bg-file-zone: hsl(0, 0%, 80%),
+    bg-file-zone-border: hsl(0, 0%, 50%),
+    bg-accordion-base: hsl(0, 0%, 85%),
+    bg-accordion-collapsible: hsl(0, 0%, 95%),
+    c-accordion-text: hsl(0, 0%, 0%),
+    bg-loading-base: hsl(0, 0%, 80%),
+    bg-loading-info: hsl(220, 94%, 67%),
+    bg-loading-download: hsl(118, 84%, 58%),
+    bg-loading-error: hsl(0, 100%, 65%),
+    c-loading-text: hsl(0, 0%, 0%),
+    bg-tools-tab: hsl(0, 0%, 20%),
+    bg-tools-tab-select: hsl(0, 80%, 55%),
+    bg-diff-easy: hsl(147, 50%, 47%),
+    bg-diff-normal: hsl(206, 88%, 65%),
+    bg-diff-hard: hsl(9, 100%, 64%),
+    bg-diff-expert: hsl(350, 64%, 46%),
+    bg-diff-expertplus: hsl(269, 67%, 57%),
+    c-outline-focus-accordion: hsl(0, 0%, 50%),
+);
