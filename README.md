@@ -1,4 +1,4 @@
-<img align="left" src="https://github.com/KivalEvan/BeatSaber-MapCheck/blob/main/assets/icon-large.png" height="176" width="176">
+<img align="left" src="https://github.com/KivalEvan/BeatSaber-MapCheck/blob/rewrite/assets/icon-large.png" height="176" width="176">
 
 # Beat Saber Map Check
 
@@ -14,10 +14,6 @@ Map tools to spot specific error, and map stats per each difficulty in one place
 ## How to use
 
 Visit the [github.io page](https://kivalevan.github.io/BeatSaber-MapCheck/) or download a copy and run `index.html` locally on any browser. Tools available within collapsible.
-
-## Limitations
-
--   No map modification outside base game support (Mapping Extension, Noodle Extension, etc.)
 
 ## Planned
 

@@ -1,6 +1,6 @@
-import BeatPerMinute from './bpm';
+import { BeatPerMinute } from './bpm';
 
-export default class NoteJumpSpeed {
+export class NoteJumpSpeed {
     private _bpm: BeatPerMinute;
     private _njs: number;
     private _sdm: number;
@@ -95,3 +95,7 @@ export default class NoteJumpSpeed {
         return ((this._njs * 60) / this._bpm.value) * beat * 2;
     }
 }
+
+export const create = (bpm: BeatPerMinute, njs: number = 10, sdm: number = 0): NoteJumpSpeed => {
+    return new NoteJumpSpeed(bpm, njs, sdm);
+};

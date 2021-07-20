@@ -5,6 +5,7 @@ import { BeatmapInfo } from './info';
 import { BeatmapData } from './map';
 
 // TODO: more error check
+// TODO: contemplate whether to make pure function or keep as is
 export const parseInfo = (mapInfo: BeatmapInfo): BeatmapInfo => {
     mapInfo._difficultyBeatmapSets.sort(
         (a, b) =>
@@ -17,6 +18,7 @@ export const parseInfo = (mapInfo: BeatmapInfo): BeatmapInfo => {
     return mapInfo;
 };
 
+// TODO: deal with BPM changes
 export const parseMap = (
     difficultyData: BeatmapData,
     difficultyName: DifficultyName,

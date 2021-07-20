@@ -19,13 +19,15 @@ export interface BeatmapInfo {
     _allDirectionsEnvironmentName: string;
     _songTimeOffset: number;
     _customData?: CustomDataInfo;
-    _difficultyBeatmapSets: BeatmapSet[];
+    _difficultyBeatmapSets: BeatmapInfoSet[];
 }
-export interface BeatmapSet {
+
+export interface BeatmapInfoSet {
     _beatmapCharacteristicName: CharacteristicName;
-    _difficultyBeatmaps: BeatmapSetDifficulty[];
+    _difficultyBeatmaps: BeatmapInfoSetDifficulty[];
 }
-export interface BeatmapSetDifficulty {
+
+export interface BeatmapInfoSetDifficulty {
     _difficulty: DifficultyName;
     _difficultyRank: DifficultyRank;
     _beatmapFilename: string;

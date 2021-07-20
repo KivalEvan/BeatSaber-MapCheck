@@ -1,3 +1,4 @@
+import { CharacteristicName } from './characteristic';
 import {
     CustomData,
     CustomDataDifficulty,
@@ -5,6 +6,8 @@ import {
     CustomDataNote,
     CustomDataObstacle,
 } from './customData';
+import { DifficultyName } from './difficulty';
+import { BeatmapInfoSetDifficulty } from './info';
 
 export interface Note {
     _time: number;
@@ -47,4 +50,11 @@ export interface BeatmapData {
     _waypoints?: Waypoint[];
     _customData?: CustomDataDifficulty;
     _information?: CustomData;
+}
+
+export interface MapDataSet {
+    _mode: CharacteristicName;
+    _difficulty: DifficultyName;
+    _info: BeatmapInfoSetDifficulty;
+    _data: BeatmapData;
 }

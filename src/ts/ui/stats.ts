@@ -1,8 +1,4 @@
-import { CharacteristicName } from '../beatmap/characteristic';
-import { BeatmapInfo, BeatmapSetDifficulty } from '../beatmap/info';
-import { BeatmapData } from '../beatmap/map';
+export const populate = (): void => {};
+export const clear = (): void => {};
 
-export const populateMode = (): void => {};
-export const populateDiff = (): void => {};
-
-export default { populateMode, populateDiff };
+export default { populate, clear };

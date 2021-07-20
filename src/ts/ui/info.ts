@@ -1,20 +1,11 @@
 // may god help you maintain these
 import { round, toMMSS } from '../utils';
-import { Contributor } from '../beatmap/contributor';
-import { EnvironmentName } from '../beatmap/environment';
-import { BeatmapInfo, BeatmapSetDifficulty } from '../beatmap/info';
-import { CustomDataInfo } from '../beatmap/customData';
-import { Editor, EditorInfo } from '../beatmap/editor';
+import * as beatmap from '../beatmap';
 import savedData from '../savedData';
-import { MapData } from '../beatmap';
-import { BeatmapData } from '../beatmap/map';
-import { ChromaEnvironment } from '../beatmap/chroma';
-import { NECustomEventData, NEPointDefinition } from '../beatmap/noodleExtensions';
-import { Bookmark } from '../beatmap/bookmark';
-import BeatPerMinute from '../beatmap/bpm';
 
 const htmlIntro = document.querySelectorAll<HTMLElement>('.intro');
 const htmlMetadata = document.querySelectorAll<HTMLElement>('.metadata');
+
 const htmlCoverLink = document.querySelectorAll<HTMLLinkElement>('.cover__link');
 const htmlCoverImage = document.querySelectorAll<HTMLImageElement>('.cover__image');
 
@@ -49,7 +40,11 @@ const htmlInfoEnvironmentEnhancement = document.querySelectorAll<HTMLElement>(
 const htmlInfoPointDefinitions = document.querySelectorAll<HTMLElement>('.info__point-definitions');
 const htmlInfoCustomEvents = document.querySelectorAll<HTMLElement>('.info__custom-events');
 
-htmlInfoContributorsSelect?.addEventListener('change', contributorsSelectHandler);
+if (htmlInfoContributorsSelect) {
+    htmlInfoContributorsSelect.addEventListener('change', contributorsSelectHandler);
+} else {
+    console.error('contributors select is missing');
+}
 
 export const switchHeader = (bool: boolean): void => {
     htmlIntro.forEach((elem) =>
@@ -119,11 +114,13 @@ export const setLevelAuthor = (str: string): void => {
 export const setEnvironment = (str: string): void => {
     htmlInfoEnvironment.forEach((elem) => {
         elem.textContent =
-            (EnvironmentName[str as keyof typeof EnvironmentName] || 'Unknown') + ' Environment';
+            (beatmap.environment.EnvironmentName[
+                str as keyof typeof beatmap.environment.EnvironmentName
+            ] || 'Unknown') + ' Environment';
     });
 };
 
-export const setEditors = (obj: Editor | undefined): void => {
+export const setEditors = (obj: beatmap.editor.Editor | undefined): void => {
     if (!obj || !obj._lastEditedBy) {
         htmlInfoEditors.forEach((elem) => elem.classList.add('hidden'));
         return;
@@ -132,7 +129,7 @@ export const setEditors = (obj: Editor | undefined): void => {
         elem.classList.remove('hidden');
         let text = 'Last edited on ' + obj._lastEditedBy;
         if (obj._lastEditedBy && obj[obj._lastEditedBy]) {
-            const mapper = obj[obj._lastEditedBy] as EditorInfo;
+            const mapper = obj[obj._lastEditedBy] as beatmap.editor.EditorInfo;
             text += ' v' + mapper.version;
         }
         elem.textContent = text;
@@ -153,13 +150,13 @@ const setContributorsRole = (str: string): void => {
     htmlInfoContributorsRole.forEach((elem) => (elem.textContent = str));
 };
 
-export const setContributors = (obj: Contributor): void => {
+export const setContributors = (obj: beatmap.contributor.Contributor): void => {
     setContributorsImage(obj._base64);
     setContributorsName(obj._name);
     setContributorsRole(obj._role);
 };
 
-export const populateContributors = (arr: Contributor[] | undefined): void => {
+export const populateContributors = (arr: beatmap.contributor.Contributor[] | undefined): void => {
     if (!arr || !arr.length) {
         htmlInfoContributors.forEach((elem) => elem.classList.add('hidden'));
         return;
@@ -243,7 +240,10 @@ export const setWarnings = (arr: string[] | undefined): void => {
     displayTableRow(htmlInfoWarnings, content);
 };
 
-export const setBookmarks = (arr: Bookmark[] | undefined, bpm?: BeatPerMinute | null): void => {
+export const setBookmarks = (
+    arr: beatmap.bookmark.Bookmark[] | undefined,
+    bpm?: beatmap.bpm.BeatPerMinute | null
+): void => {
     if (arr == undefined || !arr.length) {
         hideTableRow(htmlInfoBookmarks);
         return;
@@ -261,7 +261,9 @@ export const setBookmarks = (arr: Bookmark[] | undefined, bpm?: BeatPerMinute | 
     displayTableRow(htmlInfoBookmarks, content);
 };
 
-export const setEnvironmentEnhancement = (arr: ChromaEnvironment[] | undefined): void => {
+export const setEnvironmentEnhancement = (
+    arr: beatmap.chroma.ChromaEnvironment[] | undefined
+): void => {
     if (arr == undefined || !arr.length) {
         hideTableRow(htmlInfoEnvironmentEnhancement);
         return;
@@ -270,7 +272,9 @@ export const setEnvironmentEnhancement = (arr: ChromaEnvironment[] | undefined):
     displayTableRow(htmlInfoEnvironmentEnhancement, content);
 };
 
-export const setPointDefinitions = (arr: NEPointDefinition[] | undefined): void => {
+export const setPointDefinitions = (
+    arr: beatmap.noodleExtensions.NEPointDefinition[] | undefined
+): void => {
     if (arr == undefined || !arr.length) {
         hideTableRow(htmlInfoPointDefinitions);
         return;
@@ -279,7 +283,9 @@ export const setPointDefinitions = (arr: NEPointDefinition[] | undefined): void 
     displayTableRow(htmlInfoPointDefinitions, content);
 };
 
-export const setCustomEvents = (arr: NECustomEventData[] | undefined): void => {
+export const setCustomEvents = (
+    arr: beatmap.noodleExtensions.NECustomEventData[] | undefined
+): void => {
     if (arr == undefined || !arr.length) {
         hideTableRow(htmlInfoCustomEvents);
         return;
@@ -288,7 +294,7 @@ export const setCustomEvents = (arr: NECustomEventData[] | undefined): void => {
     displayTableRow(htmlInfoCustomEvents, content);
 };
 
-export const setInfo = (mapInfo: BeatmapInfo): void => {
+export const setInfo = (mapInfo: beatmap.info.BeatmapInfo): void => {
     setSongName(mapInfo._songName);
     setSongSubname(mapInfo._songSubName);
     setSongAuthor(mapInfo._songAuthorName);
@@ -298,7 +304,7 @@ export const setInfo = (mapInfo: BeatmapInfo): void => {
     setEditors(mapInfo._customData?._editors);
 };
 
-export const setDiffInfoTable = (mapData: MapData): void => {
+export const setDiffInfoTable = (mapData: beatmap.map.MapDataSet): void => {
     if (mapData._info?._customData) {
         setRequirements(mapData._info._customData._requirements);
         setSuggestions(mapData._info._customData._suggestions);
@@ -307,7 +313,7 @@ export const setDiffInfoTable = (mapData: MapData): void => {
     }
     if (mapData._data?._customData) {
         const bpm = savedData._mapInfo?._beatsPerMinute
-            ? new BeatPerMinute(
+            ? beatmap.bpm.create(
                   savedData._mapInfo._beatsPerMinute,
                   mapData._data._customData._bpmChanges || mapData._data._customData._BPMChanges
               )

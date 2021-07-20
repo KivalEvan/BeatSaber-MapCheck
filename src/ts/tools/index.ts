@@ -1,14 +1,10 @@
-import BeatPerMinute from '../beatmap/bpm';
-import { CharacteristicName } from '../beatmap/characteristic';
-import { DifficultyName } from '../beatmap/difficulty';
-import { BeatmapData } from '../beatmap/map';
-import NoteJumpSpeed from '../beatmap/njs';
+import * as beatmap from '../beatmap';
 
 export interface MapSettings {
-    _mode: CharacteristicName;
-    _difficulty: DifficultyName;
-    _bpm: BeatPerMinute;
-    _njs: NoteJumpSpeed;
+    _mode: beatmap.characteristic.CharacteristicName;
+    _difficulty: beatmap.difficulty.DifficultyName;
+    _bpm: beatmap.bpm.BeatPerMinute;
+    _njs: beatmap.njs.NoteJumpSpeed;
 }
 
 export type ToolType = 'note' | 'event' | 'obstacle' | 'other';
@@ -43,7 +39,7 @@ export type ToolOutput = ToolOutputHTML | ToolOutputConsole;
 
 export type ToolRun = (
     mapSettings: MapSettings,
-    mapData: BeatmapData
+    mapData: beatmap.map.BeatmapData
 ) => boolean | number | number[];
 
 export interface Tool {

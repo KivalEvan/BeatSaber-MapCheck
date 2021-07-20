@@ -12,9 +12,11 @@ export const compToHex = (c: number): string => {
     let hex = c.toString(16);
     return hex.length === 1 ? '0' + hex : hex;
 };
+
 export const cDenorm = (c: number): number => {
     return c > 1 && !(c < 0) ? 255 : round(c * 255);
 };
+
 export const rgbaToHex = (colorObj: Color): string => {
     let color: Color = { r: 0, g: 0, b: 0 };
     for (const c in colorObj) {

@@ -1,5 +1,5 @@
 import { DifficultyRename } from '../beatmap/difficulty';
-import { BeatmapInfo, BeatmapSet } from '../beatmap/info';
+import { BeatmapInfo, BeatmapInfoSet } from '../beatmap/info';
 import savedData from '../savedData';
 import { setDiffInfoTable } from './info';
 
@@ -20,7 +20,7 @@ export const setDifficultyLabel = (str: string): void => {
     htmlToolsDifficultyLabel.forEach((elem) => (elem.textContent = str));
 };
 
-const populateSelectDiff = (mapSet: BeatmapSet | undefined): void => {
+const populateSelectDiff = (mapSet: BeatmapInfoSet | undefined): void => {
     if (!mapSet) {
         return;
     }

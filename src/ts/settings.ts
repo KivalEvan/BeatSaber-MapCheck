@@ -1,6 +1,8 @@
+import { Theme } from './ui/theme';
+
 type SettingsFlag = { [key: string]: boolean };
+
 export type BeatNumbering = 'ChroMapper' | 'MediocreMapper' | 'JSON Time' | 'Real Time';
-export type Theme = 'Dark' | 'Light' | 'Monochrome';
 
 interface SettingsProperty {
     _load: SettingsPropertyLoad;

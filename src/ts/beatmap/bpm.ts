@@ -10,7 +10,7 @@ export interface BPMChangeTime extends BPMChange {
     _newTime: number;
 }
 
-export default class BeatPerMinute {
+export class BeatPerMinute {
     private _bpm: number;
     private _bpmChange: BPMChangeTime[];
     private _offset: number;
@@ -84,3 +84,11 @@ export default class BeatPerMinute {
         return this.offsetBegone(beat);
     }
 }
+
+export const create = (
+    bpm: number,
+    bpmChange: BPMChange[] = [],
+    offset: number = 0
+): BeatPerMinute => {
+    return new BeatPerMinute(bpm, bpmChange, offset);
+};

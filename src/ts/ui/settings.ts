@@ -1,8 +1,10 @@
-import settings, { Theme } from '../settings';
+import { Theme } from './theme';
+import settings from '../settings';
 
 const htmlBody = document.querySelector<HTMLBodyElement>('body');
 const htmlSettingsTheme = document.querySelectorAll<HTMLSelectElement>('.settings__theme');
 const htmlSettingsShow = document.querySelectorAll<HTMLInputElement>('.settings__show');
+const htmlSettingsClear = document.querySelectorAll<HTMLInputElement>('.settings__show');
 
 htmlSettingsTheme.forEach((elem) => elem.addEventListener('change', themeChangeHandler));
 htmlSettingsShow.forEach((elem) => elem.addEventListener('click', showCheckHandler));

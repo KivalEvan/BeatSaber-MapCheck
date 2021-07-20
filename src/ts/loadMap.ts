@@ -251,8 +251,7 @@ export const loadMap = async (mapZip: JSZip) => {
         UITools.populateSelect(savedData._mapInfo);
         UILoading.status('info', 'Adding map difficulty stats...', 80);
         console.log('adding map stats');
-        UIStats.populateMode();
-        UIStats.populateDiff();
+        UIStats.populate();
 
         UILoading.status('info', 'Analysing map...', 85);
         console.log('analysing map');
