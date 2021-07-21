@@ -49,7 +49,6 @@ export interface BeatmapData {
     _events: Event[];
     _waypoints?: Waypoint[];
     _customData?: CustomDataDifficulty;
-    _information?: CustomData;
 }
 
 export interface MapDataSet {

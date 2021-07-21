@@ -1,251 +1,246 @@
 // may god help you maintain these
-import { round, toMMSS } from '../utils';
+// TODO: sanitize input before it reach innerHTML, or change the implementation
+import * as uiHeader from './header';
+import { toMMSS } from '../utils';
 import * as beatmap from '../beatmap';
 import savedData from '../savedData';
 
-const htmlIntro = document.querySelectorAll<HTMLElement>('.intro');
-const htmlMetadata = document.querySelectorAll<HTMLElement>('.metadata');
+const logPrefix = 'UI Info: ';
 
-const htmlCoverLink = document.querySelectorAll<HTMLLinkElement>('.cover__link');
-const htmlCoverImage = document.querySelectorAll<HTMLImageElement>('.cover__image');
-
-const htmlMetadataSongName = document.querySelectorAll<HTMLElement>('.metadata__song-name');
-const htmlMetadataSongSubname = document.querySelectorAll<HTMLElement>('.metadata__song-subname');
-const htmlMetadataSongAuthor = document.querySelectorAll<HTMLElement>('.metadata__song-author');
-const htmlMetadataSongBPM = document.querySelectorAll<HTMLElement>('.metadata__song-bpm');
-const htmlMetadataSongDuration = document.querySelectorAll<HTMLElement>('.metadata__song-duration');
-
-const htmlInfoLevelAuthor = document.querySelectorAll<HTMLElement>('.info__level-author');
-const htmlInfoEnvironment = document.querySelectorAll<HTMLElement>('.info__environment');
-const htmlInfoEditors = document.querySelectorAll<HTMLElement>('.info__editors');
-const htmlInfoContributors = document.querySelectorAll<HTMLElement>('.info__contributors');
+const htmlInfoLevelAuthor = document.querySelector<HTMLElement>('.info__level-author');
+const htmlInfoEnvironment = document.querySelector<HTMLElement>('.info__environment');
+const htmlInfoEditors = document.querySelector<HTMLElement>('.info__editors');
+const htmlInfoContributors = document.querySelector<HTMLElement>('.info__contributors');
 const htmlInfoContributorsSelect = document.querySelector<HTMLSelectElement>(
     '.info__contributors-select'
 );
-const htmlInfoContributorsImage = document.querySelectorAll<HTMLImageElement>(
+const htmlInfoContributorsImage = document.querySelector<HTMLImageElement>(
     '.info__contributors-image'
 );
-const htmlInfoContributorsName = document.querySelectorAll<HTMLElement>('.info__contributors-name');
-const htmlInfoContributorsRole = document.querySelectorAll<HTMLElement>('.info__contributors-role');
+const htmlInfoContributorsName = document.querySelector<HTMLElement>('.info__contributors-name');
+const htmlInfoContributorsRole = document.querySelector<HTMLElement>('.info__contributors-role');
 
-const htmlInfoTimeSpend = document.querySelectorAll<HTMLElement>('.info__time-spend');
-const htmlInfoRequirements = document.querySelectorAll<HTMLElement>('.info__requirements');
-const htmlInfoSuggestions = document.querySelectorAll<HTMLElement>('.info__suggestions');
-const htmlInfoInformation = document.querySelectorAll<HTMLElement>('.info__information');
-const htmlInfoWarnings = document.querySelectorAll<HTMLElement>('.info__warnings');
-const htmlInfoBookmarks = document.querySelectorAll<HTMLElement>('.info__bookmarks');
-const htmlInfoEnvironmentEnhancement = document.querySelectorAll<HTMLElement>(
+const htmlTableTimeSpend = document.querySelector<HTMLElement>('.info__time-spend');
+const htmlTableRequirements = document.querySelector<HTMLElement>('.info__requirements');
+const htmlTableSuggestions = document.querySelector<HTMLElement>('.info__suggestions');
+const htmlTableInformation = document.querySelector<HTMLElement>('.info__information');
+const htmlTableWarnings = document.querySelector<HTMLElement>('.info__warnings');
+const htmlTableBookmarks = document.querySelector<HTMLElement>('.info__bookmarks');
+const htmlTableEnvironmentEnhancement = document.querySelector<HTMLElement>(
     '.info__environment-enhancement'
 );
-const htmlInfoPointDefinitions = document.querySelectorAll<HTMLElement>('.info__point-definitions');
-const htmlInfoCustomEvents = document.querySelectorAll<HTMLElement>('.info__custom-events');
+const htmlTablePointDefinitions = document.querySelector<HTMLElement>('.info__point-definitions');
+const htmlTableCustomEvents = document.querySelector<HTMLElement>('.info__custom-events');
 
+if (!htmlInfoLevelAuthor || !htmlInfoEnvironment || !htmlInfoEditors) {
+    console.error(logPrefix + 'info component is missing part');
+}
+if (!htmlInfoContributors || !htmlInfoContributorsName || !htmlInfoContributorsRole) {
+    console.error(logPrefix + 'contributors component is missing part');
+}
 if (htmlInfoContributorsSelect) {
     htmlInfoContributorsSelect.addEventListener('change', contributorsSelectHandler);
 } else {
-    console.error('contributors select is missing');
+    console.error(logPrefix + 'contributors select is missing');
+}
+if (
+    !htmlTableTimeSpend ||
+    !htmlTableRequirements ||
+    !htmlTableSuggestions ||
+    !htmlTableInformation ||
+    !htmlTableWarnings ||
+    !htmlTableBookmarks ||
+    !htmlTableEnvironmentEnhancement ||
+    !htmlTablePointDefinitions ||
+    !htmlTableCustomEvents
+) {
+    console.error(logPrefix + 'table info component is missing part');
 }
 
-export const switchHeader = (bool: boolean): void => {
-    htmlIntro.forEach((elem) =>
-        bool ? elem.classList.add('hidden') : elem.classList.remove('hidden')
-    );
-    htmlMetadata.forEach((elem) =>
-        !bool ? elem.classList.add('hidden') : elem.classList.remove('hidden')
-    );
-};
-
-export const setCoverImage = (src: string): void => {
-    htmlCoverImage.forEach((elem) => (elem.src = src));
-};
-
-export const setCoverLink = (url?: string, id?: string): void => {
-    if (url == null && id == null) {
-        htmlCoverLink.forEach((elem) => {
-            elem.textContent = '';
-            elem.href = '';
-            elem.classList.add('disabled');
-        });
+export const setLevelAuthor = (str: string): void => {
+    if (!htmlInfoLevelAuthor) {
+        console.error(logPrefix + 'missing HTML element for level author');
         return;
     }
-    if (url != null) {
-        htmlCoverLink.forEach((elem) => {
-            elem.textContent = id ?? 'Download Link';
-            elem.href = url;
-            elem.classList.remove('disabled');
-        });
-    }
-};
-
-export const setSongName = (str: string): void => {
-    htmlMetadataSongName.forEach((elem) => (elem.textContent = str));
-};
-
-export const setSongSubname = (str: string): void => {
-    htmlMetadataSongSubname.forEach((elem) => (elem.textContent = str));
-};
-
-export const setSongAuthor = (str: string): void => {
-    htmlMetadataSongAuthor.forEach((elem) => (elem.textContent = str));
-};
-
-// TODO: some way to save bpm change
-export const setSongBPM = (num: number, minBPM?: number, maxBPM?: number): void => {
-    if ((minBPM === null || minBPM === undefined) && typeof maxBPM === 'number') {
-        minBPM = Math.min(num, maxBPM);
-    }
-    if ((maxBPM === null || maxBPM === undefined) && typeof minBPM === 'number') {
-        maxBPM = Math.max(num, minBPM);
-    }
-    let text = round(num, 2).toString() + 'BPM';
-    if (minBPM && maxBPM) {
-    }
-    htmlMetadataSongBPM.forEach((elem) => (elem.textContent = text));
-};
-
-export const setSongDuration = (num: number): void => {
-    htmlMetadataSongDuration.forEach((elem) => (elem.textContent = toMMSS(num)));
-};
-
-export const setLevelAuthor = (str: string): void => {
-    htmlInfoLevelAuthor.forEach((elem) => (elem.textContent = 'Mapped by ' + str));
+    htmlInfoLevelAuthor.textContent = 'Mapped by ' + str;
 };
 
 export const setEnvironment = (str: string): void => {
-    htmlInfoEnvironment.forEach((elem) => {
-        elem.textContent =
-            (beatmap.environment.EnvironmentName[
-                str as keyof typeof beatmap.environment.EnvironmentName
-            ] || 'Unknown') + ' Environment';
-    });
+    if (!htmlInfoEnvironment) {
+        console.error(logPrefix + 'missing HTML element for environment');
+        return;
+    }
+    htmlInfoEnvironment.textContent =
+        (beatmap.environment.EnvironmentName[
+            str as keyof typeof beatmap.environment.EnvironmentName
+        ] || 'Unknown') + ' Environment';
 };
 
 export const setEditors = (obj: beatmap.editor.Editor | undefined): void => {
-    if (!obj || !obj._lastEditedBy) {
-        htmlInfoEditors.forEach((elem) => elem.classList.add('hidden'));
+    if (!htmlInfoEditors) {
+        console.error(logPrefix + 'missing HTML element for editor');
         return;
     }
-    htmlInfoEditors.forEach((elem) => {
-        elem.classList.remove('hidden');
-        let text = 'Last edited on ' + obj._lastEditedBy;
-        if (obj._lastEditedBy && obj[obj._lastEditedBy]) {
-            const mapper = obj[obj._lastEditedBy] as beatmap.editor.EditorInfo;
-            text += ' v' + mapper.version;
-        }
-        elem.textContent = text;
-    });
+    if (!obj || !obj._lastEditedBy) {
+        htmlInfoEditors.classList.add('hidden');
+        return;
+    }
+    htmlInfoEditors.classList.remove('hidden');
+    const lastEdited = obj._lastEditedBy || 'Undefined';
+    let text = 'Last edited on ' + lastEdited;
+    if (obj[lastEdited]) {
+        const mapper = obj[lastEdited] as beatmap.editor.EditorInfo;
+        text += ' v' + mapper.version;
+    }
+    htmlInfoEditors.textContent = text;
 };
 
 const setContributorsImage = (src: string | undefined): void => {
-    htmlInfoContributorsImage.forEach(
-        (elem) => (elem.src = 'data:image;base64,' + src || './assets/unknown.jpg')
-    );
+    if (!htmlInfoContributorsImage) {
+        console.error(logPrefix + 'missing HTML element for contributor image');
+        return;
+    }
+    htmlInfoContributorsImage.src = src || './assets/unknown.jpg';
 };
 
 const setContributorsName = (str: string): void => {
-    htmlInfoContributorsName.forEach((elem) => (elem.textContent = str));
+    if (!htmlInfoContributorsName) {
+        console.error(logPrefix + 'missing HTML element for contributor name');
+        return;
+    }
+    htmlInfoContributorsName.textContent = str;
 };
 
 const setContributorsRole = (str: string): void => {
-    htmlInfoContributorsRole.forEach((elem) => (elem.textContent = str));
+    if (!htmlInfoContributorsRole) {
+        console.error(logPrefix + 'missing HTML element for contributor role');
+        return;
+    }
+    htmlInfoContributorsRole.textContent = str;
 };
 
 export const setContributors = (obj: beatmap.contributor.Contributor): void => {
-    setContributorsImage(obj._base64);
+    setContributorsImage('data:image;base64,' + obj._base64);
     setContributorsName(obj._name);
     setContributorsRole(obj._role);
 };
 
 export const populateContributors = (arr: beatmap.contributor.Contributor[] | undefined): void => {
-    if (!arr || !arr.length) {
-        htmlInfoContributors.forEach((elem) => elem.classList.add('hidden'));
+    if (!htmlInfoContributors || !htmlInfoContributorsSelect) {
+        console.error(logPrefix + 'missing HTML element for contributor');
         return;
     }
-    htmlInfoContributors.forEach((elem) => elem.classList.remove('hidden'));
-    let first = true;
-    arr.forEach((el, index) => {
-        if (first) {
-            first = false;
-            setContributors(el);
-        }
-        const optCont = document.createElement('option');
-        optCont.value = index.toString();
-        optCont.text = el._name + ' -- ' + el._role;
-        htmlInfoContributorsSelect?.add(optCont);
-    });
+    if (htmlInfoContributors && (!arr || !arr.length)) {
+        htmlInfoContributors.classList.add('hidden');
+        return;
+    }
+    if (arr) {
+        htmlInfoContributors.classList.remove('hidden');
+        let first = true;
+        arr.forEach((el, index) => {
+            if (first) {
+                first = false;
+                setContributors(el);
+            }
+            const optCont = document.createElement('option');
+            optCont.value = index.toString();
+            optCont.text = el._name + ' -- ' + el._role;
+            htmlInfoContributorsSelect.add(optCont);
+        });
+    }
 };
 
-const hideTableRow = <T extends NodeListOf<HTMLElement>>(elem: T): void => {
-    elem.forEach((el) => {
-        const tableElem = el.querySelector('.info__table-element');
-        if (tableElem) {
-            tableElem.innerHTML = '';
-        }
-        el.classList.add('hidden');
-    });
+const hideTableRow = <T extends HTMLElement>(elem: T): void => {
+    const tableElem = elem.querySelector('.info__table-element');
+    if (tableElem) {
+        tableElem.innerHTML = '';
+    }
+    elem.classList.add('hidden');
 };
 
-const displayTableRow = <T extends NodeListOf<HTMLElement>>(elem: T, content: string): void => {
-    elem.forEach((el) => {
-        const tableElem = el.querySelector('.info__table-element');
-        if (tableElem) {
-            tableElem.innerHTML = content;
-        }
-        el.classList.remove('hidden');
-    });
+const displayTableRow = <T extends HTMLElement>(elem: T, content: string): void => {
+    const tableElem = elem.querySelector('.info__table-element');
+    if (tableElem) {
+        tableElem.innerHTML = content;
+    }
+    elem.classList.remove('hidden');
 };
 
 export const setTimeSpend = (num: number | undefined): void => {
+    if (!htmlTableTimeSpend) {
+        console.error(logPrefix + 'missing table row for time spend');
+        return;
+    }
     if (num === undefined || num === null) {
-        hideTableRow(htmlInfoTimeSpend);
+        hideTableRow(htmlTableTimeSpend);
         return;
     }
     const content = toMMSS(num);
-    displayTableRow(htmlInfoTimeSpend, content);
+    displayTableRow(htmlTableTimeSpend, content);
 };
 
 export const setRequirements = (arr: string[] | undefined): void => {
+    if (!htmlTableRequirements) {
+        console.error(logPrefix + 'missing table row for requirements');
+        return;
+    }
     if (arr == undefined || !arr.length) {
-        hideTableRow(htmlInfoRequirements);
+        hideTableRow(htmlTableRequirements);
         return;
     }
     const content = arr.join(', ');
-    displayTableRow(htmlInfoRequirements, content);
+    displayTableRow(htmlTableRequirements, content);
 };
 
 export const setSuggestions = (arr: string[] | undefined): void => {
+    if (!htmlTableSuggestions) {
+        console.error(logPrefix + 'missing table row for suggestions');
+        return;
+    }
     if (arr == undefined || !arr.length) {
-        hideTableRow(htmlInfoSuggestions);
+        hideTableRow(htmlTableSuggestions);
         return;
     }
     const content = arr.join(', ');
-    displayTableRow(htmlInfoSuggestions, content);
+    displayTableRow(htmlTableSuggestions, content);
 };
 
 export const setInformation = (arr: string[] | undefined): void => {
+    if (!htmlTableInformation) {
+        console.error(logPrefix + 'missing table row for information');
+        return;
+    }
     if (arr == undefined || !arr.length) {
-        hideTableRow(htmlInfoInformation);
+        hideTableRow(htmlTableInformation);
         return;
     }
     const content = arr.join('<br>');
-    displayTableRow(htmlInfoInformation, content);
+    displayTableRow(htmlTableInformation, content);
 };
 
 export const setWarnings = (arr: string[] | undefined): void => {
+    if (!htmlTableWarnings) {
+        console.error(logPrefix + 'missing table row for warnings');
+        return;
+    }
     if (arr == undefined || !arr.length) {
-        hideTableRow(htmlInfoWarnings);
+        hideTableRow(htmlTableWarnings);
         return;
     }
     const content = arr.join('<br>');
-    displayTableRow(htmlInfoWarnings, content);
+    displayTableRow(htmlTableWarnings, content);
 };
 
 export const setBookmarks = (
     arr: beatmap.bookmark.Bookmark[] | undefined,
     bpm?: beatmap.bpm.BeatPerMinute | null
 ): void => {
+    if (!htmlTableBookmarks) {
+        console.error(logPrefix + 'missing table row for bookmarks');
+        return;
+    }
     if (arr == undefined || !arr.length) {
-        hideTableRow(htmlInfoBookmarks);
+        hideTableRow(htmlTableBookmarks);
         return;
     }
     const bookmarkText = arr.map((elem) => {
@@ -255,50 +250,64 @@ export const setBookmarks = (
             time = bpm.adjustTime(time);
             rt = bpm.toRealTime(time);
         }
-        return `${elem._time}${rt ? ' | ' + toMMSS(rt) : ''} -- ${elem._name}`;
+        return `${elem._time}${rt ? ' | ' + toMMSS(rt) : ''} -- ${
+            elem._name === '' ? elem._name : '**EMPTY NAME**'
+        }`;
     });
     const content = bookmarkText.join('<br>');
-    displayTableRow(htmlInfoBookmarks, content);
+    displayTableRow(htmlTableBookmarks, content);
 };
 
 export const setEnvironmentEnhancement = (
     arr: beatmap.chroma.ChromaEnvironment[] | undefined
 ): void => {
+    if (!htmlTableEnvironmentEnhancement) {
+        console.error(logPrefix + 'missing table row for environment enhancement');
+        return;
+    }
     if (arr == undefined || !arr.length) {
-        hideTableRow(htmlInfoEnvironmentEnhancement);
+        hideTableRow(htmlTableEnvironmentEnhancement);
         return;
     }
     const content = arr.join('<br>');
-    displayTableRow(htmlInfoEnvironmentEnhancement, content);
+    displayTableRow(htmlTableEnvironmentEnhancement, content);
 };
 
 export const setPointDefinitions = (
     arr: beatmap.noodleExtensions.NEPointDefinition[] | undefined
 ): void => {
+    if (!htmlTablePointDefinitions) {
+        console.error(logPrefix + 'missing table row for point definitions');
+        return;
+    }
     if (arr == undefined || !arr.length) {
-        hideTableRow(htmlInfoPointDefinitions);
+        hideTableRow(htmlTablePointDefinitions);
         return;
     }
     const content = arr.join('<br>');
-    displayTableRow(htmlInfoPointDefinitions, content);
+    displayTableRow(htmlTablePointDefinitions, content);
 };
 
 export const setCustomEvents = (
     arr: beatmap.noodleExtensions.NECustomEventData[] | undefined
 ): void => {
+    if (!htmlTableCustomEvents) {
+        console.error(logPrefix + 'missing table row for custom events');
+        return;
+    }
     if (arr == undefined || !arr.length) {
-        hideTableRow(htmlInfoCustomEvents);
+        hideTableRow(htmlTableCustomEvents);
         return;
     }
     const content = arr.join('<br>');
-    displayTableRow(htmlInfoCustomEvents, content);
+    displayTableRow(htmlTableCustomEvents, content);
 };
 
 export const setInfo = (mapInfo: beatmap.info.BeatmapInfo): void => {
-    setSongName(mapInfo._songName);
-    setSongSubname(mapInfo._songSubName);
-    setSongAuthor(mapInfo._songAuthorName);
-    setSongBPM(mapInfo._beatsPerMinute);
+    uiHeader.setSongName(mapInfo._songName);
+    uiHeader.setSongSubname(mapInfo._songSubName);
+    uiHeader.setSongAuthor(mapInfo._songAuthorName);
+    uiHeader.setSongBPM(mapInfo._beatsPerMinute);
     setLevelAuthor(mapInfo._levelAuthorName);
     setEnvironment(mapInfo._environmentName);
     setEditors(mapInfo._customData?._editors);
@@ -330,21 +339,3 @@ function contributorsSelectHandler(ev: Event): void {
     const target = ev.target as HTMLSelectElement;
     setContributors(savedData._contributors[parseInt(target.value)]);
 }
-
-export default {
-    switchHeader,
-    setCoverImage,
-    setCoverLink,
-    setSongName,
-    setSongSubname,
-    setSongAuthor,
-    setSongBPM,
-    setSongDuration,
-    setLevelAuthor,
-    setEnvironment,
-    setEditors,
-    setContributors,
-    populateContributors,
-    setTimeSpend,
-    setInfo,
-};

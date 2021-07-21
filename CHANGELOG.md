@@ -5,9 +5,10 @@
 ### Added
 
 -   Information Tab
--   -   SongCore, Chroma & Noodle Extensions related stuff
+    -   SongCore, Chroma & Noodle Extensions related stuff
 -   Stats Tab
 -   Settings Tab
+    -   Saves to local storage
 -   Theme
 
 ### Changed
@@ -18,3 +19,4 @@
 ### Planned
 
 -   Audio player
+-   Maybe mobile friendly?

@@ -6,7 +6,7 @@ import { BeatmapData } from './map';
 
 // TODO: more error check
 // TODO: contemplate whether to make pure function or keep as is
-export const parseInfo = (mapInfo: BeatmapInfo): BeatmapInfo => {
+export const info = (mapInfo: BeatmapInfo): BeatmapInfo => {
     mapInfo._difficultyBeatmapSets.sort(
         (a, b) =>
             CharacteristicOrder[a._beatmapCharacteristicName] -
@@ -18,8 +18,8 @@ export const parseInfo = (mapInfo: BeatmapInfo): BeatmapInfo => {
     return mapInfo;
 };
 
-// TODO: deal with BPM changes
-export const parseMap = (
+// TODO: deal with and save BPM changes
+export const map = (
     difficultyData: BeatmapData,
     difficultyName: DifficultyName,
     bpm: number
@@ -71,10 +71,6 @@ export const parseMap = (
                     maxBPM = BPMChanges[i]._BPM;
                 }
             }
-            difficultyData._information = {
-                minBPM: minBPM,
-                maxBPM: maxBPM,
-            };
         }
     }
     return difficultyData;

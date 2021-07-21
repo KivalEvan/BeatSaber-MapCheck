@@ -49,7 +49,9 @@ const populateSelectDiff = (mapSet: BeatmapInfoSet | undefined): void => {
                     throw new Error('Missing _mapData');
                 }
                 setDiffInfoTable(diffData);
-                setDifficultyLabel(diff._customData?._difficultyLabel || diff._difficulty);
+                setDifficultyLabel(
+                    diff._customData?._difficultyLabel || DifficultyRename[diff._difficulty]
+                );
             }
             first = false;
             elem.add(optDiff);
@@ -105,7 +107,10 @@ function selectDifficultyHandler(ev: Event): void {
     );
     if (diff) {
         setDiffInfoTable(diff);
-        setDifficultyLabel(diff._info?._customData?._difficultyLabel || target.value);
+        setDifficultyLabel(
+            diff._info?._customData?._difficultyLabel ||
+                DifficultyRename[target.value as keyof typeof DifficultyRename]
+        );
     }
 }
 

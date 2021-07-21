@@ -1,10 +1,11 @@
 import JSZip from 'jszip';
 import UILoading from './ui/loading';
 import { disableInput } from './ui/input';
-import UIInfo from './ui/info';
-import UITools from './ui/tools';
-import UIStats from './ui/stats';
-import { parseInfo, parseMap } from './beatmap/parse';
+import * as UIInfo from './ui/info';
+import * as UITools from './ui/tools';
+import * as UIStats from './ui/stats';
+import * as UIHeader from './ui/header';
+import { info as parseInfo, map as parseMap } from './beatmap/parse';
 import { BeatmapInfo } from './beatmap/info';
 import { BeatmapData } from './beatmap/map';
 import analyse from './tools/analyse';
@@ -31,8 +32,8 @@ export const downloadFromURL = async (input: string) => {
     try {
         // apparently i need cors proxy
         let res = await downloadMap('https://cors-anywhere.herokuapp.com/' + url);
-        UIInfo.setCoverLink(url);
-        UIInfo.switchHeader(true);
+        UIHeader.setCoverLink(url);
+        UIHeader.switchHeader(true);
         extractZip(res);
         return res;
     } catch (err) {
@@ -64,8 +65,8 @@ export const downloadFromID = async (input: string) => {
     const url = 'https://beatsaver.com/api/download/key/' + id;
     try {
         const res = await downloadMap(url);
-        UIInfo.setCoverLink('https://beatsaver.com/beatmap/' + id, id);
-        UIInfo.switchHeader(true);
+        UIHeader.setCoverLink('https://beatsaver.com/beatmap/' + id, id);
+        UIHeader.switchHeader(true);
         extractZip(res);
     } catch (err) {
         disableInput(false);
@@ -156,7 +157,7 @@ export const loadMap = async (mapZip: JSZip) => {
         let imageFile = mapZip.file(savedData._mapInfo._coverImageFilename);
         if (!settings.load.image && imageFile) {
             let imgBase64 = await imageFile.async('base64');
-            UIInfo.setCoverImage('data:image;base64,' + imgBase64);
+            UIHeader.setCoverImage('data:image;base64,' + imgBase64);
             flag.map.load.image = true;
         } else {
             console.error(`${savedData._mapInfo._coverImageFilename} does not exists.`);
@@ -164,7 +165,9 @@ export const loadMap = async (mapZip: JSZip) => {
 
         savedData._contributors = [];
         let counter = savedData._mapInfo._customData?._contributors?.length || 0;
+        // TODO: replace forEach with imperative for loop instead, order matters in this
         savedData._mapInfo._customData?._contributors?.forEach(async (elem) => {
+            console.log('loading contributor image ' + elem._name);
             imageFile = mapZip.file(elem._iconPath);
             let contr = elem;
             if (!settings.load.image && imageFile) {
@@ -191,7 +194,7 @@ export const loadMap = async (mapZip: JSZip) => {
                 .decodeAudioData(audioBuffer)
                 .then(function (buffer) {
                     let duration = buffer.duration;
-                    UIInfo.setSongDuration(duration);
+                    UIHeader.setSongDuration(duration);
                     flag.map.load.audio = true;
                 })
                 .catch(function (err) {

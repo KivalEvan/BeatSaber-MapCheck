@@ -1,18 +1,32 @@
-import { Theme } from './theme';
+// TODO: automatically generate options instead of hardcoded in HTML
+import * as uiTheme from './theme';
 import settings from '../settings';
 
-const htmlBody = document.querySelector<HTMLBodyElement>('body');
-const htmlSettingsTheme = document.querySelectorAll<HTMLSelectElement>('.settings__theme');
-const htmlSettingsShow = document.querySelectorAll<HTMLInputElement>('.settings__show');
-const htmlSettingsClear = document.querySelectorAll<HTMLInputElement>('.settings__show');
+const logPrefix = 'UI Settings: ';
 
-htmlSettingsTheme.forEach((elem) => elem.addEventListener('change', themeChangeHandler));
+const htmlSettingsTheme = document.querySelector<HTMLSelectElement>('.settings__theme');
+const htmlSettingsShow = document.querySelectorAll<HTMLInputElement>('.settings__show');
+const htmlSettingsClear = document.querySelector<HTMLInputElement>('.settings__clear-button');
+
+if (htmlSettingsTheme) {
+    htmlSettingsTheme.addEventListener('change', themeChangeHandler);
+} else {
+    console.error(logPrefix + 'theme select is missing');
+}
+if (!htmlSettingsShow.length) {
+    console.error(logPrefix + 'empty show list, intentional or typo error?');
+}
 htmlSettingsShow.forEach((elem) => elem.addEventListener('click', showCheckHandler));
+if (htmlSettingsClear) {
+    htmlSettingsClear.addEventListener('click', clear);
+} else {
+    console.error(logPrefix + 'clear button is missing');
+}
 
 function themeChangeHandler(ev: Event): void {
     const target = ev.target as HTMLSelectElement;
-    settings.theme = target.options[target.options.selectedIndex].value as Theme;
-    htmlBody!.className = 'theme-' + settings.theme.toLowerCase().replace(' ', '');
+    settings.theme = target.options[target.options.selectedIndex].value as uiTheme.Theme;
+    uiTheme.set(settings.theme);
     settings.save();
 }
 
@@ -23,13 +37,6 @@ function showCheckHandler(ev: Event): void {
     settings.save();
 }
 
-export const setTheme = (str: Theme): void => {
-    htmlBody!.className = 'theme-' + str.toLowerCase().replace(' ', '');
-    htmlSettingsTheme.forEach((elem) => {
-        elem.value = str;
-    });
-};
-
 export const setShowCheck = (id: string, bool: boolean): void => {
     htmlSettingsShow.forEach((elem) => {
         if (elem.id.endsWith(id)) {
@@ -38,11 +45,19 @@ export const setShowCheck = (id: string, bool: boolean): void => {
     });
 };
 
-export const clear = (): void => {
+export const setTheme = (str: uiTheme.Theme): void => {
+    if (!htmlSettingsTheme) {
+        console.error(logPrefix + 'input element is missing');
+        return;
+    }
+    htmlSettingsTheme.value = str;
+};
+
+export function clear(): void {
     settings.clear();
     settings.reset();
     location.reload(true);
-};
+}
 
 export default {
     setTheme,

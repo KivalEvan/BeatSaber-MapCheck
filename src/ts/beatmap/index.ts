@@ -1,4 +1,5 @@
 // TODO: probably rethink how to structure these stuff again
+// TODO: also should not export literally everything
 export * as bookmark from './bookmark';
 export * as bpm from './bpm';
 export * as characteristic from './characteristic';
