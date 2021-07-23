@@ -1,6 +1,7 @@
 import { Bookmark } from './bookmark';
 import { BPMChange } from './bpm';
 import {
+    CCustomData,
     ChromaEnvironment,
     ChromaEnvironmentOld,
     ChromaEvent,
@@ -33,13 +34,13 @@ export interface CustomDataInfoDifficulty extends CustomData, ColorScheme, Chrom
     _requirements?: string[];
 }
 
-export interface CustomDataDifficulty extends CustomData, ChromaEnvironment, NECustomData {
+export interface CustomDataDifficulty extends CustomData, CCustomData, NECustomData {
     _time?: number;
     _bpmChanges?: BPMChange[];
     _BPMChanges?: BPMChange[];
     _bookmarks?: Bookmark[];
 }
 
-export interface CustomDataNote extends CustomData, ChromaNote, NENote {}
-export interface CustomDataObstacle extends CustomData, ChromaObstacle, NEObstacle {}
-export interface CustomDataEvent extends CustomData, ChromaEvent, NEEvent {}
+export type CustomDataNote = CustomData & ChromaNote & NENote;
+export type CustomDataObstacle = CustomData & ChromaObstacle & NEObstacle;
+export type CustomDataEvent = CustomData & ChromaEvent & NEEvent;

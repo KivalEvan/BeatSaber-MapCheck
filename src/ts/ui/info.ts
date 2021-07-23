@@ -1,9 +1,11 @@
 // may god help you maintain these
-// TODO: sanitize input before it reach innerHTML, or change the implementation
 import * as uiHeader from './header';
 import { toMMSS } from '../utils';
 import * as beatmap from '../beatmap';
 import savedData from '../savedData';
+import { ChromaDataEnvAbbr, ChromaEnvironment } from '../beatmap/chroma';
+import { NECustomEventData, NEDataAbbr } from '../beatmap/noodleExtensions';
+import sanitizeHtml from 'sanitize-html';
 
 const logPrefix = 'UI Info: ';
 
@@ -161,7 +163,7 @@ const hideTableRow = <T extends HTMLElement>(elem: T): void => {
 const displayTableRow = <T extends HTMLElement>(elem: T, content: string): void => {
     const tableElem = elem.querySelector('.info__table-element');
     if (tableElem) {
-        tableElem.innerHTML = content;
+        tableElem.innerHTML = sanitizeHtml(content, { allowedTags: ['br'] });
     }
     elem.classList.remove('hidden');
 };
@@ -251,13 +253,14 @@ export const setBookmarks = (
             rt = bpm.toRealTime(time);
         }
         return `${elem._time}${rt ? ' | ' + toMMSS(rt) : ''} -- ${
-            elem._name === '' ? elem._name : '**EMPTY NAME**'
+            elem._name !== '' ? elem._name : '**EMPTY NAME**'
         }`;
     });
     const content = bookmarkText.join('<br>');
     displayTableRow(htmlTableBookmarks, content);
 };
 
+// this implementation looks hideous but whatever
 export const setEnvironmentEnhancement = (
     arr: beatmap.chroma.ChromaEnvironment[] | undefined
 ): void => {
@@ -269,7 +272,22 @@ export const setEnvironmentEnhancement = (
         hideTableRow(htmlTableEnvironmentEnhancement);
         return;
     }
-    const content = arr.join('<br>');
+    const envEnhance = arr.map((elem) => {
+        let keyArr = [];
+        for (const key in elem) {
+            if (key == '_lookupMethod' || key == '_id') {
+                continue;
+            }
+            let k = ChromaDataEnvAbbr[key as keyof typeof ChromaDataEnvAbbr];
+            if (elem[key as keyof ChromaEnvironment] != null) {
+                keyArr.push(k);
+            }
+        }
+        return `${elem._lookupMethod} [${keyArr.join('')}]${
+            elem._track ? `(${elem._track})` : ''
+        } -> ${elem._id}`;
+    });
+    const content = envEnhance.join('<br>');
     displayTableRow(htmlTableEnvironmentEnhancement, content);
 };
 
@@ -284,12 +302,16 @@ export const setPointDefinitions = (
         hideTableRow(htmlTablePointDefinitions);
         return;
     }
-    const content = arr.join('<br>');
+    const pointDef = arr.map((elem) => {
+        return `${elem._name} -- ${elem._points.length} point${elem._points.length > 1 ? 's' : ''}`;
+    });
+    const content = pointDef.join('<br>');
     displayTableRow(htmlTablePointDefinitions, content);
 };
 
 export const setCustomEvents = (
-    arr: beatmap.noodleExtensions.NECustomEventData[] | undefined
+    arr: beatmap.noodleExtensions.NECustomEvent[] | undefined,
+    bpm?: beatmap.bpm.BeatPerMinute | null
 ): void => {
     if (!htmlTableCustomEvents) {
         console.error(logPrefix + 'missing table row for custom events');
@@ -299,7 +321,28 @@ export const setCustomEvents = (
         hideTableRow(htmlTableCustomEvents);
         return;
     }
-    const content = arr.join('<br>');
+    const customEv = arr.map((elem) => {
+        let time = elem._time;
+        let rt!: number;
+        if (bpm) {
+            time = bpm.adjustTime(time);
+            rt = bpm.toRealTime(time);
+        }
+        let keyArr = [];
+        for (const key in elem._data) {
+            if (key == '_duration' || key == '_easing' || key == '_track') {
+                continue;
+            }
+            let k = NEDataAbbr[key as keyof typeof NEDataAbbr];
+            if (elem._data[key as keyof NECustomEventData] != null) {
+                keyArr.push(k);
+            }
+        }
+        return `${elem._time}${rt ? ' | ' + toMMSS(rt) : ''} -- ${elem._type} -> [${keyArr.join(
+            ''
+        )}]${elem._data._track ? `(${elem._data._track})` : ''}`;
+    });
+    const content = customEv.join('<br>');
     displayTableRow(htmlTableCustomEvents, content);
 };
 
@@ -329,11 +372,15 @@ export const setDiffInfoTable = (mapData: beatmap.map.MapDataSet): void => {
             : null;
         setTimeSpend(mapData._data._customData._time);
         setBookmarks(mapData._data._customData._bookmarks, bpm);
+        setEnvironmentEnhancement(mapData._data._customData._environment);
+        setPointDefinitions(mapData._data._customData._pointDefinitions);
+        setCustomEvents(mapData._data._customData._customEvents, bpm);
     }
 };
 
 function contributorsSelectHandler(ev: Event): void {
     if (!savedData._contributors) {
+        console.error(logPrefix + 'no saved data for contributors');
         return;
     }
     const target = ev.target as HTMLSelectElement;

@@ -13,5 +13,11 @@ interface SavedData {
     [key: string]: any;
 }
 
-const savedData: SavedData = {};
+let savedData: SavedData = {};
+
+// TODO: kinda cheap solution, but idk if it's problematic?
+export const clearData = (): void => {
+    savedData = {};
+};
+
 export default savedData;

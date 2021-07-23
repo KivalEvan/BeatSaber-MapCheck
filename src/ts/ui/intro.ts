@@ -1,11 +1,12 @@
 import uiLoading from './loading';
-import { downloadFromID, downloadFromURL } from '../loadMap';
+import { downloadFromID, downloadFromURL, extractZip } from '../loadMap';
 
 const logPrefix = 'UI Intro: ';
 
 const htmlInputURL = document.querySelector<HTMLInputElement>('.input__intro-url');
 const htmlInputID = document.querySelector<HTMLInputElement>('.input__intro-id');
 const htmlInputSearchButton = document.querySelector<HTMLInputElement>('.input__search-button');
+const htmlInputFile = document.querySelector<HTMLInputElement>('.input__file');
 const htmlInputFileZone = document.querySelector<HTMLInputElement>('.input__file-zone');
 
 if (htmlInputURL) {
@@ -23,12 +24,16 @@ if (htmlInputSearchButton) {
 } else {
     console.error(logPrefix + 'search button is missing');
 }
-if (htmlInputFileZone) {
-    htmlInputFileZone.addEventListener('change', inputFileHandler);
-    htmlInputFileZone.addEventListener('dragover', dragOverHandler);
-    htmlInputFileZone.addEventListener('drop', inputFileDropHandler);
+if (htmlInputFile) {
+    htmlInputFile.addEventListener('change', inputFileHandler);
 } else {
-    console.error(logPrefix + 'file zone is missing');
+    console.error(logPrefix + 'file input is missing');
+}
+if (htmlInputFileZone) {
+    htmlInputFileZone.addEventListener('drop', inputFileDropHandler);
+    htmlInputFileZone.addEventListener('dragover', dragOverHandler);
+} else {
+    console.error(logPrefix + 'file drop zone is missing');
 }
 
 function introInputTextHandler(ev: KeyboardEvent): void {
@@ -59,18 +64,23 @@ function inputFileHandler(ev: Event): void {
     const target = ev.target as HTMLInputElement;
     uiLoading.status('info', 'Reading file input', 0);
     const file = target.files ? target.files[0] : null;
-    if (file === undefined || file === null) {
-        uiLoading.status('info', 'No file input', 0);
-        throw new Error('No file input');
-    }
-    if (file && (file.name.substr(-4) === '.zip' || file.name.substr(-4) === '.bsl')) {
-        const fr = new FileReader();
-        fr.readAsArrayBuffer(file);
-        fr.addEventListener('load', function (e) {
-            // extractZip(target.result);
-        });
-    } else {
-        uiLoading.status('info', 'Unsupported file format, please enter zip file', 0);
+    try {
+        if (file == null) {
+            uiLoading.status('info', 'No file input', 0);
+            throw new Error('No file input');
+        }
+        if (file && (file.name.substr(-4) === '.zip' || file.name.substr(-4) === '.bsl')) {
+            const fr = new FileReader();
+            fr.readAsArrayBuffer(file);
+            fr.addEventListener('load', () => {
+                extractZip(file);
+            });
+        } else {
+            throw new Error('Unsupported file format, please enter zip file');
+        }
+    } catch (err) {
+        uiLoading.status('error', err, 0);
+        console.error(err);
     }
 }
 
@@ -79,24 +89,25 @@ function inputFileDropHandler(ev: DragEvent): void {
     ev.stopPropagation();
     try {
         if (ev.dataTransfer == null) {
-            throw new Error('null');
+            throw new Error('No file input');
         }
         if (ev.dataTransfer.items) {
             if (ev.dataTransfer.items[0].kind === 'file') {
-                let file = ev.dataTransfer.items[0].getAsFile();
+                let file = ev.dataTransfer.items[0].getAsFile() as File;
                 if (file && (file.name.substr(-4) === '.zip' || file.name.substr(-4) === '.bsl')) {
                     const fr = new FileReader();
                     fr.readAsArrayBuffer(file);
-                    fr.addEventListener('load', function (e) {
-                        // extractZip(e.target.result);
+                    fr.addEventListener('load', () => {
+                        extractZip(file);
                     });
                 } else {
-                    uiLoading.status('info', 'Unsupported file format, please enter zip file', 0);
+                    throw new Error('Unsupported file format, please enter zip file');
                 }
             }
         }
     } catch (err) {
-        console.log(err);
+        uiLoading.status('error', err, 0);
+        console.error(err);
     }
 }
 

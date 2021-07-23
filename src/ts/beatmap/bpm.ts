@@ -85,10 +85,6 @@ export class BeatPerMinute {
     }
 }
 
-export const create = (
-    bpm: number,
-    bpmChange: BPMChange[] = [],
-    offset: number = 0
-): BeatPerMinute => {
+export const create = (bpm: number, bpmChange?: BPMChange[], offset?: number): BeatPerMinute => {
     return new BeatPerMinute(bpm, bpmChange, offset);
 };

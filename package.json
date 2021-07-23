@@ -21,10 +21,12 @@
     },
     "homepage": "https://github.com/KivalEvan/BeatSaber-MapCheck#readme",
     "dependencies": {
-        "jszip": "^3.6.0"
+        "jszip": "^3.6.0",
+        "sanitize-html": "^2.4.0"
     },
     "devDependencies": {
         "@types/jest": "^26.0.23",
+        "@types/sanitize-html": "^2.3.2",
         "css-loader": "^5.2.6",
         "jest": "^27.0.6",
         "mini-css-extract-plugin": "^2.0.0",

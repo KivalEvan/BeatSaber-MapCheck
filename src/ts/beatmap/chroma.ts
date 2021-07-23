@@ -2,6 +2,19 @@ type LookupMethod = 'Regex' | 'Exact' | 'Contains';
 type Array3DPoint = [number, number, number];
 type ArrayColor = [number, number, number, number?];
 
+export enum ChromaDataEnvAbbr {
+    _id = 'Ct',
+    _lookupMethod = 'Lm',
+    _duplicate = 'D',
+    _active = 'A',
+    _scale = 'S',
+    _position = 'P',
+    _localPosition = 'Lp',
+    _rotation = 'R',
+    _localRotation = 'Lr',
+    _track = 'T',
+}
+
 export interface ChromaEnvironment {
     _id: string;
     _lookupMethod: LookupMethod;
@@ -13,6 +26,10 @@ export interface ChromaEnvironment {
     _rotation: Array3DPoint;
     _localRotation: Array3DPoint;
     _track: string;
+}
+
+export interface CCustomData {
+    _environment?: ChromaEnvironment[];
 }
 
 export interface ChromaEnvironmentOld {
@@ -65,8 +82,7 @@ export interface ChromaEventZoom {
     _step?: number;
 }
 
-export interface ChromaEvent
-    extends ChromaEventLaser,
-        ChromaEventLight,
-        ChromaEventRotation,
-        ChromaEventZoom {}
+export type ChromaEvent = ChromaEventLaser &
+    ChromaEventLight &
+    ChromaEventRotation &
+    ChromaEventZoom;

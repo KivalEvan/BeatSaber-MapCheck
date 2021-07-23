@@ -39,6 +39,8 @@
         &-element {
             display: block;
             max-height: 4rem;
+            word-wrap: break-word;
+            word-break: break-all;
             overflow: auto;
         }
     }

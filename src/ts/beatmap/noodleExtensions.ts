@@ -15,6 +15,24 @@ type EventType =
     | 'AssignTrackParent'
     | 'AssignPlayerToTrack';
 
+export enum NEDataAbbr {
+    _childrenTracks = 'Ct',
+    _color = 'C',
+    _definitePosition = 'Dp',
+    _dissolve = 'D',
+    _dissolveArrow = 'Da',
+    _duration = 'Dur',
+    _easing = 'E',
+    _interactable = 'I',
+    _localRotation = 'Lr',
+    _parentTrack = 'Pt',
+    _position = 'P',
+    _rotation = 'R',
+    _scale = 'S',
+    _time = 'T',
+    _track = 'Tr',
+}
+
 interface NEObject {
     _position?: Array2DPoint;
     _rotation?: Array3DPoint;
@@ -111,8 +129,8 @@ export interface NEAnimation {
     _time?: string | ArrayPercentPointDefinition[];
 }
 
-export type NECustomEventData =
-    | NECustomEventDataAnimateTrack
-    | NECustomEventDataAssignPathAnimation
-    | NECustomEventDataAssignPathAnimation
-    | NECustomEventDataAssignPlayerToTrack;
+export type NECustomEventData = NECustomEventDataAnimateTrack &
+    NECustomEventDataAssignPathAnimation &
+    NECustomEventDataAssignPathAnimation &
+    NECustomEventDataAssignTrackParent &
+    NECustomEventDataAssignPlayerToTrack;
