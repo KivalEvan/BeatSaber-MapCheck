@@ -39,12 +39,12 @@ export const switchHeader = (bool: boolean): void => {
     !bool ? htmlMetadata.classList.add('hidden') : htmlMetadata.classList.remove('hidden');
 };
 
-export const setCoverImage = (src: string): void => {
+export const setCoverImage = (src: string | null): void => {
     if (!htmlCoverImage) {
         console.error(logPrefix + 'missing HTML element for cover image');
         return;
     }
-    htmlCoverImage.src = src;
+    htmlCoverImage.src = src || '/assets/unknown.jpg';
 };
 
 export const setCoverLink = (url?: string, id?: string): void => {
@@ -113,4 +113,11 @@ export const setSongDuration = (num: number): void => {
         return;
     }
     htmlMetadataSongDuration.textContent = toMMSS(num);
+};
+
+export const reset = (): void => {
+    switchHeader(false);
+    setCoverImage(null);
+    setCoverLink();
+    setSongDuration(0);
 };

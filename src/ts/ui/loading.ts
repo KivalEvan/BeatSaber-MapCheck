@@ -30,9 +30,6 @@ export const status = (
         : htmlLoadingBar.classList.remove(htmlLoadingBarDownload);
 };
 
-export const reset = (): void => {};
-
-export default {
-    status,
-    reset,
+export const reset = (): void => {
+    status('info', 'No map loaded', 0);
 };

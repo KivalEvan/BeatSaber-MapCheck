@@ -9,13 +9,14 @@ interface SavedData {
     _mapData?: MapDataSet[];
     _contributors?: Contributor[];
     _analysis?: any;
+    _duration?: number;
     _bpmChanges?: BPMChange[];
     [key: string]: any;
 }
 
 let savedData: SavedData = {};
 
-// TODO: kinda cheap solution, but idk if it's problematic?
+// FIXME: kinda cheap solution, but idk if it's problematic?
 export const clearData = (): void => {
     savedData = {};
 };

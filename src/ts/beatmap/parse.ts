@@ -1,5 +1,5 @@
 import { CharacteristicOrder } from './characteristic';
-import { DifficultyName } from './difficulty';
+import { DifficultyRank } from './difficulty';
 import { BeatmapInfo } from './info';
 import { BeatmapData } from './map';
 
@@ -12,45 +12,56 @@ export const info = (mapInfo: BeatmapInfo): BeatmapInfo => {
             CharacteristicOrder[b._beatmapCharacteristicName]
     );
     mapInfo._difficultyBeatmapSets.forEach((mode) => {
+        let num = 0;
+        mode._difficultyBeatmaps.forEach((a) => {
+            if (a._difficultyRank - num <= 0) {
+                console.error(a._difficulty + ' may be unordered');
+            }
+            if (DifficultyRank[a._difficulty] !== a._difficultyRank) {
+                console.error(a._difficulty + ' has invalid rank');
+            }
+            num = a._difficultyRank;
+        });
         mode._difficultyBeatmaps.sort((a, b) => b._difficultyRank - a._difficultyRank);
     });
 
     return mapInfo;
 };
 
-export const map = (difficultyData: BeatmapData, difficultyName: DifficultyName): BeatmapData => {
+export const difficulty = (difficultyData: BeatmapData): BeatmapData => {
     const { _notes, _obstacles, _events, _waypoints } = difficultyData;
     _notes.forEach((obj) => {
         for (const key in obj) {
             if (obj[key] === null) {
-                throw new Error('contain null or undefined value in _notes object');
+                throw new Error('contain null value in _notes object');
             }
         }
     });
     _obstacles.forEach((obj) => {
         for (const key in obj) {
             if (obj[key] === null) {
-                throw new Error('contain null or undefined value in _obstacles object');
+                throw new Error('contain null value in _obstacles object');
             }
         }
     });
     _events.forEach((obj) => {
         for (const key in obj) {
             if (obj[key] === null) {
-                throw new Error('contain null or undefined value in _events object');
+                throw new Error('contain null value in _events object');
             }
         }
     });
     _waypoints?.forEach((obj) => {
         for (const key in obj) {
             if (obj[key] === null) {
-                throw new Error('contain null or undefined value in _waypoints object');
+                throw new Error('contain null value in _waypoints object');
             }
         }
     });
     _notes.sort((a, b) => a._time - b._time);
     _obstacles.sort((a, b) => a._time - b._time);
     _events.sort((a, b) => a._time - b._time);
+    _waypoints?.sort((a, b) => a._time - b._time);
 
     return difficultyData;
 };

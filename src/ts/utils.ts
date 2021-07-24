@@ -65,3 +65,9 @@ export const sanitizeBeatSaverID = (id: string): string => {
     }
     throw new Error('Invalid ID');
 };
+
+export const removeOptions = (selectElement: HTMLSelectElement): void => {
+    for (let i = selectElement.options.length - 1; i >= 0; i--) {
+        selectElement.remove(i);
+    }
+};

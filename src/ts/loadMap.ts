@@ -1,13 +1,11 @@
 import JSZip from 'jszip';
-import uiLoading from './ui/loading';
+import * as uiLoading from './ui/loading';
 import { disableInput } from './ui/input';
 import * as uiInfo from './ui/info';
 import * as uiTools from './ui/tools';
 import * as uiStats from './ui/stats';
 import * as uiHeader from './ui/header';
-import { info as parseInfo, map as parseMap } from './beatmap/parse';
-import { BeatmapInfo } from './beatmap/info';
-import { BeatmapData } from './beatmap/map';
+import * as beatmap from './beatmap';
 import analyse from './tools/analyse';
 import { round, sanitizeBeatSaverID, sanitizeURL } from './utils';
 import settings from './settings';
@@ -148,9 +146,9 @@ export const loadMap = async (mapZip: JSZip) => {
     if (fileInfo) {
         disableInput(true);
         let infoFileStr = await fileInfo.async('string');
-        savedData._mapInfo = (await JSON.parse(infoFileStr)) as BeatmapInfo;
+        savedData._mapInfo = (await JSON.parse(infoFileStr)) as beatmap.info.BeatmapInfo;
 
-        parseInfo(savedData._mapInfo);
+        beatmap.parse.info(savedData._mapInfo);
         uiInfo.setInfo(savedData._mapInfo);
 
         // load cover image
@@ -224,8 +222,17 @@ export const loadMap = async (mapZip: JSZip) => {
                     console.log(
                         `loading ${mapSet[i]._beatmapCharacteristicName} ${diffInfo._difficulty}`
                     );
-                    let diffFileStr: BeatmapData = JSON.parse(await diffFile.async('string'));
-                    const mapData = parseMap(diffFileStr, diffInfo._difficulty);
+                    let diffFileStr: beatmap.map.BeatmapData = JSON.parse(
+                        await diffFile.async('string')
+                    );
+                    let mapData: beatmap.map.BeatmapData;
+                    try {
+                        mapData = beatmap.parse.difficulty(diffFileStr);
+                    } catch (err) {
+                        throw new Error(
+                            `${mapSet[i]._beatmapCharacteristicName} ${diffInfo._difficulty} ${err}`
+                        );
+                    }
                     savedData._mapData?.push({
                         _mode: mapSet[i]._beatmapCharacteristicName,
                         _difficulty: diffInfo._difficulty,

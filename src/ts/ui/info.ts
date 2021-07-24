@@ -1,6 +1,6 @@
 // may god help you maintain these
 import * as uiHeader from './header';
-import { toMMSS } from '../utils';
+import { removeOptions, toMMSS } from '../utils';
 import * as beatmap from '../beatmap';
 import savedData from '../savedData';
 import { ChromaDataEnvAbbr, ChromaEnvironment } from '../beatmap/chroma';
@@ -59,17 +59,25 @@ if (
     console.error(logPrefix + 'table info component is missing part');
 }
 
-export const setLevelAuthor = (str: string): void => {
+export const setLevelAuthor = (str?: string): void => {
     if (!htmlInfoLevelAuthor) {
         console.error(logPrefix + 'missing HTML element for level author');
+        return;
+    }
+    if (!str) {
+        htmlInfoLevelAuthor.textContent = '';
         return;
     }
     htmlInfoLevelAuthor.textContent = 'Mapped by ' + str;
 };
 
-export const setEnvironment = (str: string): void => {
+export const setEnvironment = (str?: string): void => {
     if (!htmlInfoEnvironment) {
         console.error(logPrefix + 'missing HTML element for environment');
+        return;
+    }
+    if (!str) {
+        htmlInfoEnvironment.textContent = '';
         return;
     }
     htmlInfoEnvironment.textContent =
@@ -78,7 +86,7 @@ export const setEnvironment = (str: string): void => {
         ] || 'Unknown') + ' Environment';
 };
 
-export const setEditors = (obj: beatmap.editor.Editor | undefined): void => {
+export const setEditors = (obj?: beatmap.editor.Editor): void => {
     if (!htmlInfoEditors) {
         console.error(logPrefix + 'missing HTML element for editor');
         return;
@@ -97,7 +105,7 @@ export const setEditors = (obj: beatmap.editor.Editor | undefined): void => {
     htmlInfoEditors.textContent = text;
 };
 
-const setContributorsImage = (src: string | undefined): void => {
+const setContributorsImage = (src?: string): void => {
     if (!htmlInfoContributorsImage) {
         console.error(logPrefix + 'missing HTML element for contributor image');
         return;
@@ -127,13 +135,14 @@ export const setContributors = (obj: beatmap.contributor.Contributor): void => {
     setContributorsRole(obj._role);
 };
 
-export const populateContributors = (arr: beatmap.contributor.Contributor[] | undefined): void => {
+export const populateContributors = (arr?: beatmap.contributor.Contributor[]): void => {
     if (!htmlInfoContributors || !htmlInfoContributorsSelect) {
         console.error(logPrefix + 'missing HTML element for contributor');
         return;
     }
     if (htmlInfoContributors && (!arr || !arr.length)) {
         htmlInfoContributors.classList.add('hidden');
+        removeOptions(htmlInfoContributorsSelect);
         return;
     }
     if (arr) {
@@ -168,12 +177,12 @@ const displayTableRow = <T extends HTMLElement>(elem: T, content: string): void 
     elem.classList.remove('hidden');
 };
 
-export const setTimeSpend = (num: number | undefined): void => {
+export const setTimeSpend = (num?: number): void => {
     if (!htmlTableTimeSpend) {
         console.error(logPrefix + 'missing table row for time spend');
         return;
     }
-    if (num === undefined || num === null) {
+    if (num == null) {
         hideTableRow(htmlTableTimeSpend);
         return;
     }
@@ -181,12 +190,12 @@ export const setTimeSpend = (num: number | undefined): void => {
     displayTableRow(htmlTableTimeSpend, content);
 };
 
-export const setRequirements = (arr: string[] | undefined): void => {
+export const setRequirements = (arr?: string[]): void => {
     if (!htmlTableRequirements) {
         console.error(logPrefix + 'missing table row for requirements');
         return;
     }
-    if (arr == undefined || !arr.length) {
+    if (arr == null || !arr.length) {
         hideTableRow(htmlTableRequirements);
         return;
     }
@@ -194,12 +203,12 @@ export const setRequirements = (arr: string[] | undefined): void => {
     displayTableRow(htmlTableRequirements, content);
 };
 
-export const setSuggestions = (arr: string[] | undefined): void => {
+export const setSuggestions = (arr?: string[]): void => {
     if (!htmlTableSuggestions) {
         console.error(logPrefix + 'missing table row for suggestions');
         return;
     }
-    if (arr == undefined || !arr.length) {
+    if (arr == null || !arr.length) {
         hideTableRow(htmlTableSuggestions);
         return;
     }
@@ -207,12 +216,12 @@ export const setSuggestions = (arr: string[] | undefined): void => {
     displayTableRow(htmlTableSuggestions, content);
 };
 
-export const setInformation = (arr: string[] | undefined): void => {
+export const setInformation = (arr?: string[]): void => {
     if (!htmlTableInformation) {
         console.error(logPrefix + 'missing table row for information');
         return;
     }
-    if (arr == undefined || !arr.length) {
+    if (arr == null || !arr.length) {
         hideTableRow(htmlTableInformation);
         return;
     }
@@ -220,12 +229,12 @@ export const setInformation = (arr: string[] | undefined): void => {
     displayTableRow(htmlTableInformation, content);
 };
 
-export const setWarnings = (arr: string[] | undefined): void => {
+export const setWarnings = (arr?: string[]): void => {
     if (!htmlTableWarnings) {
         console.error(logPrefix + 'missing table row for warnings');
         return;
     }
-    if (arr == undefined || !arr.length) {
+    if (arr == null || !arr.length) {
         hideTableRow(htmlTableWarnings);
         return;
     }
@@ -234,14 +243,14 @@ export const setWarnings = (arr: string[] | undefined): void => {
 };
 
 export const setBookmarks = (
-    arr: beatmap.bookmark.Bookmark[] | undefined,
+    arr?: beatmap.bookmark.Bookmark[],
     bpm?: beatmap.bpm.BeatPerMinute | null
 ): void => {
     if (!htmlTableBookmarks) {
         console.error(logPrefix + 'missing table row for bookmarks');
         return;
     }
-    if (arr == undefined || !arr.length) {
+    if (arr == null || !arr.length) {
         hideTableRow(htmlTableBookmarks);
         return;
     }
@@ -261,14 +270,12 @@ export const setBookmarks = (
 };
 
 // this implementation looks hideous but whatever
-export const setEnvironmentEnhancement = (
-    arr: beatmap.chroma.ChromaEnvironment[] | undefined
-): void => {
+export const setEnvironmentEnhancement = (arr?: beatmap.chroma.ChromaEnvironment[]): void => {
     if (!htmlTableEnvironmentEnhancement) {
         console.error(logPrefix + 'missing table row for environment enhancement');
         return;
     }
-    if (arr == undefined || !arr.length) {
+    if (arr == null || !arr.length) {
         hideTableRow(htmlTableEnvironmentEnhancement);
         return;
     }
@@ -291,14 +298,12 @@ export const setEnvironmentEnhancement = (
     displayTableRow(htmlTableEnvironmentEnhancement, content);
 };
 
-export const setPointDefinitions = (
-    arr: beatmap.noodleExtensions.NEPointDefinition[] | undefined
-): void => {
+export const setPointDefinitions = (arr?: beatmap.noodleExtensions.NEPointDefinition[]): void => {
     if (!htmlTablePointDefinitions) {
         console.error(logPrefix + 'missing table row for point definitions');
         return;
     }
-    if (arr == undefined || !arr.length) {
+    if (arr == null || !arr.length) {
         hideTableRow(htmlTablePointDefinitions);
         return;
     }
@@ -310,14 +315,14 @@ export const setPointDefinitions = (
 };
 
 export const setCustomEvents = (
-    arr: beatmap.noodleExtensions.NECustomEvent[] | undefined,
+    arr?: beatmap.noodleExtensions.NECustomEvent[],
     bpm?: beatmap.bpm.BeatPerMinute | null
 ): void => {
     if (!htmlTableCustomEvents) {
         console.error(logPrefix + 'missing table row for custom events');
         return;
     }
-    if (arr == undefined || !arr.length) {
+    if (arr == null || !arr.length) {
         hideTableRow(htmlTableCustomEvents);
         return;
     }
@@ -386,3 +391,19 @@ function contributorsSelectHandler(ev: Event): void {
     const target = ev.target as HTMLSelectElement;
     setContributors(savedData._contributors[parseInt(target.value)]);
 }
+
+export const reset = (): void => {
+    setLevelAuthor('');
+    setEnvironment('');
+    setEditors();
+    populateContributors();
+    setTimeSpend();
+    setRequirements();
+    setSuggestions();
+    setInformation();
+    setWarnings();
+    setBookmarks();
+    setEnvironmentEnhancement();
+    setPointDefinitions();
+    setCustomEvents();
+};

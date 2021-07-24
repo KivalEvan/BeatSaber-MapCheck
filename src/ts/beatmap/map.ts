@@ -1,6 +1,5 @@
 import { CharacteristicName } from './characteristic';
 import {
-    CustomData,
     CustomDataDifficulty,
     CustomDataEvent,
     CustomDataNote,
@@ -37,9 +36,23 @@ export interface Event {
     [key: string]: any;
 }
 
-// TODO: figure the property waypoint contains
+// as far as i know, it does not have customData as of yet
 export interface Waypoint {
+    _time: number;
+    _lineIndex: number;
+    _lineLayer: number;
+    _offsetDirection: number;
     [key: string]: any;
+}
+
+// yea i dont even know but it exist
+export interface SpecialEventsKeywordFilters {
+    _keywords: SpecialEventsKeywordFiltersKeywords[];
+}
+
+export interface SpecialEventsKeywordFiltersKeywords {
+    _keyword: string;
+    _specialEvents: number[];
 }
 
 export interface BeatmapData {
@@ -48,6 +61,7 @@ export interface BeatmapData {
     _obstacles: Obstacle[];
     _events: Event[];
     _waypoints?: Waypoint[];
+    _specialEventsKeywordFilters?: SpecialEventsKeywordFilters;
     _customData?: CustomDataDifficulty;
 }
 

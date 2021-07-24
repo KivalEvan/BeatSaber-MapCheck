@@ -1,4 +1,8 @@
+import { MapDataSet } from '../beatmap/map';
+import * as uiAccordion from './accordion';
+
 export const populate = (): void => {};
+
 export const clear = (): void => {};
 
-export default { populate, clear };
+export const reset = (): void => {};

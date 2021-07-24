@@ -1,6 +1,7 @@
 import { DifficultyRename } from '../beatmap/difficulty';
 import { BeatmapInfo, BeatmapInfoSet } from '../beatmap/info';
 import savedData from '../savedData';
+import { removeOptions } from '../utils';
 import { setDiffInfoTable } from './info';
 
 const htmlToolsSelectMode = document.querySelectorAll<HTMLSelectElement>('.tools__select-mode');
@@ -20,7 +21,7 @@ export const setDifficultyLabel = (str: string): void => {
     htmlToolsDifficultyLabel.forEach((elem) => (elem.textContent = str));
 };
 
-const populateSelectDiff = (mapSet: BeatmapInfoSet | undefined): void => {
+const populateSelectDiff = (mapSet?: BeatmapInfoSet): void => {
     if (!mapSet) {
         return;
     }
@@ -59,7 +60,12 @@ const populateSelectDiff = (mapSet: BeatmapInfoSet | undefined): void => {
     });
 };
 
-export const populateSelect = (mapInfo: BeatmapInfo): void => {
+export const populateSelect = (mapInfo?: BeatmapInfo): void => {
+    if (!mapInfo) {
+        htmlToolsSelectMode.forEach((elem) => removeOptions(elem));
+        htmlToolsSelectDifficulty.forEach((elem) => removeOptions(elem));
+        return;
+    }
     let first = true;
     mapInfo._difficultyBeatmapSets.forEach((mode) => {
         htmlToolsSelectMode.forEach((elem) => {
@@ -114,7 +120,7 @@ function selectDifficultyHandler(ev: Event): void {
     }
 }
 
-export default {
-    displayOutput,
-    populateSelect,
+export const reset = (): void => {
+    setDifficultyLabel('Difficulty Label');
+    populateSelect();
 };
