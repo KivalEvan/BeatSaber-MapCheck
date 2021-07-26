@@ -1,10 +1,10 @@
 import JSZip from 'jszip';
+import * as uiHeader from './ui/header';
 import * as uiLoading from './ui/loading';
-import { disableInput } from './ui/input';
 import * as uiInfo from './ui/info';
 import * as uiTools from './ui/tools';
 import * as uiStats from './ui/stats';
-import * as uiHeader from './ui/header';
+import { disableInput } from './ui/input';
 import * as beatmap from './beatmap';
 import analyse from './tools/analyse';
 import { round, sanitizeBeatSaverID, sanitizeURL } from './utils';
@@ -194,6 +194,7 @@ export const loadMap = async (mapZip: JSZip) => {
                 .decodeAudioData(audioBuffer)
                 .then(function (buffer) {
                     let duration = buffer.duration;
+                    savedData._duration = duration;
                     uiHeader.setSongDuration(duration);
                     flag.map.load.audio = true;
                 })
@@ -220,7 +221,7 @@ export const loadMap = async (mapZip: JSZip) => {
                 const diffFile = mapZip.file(diffInfo._beatmapFilename);
                 if (diffFile) {
                     console.log(
-                        `loading ${mapSet[i]._beatmapCharacteristicName} ${diffInfo._difficulty}`
+                        `parsing ${mapSet[i]._beatmapCharacteristicName} ${diffInfo._difficulty}`
                     );
                     let diffFileStr: beatmap.map.BeatmapData = JSON.parse(
                         await diffFile.async('string')

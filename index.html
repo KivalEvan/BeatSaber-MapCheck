@@ -84,14 +84,14 @@
         <div class="panel panel--large panel--offset-half">
           <div class="panel panel--max panel--flex">
             <div class="panel panel--medium panel--flex">
-              <label class="tools__label tools__label-select" for="tools__select-mode-1">
+              <label class="tools__label tools__label-select input-toggle" for="tools__select-mode-1">
                 <span>Characteristic:</span>
               </label>
               <select class="tools__select tools__select-mode" id="tools__select-mode-1">
               </select>
             </div>
             <div class="panel panel--medium panel--flex">
-              <label class="tools__label tools__label-select" for="tools__select-difficulty-1">
+              <label class="tools__label tools__label-select input-toggle" for="tools__select-difficulty-1">
                 <span>Difficulty:</span>
               </label>
               <select class="tools__select tools__select-difficulty" id="tools__select-difficulty-1">
@@ -168,22 +168,22 @@
             <label class="tools__label tools__label-tab tools__label-other unselectable"
               for="tools__other">Other</label>
           </div>
-          <div class="tools__tab" id="tools__note-content">
+          <div class="tools__tab tools__note-content">
             note content
           </div>
-          <div class="tools__tab" id="tools__obstacle-content">
+          <div class="tools__tab tools__obstacle-content">
             obstacle content
           </div>
-          <div class="tools__tab" id="tools__event-content">
+          <div class="tools__tab tools__event-content">
             event content
           </div>
-          <div class="tools__tab" id="tools__other-content">
+          <div class="tools__tab tools__other-content">
             other content
           </div>
           <div class="tools__apply">
             <span>Apply changes to:</span>
-            <input type="button" class="input-toggle" id="tools__apply-this" value="This difficulty">
-            <input type="button" class="input-toggle" id="tools__apply-this" value="All difficulty">
+            <input type="button" class="tools__apply-this input-toggle" value="This difficulty">
+            <input type="button" class="tools__apply-all input-toggle" value="All difficulty">
           </div>
         </div>
         <div class="panel panel--medium panel--offset-half">
@@ -192,23 +192,23 @@
               <label class="tools__label tools__label-select" for="tools__select-mode-2">
                 <span>Characteristic:</span>
               </label>
-              <select class="tools__select tools__select-mode" id="tools__select-mode-2">
+              <select class="tools__select tools__select-mode input-toggle" id="tools__select-mode-2">
               </select>
             </div>
             <div class="panel panel--medium panel--flex">
               <label class="tools__label tools__label-select" for="tools__select-difficulty-2">
                 <span>Difficulty:</span>
               </label>
-              <select class="tools__select tools__select-difficulty" id="tools__select-difficulty-2">
+              <select class="tools__select tools__select-difficulty input-toggle" id="tools__select-difficulty-2">
               </select>
             </div>
           </div>
           <span class="tools__output-text">Map:</span><br>
-          <div class="tools__output-box" id="tools__output-diff">
+          <div class="tools__output-box tools__output-diff">
             No output.
           </div>
           <span class="tools__output-text">General:</span><br>
-          <div class="tools__output-box" id="tools__output-map">
+          <div class="tools__output-box tools__output-general">
             No output.
           </div>
         </div>
@@ -219,21 +219,7 @@
       <label class="accordion__label accordion__label--medium unselectable" for="accordion__stats">
         <span>Stats</span>
       </label>
-      <div class="accordion__collapsible">
-        <div class="stats__mode">Standard</div>
-        <div class="accordion__collapsible" id="stats__mode-standard-content">
-          <input type="checkbox" class="accordion__button" id="stats__mode-standard-expertplus">
-          <label class="accordion__label unselectable bg--difficulty-expertplus" for="stats__mode-standard-expertplus">
-            <span>Expert+</span>
-          </label>
-          <div class="accordion__collapsible-flex" id="stats__mode-standard-expertplus-content">
-            <div class="panel panel--tiny">hi</div>
-            <div class="panel panel--tiny">hi</div>
-            <div class="panel panel--tiny">hi</div>
-            <div class="panel panel--tiny">hi</div>
-          </div>
-        </div>
-      </div>
+      <div class="accordion__collapsible"></div>
     </div>
     <div class="accordion" id="settings">
       <input type="checkbox" class="accordion__button" id="accordion__settings">
@@ -287,7 +273,7 @@
             <option value="Light">Light</option>
             <option value="Monochrome">Monochrome</option>
           </select><br>
-          <span>Show on start:</span><br>
+          <span>Show on launch:</span><br>
           <input type="checkbox" class="settings__checkbox settings__show" id="settings__show-info">
           <label for="settings__show-info">
             <span>Information</span>

@@ -1,4 +1,4 @@
-import { BeatmapData } from '../../beatmap';
+import * as beatmap from '../../beatmap';
 import { MapSettings, Tool } from '..';
 
 const tool: Tool = {

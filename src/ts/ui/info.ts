@@ -105,7 +105,7 @@ export const setEditors = (obj?: beatmap.editor.Editor): void => {
     htmlInfoEditors.textContent = text;
 };
 
-const setContributorsImage = (src?: string): void => {
+const setContributorsImage = (src: string | null): void => {
     if (!htmlInfoContributorsImage) {
         console.error(logPrefix + 'missing HTML element for contributor image');
         return;
@@ -130,7 +130,7 @@ const setContributorsRole = (str: string): void => {
 };
 
 export const setContributors = (obj: beatmap.contributor.Contributor): void => {
-    setContributorsImage('data:image;base64,' + obj._base64);
+    setContributorsImage(obj._base64 ? 'data:image;base64,' + obj._base64 : null);
     setContributorsName(obj._name);
     setContributorsRole(obj._role);
 };

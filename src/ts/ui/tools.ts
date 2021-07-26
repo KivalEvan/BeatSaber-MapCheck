@@ -9,6 +9,8 @@ const htmlToolsSelectDifficulty = document.querySelectorAll<HTMLSelectElement>(
     '.tools__select-difficulty'
 );
 const htmlToolsDifficultyLabel = document.querySelectorAll<HTMLElement>('.difficulty__label');
+const htmlToolsOutputDifficulty = document.querySelector<HTMLElement>('.tools__output-diff');
+const htmlToolsOutputGeneral = document.querySelector<HTMLElement>('.tools__output-general');
 
 htmlToolsSelectMode.forEach((elem) => elem.addEventListener('change', selectModeHandler));
 htmlToolsSelectDifficulty.forEach((elem) =>
