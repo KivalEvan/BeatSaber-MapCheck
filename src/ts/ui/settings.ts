@@ -10,6 +10,12 @@ const htmlSettingsClear = document.querySelector<HTMLInputElement>('.settings__c
 
 if (htmlSettingsTheme) {
     htmlSettingsTheme.addEventListener('change', themeChangeHandler);
+    uiTheme.list.forEach((th) => {
+        const optTheme = document.createElement('option');
+        optTheme.value = th;
+        optTheme.textContent = th;
+        htmlSettingsTheme.add(optTheme);
+    });
 } else {
     console.error(logPrefix + 'theme select is missing');
 }

@@ -44,7 +44,7 @@ export const setCoverImage = (src: string | null): void => {
         console.error(logPrefix + 'missing HTML element for cover image');
         return;
     }
-    htmlCoverImage.src = src || '/assets/unknown.jpg';
+    htmlCoverImage.src = src || './assets/unknown.jpg';
 };
 
 export const setCoverLink = (url?: string, id?: string): void => {

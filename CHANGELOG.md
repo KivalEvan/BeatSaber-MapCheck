@@ -10,11 +10,12 @@
 -   Settings Tab
     -   Saves to local storage
 -   Theme
+-   Mode and difficulty ordering
+-   Partial Mapping Extensions and Noodle Extensions support
 
 ### Changed
 
 -   Codebase rewritten
--   Layout overhaul
 
 ### Planned
 

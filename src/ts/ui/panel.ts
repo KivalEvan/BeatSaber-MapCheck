@@ -9,15 +9,24 @@ enum PanelSize {
 
 type PanelOffsetType = 'normal' | 'half';
 enum PanelOffset {
+    'none' = '',
     'normal' = 'panel--offset',
     'half' = 'panel--offset-half',
 }
 
-export const create = (size: PanelSizeType, offset?: PanelOffsetType): HTMLElement => {
+export const create = (
+    size: PanelSizeType,
+    offset?: PanelOffsetType,
+    flex?: boolean,
+    column?: boolean
+): HTMLElement => {
     const htmlPanel = document.createElement('div');
     htmlPanel.className = `panel ${PanelSize[size]}`;
     if (offset) {
         htmlPanel.classList.add(PanelOffset[offset]);
+    }
+    if (flex) {
+        htmlPanel.classList.add('panel--flex' + column ? '-column' : '');
     }
 
     return htmlPanel;

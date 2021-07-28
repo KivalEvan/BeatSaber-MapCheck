@@ -58,7 +58,7 @@
     </div>
     <div class="accordion" id="info">
       <input type="checkbox" class="accordion__button" id="accordion__info">
-      <label class="accordion__label accordion__label--medium unselectable"
+      <label class="accordion__label accordion__label--medium accordion__label--upper unselectable"
         for="accordion__info"><span>Information</span></label>
       <div class="accordion__collapsible-flex">
         <div class="panel panel--small panel--offset-half">
@@ -148,7 +148,8 @@
     </div>
     <div class="accordion" id="tools">
       <input type="checkbox" class="accordion__button" id="accordion__tools">
-      <label class="accordion__label accordion__label--medium unselectable" for="accordion__tools">
+      <label class="accordion__label accordion__label--medium accordion__label--upper unselectable"
+        for="accordion__tools">
         <span>Tools</span>
       </label>
       <div class="accordion__collapsible-flex">
@@ -216,14 +217,16 @@
     </div>
     <div class="accordion" id="stats">
       <input type="checkbox" class="accordion__button" id="accordion__stats">
-      <label class="accordion__label accordion__label--medium unselectable" for="accordion__stats">
+      <label class="accordion__label accordion__label--medium accordion__label--upper unselectable"
+        for="accordion__stats">
         <span>Stats</span>
       </label>
       <div class="accordion__collapsible"></div>
     </div>
     <div class="accordion" id="settings">
       <input type="checkbox" class="accordion__button" id="accordion__settings">
-      <label class="accordion__label accordion__label--medium unselectable" for="accordion__settings">
+      <label class="accordion__label accordion__label--medium accordion__label--upper unselectable"
+        for="accordion__settings">
         <span>Settings</span>
       </label>
       <div class="accordion__collapsible-flex">
@@ -268,11 +271,7 @@
           <label for="settings__theme">
             <span>Theme:</span>
           </label>
-          <select class="settings__theme" id="settings__theme">
-            <option value="Dark">Dark</option>
-            <option value="Light">Light</option>
-            <option value="Monochrome">Monochrome</option>
-          </select><br>
+          <select class="settings__theme" id="settings__theme"></select><br>
           <span>Show on launch:</span><br>
           <input type="checkbox" class="settings__checkbox settings__show" id="settings__show-info">
           <label for="settings__show-info">

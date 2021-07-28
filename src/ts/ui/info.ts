@@ -71,7 +71,7 @@ export const setLevelAuthor = (str?: string): void => {
     htmlInfoLevelAuthor.textContent = 'Mapped by ' + str;
 };
 
-export const setEnvironment = (str?: string): void => {
+export const setEnvironment = (str?: beatmap.environment.EnvironmentName): void => {
     if (!htmlInfoEnvironment) {
         console.error(logPrefix + 'missing HTML element for environment');
         return;
@@ -81,9 +81,7 @@ export const setEnvironment = (str?: string): void => {
         return;
     }
     htmlInfoEnvironment.textContent =
-        (beatmap.environment.EnvironmentName[
-            str as keyof typeof beatmap.environment.EnvironmentName
-        ] || 'Unknown') + ' Environment';
+        (beatmap.environment.EnvironmentRename[str] || 'Unknown') + ' Environment';
 };
 
 export const setEditors = (obj?: beatmap.editor.Editor): void => {
@@ -361,7 +359,7 @@ export const setInfo = (mapInfo: beatmap.info.BeatmapInfo): void => {
     setEditors(mapInfo._customData?._editors);
 };
 
-export const setDiffInfoTable = (mapData: beatmap.map.MapDataSet): void => {
+export const setDiffInfoTable = (mapData: beatmap.map.MapSetData): void => {
     if (mapData._info?._customData) {
         setRequirements(mapData._info._customData._requirements);
         setSuggestions(mapData._info._customData._suggestions);
@@ -393,8 +391,8 @@ function contributorsSelectHandler(ev: Event): void {
 }
 
 export const reset = (): void => {
-    setLevelAuthor('');
-    setEnvironment('');
+    setLevelAuthor();
+    setEnvironment();
     setEditors();
     populateContributors();
     setTimeSpend();

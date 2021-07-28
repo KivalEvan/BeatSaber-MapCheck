@@ -14,3 +14,7 @@ export * as map from './map';
 export * as njs from './njs';
 export * as noodleExtensions from './noodleExtensions';
 export * as parse from './parse';
+export * as note from './note';
+export * as obstacle from './obstacle';
+export * as event from './event';
+export * as waypoint from './waypoint';

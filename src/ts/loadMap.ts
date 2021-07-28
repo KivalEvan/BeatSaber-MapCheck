@@ -6,7 +6,7 @@ import * as uiTools from './ui/tools';
 import * as uiStats from './ui/stats';
 import { disableInput } from './ui/input';
 import * as beatmap from './beatmap';
-import analyse from './tools/analyse';
+import * as analyse from './tools/analyse';
 import { round, sanitizeBeatSaverID, sanitizeURL } from './utils';
 import settings from './settings';
 import flag from './flag';
@@ -207,7 +207,7 @@ export const loadMap = async (mapZip: JSZip) => {
 
         // load diff map
         uiLoading.status('info', 'Parsing difficulty...', 70);
-        savedData._mapData = [];
+        savedData._mapSet = [];
         const mapSet = savedData._mapInfo._difficultyBeatmapSets;
         for (let i = mapSet.length - 1; i >= 0; i--) {
             const mapDiff = mapSet[i]._difficultyBeatmaps;
@@ -234,7 +234,7 @@ export const loadMap = async (mapZip: JSZip) => {
                             `${mapSet[i]._beatmapCharacteristicName} ${diffInfo._difficulty} ${err}`
                         );
                     }
-                    savedData._mapData?.push({
+                    savedData._mapSet?.push({
                         _mode: mapSet[i]._beatmapCharacteristicName,
                         _difficulty: diffInfo._difficulty,
                         _info: diffInfo,

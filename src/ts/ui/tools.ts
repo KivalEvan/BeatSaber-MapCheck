@@ -9,6 +9,10 @@ const htmlToolsSelectDifficulty = document.querySelectorAll<HTMLSelectElement>(
     '.tools__select-difficulty'
 );
 const htmlToolsDifficultyLabel = document.querySelectorAll<HTMLElement>('.difficulty__label');
+const htmlToolsNote = document.querySelector<HTMLElement>('.tools__note-content');
+const htmlToolsObstacle = document.querySelector<HTMLElement>('.tools__obstacle-content');
+const htmlToolsEvent = document.querySelector<HTMLElement>('.tools__event-content');
+const htmlToolsOther = document.querySelector<HTMLElement>('.tools__other-content');
 const htmlToolsOutputDifficulty = document.querySelector<HTMLElement>('.tools__output-diff');
 const htmlToolsOutputGeneral = document.querySelector<HTMLElement>('.tools__output-general');
 
@@ -37,13 +41,13 @@ const populateSelectDiff = (mapSet?: BeatmapInfoSet): void => {
         htmlToolsSelectDifficulty.forEach((elem) => {
             const optDiff = document.createElement('option');
             optDiff.value = diff._difficulty;
-            optDiff.text =
+            optDiff.textContent =
                 DifficultyRename[diff._difficulty] +
                 (diff._customData?._difficultyLabel
                     ? ' -- ' + diff._customData?._difficultyLabel
                     : '');
             if (first) {
-                const diffData = savedData._mapData?.find(
+                const diffData = savedData._mapSet?.find(
                     (el) =>
                         el._difficulty === diff._difficulty &&
                         el._mode === mapSet._beatmapCharacteristicName
@@ -73,7 +77,7 @@ export const populateSelect = (mapInfo?: BeatmapInfo): void => {
         htmlToolsSelectMode.forEach((elem) => {
             const optMode = document.createElement('option');
             optMode.value = mode._beatmapCharacteristicName;
-            optMode.text = mode._beatmapCharacteristicName;
+            optMode.textContent = mode._beatmapCharacteristicName;
             elem.add(optMode);
         });
         if (first) {
@@ -109,7 +113,7 @@ function selectDifficultyHandler(ev: Event): void {
     if (!mode) {
         throw new Error('aaaaaaaaaaaaaaaaaaa');
     }
-    const diff = savedData._mapData?.find(
+    const diff = savedData._mapSet?.find(
         (elem) =>
             elem._difficulty === target.value && elem._mode === mode._beatmapCharacteristicName
     );

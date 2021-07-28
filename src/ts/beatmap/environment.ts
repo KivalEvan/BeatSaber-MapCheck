@@ -15,7 +15,30 @@ export interface EnvironmentScheme {
     [key: string]: ColorScheme;
 }
 
-export enum EnvironmentName {
+export type EnvironmentName =
+    | 'DefaultEnvironment'
+    | 'OriginsEnvironment'
+    | 'Origins'
+    | 'TriangleEnvironment'
+    | 'NiceEnvironment'
+    | 'BigMirrorEnvironment'
+    | 'DragonsEnvironment'
+    | 'KDAEnvironment'
+    | 'MonstercatEnvironment'
+    | 'CrabRaveEnvironment'
+    | 'PanicEnvironment'
+    | 'RocketEnvironment'
+    | 'GreenDayEnvironment'
+    | 'GreenDayGrenadeEnvironment'
+    | 'TimbalandEnvironment'
+    | 'FitBeatEnvironment'
+    | 'LinkinParkEnvironment'
+    | 'BTSEnvironment'
+    | 'KaleidoscopeEnvironment'
+    | 'InterscopeEnvironment'
+    | 'GlassDesertEnvironment';
+
+export enum EnvironmentRename {
     DefaultEnvironment = 'The First',
     OriginsEnvironment = 'Origins',
     Origins = 'Origins', // because beat games

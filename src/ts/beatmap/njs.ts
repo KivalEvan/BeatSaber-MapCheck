@@ -99,3 +99,11 @@ export class NoteJumpSpeed {
 export const create = (bpm: BeatPerMinute, njs: number = 10, sdm: number = 0): NoteJumpSpeed => {
     return new NoteJumpSpeed(bpm, njs, sdm);
 };
+
+export enum FallbackNJS {
+    'ExpertPlus' = 16,
+    'Expert' = 12,
+    'Hard' = 10,
+    'Normal' = 10,
+    'Easy' = 10,
+}

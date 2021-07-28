@@ -1,49 +1,11 @@
 import { CharacteristicName } from './characteristic';
-import {
-    CustomDataDifficulty,
-    CustomDataEvent,
-    CustomDataNote,
-    CustomDataObstacle,
-} from './customData';
+import { CustomDataDifficulty } from './customData';
 import { DifficultyName } from './difficulty';
 import { BeatmapInfoSetDifficulty } from './info';
-
-export interface Note {
-    _time: number;
-    _lineIndex: number;
-    _lineLayer: number;
-    _type: number;
-    _cutDirection: number;
-    _customData?: CustomDataNote;
-    [key: string]: any;
-}
-
-export interface Obstacle {
-    _time: number;
-    _lineIndex: number;
-    _type: number;
-    _duration: number;
-    _width: number;
-    _customData?: CustomDataObstacle;
-    [key: string]: any;
-}
-
-export interface Event {
-    _time: number;
-    _type: number;
-    _value: number;
-    _customData?: CustomDataEvent;
-    [key: string]: any;
-}
-
-// as far as i know, it does not have customData as of yet
-export interface Waypoint {
-    _time: number;
-    _lineIndex: number;
-    _lineLayer: number;
-    _offsetDirection: number;
-    [key: string]: any;
-}
+import { Note } from './note';
+import { isInteractive as obstacleInteractive, Obstacle } from './obstacle';
+import { Event } from './event';
+import { Waypoint } from './waypoint';
 
 // yea i dont even know but it exist
 export interface SpecialEventsKeywordFilters {
@@ -65,9 +27,48 @@ export interface BeatmapData {
     _customData?: CustomDataDifficulty;
 }
 
-export interface MapDataSet {
+export interface MapSetData {
     _mode: CharacteristicName;
     _difficulty: DifficultyName;
     _info: BeatmapInfoSetDifficulty;
     _data: BeatmapData;
 }
+
+export const findFirstInteractiveObstacleTime = (obstacles: Obstacle[]): number => {
+    for (let i = 0, len = obstacles.length; i < len; i++) {
+        if (obstacleInteractive(obstacles[i])) {
+            return obstacles[i]._time;
+        }
+    }
+    return Number.MAX_VALUE;
+};
+
+export const findLastInteractiveObstacleTime = (obstacles: Obstacle[]): number => {
+    let obstacleEnd = 0;
+    for (let i = obstacles.length - 1; i >= 0; i--) {
+        if (obstacleInteractive(obstacles[i])) {
+            obstacleEnd = Math.max(obstacleEnd, obstacles[i]._time + obstacles[i]._duration);
+        }
+    }
+    return obstacleEnd;
+};
+
+export const getFirstInteractiveTime = (mapData: BeatmapData): number => {
+    const { _notes: notes, _obstacles: obstacles } = mapData;
+    let firstNoteTime = Number.MAX_VALUE;
+    if (notes.length > 0) {
+        firstNoteTime = notes[0]._time;
+    }
+    const firstInteractiveObstacleTime = findFirstInteractiveObstacleTime(obstacles);
+    return Math.min(firstNoteTime, firstInteractiveObstacleTime);
+};
+
+export const getLastInteractiveTime = (mapData: BeatmapData): number => {
+    const { _notes: notes, _obstacles: obstacles } = mapData;
+    let lastNoteTime = 0;
+    if (notes.length > 0) {
+        lastNoteTime = notes[notes.length - 1]._time;
+    }
+    const lastInteractiveObstacleTime = findLastInteractiveObstacleTime(obstacles);
+    return Math.max(lastNoteTime, lastInteractiveObstacleTime);
+};

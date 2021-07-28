@@ -1,4 +1,4 @@
-import { MapDataSet } from './beatmap/map';
+import { MapSetData } from './beatmap/map';
 import { Contributor } from './beatmap/contributor';
 import { BeatmapInfo } from './beatmap/info';
 import { BPMChange } from './beatmap/bpm';
@@ -6,12 +6,11 @@ import { BPMChange } from './beatmap/bpm';
 // TODO: structure bpm change for certain use
 interface SavedData {
     _mapInfo?: BeatmapInfo;
-    _mapData?: MapDataSet[];
+    _mapSet?: MapSetData[];
     _contributors?: Contributor[];
     _analysis?: any;
     _duration?: number;
     _bpmChanges?: BPMChange[];
-    [key: string]: any;
 }
 
 let savedData: SavedData = {};

@@ -1,6 +1,7 @@
 import { CharacteristicName } from './characteristic';
 import { CustomDataInfo, CustomDataInfoDifficulty } from './customData';
 import { DifficultyName, DifficultyRank } from './difficulty';
+import { EnvironmentName } from './environment';
 
 export interface BeatmapInfo {
     _version: string;
@@ -15,8 +16,8 @@ export interface BeatmapInfo {
     _previewDuration: number;
     _songFilename: string;
     _coverImageFilename: string;
-    _environmentName: string;
-    _allDirectionsEnvironmentName: string;
+    _environmentName: EnvironmentName;
+    _allDirectionsEnvironmentName: EnvironmentName;
     _songTimeOffset: number;
     _customData?: CustomDataInfo;
     _difficultyBeatmapSets: BeatmapInfoSet[];
