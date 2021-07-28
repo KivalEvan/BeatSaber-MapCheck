@@ -26,7 +26,7 @@
             }
         }
         &:focus + &-zone {
-            background-color: #aaa;
+            filter: brightness(0.75) contrast(1.25);
         }
     }
     &__intro {

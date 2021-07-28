@@ -78,6 +78,42 @@ export const isSlantedWindow = (n1: Note, n2: Note): boolean => {
     return isWindow(n1, n2) && !isDiagonal(n1, n2) && !isHorizontal(n1, n2) && !isVertical(n1, n2);
 };
 
+export const hasChroma = (note: Note): boolean => {
+    return (
+        Array.isArray(note._customData?._color) ||
+        typeof note._customData?._disableSpawnEffect === 'boolean'
+    );
+};
+
+// god i hate these
+export const hasNoodleExtensions = (note: Note): boolean => {
+    return (
+        Array.isArray(note._customData?._animation) ||
+        typeof note._customData?._cutDirection === 'number' ||
+        typeof note._customData?._disableNoteGravity === 'boolean' ||
+        typeof note._customData?._disableNoteLook === 'boolean' ||
+        typeof note._customData?._fake === 'boolean' ||
+        Array.isArray(note._customData?._flip) ||
+        typeof note._customData?._interactable === 'boolean' ||
+        Array.isArray(note._customData?._localRotation) ||
+        typeof note._customData?._noteJumpMovementSpeed === 'number' ||
+        typeof note._customData?._noteJumpStartBeatOffset === 'number' ||
+        Array.isArray(note._customData?._position) ||
+        Array.isArray(note._customData?._rotation) ||
+        typeof note._customData?._track === 'string'
+    );
+};
+
+export const hasMappingExtensions = (note: Note): boolean => {
+    return (
+        note._cutDirection >= 1000 ||
+        note._lineIndex > 3 ||
+        note._lineIndex < 0 ||
+        note._lineLayer > 2 ||
+        note._lineLayer < 0
+    );
+};
+
 export const count = (notes: Note[]): NoteCount => {
     const noteCount: NoteCount = {
         red: {

@@ -1,6 +1,7 @@
 @use 'dark';
 @use 'light';
 @use 'monochrome';
+@use 'template';
 
 @mixin themify($themes) {
     @each $theme, $map in $themes {
@@ -20,7 +21,7 @@ $themes: (
 
 // default fallback theme
 body {
-    @each $key, $submap in dark.$theme {
+    @each $key, $submap in template.$theme {
         --#{$key}: #{$submap};
     }
 }

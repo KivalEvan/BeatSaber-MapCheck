@@ -3,8 +3,6 @@ import * as uiHeader from './header';
 import { removeOptions, toMMSS } from '../utils';
 import * as beatmap from '../beatmap';
 import savedData from '../savedData';
-import { ChromaDataEnvAbbr, ChromaEnvironment } from '../beatmap/chroma';
-import { NECustomEventData, NEDataAbbr } from '../beatmap/noodleExtensions';
 import sanitizeHtml from 'sanitize-html';
 
 const logPrefix = 'UI Info: ';
@@ -283,8 +281,11 @@ export const setEnvironmentEnhancement = (arr?: beatmap.chroma.ChromaEnvironment
             if (key == '_lookupMethod' || key == '_id') {
                 continue;
             }
-            let k = ChromaDataEnvAbbr[key as keyof typeof ChromaDataEnvAbbr];
-            if (elem[key as keyof ChromaEnvironment] != null) {
+            let k =
+                beatmap.chroma.ChromaDataEnvAbbr[
+                    key as keyof typeof beatmap.chroma.ChromaDataEnvAbbr
+                ];
+            if (elem[key as keyof beatmap.chroma.ChromaEnvironment] != null) {
                 keyArr.push(k);
             }
         }
@@ -336,8 +337,11 @@ export const setCustomEvents = (
             if (key == '_duration' || key == '_easing' || key == '_track') {
                 continue;
             }
-            let k = NEDataAbbr[key as keyof typeof NEDataAbbr];
-            if (elem._data[key as keyof NECustomEventData] != null) {
+            let k =
+                beatmap.noodleExtensions.NEDataAbbr[
+                    key as keyof typeof beatmap.noodleExtensions.NEDataAbbr
+                ];
+            if (elem._data[key as keyof beatmap.noodleExtensions.NECustomEventData] != null) {
                 keyArr.push(k);
             }
         }
@@ -359,7 +363,7 @@ export const setInfo = (mapInfo: beatmap.info.BeatmapInfo): void => {
     setEditors(mapInfo._customData?._editors);
 };
 
-export const setDiffInfoTable = (mapData: beatmap.map.MapSetData): void => {
+export const setDiffInfoTable = (mapData: beatmap.map.BeatmapSetData): void => {
     if (mapData._info?._customData) {
         setRequirements(mapData._info._customData._requirements);
         setSuggestions(mapData._info._customData._suggestions);

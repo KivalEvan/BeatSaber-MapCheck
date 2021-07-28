@@ -1,13 +1,400 @@
+// i hate implementing these so much
 import * as uiAccordion from './accordion';
 import * as uiPanel from './panel';
 import * as beatmap from '../beatmap';
+import * as swing from '../tools/swing';
 import savedData from '../savedData';
-import { round } from '../utils';
+import { formatNumber, round } from '../utils';
+import { BeatmapInfo } from '../beatmap/info';
+import { BeatmapSetData } from '../beatmap/map';
 
 const logPrefix = 'UI Stats: ';
 const prefix = 'stats__';
 
 const htmlStats = document.querySelector('#stats .accordion__collapsible');
+
+export const createSettingsTable = (
+    mapInfo: BeatmapInfo,
+    mapSet: BeatmapSetData
+): HTMLTableElement => {
+    const bpm = beatmap.bpm.create(mapInfo._beatsPerMinute);
+    const njs = beatmap.njs.create(
+        bpm,
+        mapSet._info._noteJumpMovementSpeed || beatmap.njs.FallbackNJS[mapSet._difficulty],
+        mapSet._info._noteJumpStartBeatOffset
+    );
+
+    const htmlTable = document.createElement('table');
+    htmlTable.className = prefix + 'table';
+    htmlTable.innerHTML = `<caption class="${prefix}table-caption">Map Settings:</caption>
+    <tr>
+    <th class="${prefix}table-header" colspan="2">Note Jump Speed</th>
+    <td class="${prefix}table-element">${round(njs.value, 3)}</td>
+    </tr>
+    <tr>
+    <th class="${prefix}table-header" colspan="2">Spawn Distance Modifier</th>
+    <td class="${prefix}table-element">${round(njs.offset, 3)}</td>
+    </tr>
+    <tr>
+    <th class="${prefix}table-header" colspan="2">Half Jump Duration</th>
+    <td class="${prefix}table-element">${round(njs.hjd, 3)}</td>
+    </tr>
+    <tr>
+    <th class="${prefix}table-header" colspan="2">Jump Distance</th>
+    <td class="${prefix}table-element">${round(njs.jd, 3)}</td>
+    </tr>
+    <tr>
+    <th class="${prefix}table-header" colspan="2">Reaction Time</th>
+    <td class="${prefix}table-element">${round(njs.reactTime * 1000)}ms</td>
+    </tr>`;
+
+    return htmlTable;
+};
+
+export const createNPSTable = (mapInfo: BeatmapInfo, mapSet: BeatmapSetData): HTMLTableElement => {
+    const bpm = beatmap.bpm.create(mapInfo._beatsPerMinute);
+    const duration = savedData._duration || 0;
+    const mapDuration = bpm.toRealTime(beatmap.map.getLastInteractiveTime(mapSet._data));
+
+    const htmlTable = document.createElement('table');
+    htmlTable.className = prefix + 'table';
+    htmlTable.innerHTML = `<caption class="${prefix}table-caption">Note Per Seconds (NPS):</caption>
+    <tr>
+    <th class="${prefix}table-header" colspan="2">Overall</th>
+    <td class="${prefix}table-element">${round(
+        beatmap.note.calculate(mapSet._data._notes, duration),
+        2
+    )}</td>
+    </tr>
+    <tr>
+    <th class="${prefix}table-header" colspan="2">Mapped</th>
+    <td class="${prefix}table-element">${round(
+        beatmap.note.calculate(mapSet._data._notes, mapDuration),
+        2
+    )}</td>
+    </tr>
+    <tr>
+    <th class="${prefix}table-header" rowspan="3">Peak</th>
+    <th class="${prefix}table-header">16-beat</th>
+    <td class="${prefix}table-element">${round(
+        beatmap.note.peak(mapSet._data._notes, 16, bpm.value),
+        2
+    )}</td>
+    </tr>
+    <tr>
+    <th class="${prefix}table-header">8-beat</th>
+    <td class="${prefix}table-element">${round(
+        beatmap.note.peak(mapSet._data._notes, 8, bpm.value),
+        2
+    )}</td>
+    </tr>
+    <tr>
+    <th class="${prefix}table-header">4-beat</th>
+    <td class="${prefix}table-element">${round(
+        beatmap.note.peak(mapSet._data._notes, 4, bpm.value),
+        2
+    )}</td>
+    </tr>`;
+
+    return htmlTable;
+};
+
+export const createSPSTable = (mapInfo: BeatmapInfo, mapSet: BeatmapSetData): HTMLTableElement => {
+    const bpm = beatmap.bpm.create(mapInfo._beatsPerMinute);
+    const swingInfo = swing.info(mapSet, bpm);
+
+    const htmlTable = document.createElement('table');
+    htmlTable.className = prefix + 'table';
+    htmlTable.innerHTML = `<caption class="${prefix}table-caption">Swing Per Seconds (SPS):</caption>
+    <tr>
+    <th class="${prefix}table-header"></th>
+    <th class="${prefix}table-header">Total</th>
+    <th class="${prefix}table-header">Red</th>
+    <th class="${prefix}table-header">Blue</th>
+    </tr>
+    <tr>
+    <th class="${prefix}table-header">Overall</th>
+    <td class="${prefix}table-element">${round(swingInfo.total.overall, 2)}</td>
+    <td class="${prefix}table-element">${round(swingInfo.red.overall, 2)}</td>
+    <td class="${prefix}table-element">${round(swingInfo.blue.overall, 2)}</td>
+    </tr>
+    <tr>
+    <th class="${prefix}table-header">Median</th>
+    <td class="${prefix}table-element">${round(swingInfo.total.median, 2)}</td>
+    <td class="${prefix}table-element">${round(swingInfo.red.median, 2)}</td>
+    <td class="${prefix}table-element">${round(swingInfo.blue.median, 2)}</td>
+    </tr>
+    <tr>
+    <th class="${prefix}table-header">Peak</th>
+    <td class="${prefix}table-element">${round(swingInfo.total.peak, 2)}</td>
+    <td class="${prefix}table-element">${round(swingInfo.red.peak, 2)}</td>
+    <td class="${prefix}table-element">${round(swingInfo.blue.peak, 2)}</td>
+    </tr>
+    <tr>
+    <th class="${prefix}table-header">Total</th>
+    <td class="${prefix}table-element">${swingInfo.total.total}</td>
+    <td class="${prefix}table-element">${swingInfo.red.total}</td>
+    <td class="${prefix}table-element">${swingInfo.blue.total}</td>
+    </tr>`;
+
+    return htmlTable;
+};
+
+export const createNoteCountTable = (
+    mapInfo: BeatmapInfo,
+    mapSet: BeatmapSetData
+): HTMLTableElement => {
+    const noteCount = beatmap.note.count(mapSet._data._notes);
+
+    let htmlString = `<caption class="${prefix}table-caption">Note: ${
+        noteCount.red.total + noteCount.blue.total
+    }<br>R/B Ratio: ${round(noteCount.red.total / noteCount.blue.total, 2)}</caption>
+    <tr>
+    <th class="${prefix}table-header"></th>
+    <th class="${prefix}table-header">Red</th>
+    <th class="${prefix}table-header">Blue</th>
+    <th class="${prefix}table-header">Bomb</th>
+    </tr>
+    <tr>
+    <th class="${prefix}table-header">Total</th>
+    <td class="${prefix}table-element">${noteCount.red.total}</td>
+    <td class="${prefix}table-element">${noteCount.blue.total}</td>
+    <td class="${prefix}table-element">${noteCount.bomb.total}</td>
+    </tr>`;
+    if (noteCount.red.chroma || noteCount.blue.chroma || noteCount.bomb.chroma) {
+        htmlString += `<tr>
+        <th class="${prefix}table-header">Chroma</th>
+        <td class="${prefix}table-element">${noteCount.red.chroma}</td>
+        <td class="${prefix}table-element">${noteCount.blue.chroma}</td>
+        <td class="${prefix}table-element">${noteCount.bomb.chroma}</td>
+        </tr>`;
+    }
+    if (
+        noteCount.red.noodleExtensions ||
+        noteCount.blue.noodleExtensions ||
+        noteCount.bomb.noodleExtensions
+    ) {
+        htmlString += `<tr>
+        <th class="${prefix}table-header">NE</th>
+        <td class="${prefix}table-element">${noteCount.red.noodleExtensions}</td>
+        <td class="${prefix}table-element">${noteCount.blue.noodleExtensions}</td>
+        <td class="${prefix}table-element">${noteCount.bomb.noodleExtensions}</td>
+        </tr>`;
+    }
+    if (
+        noteCount.red.mappingExtensions ||
+        noteCount.blue.mappingExtensions ||
+        noteCount.bomb.mappingExtensions
+    ) {
+        htmlString += `<tr>
+        <th class="${prefix}table-header">ME</th>
+        <td class="${prefix}table-element">${noteCount.red.mappingExtensions}</td>
+        <td class="${prefix}table-element">${noteCount.blue.mappingExtensions}</td>
+        <td class="${prefix}table-element">${noteCount.bomb.mappingExtensions}</td>
+        </tr>`;
+    }
+
+    const htmlTable = document.createElement('table');
+    htmlTable.className = prefix + 'table';
+    htmlTable.innerHTML = htmlString;
+
+    return htmlTable;
+};
+
+export const createNotePlacementTable = (
+    mapInfo: BeatmapInfo,
+    mapSet: BeatmapSetData
+): HTMLTableElement => {
+    const notes = mapSet._data._notes;
+    const totalNote = notes.length;
+
+    const htmlTable = document.createElement('table');
+    htmlTable.className = prefix + 'table';
+    htmlTable.innerHTML = `<caption class="${prefix}table-caption">Note Placement:</caption>
+    <tr>
+    <td class="${prefix}table-element">${beatmap.note.countIndexLayer(notes, 0, 2)}</td>
+    <td class="${prefix}table-element">${beatmap.note.countIndexLayer(notes, 1, 2)}</td>
+    <td class="${prefix}table-element">${beatmap.note.countIndexLayer(notes, 2, 2)}</td>
+    <td class="${prefix}table-element">${beatmap.note.countIndexLayer(notes, 3, 2)}</td>
+    <td class="${prefix}table-element ${prefix}table--no-border">${round(
+        (beatmap.note.countLayer(notes, 2) / totalNote) * 100,
+        1
+    )}%</td>
+    </tr>
+    <tr>
+    <td class="${prefix}table-element">${beatmap.note.countIndexLayer(notes, 0, 1)}</td>
+    <td class="${prefix}table-element">${beatmap.note.countIndexLayer(notes, 1, 1)}</td>
+    <td class="${prefix}table-element">${beatmap.note.countIndexLayer(notes, 2, 1)}</td>
+    <td class="${prefix}table-element">${beatmap.note.countIndexLayer(notes, 3, 1)}</td>
+    <td class="${prefix}table-element ${prefix}table--no-border">${round(
+        (beatmap.note.countLayer(notes, 1) / totalNote) * 100,
+        1
+    )}%</td>
+    </tr>
+    <tr>
+    <td class="${prefix}table-element">${beatmap.note.countIndexLayer(notes, 0, 0)}</td>
+    <td class="${prefix}table-element">${beatmap.note.countIndexLayer(notes, 1, 0)}</td>
+    <td class="${prefix}table-element">${beatmap.note.countIndexLayer(notes, 2, 0)}</td>
+    <td class="${prefix}table-element">${beatmap.note.countIndexLayer(notes, 3, 0)}</td>
+    <td class="${prefix}table-element ${prefix}table--no-border">${round(
+        (beatmap.note.countLayer(notes, 0) / totalNote) * 100,
+        1
+    )}%</td>
+    </tr>
+    <tr>
+    <td class="${prefix}table-element ${prefix}table--no-border">${round(
+        (beatmap.note.countIndex(notes, 0) / totalNote) * 100,
+        1
+    )}%</td>
+    <td class="${prefix}table-element ${prefix}table--no-border">${round(
+        (beatmap.note.countIndex(notes, 1) / totalNote) * 100,
+        1
+    )}%</td>
+    <td class="${prefix}table-element ${prefix}table--no-border">${round(
+        (beatmap.note.countIndex(notes, 2) / totalNote) * 100,
+        1
+    )}%</td>
+    <td class="${prefix}table-element ${prefix}table--no-border">${round(
+        (beatmap.note.countIndex(notes, 3) / totalNote) * 100,
+        1
+    )}%</td>
+    </tr>`;
+
+    return htmlTable;
+};
+
+export const createInfoTable = (mapInfo: BeatmapInfo, mapSet: BeatmapSetData): HTMLTableElement => {
+    const noteCount = beatmap.note.count(mapSet._data._notes);
+
+    const htmlTable = document.createElement('table');
+    htmlTable.className = prefix + 'table';
+    htmlTable.innerHTML = `<caption class="${prefix}table-caption">Note Information:</caption>
+    <tr>
+    <th class="${prefix}table-header" colspan="2">Max Score</th>
+    <td class="${prefix}table-element">${formatNumber(
+        beatmap.score.calculate(noteCount.red.total + noteCount.blue.total)
+    )}</td>
+    </tr>
+    <tr>
+    <th class="${prefix}table-header" colspan="2">Effective BPM</th>
+    <td class="${prefix}table-element">0</td>
+    </tr>
+    <tr>
+    <th class="${prefix}table-header" colspan="2">Effective BPM (swing)</th>
+    <td class="${prefix}table-element">0</td>
+    </tr>
+    <tr>
+    <th class="${prefix}table-header" colspan="2">Min. Slider Speed</th>
+    <td class="${prefix}table-element">0ms</td>
+    </tr>
+    <tr>
+    <th class="${prefix}table-header" colspan="2">Max. Slider Speed</th>
+    <td class="${prefix}table-element">0ms</td>
+    </tr>`;
+
+    return htmlTable;
+};
+
+export const createEventCountTable = (
+    mapInfo: BeatmapInfo,
+    mapSet: BeatmapSetData
+): HTMLTableElement => {
+    const eventCount = beatmap.event.count(mapSet._data._events);
+    let chroma = 0;
+    let chromaOld = 0;
+    let noodleExtensions = 0;
+    let mappingExtensions = 0;
+
+    let htmlString = `<caption class="${prefix}table-caption">Event: ${Object.values(
+        eventCount
+    ).reduce((t, { total }) => t + total, 0)}</caption>`;
+
+    for (const key in eventCount) {
+        chroma += eventCount[key].chroma;
+        chromaOld += eventCount[key].chromaOld;
+        noodleExtensions += eventCount[key].noodleExtensions;
+        mappingExtensions += eventCount[key].mappingExtensions;
+        htmlString += `<tr>
+        <th class="${prefix}table-header" colspan="2">${beatmap.event.EventRename[key]}</th>
+        <td class="${prefix}table-element">${eventCount[key].total}</td>
+        </tr>`;
+    }
+    if (chroma) {
+        htmlString += `<tr>
+        <th class="${prefix}table-header" colspan="2">Chroma</th>
+        <td class="${prefix}table-element">${chroma}</td>
+        </tr>`;
+    }
+    if (chromaOld) {
+        htmlString += `<tr>
+        <th class="${prefix}table-header" colspan="2">OG Chroma</th>
+        <td class="${prefix}table-element">${chromaOld}</td>
+        </tr>`;
+    }
+    if (noodleExtensions) {
+        htmlString += `<tr>
+        <th class="${prefix}table-header" colspan="2">Noodle Extensions</th>
+        <td class="${prefix}table-element">${noodleExtensions}</td>
+        </tr>`;
+    }
+    if (mappingExtensions) {
+        htmlString += `<tr>
+        <th class="${prefix}table-header" colspan="2">Mapping Extensions</th>
+        <td class="${prefix}table-element">${mappingExtensions}</td>
+        </tr>`;
+    }
+
+    const htmlTable = document.createElement('table');
+    htmlTable.className = prefix + 'table';
+    htmlTable.innerHTML = htmlString;
+
+    return htmlTable;
+};
+
+export const createObstacleCountTable = (
+    mapInfo: BeatmapInfo,
+    mapSet: BeatmapSetData
+): HTMLTableElement => {
+    const obstacleCount = beatmap.obstacle.count(mapSet._data._obstacles);
+
+    let htmlString = `<caption class="${prefix}table-caption">Obstacle: ${obstacleCount.total}</caption>`;
+    if (obstacleCount.interactive) {
+        htmlString += `<tr>
+        <th class="${prefix}table-header" colspan="2">Interactive</th>
+        <td class="${prefix}table-element">${obstacleCount.interactive}</td>
+        </tr>`;
+    }
+    if (obstacleCount.crouch) {
+        htmlString += `<tr>
+        <th class="${prefix}table-header" colspan="2">Crouch</th>
+        <td class="${prefix}table-element">${obstacleCount.crouch}</td>
+        </tr>`;
+    }
+    if (obstacleCount.chroma) {
+        htmlString += `<tr>
+        <th class="${prefix}table-header" colspan="2">Chroma</th>
+        <td class="${prefix}table-element">${obstacleCount.chroma}</td>
+        </tr>`;
+    }
+    if (obstacleCount.noodleExtensions) {
+        htmlString += `<tr>
+        <th class="${prefix}table-header" colspan="2">Noodle Extensions</th>
+        <td class="${prefix}table-element">${obstacleCount.noodleExtensions}</td>
+        </tr>`;
+    }
+    if (obstacleCount.mappingExtensions) {
+        htmlString += `<tr>
+        <th class="${prefix}table-header" colspan="2">Mapping Extensions</th>
+        <td class="${prefix}table-element">${obstacleCount.mappingExtensions}</td>
+        </tr>`;
+    }
+
+    const htmlTable = document.createElement('table');
+    htmlTable.className = prefix + 'table';
+    htmlTable.innerHTML = htmlString;
+
+    return htmlTable;
+};
 
 export const clear = (): void => {};
 
@@ -23,7 +410,9 @@ export const populate = (): void => {
     if (!savedData._mapSet) {
         throw new Error(logPrefix + 'map data could not be found in savedData');
     }
-    savedData._mapInfo._difficultyBeatmapSets.forEach((set) => {
+    const mapInfo = savedData._mapInfo;
+
+    mapInfo._difficultyBeatmapSets.forEach((set) => {
         const htmlContainer = document.createElement('div');
         htmlContainer.className = prefix + 'mode-' + set._beatmapCharacteristicName;
 
@@ -34,6 +423,15 @@ export const populate = (): void => {
         htmlContainer.appendChild(htmlTitle);
 
         set._difficultyBeatmaps.forEach((diff) => {
+            const mapSet = savedData._mapSet?.find(
+                (data) =>
+                    data._mode === set._beatmapCharacteristicName &&
+                    data._difficulty === diff._difficulty
+            );
+            if (!mapSet) {
+                throw new Error(logPrefix + 'Could not find map data');
+            }
+
             const htmlAccordion = uiAccordion.create(
                 `${prefix}${set._beatmapCharacteristicName}-${diff._difficulty}`,
                 beatmap.difficulty.DifficultyRename[diff._difficulty] +
@@ -49,36 +447,28 @@ export const populate = (): void => {
                 throw new Error(logPrefix + 'Something went wrong!');
             }
 
-            const mapData = savedData._mapSet?.find(
-                (data) =>
-                    data._mode === set._beatmapCharacteristicName &&
-                    data._difficulty === diff._difficulty
-            );
-            if (!mapData) {
-                throw new Error(logPrefix + 'Could not find map data');
-            }
+            const htmlPanelL = uiPanel.create('small', 'half');
+            const htmlPanelM = uiPanel.create('small', 'half');
+            const htmlPanelR = uiPanel.create('small', 'half');
 
-            const htmlPanelL = uiPanel.create('tiny', 'half');
-            const htmlPanelML = uiPanel.create('tiny', 'half');
-            const htmlPanelMR = uiPanel.create('tiny', 'half');
-            const htmlPanelR = uiPanel.create('tiny', 'half');
+            htmlPanelL.append(createSettingsTable(mapInfo, mapSet));
+            htmlPanelL.append(document.createElement('br'));
+            htmlPanelL.append(createNPSTable(mapInfo, mapSet));
+            htmlPanelL.append(document.createElement('br'));
+            htmlPanelL.append(createSPSTable(mapInfo, mapSet));
 
-            const htmlTable = document.createElement('table');
-            htmlTable.innerHTML = `<caption>Note Per Seconds:</caption>
-            <tr>
-            <th colspan="2">Overall</th>
-            <td>${round(beatmap.note.calculate(mapData._data._notes, savedData._duration), 2)}</td>
-            </tr>
-            <tr>
-            <th colspan="2">Mapped</th>
-            <td>${round(beatmap.note.calculate(mapData._data._notes, savedData._duration), 2)}</td>
-            </tr>`;
+            htmlPanelM.append(createNoteCountTable(mapInfo, mapSet));
+            htmlPanelM.append(document.createElement('br'));
+            htmlPanelM.append(createNotePlacementTable(mapInfo, mapSet));
+            htmlPanelM.append(document.createElement('br'));
+            htmlPanelM.append(createInfoTable(mapInfo, mapSet));
 
-            htmlPanelML.append(htmlTable);
+            htmlPanelR.append(createEventCountTable(mapInfo, mapSet));
+            htmlPanelR.append(document.createElement('br'));
+            htmlPanelR.append(createObstacleCountTable(mapInfo, mapSet));
 
             htmlContent.appendChild(htmlPanelL);
-            htmlContent.appendChild(htmlPanelML);
-            htmlContent.appendChild(htmlPanelMR);
+            htmlContent.appendChild(htmlPanelM);
             htmlContent.appendChild(htmlPanelR);
             htmlContainer.appendChild(htmlAccordion);
         });

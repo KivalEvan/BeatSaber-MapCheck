@@ -17,6 +17,10 @@
 
 -   Codebase rewritten
 
+### Fixed
+
+-   Potential miscalculation on Chroma count
+
 ### Planned
 
 -   Audio player

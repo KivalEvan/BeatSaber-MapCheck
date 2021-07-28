@@ -18,3 +18,4 @@ export * as note from './note';
 export * as obstacle from './obstacle';
 export * as event from './event';
 export * as waypoint from './waypoint';
+export * as score from './score';

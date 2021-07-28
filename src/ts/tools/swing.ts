@@ -1,5 +1,5 @@
 import * as beatmap from '../beatmap';
-import { median, round } from '../utils';
+import { median } from '../utils';
 
 interface SwingCount {
     left: number[];
@@ -71,38 +71,37 @@ export const count = (
     duration: number,
     bpm: beatmap.bpm.BeatPerMinute
 ): SwingCount => {
-    if (notes.length === 0) {
-        return { left: [0], right: [0] };
-    }
-    let swingCountRed = new Array(Math.floor(duration + 1)).fill(0);
-    let swingCountBlue = new Array(Math.floor(duration + 1)).fill(0);
-    let lastRed: beatmap.note.Note;
-    let lastBlue: beatmap.note.Note;
+    const swingCount: SwingCount = {
+        left: new Array(Math.floor(duration + 1)).fill(0),
+        right: new Array(Math.floor(duration + 1)).fill(0),
+    };
+    let lastRed!: beatmap.note.Note;
+    let lastBlue!: beatmap.note.Note;
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         const realTime = bpm.toRealTime(note._time);
         if (note._type === 0) {
             if (lastRed) {
                 if (next(note, lastRed, bpm)) {
-                    swingCountRed[Math.floor(realTime)]++;
+                    swingCount.left[Math.floor(realTime)]++;
                 }
             } else {
-                swingCountRed[Math.floor(realTime)]++;
+                swingCount.left[Math.floor(realTime)]++;
             }
             lastRed = note;
         }
         if (note._type === 1) {
             if (lastBlue) {
                 if (next(note, lastBlue, bpm)) {
-                    swingCountBlue[Math.floor(realTime)]++;
+                    swingCount.right[Math.floor(realTime)]++;
                 }
             } else {
-                swingCountBlue[Math.floor(realTime)]++;
+                swingCount.right[Math.floor(realTime)]++;
             }
             lastBlue = note;
         }
     }
-    return { left: swingCountRed, right: swingCountBlue };
+    return swingCount;
 };
 
 export const calcMaxRollingSPS = (swingArray: number[], x: number): number => {
@@ -110,7 +109,7 @@ export const calcMaxRollingSPS = (swingArray: number[], x: number): number => {
         return 0;
     }
     if (swingArray.length < x) {
-        return round(swingArray.reduce((a, b) => a + b) / swingArray.length, 1);
+        return swingArray.reduce((a, b) => a + b) / swingArray.length;
     }
     let currentSPS = swingArray.slice(0, x).reduce((a, b) => a + b);
     let maxSPS = currentSPS;
@@ -118,11 +117,11 @@ export const calcMaxRollingSPS = (swingArray: number[], x: number): number => {
         currentSPS = currentSPS - swingArray[i] + swingArray[i + x];
         maxSPS = Math.max(maxSPS, currentSPS);
     }
-    return round(maxSPS / x, 1);
+    return maxSPS / x;
 };
 
 export const info = (
-    mapSetData: beatmap.map.MapSetData,
+    mapSetData: beatmap.map.BeatmapSetData,
     bpm: beatmap.bpm.BeatPerMinute
 ): SwingPerSecondInfo => {
     const interval = 10;
@@ -131,14 +130,19 @@ export const info = (
         blue: { overall: 0, peak: 0, median: 0, total: 0 },
         total: { overall: 0, peak: 0, median: 0, total: 0 },
     };
-    const duration = bpm.toRealTime(
-        beatmap.map.getFirstInteractiveTime(mapSetData._data) -
-            beatmap.map.getLastInteractiveTime(mapSetData._data)
+    const duration = Math.max(
+        bpm.toRealTime(
+            beatmap.map.getLastInteractiveTime(mapSetData._data) -
+                beatmap.map.getFirstInteractiveTime(mapSetData._data)
+        ),
+        0
     );
-    const swing = count(mapSetData._data._notes, duration, bpm);
-    const swingTotal = swing.left.map(function (num, i) {
-        return num + swing.right[i];
-    });
+    const mapDuration = Math.max(
+        bpm.toRealTime(beatmap.map.getLastInteractiveTime(mapSetData._data)),
+        0
+    );
+    const swing = count(mapSetData._data._notes, mapDuration, bpm);
+    const swingTotal = swing.left.map((num, i) => num + swing.right[i]);
     if (swingTotal.reduce((a, b) => a + b) === 0) {
         return spsInfo;
     }
@@ -152,26 +156,26 @@ export const info = (
         if (maxInterval + sliceStart > swingTotal.length) {
             maxInterval = swingTotal.length - sliceStart;
         }
-        const sliceRed = swing.left.slice(sliceStart, interval);
-        const sliceBlue = swing.right.slice(sliceStart, interval);
-        const sliceTotal = swingTotal.slice(sliceStart, interval);
+        const sliceRed = swing.left.slice(sliceStart, sliceStart + maxInterval);
+        const sliceBlue = swing.right.slice(sliceStart, sliceStart + maxInterval);
+        const sliceTotal = swingTotal.slice(sliceStart, sliceStart + maxInterval);
         swingIntervalRed.push(sliceRed.reduce((a, b) => a + b) / maxInterval);
         swingIntervalBlue.push(sliceBlue.reduce((a, b) => a + b) / maxInterval);
         swingIntervalTotal.push(sliceTotal.reduce((a, b) => a + b) / maxInterval);
     }
 
-    spsInfo.red.overall = round(swing.left.reduce((a, b) => a + b) / duration, 2);
+    spsInfo.red.total = swing.left.reduce((a, b) => a + b);
+    spsInfo.red.overall = swing.left.reduce((a, b) => a + b) / duration;
     spsInfo.red.peak = calcMaxRollingSPS(swing.left, interval);
     spsInfo.red.median = median(swingIntervalRed);
-    spsInfo.red.total = swing.left.reduce((a, b) => a + b);
-    spsInfo.blue.overall = round(swing.right.reduce((a, b) => a + b) / duration, 2);
+    spsInfo.blue.total = swing.right.reduce((a, b) => a + b);
+    spsInfo.blue.overall = swing.right.reduce((a, b) => a + b) / duration;
     spsInfo.blue.peak = calcMaxRollingSPS(swing.right, interval);
     spsInfo.blue.median = median(swingIntervalBlue);
-    spsInfo.blue.total = swing.right.reduce((a, b) => a + b);
-    spsInfo.total.overall = round(swingTotal.reduce((a, b) => a + b) / duration, 2);
+    spsInfo.total.total = spsInfo.red.total + spsInfo.blue.total;
+    spsInfo.total.overall = swingTotal.reduce((a, b) => a + b) / duration;
     spsInfo.total.peak = calcMaxRollingSPS(swingTotal, interval);
     spsInfo.total.median = median(swingIntervalTotal);
-    spsInfo.total.total = spsInfo.red.total + spsInfo.blue.total;
 
     return spsInfo;
 };

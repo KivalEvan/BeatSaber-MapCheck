@@ -27,7 +27,7 @@ export interface BeatmapData {
     _customData?: CustomDataDifficulty;
 }
 
-export interface MapSetData {
+export interface BeatmapSetData {
     _mode: CharacteristicName;
     _difficulty: DifficultyName;
     _info: BeatmapInfoSetDifficulty;
