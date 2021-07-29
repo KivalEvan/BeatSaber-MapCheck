@@ -157,35 +157,26 @@ export const count = (notes: Note[]): NoteCount => {
 };
 
 export const countIndex = (notes: Note[], i: number): number => {
-    let count = 0;
-    notes.forEach((n) => {
-        if (isNote(n) && n._lineIndex === i) {
-            count++;
-        }
-    });
-    return count;
+    return notes.filter((n) => n._lineIndex === i).length;
 };
 
 export const countLayer = (notes: Note[], l: number): number => {
-    let count = 0;
-    notes.forEach((n) => {
-        if (isNote(n) && n._lineLayer === l) {
-            count++;
-        }
-    });
-    return count;
+    return notes.filter((n) => n._lineLayer === l).length;
 };
 
 export const countIndexLayer = (notes: Note[], i: number, l: number): number => {
-    let count = 0;
-    notes.forEach((n) => {
-        if (isNote(n) && n._lineIndex === i && n._lineLayer === l) {
-            count++;
-        }
-    });
-    return count;
+    return notes.filter((n) => n._lineIndex === i && n._lineLayer === l).length;
 };
-export const calculate = (notes: Note[], duration: number): number => {
+
+export const countDirection = (notes: Note[], cd: number): number => {
+    return notes.filter((n) => n._cutDirection === cd).length;
+};
+
+export const countAngle = (notes: Note[], angle: number): number => {
+    return notes.filter((n) => getAngle(n) === angle).length;
+};
+
+export const nps = (notes: Note[], duration: number): number => {
     return notes.filter((n) => isNote(n)).length / duration;
 };
 

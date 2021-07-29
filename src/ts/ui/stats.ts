@@ -1,6 +1,7 @@
 // i hate implementing these so much
 import * as uiAccordion from './accordion';
 import * as uiPanel from './panel';
+import * as uiSelect from './select';
 import * as beatmap from '../beatmap';
 import * as swing from '../tools/swing';
 import savedData from '../savedData';
@@ -62,14 +63,14 @@ export const createNPSTable = (mapInfo: BeatmapInfo, mapSet: BeatmapSetData): HT
     <tr>
     <th class="${prefix}table-header" colspan="2">Overall</th>
     <td class="${prefix}table-element">${round(
-        beatmap.note.calculate(mapSet._data._notes, duration),
+        beatmap.note.nps(mapSet._data._notes, duration),
         2
     )}</td>
     </tr>
     <tr>
     <th class="${prefix}table-header" colspan="2">Mapped</th>
     <td class="${prefix}table-element">${round(
-        beatmap.note.calculate(mapSet._data._notes, mapDuration),
+        beatmap.note.nps(mapSet._data._notes, mapDuration),
         2
     )}</td>
     </tr>
@@ -201,47 +202,67 @@ export const createNoteCountTable = (
     return htmlTable;
 };
 
-export const createNotePlacementTable = (
-    mapInfo: BeatmapInfo,
-    mapSet: BeatmapSetData
-): HTMLTableElement => {
-    const notes = mapSet._data._notes;
-    const totalNote = notes.length;
+function notePlacementSelectHandler(ev: Event) {
+    const target = ev.target as HTMLSelectElement;
+    const id = target.id.replace(`${prefix}table-select-placement-`, '').split('-');
 
-    const htmlTable = document.createElement('table');
-    htmlTable.className = prefix + 'table';
-    htmlTable.innerHTML = `<caption class="${prefix}table-caption">Note Placement:</caption>
-    <tr>
-    <td class="${prefix}table-element">${beatmap.note.countIndexLayer(notes, 0, 2)}</td>
-    <td class="${prefix}table-element">${beatmap.note.countIndexLayer(notes, 1, 2)}</td>
-    <td class="${prefix}table-element">${beatmap.note.countIndexLayer(notes, 2, 2)}</td>
-    <td class="${prefix}table-element">${beatmap.note.countIndexLayer(notes, 3, 2)}</td>
-    <td class="${prefix}table-element ${prefix}table--no-border">${round(
-        (beatmap.note.countLayer(notes, 2) / totalNote) * 100,
-        1
-    )}%</td>
-    </tr>
-    <tr>
-    <td class="${prefix}table-element">${beatmap.note.countIndexLayer(notes, 0, 1)}</td>
-    <td class="${prefix}table-element">${beatmap.note.countIndexLayer(notes, 1, 1)}</td>
-    <td class="${prefix}table-element">${beatmap.note.countIndexLayer(notes, 2, 1)}</td>
-    <td class="${prefix}table-element">${beatmap.note.countIndexLayer(notes, 3, 1)}</td>
-    <td class="${prefix}table-element ${prefix}table--no-border">${round(
-        (beatmap.note.countLayer(notes, 1) / totalNote) * 100,
-        1
-    )}%</td>
-    </tr>
-    <tr>
-    <td class="${prefix}table-element">${beatmap.note.countIndexLayer(notes, 0, 0)}</td>
-    <td class="${prefix}table-element">${beatmap.note.countIndexLayer(notes, 1, 0)}</td>
-    <td class="${prefix}table-element">${beatmap.note.countIndexLayer(notes, 2, 0)}</td>
-    <td class="${prefix}table-element">${beatmap.note.countIndexLayer(notes, 3, 0)}</td>
-    <td class="${prefix}table-element ${prefix}table--no-border">${round(
-        (beatmap.note.countLayer(notes, 0) / totalNote) * 100,
-        1
-    )}%</td>
-    </tr>
-    <tr>
+    const mode = id[0];
+    const diff = id[1];
+    const notes = savedData._mapSet?.find((set) => set._mode === mode && set._difficulty === diff)
+        ?._data._notes;
+    if (!notes) {
+        console.error('note could not be found');
+        return;
+    }
+    let filteredNotes!: beatmap.note.Note[];
+    switch (target.value) {
+        case 'note': {
+            filteredNotes = notes.filter((n) => beatmap.note.isNote(n));
+            break;
+        }
+        case 'red': {
+            filteredNotes = notes.filter((n) => n._type === 0);
+            break;
+        }
+        case 'blue': {
+            filteredNotes = notes.filter((n) => n._type === 1);
+            break;
+        }
+        case 'bomb': {
+            filteredNotes = notes.filter((n) => n._type === 3);
+            break;
+        }
+        default: {
+            filteredNotes = notes;
+        }
+    }
+    const htmlTableBody = document.querySelector(`#${prefix}table-placement-${mode}-${diff}`);
+    if (!htmlTableBody) {
+        console.error('table could not be found');
+        return;
+    }
+    htmlTableBody.innerHTML = notePlacementTableString(filteredNotes);
+}
+
+function notePlacementTableString(notes: beatmap.note.Note[]): string {
+    const totalNote = notes.length || 1;
+    let htmlString = '';
+    for (let l = 2; l >= 0; l--) {
+        htmlString += '<tr>';
+        for (let i = 0; i <= 3; i++) {
+            htmlString += `<td class="${prefix}table-element">${beatmap.note.countIndexLayer(
+                notes,
+                i,
+                l
+            )}</td>`;
+        }
+        htmlString += `<td class="${prefix}table-element ${prefix}table--no-border">${round(
+            (beatmap.note.countLayer(notes, l) / totalNote) * 100,
+            1
+        )}%</td>
+        </tr>`;
+    }
+    htmlString += `<tr>
     <td class="${prefix}table-element ${prefix}table--no-border">${round(
         (beatmap.note.countIndex(notes, 0) / totalNote) * 100,
         1
@@ -259,6 +280,127 @@ export const createNotePlacementTable = (
         1
     )}%</td>
     </tr>`;
+    return htmlString;
+}
+
+export const createNotePlacementTable = (
+    mapInfo: BeatmapInfo,
+    mapSet: BeatmapSetData
+): HTMLTableElement => {
+    const htmlSelect = uiSelect.create(
+        `${prefix}table-select-placement-${mapSet._mode}-${mapSet._difficulty}`,
+        'Note Placement: ',
+        'caption',
+        `${prefix}table-caption`,
+        { text: 'All', value: 'all' },
+        { text: 'Note', value: 'note' },
+        { text: 'Red', value: 'red' },
+        { text: 'Blue', value: 'blue' },
+        { text: 'Bomb', value: 'bomb' }
+    );
+    htmlSelect
+        .querySelector<HTMLSelectElement>('select')
+        ?.addEventListener('change', notePlacementSelectHandler);
+
+    let htmlString = `<tbody id="${prefix}table-placement-${mapSet._mode}-${
+        mapSet._difficulty
+    }">${notePlacementTableString(mapSet._data._notes)}</tbody>`;
+
+    const htmlTable = document.createElement('table');
+    htmlTable.className = prefix + 'table';
+    htmlTable.innerHTML = htmlString;
+    htmlTable.prepend(htmlSelect);
+
+    return htmlTable;
+};
+
+function noteAngleSelectHandler(ev: Event) {
+    const target = ev.target as HTMLSelectElement;
+    const id = target.id.replace(`${prefix}table-select-angle-`, '').split('-');
+
+    const mode = id[0];
+    const diff = id[1];
+    const notes = savedData._mapSet?.find((set) => set._mode === mode && set._difficulty === diff)
+        ?._data._notes;
+    if (!notes) {
+        console.error('note could not be found');
+        return;
+    }
+    let filteredNotes!: beatmap.note.Note[];
+    switch (target.value) {
+        case 'note': {
+            filteredNotes = notes.filter((n) => beatmap.note.isNote(n));
+            break;
+        }
+        case 'red': {
+            filteredNotes = notes.filter((n) => n._type === 0);
+            break;
+        }
+        case 'blue': {
+            filteredNotes = notes.filter((n) => n._type === 1);
+            break;
+        }
+        case 'bomb': {
+            filteredNotes = notes.filter((n) => n._type === 3);
+            break;
+        }
+        default: {
+            filteredNotes = notes;
+        }
+    }
+    const htmlTableBody = document.querySelector(`#${prefix}table-angle-${mode}-${diff}`);
+    if (!htmlTableBody) {
+        console.error('table could not be found');
+        return;
+    }
+    htmlTableBody.innerHTML = noteAngleTableString(filteredNotes);
+}
+
+function noteAngleTableString(notes: beatmap.note.Note[]): string {
+    const totalNote = notes.length || 1;
+    const cutOrder = [4, 0, 5, 2, 8, 3, 6, 1, 7];
+    let htmlString = '';
+    for (let i = 0; i < 3; i++) {
+        htmlString += '<tr>';
+        for (let j = 0; j < 3; j++) {
+            let count = beatmap.note.countDirection(notes, cutOrder[i * 3 + j]);
+            htmlString += `<td class="${prefix}table-element">${count}<br>(${round(
+                (count / totalNote) * 100,
+                1
+            )}%)</td>`;
+        }
+        htmlString += `</tr>`;
+    }
+    return htmlString;
+}
+
+export const createNoteAngleTable = (
+    mapInfo: BeatmapInfo,
+    mapSet: BeatmapSetData
+): HTMLTableElement => {
+    const htmlSelect = uiSelect.create(
+        `${prefix}table-select-angle-${mapSet._mode}-${mapSet._difficulty}`,
+        'Note Angle: ',
+        'caption',
+        `${prefix}table-caption`,
+        { text: 'All', value: 'all' },
+        { text: 'Note', value: 'note' },
+        { text: 'Red', value: 'red' },
+        { text: 'Blue', value: 'blue' },
+        { text: 'Bomb', value: 'bomb' }
+    );
+    htmlSelect
+        .querySelector<HTMLSelectElement>('select')
+        ?.addEventListener('change', noteAngleSelectHandler);
+
+    let htmlString = `<tbody id="${prefix}table-angle-${mapSet._mode}-${
+        mapSet._difficulty
+    }">${noteAngleTableString(mapSet._data._notes)}</tbody>`;
+
+    const htmlTable = document.createElement('table');
+    htmlTable.className = prefix + 'table';
+    htmlTable.innerHTML = htmlString;
+    htmlTable.prepend(htmlSelect);
 
     return htmlTable;
 };
@@ -396,8 +538,6 @@ export const createObstacleCountTable = (
     return htmlTable;
 };
 
-export const clear = (): void => {};
-
 // TODO: may god forgive me, i'll replace them with smaller function later
 export const populate = (): void => {
     if (!htmlStats) {
@@ -457,12 +597,14 @@ export const populate = (): void => {
             htmlPanelL.append(document.createElement('br'));
             htmlPanelL.append(createSPSTable(mapInfo, mapSet));
 
-            htmlPanelM.append(createNoteCountTable(mapInfo, mapSet));
+            htmlPanelM.append(createInfoTable(mapInfo, mapSet));
             htmlPanelM.append(document.createElement('br'));
             htmlPanelM.append(createNotePlacementTable(mapInfo, mapSet));
             htmlPanelM.append(document.createElement('br'));
-            htmlPanelM.append(createInfoTable(mapInfo, mapSet));
+            htmlPanelM.append(createNoteAngleTable(mapInfo, mapSet));
 
+            htmlPanelR.append(createNoteCountTable(mapInfo, mapSet));
+            htmlPanelR.append(document.createElement('br'));
             htmlPanelR.append(createEventCountTable(mapInfo, mapSet));
             htmlPanelR.append(document.createElement('br'));
             htmlPanelR.append(createObstacleCountTable(mapInfo, mapSet));

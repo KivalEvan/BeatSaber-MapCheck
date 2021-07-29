@@ -11,6 +11,8 @@
     -   Saves to local storage
 -   Theme
 -   Mode and difficulty ordering
+-   Note Angle stats
+-   Note Placement and Note Angle note options
 -   Partial Mapping Extensions and Noodle Extensions support
 
 ### Changed

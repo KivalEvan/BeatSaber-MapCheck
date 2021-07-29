@@ -26,10 +26,10 @@
                 border-bottom: 1px solid var(--bg-tools-tab-select);
             }
             + .tools__tab,
-            &[id='tools__note'] ~ #tools__note-content,
-            &[id='tools__obstacle'] ~ #tools__obstacle-content,
-            &[id='tools__event'] ~ #tools__event-content,
-            &[id='tools__other'] ~ #tools__other-content {
+            &[id='tools__note'] ~ .tools__note-content,
+            &[id='tools__obstacle'] ~ .tools__obstacle-content,
+            &[id='tools__event'] ~ .tools__event-content,
+            &[id='tools__other'] ~ .tools__other-content {
                 display: block;
             }
         }
