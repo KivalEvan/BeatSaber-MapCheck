@@ -141,7 +141,7 @@ export const extractZip = async (data: ArrayBuffer | File) => {
 // TODO: possibly do more accurate & predictive loading bar based on the amount of file available (may be farfetched and likely not be implemented)
 export const loadMap = async (mapZip: JSZip) => {
     uiLoading.status('info', 'Parsing map info...', 0);
-    console.log('loading map info');
+    console.log('parsing map info');
     const fileInfo = mapZip.file('Info.dat') || mapZip.file('info.dat');
     if (fileInfo) {
         disableInput(true);
@@ -155,7 +155,7 @@ export const loadMap = async (mapZip: JSZip) => {
         uiLoading.status('info', 'Loading image...', 10.4375);
         console.log('loading cover image');
         let imageFile = mapZip.file(savedData._mapInfo._coverImageFilename);
-        if (!settings.load.image && imageFile) {
+        if (settings.load.imageCover && imageFile) {
             let imgBase64 = await imageFile.async('base64');
             uiHeader.setCoverImage('data:image;base64,' + imgBase64);
             flag.map.load.image = true;
@@ -170,7 +170,7 @@ export const loadMap = async (mapZip: JSZip) => {
             console.log('loading contributor image ' + elem._name);
             imageFile = mapZip.file(elem._iconPath);
             let contr = elem;
-            if (!settings.load.image && imageFile) {
+            if (settings.load.imageContributor && imageFile) {
                 contr._base64 = await imageFile.async('base64');
             } else {
                 console.error(`${elem._iconPath} does not exists.`);
@@ -187,7 +187,7 @@ export const loadMap = async (mapZip: JSZip) => {
         uiLoading.status('info', 'Loading audio...', 20.875);
         console.log('loading audio');
         let audioFile = mapZip.file(savedData._mapInfo._songFilename);
-        if (!settings.load.audio && audioFile) {
+        if (settings.load.audio && audioFile) {
             let audioBuffer = await audioFile.async('arraybuffer');
             let audioContext = new AudioContext();
             await audioContext

@@ -1,7 +1,6 @@
-import { noodleExtensions } from '.';
 import { CustomDataEvent } from './customData';
 
-// it took me long enough to realise Event is also a built in JS, but it has no effect here anyway
+// it took me long enough to realise Event is a built in JS interface, but it has no effect here anyway
 export interface Event {
     _time: number;
     _type: number;
@@ -53,6 +52,10 @@ export const isLightEvent = (event: Event): boolean => {
 
 export const isLaserRotationEvent = (event: Event): boolean => {
     return event._type === 12 || event._type === 13;
+};
+
+export const isLaneRotationEvent = (event: Event): boolean => {
+    return event._type === 14 || event._type === 15;
 };
 
 export const isHydraulicEvent = (event: Event): boolean => {

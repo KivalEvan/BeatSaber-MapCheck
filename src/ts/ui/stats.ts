@@ -5,18 +5,17 @@ import * as uiSelect from './select';
 import * as beatmap from '../beatmap';
 import * as swing from '../tools/swing';
 import savedData from '../savedData';
+import settings from '../settings';
 import { formatNumber, round } from '../utils';
-import { BeatmapInfo } from '../beatmap/info';
-import { BeatmapSetData } from '../beatmap/map';
 
 const logPrefix = 'UI Stats: ';
 const prefix = 'stats__';
 
 const htmlStats = document.querySelector('#stats .accordion__collapsible');
 
-export const createSettingsTable = (
-    mapInfo: BeatmapInfo,
-    mapSet: BeatmapSetData
+const createSettingsTable = (
+    mapInfo: beatmap.info.BeatmapInfo,
+    mapSet: beatmap.map.BeatmapSetData
 ): HTMLTableElement => {
     const bpm = beatmap.bpm.create(mapInfo._beatsPerMinute);
     const njs = beatmap.njs.create(
@@ -52,7 +51,10 @@ export const createSettingsTable = (
     return htmlTable;
 };
 
-export const createNPSTable = (mapInfo: BeatmapInfo, mapSet: BeatmapSetData): HTMLTableElement => {
+const createNPSTable = (
+    mapInfo: beatmap.info.BeatmapInfo,
+    mapSet: beatmap.map.BeatmapSetData
+): HTMLTableElement => {
     const bpm = beatmap.bpm.create(mapInfo._beatsPerMinute);
     const duration = savedData._duration || 0;
     const mapDuration = bpm.toRealTime(beatmap.map.getLastInteractiveTime(mapSet._data));
@@ -100,7 +102,10 @@ export const createNPSTable = (mapInfo: BeatmapInfo, mapSet: BeatmapSetData): HT
     return htmlTable;
 };
 
-export const createSPSTable = (mapInfo: BeatmapInfo, mapSet: BeatmapSetData): HTMLTableElement => {
+const createSPSTable = (
+    mapInfo: beatmap.info.BeatmapInfo,
+    mapSet: beatmap.map.BeatmapSetData
+): HTMLTableElement => {
     const bpm = beatmap.bpm.create(mapInfo._beatsPerMinute);
     const swingInfo = swing.info(mapSet, bpm);
 
@@ -141,9 +146,9 @@ export const createSPSTable = (mapInfo: BeatmapInfo, mapSet: BeatmapSetData): HT
     return htmlTable;
 };
 
-export const createNoteCountTable = (
-    mapInfo: BeatmapInfo,
-    mapSet: BeatmapSetData
+const createNoteCountTable = (
+    mapInfo: beatmap.info.BeatmapInfo,
+    mapSet: beatmap.map.BeatmapSetData
 ): HTMLTableElement => {
     const noteCount = beatmap.note.count(mapSet._data._notes);
 
@@ -211,7 +216,7 @@ function notePlacementSelectHandler(ev: Event) {
     const notes = savedData._mapSet?.find((set) => set._mode === mode && set._difficulty === diff)
         ?._data._notes;
     if (!notes) {
-        console.error('note could not be found');
+        console.error(logPrefix + 'note could not be found');
         return;
     }
     let filteredNotes!: beatmap.note.Note[];
@@ -238,7 +243,7 @@ function notePlacementSelectHandler(ev: Event) {
     }
     const htmlTableBody = document.querySelector(`#${prefix}table-placement-${mode}-${diff}`);
     if (!htmlTableBody) {
-        console.error('table could not be found');
+        console.error(logPrefix + 'table could not be found');
         return;
     }
     htmlTableBody.innerHTML = notePlacementTableString(filteredNotes);
@@ -283,9 +288,9 @@ function notePlacementTableString(notes: beatmap.note.Note[]): string {
     return htmlString;
 }
 
-export const createNotePlacementTable = (
-    mapInfo: BeatmapInfo,
-    mapSet: BeatmapSetData
+const createNotePlacementTable = (
+    mapInfo: beatmap.info.BeatmapInfo,
+    mapSet: beatmap.map.BeatmapSetData
 ): HTMLTableElement => {
     const htmlSelect = uiSelect.create(
         `${prefix}table-select-placement-${mapSet._mode}-${mapSet._difficulty}`,
@@ -293,9 +298,9 @@ export const createNotePlacementTable = (
         'caption',
         `${prefix}table-caption`,
         { text: 'All', value: 'all' },
-        { text: 'Note', value: 'note' },
-        { text: 'Red', value: 'red' },
-        { text: 'Blue', value: 'blue' },
+        { text: 'Note Only', value: 'note' },
+        { text: 'Red Note', value: 'red' },
+        { text: 'Blue Note', value: 'blue' },
         { text: 'Bomb', value: 'bomb' }
     );
     htmlSelect
@@ -323,7 +328,7 @@ function noteAngleSelectHandler(ev: Event) {
     const notes = savedData._mapSet?.find((set) => set._mode === mode && set._difficulty === diff)
         ?._data._notes;
     if (!notes) {
-        console.error('note could not be found');
+        console.error(logPrefix + 'note could not be found');
         return;
     }
     let filteredNotes!: beatmap.note.Note[];
@@ -350,12 +355,13 @@ function noteAngleSelectHandler(ev: Event) {
     }
     const htmlTableBody = document.querySelector(`#${prefix}table-angle-${mode}-${diff}`);
     if (!htmlTableBody) {
-        console.error('table could not be found');
+        console.error(logPrefix + 'table could not be found');
         return;
     }
     htmlTableBody.innerHTML = noteAngleTableString(filteredNotes);
 }
 
+// TODO: use angle instead of cut direction
 function noteAngleTableString(notes: beatmap.note.Note[]): string {
     const totalNote = notes.length || 1;
     const cutOrder = [4, 0, 5, 2, 8, 3, 6, 1, 7];
@@ -374,9 +380,9 @@ function noteAngleTableString(notes: beatmap.note.Note[]): string {
     return htmlString;
 }
 
-export const createNoteAngleTable = (
-    mapInfo: BeatmapInfo,
-    mapSet: BeatmapSetData
+const createNoteAngleTable = (
+    mapInfo: beatmap.info.BeatmapInfo,
+    mapSet: beatmap.map.BeatmapSetData
 ): HTMLTableElement => {
     const htmlSelect = uiSelect.create(
         `${prefix}table-select-angle-${mapSet._mode}-${mapSet._difficulty}`,
@@ -384,9 +390,9 @@ export const createNoteAngleTable = (
         'caption',
         `${prefix}table-caption`,
         { text: 'All', value: 'all' },
-        { text: 'Note', value: 'note' },
-        { text: 'Red', value: 'red' },
-        { text: 'Blue', value: 'blue' },
+        { text: 'Note Only', value: 'note' },
+        { text: 'Red Note', value: 'red' },
+        { text: 'Blue Note', value: 'blue' },
         { text: 'Bomb', value: 'bomb' }
     );
     htmlSelect
@@ -405,7 +411,10 @@ export const createNoteAngleTable = (
     return htmlTable;
 };
 
-export const createInfoTable = (mapInfo: BeatmapInfo, mapSet: BeatmapSetData): HTMLTableElement => {
+const createInfoTable = (
+    mapInfo: beatmap.info.BeatmapInfo,
+    mapSet: beatmap.map.BeatmapSetData
+): HTMLTableElement => {
     const noteCount = beatmap.note.count(mapSet._data._notes);
 
     const htmlTable = document.createElement('table');
@@ -437,9 +446,9 @@ export const createInfoTable = (mapInfo: BeatmapInfo, mapSet: BeatmapSetData): H
     return htmlTable;
 };
 
-export const createEventCountTable = (
-    mapInfo: BeatmapInfo,
-    mapSet: BeatmapSetData
+const createEventCountTable = (
+    mapInfo: beatmap.info.BeatmapInfo,
+    mapSet: beatmap.map.BeatmapSetData
 ): HTMLTableElement => {
     const eventCount = beatmap.event.count(mapSet._data._events);
     let chroma = 0;
@@ -493,9 +502,9 @@ export const createEventCountTable = (
     return htmlTable;
 };
 
-export const createObstacleCountTable = (
-    mapInfo: BeatmapInfo,
-    mapSet: BeatmapSetData
+const createObstacleCountTable = (
+    mapInfo: beatmap.info.BeatmapInfo,
+    mapSet: beatmap.map.BeatmapSetData
 ): HTMLTableElement => {
     const obstacleCount = beatmap.obstacle.count(mapSet._data._obstacles);
 
@@ -583,9 +592,12 @@ export const populate = (): void => {
             );
 
             const htmlContent = htmlAccordion.querySelector('.accordion__collapsible-flex');
-            if (!htmlContent) {
-                throw new Error(logPrefix + 'Something went wrong!');
+            const htmlCheckbox =
+                htmlAccordion.querySelector<HTMLInputElement>('.accordion__button');
+            if (!htmlContent || !htmlCheckbox) {
+                throw new Error(logPrefix + 'something went wrong!');
             }
+            htmlCheckbox.checked = settings.onLoad.stats;
 
             const htmlPanelL = uiPanel.create('small', 'half');
             const htmlPanelM = uiPanel.create('small', 'half');

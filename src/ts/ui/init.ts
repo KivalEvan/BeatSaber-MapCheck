@@ -15,9 +15,16 @@ export default (function () {
             uiSettings.setTheme(settings.theme);
             uiFooter.setWatermark(version.watermark);
             uiFooter.setVersion(version.value);
+            for (const id in settings.load) {
+                uiSettings.setLoadCheck(id, settings.load[id]);
+            }
+            uiSettings.setSortCheck(settings.sorting);
             for (const id in settings.show) {
                 uiAccordion.show(id, settings.show[id]);
                 uiSettings.setShowCheck(id, settings.show[id]);
+            }
+            for (const id in settings.onLoad) {
+                uiSettings.setOnLoadCheck(id, settings.onLoad[id]);
             }
             uiTheme.set(settings.theme);
             console.log('user interface initialised');

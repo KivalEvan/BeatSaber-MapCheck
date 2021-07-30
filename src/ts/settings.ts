@@ -1,8 +1,9 @@
+// TODO: validate settings
 import { Theme } from './ui/theme';
 
 type SettingsFlag = { [key: string]: boolean };
 
-export type BeatNumbering = 'ChroMapper' | 'MediocreMapper' | 'JSON Time' | 'Real Time';
+type BeatNumbering = 'beattime' | 'jsontime' | 'realtime';
 
 interface SettingsProperty {
     _load: SettingsPropertyLoad;
@@ -10,14 +11,27 @@ interface SettingsProperty {
     _beatNumbering: BeatNumbering;
     _rounding: number;
     _theme: Theme;
+    _onLoad: SettingsPropertyOnLoad;
     _show: SettingsPropertyShow;
 }
 
+export enum SettingsLoadRename {
+    audio = 'Audio',
+    imageCover = 'Cover Image',
+    imageContributor = 'Contributor Image',
+}
 interface SettingsPropertyLoad extends SettingsFlag {
     audio: boolean;
-    image: boolean;
+    imageCover: boolean;
+    imageContributor: boolean;
 }
 
+export enum SettingsShowRename {
+    info = 'Information',
+    tools = 'Tools',
+    stats = 'Stats',
+    settings = 'Settings',
+}
 interface SettingsPropertyShow extends SettingsFlag {
     info: boolean;
     tools: boolean;
@@ -25,16 +39,21 @@ interface SettingsPropertyShow extends SettingsFlag {
     settings: boolean;
 }
 
+interface SettingsPropertyOnLoad extends SettingsFlag {
+    stats: boolean;
+}
+
 const settingsDefault: SettingsProperty = {
     _load: {
-        audio: false,
-        image: false,
-        customData: false,
+        audio: true,
+        imageCover: true,
+        imageContributor: true,
     },
-    _sorting: false,
-    _beatNumbering: 'ChroMapper',
+    _sorting: true,
+    _beatNumbering: 'beattime',
     _rounding: 3,
     _theme: 'Dark',
+    _onLoad: { stats: false },
     _show: {
         info: false,
         tools: false,
@@ -76,6 +95,9 @@ class Settings {
     }
     set theme(val: Theme) {
         this._property._theme = val;
+    }
+    get onLoad() {
+        return this._property._onLoad;
     }
     get show(): SettingsPropertyShow {
         return this._property._show;

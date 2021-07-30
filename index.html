@@ -230,48 +230,30 @@
         <span>Settings</span>
       </label>
       <div class="accordion__collapsible-flex">
-        <div class="panel panel--medium panel--offset-half">
-          <span>Map Loading/Output</span><br>
-          <input type="checkbox" class="settings__checkbox" id="settings__loadaudio">
-          <label for="settings__loadaudio">
+        <div class="panel panel--small panel--offset-half">
+          <span>Map zip loading:</span><br>
+          <input type="checkbox" class="settings__checkbox settings__load" id="settings__load-audio" name="audio">
+          <label for="settings__load-audio">
             <span>Load audio</span>
           </label><br>
-          <input type="checkbox" class="settings__checkbox" id="settings__loadcoverimage">
-          <label for="settings__loadcoverimage">
+          <input type="checkbox" class="settings__checkbox settings__load" id="settings__load-imagecover"
+            name="imageCover">
+          <label for="settings__load-imagecover">
             <span>Load cover image</span>
           </label><br>
-          <input type="checkbox" class="settings__checkbox" id="settings__loadcontributorimage">
-          <label for="settings__loadcontributorimage">
+          <input type="checkbox" class="settings__checkbox settings__load" id="settings__load-imagecontributor"
+            name="imageContributor">
+          <label for="settings__load-imagecontributor">
             <span>Load contributor image</span>
           </label><br>
-          <input type="checkbox" class="settings__checkbox" id="settings__sort">
+          <input type="checkbox" class="settings__checkbox settings__sort" id="settings__sort">
           <label for="settings__sort">
             <span>Sorting</span>
           </label><br>
-          <input type="checkbox" class="settings__checkbox" id="settings__customdata">
-          <label for="settings__customdata">
-            <span>Custom data check</span>
-          </label><br>
-          <label for="settings__beat-numbering">
-            <span>Beat numbering:</span>
-          </label>
-          <select class="settings__beat-numbering" id="settings__beat-numbering">
-            <option value="mmtime">ChroMapper</option>
-            <option value="cmtime">MediocreMapper</option>
-            <option value="jsontime">JSON Time</option>
-            <option value="realtime">Real Time</option>
-          </select><br>
-          <label for="settings__rounding">
-            <span>Rounding:</span>
-          </label>
-          <input type="number" class="settings__rounding" id="settings__rounding">
+          <br>
+          <div>Disabling these speeds up loading time but may cause unintended result.</div>
         </div>
-        <div class="panel panel--medium panel--offset-half">
-          <span>Preferences</span><br>
-          <label for="settings__theme">
-            <span>Theme:</span>
-          </label>
-          <select class="settings__theme" id="settings__theme"></select><br>
+        <div class="panel panel--small panel--offset-half">
           <span>Show on launch:</span><br>
           <input type="checkbox" class="settings__checkbox settings__show" id="settings__show-info">
           <label for="settings__show-info">
@@ -289,6 +271,20 @@
           <label for="settings__show-settings">
             <span>Settings</span>
           </label><br>
+          <br>
+          <span>On map load:</span><br>
+          <input type="checkbox" class="settings__checkbox settings__onload" id="settings__onload-stats" name="stats">
+          <label for="settings__onload-stats">
+            <span>Show difficulty stats</span>
+          </label><br>
+        </div>
+        <div class="panel panel--small panel--offset-half">
+          <span>Preferences:</span><br>
+          <label for="settings__theme">
+            <span>Theme:</span>
+          </label>
+          <select class="settings__theme" id="settings__theme"></select><br>
+          <br>
           <input type="button" class="settings__clear-button input-toggle" id="settings__clear-button"
             value="Clear Settings">
         </div>

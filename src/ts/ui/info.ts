@@ -1,7 +1,8 @@
 // may god help you maintain these
+// TODO: add custom colours somewhere
 import * as uiHeader from './header';
-import { removeOptions, toMMSS } from '../utils';
 import * as beatmap from '../beatmap';
+import { removeOptions, toMMSS } from '../utils';
 import savedData from '../savedData';
 import sanitizeHtml from 'sanitize-html';
 

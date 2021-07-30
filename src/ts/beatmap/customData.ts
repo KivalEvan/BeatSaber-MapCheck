@@ -2,7 +2,6 @@ import { Bookmark } from './bookmark';
 import { BPMChange } from './bpm';
 import {
     CCustomData,
-    ChromaEnvironment,
     ChromaEnvironmentOld,
     ChromaEvent,
     ChromaNote,
