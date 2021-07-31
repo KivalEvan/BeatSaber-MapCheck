@@ -182,11 +182,12 @@ export const loadMap = async (mapZip: JSZip) => {
         console.log('loading audio');
         let audioFile = mapZip.file(savedData._mapInfo._songFilename);
         if (settings.load.audio && audioFile) {
-            let audioBuffer = await audioFile.async('arraybuffer');
+            let arrayBuffer = await audioFile.async('arraybuffer');
+            uiHeader.setAudio(arrayBuffer);
             let audioContext = new AudioContext();
             await audioContext
-                .decodeAudioData(audioBuffer)
-                .then(function (buffer) {
+                .decodeAudioData(arrayBuffer)
+                .then((buffer) => {
                     let duration = buffer.duration;
                     savedData._duration = duration;
                     uiHeader.setSongDuration(duration);

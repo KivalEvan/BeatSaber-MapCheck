@@ -1,6 +1,7 @@
 import { round, toMMSS } from '../utils';
 
 const logPrefix = 'UI Header: ';
+const mimeCodec = 'audio/ogg';
 
 const htmlIntro = document.querySelector<HTMLElement>('.intro');
 const htmlMetadata = document.querySelector<HTMLElement>('.metadata');
@@ -13,6 +14,8 @@ const htmlMetadataSongSubname = document.querySelector<HTMLElement>('.metadata__
 const htmlMetadataSongAuthor = document.querySelector<HTMLElement>('.metadata__song-author');
 const htmlMetadataSongBPM = document.querySelector<HTMLElement>('.metadata__song-bpm');
 const htmlMetadataSongDuration = document.querySelector<HTMLElement>('.metadata__song-duration');
+const htmlAudio = document.querySelector<HTMLAudioElement>('.audio');
+let audioSource: AudioBufferSourceNode;
 
 if (!htmlIntro || !htmlMetadata) {
     console.error(logPrefix + 'header component is missing one of the two section');
@@ -115,9 +118,29 @@ export const setSongDuration = (num: number): void => {
     htmlMetadataSongDuration.textContent = toMMSS(num);
 };
 
+let audioURL: string;
+export const setAudio = async (arrayBuffer: ArrayBuffer): Promise<void> => {
+    if (!htmlAudio) {
+        console.error(logPrefix + 'missing HTML element for audio');
+        return;
+    }
+    const blob = new Blob([arrayBuffer], { type: 'audio/ogg' });
+    htmlAudio.src = window.URL.createObjectURL(blob);
+};
+
+export const unloadAudio = (): void => {
+    if (!htmlAudio) {
+        console.error(logPrefix + 'missing HTML element for audio');
+        return;
+    }
+    htmlAudio.src = '';
+    window.URL.revokeObjectURL(audioURL);
+};
+
 export const reset = (): void => {
     switchHeader(false);
     setCoverImage(null);
     setCoverLink();
     setSongDuration(0);
+    unloadAudio();
 };
