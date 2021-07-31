@@ -1,21 +1,12 @@
+import * as beatmap from '../beatmap';
+import * as template from './template';
 import savedData from '../savedData';
-import { CharacteristicName } from '../beatmap/characteristic';
-import { DifficultyName } from '../beatmap/difficulty';
-
-interface Analysis {
-    missing: [];
-    mapSet: AnalysisSet;
-}
-
-interface AnalysisSet {
-    mode: CharacteristicName;
-    difficulty: DifficultyName;
-    sps: number;
-    htmlOutput: HTMLElement | string;
-}
 
 export const general = (): void => {};
-export const difficulty = (mode?: CharacteristicName, difficulty?: DifficultyName): void => {
+export const difficulty = (
+    mode?: beatmap.characteristic.CharacteristicName,
+    difficulty?: beatmap.difficulty.DifficultyName
+): void => {
     if (mode && difficulty) {
     }
 };

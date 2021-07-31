@@ -102,7 +102,7 @@ function onLoadCheckHandler(ev: Event): void {
 }
 
 export const setOnLoadCheck = (id: string, bool: boolean): void => {
-    htmlSettingsLoad.forEach((elem) => {
+    htmlSettingsOnLoad.forEach((elem) => {
         if (elem.name === id) {
             elem.checked = bool;
         }

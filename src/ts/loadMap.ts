@@ -164,24 +164,18 @@ export const loadMap = async (mapZip: JSZip) => {
         }
 
         savedData._contributors = [];
-        let counter = savedData._mapInfo._customData?._contributors?.length || 0;
-        // TODO: replace forEach with imperative for loop instead, order matters in this
-        savedData._mapInfo._customData?._contributors?.forEach(async (elem) => {
-            console.log('loading contributor image ' + elem._name);
-            imageFile = mapZip.file(elem._iconPath);
-            let contr = elem;
-            if (settings.load.imageContributor && imageFile) {
-                contr._base64 = await imageFile.async('base64');
-            } else {
-                console.error(`${elem._iconPath} does not exists.`);
+        if (savedData._mapInfo?._customData?._contributors) {
+            for (const contr of savedData._mapInfo._customData._contributors) {
+                console.log('loading contributor image ' + contr._name);
+                imageFile = mapZip.file(contr._iconPath);
+                if (settings.load.imageContributor && imageFile) {
+                    contr._base64 = await imageFile.async('base64');
+                } else {
+                    console.error(`${contr._iconPath} does not exists.`);
+                }
+                savedData._contributors.push(contr);
             }
-            // how is this going to be undefined??? i just defined u up there
-            savedData._contributors?.push(contr);
-            counter--;
-            if (counter === 0) {
-                uiInfo.populateContributors(savedData._contributors);
-            }
-        });
+        }
 
         // load audio
         uiLoading.status('info', 'Loading audio...', 20.875);
@@ -261,14 +255,16 @@ export const loadMap = async (mapZip: JSZip) => {
         uiLoading.status('info', 'Adding map difficulty stats...', 80);
         console.log('adding map stats');
         uiStats.populate();
+        uiInfo.populateContributors(savedData._contributors);
 
         uiLoading.status('info', 'Analysing map...', 85);
         console.log('analysing map');
         analyse.general();
+        uiTools.displayOutputGeneral();
 
         uiLoading.status('info', 'Analysing difficulty...', 90);
         analyse.difficulty();
-        uiTools.displayOutput();
+        uiTools.displayOutputDifficulty();
 
         disableInput(false);
         uiLoading.status('info', 'Map successfully loaded!');

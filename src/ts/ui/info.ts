@@ -27,6 +27,7 @@ const htmlTableSuggestions = document.querySelector<HTMLElement>('.info__suggest
 const htmlTableInformation = document.querySelector<HTMLElement>('.info__information');
 const htmlTableWarnings = document.querySelector<HTMLElement>('.info__warnings');
 const htmlTableBookmarks = document.querySelector<HTMLElement>('.info__bookmarks');
+const htmlTableBPMChanges = document.querySelector<HTMLElement>('.info__bpm-changes');
 const htmlTableEnvironmentEnhancement = document.querySelector<HTMLElement>(
     '.info__environment-enhancement'
 );
@@ -51,6 +52,7 @@ if (
     !htmlTableInformation ||
     !htmlTableWarnings ||
     !htmlTableBookmarks ||
+    !htmlTableBPMChanges ||
     !htmlTableEnvironmentEnhancement ||
     !htmlTablePointDefinitions ||
     !htmlTableCustomEvents
@@ -266,6 +268,24 @@ export const setBookmarks = (
     displayTableRow(htmlTableBookmarks, content);
 };
 
+export const setBPMChanges = (bpm?: beatmap.bpm.BeatPerMinute | null): void => {
+    if (!htmlTableBPMChanges) {
+        console.error(logPrefix + 'missing table row for bookmarks');
+        return;
+    }
+    if (!bpm || !bpm.change.length) {
+        hideTableRow(htmlTableBPMChanges);
+        return;
+    }
+    const bpmcText = bpm.change.map((bpmc) => {
+        let time = bpmc._newTime;
+        let rt = bpm.toRealTime(bpmc._time);
+        return `${time} | ${toMMSS(rt)} -- ${bpmc._BPM}`;
+    });
+    const content = bpmcText.join('<br>');
+    displayTableRow(htmlTableBPMChanges, content);
+};
+
 // this implementation looks hideous but whatever
 export const setEnvironmentEnhancement = (arr?: beatmap.chroma.ChromaEnvironment[]): void => {
     if (!htmlTableEnvironmentEnhancement) {
@@ -380,6 +400,7 @@ export const setDiffInfoTable = (mapData: beatmap.map.BeatmapSetData): void => {
             : null;
         setTimeSpend(mapData._data._customData._time);
         setBookmarks(mapData._data._customData._bookmarks, bpm);
+        setBPMChanges(bpm);
         setEnvironmentEnhancement(mapData._data._customData._environment);
         setPointDefinitions(mapData._data._customData._pointDefinitions);
         setCustomEvents(mapData._data._customData._customEvents, bpm);

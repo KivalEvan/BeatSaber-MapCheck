@@ -1,5 +1,9 @@
 import * as beatmap from '../../beatmap';
-import { MapSettings, Tool } from '..';
+import { BeatmapSettings, Tool } from '../template';
+
+export const check = (mapSettings: BeatmapSettings, mapData: beatmap.map.BeatmapSetData): void => {
+    return;
+};
 
 const tool: Tool = {
     name: 'Placeholder',
@@ -20,9 +24,5 @@ const tool: Tool = {
     },
     run: check,
 };
-
-function check(mapSettings: MapSettings, mapData: BeatmapData): number {
-    return 0;
-}
 
 export default tool;

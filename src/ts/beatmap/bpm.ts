@@ -17,8 +17,8 @@ export class BeatPerMinute {
 
     constructor(bpm: number, bpmChange: BPMChange[] = [], offset: number = 0) {
         this._bpm = bpm;
-        this._bpmChange = this.getBPMChangeTime([...bpmChange]);
         this._offset = offset;
+        this._bpmChange = this.getBPMChangeTime([...bpmChange]);
     }
 
     get value(): number {
