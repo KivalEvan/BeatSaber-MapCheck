@@ -631,4 +631,8 @@ export const populate = (): void => {
     });
 };
 
-export const reset = (): void => {};
+export const reset = (): void => {
+    while (htmlStats.firstChild) {
+        htmlStats.removeChild(htmlStats.firstChild);
+    }
+};

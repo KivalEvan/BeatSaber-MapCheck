@@ -14,11 +14,12 @@ interface SavedData {
     _bpmChanges?: BPMChange[];
 }
 
-let savedData: SavedData = {};
+const savedData: SavedData = {};
 
-// FIXME: kinda cheap solution, but idk if it's problematic?
 export const clearData = (): void => {
-    savedData = {};
+    for (const data in savedData) {
+        delete savedData[data];
+    }
 };
 
 export default savedData;
