@@ -6,6 +6,7 @@ import * as uiFooter from './footer';
 import * as uiSettings from './settings';
 import * as uiAccordion from './accordion';
 import * as uiTheme from './theme';
+import * as uiTools from './tools';
 
 export default (function () {
     let executed = false;
@@ -15,6 +16,7 @@ export default (function () {
             uiSettings.setTheme(settings.theme);
             uiFooter.setWatermark(version.watermark);
             uiFooter.setVersion(version.value);
+            uiTools.populateTool();
             for (const id in settings.load) {
                 uiSettings.setLoadCheck(id, settings.load[id]);
             }

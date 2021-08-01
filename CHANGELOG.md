@@ -10,6 +10,7 @@
 -   Settings Tab
     -   Saves to local storage
 -   Theme
+-   Audio player
 -   Mode and difficulty ordering
 -   Note Angle stats
 -   Note Placement and Note Angle note options
@@ -25,5 +26,4 @@
 
 ### Planned
 
--   Audio player
 -   Maybe mobile friendly?

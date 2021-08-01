@@ -59,6 +59,8 @@
     }
     &__tab {
         display: none;
+        box-sizing: border-box;
+        margin: 0.25em;
     }
     &__apply {
         margin-top: auto;
@@ -78,7 +80,5 @@
             margin: 0.25em;
             padding: 0.25em;
         }
-    }
-    &__input[type='checkbox'] {
     }
 }

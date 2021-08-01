@@ -17,8 +17,8 @@ interface SavedData {
 const savedData: SavedData = {};
 
 export const clearData = (): void => {
-    for (const data in savedData) {
-        delete savedData[data];
+    for (const key in savedData) {
+        delete savedData[key as keyof typeof savedData];
     }
 };
 

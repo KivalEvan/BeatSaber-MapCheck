@@ -415,11 +415,10 @@ const createInfoTable = (
     mapInfo: beatmap.info.BeatmapInfo,
     mapSet: beatmap.map.BeatmapSetData
 ): HTMLTableElement => {
+    const bpm = beatmap.bpm.create(mapInfo._beatsPerMinute);
     const noteCount = beatmap.note.count(mapSet._data._notes);
 
-    const htmlTable = document.createElement('table');
-    htmlTable.className = prefix + 'table';
-    htmlTable.innerHTML = `<caption class="${prefix}table-caption">Note Information:</caption>
+    let htmlString = `<caption class="${prefix}table-caption">Note Information:</caption>
     <tr>
     <th class="${prefix}table-header" colspan="2">Max Score</th>
     <td class="${prefix}table-element">${formatNumber(
@@ -428,20 +427,36 @@ const createInfoTable = (
     </tr>
     <tr>
     <th class="${prefix}table-header" colspan="2">Effective BPM</th>
-    <td class="${prefix}table-element">0</td>
+    <td class="${prefix}table-element">${round(
+        swing.getMaxEffectiveBPM(mapSet._data._notes, bpm),
+        2
+    )}</td>
     </tr>
     <tr>
     <th class="${prefix}table-header" colspan="2">Effective BPM (swing)</th>
-    <td class="${prefix}table-element">0</td>
-    </tr>
-    <tr>
-    <th class="${prefix}table-header" colspan="2">Min. Slider Speed</th>
-    <td class="${prefix}table-element">0ms</td>
-    </tr>
-    <tr>
-    <th class="${prefix}table-header" colspan="2">Max. Slider Speed</th>
-    <td class="${prefix}table-element">0ms</td>
+    <td class="${prefix}table-element">${round(
+        swing.getMaxEffectiveBPMSwing(mapSet._data._notes, bpm),
+        2
+    )}</td>
     </tr>`;
+
+    let minSpeed = round(swing.getMinSliderSpeed(mapSet._data._notes, bpm) * 1000, 1);
+    let maxSpeed = round(swing.getMaxSliderSpeed(mapSet._data._notes, bpm) * 1000, 1);
+    if (minSpeed && maxSpeed) {
+        htmlString += `
+        <tr>
+        <th class="${prefix}table-header" colspan="2">Min. Slider Speed</th>
+        <td class="${prefix}table-element">${minSpeed}ms</td>
+        </tr>
+        <tr>
+        <th class="${prefix}table-header" colspan="2">Max. Slider Speed</th>
+        <td class="${prefix}table-element">${maxSpeed}ms</td>
+        </tr>`;
+    }
+
+    const htmlTable = document.createElement('table');
+    htmlTable.className = prefix + 'table';
+    htmlTable.innerHTML = htmlString;
 
     return htmlTable;
 };
@@ -632,6 +647,10 @@ export const populate = (): void => {
 };
 
 export const reset = (): void => {
+    if (!htmlStats) {
+        console.error(logPrefix + 'HTML stats does not exist');
+        return;
+    }
     while (htmlStats.firstChild) {
         htmlStats.removeChild(htmlStats.firstChild);
     }

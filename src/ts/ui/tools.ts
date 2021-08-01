@@ -1,5 +1,6 @@
 import * as beatmap from '../beatmap';
 import savedData from '../savedData';
+import * as tools from '../tools';
 import { removeOptions } from '../utils';
 import { setDiffInfoTable } from './info';
 
@@ -161,7 +162,42 @@ function selectDifficultyHandler(ev: Event): void {
     }
 }
 
-export const populateTool = (): void => {};
+export const populateTool = (): void => {
+    if (!htmlToolsNote || !htmlToolsObstacle || !htmlToolsEvent || !htmlToolsOther) {
+        console.error(logPrefix + 'could not find tools content');
+        return;
+    }
+    const toolList = tools.component.getAll().sort((a, b) => a.order.input - b.order.input);
+    toolList.forEach((tl) => {
+        if (tl.input.html) {
+            switch (tl.type) {
+                case 'note': {
+                    htmlToolsNote.appendChild(tl.input.html);
+                    break;
+                }
+                case 'obstacle': {
+                    htmlToolsObstacle.appendChild(tl.input.html);
+                    break;
+                }
+                case 'event': {
+                    htmlToolsEvent.appendChild(tl.input.html);
+                    break;
+                }
+                case 'other': {
+                    htmlToolsOther.appendChild(tl.input.html);
+                    break;
+                }
+                case 'general': {
+                }
+                default: {
+                    console.error(
+                        logPrefix + 'could not recognise type ' + tl.type + ' for ' + tl.name
+                    );
+                }
+            }
+        }
+    });
+};
 
 export const reset = (): void => {
     setDifficultyLabel('Difficulty Label');

@@ -65,13 +65,15 @@ export const isDiagonal = (n1: Note, n2: Note): boolean => {
     return Math.abs(n1._lineIndex - n2._lineIndex) === Math.abs(n1._lineLayer - n2._lineLayer);
 };
 
-export const isWindow = (n1: Note, n2: Note): boolean => {
-    return (
-        Math.max(
-            Math.abs(n1._lineIndex - n2._lineIndex),
-            Math.abs(n1._lineLayer - n2._lineLayer)
-        ) >= 2
+export const distance = (n1: Note, n2: Note): number => {
+    return Math.max(
+        Math.abs(n1._lineIndex - n2._lineIndex),
+        Math.abs(n1._lineLayer - n2._lineLayer)
     );
+};
+
+export const isWindow = (n1: Note, n2: Note): boolean => {
+    return distance(n1, n2) >= 2;
 };
 
 export const isSlantedWindow = (n1: Note, n2: Note): boolean => {

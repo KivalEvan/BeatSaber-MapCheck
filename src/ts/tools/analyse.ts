@@ -1,5 +1,5 @@
 import * as beatmap from '../beatmap';
-import * as template from './template';
+import * as component from './component';
 import savedData from '../savedData';
 
 export const general = (): void => {};
