@@ -1,6 +1,7 @@
 import * as beatmap from '../beatmap';
 import savedData from '../savedData';
 import * as tools from '../tools';
+import * as analyse from '../tools/analyse';
 import { removeOptions } from '../utils';
 import { setDiffInfoTable } from './info';
 
@@ -17,12 +18,20 @@ const htmlToolsEvent = document.querySelector<HTMLElement>('.tools__event-conten
 const htmlToolsOther = document.querySelector<HTMLElement>('.tools__other-content');
 const htmlToolsOutputDifficulty = document.querySelector<HTMLElement>('.tools__output-diff');
 const htmlToolsOutputGeneral = document.querySelector<HTMLElement>('.tools__output-general');
+const htmlToolsApplyThis = document.querySelector<HTMLInputElement>('.tools__apply-this');
+const htmlToolsApplyAll = document.querySelector<HTMLInputElement>('.tools__apply-all');
 
 if (!htmlToolsNote || !htmlToolsObstacle || !htmlToolsEvent || !htmlToolsOther) {
     console.error(logPrefix + 'missing content element');
 }
 if (!htmlToolsOutputDifficulty || !htmlToolsOutputGeneral) {
     console.error(logPrefix + 'missing output element');
+}
+if (htmlToolsApplyThis && htmlToolsApplyAll) {
+    htmlToolsApplyThis.addEventListener('click', applyThisHandler);
+    htmlToolsApplyAll.addEventListener('click', applyAllHandler);
+} else {
+    console.error(logPrefix + 'missing apply element');
 }
 
 htmlToolsSelectMode.forEach((elem) => elem.addEventListener('change', selectModeHandler));
@@ -34,24 +43,41 @@ export const displayOutputGeneral = (): void => {
     if (!htmlToolsOutputGeneral) {
         throw new Error(logPrefix + 'output general is missing');
     }
-    htmlToolsOutputGeneral.innerHTML = 'Nothing to display';
+    htmlToolsOutputGeneral.innerHTML = 'not fully implemented yet.';
 };
 
 export const displayOutputDifficulty = (
     mode?: beatmap.characteristic.CharacteristicName,
-    diff?: beatmap.difficulty.DifficultyName
+    difficulty?: beatmap.difficulty.DifficultyName
 ): void => {
-    if (!mode && !diff) {
+    if (!mode && !difficulty) {
         mode = htmlToolsSelectMode[0].value as beatmap.characteristic.CharacteristicName;
-        diff = htmlToolsSelectDifficulty[0].value as beatmap.difficulty.DifficultyName;
+        difficulty = htmlToolsSelectDifficulty[0].value as beatmap.difficulty.DifficultyName;
     }
-    if (!mode || !diff) {
-        throw new Error('something went wrong!');
+    if (!mode || !difficulty) {
+        throw new Error(logPrefix + 'something went wrong!');
     }
     if (!htmlToolsOutputDifficulty) {
         throw new Error(logPrefix + 'output difficulty is missing');
     }
-    htmlToolsOutputDifficulty.innerHTML = 'Nothing to display';
+    htmlToolsOutputDifficulty.innerHTML = '';
+    const analysis = savedData._analysis?.mapSet.find(
+        (set) => set.difficulty === difficulty && set.mode === mode
+    );
+    if (!analysis) {
+        htmlToolsOutputDifficulty.textContent =
+            'ERROR: could not find analysis for ' + mode + ' ' + difficulty;
+        return;
+    }
+    if (!analysis.html) {
+        htmlToolsOutputDifficulty.textContent =
+            'ERROR: could not find HTML for ' + mode + ' ' + difficulty;
+        return;
+    }
+    analysis.html.forEach((h) => htmlToolsOutputDifficulty.appendChild(h));
+    if (!htmlToolsOutputDifficulty.firstChild) {
+        htmlToolsOutputDifficulty.textContent = 'No output available.';
+    }
 };
 
 export const setDifficultyLabel = (str: string): void => {
@@ -159,7 +185,28 @@ function selectDifficultyHandler(ev: Event): void {
                     target.value as keyof typeof beatmap.difficulty.DifficultyRename
                 ]
         );
+        displayOutputDifficulty(diff._mode, diff._difficulty);
     }
+}
+
+function applyThisHandler(): void {
+    const mode = htmlToolsSelectMode[0].value as beatmap.characteristic.CharacteristicName;
+    const difficulty = htmlToolsSelectDifficulty[0].value as beatmap.difficulty.DifficultyName;
+    if (!mode || !difficulty) {
+        throw new Error(logPrefix + 'mode/difficulty does not exist');
+    }
+    analyse.difficulty(mode, difficulty);
+    displayOutputDifficulty(mode, difficulty);
+}
+
+function applyAllHandler(): void {
+    const mode = htmlToolsSelectMode[0].value as beatmap.characteristic.CharacteristicName;
+    const difficulty = htmlToolsSelectDifficulty[0].value as beatmap.difficulty.DifficultyName;
+    if (!mode || !difficulty) {
+        throw new Error(logPrefix + 'mode/difficulty does not exist');
+    }
+    analyse.all();
+    displayOutputDifficulty(mode, difficulty);
 }
 
 export const populateTool = (): void => {
@@ -188,6 +235,8 @@ export const populateTool = (): void => {
                     break;
                 }
                 case 'general': {
+                    console.log(logPrefix + 'ignoring general tool for ' + tl.name);
+                    break;
                 }
                 default: {
                     console.error(
@@ -199,7 +248,17 @@ export const populateTool = (): void => {
     });
 };
 
+const clearOutput = (): void => {
+    if (htmlToolsOutputGeneral) {
+        htmlToolsOutputGeneral.innerHTML = 'No output.';
+    }
+    if (htmlToolsOutputDifficulty) {
+        htmlToolsOutputDifficulty.innerHTML = 'No output.';
+    }
+};
+
 export const reset = (): void => {
+    clearOutput();
     setDifficultyLabel('Difficulty Label');
     populateSelect();
 };

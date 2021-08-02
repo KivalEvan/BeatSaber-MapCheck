@@ -5,6 +5,8 @@ export interface BeatmapSettings {
     _difficulty: beatmap.difficulty.DifficultyName;
     _bpm: beatmap.bpm.BeatPerMinute;
     _njs: beatmap.njs.NoteJumpSpeed;
+    _audioDuration: number | null;
+    _mapDuration: number | null;
 }
 
 export type ToolType = 'note' | 'event' | 'obstacle' | 'other' | 'general';
@@ -14,23 +16,28 @@ export enum ToolLevelEmoji {
     'error' = '❌',
 }
 
-export interface ToolInputOption {
-    enabled: boolean;
+export interface ToolInputParams {
     [key: string]: boolean | number | number[];
 }
 
 export interface ToolInput {
-    option: ToolInputOption;
+    enabled: boolean;
+    params: ToolInputParams;
     html?: HTMLElement;
 }
 
+type ToolOutputType = boolean | number | number[];
 export interface ToolOutput {
-    result: boolean | string | number | number[] | null;
+    result: ToolOutputType | { [key: string]: ToolOutputType } | null;
     html?: HTMLElement | null;
-    console?: (...args: any) => void;
+    console?: string | null;
 }
 
-export type ToolRun = (mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData) => void;
+export type ToolRun = (
+    mapSettings: BeatmapSettings,
+    mapSet: beatmap.map.BeatmapSetData,
+    mapInfo?: beatmap.info.BeatmapInfo
+) => void;
 
 export interface Tool {
     name: string;

@@ -10,9 +10,8 @@ const tool: Tool = {
         output: 0,
     },
     input: {
-        option: {
-            enabled: false,
-        },
+        enabled: false,
+        params: {},
     },
     output: {
         result: null,

@@ -1,3 +1,4 @@
+// TODO: change round to floor so it's consistent with audio player?
 export const toMMSS = (num: number): string => {
     if (!num) {
         return '0:00';

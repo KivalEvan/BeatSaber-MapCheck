@@ -5,7 +5,7 @@
     "private": true,
     "scripts": {
         "test": "jest",
-        "build": "jest && webpack --config webpack.prod.js",
+        "build": "webpack --config webpack.prod.js",
         "dev": "webpack --config webpack.dev.js",
         "clean": "npm cache clean --force",
         "madge": "madge ./src/ts --extensions ts,js -c --warning"

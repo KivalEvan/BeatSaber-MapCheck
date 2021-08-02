@@ -61,6 +61,8 @@
         display: none;
         box-sizing: border-box;
         margin: 0.25em;
+        max-height: 20em;
+        overflow: auto;
     }
     &__apply {
         margin-top: auto;
@@ -79,6 +81,8 @@
             border-radius: 4px;
             margin: 0.25em;
             padding: 0.25em;
+            max-height: 12em;
+            overflow: auto;
         }
     }
 }

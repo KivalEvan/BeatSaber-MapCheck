@@ -2,12 +2,16 @@ import * as beatmap from '../beatmap';
 
 export interface Analysis {
     missing: [];
-    mapSet: AnalysisSet;
+    general: AnalysisBase;
+    mapSet: AnalysisSet[];
 }
 
-interface AnalysisSet {
+interface AnalysisBase {
+    html: HTMLElement[] | null;
+}
+
+export interface AnalysisSet extends AnalysisBase {
     mode: beatmap.characteristic.CharacteristicName;
     difficulty: beatmap.difficulty.DifficultyName;
     sps: number;
-    htmlOutput: HTMLElement | string;
 }

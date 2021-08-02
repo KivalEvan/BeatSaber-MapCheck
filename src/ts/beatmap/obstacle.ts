@@ -30,6 +30,10 @@ export const isCrouch = (obstacle: Obstacle): boolean => {
     );
 };
 
+export const isZero = (obstacle: Obstacle): boolean => {
+    return obstacle._duration === 0 || obstacle._width === 0;
+};
+
 export const hasChroma = (obstacle: Obstacle): boolean => {
     return Array.isArray(obstacle._customData?._color);
 };

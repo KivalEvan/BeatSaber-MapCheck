@@ -1,6 +1,7 @@
 import * as beatmap from '../../beatmap';
 import { round } from '../../utils';
 import { BeatmapSettings, Tool } from '../template';
+import * as swing from '../swing';
 
 const defaultEBPM = 450;
 const defaultEBPMS = 350;
@@ -43,8 +44,8 @@ const tool: Tool = {
         output: 0,
     },
     input: {
-        option: {
-            enabled: false,
+        enabled: false,
+        params: {
             ebpmThres: defaultEBPM,
             ebpmsThres: defaultEBPMS,
         },
@@ -53,26 +54,65 @@ const tool: Tool = {
     output: {
         result: null,
         html: null,
-        console() {
-            return this.result;
-        },
     },
-    run: check,
+    run: run,
 };
 
 function inputEBPMHandler(this: HTMLInputElement) {
-    tool.input.option.ebpmThres = round(Math.abs(parseFloat(this.value)), 1);
-    this.value = tool.input.option.ebpmThres.toString();
+    tool.input.params.ebpmThres = round(Math.abs(parseFloat(this.value)), 1);
+    this.value = tool.input.params.ebpmThres.toString();
 }
 
 function inputEBPMSHandler(this: HTMLInputElement) {
-    tool.input.option.ebpmsThres = round(Math.abs(parseFloat(this.value)), 1);
-    this.value = tool.input.option.ebpmsThres.toString();
+    tool.input.params.ebpmsThres = round(Math.abs(parseFloat(this.value)), 1);
+    this.value = tool.input.params.ebpmsThres.toString();
 }
 
-function check(mapSettings: BeatmapSettings, mapData: beatmap.map.BeatmapSetData): void {
-    tool.output.result;
-    return;
+function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData) {
+    const { _bpm: bpm } = mapSettings;
+    const { _notes: notes } = mapSet._data;
+    const params = tool.input.params;
+
+    const noteEBPM = swing
+        .getEffectiveBPMNote(notes, bpm)
+        .filter((n) => n._ebpm > params.ebpmThres)
+        .map((n) => bpm.adjustTime(n._time));
+    const noteEBPMS = swing
+        .getEffectiveBPMSwingNote(notes, bpm)
+        .filter((n) => n._ebpm > params.ebpmsThres)
+        .map((n) => bpm.adjustTime(n._time));
+
+    return { base: noteEBPM, swing: noteEBPMS };
+}
+
+function run(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData): void {
+    const result = check(mapSettings, mapSet);
+    tool.output.result = result;
+    const params = tool.input.params;
+
+    const htmlString = [];
+    if (result.base.length) {
+        htmlString.push(
+            `<b>>${params.ebpmThres}EBPM warning [${result.base.length}]:</b> ${result.base
+                .map((n) => round(n, 3))
+                .join(', ')}`
+        );
+    }
+    if (result.swing.length) {
+        htmlString.push(
+            `<b>>${params.ebpmsThres}EBPM (swing) warning [${
+                result.swing.length
+            }]:</b> ${result.swing.map((n) => round(n, 3)).join(', ')}`
+        );
+    }
+
+    if (htmlString.length) {
+        const htmlResult = document.createElement('div');
+        htmlResult.innerHTML = htmlString.join('<br>');
+        tool.output.html = htmlResult;
+    } else {
+        tool.output.html = null;
+    }
 }
 
 export default tool;

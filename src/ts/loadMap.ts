@@ -252,7 +252,6 @@ export const loadMap = async (mapZip: JSZip) => {
             }
         }
 
-        uiTools.populateSelect(savedData._mapInfo);
         uiLoading.status('info', 'Adding map difficulty stats...', 80);
         console.log('adding map stats');
         uiStats.populate();
@@ -264,7 +263,8 @@ export const loadMap = async (mapZip: JSZip) => {
         uiTools.displayOutputGeneral();
 
         uiLoading.status('info', 'Analysing difficulty...', 90);
-        analyse.difficulty();
+        analyse.all();
+        uiTools.populateSelect(savedData._mapInfo);
         uiTools.displayOutputDifficulty();
 
         disableInput(false);
