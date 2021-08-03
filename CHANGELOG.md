@@ -1,6 +1,6 @@
 # Changelog
 
-## v2.0.0 : TypeScript Rewrite
+## v2.0.0 : TypeScript Rewrite [##-08-2021]
 
 ### Added
 

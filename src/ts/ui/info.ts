@@ -4,7 +4,7 @@ import * as uiHeader from './header';
 import * as beatmap from '../beatmap';
 import { removeOptions, toMMSS } from '../utils';
 import savedData from '../savedData';
-import sanitizeHtml from 'sanitize-html';
+import { container } from 'webpack';
 
 const logPrefix = 'UI Info: ';
 
@@ -168,10 +168,22 @@ const hideTableRow = <T extends HTMLElement>(elem: T): void => {
     elem.classList.add('hidden');
 };
 
-const displayTableRow = <T extends HTMLElement>(elem: T, content: string): void => {
+const displayTableRow = <T extends HTMLElement>(elem: T, content: string | string[]): void => {
     const tableElem = elem.querySelector('.info__table-element');
     if (tableElem) {
-        tableElem.innerHTML = sanitizeHtml(content, { allowedTags: ['br'] });
+        if (typeof content === 'string') {
+            tableElem.textContent = content;
+        } else {
+            content.forEach((c) => {
+                let temp = document.createElement('span');
+                temp.textContent = c;
+                tableElem.appendChild(temp);
+                tableElem.appendChild(document.createElement('br'));
+            });
+            if (tableElem.lastChild) {
+                tableElem.removeChild(tableElem.lastChild);
+            }
+        }
     }
     elem.classList.remove('hidden');
 };
@@ -224,8 +236,7 @@ export const setInformation = (arr?: string[]): void => {
         hideTableRow(htmlTableInformation);
         return;
     }
-    const content = arr.join('<br>');
-    displayTableRow(htmlTableInformation, content);
+    displayTableRow(htmlTableInformation, arr);
 };
 
 export const setWarnings = (arr?: string[]): void => {
@@ -237,8 +248,7 @@ export const setWarnings = (arr?: string[]): void => {
         hideTableRow(htmlTableWarnings);
         return;
     }
-    const content = arr.join('<br>');
-    displayTableRow(htmlTableWarnings, content);
+    displayTableRow(htmlTableWarnings, arr);
 };
 
 export const setBookmarks = (
@@ -264,8 +274,7 @@ export const setBookmarks = (
             elem._name !== '' ? elem._name : '**EMPTY NAME**'
         }`;
     });
-    const content = bookmarkText.join('<br>');
-    displayTableRow(htmlTableBookmarks, content);
+    displayTableRow(htmlTableBookmarks, bookmarkText);
 };
 
 export const setBPMChanges = (bpm?: beatmap.bpm.BeatPerMinute | null): void => {
@@ -282,8 +291,7 @@ export const setBPMChanges = (bpm?: beatmap.bpm.BeatPerMinute | null): void => {
         let rt = bpm.toRealTime(bpmc._time);
         return `${time} | ${toMMSS(rt)} -- ${bpmc._BPM}`;
     });
-    const content = bpmcText.join('<br>');
-    displayTableRow(htmlTableBPMChanges, content);
+    displayTableRow(htmlTableBPMChanges, bpmcText);
 };
 
 // this implementation looks hideous but whatever
@@ -314,8 +322,7 @@ export const setEnvironmentEnhancement = (arr?: beatmap.chroma.ChromaEnvironment
             elem._track ? `(${elem._track})` : ''
         } -> ${elem._id}`;
     });
-    const content = envEnhance.join('<br>');
-    displayTableRow(htmlTableEnvironmentEnhancement, content);
+    displayTableRow(htmlTableEnvironmentEnhancement, envEnhance);
 };
 
 export const setPointDefinitions = (arr?: beatmap.noodleExtensions.NEPointDefinition[]): void => {
@@ -330,8 +337,7 @@ export const setPointDefinitions = (arr?: beatmap.noodleExtensions.NEPointDefini
     const pointDef = arr.map((elem) => {
         return `${elem._name} -- ${elem._points.length} point${elem._points.length > 1 ? 's' : ''}`;
     });
-    const content = pointDef.join('<br>');
-    displayTableRow(htmlTablePointDefinitions, content);
+    displayTableRow(htmlTablePointDefinitions, pointDef);
 };
 
 export const setCustomEvents = (
@@ -370,8 +376,7 @@ export const setCustomEvents = (
             ''
         )}]${elem._data._track ? `(${elem._data._track})` : ''}`;
     });
-    const content = customEv.join('<br>');
-    displayTableRow(htmlTableCustomEvents, content);
+    displayTableRow(htmlTableCustomEvents, customEv);
 };
 
 export const setInfo = (mapInfo: beatmap.info.BeatmapInfo): void => {
