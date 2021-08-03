@@ -2,6 +2,7 @@ import * as beatmap from '../beatmap';
 import savedData from '../savedData';
 import * as tools from '../tools';
 import * as analyse from '../tools/analyse';
+import * as uiLoading from './loading';
 import { removeOptions } from '../utils';
 import { setDiffInfoTable } from './info';
 
@@ -43,7 +44,20 @@ export const displayOutputGeneral = (): void => {
     if (!htmlToolsOutputGeneral) {
         throw new Error(logPrefix + 'output general is missing');
     }
-    htmlToolsOutputGeneral.innerHTML = 'not fully implemented yet.';
+    const analysis = savedData._analysis?.general;
+    if (!analysis) {
+        htmlToolsOutputGeneral.textContent = 'ERROR: could not find analysis for general';
+        return;
+    }
+    if (!analysis.html) {
+        htmlToolsOutputGeneral.textContent = 'ERROR: could not find HTML for general';
+        return;
+    }
+    htmlToolsOutputGeneral.innerHTML = '';
+    analysis.html.forEach((h) => htmlToolsOutputGeneral.appendChild(h));
+    if (!htmlToolsOutputGeneral.firstChild) {
+        htmlToolsOutputGeneral.textContent = 'No issues found.';
+    }
 };
 
 export const displayOutputDifficulty = (
@@ -76,7 +90,7 @@ export const displayOutputDifficulty = (
     }
     analysis.html.forEach((h) => htmlToolsOutputDifficulty.appendChild(h));
     if (!htmlToolsOutputDifficulty.firstChild) {
-        htmlToolsOutputDifficulty.textContent = 'No output available.';
+        htmlToolsOutputDifficulty.textContent = 'No issues found.';
     }
 };
 
@@ -147,6 +161,15 @@ export const populateSelect = (mapInfo?: beatmap.info.BeatmapInfo): void => {
     });
 };
 
+export const adjustTime = (): void => {
+    const mapInfo = savedData._mapInfo;
+    if (!mapInfo) {
+        throw new Error(logPrefix + 'could not find map info');
+    }
+    const bpm = beatmap.bpm.create(mapInfo._beatsPerMinute);
+    analyse.adjustTime(bpm);
+};
+
 function selectModeHandler(ev: Event): void {
     const target = ev.target as HTMLSelectElement;
     htmlToolsSelectMode.forEach((elem) => {
@@ -195,6 +218,7 @@ function applyThisHandler(): void {
     if (!mode || !difficulty) {
         throw new Error(logPrefix + 'mode/difficulty does not exist');
     }
+    uiLoading.status('info', `Re-analysing ${mode} ${difficulty}`, 100);
     analyse.difficulty(mode, difficulty);
     displayOutputDifficulty(mode, difficulty);
 }
@@ -205,6 +229,7 @@ function applyAllHandler(): void {
     if (!mode || !difficulty) {
         throw new Error(logPrefix + 'mode/difficulty does not exist');
     }
+    uiLoading.status('info', `Re-analysing all difficulties`, 100);
     analyse.all();
     displayOutputDifficulty(mode, difficulty);
 }

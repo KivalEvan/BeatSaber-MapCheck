@@ -13,12 +13,13 @@
 -   Audio player
 -   Mode and difficulty ordering
 -   Note Angle stats
--   Note Placement and Note Angle note options
+-   Improved Note Placement stats
 -   Partial Mapping Extensions and Noodle Extensions support
 
 ### Changed
 
 -   Codebase rewritten
+-   Updated SPS requirement
 
 ### Fixed
 

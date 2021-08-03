@@ -4,7 +4,7 @@ import { BeatmapSettings, Tool } from '../template';
 const tool: Tool = {
     name: 'Placeholder',
     description: 'Placeholder',
-    type: 'event',
+    type: 'other',
     order: {
         input: 0,
         output: 0,
@@ -13,13 +13,11 @@ const tool: Tool = {
         enabled: false,
         params: {},
     },
-    output: {
-        result: null,
-    },
+    output: {},
     run: check,
 };
 
-function check(mapSettings: BeatmapSettings, mapData: beatmap.map.BeatmapSetData): void {
+function check(mapSettings: BeatmapSettings): void {
     return;
 }
 

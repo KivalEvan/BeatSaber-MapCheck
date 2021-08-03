@@ -194,9 +194,11 @@ export const loadMap = async (mapZip: JSZip) => {
                     flag.map.load.audio = true;
                 })
                 .catch(function (err) {
+                    uiHeader.setSongDuration();
                     console.error(err);
                 });
         } else {
+            uiHeader.setSongDuration();
             console.error(`${savedData._mapInfo._songFilename} does not exist.`);
         }
 
@@ -252,6 +254,7 @@ export const loadMap = async (mapZip: JSZip) => {
             }
         }
 
+        uiTools.adjustTime();
         uiLoading.status('info', 'Adding map difficulty stats...', 80);
         console.log('adding map stats');
         uiStats.populate();
@@ -259,6 +262,7 @@ export const loadMap = async (mapZip: JSZip) => {
 
         uiLoading.status('info', 'Analysing map...', 85);
         console.log('analysing map');
+        analyse.sps();
         analyse.general();
         uiTools.displayOutputGeneral();
 

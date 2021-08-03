@@ -131,6 +131,10 @@ export const hasMappingExtensions = (event: Event): boolean => {
     );
 };
 
+export const isValid = (event: Event): boolean => {
+    return isValidType(event);
+};
+
 const commonEvent = [0, 1, 2, 3, 4, 8, 9, 12, 13];
 export const count = (events: Event[]): EventCount => {
     const eventCount: EventCount = {};

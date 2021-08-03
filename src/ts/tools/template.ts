@@ -1,8 +1,7 @@
 import * as beatmap from '../beatmap';
+import { SwingAnalysis } from './swing';
 
 export interface BeatmapSettings {
-    _mode: beatmap.characteristic.CharacteristicName;
-    _difficulty: beatmap.difficulty.DifficultyName;
     _bpm: beatmap.bpm.BeatPerMinute;
     _njs: beatmap.njs.NoteJumpSpeed;
     _audioDuration: number | null;
@@ -24,19 +23,19 @@ export interface ToolInput {
     enabled: boolean;
     params: ToolInputParams;
     html?: HTMLElement;
+    adjustTime?: (bpm: beatmap.bpm.BeatPerMinute) => void;
 }
 
-type ToolOutputType = boolean | number | number[];
 export interface ToolOutput {
-    result: ToolOutputType | { [key: string]: ToolOutputType } | null;
     html?: HTMLElement | null;
-    console?: string | null;
+    console?: any;
 }
 
 export type ToolRun = (
     mapSettings: BeatmapSettings,
-    mapSet: beatmap.map.BeatmapSetData,
-    mapInfo?: beatmap.info.BeatmapInfo
+    mapSet?: beatmap.map.BeatmapSetData,
+    mapInfo?: beatmap.info.BeatmapInfo,
+    sps?: SwingAnalysis[]
 ) => void;
 
 export interface Tool {

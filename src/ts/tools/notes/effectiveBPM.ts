@@ -44,19 +44,26 @@ const tool: Tool = {
         output: 0,
     },
     input: {
-        enabled: false,
+        enabled: true,
         params: {
             ebpmThres: defaultEBPM,
             ebpmsThres: defaultEBPMS,
         },
         html: htmlContainer,
+        adjustTime: adjustTimeHandler,
     },
     output: {
-        result: null,
         html: null,
     },
     run: run,
 };
+
+function adjustTimeHandler(bpm: beatmap.bpm.BeatPerMinute) {
+    tool.input.params.ebpmThres = round(Math.min(defaultEBPM, bpm.value * 2 * 1.285714), 1);
+    tool.input.params.ebpmsThres = round(Math.min(defaultEBPMS, bpm.value * 2), 1);
+    htmlInputEBPM.value = tool.input.params.ebpmThres.toString();
+    htmlInputEBPMS.value = tool.input.params.ebpmsThres.toString();
+}
 
 function inputEBPMHandler(this: HTMLInputElement) {
     tool.input.params.ebpmThres = round(Math.abs(parseFloat(this.value)), 1);
@@ -71,38 +78,40 @@ function inputEBPMSHandler(this: HTMLInputElement) {
 function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData) {
     const { _bpm: bpm } = mapSettings;
     const { _notes: notes } = mapSet._data;
-    const params = tool.input.params;
+    const { ebpmThres, ebpmsThres } = <{ ebpmThres: number; ebpmsThres: number }>tool.input.params;
 
     const noteEBPM = swing
         .getEffectiveBPMNote(notes, bpm)
-        .filter((n) => n._ebpm > params.ebpmThres)
-        .map((n) => bpm.adjustTime(n._time));
+        .filter((n) => n._ebpm > ebpmThres)
+        .map((n) => n._time);
     const noteEBPMS = swing
         .getEffectiveBPMSwingNote(notes, bpm)
-        .filter((n) => n._ebpm > params.ebpmsThres)
-        .map((n) => bpm.adjustTime(n._time));
+        .filter((n) => n._ebpm > ebpmsThres)
+        .map((n) => n._time);
 
     return { base: noteEBPM, swing: noteEBPMS };
 }
 
-function run(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData): void {
+function run(mapSettings: BeatmapSettings, mapSet?: beatmap.map.BeatmapSetData): void {
+    if (!mapSet) {
+        throw new Error('something went wrong!');
+    }
     const result = check(mapSettings, mapSet);
-    tool.output.result = result;
-    const params = tool.input.params;
+    const { ebpmThres, ebpmsThres } = <{ ebpmThres: number; ebpmsThres: number }>tool.input.params;
 
-    const htmlString = [];
+    const htmlString: string[] = [];
     if (result.base.length) {
         htmlString.push(
-            `<b>>${params.ebpmThres}EBPM warning [${result.base.length}]:</b> ${result.base
-                .map((n) => round(n, 3))
+            `<b>>${ebpmThres}EBPM warning [${result.base.length}]:</b> ${result.base
+                .map((n) => round(mapSettings._bpm.adjustTime(n), 3))
                 .join(', ')}`
         );
     }
     if (result.swing.length) {
         htmlString.push(
-            `<b>>${params.ebpmsThres}EBPM (swing) warning [${
-                result.swing.length
-            }]:</b> ${result.swing.map((n) => round(n, 3)).join(', ')}`
+            `<b>>${ebpmsThres}EBPM (swing) warning [${result.swing.length}]:</b> ${result.swing
+                .map((n) => round(mapSettings._bpm.adjustTime(n), 3))
+                .join(', ')}`
         );
     }
 

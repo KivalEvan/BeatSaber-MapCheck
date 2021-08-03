@@ -427,6 +427,7 @@ export const reset = (): void => {
     setInformation();
     setWarnings();
     setBookmarks();
+    setBPMChanges();
     setEnvironmentEnhancement();
     setPointDefinitions();
     setCustomEvents();

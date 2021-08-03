@@ -65,6 +65,10 @@ export const isDiagonal = (n1: Note, n2: Note): boolean => {
     return Math.abs(n1._lineIndex - n2._lineIndex) === Math.abs(n1._lineLayer - n2._lineLayer);
 };
 
+export const isInline = (n1: Note, n2: Note): boolean => {
+    return n1._lineLayer === n2._lineLayer && n1._lineIndex === n2._lineIndex;
+};
+
 export const distance = (n1: Note, n2: Note): number => {
     return Math.max(
         Math.abs(n1._lineIndex - n2._lineIndex),
@@ -114,6 +118,10 @@ export const hasMappingExtensions = (note: Note): boolean => {
         note._lineLayer > 2 ||
         note._lineLayer < 0
     );
+};
+
+export const isValid = (note: Note): boolean => {
+    return !hasMappingExtensions(note) && note._cutDirection >= 0 && note._cutDirection <= 8;
 };
 
 export const count = (notes: Note[]): NoteCount => {
@@ -207,11 +215,37 @@ export const getAngle = (n: Note): number => {
     return cutAngle[n._cutDirection];
 };
 
-export const checkDirection = (n1: Note, n2: Note, angleTol: number, equal: boolean): boolean => {
-    if (n1._cutDirection === 8 || n2._cutDirection === 8) {
-        return false;
+export const checkDirection = (
+    n1: Note | number,
+    n2: Note | number,
+    angleTol: number,
+    equal: boolean
+): boolean => {
+    let n1Angle!: number;
+    let n2Angle!: number;
+    if (typeof n1 === 'number') {
+        if (n1 === 8) {
+            return false;
+        }
+        n1Angle = cutAngle[n1];
+    } else {
+        if (n1._cutDirection === 8) {
+            return false;
+        }
+        n1Angle = getAngle(n1);
+    }
+    if (typeof n2 === 'number') {
+        if (n2 === 8) {
+            return false;
+        }
+        n2Angle = cutAngle[n2];
+    } else {
+        if (n2._cutDirection === 8) {
+            return false;
+        }
+        n2Angle = getAngle(n2);
     }
     return equal
-        ? shortRotDistance(getAngle(n1), getAngle(n2), 360) <= angleTol
-        : shortRotDistance(getAngle(n1), getAngle(n2), 360) >= angleTol;
+        ? shortRotDistance(n1Angle, n2Angle, 360) <= angleTol
+        : shortRotDistance(n1Angle, n2Angle, 360) >= angleTol;
 };

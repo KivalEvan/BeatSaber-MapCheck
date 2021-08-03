@@ -50,6 +50,14 @@ export const setCoverImage = (src: string | null): void => {
     htmlCoverImage.src = src || './assets/unknown.jpg';
 };
 
+export const getCoverImage = (): string | null => {
+    if (!htmlCoverImage) {
+        console.error(logPrefix + 'missing HTML element for cover image');
+        return null;
+    }
+    return htmlCoverImage.src;
+};
+
 export const setCoverLink = (url?: string, id?: string): void => {
     if (!htmlCoverLink) {
         console.error(logPrefix + 'missing HTML element for cover link');
@@ -110,12 +118,16 @@ export const setSongBPM = (num: number, minBPM?: number, maxBPM?: number): void 
     htmlMetadataSongBPM.textContent = text;
 };
 
-export const setSongDuration = (num: number): void => {
+export const setSongDuration = (num?: number): void => {
     if (!htmlMetadataSongDuration) {
         console.error(logPrefix + 'missing HTML element for song duration');
         return;
     }
-    htmlMetadataSongDuration.textContent = toMMSS(num);
+    if (num) {
+        htmlMetadataSongDuration.textContent = toMMSS(num);
+    } else {
+        htmlMetadataSongDuration.textContent = 'No audio';
+    }
 };
 
 let audioURL: string;

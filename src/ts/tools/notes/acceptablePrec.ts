@@ -29,14 +29,13 @@ const tool: Tool = {
         output: 0,
     },
     input: {
-        enabled: false,
+        enabled: true,
         params: {
             prec: [...defaultPrec],
         },
         html: htmlContainer,
     },
     output: {
-        result: null,
         html: null,
     },
     run: run,
@@ -57,9 +56,9 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
     // god this hurt me, but typescript sees this as number instead of number[]
     const { prec } = <{ prec: number[] }>tool.input.params;
 
-    const noteTime = swing
+    return swing
         .getEffectiveBPMSwingNote(notes, bpm)
-        .map((n) => bpm.adjustTime(n._time))
+        .map((n) => n._time)
         .filter((x, i, ary) => {
             return !i || x !== ary[i - 1];
         })
@@ -68,24 +67,24 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
                 return false;
             }
             for (let i = 0; i < prec.length; i++) {
-                if ((n + 0.001) % (1 / prec[i]) < 0.01) {
+                if ((bpm.adjustTime(n) + 0.001) % (1 / prec[i]) < 0.01) {
                     return false;
                 }
             }
             return true;
         });
-
-    return noteTime;
 }
 
-function run(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData): void {
+function run(mapSettings: BeatmapSettings, mapSet?: beatmap.map.BeatmapSetData): void {
+    if (!mapSet) {
+        throw new Error('something went wrong!');
+    }
     const result = check(mapSettings, mapSet);
-    tool.output.result = result;
 
     if (result.length) {
         const htmlResult = document.createElement('div');
         htmlResult.innerHTML = `<b>Off-beat precision [${result.length}]:</b> ${result
-            .map((n) => round(n, 3))
+            .map((n) => round(mapSettings._bpm.adjustTime(n), 3))
             .join(', ')}`;
         tool.output.html = htmlResult;
     } else {

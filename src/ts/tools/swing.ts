@@ -19,10 +19,10 @@ interface SwingPerSecondInfo {
     total: SwingPerSecond;
 }
 
-interface SwingAnalysis {
+export interface SwingAnalysis {
     mode: beatmap.characteristic.CharacteristicName;
     difficulty: beatmap.difficulty.DifficultyName;
-    sps: number;
+    sps: SwingPerSecondInfo;
 }
 
 interface NoteEBPM extends beatmap.note.Note {
@@ -354,57 +354,63 @@ export const info = (
     return spsInfo;
 };
 
-export const getProgressionMax = (spsArray: SwingAnalysis[], duration: number) => {
+export const getProgressionMax = (
+    spsArray: SwingAnalysis[],
+    minSPS: number
+): SwingAnalysis | null => {
     let spsPerc = 0;
     let spsCurr = 0;
-    let prevDiff = null;
-    for (const diff of spsArray) {
-        if (spsCurr > 0 && diff.sps > 0) {
-            spsPerc = (1 - spsCurr / diff.sps) * 100;
+    for (const spsMap of spsArray) {
+        const overall = spsMap.sps.total.overall;
+        if (spsCurr > 0 && overall > 0) {
+            spsPerc = (1 - spsCurr / overall) * 100;
         }
-        spsCurr = diff.sps > 0 ? diff.sps : spsCurr;
-        if (spsCurr > (duration < 120 ? 3.2 : 4.2) && spsPerc > 40) {
-            return prevDiff;
+        spsCurr = overall > 0 ? overall : spsCurr;
+        if (spsCurr > minSPS && spsPerc > 40) {
+            return spsMap;
         }
-        prevDiff = diff;
     }
-    return false;
+    return null;
 };
 
-export const getProgressionMin = (spsArray: SwingAnalysis[], duration: number) => {
+export const getProgressionMin = (
+    spsArray: SwingAnalysis[],
+    minSPS: number
+): SwingAnalysis | null => {
     let spsPerc = Number.MAX_SAFE_INTEGER;
     let spsCurr = 0;
-    let prevDiff = null;
-    for (const diff of spsArray) {
-        if (spsCurr > 0 && diff.sps > 0) {
-            spsPerc = (1 - spsCurr / diff.sps) * 100;
+    for (const spsMap of spsArray) {
+        const overall = spsMap.sps.total.overall;
+        if (spsCurr > 0 && overall > 0) {
+            spsPerc = (1 - spsCurr / overall) * 100;
         }
-        spsCurr = diff.sps > 0 ? diff.sps : spsCurr;
-        if (spsCurr > (duration < 120 ? 3.2 : 4.2) && spsPerc < 10) {
-            return prevDiff;
+        spsCurr = overall > 0 ? overall : spsCurr;
+        if (spsCurr > minSPS && spsPerc < 10) {
+            return spsMap;
         }
-        prevDiff = diff;
     }
-    return false;
+    return null;
 };
 
-export const getSPSTotalPercDrop = (spsArray: SwingAnalysis[]) => {
+export const calcSPSTotalPercDrop = (spsArray: SwingAnalysis[]): number => {
     let highest = 0;
     let lowest = Number.MAX_SAFE_INTEGER;
-    spsArray.forEach((diff) => {
-        if (diff.sps > 0) {
-            highest = Math.max(highest, diff.sps);
-            lowest = Math.min(lowest, diff.sps);
+    spsArray.forEach((spsMap) => {
+        const overall = spsMap.sps.total.overall;
+        if (overall > 0) {
+            highest = Math.max(highest, overall);
+            lowest = Math.min(lowest, overall);
         }
     });
     return highest || (highest && lowest) ? (1 - lowest / highest) * 100 : 0;
 };
 
-export const getSPSLowest = (spsArray: SwingAnalysis[]) => {
+export const getSPSLowest = (spsArray: SwingAnalysis[]): number => {
     let lowest = Number.MAX_SAFE_INTEGER;
-    spsArray.forEach((diff) => {
-        if (diff.sps > 0) {
-            lowest = Math.min(lowest, diff.sps);
+    spsArray.forEach((spsMap) => {
+        const overall = spsMap.sps.total.overall;
+        if (overall > 0) {
+            lowest = Math.min(lowest, overall);
         }
     });
     return lowest;

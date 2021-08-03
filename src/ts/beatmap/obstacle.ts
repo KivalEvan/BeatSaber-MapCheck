@@ -34,6 +34,17 @@ export const isZero = (obstacle: Obstacle): boolean => {
     return obstacle._duration === 0 || obstacle._width === 0;
 };
 
+export const isLonger = (
+    currObstacle: Obstacle,
+    prevObstacle: Obstacle,
+    offset: number = 0
+): boolean => {
+    return (
+        currObstacle._time + currObstacle._duration >
+        prevObstacle._time + prevObstacle._duration + offset
+    );
+};
+
 export const hasChroma = (obstacle: Obstacle): boolean => {
     return Array.isArray(obstacle._customData?._color);
 };
@@ -57,9 +68,13 @@ export const hasMappingExtensions = (obstacle: Obstacle): boolean => {
     return (
         obstacle._width > 4 ||
         obstacle._type >= 1000 ||
-        obstacle._lineIndex >= 1000 ||
-        obstacle._lineIndex <= -1000
+        obstacle._lineIndex > 3 ||
+        obstacle._lineIndex < 0
     );
+};
+
+export const isValid = (obstacle: Obstacle): boolean => {
+    return !hasMappingExtensions(obstacle);
 };
 
 export const count = (obstacles: Obstacle[]): ObstacleCount => {
