@@ -16,7 +16,7 @@ export enum ToolLevelEmoji {
 }
 
 export interface ToolInputParams {
-    [key: string]: boolean | number | number[];
+    [key: string]: boolean | string | number | number[];
 }
 
 export interface ToolInput {
@@ -28,7 +28,6 @@ export interface ToolInput {
 
 export interface ToolOutput {
     html?: HTMLElement | null;
-    console?: any;
 }
 
 export type ToolRun = (

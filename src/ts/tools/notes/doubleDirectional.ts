@@ -3,13 +3,9 @@ import { round } from '../../utils';
 import { BeatmapSettings, Tool } from '../template';
 import * as swing from '../swing';
 
-const defaultSpeed = 0.025;
-
 const htmlContainer = document.createElement('div');
 const htmlInputCheck = document.createElement('input');
 const htmlLabelCheck = document.createElement('label');
-
-let localBPM!: beatmap.bpm.BeatPerMinute;
 
 htmlLabelCheck.textContent = ' Double-directional';
 htmlLabelCheck.htmlFor = 'input__tools-dd-check';
@@ -23,12 +19,12 @@ htmlContainer.appendChild(htmlInputCheck);
 htmlContainer.appendChild(htmlLabelCheck);
 
 const tool: Tool = {
-    name: 'Slow Slider',
+    name: 'Double-directional',
     description: 'Placeholder',
     type: 'note',
     order: {
-        input: 0,
-        output: 0,
+        input: 99,
+        output: 140,
     },
     input: {
         enabled: htmlInputCheck.checked,

@@ -26,8 +26,8 @@ const tool: Tool = {
     description: 'Placeholder',
     type: 'note',
     order: {
-        input: 0,
-        output: 0,
+        input: 20,
+        output: 130,
     },
     input: {
         enabled: htmlInputCheck.checked,

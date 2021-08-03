@@ -23,7 +23,7 @@ const tool: Tool = {
     type: 'obstacle',
     order: {
         input: 0,
-        output: 0,
+        output: 50,
     },
     input: {
         enabled: htmlInputCheck.checked,

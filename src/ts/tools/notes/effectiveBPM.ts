@@ -41,7 +41,7 @@ const tool: Tool = {
     type: 'note',
     order: {
         input: 0,
-        output: 0,
+        output: 100,
     },
     input: {
         enabled: true,

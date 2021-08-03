@@ -53,8 +53,8 @@ const tool: Tool = {
     description: 'Placeholder',
     type: 'note',
     order: {
-        input: 0,
-        output: 0,
+        input: 21,
+        output: 120,
     },
     input: {
         enabled: htmlInputCheck.checked,

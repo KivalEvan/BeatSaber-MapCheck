@@ -7,8 +7,8 @@ const tool: Tool = {
     description: 'Placeholder',
     type: 'other',
     order: {
-        input: 0,
-        output: 0,
+        input: 40,
+        output: 40,
     },
     input: {
         enabled: true,

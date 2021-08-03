@@ -49,9 +49,6 @@ export const general = (): void => {
                 if (tool.output.html) {
                     htmlArr.push(tool.output.html);
                 }
-                if (tool.output.console) {
-                    console.log(tool.output.console);
-                }
             } catch (err) {
                 console.error(err);
             }
@@ -116,9 +113,6 @@ export const difficulty = (
                 tool.run(mapSettings, mapSet, mapInfo);
                 if (tool.output.html) {
                     htmlArr.push(tool.output.html);
-                }
-                if (tool.output.console) {
-                    console.log(tool.output.console);
                 }
             } catch (err) {
                 console.error(err);

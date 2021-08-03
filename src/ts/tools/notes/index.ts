@@ -4,3 +4,5 @@ export { default as varySwing } from './varySwing';
 export { default as slowSlider } from './slowSlider';
 export { default as inlineAngle } from './inlineAngle';
 export { default as doubleDirectional } from './doubleDirectional';
+export { default as visionBlock } from './visionBlock';
+export { default as stackedNote } from './stackedNote';
