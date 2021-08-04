@@ -1,0 +1,23 @@
+$font-monospace: Monaco, monospace;
+$font-sans-serif: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+:root {
+    --font-monospace: #{$font-monospace};
+    --font-sans-serif: #{$font-sans-serif};
+}
+
+.hidden {
+    display: none;
+}
+.disabled {
+    pointer-events: none;
+    cursor: default;
+}
+.unselectable {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}

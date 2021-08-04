@@ -4,161 +4,312 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
-  <link rel="shortcut icon" type="image/jpg" href="favicon.png">
+  <meta name="description" content="Beat Saber Map Check by Kival Evan">
+  <link rel="stylesheet" href="./dist/main.css">
+  <link rel="shortcut icon" type="image/jpg" href="./assets/favicon.png">
   <link href='https://fonts.googleapis.com/css?family=Teko' rel='stylesheet'>
   <title>BS Map Check</title>
-  <script src="./scripts/libs/jquery.slim.min.js"></script>
-  <script src="./scripts/libs/jszip.min.js"></script>
 </head>
 
 <body>
-  <div id="main">
-    <noscript>You need to enable JavaScript to run this app.</noscript>
+  <div class="wrapper wrapper--shadow">
+    <noscript>JavaScript is required to be enabled in order to use this app.</noscript>
     <header>
       <div class="cover">
-        <img id="coverimg" src="./assets/unknown.jpg" alt="No Cover Images">
-        <a id="map-link" href="#" target="_blank"></a>
+        <img class="cover__image" src="./assets/unknown.jpg" alt="cover image">
+        <a class="cover__link disabled" id="map-link" href="#" target="_blank"></a>
       </div>
-      <div class="info">
-        <div class="metadata" id="metadata-container">
-          <span id="song-name" title="Song Name"></span>
-          <span id="song-subname" title="Song Subname"></span><br>
-          <span id="song-author" title="Song Author"></span><br>
-          <span id="song-bpm" title="Song BPM"></span><br>
-          <span id="song-duration" title="Song Duration"></span><br><br>
-          <span id="level-author" title="Level Author"></span>
-          <br>
-          <span id="environment" title="Environment"></span><br>
+      <div class="container">
+        <div class="metadata hidden">
+          <div class="metadata__container">
+            <div class="panel panel--max panel--offset">
+              <span class="metadata__song-name" title="Song Name">Song Name</span>
+              <span class="metadata__song-subname" title="Song Subname">Song Subname</span><br>
+              <span class="metadata__song-author" title="Song Author">Song Author</span><br>
+              <span class="metadata__song-bpm" title="Song BPM">Song BPM</span><br>
+              <span class="metadata__song-duration" title="Song Duration">Song Duration</span><br>
+              <audio class="audio" controls preload='auto'>
+                <p>Your browser does not support HTML 5 audio. Audio player will
+                  not display here.</p>
+              </audio>
+            </div>
+          </div>
         </div>
-        <div class="input" id="input-container" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
-          <span id="title">Beat Saber</span><br>
-          <span id="subtitle">Map Check</span><br>
-          <label class="input" for="input-url">Map zip link: </label>
-          <input type="text" class="input" id="input-url" name="input-url"
-            placeholder="https://example.com/map.zip"><br>
-          <label class="input" for="input-id">BeatSaver ID: </label>
-          <input type="text" class="input" id="input-id" name="input-id" placeholder="10b39"><br>
-          <label class="input" id="input-button" for="input-file">Upload Map</label>
-          <input type="file" class="input" id="input-file" name="input-file" accept=".zip,.bsl">
-          <span>or drag & drop the zip file here</span>
-          <br>
+        <div class="intro">
+          <div class="intro__container">
+            <div class="panel panel--small panel--offset">
+              <span class="intro__title">Beat Saber</span><br>
+              <span class="intro__subtitle">Map Check</span><br>
+              <label for="input__intro-url">Map zip link: </label>
+              <input type="text" class="input__intro-url input-toggle" id="input__intro-url"
+                placeholder="https://example.com/map.zip"><br>
+              <!--<label for="input__intro-id">BeatSaver ID: </label>-->
+              <input type="text" class="hidden input__intro-id input-toggle" id="input__intro-id"
+                placeholder="10b39"><br>
+              <input type="button" class="input__search-button input-toggle" id="input__search-button" value="Get Link">
+            </div>
+            <div class="panel panel--large panel--offset-half">
+              <input type="file" class="input__file input-toggle" id="input__file" accept=".zip,.bsl">
+              <label class="input__file-zone" for="input__file">
+                <span class="input__file-zone-span">UPLOAD ZIP FILE HERE<br>DRAG & DROP ZONE</span>
+              </label>
+            </div>
+          </div>
         </div>
-        <input type="button" class="settings" id="reset-button" value="Reset">
-        <div class="watermark">
-          <a id="watermark" href="https://kivalevan.github.io/"></a><span> | </span>
-          <a id="version" href="https://github.com/KivalEvan/BeatSaber-MapCheck/blob/main/CHANGELOG.md"></a>
-          <a id="link-wiki" href="https://github.com/KivalEvan/BeatSaber-MapCheck/wiki">wiki</a>
-          <a id="link-utility" href="https://kivalevan.github.io/BeatSaber-MappingUtility/">utility</a>
-        </div>
+        <input type="button" class="input__reset-button input-toggle" id="input__reset-button" value="Reset">
       </div>
     </header>
     <div class="loading">
-      <div id="loadingbar"></div>
-      <span id="loadingtext">No map loaded</span>
+      <div class="loading__bar"></div>
+      <span class="loading__text">No map loaded</span>
     </div>
-    <button class="accordion">Tools</button>
-    <div class="collapsible">
-      <div id="tools">
-        <div class="settings" id="settings">
-          <label for="mapset">Characteristic select:</label>
-          <select class="settings" id="mapset">
-            <option disabled selected>-</option>
-          </select><br>
-          <label for="mapdiff">Difficulty select:</label>
-          <select class="settings" id="mapdiff">
-            <option disabled selected>-</option>
-          </select><br>
-          <hr>
-          <label for="ebpm">Effective BPM threshold:</label>
-          <input type="number" class="settings" id="ebpm" name="ebpm" min="0">
-          <label for="ebpms">(swing):</label>
-          <input type="number" class="settings" id="ebpms" name="ebpms" min="0">
-          <br>
-          <label for="beatprec">Acceptable beat precision:</label>
-          <input type="text" class="settings" id="beatprec" name="beatprec" placeholder="4 3">
-          <br>
-          <input type="checkbox" class="settings" id="hb-stair" name="hb-stair" value="hbStaircase">
-          <label for="hb-stair">Hitbox staircase</label>
-          <br>
-          <input type="checkbox" class="settings" id="slowslider" name="slowslider" value="slowSlider">
-          <label for="slowslider">Slow slider</label><br>
-          <label for="slowslider-min">min speed (ms):</label>
-          <input type="number" class="settings" id="slowslider-min" name="slowslider-min" min="0">
-          <label for="slowslider-min-prec">(prec):</label>
-          <input type="number" class="settings" id="slowslider-min-prec" name="slowslider-min-prec" min="0">
-          <br>
-          <input type="checkbox" class="settings" id="inlineangle" name="inlineangle" value="inlineAngle">
-          <label for="inlineangle">Inline sharp angle</label><br>
-          <label for="inlineangle-max">max time (ms):</label>
-          <input type="number" class="settings" id="inlineangle-max" name="inlineangle-max" min="0">
-          <label for="inlineangle-max-prec">(prec):</label>
-          <input type="number" class="settings" id="inlineangle-max-prec" name="inlineangle-max-prec" min="0">
-          <br>
-          <input type="checkbox" class="settings" id="shrangle" name="shrangle" value="shrAngle">
-          <label for="shrangle">Shrado angle</label><br>
-          <label for="shrangle-max">max time (ms):</label>
-          <input type="number" class="settings" id="shrangle-max" name="shrangle-max" min="0">
-          <label for="shrangle-max-prec">(prec):</label>
-          <input type="number" class="settings" id="shrangle-max-prec" name="shrangle-max-prec" min="0">
-          <br>
-          <input type="checkbox" class="settings" id="speedpause" name="speedpause" value="speedPause">
-          <label for="speedpause">Speed pause (EXPERIMENTAL)</label><br>
-          <label for="speedpause-max">stream precision (ms):</label>
-          <input type="number" class="settings" id="speedpause-max" name="speedpause-max" min="0">
-          <label for="speedpause-max-prec">(prec):</label>
-          <input type="number" class="settings" id="speedpause-max-prec" name="speedpause-max-prec" min="0">
-          <br>
-          <input type="checkbox" class="settings" id="dd" name="dd" value="dd">
-          <label for="dd">Double-directional</label>
-          <br>
-          <input type="checkbox" class="settings" id="vb-note" name="vb-note" value="vbNote">
-          <label for="vb-note">Vision block</label>
-          <br>
-          <input type="radio" class="settings" id="vb-specific-time" name="vb-specific" value="time">
-          <label for="vb-specific-time">Time specific</label>
-          <input type="radio" class="settings" id="vb-specific-diff" name="vb-specific" value="diff">
-          <label for="vb-specific-diff">Diff specific</label>
-          <br>
-          <label for="vb-min">min time (ms):</label>
-          <input type="number" class="settings" id="vb-min" name="vb-min" min="0">
-          <label for="vb-min-beat">(beat):</label>
-          <input type="number" class="settings" id="vb-min-beat" name="vb-min-beat" min="0" step="0.125"><br>
-          <label for="vb-max">max time (ms):</label>
-          <input type="number" class="settings" id="vb-max" name="vb-max" min="0">
-          <label for="vb-max-beat">(beat):</label>
-          <input type="number" class="settings" id="vb-max-beat" name="vb-max-beat" min="0" step="0.125">
-          <br>
-          <input type="button" class="settings" id="vb-hjd" value="Set by HJD">
-          <input type="button" class="settings" id="vb-optimal" value="Set by optimal reaction time">
-          <br>
-          <hr>
-          Apply changes to:
-          <input type="button" id="apply-this" value="This difficulty" disabled>
-          <input type="button" id="apply-all" value="All difficulties" disabled>
+    <div class="accordion" id="info">
+      <input type="checkbox" class="accordion__button" id="accordion__info">
+      <label class="accordion__label accordion__label--medium accordion__label--upper unselectable"
+        for="accordion__info"><span>Information</span></label>
+      <div class="accordion__collapsible-flex">
+        <div class="panel panel--small panel--offset-half">
+          <div class="info__level-author" title="Level Author">Level Author</div>
+          <div class="info__environment" title="Environment">Environment</div>
+          <div class="info__tags hidden">Tag</div>
+          <div class="info__editors hidden">Editors</div>
+          <div class="info__contributors hidden">
+            <label class="info__label" for="info__contributors-select">
+              <span>Contributors:</span>
+            </label>
+            <select class="info__select info__contributors-select" id="info__contributors-select">
+            </select>
+            <div class="info__contributors-card">
+              <img class="info__contributors-image" src="assets/unknown.jpg" alt="contributor image">
+              <div class="info__contributors-content">
+                <span class="info__contributors-name">Name</span><br>
+                <span class="info__contributors-role">Role</span>
+              </div>
+            </div>
+          </div>
         </div>
-        <div id="output-container">
-          <span>Difficulty: <span id="output-difficulty-name"></span></span>
-          <br>
-          <span class="diff-labels" id="output-difficulty-label">Difficulty Label</span>
-          <br>
-          <div class="output-box" id="output-diff">No output.</div>
-          <span>Map:</span><br>
-          <div class="output-box" id="output-map">No output.</div>
+        <div class="panel panel--large panel--offset-half">
+          <div class="panel panel--max panel--flex">
+            <div class="panel panel--medium panel--flex">
+              <label class="tools__label tools__label-select input-toggle" for="tools__select-mode-1">
+                <span>Characteristic:</span>
+              </label>
+              <select class="tools__select tools__select-mode" id="tools__select-mode-1">
+              </select>
+            </div>
+            <div class="panel panel--medium panel--flex">
+              <label class="tools__label tools__label-select input-toggle" for="tools__select-difficulty-1">
+                <span>Difficulty:</span>
+              </label>
+              <select class="tools__select tools__select-difficulty" id="tools__select-difficulty-1">
+              </select>
+            </div>
+          </div>
+          <div class="panel panel--max">
+            <span class="difficulty__label" id="output-difficulty-label">Difficulty Label</span>
+          </div>
+          <div class="panel panel--max">
+            <table class="info__table">
+              <tbody>
+                <tr class="info__table-row info__custom-color hidden">
+                  <th class="info__table-header">Custom Color</th>
+                  <td class="info__table-element"></td>
+                </tr>
+                <tr class="info__table-row info__time-spend hidden">
+                  <th class="info__table-header">Time Spent</th>
+                  <td class="info__table-element"></td>
+                </tr>
+                <tr class="info__table-row info__requirements hidden">
+                  <th class="info__table-header">Requirements</th>
+                  <td class="info__table-element"></td>
+                </tr>
+                <tr class="info__table-row info__suggestions hidden">
+                  <th class="info__table-header">Suggestions</th>
+                  <td class="info__table-element"></td>
+                </tr>
+                <tr class="info__table-row info__information hidden">
+                  <th class="info__table-header">Information</th>
+                  <td class="info__table-element"></td>
+                </tr>
+                <tr class="info__table-row info__warnings hidden">
+                  <th class="info__table-header">Warnings</th>
+                  <td class="info__table-element"></td>
+                </tr>
+                <tr class="info__table-row info__bookmarks hidden">
+                  <th class="info__table-header">Bookmarks</th>
+                  <td class="info__table-element"></td>
+                </tr>
+                <tr class="info__table-row info__bpm-changes hidden">
+                  <th class="info__table-header">BPM Changes</th>
+                  <td class="info__table-element"></td>
+                </tr>
+                <tr class="info__table-row info__environment-enhancement hidden">
+                  <th class="info__table-header">Environment</th>
+                  <td class="info__table-element"></td>
+                </tr>
+                <tr class="info__table-row info__point-definitions hidden">
+                  <th class="info__table-header">Point Definitions</th>
+                  <td class="info__table-element"></td>
+                </tr>
+                <tr class="info__table-row info__custom-events hidden">
+                  <th class="info__table-header">Custom Events</th>
+                  <td class="info__table-element"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
-    <div class="stats" id="stats"></div>
+    <div class="accordion" id="tools">
+      <input type="checkbox" class="accordion__button" id="accordion__tools">
+      <label class="accordion__label accordion__label--medium accordion__label--upper unselectable"
+        for="accordion__tools">
+        <span>Tools</span>
+      </label>
+      <div class="accordion__collapsible-flex">
+        <div class="panel panel--medium panel--flex-column panel--offset-half">
+          <input type="radio" class="tools__radio tools__note" id="tools__note" name="tools__radio" value="note"
+            checked>
+          <input type="radio" class="tools__radio tools__obstacle" id="tools__obstacle" name="tools__radio"
+            value="obstacle">
+          <input type="radio" class="tools__radio tools__event" id="tools__event" name="tools__radio" value="event">
+          <input type="radio" class="tools__radio tools__other" id="tools__other" name="tools__radio" value="other">
+          <div class="tools__nav">
+            <label class="tools__label tools__label-tab tools__label-note unselectable" for="tools__note">Note</label>
+            <label class="tools__label tools__label-tab tools__label-obstacle unselectable"
+              for="tools__obstacle">Obstacle</label>
+            <label class="tools__label tools__label-tab tools__label-event unselectable"
+              for="tools__event">Event</label>
+            <label class="tools__label tools__label-tab tools__label-other unselectable"
+              for="tools__other">Other</label>
+          </div>
+          <div class="tools__tab tools__note-content"></div>
+          <div class="tools__tab tools__obstacle-content"></div>
+          <div class="tools__tab tools__event-content"></div>
+          <div class="tools__tab tools__other-content"></div>
+          <div class="tools__apply">
+            <hr>
+            <span>Apply changes to:</span>
+            <input type="button" class="tools__apply-this input-toggle" value="This difficulty">
+            <input type="button" class="tools__apply-all input-toggle" value="All difficulty">
+          </div>
+        </div>
+        <div class="panel panel--medium panel--offset-half">
+          <div class="panel panel--max panel--flex">
+            <div class="panel panel--medium panel--flex">
+              <label class="tools__label tools__label-select" for="tools__select-mode-2">
+                <span>Characteristic:</span>
+              </label>
+              <select class="tools__select tools__select-mode input-toggle" id="tools__select-mode-2">
+              </select>
+            </div>
+            <div class="panel panel--medium panel--flex">
+              <label class="tools__label tools__label-select" for="tools__select-difficulty-2">
+                <span>Difficulty:</span>
+              </label>
+              <select class="tools__select tools__select-difficulty input-toggle" id="tools__select-difficulty-2">
+              </select>
+            </div>
+          </div>
+          <span class="tools__output-text">Map:</span><br>
+          <div class="tools__output-box tools__output-diff">
+            No output.
+          </div>
+          <span class="tools__output-text">General:</span><br>
+          <div class="tools__output-box tools__output-general">
+            No output.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="accordion" id="stats">
+      <input type="checkbox" class="accordion__button" id="accordion__stats">
+      <label class="accordion__label accordion__label--medium accordion__label--upper unselectable"
+        for="accordion__stats">
+        <span>Stats</span>
+      </label>
+      <div class="accordion__collapsible"></div>
+    </div>
+    <div class="accordion" id="settings">
+      <input type="checkbox" class="accordion__button" id="accordion__settings">
+      <label class="accordion__label accordion__label--medium accordion__label--upper unselectable"
+        for="accordion__settings">
+        <span>Settings</span>
+      </label>
+      <div class="accordion__collapsible-flex">
+        <div class="panel panel--small panel--offset-half">
+          <span>Map zip loading:</span><br>
+          <input type="checkbox" class="settings__checkbox settings__load" id="settings__load-audio" name="audio">
+          <label for="settings__load-audio">
+            <span>Load audio</span>
+          </label><br>
+          <input type="checkbox" class="settings__checkbox settings__load" id="settings__load-imagecover"
+            name="imageCover">
+          <label for="settings__load-imagecover">
+            <span>Load cover image</span>
+          </label><br>
+          <input type="checkbox" class="settings__checkbox settings__load" id="settings__load-imagecontributor"
+            name="imageContributor">
+          <label for="settings__load-imagecontributor">
+            <span>Load contributor image</span>
+          </label><br>
+          <input type="checkbox" class="settings__checkbox settings__sort" id="settings__sort">
+          <label for="settings__sort">
+            <span>Sorting</span>
+          </label><br>
+          <br>
+          <div>Disabling these speeds up loading time but may cause unintended result.</div>
+        </div>
+        <div class="panel panel--small panel--offset-half">
+          <span>Show on launch:</span><br>
+          <input type="checkbox" class="settings__checkbox settings__show" id="settings__show-info">
+          <label for="settings__show-info">
+            <span>Information</span>
+          </label><br>
+          <input type="checkbox" class="settings__checkbox settings__show" id="settings__show-tools">
+          <label for="settings__show-tools">
+            <span>Tools</span>
+          </label><br>
+          <input type="checkbox" class="settings__checkbox settings__show" id="settings__show-stats">
+          <label for="settings__show-stats">
+            <span>Stats</span>
+          </label><br>
+          <input type="checkbox" class="settings__checkbox settings__show" id="settings__show-settings">
+          <label for="settings__show-settings">
+            <span>Settings</span>
+          </label><br>
+          <br>
+          <span>On map load:</span><br>
+          <input type="checkbox" class="settings__checkbox settings__onload" id="settings__onload-stats" name="stats">
+          <label for="settings__onload-stats">
+            <span>Show difficulty stats</span>
+          </label><br>
+        </div>
+        <div class="panel panel--small panel--offset-half">
+          <span>Preferences:</span><br>
+          <label for="settings__theme">
+            <span>Theme:</span>
+          </label>
+          <select class="settings__theme" id="settings__theme"></select><br>
+          <br>
+          <input type="button" class="settings__clear-button input-toggle" id="settings__clear-button"
+            value="Clear Settings">
+        </div>
+      </div>
+    </div>
+    <footer>
+      <div>
+        <a class="link link__watermark" href="https://kivalevan.github.io/">watermark</a>
+        <span> | </span>
+        <a class="link link__version"
+          href="https://github.com/KivalEvan/BeatSaber-MapCheck/blob/main/CHANGELOG.md">version</a>
+        <a class="link link__wiki" href="https://github.com/KivalEvan/BeatSaber-MapCheck/wiki">wiki</a>
+        <a class="link link__utility" href="https://kivalevan.github.io/BeatSaber-MappingUtility/">utility</a>
+      </div>
+    </footer>
   </div>
-  <script defer src="./scripts/global.js"></script>
-  <script defer src="./scripts/ui.js"></script>
-  <script defer src="./scripts/beatmap.js"></script>
-  <script defer src="./scripts/tools/generic.js"></script>
-  <script defer src="./scripts/tools/note.js"></script>
-  <script defer src="./scripts/tools/obstacle.js"></script>
-  <script defer src="./scripts/tools/event.js"></script>
-  <script defer src="./scripts/tools/swing.js"></script>
-  <script defer src="./scripts/index.js"></script>
+  <script defer src="./dist/bundle.js"></script>
 </body>
 
 </html>

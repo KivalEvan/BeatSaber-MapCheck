@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+        "outDir": "src",
+        "target": "es6",
+        "module": "es6",
+        "allowJs": true,
+        "moduleResolution": "node",
+        "watch": true,
+        "removeComments": true,
+        "noImplicitAny": true,
+        "noImplicitThis": true,
+        "noImplicitReturns": true,
+        "strictNullChecks": true,
+        "strictFunctionTypes": true,
+        "strictPropertyInitialization": true,
+        "allowSyntheticDefaultImports": true
+    }
+}
