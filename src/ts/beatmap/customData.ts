@@ -12,9 +12,7 @@ import { Editor } from './editor';
 import { ColorScheme } from './environment';
 import { NECustomData, NEEvent, NENote, NEObstacle } from './noodleExtensions';
 
-export interface CustomData {
-    [key: string]: any;
-}
+export interface CustomData {}
 
 export interface CustomDataInfo extends CustomData {
     _editors?: Editor;

@@ -1,6 +1,5 @@
 export interface EditorInfo {
     version?: string;
-    [key: string]: any;
 }
 
 export interface Editor {

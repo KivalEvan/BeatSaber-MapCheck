@@ -7,7 +7,7 @@ export interface Obstacle {
     _duration: number;
     _width: number;
     _customData?: CustomDataObstacle;
-    [key: string]: any;
+    [key: string]: number | CustomDataObstacle | undefined;
 }
 
 interface ObstacleCount {
@@ -66,7 +66,7 @@ export const hasNoodleExtensions = (obstacle: Obstacle): boolean => {
 
 export const hasMappingExtensions = (obstacle: Obstacle): boolean => {
     return (
-        obstacle._width > 4 ||
+        obstacle._width >= 1000 ||
         obstacle._type >= 1000 ||
         obstacle._lineIndex > 3 ||
         obstacle._lineIndex < 0

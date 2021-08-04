@@ -6,7 +6,7 @@ export interface Event {
     _type: number;
     _value: number;
     _customData?: CustomDataEvent;
-    [key: string]: any;
+    [key: string]: number | CustomDataEvent | undefined;
 }
 
 export enum EventRename {
@@ -43,7 +43,7 @@ interface EventCountStats {
 }
 
 export const isValidType = (event: Event): boolean => {
-    return event._type >= 0 && event._type <= 17;
+    return event._type >= 0 && event._type <= 17 && event._type !== 10;
 };
 
 export const isLightEvent = (event: Event): boolean => {
@@ -132,7 +132,7 @@ export const hasMappingExtensions = (event: Event): boolean => {
 };
 
 export const isValid = (event: Event): boolean => {
-    return isValidType(event);
+    return isValidType(event) && event._value >= 0 && !(event._value > 7 && !hasOldChroma(event));
 };
 
 const commonEvent = [0, 1, 2, 3, 4, 8, 9, 12, 13];
@@ -180,7 +180,7 @@ export const count = (events: Event[]): EventCount => {
 export const sufficientLight = (events: Event[]): boolean => {
     let count = 0;
     for (let i = events.length - 1; i >= 0; i--) {
-        if (isLightEvent(events[i]) && events[i]._value !== 0) {
+        if (isLightEvent(events[i]) && events[i]._value !== 0 && events[i]._value !== 4) {
             count++;
             if (count > 10) {
                 return true;

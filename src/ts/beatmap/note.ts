@@ -8,7 +8,7 @@ export interface Note {
     _type: number;
     _cutDirection: number;
     _customData?: CustomDataNote;
-    [key: string]: any;
+    [key: string]: number | CustomDataNote | undefined;
 }
 
 interface NoteCount {
@@ -316,7 +316,7 @@ export const countAngle = (notes: Note[], angle: number): number => {
 };
 
 export const nps = (notes: Note[], duration: number): number => {
-    return notes.filter((n) => isNote(n)).length / duration;
+    return duration ? notes.filter((n) => isNote(n)).length / duration : 0;
 };
 
 export const peak = (notes: Note[], beat: number, bpm: number): number => {

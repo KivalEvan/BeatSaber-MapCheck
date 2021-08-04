@@ -8,7 +8,6 @@ export interface ColorScheme {
     _envColorLeftBoost?: Color;
     _envColorRightBoost?: Color;
     _obstacleColor?: Color;
-    [key: string]: Color | undefined | null;
 }
 
 export enum ColorSchemeRename {

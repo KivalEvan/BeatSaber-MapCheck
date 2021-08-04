@@ -152,7 +152,7 @@ const createNoteCountTable = (
 ): HTMLTableElement => {
     const noteCount = beatmap.note.count(mapSet._data._notes);
 
-    let htmlString = `<caption class="${prefix}table-caption">Note: ${
+    let htmlString = `<caption class="${prefix}table-caption">Notes: ${
         noteCount.red.total + noteCount.blue.total
     }<br>R/B Ratio: ${round(noteCount.red.total / noteCount.blue.total, 2)}</caption>
     <tr>
@@ -471,7 +471,7 @@ const createEventCountTable = (
     let noodleExtensions = 0;
     let mappingExtensions = 0;
 
-    let htmlString = `<caption class="${prefix}table-caption">Event: ${Object.values(
+    let htmlString = `<caption class="${prefix}table-caption">Events: ${Object.values(
         eventCount
     ).reduce((t, { total }) => t + total, 0)}</caption>`;
 
@@ -523,7 +523,7 @@ const createObstacleCountTable = (
 ): HTMLTableElement => {
     const obstacleCount = beatmap.obstacle.count(mapSet._data._obstacles);
 
-    let htmlString = `<caption class="${prefix}table-caption">Obstacle: ${obstacleCount.total}</caption>`;
+    let htmlString = `<caption class="${prefix}table-caption">Obstacles: ${obstacleCount.total}</caption>`;
     if (obstacleCount.interactive) {
         htmlString += `<tr>
         <th class="${prefix}table-header" colspan="2">Interactive</th>
