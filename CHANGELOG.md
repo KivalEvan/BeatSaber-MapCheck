@@ -1,6 +1,6 @@
 # Changelog
 
-## v2.0.0 : TypeScript Rewrite [##-08-2021]
+## v2.0.0 : TypeScript Rewrite [05-08-2021]
 
 ### Added
 
@@ -21,11 +21,8 @@
 -   Codebase rewritten
 -   Improved tools
 -   Updated SPS requirement
+-   BeatSaver ID download temporarily disabled
 
 ### Fixed
 
 -   Potential miscalculation on Chroma count
-
-### Planned
-
--   Maybe mobile friendly?

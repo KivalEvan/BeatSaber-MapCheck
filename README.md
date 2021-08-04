@@ -13,13 +13,12 @@ Map tools to spot specific error, and map stats per each difficulty in one place
 
 ## How to use
 
-Visit the [github.io page](https://kivalevan.github.io/BeatSaber-MapCheck/) or download a copy and run `index.html` locally on any browser. Tools available within collapsible.
+Visit the [github.io page](https://kivalevan.github.io/BeatSaber-MapCheck/) or download a copy and run `index.html` locally on any browser.
 
 ## Planned
 
 -   Rewrite swing detection
 -   Basic parity check
--   Basic unrankable hit check
 -   Save tools parameter
 
 ## Known Issues

@@ -1,7 +1,6 @@
-import { round, toMMSS } from '../utils';
+import { round, toMMSSMS } from '../utils';
 
 const logPrefix = 'UI Header: ';
-const mimeCodec = 'audio/ogg';
 
 const htmlIntro = document.querySelector<HTMLElement>('.intro');
 const htmlMetadata = document.querySelector<HTMLElement>('.metadata');
@@ -123,7 +122,7 @@ export const setSongDuration = (num?: number): void => {
         return;
     }
     if (num) {
-        htmlMetadataSongDuration.textContent = toMMSS(num);
+        htmlMetadataSongDuration.textContent = toMMSSMS(num);
     } else {
         htmlMetadataSongDuration.textContent = 'No audio';
     }
