@@ -1,10 +1,10 @@
 // may god help you maintain these
-// TODO: add custom colours somewhere
 import * as uiHeader from './header';
 import * as beatmap from '../beatmap';
-import { removeOptions, toMMSS } from '../utils';
+import * as colors from '../colors';
+import * as uiPanel from './panel';
+import { removeOptions, round, toMMSS } from '../utils';
 import savedData from '../savedData';
-import { container } from 'webpack';
 
 const logPrefix = 'UI Info: ';
 
@@ -21,6 +21,7 @@ const htmlInfoContributorsImage = document.querySelector<HTMLImageElement>(
 const htmlInfoContributorsName = document.querySelector<HTMLElement>('.info__contributors-name');
 const htmlInfoContributorsRole = document.querySelector<HTMLElement>('.info__contributors-role');
 
+const htmlTableCustomColor = document.querySelector<HTMLElement>('.info__custom-color');
 const htmlTableTimeSpend = document.querySelector<HTMLElement>('.info__time-spend');
 const htmlTableRequirements = document.querySelector<HTMLElement>('.info__requirements');
 const htmlTableSuggestions = document.querySelector<HTMLElement>('.info__suggestions');
@@ -46,6 +47,7 @@ if (htmlInfoContributorsSelect) {
     console.error(logPrefix + 'contributors select is missing');
 }
 if (
+    !htmlTableCustomColor ||
     !htmlTableTimeSpend ||
     !htmlTableRequirements ||
     !htmlTableSuggestions ||
@@ -168,17 +170,26 @@ const hideTableRow = <T extends HTMLElement>(elem: T): void => {
     elem.classList.add('hidden');
 };
 
-const displayTableRow = <T extends HTMLElement>(elem: T, content: string | string[]): void => {
+const displayTableRow = <T extends HTMLElement>(
+    elem: T,
+    content: string | string[] | HTMLElement[]
+): void => {
     const tableElem = elem.querySelector('.info__table-element');
     if (tableElem) {
+        tableElem.textContent = '';
         if (typeof content === 'string') {
             tableElem.textContent = content;
         } else {
-            content.forEach((c) => {
-                let temp = document.createElement('span');
-                temp.textContent = c;
-                tableElem.appendChild(temp);
-                tableElem.appendChild(document.createElement('br'));
+            content.forEach((c: string | HTMLElement) => {
+                if (typeof c === 'string') {
+                    let temp = document.createElement('span');
+                    temp.textContent = c;
+                    tableElem.appendChild(temp);
+                    tableElem.appendChild(document.createElement('br'));
+                } else {
+                    tableElem.appendChild(c);
+                    tableElem.appendChild(document.createElement('br'));
+                }
             });
             if (tableElem.lastChild) {
                 tableElem.removeChild(tableElem.lastChild);
@@ -186,6 +197,153 @@ const displayTableRow = <T extends HTMLElement>(elem: T, content: string | strin
         }
     }
     elem.classList.remove('hidden');
+};
+
+export const setCustomColor = (
+    customColor?: beatmap.environment.ColorScheme,
+    environment?: beatmap.environment.EnvironmentName
+): void => {
+    if (!htmlTableCustomColor) {
+        console.error(logPrefix + 'missing table row for custom colors');
+        return;
+    }
+    if (
+        !customColor ||
+        (!customColor._colorLeft &&
+            !customColor._colorRight &&
+            !customColor._envColorLeft &&
+            !customColor._envColorLeftBoost &&
+            !customColor._envColorRight &&
+            !customColor._envColorRightBoost &&
+            !customColor._obstacleColor)
+    ) {
+        hideTableRow(htmlTableCustomColor);
+        return;
+    }
+    if (!environment) {
+        environment = 'DefaultEnvironment';
+    }
+    let hexColor: { [key: string]: string | null } = {
+        _colorLeft:
+            colors.rgbaToHex(
+                beatmap.environment.colorScheme[beatmap.environment.EnvironmentColor[environment]]
+                    ?._colorLeft
+            ) || null,
+        _colorRight:
+            colors.rgbaToHex(
+                beatmap.environment.colorScheme[beatmap.environment.EnvironmentColor[environment]]
+                    ?._colorRight
+            ) || null,
+        _envColorLeft:
+            colors.rgbaToHex(
+                beatmap.environment.colorScheme[beatmap.environment.EnvironmentColor[environment]]
+                    ?._envColorLeft
+            ) || null,
+        _envColorRight:
+            colors.rgbaToHex(
+                beatmap.environment.colorScheme[beatmap.environment.EnvironmentColor[environment]]
+                    ?._envColorRight
+            ) || null,
+        _envColorLeftBoost:
+            colors.rgbaToHex(
+                beatmap.environment.colorScheme[beatmap.environment.EnvironmentColor[environment]]
+                    ?._envColorLeftBoost
+            ) || null,
+        _envColorRightBoost:
+            colors.rgbaToHex(
+                beatmap.environment.colorScheme[beatmap.environment.EnvironmentColor[environment]]
+                    ?._envColorRightBoost
+            ) || null,
+        _obstacleColor:
+            colors.rgbaToHex(
+                beatmap.environment.colorScheme[beatmap.environment.EnvironmentColor[environment]]
+                    ?._obstacleColor
+            ) || null,
+    };
+    if (customColor._colorLeft) {
+        hexColor._colorLeft = colors.rgbaToHex(customColor._colorLeft);
+    }
+    if (customColor._colorRight) {
+        hexColor._colorRight = colors.rgbaToHex(customColor._colorRight);
+    }
+    if (customColor._envColorLeft) {
+        hexColor._envColorLeft = colors.rgbaToHex(customColor._envColorLeft);
+    } else if (customColor._colorLeft) {
+        hexColor._envColorLeft = colors.rgbaToHex(customColor._colorLeft);
+    }
+    if (customColor._envColorRight) {
+        hexColor._envColorRight = colors.rgbaToHex(customColor._envColorRight);
+    } else if (customColor._colorRight) {
+        hexColor._envColorRight = colors.rgbaToHex(customColor._colorRight);
+    }
+
+    // tricky stuff
+    // need to display both boost if one exist
+    let envBL!: string | null,
+        envBR!: string | null,
+        envBoost = false;
+    if (customColor._envColorLeftBoost) {
+        envBL = colors.rgbaToHex(customColor._envColorLeftBoost);
+        envBoost = true;
+    } else {
+        envBL =
+            colors.rgbaToHex(
+                beatmap.environment.colorScheme[beatmap.environment.EnvironmentColor[environment]]
+                    ?._envColorLeftBoost
+            ) || hexColor._envColorLeft;
+    }
+    if (customColor._envColorRightBoost) {
+        envBR = colors.rgbaToHex(customColor._envColorRightBoost);
+        envBoost = true;
+    } else {
+        envBR =
+            colors.rgbaToHex(
+                beatmap.environment.colorScheme[beatmap.environment.EnvironmentColor[environment]]
+                    ?._envColorRightBoost
+            ) || hexColor._envColorRight;
+    }
+
+    if (envBoost) {
+        hexColor._envColorLeftBoost = envBL;
+        hexColor._envColorRightBoost = envBR;
+    }
+
+    if (customColor._obstacleColor) {
+        hexColor._obstacleColor = colors.rgbaToHex(customColor._obstacleColor);
+    }
+
+    console.log(hexColor);
+    const panel = uiPanel.create('max', 'none', true);
+    for (const key in hexColor) {
+        if (!hexColor[key]) {
+            continue;
+        }
+        const container = document.createElement('div');
+        const colorContainer = document.createElement('div');
+        const textMonoContainer = document.createElement('div');
+        const textContainer = document.createElement('div');
+
+        colorContainer.className = 'info__color-dot';
+        colorContainer.style.backgroundColor = hexColor[key] || '#000000';
+
+        textMonoContainer.className = 'info__color-text info__color-text--monospace';
+        textMonoContainer.textContent = `${hexColor[key]}`;
+
+        textContainer.className = 'info__color-text';
+        textContainer.textContent = ` -- ${
+            beatmap.environment.ColorSchemeRename[
+                key as keyof typeof beatmap.environment.ColorSchemeRename
+            ]
+        }`;
+
+        container.appendChild(colorContainer);
+        container.appendChild(textMonoContainer);
+        container.appendChild(textContainer);
+
+        panel.appendChild(container);
+    }
+    const content: HTMLElement[] = [panel];
+    displayTableRow(htmlTableCustomColor, content);
 };
 
 export const setTimeSpend = (num?: number): void => {
@@ -197,8 +355,7 @@ export const setTimeSpend = (num?: number): void => {
         hideTableRow(htmlTableTimeSpend);
         return;
     }
-    const content = toMMSS(num);
-    displayTableRow(htmlTableTimeSpend, content);
+    displayTableRow(htmlTableTimeSpend, toMMSS(num));
 };
 
 export const setRequirements = (arr?: string[]): void => {
@@ -210,8 +367,7 @@ export const setRequirements = (arr?: string[]): void => {
         hideTableRow(htmlTableRequirements);
         return;
     }
-    const content = arr.join(', ');
-    displayTableRow(htmlTableRequirements, content);
+    displayTableRow(htmlTableRequirements, arr.join(', '));
 };
 
 export const setSuggestions = (arr?: string[]): void => {
@@ -223,8 +379,7 @@ export const setSuggestions = (arr?: string[]): void => {
         hideTableRow(htmlTableSuggestions);
         return;
     }
-    const content = arr.join(', ');
-    displayTableRow(htmlTableSuggestions, content);
+    displayTableRow(htmlTableSuggestions, arr.join(', '));
 };
 
 export const setInformation = (arr?: string[]): void => {
@@ -270,7 +425,7 @@ export const setBookmarks = (
             time = bpm.adjustTime(time);
             rt = bpm.toRealTime(time);
         }
-        return `${elem._time}${rt ? ' | ' + toMMSS(rt) : ''} -- ${
+        return `${round(elem._time, 3)}${rt ? ' | ' + toMMSS(rt) : ''} -- ${
             elem._name !== '' ? elem._name : '**EMPTY NAME**'
         }`;
     });
@@ -287,7 +442,7 @@ export const setBPMChanges = (bpm?: beatmap.bpm.BeatPerMinute | null): void => {
         return;
     }
     const bpmcText = bpm.change.map((bpmc) => {
-        let time = bpmc._newTime;
+        let time = round(bpmc._newTime, 3);
         let rt = bpm.toRealTime(bpmc._time);
         return `${time} | ${toMMSS(rt)} -- ${bpmc._BPM}`;
     });
@@ -372,9 +527,9 @@ export const setCustomEvents = (
                 keyArr.push(k);
             }
         }
-        return `${elem._time}${rt ? ' | ' + toMMSS(rt) : ''} -- ${elem._type} -> [${keyArr.join(
-            ''
-        )}]${elem._data._track ? `(${elem._data._track})` : ''}`;
+        return `${round(elem._time, 3)}${rt ? ' | ' + toMMSS(rt) : ''} -- ${
+            elem._type
+        } -> [${keyArr.join('')}]${elem._data._track ? `(${elem._data._track})` : ''}`;
     });
     displayTableRow(htmlTableCustomEvents, customEv);
 };
@@ -391,6 +546,7 @@ export const setInfo = (mapInfo: beatmap.info.BeatmapInfo): void => {
 
 export const setDiffInfoTable = (mapData: beatmap.map.BeatmapSetData): void => {
     if (mapData._info?._customData) {
+        setCustomColor(mapData._info._customData);
         setRequirements(mapData._info._customData._requirements);
         setSuggestions(mapData._info._customData._suggestions);
         setInformation(mapData._info._customData._information);
@@ -427,6 +583,7 @@ export const reset = (): void => {
     setEditors();
     populateContributors();
     setTimeSpend();
+    setCustomColor();
     setRequirements();
     setSuggestions();
     setInformation();

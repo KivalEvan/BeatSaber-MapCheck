@@ -15,7 +15,6 @@ const htmlMetadataSongAuthor = document.querySelector<HTMLElement>('.metadata__s
 const htmlMetadataSongBPM = document.querySelector<HTMLElement>('.metadata__song-bpm');
 const htmlMetadataSongDuration = document.querySelector<HTMLElement>('.metadata__song-duration');
 const htmlAudio = document.querySelector<HTMLAudioElement>('.audio');
-let audioSource: AudioBufferSourceNode;
 
 if (!htmlIntro || !htmlMetadata) {
     console.error(logPrefix + 'header component is missing one of the two section');

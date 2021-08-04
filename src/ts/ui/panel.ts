@@ -7,7 +7,7 @@ enum PanelSize {
     'max' = 'panel--max',
 }
 
-type PanelOffsetType = 'normal' | 'half';
+type PanelOffsetType = 'normal' | 'half' | 'none';
 enum PanelOffset {
     'none' = '',
     'normal' = 'panel--offset',
@@ -22,7 +22,7 @@ export const create = (
 ): HTMLElement => {
     const htmlPanel = document.createElement('div');
     htmlPanel.className = `panel ${PanelSize[size]}`;
-    if (offset) {
+    if (offset && offset !== 'none') {
         htmlPanel.classList.add(PanelOffset[offset]);
     }
     if (flex) {

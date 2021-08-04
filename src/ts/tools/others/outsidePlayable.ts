@@ -50,28 +50,28 @@ function run(mapSettings: BeatmapSettings, mapSet?: beatmap.map.BeatmapSetData):
     const htmlString: string[] = [];
     if (duration) {
         let endBeat = bpm.toBeatTime(duration);
-        if (notes[0]._time < 0) {
+        if (notes.length && notes[0]._time < 0) {
             htmlString.push(
                 `<b>Note(s) before start time:</b> ${round(notes[0]._time, 3)} (${toMMSS(
                     bpm.toRealTime(notes[0]._time)
                 )})`
             );
         }
-        if (obstacles[0]._time < 0) {
+        if (obstacles.length && obstacles[0]._time < 0) {
             htmlString.push(
                 `<b>Obstacle(s) before start time:</b> ${round(obstacles[0]._time, 3)} (${toMMSS(
                     bpm.toRealTime(obstacles[0]._time)
                 )})`
             );
         }
-        if (events[0]._time < 0) {
+        if (events.length && events[0]._time < 0) {
             htmlString.push(
                 `<b>Event(s) before start time:</b> ${round(events[0]._time, 3)} (${toMMSS(
                     bpm.toRealTime(events[0]._time)
                 )})`
             );
         }
-        if (notes[notes.length - 1]._time > endBeat) {
+        if (notes.length && notes[notes.length - 1]._time > endBeat) {
             htmlString.push(
                 `<b>Note(s) after end time:</b> ${round(
                     notes[notes.length - 1]._time,
@@ -79,7 +79,7 @@ function run(mapSettings: BeatmapSettings, mapSet?: beatmap.map.BeatmapSetData):
                 )} (${toMMSS(bpm.toRealTime(notes[notes.length - 1]._time))})`
             );
         }
-        if (obstacles[obstacles.length - 1]._time > endBeat) {
+        if (obstacles.length && obstacles[obstacles.length - 1]._time > endBeat) {
             htmlString.push(
                 `<b>Obstacle(s) after end time:</b> ${round(
                     obstacles[obstacles.length - 1]._time,
@@ -87,7 +87,7 @@ function run(mapSettings: BeatmapSettings, mapSet?: beatmap.map.BeatmapSetData):
                 )} (${toMMSS(bpm.toRealTime(obstacles[obstacles.length - 1]._time))})`
             );
         }
-        if (events[events.length - 1]._time > endBeat) {
+        if (events.length && events[events.length - 1]._time > endBeat) {
             htmlString.push(
                 `<b>Event(s) after end time:</b> ${round(
                     events[events.length - 1]._time,

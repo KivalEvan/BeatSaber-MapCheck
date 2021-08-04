@@ -1,4 +1,4 @@
-import savedData, { clearData } from '../savedData';
+import { clearData } from '../savedData';
 import * as uiLoading from './loading';
 import * as uiHeader from './header';
 import * as uiInfo from './info';

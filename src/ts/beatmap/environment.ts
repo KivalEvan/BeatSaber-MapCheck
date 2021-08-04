@@ -8,7 +8,17 @@ export interface ColorScheme {
     _envColorLeftBoost?: Color;
     _envColorRightBoost?: Color;
     _obstacleColor?: Color;
-    [key: string]: Color | undefined;
+    [key: string]: Color | undefined | null;
+}
+
+export enum ColorSchemeRename {
+    '_colorLeft' = 'Left Note Color',
+    '_colorRight' = 'Right Note Color',
+    '_envColorLeft' = 'Left Environment Color',
+    '_envColorRight' = 'Right Environment Color',
+    '_envColorLeftBoost' = 'Left Environment Boost Color',
+    '_envColorRightBoost' = 'Right Environment Boost Color',
+    '_obstacleColor' = 'Obstacle Color',
 }
 
 export interface EnvironmentScheme {
