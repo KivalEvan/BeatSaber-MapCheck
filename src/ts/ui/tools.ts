@@ -220,6 +220,7 @@ function applyThisHandler(): void {
     }
     uiLoading.status('info', `Re-analysing ${mode} ${difficulty}`, 100);
     analyse.difficulty(mode, difficulty);
+    uiLoading.status('info', `Re-analysed ${mode} ${difficulty}`, 100);
     displayOutputDifficulty(mode, difficulty);
 }
 
@@ -231,6 +232,7 @@ function applyAllHandler(): void {
     }
     uiLoading.status('info', `Re-analysing all difficulties`, 100);
     analyse.all();
+    uiLoading.status('info', `Re-analysed all difficulties`, 100);
     displayOutputDifficulty(mode, difficulty);
 }
 

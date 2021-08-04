@@ -176,7 +176,9 @@ const displayTableRow = <T extends HTMLElement>(
 ): void => {
     const tableElem = elem.querySelector('.info__table-element');
     if (tableElem) {
-        tableElem.textContent = '';
+        while (tableElem.firstChild) {
+            tableElem.removeChild(tableElem.firstChild);
+        }
         if (typeof content === 'string') {
             tableElem.textContent = content;
         } else {
@@ -312,7 +314,6 @@ export const setCustomColor = (
         hexColor._obstacleColor = colors.rgbaToHex(customColor._obstacleColor);
     }
 
-    console.log(hexColor);
     const panel = uiPanel.create('max', 'none', true);
     for (const key in hexColor) {
         if (!hexColor[key]) {

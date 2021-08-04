@@ -10,8 +10,8 @@ const htmlInputCheck = document.createElement('input');
 const htmlLabelCheck = document.createElement('label');
 const htmlInputMinTime = document.createElement('input');
 const htmlLabelMinTime = document.createElement('label');
-const htmlInputMinPrec = document.createElement('input');
-const htmlLabelMinPrec = document.createElement('label');
+const htmlInputMinBeat = document.createElement('input');
+const htmlLabelMinBeat = document.createElement('label');
 
 let localBPM!: beatmap.bpm.BeatPerMinute;
 
@@ -32,21 +32,22 @@ htmlInputMinTime.min = '0';
 htmlInputMinTime.value = round(defaultMaxTime * 1000, 1).toString();
 htmlInputMinTime.addEventListener('change', inputTimeHandler);
 
-htmlLabelMinPrec.textContent = ' (prec): ';
-htmlLabelMinPrec.htmlFor = 'input__tools-inline-angle-prec';
-htmlInputMinPrec.id = 'input__tools-inline-angle-prec';
-htmlInputMinPrec.className = 'input-toggle input--small';
-htmlInputMinPrec.type = 'number';
-htmlInputMinPrec.min = '0';
-htmlInputMinPrec.addEventListener('change', inputPrecHandler);
+htmlLabelMinBeat.textContent = ' (beat): ';
+htmlLabelMinBeat.htmlFor = 'input__tools-inline-angle-beat';
+htmlInputMinBeat.id = 'input__tools-inline-angle-beat';
+htmlInputMinBeat.className = 'input-toggle input--small';
+htmlInputMinBeat.type = 'number';
+htmlInputMinBeat.min = '0';
+htmlInputMinBeat.step = '0.1';
+htmlInputMinBeat.addEventListener('change', inputBeatHandler);
 
 htmlContainer.appendChild(htmlInputCheck);
 htmlContainer.appendChild(htmlLabelCheck);
 htmlContainer.appendChild(document.createElement('br'));
 htmlContainer.appendChild(htmlLabelMinTime);
 htmlContainer.appendChild(htmlInputMinTime);
-htmlContainer.appendChild(htmlLabelMinPrec);
-htmlContainer.appendChild(htmlInputMinPrec);
+htmlContainer.appendChild(htmlLabelMinBeat);
+htmlContainer.appendChild(htmlInputMinBeat);
 
 const tool: Tool = {
     name: 'Inline Sharp Angle',
@@ -72,8 +73,8 @@ const tool: Tool = {
 
 function adjustTimeHandler(bpm: beatmap.bpm.BeatPerMinute) {
     localBPM = bpm;
-    htmlInputMinPrec.value = round(
-        1 / localBPM.toBeatTime(tool.input.params.maxTime as number),
+    htmlInputMinBeat.value = round(
+        localBPM.toBeatTime(tool.input.params.maxTime as number),
         2
     ).toString();
 }
@@ -86,20 +87,20 @@ function inputTimeHandler(this: HTMLInputElement) {
     tool.input.params.maxTime = Math.abs(parseFloat(this.value)) / 1000;
     this.value = round(tool.input.params.maxTime * 1000, 1).toString();
     if (localBPM) {
-        htmlInputMinPrec.value = round(
-            1 / localBPM.toBeatTime(tool.input.params.maxTime as number),
+        htmlInputMinBeat.value = round(
+            localBPM.toBeatTime(tool.input.params.maxTime as number),
             2
         ).toString();
     }
 }
 
-function inputPrecHandler(this: HTMLInputElement) {
+function inputBeatHandler(this: HTMLInputElement) {
     if (!localBPM) {
         this.value = '0';
         return;
     }
     let val = round(Math.abs(parseFloat(this.value)), 2) || 1;
-    tool.input.params.maxTime = localBPM.toRealTime(1 / val);
+    tool.input.params.maxTime = localBPM.toRealTime(val);
     htmlInputMinTime.value = round(tool.input.params.maxTime * 1000, 1).toString();
     this.value = val.toString();
 }
@@ -108,7 +109,7 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
     const { _bpm: bpm } = mapSettings;
     const { _notes: notes } = mapSet._data;
     const { maxTime: temp } = <{ maxTime: number }>tool.input.params;
-    const maxTime = bpm.toBeatTime(temp);
+    const maxTime = bpm.toBeatTime(temp) + 0.001;
 
     const lastNote: { [key: number]: beatmap.note.Note } = {};
     const lastNoteDirection: { [key: number]: number } = {};
