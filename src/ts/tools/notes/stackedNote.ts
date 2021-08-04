@@ -19,12 +19,12 @@ htmlContainer.appendChild(htmlInputCheck);
 htmlContainer.appendChild(htmlLabelCheck);
 
 const tool: Tool = {
-    name: 'Double-directional',
+    name: 'Stacked Note',
     description: 'Placeholder',
     type: 'note',
     order: {
-        input: 50,
-        output: 160,
+        input: 98,
+        output: 198,
     },
     input: {
         enabled: htmlInputCheck.checked,

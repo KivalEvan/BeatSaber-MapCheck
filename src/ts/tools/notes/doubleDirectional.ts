@@ -52,6 +52,7 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
         1: [],
         3: [],
     };
+
     const arr: beatmap.note.Note[] = [];
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];

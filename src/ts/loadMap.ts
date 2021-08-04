@@ -10,7 +10,7 @@ import * as analyse from './tools/analyse';
 import { round, sanitizeBeatSaverID, sanitizeURL } from './utils';
 import settings from './settings';
 import flag from './flag';
-import savedData from './savedData';
+import savedData, { clearData } from './savedData';
 
 export const downloadFromURL = async (input: string) => {
     // sanitize & validate url
@@ -129,7 +129,7 @@ export const extractZip = async (data: ArrayBuffer | File) => {
         mapZip = await JSZip.loadAsync(data);
         await loadMap(mapZip);
     } catch (err) {
-        // mapReset();
+        clearData();
         disableInput(false);
         uiHeader.switchHeader(false);
         uiLoading.status('error', err, 100);

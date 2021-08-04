@@ -43,10 +43,10 @@ function run(mapSettings: BeatmapSettings, mapSet?: beatmap.map.BeatmapSetData):
     }
     if (njs.jd > njs.calcJumpDistanceOptimalHigh()) {
         htmlString.push(
-            `<b>High jump distance (>${round(njs.calcJumpDistanceOptimalHigh(), 2)}):</b> ${round(
-                njs.jd,
+            `<b>High jump distance warning (>${round(
+                njs.calcJumpDistanceOptimalHigh(),
                 2
-            )} at ${round(njs.value, 2)} NJS may be uncomfortable to play`
+            )}):</b> ${round(njs.jd, 2)} at ${round(njs.value, 2)} NJS may be uncomfortable to play`
         );
     }
     if (bpm.toRealTime(njs.hjd) < 0.45) {

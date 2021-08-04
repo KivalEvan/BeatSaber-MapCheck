@@ -1,10 +1,10 @@
-// TODO: include type of easing available
+import { Easings } from './easings';
 type Array2DPoint = [number, number];
 type Array3DPoint = [number, number, number];
-type ArrayColorPointDefinition = [number, number, number, number, number, string?];
-type ArrayPercentPointDefinition = [number, number, string?];
-type Array2DPointDefinition = [number, number, number, string?, string?];
-type Array3DPointDefinition = [number, number, number, number, string?, string?];
+type ArrayColorPointDefinition = [number, number, number, number, number, Easings?];
+type ArrayPercentPointDefinition = [number, number, Easings?];
+type Array2DPointDefinition = [number, number, number, Easings?, 'splineCatmullRom'?];
+type Array3DPointDefinition = [number, number, number, number, Easings?, 'splineCatmullRom'?];
 type ArrayPointDefinition =
     | Array2DPointDefinition[]
     | Array3DPointDefinition[]
@@ -83,7 +83,7 @@ export interface NECustomData {
 // lmao wtf
 export interface NECustomEventDataAnimateTrack extends NECustomEventDataBase {
     _duration: number;
-    _easing?: string;
+    _easing?: Easings;
     _position?: string | Array3DPointDefinition[];
     _rotation?: string | Array3DPointDefinition[];
     _localRotation?: string | Array3DPointDefinition[];
@@ -97,7 +97,7 @@ export interface NECustomEventDataAnimateTrack extends NECustomEventDataBase {
 
 export interface NECustomEventDataAssignPathAnimation extends NECustomEventDataBase {
     _duration: number;
-    _easing?: string;
+    _easing?: Easings;
     _position?: string | Array3DPointDefinition[];
     _rotation?: string | Array3DPointDefinition[];
     _localRotation?: string | Array3DPointDefinition[];

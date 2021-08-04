@@ -562,7 +562,6 @@ const createObstacleCountTable = (
     return htmlTable;
 };
 
-// TODO: may god forgive me, i'll replace them with smaller function later
 export const populate = (): void => {
     if (!htmlStats) {
         console.error(logPrefix + 'HTML stats does not exist');

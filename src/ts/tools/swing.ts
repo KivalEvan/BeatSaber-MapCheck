@@ -184,7 +184,6 @@ export const calcMaxSliderSpeed = (
     );
 };
 
-// FIXME: last swing did not count, pls fix
 export const getSliderNote = (
     notes: beatmap.note.Note[],
     bpm: beatmap.bpm.BeatPerMinute
@@ -218,6 +217,17 @@ export const getSliderNote = (
             lastNote[note._type] = note;
         }
         swingNoteArray[note._type].push(note);
+    }
+    for (let i = 0; i < 2; i++) {
+        if (lastNote[i]) {
+            let minSpeed = calcMinSliderSpeed(swingNoteArray[0], bpm);
+            let maxSpeed = calcMaxSliderSpeed(swingNoteArray[0], bpm);
+            if (minSpeed > 0 && maxSpeed !== Infinity) {
+                lastNote[0]._minSpeed = minSpeed;
+                lastNote[0]._maxSpeed = maxSpeed;
+                noteSlider.push(lastNote[0]);
+            }
+        }
     }
     return noteSlider;
 };

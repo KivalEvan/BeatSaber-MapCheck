@@ -19,6 +19,7 @@
 ### Changed
 
 -   Codebase rewritten
+-   Improved Tools Tab
 -   Updated SPS requirement
 
 ### Fixed

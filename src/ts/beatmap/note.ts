@@ -48,6 +48,18 @@ export const flipDirection = [
     8, // 8
 ];
 
+export const cutDirectionSpace: { [key: number]: [number, number] } = {
+    0: [0, 1],
+    1: [0, -1],
+    2: [-1, 0],
+    3: [1, 0],
+    4: [-1, 1],
+    5: [1, 1],
+    6: [-1, -1],
+    7: [1, -1],
+    8: [0, 0],
+};
+
 export const isNote = (n: Note): boolean => {
     return n._type === 0 || n._type === 1;
 };
@@ -67,6 +79,123 @@ export const isDiagonal = (n1: Note, n2: Note): boolean => {
 
 export const isInline = (n1: Note, n2: Note): boolean => {
     return n1._lineLayer === n2._lineLayer && n1._lineIndex === n2._lineIndex;
+};
+
+export const isDouble = (n: Note, notes: Note[], index: number): boolean => {
+    for (let i = index, len = notes.length; i < len; i++) {
+        if (notes[i]._time < n._time + 0.01 && notes[i]._type !== n._type) {
+            return true;
+        }
+        if (notes[i]._time > n._time + 0.01) {
+            return false;
+        }
+    }
+    return false;
+};
+
+export const isEndNote = (currNote: Note, prevNote: Note, cd: number): boolean => {
+    // fuck u and ur dot note stack
+    if (currNote._cutDirection === 8 && prevNote._cutDirection === 8 && cd !== 8) {
+        // if end note on right side
+        if (currNote._lineIndex > prevNote._lineIndex) {
+            if (cd === 5 || cd === 3 || cd === 7) {
+                return true;
+            }
+        }
+        // if end note on left side
+        if (currNote._lineIndex < prevNote._lineIndex) {
+            if (cd === 6 || cd === 2 || cd === 4) {
+                return true;
+            }
+        }
+        // if end note is above
+        if (currNote._lineLayer > prevNote._lineLayer) {
+            if (cd === 4 || cd === 0 || cd === 5) {
+                return true;
+            }
+        }
+        // if end note is below
+        if (currNote._lineLayer < prevNote._lineLayer) {
+            if (cd === 6 || cd === 1 || cd === 7) {
+                return true;
+            }
+        }
+    }
+    // if end note on right side
+    if (currNote._lineIndex > prevNote._lineIndex) {
+        // check if end note is arrowed
+        if (
+            currNote._cutDirection === 5 ||
+            currNote._cutDirection === 3 ||
+            currNote._cutDirection === 7
+        ) {
+            return true;
+        }
+        // check if end note is dot and start arrow is pointing to it
+        if (
+            (prevNote._cutDirection === 5 ||
+                prevNote._cutDirection === 3 ||
+                prevNote._cutDirection === 7) &&
+            currNote._cutDirection === 8
+        ) {
+            return true;
+        }
+    }
+    // if end note on left side
+    if (currNote._lineIndex < prevNote._lineIndex) {
+        if (
+            currNote._cutDirection === 6 ||
+            currNote._cutDirection === 2 ||
+            currNote._cutDirection === 4
+        ) {
+            return true;
+        }
+        if (
+            (prevNote._cutDirection === 6 ||
+                prevNote._cutDirection === 2 ||
+                prevNote._cutDirection === 4) &&
+            currNote._cutDirection === 8
+        ) {
+            return true;
+        }
+    }
+    // if end note is above
+    if (currNote._lineLayer > prevNote._lineLayer) {
+        if (
+            currNote._cutDirection === 4 ||
+            currNote._cutDirection === 0 ||
+            currNote._cutDirection === 5
+        ) {
+            return true;
+        }
+        if (
+            (prevNote._cutDirection === 4 ||
+                prevNote._cutDirection === 0 ||
+                prevNote._cutDirection === 5) &&
+            currNote._cutDirection === 8
+        ) {
+            return true;
+        }
+    }
+    // if end note is below
+    if (currNote._lineLayer < prevNote._lineLayer) {
+        if (
+            currNote._cutDirection === 6 ||
+            currNote._cutDirection === 1 ||
+            currNote._cutDirection === 7
+        ) {
+            return true;
+        }
+        if (
+            (prevNote._cutDirection === 6 ||
+                prevNote._cutDirection === 1 ||
+                prevNote._cutDirection === 7) &&
+            currNote._cutDirection === 8
+        ) {
+            return true;
+        }
+    }
+    return false;
 };
 
 export const distance = (n1: Note, n2: Note): number => {

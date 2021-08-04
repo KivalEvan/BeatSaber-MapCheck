@@ -2,8 +2,8 @@ import * as beatmap from '../../beatmap';
 import { round } from '../../utils';
 import { BeatmapSettings, Tool } from '../template';
 
-const minVBTime = 0.1;
-const maxVBTime = 0.5;
+const defaultMinTime = 0.1;
+const defaultMaxTime = 0.5;
 
 const vbDiff: { [key: string]: { min: number; max: number } } = {
     Easy: {
@@ -39,12 +39,12 @@ const htmlInputDiffCheck = document.createElement('input');
 const htmlLabelDiffCheck = document.createElement('label');
 const htmlInputMinTime = document.createElement('input');
 const htmlLabelMinTime = document.createElement('label');
-const htmlInputMinPrec = document.createElement('input');
-const htmlLabelMinPrec = document.createElement('label');
+const htmlInputMinBeat = document.createElement('input');
+const htmlLabelMinBeat = document.createElement('label');
 const htmlInputMaxTime = document.createElement('input');
 const htmlLabelMaxTime = document.createElement('label');
-const htmlInputMaxPrec = document.createElement('input');
-const htmlLabelMaxPrec = document.createElement('label');
+const htmlInputMaxBeat = document.createElement('input');
+const htmlLabelMaxBeat = document.createElement('label');
 
 htmlLabelCheck.textContent = ' Vision block';
 htmlLabelCheck.htmlFor = 'input__tools-vb-check';
@@ -79,33 +79,35 @@ htmlInputMinTime.id = 'input__tools-vb-min-time';
 htmlInputMinTime.className = 'input-toggle input--small';
 htmlInputMinTime.type = 'number';
 htmlInputMinTime.min = '0';
-htmlInputMinTime.value = round(minVBTime * 1000, 1).toString();
+htmlInputMinTime.value = round(defaultMinTime * 1000, 1).toString();
 htmlInputMinTime.addEventListener('change', inputMinTimeHandler);
 
-htmlLabelMinPrec.textContent = ' (prec): ';
-htmlLabelMinPrec.htmlFor = 'input__tools-vb-min-prec';
-htmlInputMinPrec.id = 'input__tools-vb-min-prec';
-htmlInputMinPrec.className = 'input-toggle input--small';
-htmlInputMinPrec.type = 'number';
-htmlInputMinPrec.min = '0';
-htmlInputMinPrec.addEventListener('change', inputMinPrecHandler);
+htmlLabelMinBeat.textContent = ' (beat): ';
+htmlLabelMinBeat.htmlFor = 'input__tools-vb-min-beat';
+htmlInputMinBeat.id = 'input__tools-vb-min-beat';
+htmlInputMinBeat.className = 'input-toggle input--small';
+htmlInputMinBeat.type = 'number';
+htmlInputMinBeat.min = '0';
+htmlInputMinBeat.step = '0.1';
+htmlInputMinBeat.addEventListener('change', inputMinBeatHandler);
 
 htmlLabelMaxTime.textContent = 'max time (ms): ';
-htmlLabelMaxTime.htmlFor = 'input__tools-vb-min-time';
-htmlInputMaxTime.id = 'input__tools-vb-min-time';
+htmlLabelMaxTime.htmlFor = 'input__tools-vb-max-time';
+htmlInputMaxTime.id = 'input__tools-vb-max-time';
 htmlInputMaxTime.className = 'input-toggle input--small';
 htmlInputMaxTime.type = 'number';
 htmlInputMaxTime.min = '0';
-htmlInputMaxTime.value = round(maxVBTime * 1000, 1).toString();
+htmlInputMaxTime.value = round(defaultMaxTime * 1000, 1).toString();
 htmlInputMaxTime.addEventListener('change', inputMaxTimeHandler);
 
-htmlLabelMaxPrec.textContent = ' (prec): ';
-htmlLabelMaxPrec.htmlFor = 'input__tools-vb-min-prec';
-htmlInputMaxPrec.id = 'input__tools-vb-min-prec';
-htmlInputMaxPrec.className = 'input-toggle input--small';
-htmlInputMaxPrec.type = 'number';
-htmlInputMaxPrec.min = '0';
-htmlInputMaxPrec.addEventListener('change', inputMaxPrecHandler);
+htmlLabelMaxBeat.textContent = ' (beat): ';
+htmlLabelMaxBeat.htmlFor = 'input__tools-vb-max-beat';
+htmlInputMaxBeat.id = 'input__tools-vb-max-beat';
+htmlInputMaxBeat.className = 'input-toggle input--small';
+htmlInputMaxBeat.type = 'number';
+htmlInputMaxBeat.min = '0';
+htmlInputMaxBeat.step = '0.1';
+htmlInputMaxBeat.addEventListener('change', inputMaxBeatHandler);
 
 htmlContainer.appendChild(htmlInputCheck);
 htmlContainer.appendChild(htmlLabelCheck);
@@ -117,13 +119,13 @@ htmlContainer.appendChild(htmlLabelDiffCheck);
 htmlContainer.appendChild(document.createElement('br'));
 htmlContainer.appendChild(htmlLabelMinTime);
 htmlContainer.appendChild(htmlInputMinTime);
-htmlContainer.appendChild(htmlLabelMinPrec);
-htmlContainer.appendChild(htmlInputMinPrec);
+htmlContainer.appendChild(htmlLabelMinBeat);
+htmlContainer.appendChild(htmlInputMinBeat);
 htmlContainer.appendChild(document.createElement('br'));
 htmlContainer.appendChild(htmlLabelMaxTime);
 htmlContainer.appendChild(htmlInputMaxTime);
-htmlContainer.appendChild(htmlLabelMaxPrec);
-htmlContainer.appendChild(htmlInputMaxPrec);
+htmlContainer.appendChild(htmlLabelMaxBeat);
+htmlContainer.appendChild(htmlInputMaxBeat);
 
 const tool: Tool = {
     name: 'Slow Slider',
@@ -137,8 +139,8 @@ const tool: Tool = {
         enabled: htmlInputCheck.checked,
         params: {
             specific: 'difficulty',
-            minTime: minVBTime,
-            maxTime: maxVBTime,
+            minTime: defaultMinTime,
+            maxTime: defaultMaxTime,
         },
         html: htmlContainer,
         adjustTime: adjustTimeHandler,
@@ -151,12 +153,12 @@ const tool: Tool = {
 
 function adjustTimeHandler(bpm: beatmap.bpm.BeatPerMinute) {
     localBPM = bpm;
-    htmlInputMinPrec.value = round(
-        1 / localBPM.toBeatTime(tool.input.params.minTime as number),
+    htmlInputMinBeat.value = round(
+        localBPM.toBeatTime(tool.input.params.minTime as number),
         2
     ).toString();
-    htmlInputMaxPrec.value = round(
-        1 / localBPM.toBeatTime(tool.input.params.maxTime as number),
+    htmlInputMaxBeat.value = round(
+        localBPM.toBeatTime(tool.input.params.maxTime as number),
         2
     ).toString();
 }
@@ -173,44 +175,63 @@ function inputMinTimeHandler(this: HTMLInputElement) {
     tool.input.params.minTime = Math.abs(parseFloat(this.value)) / 1000;
     this.value = round(tool.input.params.minTime * 1000, 1).toString();
     if (localBPM) {
-        htmlInputMinPrec.value = round(
-            1 / localBPM.toBeatTime(tool.input.params.minSpeed as number),
+        htmlInputMinBeat.value = round(
+            localBPM.toBeatTime(tool.input.params.minTime as number),
             2
         ).toString();
+        if (tool.input.params.minTime > tool.input.params.maxTime) {
+            tool.input.params.maxTime = tool.input.params.minTime;
+            htmlInputMaxTime.value = round(
+                (tool.input.params.maxTime as number) * 1000,
+                1
+            ).toString();
+            htmlInputMaxBeat.value = round(
+                localBPM.toBeatTime(tool.input.params.maxTime as number),
+                2
+            ).toString();
+        }
     }
 }
 
-function inputMinPrecHandler(this: HTMLInputElement) {
+function inputMinBeatHandler(this: HTMLInputElement) {
     if (!localBPM) {
         this.value = '0';
         return;
     }
-    let val = round(Math.abs(parseFloat(this.value)), 2) || 1;
-    tool.input.params.minTime = localBPM.toRealTime(1 / val);
+    const val = Math.abs(parseFloat(this.value)) || 1;
+    tool.input.params.minTime = localBPM.toRealTime(val);
     htmlInputMinTime.value = round(tool.input.params.minTime * 1000, 1).toString();
-    this.value = val.toString();
+    this.value = round(val, 2).toString();
+    if (tool.input.params.minTime > tool.input.params.maxTime) {
+        tool.input.params.maxTime = tool.input.params.minTime;
+        htmlInputMaxTime.value = round((tool.input.params.maxTime as number) * 1000, 1).toString();
+        htmlInputMaxBeat.value = round(
+            localBPM.toBeatTime(tool.input.params.maxTime as number),
+            2
+        ).toString();
+    }
 }
 
 function inputMaxTimeHandler(this: HTMLInputElement) {
     tool.input.params.maxTime = Math.abs(parseFloat(this.value)) / 1000;
     this.value = round(tool.input.params.maxTime * 1000, 1).toString();
     if (localBPM) {
-        htmlInputMinPrec.value = round(
-            1 / localBPM.toBeatTime(tool.input.params.minSpeed as number),
+        htmlInputMaxBeat.value = round(
+            localBPM.toBeatTime(tool.input.params.maxTime as number),
             2
         ).toString();
     }
 }
 
-function inputMaxPrecHandler(this: HTMLInputElement) {
+function inputMaxBeatHandler(this: HTMLInputElement) {
     if (!localBPM) {
         this.value = '0';
         return;
     }
-    let val = round(Math.abs(parseFloat(this.value)), 2) || 1;
-    tool.input.params.maxTime = localBPM.toRealTime(1 / val);
-    htmlInputMinTime.value = round(tool.input.params.maxTime * 1000, 1).toString();
-    this.value = val.toString();
+    const val = Math.abs(parseFloat(this.value)) || 1;
+    tool.input.params.maxTime = localBPM.toRealTime(val);
+    htmlInputMaxTime.value = round(tool.input.params.maxTime * 1000, 1).toString();
+    this.value = round(val, 2).toString();
 }
 
 function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData) {
@@ -236,22 +257,22 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         if (lastMidL) {
-            if (note._time - lastMidL._time > minTime && note._time - lastMidL._time < maxTime) {
+            if (note._time - lastMidL._time >= minTime && note._time - lastMidL._time <= maxTime) {
                 if (note._lineIndex < 2) {
                     arr.push(note);
                 }
             }
             // yeet the last note if nothing else found so we dont have to perform check every note
-            else if (note._time - lastMidL._time >= maxTime) {
+            else if (note._time - lastMidL._time > maxTime) {
                 lastMidL = null;
             }
         }
         if (lastMidR) {
-            if (note._time - lastMidR._time > minTime && note._time - lastMidR._time < maxTime) {
+            if (note._time - lastMidR._time >= minTime && note._time - lastMidR._time <= maxTime) {
                 if (note._lineIndex > 1) {
                     arr.push(note);
                 }
-            } else if (note._time - lastMidR._time >= maxTime) {
+            } else if (note._time - lastMidR._time > maxTime) {
                 lastMidR = null;
             }
         }

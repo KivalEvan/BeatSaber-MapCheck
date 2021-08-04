@@ -1,4 +1,4 @@
-// TODO: automatically generate options instead of hardcoded in HTML
+// TODO: generate options instead of hardcoded in HTML
 import * as uiTheme from './theme';
 import settings from '../settings';
 

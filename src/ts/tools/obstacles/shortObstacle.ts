@@ -212,7 +212,7 @@ function run(mapSettings: BeatmapSettings, mapSet?: beatmap.map.BeatmapSetData):
 
     if (result.length) {
         const htmlResult = document.createElement('div');
-        htmlResult.innerHTML = `<b>Negative obstacle [${result.length}]:</b> ${result
+        htmlResult.innerHTML = `<b><15ms obstacle [${result.length}]:</b> ${result
             .map((n) => round(mapSettings._bpm.adjustTime(n), 3))
             .join(', ')}`;
         tool.output.html = htmlResult;
