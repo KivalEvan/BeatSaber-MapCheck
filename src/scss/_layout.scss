@@ -85,3 +85,36 @@ footer {
         transform: scale(0.5, 0.5);
     }
 }
+
+@media (max-width: 760px) {
+    .panel {
+        &--tiny {
+            width: auto;
+        }
+        &--small {
+            width: auto;
+        }
+        &--medium {
+            width: auto;
+        }
+        &--large {
+            width: auto;
+        }
+        &--max {
+            width: auto;
+        }
+        &--offset {
+            margin: 0;
+            padding: $-sz-panel-offset;
+            &-half {
+                margin: 0;
+                padding: calc(#{$-sz-panel-offset} / 2);
+            }
+        }
+    }
+    header {
+        display: block;
+        height: unset;
+        position: relative;
+    }
+}

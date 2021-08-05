@@ -1,5 +1,20 @@
 # Changelog
 
+## v2.0.1 [06-08-2021]
+
+### Added
+
+-   Mobile friendly support
+
+### Changed
+
+-   Re-enabled BeatSaver Download
+-   QoL update for VB tool
+
+### Fixed
+
+-   Invalid event picking up laser rotation of high value
+
 ## v2.0.0 : TypeScript Rewrite [05-08-2021]
 
 ### Added

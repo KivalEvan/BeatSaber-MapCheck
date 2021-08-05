@@ -98,3 +98,25 @@
         }
     }
 }
+
+@media (max-width: 760px) {
+    .accordion {
+        &__button {
+            &:checked {
+                + .accordion__label {
+                    + .accordion__collapsible {
+                        &-flex {
+                            display: block;
+                        }
+                    }
+                }
+            }
+        }
+        &__collapsible {
+            &-flex {
+                align-items: unset;
+                display: block;
+            }
+        }
+    }
+}

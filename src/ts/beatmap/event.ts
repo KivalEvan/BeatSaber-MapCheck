@@ -132,7 +132,11 @@ export const hasMappingExtensions = (event: Event): boolean => {
 };
 
 export const isValid = (event: Event): boolean => {
-    return isValidType(event) && event._value >= 0 && !(event._value > 7 && !hasOldChroma(event));
+    return (
+        isValidType(event) &&
+        event._value >= 0 &&
+        !(!isLaserRotationEvent(event) && event._value > 7 && !hasOldChroma(event))
+    );
 };
 
 const commonEvent = [0, 1, 2, 3, 4, 8, 9, 12, 13];

@@ -51,7 +51,6 @@
         font-weight: 500;
     }
 }
-
 .metadata {
     position: relative;
     height: 100%;
@@ -79,10 +78,51 @@
         font-family: var(--font-monospace);
     }
 }
-
 .audio {
     position: absolute;
     bottom: 0;
     height: 2em;
     width: 100%;
+}
+
+@media (max-width: 760px) {
+    .cover {
+        width: 80%;
+        height: 80%;
+        margin: auto;
+        &__link {
+            width: 80%;
+            height: 80%;
+        }
+        &__image {
+            display: block;
+            position: unset;
+            width: 80%;
+            height: 80%;
+            margin: auto;
+            box-shadow: 0.125em 0.125em 0.5em -0.125em black;
+        }
+    }
+    .container {
+        height: auto;
+    }
+    .intro {
+        height: auto;
+        &__container {
+            display: block;
+            height: auto;
+            align-items: unset;
+        }
+    }
+    .metadata {
+        height: auto;
+        &__container {
+            display: block;
+            height: auto;
+        }
+    }
+    .audio {
+        position: unset;
+        margin-top: 1em;
+    }
 }

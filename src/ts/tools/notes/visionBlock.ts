@@ -54,7 +54,7 @@ htmlInputCheck.type = 'checkbox';
 htmlInputCheck.checked = true;
 htmlInputCheck.addEventListener('change', inputCheckHandler);
 
-htmlLabelTimeCheck.textContent = ' Time specific ';
+htmlLabelTimeCheck.textContent = ' VB time specific ';
 htmlLabelTimeCheck.htmlFor = 'input__tools-vb-time-check';
 htmlInputTimeCheck.id = 'input__tools-vb-time-check';
 htmlInputTimeCheck.className = 'input-toggle';
@@ -63,7 +63,7 @@ htmlInputTimeCheck.name = 'input__tools-vb-spec';
 htmlInputTimeCheck.value = 'time';
 htmlInputTimeCheck.addEventListener('change', inputSpecCheckHandler);
 
-htmlLabelDiffCheck.textContent = ' Difficulty specific ';
+htmlLabelDiffCheck.textContent = ' VB difficulty specific ';
 htmlLabelDiffCheck.htmlFor = 'input__tools-vb-diff-check';
 htmlInputDiffCheck.id = 'input__tools-vb-diff-check';
 htmlInputDiffCheck.className = 'input-toggle';

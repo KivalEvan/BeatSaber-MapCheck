@@ -11,6 +11,7 @@ import { round, sanitizeBeatSaverID, sanitizeURL } from './utils';
 import settings from './settings';
 import flag from './flag';
 import savedData, { clearData } from './savedData';
+import { getZipURL } from './beatsaver';
 
 export const downloadFromURL = async (input: string) => {
     // sanitize & validate url
@@ -23,11 +24,10 @@ export const downloadFromURL = async (input: string) => {
         return;
     }
 
-    disableInput(true);
-    uiLoading.status('info', 'Requesting download from link', 0);
-
-    console.log(`downloading from ${url}`);
     try {
+        disableInput(true);
+        uiLoading.status('info', 'Requesting download from link', 0);
+        console.log(`downloading from ${url}`);
         // apparently i need cors proxy
         let res = await downloadMap('https://cors-anywhere.herokuapp.com/' + url);
         uiHeader.setCoverLink(url);
@@ -36,10 +36,6 @@ export const downloadFromURL = async (input: string) => {
     } catch (err) {
         disableInput(false);
         uiLoading.status('error', err, 100);
-        // setTimeout(function () {
-        //     if (!flag.loading)
-        //         $('#loadingbar').css('background-color', '#111').css('width', '0%');
-        // }, 3000);
     }
     return;
 };
@@ -55,12 +51,13 @@ export const downloadFromID = async (input: string) => {
         throw new Error(err);
     }
 
-    disableInput(true);
-    uiLoading.status('info', 'Requesting download from BeatSaver', 0);
-
-    console.log(`downloading from BeatSaver for map ID ${id}`);
-    const url = 'https://beatsaver.com/api/download/key/' + id;
     try {
+        disableInput(true);
+        console.log(`fetching download URL from BeatSaver for map ID ${id}`);
+        uiLoading.status('info', 'Fetching download URL from BeatSaver', 0);
+        const url = await getZipURL(id);
+        console.log(`downloading from BeatSaver for map ID ${id}`);
+        uiLoading.status('info', 'Requesting download from BeatSaver', 0);
         const res = await downloadMap(url);
         uiHeader.setCoverLink('https://beatsaver.com/beatmap/' + id, id);
         extractZip(res);
@@ -68,10 +65,6 @@ export const downloadFromID = async (input: string) => {
         disableInput(false);
         uiLoading.status('error', err, 100);
         console.error(err);
-        // setTimeout(function () {
-        //     if (!flag.loading)
-        //         $('#loadingbar').css('background-color', '#111').css('width', '0%');
-        // }, 3000);
     }
 };
 
