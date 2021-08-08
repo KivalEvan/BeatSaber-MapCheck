@@ -74,7 +74,7 @@ export const hasMappingExtensions = (obstacle: Obstacle): boolean => {
 };
 
 export const isValid = (obstacle: Obstacle): boolean => {
-    return !hasMappingExtensions(obstacle) && obstacle._width >= 0 && obstacle._width <= 3;
+    return !hasMappingExtensions(obstacle) && obstacle._width > 0 && obstacle._width <= 4;
 };
 
 export const count = (obstacles: Obstacle[]): ObstacleCount => {

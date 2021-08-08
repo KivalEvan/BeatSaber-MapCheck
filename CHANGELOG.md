@@ -1,5 +1,15 @@
 # Changelog
 
+## v2.0.2 [08-08-2021]
+
+### Changed
+
+-   Accordion button resized for mobile device
+
+### Fixed
+
+-   Invalid obstacle picking up 4-wide crouch wall
+
 ## v2.0.1 [06-08-2021]
 
 ### Added
