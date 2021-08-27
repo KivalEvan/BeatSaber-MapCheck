@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.0.3 [27-08-2021]
+
+### Fixed
+
+-   BeatSaver download not having correct API link
+
 ## v2.0.2 [08-08-2021]
 
 ### Changed

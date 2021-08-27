@@ -161,7 +161,7 @@ const fetchJSON = async (url: string): Promise<any> => {
 };
 
 export const getZipURL = async (id: string): Promise<string> => {
-    const url = `https://api.beatsaver.com/maps/beatsaver/${id}`;
+    const url = `https://api.beatsaver.com/maps/id/${id}`;
     const json = (await fetchJSON(url)) as MapDetail;
     if (json?.versions.length) {
         return json.versions[json.versions.length - 1].downloadURL;
