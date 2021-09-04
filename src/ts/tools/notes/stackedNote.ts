@@ -70,22 +70,20 @@ function checkNote(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetD
 }
 
 function checkBomb(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData) {
-    const { _bpm: bpm } = mapSettings;
+    const { _bpm: bpm, _njs: njs } = mapSettings;
     const { _notes: notes } = mapSet._data;
 
     const arr: beatmap.note.Note[] = [];
-    let lastTime: number = 0;
     for (let i = 0, len = notes.length; i < len; i++) {
-        if (bpm.toRealTime(notes[i]._time) < lastTime + 0.02 || notes[i]._type !== 3) {
+        if (notes[i]._type !== 3) {
             continue;
         }
         for (let j = i + 1; j < len; j++) {
-            if (bpm.toRealTime(notes[j]._time) > bpm.toRealTime(notes[i]._time) + 0.02) {
+            if (njs.value > bpm.value / (120 * (notes[j]._time - notes[i]._time))) {
                 break;
             }
             if (beatmap.note.isInline(notes[i], notes[j])) {
                 arr.push(notes[i]);
-                lastTime = bpm.toRealTime(notes[i]._time);
             }
         }
     }
@@ -113,7 +111,7 @@ function run(mapSettings: BeatmapSettings, mapSet?: beatmap.map.BeatmapSetData):
     }
     if (resultBomb.length) {
         htmlString.push(
-            `<b>Stacked bomb (<20ms) [${resultBomb.length}]:</b> ${resultBomb
+            `<b>Stacked bomb [${resultBomb.length}]:</b> ${resultBomb
                 .map((n) => round(mapSettings._bpm.adjustTime(n), 3))
                 .join(', ')}`
         );

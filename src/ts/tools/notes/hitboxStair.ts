@@ -64,13 +64,17 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         if (beatmap.note.isNote(note) && lastNote[note._type]) {
-            if (swing.next(note, lastNote[note._type], bpm, swingNoteArray[note._type])) {
+            if (
+                swing.next(note, lastNote[note._type], bpm, swingNoteArray[note._type])
+            ) {
                 lastSpeed[note._type] = note._time - lastNote[note._type]._time;
                 if (note._cutDirection !== 8) {
                     noteOccupy[note._type]._lineIndex =
-                        note._lineIndex + beatmap.note.cutDirectionSpace[note._cutDirection][0];
+                        note._lineIndex +
+                        beatmap.note.cutDirectionSpace[note._cutDirection][0];
                     noteOccupy[note._type]._lineLayer =
-                        note._lineLayer + beatmap.note.cutDirectionSpace[note._cutDirection][1];
+                        note._lineLayer +
+                        beatmap.note.cutDirectionSpace[note._cutDirection][1];
                 } else {
                     noteOccupy[note._type]._lineIndex = -1;
                     noteOccupy[note._type]._lineLayer = -1;
@@ -78,21 +82,31 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
                 swingNoteArray[note._type] = [];
                 lastNoteDirection[note._type] = note._cutDirection;
             } else if (
-                beatmap.note.isEndNote(note, lastNote[note._type], lastNoteDirection[note._type])
+                beatmap.note.isEnd(
+                    note,
+                    lastNote[note._type],
+                    lastNoteDirection[note._type]
+                )
             ) {
                 if (note._cutDirection !== 8) {
                     noteOccupy[note._type]._lineIndex =
-                        note._lineIndex + beatmap.note.cutDirectionSpace[note._cutDirection][0];
+                        note._lineIndex +
+                        beatmap.note.cutDirectionSpace[note._cutDirection][0];
                     noteOccupy[note._type]._lineLayer =
-                        note._lineLayer + beatmap.note.cutDirectionSpace[note._cutDirection][1];
+                        note._lineLayer +
+                        beatmap.note.cutDirectionSpace[note._cutDirection][1];
                     lastNoteDirection[note._type] = note._cutDirection;
                 } else {
                     noteOccupy[note._type]._lineIndex =
                         note._lineIndex +
-                        beatmap.note.cutDirectionSpace[lastNoteDirection[note._type]][0];
+                        beatmap.note.cutDirectionSpace[
+                            lastNoteDirection[note._type]
+                        ][0];
                     noteOccupy[note._type]._lineLayer =
                         note._lineLayer +
-                        beatmap.note.cutDirectionSpace[lastNoteDirection[note._type]][1];
+                        beatmap.note.cutDirectionSpace[
+                            lastNoteDirection[note._type]
+                        ][1];
                 }
             }
             if (
@@ -112,9 +126,11 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
         } else {
             if (note._cutDirection !== 8) {
                 noteOccupy[note._type]._lineIndex =
-                    note._lineIndex + beatmap.note.cutDirectionSpace[note._cutDirection][0];
+                    note._lineIndex +
+                    beatmap.note.cutDirectionSpace[note._cutDirection][0];
                 noteOccupy[note._type]._lineLayer =
-                    note._lineLayer + beatmap.note.cutDirectionSpace[note._cutDirection][1];
+                    note._lineLayer +
+                    beatmap.note.cutDirectionSpace[note._cutDirection][1];
             } else {
                 noteOccupy[note._type]._lineIndex = -1;
                 noteOccupy[note._type]._lineLayer = -1;

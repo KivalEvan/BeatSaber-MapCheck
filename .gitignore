@@ -1,8 +1,5 @@
 package-lock.json
-test
-jest*
 *.pdn
-*.old.*
 .vscode
 
 # Logs

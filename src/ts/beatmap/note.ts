@@ -74,7 +74,10 @@ export const isHorizontal = (n1: Note, n2: Note): boolean => {
 };
 
 export const isDiagonal = (n1: Note, n2: Note): boolean => {
-    return Math.abs(n1._lineIndex - n2._lineIndex) === Math.abs(n1._lineLayer - n2._lineLayer);
+    return (
+        Math.abs(n1._lineIndex - n2._lineIndex) ===
+        Math.abs(n1._lineLayer - n2._lineLayer)
+    );
 };
 
 export const isInline = (n1: Note, n2: Note): boolean => {
@@ -93,7 +96,7 @@ export const isDouble = (n: Note, notes: Note[], index: number): boolean => {
     return false;
 };
 
-export const isEndNote = (currNote: Note, prevNote: Note, cd: number): boolean => {
+export const isEnd = (currNote: Note, prevNote: Note, cd: number): boolean => {
     // fuck u and ur dot note stack
     if (currNote._cutDirection === 8 && prevNote._cutDirection === 8 && cd !== 8) {
         // if end note on right side
@@ -198,6 +201,56 @@ export const isEndNote = (currNote: Note, prevNote: Note, cd: number): boolean =
     return false;
 };
 
+export const predictDirection = (currNote: Note, prevNote: Note): number => {
+    if (isEnd(currNote, prevNote, 8)) {
+        return currNote._cutDirection === 8
+            ? prevNote._cutDirection
+            : currNote._cutDirection;
+    }
+    if (currNote._cutDirection !== 8) {
+        return currNote._cutDirection;
+    }
+    if (currNote._time > prevNote._time) {
+        // if end note on right side
+        if (currNote._lineIndex > prevNote._lineIndex) {
+            if (isHorizontal(currNote, prevNote)) {
+                return 3;
+            }
+        }
+        // if end note on left side
+        if (currNote._lineIndex < prevNote._lineIndex) {
+            if (isHorizontal(currNote, prevNote)) {
+                return 2;
+            }
+        }
+        // if end note is above
+        if (currNote._lineLayer > prevNote._lineLayer) {
+            if (isVertical(currNote, prevNote)) {
+                return 0;
+            }
+            if (currNote._lineIndex > prevNote._lineIndex) {
+                return 5;
+            }
+            if (currNote._lineIndex < prevNote._lineIndex) {
+                return 4;
+            }
+        }
+        // if end note is below
+        if (currNote._lineLayer < prevNote._lineLayer) {
+            if (isVertical(currNote, prevNote)) {
+                return 1;
+            }
+            if (currNote._lineIndex > prevNote._lineIndex) {
+                return 7;
+            }
+            if (currNote._lineIndex < prevNote._lineIndex) {
+                return 6;
+            }
+        }
+    }
+    return 8;
+};
+
 export const distance = (n1: Note, n2: Note): number => {
     return Math.max(
         Math.abs(n1._lineIndex - n2._lineIndex),
@@ -210,7 +263,12 @@ export const isWindow = (n1: Note, n2: Note): boolean => {
 };
 
 export const isSlantedWindow = (n1: Note, n2: Note): boolean => {
-    return isWindow(n1, n2) && !isDiagonal(n1, n2) && !isHorizontal(n1, n2) && !isVertical(n1, n2);
+    return (
+        isWindow(n1, n2) &&
+        !isDiagonal(n1, n2) &&
+        !isHorizontal(n1, n2) &&
+        !isVertical(n1, n2)
+    );
 };
 
 export const hasChroma = (note: Note): boolean => {
@@ -250,7 +308,11 @@ export const hasMappingExtensions = (note: Note): boolean => {
 };
 
 export const isValid = (note: Note): boolean => {
-    return !hasMappingExtensions(note) && note._cutDirection >= 0 && note._cutDirection <= 8;
+    return (
+        !hasMappingExtensions(note) &&
+        note._cutDirection >= 0 &&
+        note._cutDirection <= 8
+    );
 };
 
 export const count = (notes: Note[]): NoteCount => {
@@ -277,17 +339,26 @@ export const count = (notes: Note[]): NoteCount => {
     for (let i = notes.length - 1; i >= 0; i--) {
         if (notes[i]._type === 0) {
             noteCount.red.total++;
-            if (notes[i]._customData?._color || notes[i]._customData?._disableSpawnEffect) {
+            if (
+                notes[i]._customData?._color ||
+                notes[i]._customData?._disableSpawnEffect
+            ) {
                 noteCount.red.chroma++;
             }
         } else if (notes[i]._type === 1) {
             noteCount.blue.total++;
-            if (notes[i]._customData?._color || notes[i]._customData?._disableSpawnEffect) {
+            if (
+                notes[i]._customData?._color ||
+                notes[i]._customData?._disableSpawnEffect
+            ) {
                 noteCount.blue.chroma++;
             }
         } else if (notes[i]._type === 3) {
             noteCount.bomb.total++;
-            if (notes[i]._customData?._color || notes[i]._customData?._disableSpawnEffect) {
+            if (
+                notes[i]._customData?._color ||
+                notes[i]._customData?._disableSpawnEffect
+            ) {
                 noteCount.bomb.chroma++;
             }
         }
@@ -328,10 +399,18 @@ export const peak = (notes: Note[], beat: number, bpm: number): number => {
         while (nArr[i]._time - nArr[currentSectionStart]._time > beat) {
             currentSectionStart++;
         }
-        peakNPS = Math.max(peakNPS, (i - currentSectionStart + 1) / ((beat / bpm) * 60));
+        peakNPS = Math.max(
+            peakNPS,
+            (i - currentSectionStart + 1) / ((beat / bpm) * 60)
+        );
     }
 
     return peakNPS;
+};
+
+// TODO: make support for NE and ME
+export const getPosition = (n: Note): [number, number] => {
+    return [0, 0];
 };
 
 export const getAngle = (n: Note): number => {

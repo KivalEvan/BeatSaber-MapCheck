@@ -48,7 +48,10 @@ export const next = (
         currNote._cutDirection !== 8
     ) {
         for (const n of context) {
-            if (n._cutDirection !== 8 && beatmap.note.checkDirection(currNote, n, 90, false)) {
+            if (
+                n._cutDirection !== 8 &&
+                beatmap.note.checkDirection(currNote, n, 90, false)
+            ) {
                 return true;
             }
         }
@@ -173,13 +176,15 @@ export const calcMaxSliderSpeed = (
 ): number => {
     return bpm.toRealTime(
         Math.min(
-            ...notes
-                .map(
-                    (n, i) =>
-                        (notes[i]._time - notes[Math.max(i - 1, 0)]._time) /
-                        (i ? beatmap.note.distance(notes[i], notes[i - 1]) : 1)
-                )
-                .filter((n) => n !== 0)
+            ...notes.map((n, i) => {
+                if (i === 0) {
+                    return Number.MAX_SAFE_INTEGER;
+                }
+                return (
+                    (notes[i]._time - notes[Math.max(i - 1, 0)]._time) /
+                    (i ? beatmap.note.distance(notes[i], notes[i - 1]) : 1)
+                );
+            })
         )
     );
 };
@@ -220,12 +225,12 @@ export const getSliderNote = (
     }
     for (let i = 0; i < 2; i++) {
         if (lastNote[i]) {
-            let minSpeed = calcMinSliderSpeed(swingNoteArray[0], bpm);
-            let maxSpeed = calcMaxSliderSpeed(swingNoteArray[0], bpm);
+            let minSpeed = calcMinSliderSpeed(swingNoteArray[i], bpm);
+            let maxSpeed = calcMaxSliderSpeed(swingNoteArray[i], bpm);
             if (minSpeed > 0 && maxSpeed !== Infinity) {
-                lastNote[0]._minSpeed = minSpeed;
-                lastNote[0]._maxSpeed = maxSpeed;
-                noteSlider.push(lastNote[0]);
+                lastNote[i]._minSpeed = minSpeed;
+                lastNote[i]._maxSpeed = maxSpeed;
+                noteSlider.push(lastNote[i]);
             }
         }
     }

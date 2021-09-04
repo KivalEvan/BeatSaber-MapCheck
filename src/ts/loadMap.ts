@@ -13,7 +13,7 @@ import flag from './flag';
 import savedData, { clearData } from './savedData';
 import { getZipURL } from './beatsaver';
 
-export const downloadFromURL = async (input: string) => {
+export const downloadFromURL = async (input: string): Promise<void> => {
     // sanitize & validate url
     let url: string;
     try {
@@ -32,15 +32,13 @@ export const downloadFromURL = async (input: string) => {
         let res = await downloadMap('https://cors-anywhere.herokuapp.com/' + url);
         uiHeader.setCoverLink(url);
         extractZip(res);
-        return res;
     } catch (err) {
         disableInput(false);
         uiLoading.status('error', err, 100);
     }
-    return;
 };
 
-export const downloadFromID = async (input: string) => {
+export const downloadFromID = async (input: string): Promise<void> => {
     // sanitize & validate id
     let id;
     try {
@@ -59,7 +57,7 @@ export const downloadFromID = async (input: string) => {
         console.log(`downloading from BeatSaver for map ID ${id}`);
         uiLoading.status('info', 'Requesting download from BeatSaver', 0);
         const res = await downloadMap(url);
-        uiHeader.setCoverLink('https://beatsaver.com/beatmap/' + id, id);
+        uiHeader.setCoverLink('https://beatsaver.com/maps/' + id, id);
         extractZip(res);
     } catch (err) {
         disableInput(false);

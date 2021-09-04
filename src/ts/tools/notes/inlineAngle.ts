@@ -4,16 +4,15 @@ import { BeatmapSettings, Tool } from '../template';
 import * as swing from '../swing';
 
 const defaultMaxTime = 0.15;
+let localBPM!: beatmap.bpm.BeatPerMinute;
 
 const htmlContainer = document.createElement('div');
 const htmlInputCheck = document.createElement('input');
 const htmlLabelCheck = document.createElement('label');
-const htmlInputMinTime = document.createElement('input');
-const htmlLabelMinTime = document.createElement('label');
-const htmlInputMinBeat = document.createElement('input');
-const htmlLabelMinBeat = document.createElement('label');
-
-let localBPM!: beatmap.bpm.BeatPerMinute;
+const htmlInputMaxTime = document.createElement('input');
+const htmlLabelMaxTime = document.createElement('label');
+const htmlInputMaxBeat = document.createElement('input');
+const htmlLabelMaxBeat = document.createElement('label');
 
 htmlLabelCheck.textContent = ' Inline sharp angle';
 htmlLabelCheck.htmlFor = 'input__tools-inline-angle-check';
@@ -23,31 +22,31 @@ htmlInputCheck.type = 'checkbox';
 htmlInputCheck.checked = true;
 htmlInputCheck.addEventListener('change', inputCheckHandler);
 
-htmlLabelMinTime.textContent = 'max time (ms): ';
-htmlLabelMinTime.htmlFor = 'input__tools-inline-angle-time';
-htmlInputMinTime.id = 'input__tools-inline-angle-time';
-htmlInputMinTime.className = 'input-toggle input--small';
-htmlInputMinTime.type = 'number';
-htmlInputMinTime.min = '0';
-htmlInputMinTime.value = round(defaultMaxTime * 1000, 1).toString();
-htmlInputMinTime.addEventListener('change', inputTimeHandler);
+htmlLabelMaxTime.textContent = 'max time (ms): ';
+htmlLabelMaxTime.htmlFor = 'input__tools-inline-angle-time';
+htmlInputMaxTime.id = 'input__tools-inline-angle-time';
+htmlInputMaxTime.className = 'input-toggle input--small';
+htmlInputMaxTime.type = 'number';
+htmlInputMaxTime.min = '0';
+htmlInputMaxTime.value = round(defaultMaxTime * 1000, 1).toString();
+htmlInputMaxTime.addEventListener('change', inputTimeHandler);
 
-htmlLabelMinBeat.textContent = ' (beat): ';
-htmlLabelMinBeat.htmlFor = 'input__tools-inline-angle-beat';
-htmlInputMinBeat.id = 'input__tools-inline-angle-beat';
-htmlInputMinBeat.className = 'input-toggle input--small';
-htmlInputMinBeat.type = 'number';
-htmlInputMinBeat.min = '0';
-htmlInputMinBeat.step = '0.1';
-htmlInputMinBeat.addEventListener('change', inputBeatHandler);
+htmlLabelMaxBeat.textContent = ' (beat): ';
+htmlLabelMaxBeat.htmlFor = 'input__tools-inline-angle-beat';
+htmlInputMaxBeat.id = 'input__tools-inline-angle-beat';
+htmlInputMaxBeat.className = 'input-toggle input--small';
+htmlInputMaxBeat.type = 'number';
+htmlInputMaxBeat.min = '0';
+htmlInputMaxBeat.step = '0.1';
+htmlInputMaxBeat.addEventListener('change', inputBeatHandler);
 
 htmlContainer.appendChild(htmlInputCheck);
 htmlContainer.appendChild(htmlLabelCheck);
 htmlContainer.appendChild(document.createElement('br'));
-htmlContainer.appendChild(htmlLabelMinTime);
-htmlContainer.appendChild(htmlInputMinTime);
-htmlContainer.appendChild(htmlLabelMinBeat);
-htmlContainer.appendChild(htmlInputMinBeat);
+htmlContainer.appendChild(htmlLabelMaxTime);
+htmlContainer.appendChild(htmlInputMaxTime);
+htmlContainer.appendChild(htmlLabelMaxBeat);
+htmlContainer.appendChild(htmlInputMaxBeat);
 
 const tool: Tool = {
     name: 'Inline Sharp Angle',
@@ -73,7 +72,7 @@ const tool: Tool = {
 
 function adjustTimeHandler(bpm: beatmap.bpm.BeatPerMinute) {
     localBPM = bpm;
-    htmlInputMinBeat.value = round(
+    htmlInputMaxBeat.value = round(
         localBPM.toBeatTime(tool.input.params.maxTime as number),
         2
     ).toString();
@@ -87,7 +86,7 @@ function inputTimeHandler(this: HTMLInputElement) {
     tool.input.params.maxTime = Math.abs(parseFloat(this.value)) / 1000;
     this.value = round(tool.input.params.maxTime * 1000, 1).toString();
     if (localBPM) {
-        htmlInputMinBeat.value = round(
+        htmlInputMaxBeat.value = round(
             localBPM.toBeatTime(tool.input.params.maxTime as number),
             2
         ).toString();
@@ -101,7 +100,7 @@ function inputBeatHandler(this: HTMLInputElement) {
     }
     let val = round(Math.abs(parseFloat(this.value)), 2) || 1;
     tool.input.params.maxTime = localBPM.toRealTime(val);
-    htmlInputMinTime.value = round(tool.input.params.maxTime * 1000, 1).toString();
+    htmlInputMaxTime.value = round(tool.input.params.maxTime * 1000, 1).toString();
     this.value = val.toString();
 }
 
@@ -125,7 +124,9 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         if (beatmap.note.isNote(note) && lastNote[note._type]) {
-            if (swing.next(note, lastNote[note._type], bpm, swingNoteArray[note._type])) {
+            if (
+                swing.next(note, lastNote[note._type], bpm, swingNoteArray[note._type])
+            ) {
                 if (startNoteDot[note._type]) {
                     startNoteDot[note._type] = null;
                     lastNoteDirection[note._type] =

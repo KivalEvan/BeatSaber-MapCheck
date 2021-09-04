@@ -4,7 +4,6 @@
     "description": "map check or somethin",
     "private": true,
     "scripts": {
-        "test": "jest",
         "build": "webpack --config webpack.prod.js",
         "dev": "webpack --config webpack.dev.js",
         "clean": "npm cache clean --force",
@@ -24,9 +23,7 @@
         "jszip": "^3.6.0"
     },
     "devDependencies": {
-        "@types/jest": "^26.0.23",
         "css-loader": "^5.2.6",
-        "jest": "^27.0.6",
         "mini-css-extract-plugin": "^2.0.0",
         "sass": "^1.35.1",
         "sass-loader": "^12.1.0",
