@@ -64,7 +64,7 @@ export class Parity {
         this._warningThreshold = warningThreshold;
         this._errorThreshold = errorThreshold;
         this._allowedRotation = allowedRotation;
-        if (parity) {
+        if (parity && parity !== 'neutral') {
             this._state = parity;
             this._rotation = 0;
         } else {
@@ -264,12 +264,12 @@ export class Parity {
             if (note._type === 3) {
                 if (note._lineLayer === 0) {
                     if (note._lineIndex === type ? 1 : 2) {
-                        startParity = 'forehand';
+                        startParity = 'backhand';
                     }
                 }
                 if (note._lineLayer === 2) {
                     if (note._lineIndex === type ? 1 : 2) {
-                        startParity = 'backhand';
+                        startParity = 'forehand';
                     }
                 }
             }
@@ -289,14 +289,12 @@ export class Parity {
                     if (
                         noteInitParity[note._type].forehand.includes(note._cutDirection)
                     ) {
-                        startParity = 'backhand';
-                        break;
+                        return 'backhand';
                     }
                     if (
                         noteInitParity[note._type].backhand.includes(note._cutDirection)
                     ) {
-                        startParity = 'forehand';
-                        break;
+                        return 'forehand';
                     }
                     if (startParity === 'neutral' && note._cutDirection === 8) {
                         if (note._lineLayer === 0) {
