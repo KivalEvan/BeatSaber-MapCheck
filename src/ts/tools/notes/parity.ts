@@ -182,6 +182,7 @@ function run(mapSettings: BeatmapSettings, mapSet?: beatmap.map.BeatmapSetData):
                 .filter(function (x, i, ary) {
                     return !i || x !== ary[i - 1];
                 })
+                .sort((a, b) => a - b)
                 .map((n) => round(mapSettings._bpm.adjustTime(n), 3))
                 .join(', ')}`
         );
@@ -192,6 +193,7 @@ function run(mapSettings: BeatmapSettings, mapSet?: beatmap.map.BeatmapSetData):
                 .filter(function (x, i, ary) {
                     return !i || x !== ary[i - 1];
                 })
+                .sort((a, b) => a - b)
                 .map((n) => round(mapSettings._bpm.adjustTime(n), 3))
                 .join(', ')}`
         );
