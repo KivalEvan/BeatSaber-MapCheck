@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.1.1 [05-08-2021]
+
+### Changed
+
+-   Bomb stack now checks by both NJS and time (<20ms)
+
 ## v2.1.0 [04-08-2021]
 
 ### Added

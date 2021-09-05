@@ -1,5 +1,4 @@
 import * as beatmap from '../../beatmap';
-import { round } from '../../utils';
 import { BeatmapSettings, Tool } from '../template';
 
 const htmlContainer = document.createElement('div');

@@ -53,7 +53,10 @@ function checkNote(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetD
             continue;
         }
         for (let j = i + 1; j < len; j++) {
-            if (bpm.toRealTime(notes[j]._time) > bpm.toRealTime(notes[i]._time) + 0.01) {
+            if (
+                bpm.toRealTime(notes[j]._time) >
+                bpm.toRealTime(notes[i]._time) + 0.01
+            ) {
                 break;
             }
             if (beatmap.note.isInline(notes[i], notes[j])) {
@@ -79,7 +82,11 @@ function checkBomb(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetD
             continue;
         }
         for (let j = i + 1; j < len; j++) {
-            if (njs.value > bpm.value / (120 * (notes[j]._time - notes[i]._time))) {
+            if (
+                bpm.toRealTime(notes[j]._time) >=
+                    bpm.toRealTime(notes[i]._time) + 0.02 ||
+                njs.value > bpm.value / (120 * (notes[j]._time - notes[i]._time))
+            ) {
                 break;
             }
             if (beatmap.note.isInline(notes[i], notes[j])) {
