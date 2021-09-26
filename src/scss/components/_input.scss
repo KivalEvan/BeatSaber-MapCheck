@@ -1,0 +1,61 @@
+.input {
+    &__file {
+        position: absolute;
+        left: -9999px;
+        &-zone {
+            display: block;
+            position: relative;
+            box-sizing: border-box;
+            cursor: pointer;
+            height: 100%;
+            border: 0.125em dashed var(--bg-file-zone-border);
+            border-radius: 0.5em;
+            background-color: var(--bg-file-zone);
+            transition: filter 0.125s ease;
+            &:hover {
+                filter: brightness(0.9) contrast(0.9);
+            }
+            &-span {
+                position: absolute;
+                width: 100%;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                margin: auto;
+                text-align: center;
+            }
+        }
+        &:focus + &-zone {
+            filter: brightness(0.75) contrast(1.25);
+        }
+    }
+    &__intro {
+        &-url {
+            width: 100%;
+        }
+        &-id {
+            width: 4em;
+        }
+    }
+    &__reset-button {
+        position: absolute;
+        top: 1em;
+        right: 1.5em;
+    }
+    &--small {
+        width: 4em;
+    }
+}
+
+@media (max-width: 760px) {
+    .input {
+        &__file {
+            &-zone {
+                display: block;
+                position: relative;
+                width: 100%;
+                height: 8em;
+            }
+        }
+    }
+}

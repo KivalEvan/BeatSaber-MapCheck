@@ -1,0 +1,19 @@
+@forward 'header';
+@forward 'loading';
+@forward 'accordion';
+@forward 'info';
+@forward 'difficulty';
+@forward 'tools';
+@forward 'stats';
+@forward 'input';
+
+.link {
+    padding: 0.125rem 0.25rem;
+    font-size: 1rem;
+    text-decoration: none;
+    color: var(--c-link-base);
+    transition: color ease 0.125s;
+    &:hover {
+        color: var(--c-link-hover);
+    }
+}

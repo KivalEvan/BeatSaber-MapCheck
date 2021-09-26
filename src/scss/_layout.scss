@@ -1,0 +1,120 @@
+$-max-width: 64em;
+$-sz-header-height: 12em;
+$-sz-panel-tiny: 25%;
+$-sz-panel-small: 33.33%;
+$-sz-panel-medium: 50%;
+$-sz-panel-large: 66.66%;
+$-sz-panel-offset: 0.75em;
+
+:root {
+    --header-height: #{$-sz-header-height};
+    --panel-offset: #{$-sz-panel-offset};
+}
+html {
+    height: 100%;
+    font-size: 1em;
+    font-family: var(--font-sans-serif);
+}
+body {
+    color: var(--c-text-primary);
+    background: var(--bg-body);
+    margin: 0;
+    padding-bottom: 4em;
+}
+.wrapper {
+    max-width: $-max-width;
+    margin: 0 auto;
+    &--shadow {
+        box-shadow: 0 0 1rem black;
+    }
+}
+.panel {
+    position: relative;
+    box-sizing: border-box;
+    &--tiny {
+        width: $-sz-panel-tiny;
+    }
+    &--small {
+        width: $-sz-panel-small;
+    }
+    &--medium {
+        width: $-sz-panel-medium;
+    }
+    &--large {
+        width: $-sz-panel-large;
+    }
+    &--max {
+        width: 100%;
+    }
+    &--offset {
+        margin: $-sz-panel-offset;
+        &-half {
+            margin: calc(#{$-sz-panel-offset} / 2);
+        }
+    }
+    &--flex {
+        display: flex;
+        &-column {
+            display: flex;
+            flex-direction: column;
+        }
+    }
+}
+header {
+    display: flex;
+    position: relative;
+    height: $-sz-header-height;
+    background-color: var(--bg-header);
+}
+footer {
+    display: flex;
+    position: fixed;
+    bottom: 1em;
+    right: 1em;
+    background-image: linear-gradient(
+        to left,
+        #20202000,
+        #202020cc,
+        #202020cc,
+        #202020cc,
+        #20202000
+    );
+    color: white;
+    transform: scale(2, 2);
+    div {
+        transform: scale(0.5, 0.5);
+    }
+}
+
+@media (max-width: 760px) {
+    .panel {
+        &--tiny {
+            width: auto;
+        }
+        &--small {
+            width: auto;
+        }
+        &--medium {
+            width: auto;
+        }
+        &--large {
+            width: auto;
+        }
+        &--max {
+            width: auto;
+        }
+        &--offset {
+            margin: 0;
+            padding: $-sz-panel-offset;
+            &-half {
+                margin: 0;
+                padding: calc(#{$-sz-panel-offset} / 2);
+            }
+        }
+    }
+    header {
+        display: block;
+        height: unset;
+        position: relative;
+    }
+}

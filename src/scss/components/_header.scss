@@ -1,0 +1,128 @@
+.cover {
+    display: block;
+    width: var(--header-height);
+    height: var(--header-height);
+    &__link {
+        display: block;
+        position: relative;
+        width: inherit;
+        height: inherit;
+        padding: 0;
+        font-size: 1.5rem;
+        font-family: var(--font-monospace);
+        text-indent: 0.5rem;
+        text-decoration: none;
+        text-shadow: 0 0 0.25rem black;
+        line-height: 2rem;
+        color: white;
+        transition: background-color 0.125s ease;
+        &:not(.disabled):hover {
+            background-color: #000000c0;
+        }
+    }
+    &__image {
+        position: absolute;
+        width: inherit;
+        height: inherit;
+        box-shadow: 0.125em 0 0.5em -0.125em black;
+    }
+}
+.container {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: var(--header-height);
+}
+.intro {
+    position: relative;
+    height: 100%;
+    &__container {
+        display: flex;
+        height: 100%;
+        align-items: stretch;
+    }
+    &__title {
+        font-size: 2rem;
+        font-weight: 600;
+        line-height: 0.5;
+    }
+    &__subtitle {
+        font-size: 1.5rem;
+        font-weight: 500;
+    }
+}
+.metadata {
+    position: relative;
+    height: 100%;
+    &__container {
+        display: flex;
+        height: 100%;
+        align-items: stretch;
+    }
+    &__song-name {
+        font-weight: 500;
+        font-size: 2rem;
+        line-height: 0.5;
+    }
+    &__song-subname {
+        font-weight: 400;
+    }
+    &__song-author {
+        font-weight: 400;
+        font-size: 1.375rem;
+    }
+    &__song-bpm {
+        font-family: var(--font-monospace);
+    }
+    &__song-duration {
+        font-family: var(--font-monospace);
+    }
+}
+.audio {
+    position: absolute;
+    bottom: 0;
+    height: 2em;
+    width: 100%;
+}
+
+@media (max-width: 760px) {
+    .cover {
+        width: 80%;
+        height: 80%;
+        margin: auto;
+        &__link {
+            width: 80%;
+            height: 80%;
+        }
+        &__image {
+            display: block;
+            position: unset;
+            width: 80%;
+            height: 80%;
+            margin: auto;
+            box-shadow: 0.125em 0.125em 0.5em -0.125em black;
+        }
+    }
+    .container {
+        height: auto;
+    }
+    .intro {
+        height: auto;
+        &__container {
+            display: block;
+            height: auto;
+            align-items: unset;
+        }
+    }
+    .metadata {
+        height: auto;
+        &__container {
+            display: block;
+            height: auto;
+        }
+    }
+    .audio {
+        position: unset;
+        margin-top: 1em;
+    }
+}
