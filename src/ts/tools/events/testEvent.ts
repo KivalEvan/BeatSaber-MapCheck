@@ -1,29 +1,29 @@
 import * as beatmap from '../../beatmap';
-import { BeatmapSettings, Tool } from '../template';
 import { round } from '../../utils';
+import { BeatmapSettings, Tool } from '../template';
 
 const htmlContainer = document.createElement('div');
 const htmlInputCheck = document.createElement('input');
 const htmlLabelCheck = document.createElement('label');
 
-htmlLabelCheck.textContent = ' Negative obstacle';
-htmlLabelCheck.htmlFor = 'input__tools-negative-obstacle-check';
-htmlInputCheck.id = 'input__tools-negative-obstacle-check';
+htmlLabelCheck.textContent = ' Event peak (1 second) and per second';
+htmlLabelCheck.htmlFor = 'input__tools-light-stats';
+htmlInputCheck.id = 'input__tools-light-stats';
 htmlInputCheck.className = 'input-toggle';
 htmlInputCheck.type = 'checkbox';
-htmlInputCheck.checked = true;
+htmlInputCheck.checked = false;
 htmlInputCheck.addEventListener('change', inputCheckHandler);
 
 htmlContainer.appendChild(htmlInputCheck);
 htmlContainer.appendChild(htmlLabelCheck);
 
 const tool: Tool = {
-    name: 'Negative Obstacle',
+    name: 'Insufficient Light',
     description: 'Placeholder',
-    type: 'obstacle',
+    type: 'event',
     order: {
-        input: 30,
-        output: 80,
+        input: 0,
+        output: 0,
     },
     input: {
         enabled: htmlInputCheck.checked,
@@ -41,14 +41,22 @@ function inputCheckHandler(this: HTMLInputElement) {
 }
 
 function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData) {
-    const { _obstacles: obstacles } = mapSet._data;
-    if (
-        mapSet._info._customData?._requirements?.includes('Mapping Extensions') ||
-        mapSet._info._customData?._requirements?.includes('Noodle Extensions')
-    ) {
-        return [];
+    const { _bpm: bpm, _audioDuration: duration } = mapSettings;
+    const { _events: events } = mapSet._data;
+
+    let second = bpm.toBeatTime(1);
+    let peakEPS = 0;
+    let currentSectionStart = 0;
+    for (let i = 0; i < events.length; i++) {
+        while (events[i]._time - events[currentSectionStart]._time > second) {
+            currentSectionStart++;
+        }
+        peakEPS = Math.max(
+            peakEPS,
+            (i - currentSectionStart + second) / ((1 / bpm.value) * 60)
+        );
     }
-    return obstacles.filter((o) => o._width < 0 || o._duration < 0).map((o) => o._time);
+    return { EPS: duration ? round(events.length / duration, 3) : 0, peakEPS: peakEPS };
 }
 
 function run(mapSettings: BeatmapSettings, mapSet?: beatmap.map.BeatmapSetData): void {
@@ -57,11 +65,9 @@ function run(mapSettings: BeatmapSettings, mapSet?: beatmap.map.BeatmapSetData):
     }
     const result = check(mapSettings, mapSet);
 
-    if (result.length) {
+    if (result) {
         const htmlResult = document.createElement('div');
-        htmlResult.innerHTML = `<b>Negative obstacle [${result.length}]:</b> ${result
-            .map((n) => round(mapSettings._bpm.adjustTime(n), 3))
-            .join(', ')}`;
+        htmlResult.innerHTML = `<b>Events per second:</b> ${result.EPS}<br><b>Peak Event (1s):</b> ${result.peakEPS}`;
         tool.output.html = htmlResult;
     } else {
         tool.output.html = null;

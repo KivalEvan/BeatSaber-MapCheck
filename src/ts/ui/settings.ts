@@ -8,8 +8,11 @@ const htmlSettingsTheme = document.querySelector<HTMLSelectElement>('.settings__
 const htmlSettingsLoad = document.querySelectorAll<HTMLInputElement>('.settings__load');
 const htmlSettingsSort = document.querySelector<HTMLInputElement>('.settings__sort');
 const htmlSettingsShow = document.querySelectorAll<HTMLInputElement>('.settings__show');
-const htmlSettingsOnLoad = document.querySelectorAll<HTMLInputElement>('.settings__onload');
-const htmlSettingsClear = document.querySelector<HTMLInputElement>('.settings__clear-button');
+const htmlSettingsOnLoad =
+    document.querySelectorAll<HTMLInputElement>('.settings__onload');
+const htmlSettingsClear = document.querySelector<HTMLInputElement>(
+    '.settings__clear-button'
+);
 
 if (htmlSettingsTheme) {
     htmlSettingsTheme.addEventListener('change', themeChangeHandler);
@@ -34,7 +37,9 @@ if (htmlSettingsSort) {
 if (!htmlSettingsOnLoad.length) {
     console.error(logPrefix + 'empty onload list, intentional or typo error?');
 }
-htmlSettingsOnLoad.forEach((elem) => elem.addEventListener('change', onLoadCheckHandler));
+htmlSettingsOnLoad.forEach((elem) =>
+    elem.addEventListener('change', onLoadCheckHandler)
+);
 if (!htmlSettingsShow.length) {
     console.error(logPrefix + 'empty show list, intentional or typo error?');
 }
@@ -47,7 +52,8 @@ if (htmlSettingsClear) {
 
 function themeChangeHandler(ev: Event): void {
     const target = ev.target as HTMLSelectElement;
-    settings.theme = target.options[target.options.selectedIndex].value as uiTheme.Theme;
+    settings.theme = target.options[target.options.selectedIndex]
+        .value as uiTheme.Theme;
     uiTheme.set(settings.theme);
     settings.save();
 }
@@ -120,7 +126,7 @@ export const setTheme = (str: uiTheme.Theme): void => {
 export function clear(): void {
     settings.clear();
     settings.reset();
-    location.reload(true);
+    location.reload();
 }
 
 export default {

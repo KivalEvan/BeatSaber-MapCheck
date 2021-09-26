@@ -5,6 +5,7 @@ export interface Event {
     _time: number;
     _type: number;
     _value: number;
+    _floatValue?: number;
     _customData?: CustomDataEvent;
     [key: string]: number | CustomDataEvent | undefined;
 }
@@ -20,14 +21,15 @@ export enum EventRename {
     'Extra Right Lights',
     'Ring Rotation',
     'Ring Zoom',
-    'Unused BPM Change',
-    'Unused Type 11',
+    'Extra Left Lasers',
+    'Extra Right Lasers',
     'Left Laser Rotation',
     'Right Laser Rotation',
     'Early Lane Rotation',
     'Late Lane Rotation',
     'Lower Hydraulic',
     'Raise Hydraulic',
+    'BPM Change' = 100,
 }
 
 interface EventCount {
@@ -43,11 +45,24 @@ interface EventCountStats {
 }
 
 export const isValidType = (event: Event): boolean => {
-    return event._type >= 0 && event._type <= 17 && event._type !== 10;
+    return (event._type >= 0 && event._type <= 17) || event._type === 100;
 };
 
 export const isLightEvent = (event: Event): boolean => {
-    return event._type >= 0 && event._type <= 7 && event._type !== 5;
+    return (
+        event._type >= 0 &&
+        event._type <= 11 &&
+        !isRingEvent(event) &&
+        !isColorBoost(event)
+    );
+};
+
+export const isColorBoost = (event: Event): boolean => {
+    return event._type === 5;
+};
+
+export const isRingEvent = (event: Event): boolean => {
+    return event._type === 8 || event._type === 9;
 };
 
 export const isLaserRotationEvent = (event: Event): boolean => {
@@ -62,14 +77,17 @@ export const isHydraulicEvent = (event: Event): boolean => {
     return event._type === 16 || event._type === 17;
 };
 
+export const isBPMChangeEvent = (event: Event): boolean => {
+    return event._type === 100;
+};
+
 // not to be confused with isLightEvent, this checks for event that affects the environment/lighting
 export const isLightingEvent = (event: Event): boolean => {
     return (
         isLightEvent(event) ||
+        isRingEvent(event) ||
         isLaserRotationEvent(event) ||
-        isHydraulicEvent(event) ||
-        event._type === 8 ||
-        event._type === 9
+        isHydraulicEvent(event)
     );
 };
 
@@ -127,7 +145,9 @@ export const hasNoodleExtensions = (event: Event): boolean => {
 
 export const hasMappingExtensions = (event: Event): boolean => {
     return (
-        (event._type === 14 || event._type === 15) && event._value >= 1000 && event._value <= 1720
+        (event._type === 14 || event._type === 15) &&
+        event._value >= 1000 &&
+        event._value <= 1720
     );
 };
 
@@ -184,7 +204,11 @@ export const count = (events: Event[]): EventCount => {
 export const sufficientLight = (events: Event[]): boolean => {
     let count = 0;
     for (let i = events.length - 1; i >= 0; i--) {
-        if (isLightEvent(events[i]) && events[i]._value !== 0 && events[i]._value !== 4) {
+        if (
+            isLightEvent(events[i]) &&
+            events[i]._value !== 0 &&
+            events[i]._value !== 4
+        ) {
             count++;
             if (count > 10) {
                 return true;

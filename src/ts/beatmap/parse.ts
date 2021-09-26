@@ -1,7 +1,7 @@
 import { CharacteristicOrder } from './characteristic';
 import { DifficultyRank } from './difficulty';
 import { BeatmapInfo } from './info';
-import { BeatmapData } from './map';
+import { DifficultyData } from './difficulty';
 import settings from '../settings';
 
 // TODO: more error check
@@ -24,14 +24,16 @@ export const info = (mapInfo: BeatmapInfo): BeatmapInfo => {
                 }
                 num = a._difficultyRank;
             });
-            mode._difficultyBeatmaps.sort((a, b) => b._difficultyRank - a._difficultyRank);
+            mode._difficultyBeatmaps.sort(
+                (a, b) => b._difficultyRank - a._difficultyRank
+            );
         });
     }
 
     return mapInfo;
 };
 
-export const difficulty = (difficultyData: BeatmapData): BeatmapData => {
+export const difficulty = (difficultyData: DifficultyData): DifficultyData => {
     const { _notes, _obstacles, _events, _waypoints } = difficultyData;
     _notes.forEach((obj) => {
         for (const key in obj) {

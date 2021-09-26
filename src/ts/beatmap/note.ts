@@ -307,12 +307,12 @@ export const hasMappingExtensions = (note: Note): boolean => {
     );
 };
 
+export const isValidDirection = (note: Note): boolean => {
+    return note._cutDirection >= 0 && note._cutDirection <= 8;
+};
+
 export const isValid = (note: Note): boolean => {
-    return (
-        !hasMappingExtensions(note) &&
-        note._cutDirection >= 0 &&
-        note._cutDirection <= 8
-    );
+    return !hasMappingExtensions(note) && isValidDirection(note);
 };
 
 export const count = (notes: Note[]): NoteCount => {

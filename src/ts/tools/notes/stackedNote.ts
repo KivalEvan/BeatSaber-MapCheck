@@ -83,8 +83,10 @@ function checkBomb(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetD
         }
         for (let j = i + 1; j < len; j++) {
             if (
-                bpm.toRealTime(notes[j]._time) >=
-                    bpm.toRealTime(notes[i]._time) + 0.02 ||
+                !(
+                    bpm.toRealTime(notes[j]._time) <
+                    bpm.toRealTime(notes[i]._time) + 0.02
+                ) &&
                 njs.value > bpm.value / (120 * (notes[j]._time - notes[i]._time))
             ) {
                 break;
