@@ -6,12 +6,12 @@ const htmlContainer = document.createElement('div');
 const htmlInputCheck = document.createElement('input');
 const htmlLabelCheck = document.createElement('label');
 
-htmlLabelCheck.textContent = ' Event peak (1 second) and per second';
-htmlLabelCheck.htmlFor = 'input__tools-light-stats';
-htmlInputCheck.id = 'input__tools-light-stats';
+htmlLabelCheck.textContent = ' Old value 4 event';
+htmlLabelCheck.htmlFor = 'input__tools-light-4';
+htmlInputCheck.id = 'input__tools-light-4';
 htmlInputCheck.className = 'input-toggle';
 htmlInputCheck.type = 'checkbox';
-htmlInputCheck.checked = false;
+htmlInputCheck.checked = true;
 htmlInputCheck.addEventListener('change', inputCheckHandler);
 
 htmlContainer.appendChild(htmlInputCheck);
@@ -44,22 +44,21 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
     const { _bpm: bpm, _audioDuration: duration } = mapSettings;
     const { _events: events } = mapSet._data;
 
-    let second = bpm.toBeatTime(1);
-    let peakEPS = 0;
-    let currentSectionStart = 0;
-    for (let i = 0; i < events.length; i++) {
-        while (events[i]._time - events[currentSectionStart]._time > second) {
-            currentSectionStart++;
+    const arr: beatmap.event.Event[] = [];
+    if (beatmap.version.compare(mapSet._data._version, 'difficulty') === 'old') {
+        for (let i = 0; i < events.length; i++) {
+            if (beatmap.event.isLightEvent(events[i]) && events[i]._value === 4) {
+                arr.push(events[i]);
+            }
         }
-        peakEPS = Math.max(
-            peakEPS,
-            (i - currentSectionStart + second) / ((1 / bpm.value) * 60)
-        );
+    } else {
+        return [];
     }
-    return {
-        EPS: duration ? round(events.length / duration, 3) : 0,
-        peakEPS: round(peakEPS, 3),
-    };
+    return arr
+        .map((n) => n._time)
+        .filter(function (x, i, ary) {
+            return !i || x !== ary[i - 1];
+        });
 }
 
 function run(mapSettings: BeatmapSettings, mapSet?: beatmap.map.BeatmapSetData): void {
@@ -68,9 +67,11 @@ function run(mapSettings: BeatmapSettings, mapSet?: beatmap.map.BeatmapSetData):
     }
     const result = check(mapSettings, mapSet);
 
-    if (result) {
+    if (result.length) {
         const htmlResult = document.createElement('div');
-        htmlResult.innerHTML = `<b>Events per second:</b> ${result.EPS}<br><b>Peak Event (1s):</b> ${result.peakEPS}`;
+        htmlResult.innerHTML = `<b>Event with value 4 [${result.length}]:</b> ${result
+            .map((n) => round(mapSettings._bpm.adjustTime(n), 3))
+            .join(', ')}`;
         tool.output.html = htmlResult;
     } else {
         tool.output.html = null;

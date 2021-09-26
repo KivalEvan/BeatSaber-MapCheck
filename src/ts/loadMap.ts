@@ -1,7 +1,7 @@
 import JSZip from 'jszip';
 import * as uiHeader from './ui/header';
 import * as uiLoading from './ui/loading';
-import * as uiInfo from './ui/info';
+import * as uiInfo from './ui/information';
 import * as uiTools from './ui/tools';
 import * as uiStats from './ui/stats';
 import { disableInput } from './ui/input';

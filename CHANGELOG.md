@@ -1,5 +1,25 @@
 # Changelog
 
+## v2.1.2 [ TBD ]
+
+### Added
+
+-   Skrillex & Billie Eilish environment support
+-   Difficulty version for Information
+-   Old value 4 event check for old map
+
+### Changed
+
+-   Plenty of code clean-up
+
+### Fixed
+
+-   Mapping Extensions and Noodle Extensions now have basic check for valid (and negative) notes and obstacles
+
+### Deprecated
+
+-   Map version older than v2.5.0 no longer gets support for event
+
 ## v2.1.1 [05-08-2021]
 
 ### Changed
