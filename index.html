@@ -20,7 +20,7 @@
         <a class="cover__link disabled" id="map-link" href="#" target="_blank"></a>
       </div>
       <div class="container">
-        <div class="metadata ">
+        <div class="metadata hidden">
           <div class="metadata__container">
             <div class="panel panel--max panel--offset">
               <span class="metadata__song-name" title="Song Name">Song Name</span>
@@ -28,30 +28,14 @@
               <span class="metadata__song-author" title="Song Author">Song Author</span><br>
               <span class="metadata__song-bpm" title="Song BPM">Song BPM</span><br>
               <span class="metadata__song-duration" title="Song Duration">Song Duration</span><br>
-              <div class="audio-player">
-                <input type="checkbox" class="audio-player__playback" id="audio-player__playback"></input>
-                <label for="audio-player__playback" class="audio-player__playback-label"></label>
-                <input type="range" class="audio-player__scrubber" min="0" max="0" value="0" step="1">
-                </input>
-                <div class="audio-player__duration">
-                  <div class="audio-player__duration-container">
-                    <span class="audio-player__duration-current">0:00</span>/<span
-                      class="audio-player__duration-max">0:00</span>
-                  </div>
-                </div>
-                <div class="audio-player__volume-control">
-                  <input type="checkbox" class="audio-player__volume-control-toggle"
-                    id="audio-player__volume-control-toggle" checked></input>
-                  <label for="audio-player__volume-control-toggle"
-                    class="audio-player__volume-control-toggle-label"></label>
-                  <input type="range" class="audio-player__volume-control-slider" min="0" max="100" value="100"
-                    step="1">
-                </div>
-              </div>
+              <audio class="audio" controls preload='auto'>
+                <p>Your browser does not support HTML 5 audio. Audio player will
+                  not display here.</p>
+              </audio>
             </div>
           </div>
         </div>
-        <div class="intro hidden">
+        <div class="intro">
           <div class="intro__container">
             <div class="panel panel--small panel--offset">
               <span class="intro__title">Beat Saber</span><br>

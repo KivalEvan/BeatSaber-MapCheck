@@ -1,5 +1,4 @@
 import { round, toMMSSMS } from '../utils';
-import { AudioPlayer } from './audioPlayer';
 
 const logPrefix = 'UI Header: ';
 
@@ -21,7 +20,7 @@ const htmlMetadataSongBPM = document.querySelector<HTMLElement>('.metadata__song
 const htmlMetadataSongDuration = document.querySelector<HTMLElement>(
     '.metadata__song-duration'
 );
-const htmlAudio = document.querySelector<HTMLElement>('.audio-player');
+const htmlAudio = document.querySelector<HTMLAudioElement>('.audio');
 
 if (!htmlIntro || !htmlMetadata) {
     console.error(logPrefix + 'header component is missing one of the two section');
@@ -140,11 +139,14 @@ export const setSongDuration = (num?: number): void => {
     }
 };
 
-export const setAudio = async (arrayBuffer: AudioBuffer): Promise<void> => {
+let audioURL: string;
+export const setAudio = async (arrayBuffer: ArrayBuffer): Promise<void> => {
     if (!htmlAudio) {
         console.error(logPrefix + 'missing HTML element for audio');
         return;
     }
+    const blob = new Blob([arrayBuffer], { type: 'audio/ogg' });
+    htmlAudio.src = window.URL.createObjectURL(blob);
 };
 
 export const unloadAudio = (): void => {
@@ -152,6 +154,8 @@ export const unloadAudio = (): void => {
         console.error(logPrefix + 'missing HTML element for audio');
         return;
     }
+    htmlAudio.src = '';
+    window.URL.revokeObjectURL(audioURL);
 };
 
 export const reset = (): void => {

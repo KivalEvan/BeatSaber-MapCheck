@@ -1,6 +1,6 @@
 # Changelog
 
-## v2.2.0 [ TBD ]
+## v2.1.2 [ TBD ]
 
 ### Added
 
@@ -10,8 +10,6 @@
 
 ### Changed
 
--   Replaced HTML5 Audio with custom audio player
-    -   This should also make audio loading faster
 -   Plenty of code clean-up
 
 ### Fixed

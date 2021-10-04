@@ -115,6 +115,7 @@ export const downloadMap = async (url: string): Promise<ArrayBuffer> => {
 export const extractZip = async (data: ArrayBuffer | File) => {
     uiLoading.status('info', 'Extracting zip', 0);
     let mapZip = new JSZip();
+    console.time('loading time');
     try {
         uiHeader.switchHeader(true);
         mapZip = await JSZip.loadAsync(data);
@@ -126,12 +127,12 @@ export const extractZip = async (data: ArrayBuffer | File) => {
         uiLoading.status('error', err, 100);
         console.error(err);
     }
+    console.timeEnd('loading time');
 };
 
 // TODO: break these to smaller functions, and probably slap in async while at it
 // TODO: possibly do more accurate & predictive loading bar based on the amount of file available (may be farfetched and likely not be implemented)
 export const loadMap = async (mapZip: JSZip) => {
-    console.time('load time');
     uiLoading.status('info', 'Parsing map info...', 0);
     console.log('parsing map info');
     const fileInfo = mapZip.file('Info.dat') || mapZip.file('info.dat');
@@ -176,16 +177,25 @@ export const loadMap = async (mapZip: JSZip) => {
         console.log('loading audio');
         let audioFile = mapZip.file(savedData._mapInfo._songFilename);
         if (settings.load.audio && audioFile) {
+            let loaded = false;
+            setTimeout(() => {
+                if (!loaded)
+                    uiLoading.status(
+                        'info',
+                        'Loading audio... (this may take a while)',
+                        20.875
+                    );
+            }, 10000);
             let arrayBuffer = await audioFile.async('arraybuffer');
+            uiHeader.setAudio(arrayBuffer);
             let audioContext = new AudioContext();
             await audioContext
                 .decodeAudioData(arrayBuffer)
                 .then((buffer) => {
+                    loaded = true;
                     let duration = buffer.duration;
                     savedData._duration = duration;
-                    savedData._audioBuffer = buffer;
                     uiHeader.setSongDuration(duration);
-                    uiHeader.setAudio(buffer);
                     flag.map.load.audio = true;
                 })
                 .catch(function (err) {
@@ -268,7 +278,6 @@ export const loadMap = async (mapZip: JSZip) => {
 
         disableInput(false);
         uiLoading.status('info', 'Map successfully loaded!');
-        console.timeEnd('load time');
     } else {
         throw new Error("Couldn't find Info.dat");
     }
