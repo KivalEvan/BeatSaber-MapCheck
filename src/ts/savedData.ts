@@ -12,6 +12,7 @@ interface SavedData {
     _analysis?: Analysis;
     _duration?: number;
     _bpmChanges?: BPMChange[];
+    _audioBuffer?: AudioBuffer;
 }
 
 const savedData: SavedData = {};

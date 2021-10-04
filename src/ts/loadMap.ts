@@ -131,6 +131,7 @@ export const extractZip = async (data: ArrayBuffer | File) => {
 // TODO: break these to smaller functions, and probably slap in async while at it
 // TODO: possibly do more accurate & predictive loading bar based on the amount of file available (may be farfetched and likely not be implemented)
 export const loadMap = async (mapZip: JSZip) => {
+    console.time('load time');
     uiLoading.status('info', 'Parsing map info...', 0);
     console.log('parsing map info');
     const fileInfo = mapZip.file('Info.dat') || mapZip.file('info.dat');
@@ -176,14 +177,15 @@ export const loadMap = async (mapZip: JSZip) => {
         let audioFile = mapZip.file(savedData._mapInfo._songFilename);
         if (settings.load.audio && audioFile) {
             let arrayBuffer = await audioFile.async('arraybuffer');
-            uiHeader.setAudio(arrayBuffer);
             let audioContext = new AudioContext();
             await audioContext
                 .decodeAudioData(arrayBuffer)
                 .then((buffer) => {
                     let duration = buffer.duration;
                     savedData._duration = duration;
+                    savedData._audioBuffer = buffer;
                     uiHeader.setSongDuration(duration);
+                    uiHeader.setAudio(buffer);
                     flag.map.load.audio = true;
                 })
                 .catch(function (err) {
@@ -266,6 +268,7 @@ export const loadMap = async (mapZip: JSZip) => {
 
         disableInput(false);
         uiLoading.status('info', 'Map successfully loaded!');
+        console.timeEnd('load time');
     } else {
         throw new Error("Couldn't find Info.dat");
     }

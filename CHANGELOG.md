@@ -1,6 +1,6 @@
 # Changelog
 
-## v2.1.2 [ TBD ]
+## v2.2.0 [ TBD ]
 
 ### Added
 
@@ -10,6 +10,8 @@
 
 ### Changed
 
+-   Replaced HTML5 Audio with custom audio player
+    -   This should also make audio loading faster
 -   Plenty of code clean-up
 
 ### Fixed
@@ -20,13 +22,13 @@
 
 -   Map version older than v2.5.0 no longer gets support for event
 
-## v2.1.1 [05-08-2021]
+## v2.1.1 [05-09-2021]
 
 ### Changed
 
 -   Bomb stack now checks by both NJS and time (<20ms)
 
-## v2.1.0 [04-08-2021]
+## v2.1.0 [04-09-2021]
 
 ### Added
 

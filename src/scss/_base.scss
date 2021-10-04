@@ -1,11 +1,15 @@
 $font-monospace: Monaco, monospace;
 $font-sans-serif: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 
+* {
+    margin: 0;
+    box-sizing: border-box;
+}
+
 :root {
     --font-monospace: #{$font-monospace};
     --font-sans-serif: #{$font-sans-serif};
 }
-
 .hidden {
     display: none;
 }
@@ -20,4 +24,15 @@ $font-sans-serif: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+}
+
+.link {
+    padding: 0.125rem 0.25rem;
+    font-size: 1rem;
+    text-decoration: none;
+    color: var(--c-link-base);
+    transition: color ease 0.125s;
+    &:hover {
+        color: var(--c-link-hover);
+    }
 }

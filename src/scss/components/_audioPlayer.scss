@@ -1,0 +1,101 @@
+.audio-player {
+    display: flex;
+    position: absolute;
+    bottom: 0;
+    height: 2em;
+    width: 100%;
+    font-size: 1rem;
+    align-items: center;
+    background-color: #181818;
+    &__playback {
+        position: absolute;
+        width: 0;
+        height: 0;
+        left: -9999px;
+        &-label {
+            display: block;
+            cursor: pointer;
+            width: 4em;
+            text-align: center;
+            height: 100%;
+            color: #fff;
+            transition: color 0.1s ease;
+            &:hover {
+                color: #48f;
+            }
+            &::before {
+                content: '\25B6';
+                vertical-align: middle;
+            }
+        }
+        &:checked + &-label {
+            &::before {
+                content: '\23F8';
+                font-size: 1.1875rem;
+            }
+        }
+        &:focus + &-label {
+            outline: 1px dashed var(--c-outline-focus-accordion);
+            outline-offset: -1px;
+        }
+    }
+    &__scrubber[type='range'] {
+        height: 100%;
+        width: 100%;
+        cursor: pointer;
+    }
+    &__duration {
+        width: auto;
+        height: 100%;
+        padding: 0 0 0 0.75em;
+        text-align: center;
+        vertical-align: middle;
+        &-container {
+            display: inline-block;
+            vertical-align: middle;
+        }
+    }
+    &__volume-control {
+        display: flex;
+        height: 100%;
+        padding: 0 0.75em;
+        &-toggle {
+            position: absolute;
+            width: 0;
+            height: 0;
+            left: -9999px;
+            &-label {
+                display: block;
+                cursor: pointer;
+                width: 2em;
+                text-align: center;
+                height: 100%;
+                color: #fff;
+                transition: color 0.1s ease;
+                &:hover {
+                    color: #48f;
+                }
+                &::before {
+                    content: '\1F507';
+                    color: #c00;
+                    vertical-align: middle;
+                }
+            }
+            &:checked + &-label {
+                &::before {
+                    content: '\1F50A';
+                    color: #fff;
+                }
+            }
+            &:focus + &-label {
+                outline: 1px dashed var(--c-outline-focus-accordion);
+                outline-offset: -1px;
+            }
+        }
+        &-slider {
+            display: block;
+            width: 5em;
+            cursor: pointer;
+        }
+    }
+}

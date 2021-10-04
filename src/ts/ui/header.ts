@@ -1,4 +1,5 @@
 import { round, toMMSSMS } from '../utils';
+import { AudioPlayer } from './audioPlayer';
 
 const logPrefix = 'UI Header: ';
 
@@ -8,12 +9,19 @@ const htmlMetadata = document.querySelector<HTMLElement>('.metadata');
 const htmlCoverLink = document.querySelector<HTMLLinkElement>('.cover__link');
 const htmlCoverImage = document.querySelector<HTMLImageElement>('.cover__image');
 
-const htmlMetadataSongName = document.querySelector<HTMLElement>('.metadata__song-name');
-const htmlMetadataSongSubname = document.querySelector<HTMLElement>('.metadata__song-subname');
-const htmlMetadataSongAuthor = document.querySelector<HTMLElement>('.metadata__song-author');
+const htmlMetadataSongName =
+    document.querySelector<HTMLElement>('.metadata__song-name');
+const htmlMetadataSongSubname = document.querySelector<HTMLElement>(
+    '.metadata__song-subname'
+);
+const htmlMetadataSongAuthor = document.querySelector<HTMLElement>(
+    '.metadata__song-author'
+);
 const htmlMetadataSongBPM = document.querySelector<HTMLElement>('.metadata__song-bpm');
-const htmlMetadataSongDuration = document.querySelector<HTMLElement>('.metadata__song-duration');
-const htmlAudio = document.querySelector<HTMLAudioElement>('.audio');
+const htmlMetadataSongDuration = document.querySelector<HTMLElement>(
+    '.metadata__song-duration'
+);
+const htmlAudio = document.querySelector<HTMLElement>('.audio-player');
 
 if (!htmlIntro || !htmlMetadata) {
     console.error(logPrefix + 'header component is missing one of the two section');
@@ -33,11 +41,15 @@ if (
 
 export const switchHeader = (bool: boolean): void => {
     if (!htmlIntro || !htmlMetadata) {
-        console.error(logPrefix + 'could not switch header, one of the section is missing');
+        console.error(
+            logPrefix + 'could not switch header, one of the section is missing'
+        );
         return;
     }
     bool ? htmlIntro.classList.add('hidden') : htmlIntro.classList.remove('hidden');
-    !bool ? htmlMetadata.classList.add('hidden') : htmlMetadata.classList.remove('hidden');
+    !bool
+        ? htmlMetadata.classList.add('hidden')
+        : htmlMetadata.classList.remove('hidden');
 };
 
 export const setCoverImage = (src: string | null): void => {
@@ -128,14 +140,11 @@ export const setSongDuration = (num?: number): void => {
     }
 };
 
-let audioURL: string;
-export const setAudio = async (arrayBuffer: ArrayBuffer): Promise<void> => {
+export const setAudio = async (arrayBuffer: AudioBuffer): Promise<void> => {
     if (!htmlAudio) {
         console.error(logPrefix + 'missing HTML element for audio');
         return;
     }
-    const blob = new Blob([arrayBuffer], { type: 'audio/ogg' });
-    htmlAudio.src = window.URL.createObjectURL(blob);
 };
 
 export const unloadAudio = (): void => {
@@ -143,8 +152,6 @@ export const unloadAudio = (): void => {
         console.error(logPrefix + 'missing HTML element for audio');
         return;
     }
-    htmlAudio.src = '';
-    window.URL.revokeObjectURL(audioURL);
 };
 
 export const reset = (): void => {
