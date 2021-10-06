@@ -5,8 +5,8 @@ export class NoteJumpSpeed {
     private _njs: number;
     private _sdm: number;
     private _hjd!: number;
-    private static readonly _hjdStart: number = 4;
-    private static readonly _hjdMin: number = 1;
+    private static readonly HJD_START: number = 4;
+    private static readonly HJD_MIN: number = 0.25;
     private _jd!: number;
     private _jdMin!: number;
     private _reactionTime!: number;
@@ -36,7 +36,7 @@ export class NoteJumpSpeed {
         return this._hjd;
     }
     get hjdMin(): number {
-        return NoteJumpSpeed._hjdMin;
+        return NoteJumpSpeed.HJD_MIN;
     }
     get reactTime(): number {
         return this._reactionTime;
@@ -51,18 +51,18 @@ export class NoteJumpSpeed {
     private update(): void {
         this._hjd = this.calcHalfJumpDuration();
         this._jd = this.calcJumpDistance();
-        this._jdMin = this.calcJumpDistance(NoteJumpSpeed._hjdMin);
+        this._jdMin = this.calcJumpDistance(NoteJumpSpeed.HJD_MIN);
         this._reactionTime = this.calcReactionTimeFromHJD();
     }
     public calcHalfJumpDurationRaw(): number {
         const maxHalfJump = 18;
         const noteJumpMovementSpeed = (this._njs * this._njs) / this._njs;
         const num = 60 / this._bpm.value;
-        let hjd = NoteJumpSpeed._hjdStart;
+        let hjd = NoteJumpSpeed.HJD_START;
         while (noteJumpMovementSpeed * num * hjd > maxHalfJump) {
             hjd /= 2;
         }
-        if (hjd < NoteJumpSpeed._hjdMin) {
+        if (hjd < NoteJumpSpeed.HJD_MIN) {
             hjd = 1;
         }
         return hjd;
@@ -73,7 +73,9 @@ export class NoteJumpSpeed {
     public calcHalfJumpDurationFromJD(jd: number = this.calcJumpDistance()): number {
         return jd / ((60 / this._bpm.value) * this._njs * 2);
     }
-    public calcHalfJumpDurationFromRT(rt: number = this.calcReactionTimeFromHJD()): number {
+    public calcHalfJumpDurationFromRT(
+        rt: number = this.calcReactionTimeFromHJD()
+    ): number {
         return rt / (60 / this._bpm.value);
     }
     public calcJumpDistance(hjd: number = this.calcHalfJumpDuration()): number {
@@ -96,7 +98,11 @@ export class NoteJumpSpeed {
     }
 }
 
-export const create = (bpm: BeatPerMinute, njs: number = 10, sdm: number = 0): NoteJumpSpeed => {
+export const create = (
+    bpm: BeatPerMinute,
+    njs: number = 10,
+    sdm: number = 0
+): NoteJumpSpeed => {
     return new NoteJumpSpeed(bpm, njs, sdm);
 };
 

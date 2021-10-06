@@ -7,9 +7,11 @@
 -   Skrillex & Billie Eilish environment support
 -   Difficulty version for Information
 -   Old value 4 event check for old map
+-   Warning for long audio loading
 
 ### Changed
 
+-   NJS HJD minimum limit reduced to 0.25 to accomodate v1.18.1 update
 -   Plenty of code clean-up
 
 ### Fixed
