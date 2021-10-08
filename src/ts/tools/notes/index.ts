@@ -8,6 +8,7 @@ export { default as speedPause } from './speedPause';
 export { default as hitboxStair } from './hitboxStair';
 export { default as hitboxReverseStair } from './hitboxReverseStair';
 export { default as hitboxInline } from './hitboxInline';
+export { default as hitboxPath } from './hitboxPath';
 export { default as improperWindow } from './improperWindow';
 export { default as parity } from './parity';
 export { default as doubleDirectional } from './doubleDirectional';

@@ -1,6 +1,6 @@
 # Changelog
 
-## v2.1.2 [ TBD ]
+## v2.2.0 [ 08-10-2021 ]
 
 ### Added
 
@@ -8,15 +8,13 @@
 -   Difficulty version for Information
 -   Old value 4 event check for old map
 -   Warning for long audio loading
+-   Hitbox path check
 
 ### Changed
 
 -   NJS HJD minimum limit reduced to 0.25 to accomodate v1.18.1 update
--   Plenty of code clean-up
-
-### Fixed
-
 -   Mapping Extensions and Noodle Extensions now have basic check for valid (and negative) notes and obstacles
+-   Plenty of code clean-up
 
 ### Deprecated
 

@@ -60,6 +60,13 @@ export const cutDirectionSpace: { [key: number]: [number, number] } = {
     8: [0, 0],
 };
 
+export const distance = (n1: Note, n2: Note): number => {
+    return Math.max(
+        Math.abs(n1._lineIndex - n2._lineIndex),
+        Math.abs(n1._lineLayer - n2._lineLayer)
+    );
+};
+
 export const isNote = (n: Note): boolean => {
     return n._type === 0 || n._type === 1;
 };
@@ -94,6 +101,23 @@ export const isDouble = (n: Note, notes: Note[], index: number): boolean => {
         }
     }
     return false;
+};
+
+export const isAdjacent = (n1: Note, n2: Note): boolean => {
+    return distance(n1, n2) === 1;
+};
+
+export const isWindow = (n1: Note, n2: Note): boolean => {
+    return distance(n1, n2) >= 2;
+};
+
+export const isSlantedWindow = (n1: Note, n2: Note): boolean => {
+    return (
+        isWindow(n1, n2) &&
+        !isDiagonal(n1, n2) &&
+        !isHorizontal(n1, n2) &&
+        !isVertical(n1, n2)
+    );
 };
 
 export const isEnd = (currNote: Note, prevNote: Note, cd: number): boolean => {
@@ -249,26 +273,6 @@ export const predictDirection = (currNote: Note, prevNote: Note): number => {
         }
     }
     return 8;
-};
-
-export const distance = (n1: Note, n2: Note): number => {
-    return Math.max(
-        Math.abs(n1._lineIndex - n2._lineIndex),
-        Math.abs(n1._lineLayer - n2._lineLayer)
-    );
-};
-
-export const isWindow = (n1: Note, n2: Note): boolean => {
-    return distance(n1, n2) >= 2;
-};
-
-export const isSlantedWindow = (n1: Note, n2: Note): boolean => {
-    return (
-        isWindow(n1, n2) &&
-        !isDiagonal(n1, n2) &&
-        !isHorizontal(n1, n2) &&
-        !isVertical(n1, n2)
-    );
 };
 
 export const hasChroma = (note: Note): boolean => {
