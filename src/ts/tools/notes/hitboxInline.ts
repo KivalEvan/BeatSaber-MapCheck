@@ -56,14 +56,19 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         if (beatmap.note.isNote(note) && lastNote[note._type]) {
-            if (swing.next(note, lastNote[note._type], bpm, swingNoteArray[note._type])) {
+            if (
+                swing.next(note, lastNote[note._type], bpm, swingNoteArray[note._type])
+            ) {
                 swingNoteArray[note._type] = [];
             }
         }
         for (const other of swingNoteArray[(note._type + 1) % 2]) {
             // magic number 1.425 from saber length + good/bad hitbox
             if (
-                !(njs.value > (1.425 * bpm.value) / (120 * (note._time - other._time))) &&
+                !(
+                    njs.value >
+                    (1.425 * bpm.value) / (60 * (note._time - other._time))
+                ) &&
                 note._lineIndex === other._lineIndex &&
                 note._lineLayer === other._lineLayer
             ) {

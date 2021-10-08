@@ -1,7 +1,6 @@
 import * as beatmap from '../../beatmap';
 import { round } from '../../utils';
 import { BeatmapSettings, Tool } from '../template';
-import * as swing from '../swing';
 
 const htmlContainer = document.createElement('div');
 const htmlInputCheck = document.createElement('input');
@@ -82,16 +81,16 @@ function checkBomb(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetD
             continue;
         }
         for (let j = i + 1; j < len; j++) {
-            if (
-                !(
-                    bpm.toRealTime(notes[j]._time) <
-                    bpm.toRealTime(notes[i]._time) + 0.02
-                ) &&
-                njs.value > bpm.value / (120 * (notes[j]._time - notes[i]._time))
-            ) {
+            // arbitrary break after 1s to not loop too much often
+            if (bpm.toRealTime(notes[j]._time) > bpm.toRealTime(notes[i]._time) + 1) {
                 break;
             }
-            if (beatmap.note.isInline(notes[i], notes[j])) {
+            if (
+                beatmap.note.isInline(notes[i], notes[j]) &&
+                (njs.value < bpm.value / (120 * (notes[j]._time - notes[i]._time)) ||
+                    bpm.toRealTime(notes[j]._time) <
+                        bpm.toRealTime(notes[i]._time) + 0.02)
+            ) {
                 arr.push(notes[i]);
             }
         }

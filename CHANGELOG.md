@@ -16,6 +16,10 @@
 -   Mapping Extensions and Noodle Extensions now have basic check for valid (and negative) notes and obstacles
 -   Plenty of code clean-up
 
+### Fixed
+
+-   NJS dependent check corrected formula (this affects inline, reverse stair, and stacked bomb)
+
 ### Deprecated
 
 -   Map version older than v2.5.0 no longer gets support for event

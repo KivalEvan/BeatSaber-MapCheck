@@ -56,7 +56,9 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         if (beatmap.note.isNote(note) && lastNote[note._type]) {
-            if (swing.next(note, lastNote[note._type], bpm, swingNoteArray[note._type])) {
+            if (
+                swing.next(note, lastNote[note._type], bpm, swingNoteArray[note._type])
+            ) {
                 swingNoteArray[note._type] = [];
             }
         }
@@ -73,7 +75,7 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
                         beatmap.note.flipDirection[other._cutDirection]
                     ][1];
                 if (
-                    !(njs.value > bpm.value / (120 * (note._time - other._time))) &&
+                    !(njs.value > bpm.value / (60 * (note._time - other._time))) &&
                     note._lineIndex === noteOccupyLineIndex &&
                     note._lineLayer === noteOccupyLineLayer
                 ) {
@@ -100,7 +102,9 @@ function run(mapSettings: BeatmapSettings, mapSet?: beatmap.map.BeatmapSetData):
 
     if (result.length) {
         const htmlResult = document.createElement('div');
-        htmlResult.innerHTML = `<b>Hitbox reverse staircase [${result.length}]:</b> ${result
+        htmlResult.innerHTML = `<b>Hitbox reverse staircase [${
+            result.length
+        }]:</b> ${result
             .map((n) => round(mapSettings._bpm.adjustTime(n), 3))
             .join(', ')}`;
         tool.output.html = htmlResult;
