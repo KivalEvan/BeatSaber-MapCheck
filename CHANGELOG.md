@@ -1,12 +1,36 @@
 # Changelog
 
-## v2.1.1 [05-08-2021]
+## v2.2.0 [08-10-2021]
+
+### Added
+
+-   Skrillex & Billie Eilish environment support
+-   Difficulty version for Information
+-   Old value 4 event check for old map
+-   Warning for long audio loading
+-   Hitbox path check
+
+### Changed
+
+-   NJS HJD minimum limit reduced to 0.25 to accomodate v1.18.1 update
+-   Mapping Extensions and Noodle Extensions now have basic check for valid (and negative) notes and obstacles
+-   Plenty of code clean-up
+
+### Fixed
+
+-   NJS dependent check corrected formula (this affects inline, reverse stair, and stacked bomb)
+
+### Deprecated
+
+-   Map version older than v2.5.0 no longer gets support for event
+
+## v2.1.1 [05-09-2021]
 
 ### Changed
 
 -   Bomb stack now checks by both NJS and time (<20ms)
 
-## v2.1.0 [04-08-2021]
+## v2.1.0 [04-09-2021]
 
 ### Added
 

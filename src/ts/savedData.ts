@@ -1,4 +1,4 @@
-import { BeatmapSetData } from './beatmap/map';
+import { BeatmapSetData } from './beatmap/mapSet';
 import { Contributor } from './beatmap/contributor';
 import { BeatmapInfo } from './beatmap/info';
 import { BPMChange } from './beatmap/bpm';

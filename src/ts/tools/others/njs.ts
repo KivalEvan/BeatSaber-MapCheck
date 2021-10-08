@@ -32,7 +32,10 @@ function run(mapSettings: BeatmapSettings, mapSet?: beatmap.map.BeatmapSetData):
     }
     if (njs.value > 23) {
         htmlString.push(
-            `<b>NJS is too high (${round(njs.value, 2)}):</b> use lower whenever necessary`
+            `<b>NJS is too high (${round(
+                njs.value,
+                2
+            )}):</b> use lower whenever necessary`
         );
     }
     if (njs.jd < 18) {
@@ -46,7 +49,10 @@ function run(mapSettings: BeatmapSettings, mapSet?: beatmap.map.BeatmapSetData):
             `<b>High jump distance warning (>${round(
                 njs.calcJumpDistanceOptimalHigh(),
                 2
-            )}):</b> ${round(njs.jd, 2)} at ${round(njs.value, 2)} NJS may be uncomfortable to play`
+            )}):</b> ${round(njs.jd, 2)} at ${round(
+                njs.value,
+                2
+            )} NJS may be uncomfortable to play`
         );
     }
     if (bpm.toRealTime(njs.hjd) < 0.45) {
@@ -56,8 +62,10 @@ function run(mapSettings: BeatmapSettings, mapSet?: beatmap.map.BeatmapSetData):
             )}ms):</b> may lead to suboptimal gameplay`
         );
     }
-    if (njs.calcHalfJumpDurationRaw() + njs.offset < njs.hjd) {
-        htmlString.push(`<b>Unnecessary negative NJS offset:</b> HJD will not drop 1`);
+    if (njs.calcHalfJumpDurationRaw() + njs.offset < njs.hjdMin) {
+        htmlString.push(
+            `<b>Unnecessary negative offset:</b> will not drop below ${njs.hjdMin}`
+        );
     }
 
     if (htmlString.length) {

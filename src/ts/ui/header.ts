@@ -8,11 +8,18 @@ const htmlMetadata = document.querySelector<HTMLElement>('.metadata');
 const htmlCoverLink = document.querySelector<HTMLLinkElement>('.cover__link');
 const htmlCoverImage = document.querySelector<HTMLImageElement>('.cover__image');
 
-const htmlMetadataSongName = document.querySelector<HTMLElement>('.metadata__song-name');
-const htmlMetadataSongSubname = document.querySelector<HTMLElement>('.metadata__song-subname');
-const htmlMetadataSongAuthor = document.querySelector<HTMLElement>('.metadata__song-author');
+const htmlMetadataSongName =
+    document.querySelector<HTMLElement>('.metadata__song-name');
+const htmlMetadataSongSubname = document.querySelector<HTMLElement>(
+    '.metadata__song-subname'
+);
+const htmlMetadataSongAuthor = document.querySelector<HTMLElement>(
+    '.metadata__song-author'
+);
 const htmlMetadataSongBPM = document.querySelector<HTMLElement>('.metadata__song-bpm');
-const htmlMetadataSongDuration = document.querySelector<HTMLElement>('.metadata__song-duration');
+const htmlMetadataSongDuration = document.querySelector<HTMLElement>(
+    '.metadata__song-duration'
+);
 const htmlAudio = document.querySelector<HTMLAudioElement>('.audio');
 
 if (!htmlIntro || !htmlMetadata) {
@@ -33,11 +40,15 @@ if (
 
 export const switchHeader = (bool: boolean): void => {
     if (!htmlIntro || !htmlMetadata) {
-        console.error(logPrefix + 'could not switch header, one of the section is missing');
+        console.error(
+            logPrefix + 'could not switch header, one of the section is missing'
+        );
         return;
     }
     bool ? htmlIntro.classList.add('hidden') : htmlIntro.classList.remove('hidden');
-    !bool ? htmlMetadata.classList.add('hidden') : htmlMetadata.classList.remove('hidden');
+    !bool
+        ? htmlMetadata.classList.add('hidden')
+        : htmlMetadata.classList.remove('hidden');
 };
 
 export const setCoverImage = (src: string | null): void => {

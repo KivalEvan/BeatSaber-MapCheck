@@ -1,11 +1,12 @@
 import { clearData } from '../savedData';
 import * as uiLoading from './loading';
 import * as uiHeader from './header';
-import * as uiInfo from './info';
+import * as uiInfo from './information';
 import * as uiTools from './tools';
 import * as uiStats from './stats';
 
-const htmlResetButton = document.querySelectorAll<HTMLInputElement>('.input__reset-button');
+const htmlResetButton =
+    document.querySelectorAll<HTMLInputElement>('.input__reset-button');
 htmlResetButton.forEach((elem) => elem.addEventListener('click', resetHandler));
 
 function resetHandler(): void {

@@ -1,7 +1,7 @@
 import JSZip from 'jszip';
 import * as uiHeader from './ui/header';
 import * as uiLoading from './ui/loading';
-import * as uiInfo from './ui/info';
+import * as uiInfo from './ui/information';
 import * as uiTools from './ui/tools';
 import * as uiStats from './ui/stats';
 import { disableInput } from './ui/input';
@@ -115,6 +115,7 @@ export const downloadMap = async (url: string): Promise<ArrayBuffer> => {
 export const extractZip = async (data: ArrayBuffer | File) => {
     uiLoading.status('info', 'Extracting zip', 0);
     let mapZip = new JSZip();
+    console.time('loading time');
     try {
         uiHeader.switchHeader(true);
         mapZip = await JSZip.loadAsync(data);
@@ -126,6 +127,7 @@ export const extractZip = async (data: ArrayBuffer | File) => {
         uiLoading.status('error', err, 100);
         console.error(err);
     }
+    console.timeEnd('loading time');
 };
 
 // TODO: break these to smaller functions, and probably slap in async while at it
@@ -137,7 +139,9 @@ export const loadMap = async (mapZip: JSZip) => {
     if (fileInfo) {
         disableInput(true);
         let infoFileStr = await fileInfo.async('string');
-        savedData._mapInfo = (await JSON.parse(infoFileStr)) as beatmap.info.BeatmapInfo;
+        savedData._mapInfo = (await JSON.parse(
+            infoFileStr
+        )) as beatmap.info.BeatmapInfo;
 
         beatmap.parse.info(savedData._mapInfo);
         uiInfo.setInfo(savedData._mapInfo);
@@ -173,12 +177,22 @@ export const loadMap = async (mapZip: JSZip) => {
         console.log('loading audio');
         let audioFile = mapZip.file(savedData._mapInfo._songFilename);
         if (settings.load.audio && audioFile) {
+            let loaded = false;
+            setTimeout(() => {
+                if (!loaded)
+                    uiLoading.status(
+                        'info',
+                        'Loading audio... (this may take a while)',
+                        20.875
+                    );
+            }, 10000);
             let arrayBuffer = await audioFile.async('arraybuffer');
             uiHeader.setAudio(arrayBuffer);
             let audioContext = new AudioContext();
             await audioContext
                 .decodeAudioData(arrayBuffer)
                 .then((buffer) => {
+                    loaded = true;
                     let duration = buffer.duration;
                     savedData._duration = duration;
                     uiHeader.setSongDuration(duration);
@@ -211,10 +225,10 @@ export const loadMap = async (mapZip: JSZip) => {
                     console.log(
                         `parsing ${mapSet[i]._beatmapCharacteristicName} ${diffInfo._difficulty}`
                     );
-                    let diffFileStr: beatmap.map.BeatmapData = JSON.parse(
+                    let diffFileStr: beatmap.difficulty.DifficultyData = JSON.parse(
                         await diffFile.async('string')
                     );
-                    let mapData: beatmap.map.BeatmapData;
+                    let mapData: beatmap.difficulty.DifficultyData;
                     try {
                         mapData = beatmap.parse.difficulty(diffFileStr);
                     } catch (err) {

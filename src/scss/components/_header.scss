@@ -27,12 +27,14 @@
         box-shadow: 0.125em 0 0.5em -0.125em black;
     }
 }
+
 .container {
     display: block;
     position: relative;
     width: 100%;
     height: var(--header-height);
 }
+
 .intro {
     position: relative;
     height: 100%;
@@ -51,6 +53,7 @@
         font-weight: 500;
     }
 }
+
 .metadata {
     position: relative;
     height: 100%;
@@ -77,12 +80,6 @@
     &__song-duration {
         font-family: var(--font-monospace);
     }
-}
-.audio {
-    position: absolute;
-    bottom: 0;
-    height: 2em;
-    width: 100%;
 }
 
 @media (max-width: 760px) {
