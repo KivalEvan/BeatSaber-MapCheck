@@ -1,5 +1,16 @@
 # Changelog
 
+## v2.2.1 [10-10-2021]
+
+### Changed
+
+-   Hitbox path now checks for diagonal
+-   Updated SPS requirement for 7:00 to 6:00
+
+### Fixed
+
+-   Hitbox path picking up bomb as note
+
 ## v2.2.0 [08-10-2021]
 
 ### Added

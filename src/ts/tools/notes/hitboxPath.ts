@@ -1,7 +1,6 @@
 import * as beatmap from '../../beatmap';
 import { round } from '../../utils';
 import { BeatmapSettings, Tool } from '../template';
-import * as swing from '../swing';
 
 const htmlContainer = document.createElement('div');
 const htmlInputCheck = document.createElement('input');
@@ -59,13 +58,15 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
             ) {
                 break;
             }
-            if (notes[i]._type === notes[j]._type) {
+            if (notes[i]._type === notes[j]._type || notes[j]._type === 3) {
                 continue;
             }
             if (
-                isIntersect(notes[i], notes[j], 2) &&
-                (beatmap.note.isHorizontal(notes[i], notes[j]) ||
-                    beatmap.note.isVertical(notes[i], notes[j]))
+                ((beatmap.note.isHorizontal(notes[i], notes[j]) ||
+                    beatmap.note.isVertical(notes[i], notes[j])) &&
+                    beatmap.note.isIntersect(notes[i], notes[j], 2)) ||
+                (beatmap.note.isDiagonal(notes[i], notes[j]) &&
+                    beatmap.note.isIntersect(notes[i], notes[j], 1))
             ) {
                 arr.push(notes[i]);
                 lastTime = bpm.toRealTime(notes[i]._time);
@@ -77,57 +78,6 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
         .filter(function (x, i, ary) {
             return !i || x !== ary[i - 1];
         });
-}
-
-// i dont like this implementation but whatever
-function isIntersect(
-    n1: beatmap.note.Note,
-    n2: beatmap.note.Note,
-    maxDistance: number
-): boolean {
-    for (let i = 1; i <= maxDistance; i++) {
-        if (n1._cutDirection !== 8) {
-            let noteOccupyLineIndex =
-                n1._lineIndex +
-                beatmap.note.cutDirectionSpace[
-                    beatmap.note.flipDirection[n1._cutDirection]
-                ][0] *
-                    i;
-            let noteOccupyLineLayer =
-                n1._lineLayer +
-                beatmap.note.cutDirectionSpace[
-                    beatmap.note.flipDirection[n1._cutDirection]
-                ][1] *
-                    i;
-            if (
-                n2._lineIndex === noteOccupyLineIndex &&
-                n2._lineLayer === noteOccupyLineLayer
-            ) {
-                return true;
-            }
-        }
-        if (n2._cutDirection !== 8) {
-            let noteOccupyLineIndex =
-                n2._lineIndex +
-                beatmap.note.cutDirectionSpace[
-                    beatmap.note.flipDirection[n2._cutDirection]
-                ][0] *
-                    i;
-            let noteOccupyLineLayer =
-                n2._lineLayer +
-                beatmap.note.cutDirectionSpace[
-                    beatmap.note.flipDirection[n2._cutDirection]
-                ][1] *
-                    i;
-            if (
-                n1._lineIndex === noteOccupyLineIndex &&
-                n1._lineLayer === noteOccupyLineLayer
-            ) {
-                return true;
-            }
-        }
-    }
-    return false;
 }
 
 function run(mapSettings: BeatmapSettings, mapSet?: beatmap.map.BeatmapSetData): void {

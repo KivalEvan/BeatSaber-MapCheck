@@ -72,15 +72,28 @@ export const isNote = (n: Note): boolean => {
 };
 
 // TODO: Mapping Extensions and Noodle Extensions note position support
+// TODO: probably do standardised position instead
 export const isVertical = (n1: Note, n2: Note): boolean => {
+    if (n1._customData?._position && n2._customData?._position) {
+        return n1._customData._position[1] - n2._customData._position[1] === 0;
+    }
     return n1._lineIndex - n2._lineIndex === 0;
 };
 
 export const isHorizontal = (n1: Note, n2: Note): boolean => {
+    if (n1._customData?._position && n2._customData?._position) {
+        return n1._customData._position[0] - n2._customData._position[0] === 0;
+    }
     return n1._lineLayer - n2._lineLayer === 0;
 };
 
 export const isDiagonal = (n1: Note, n2: Note): boolean => {
+    if (n1._customData?._position && n2._customData?._position) {
+        return (
+            Math.abs(n1._customData._position[1] - n2._customData._position[1]) ===
+            Math.abs(n1._customData._position[0] - n2._customData._position[0])
+        );
+    }
     return (
         Math.abs(n1._lineIndex - n2._lineIndex) ===
         Math.abs(n1._lineLayer - n2._lineLayer)
@@ -88,6 +101,12 @@ export const isDiagonal = (n1: Note, n2: Note): boolean => {
 };
 
 export const isInline = (n1: Note, n2: Note): boolean => {
+    if (n1._customData?._position && n2._customData?._position) {
+        return (
+            n1._customData._position[1] === n2._customData._position[1] &&
+            n1._customData._position[0] === n2._customData._position[0]
+        );
+    }
     return n1._lineLayer === n2._lineLayer && n1._lineIndex === n2._lineIndex;
 };
 
@@ -118,6 +137,40 @@ export const isSlantedWindow = (n1: Note, n2: Note): boolean => {
         !isHorizontal(n1, n2) &&
         !isVertical(n1, n2)
     );
+};
+
+export const isIntersect = (n1: Note, n2: Note, maxDistance: number): boolean => {
+    for (let i = 1; i <= maxDistance; i++) {
+        if (n1._cutDirection !== 8) {
+            let noteOccupyLineIndex =
+                n1._lineIndex +
+                cutDirectionSpace[flipDirection[n1._cutDirection]][0] * i;
+            let noteOccupyLineLayer =
+                n1._lineLayer +
+                cutDirectionSpace[flipDirection[n1._cutDirection]][1] * i;
+            if (
+                n2._lineIndex === noteOccupyLineIndex &&
+                n2._lineLayer === noteOccupyLineLayer
+            ) {
+                return true;
+            }
+        }
+        if (n2._cutDirection !== 8) {
+            let noteOccupyLineIndex =
+                n2._lineIndex +
+                cutDirectionSpace[flipDirection[n2._cutDirection]][0] * i;
+            let noteOccupyLineLayer =
+                n2._lineLayer +
+                cutDirectionSpace[flipDirection[n2._cutDirection]][1] * i;
+            if (
+                n1._lineIndex === noteOccupyLineIndex &&
+                n1._lineLayer === noteOccupyLineLayer
+            ) {
+                return true;
+            }
+        }
+    }
+    return false;
 };
 
 export const isEnd = (currNote: Note, prevNote: Note, cd: number): boolean => {
