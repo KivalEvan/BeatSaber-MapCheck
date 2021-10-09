@@ -59,10 +59,12 @@ function run(
     }
     const progMax = swing.getProgressionMax(filteredSPS, minSPS);
     const progMin = swing.getProgressionMin(filteredSPS, minSPS);
-    if (progMax && audioDuration < 420) {
-        htmlString.push(`<b>Violates progression:</b> ${progMax.difficulty} exceeded 40% SPS drop`);
+    if (progMax && audioDuration < 360) {
+        htmlString.push(
+            `<b>Violates progression:</b> ${progMax.difficulty} exceeded 40% SPS drop`
+        );
     }
-    if (progMin && audioDuration < 420) {
+    if (progMin && audioDuration < 360) {
         htmlString.push(
             `<b>Violates progression:</b> ${progMin.difficulty} has less than 10% SPS drop`
         );
