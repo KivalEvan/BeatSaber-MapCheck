@@ -1,5 +1,15 @@
 # Changelog
 
+## v2.2.2 [TBD]
+
+### Added
+
+-   Distance input for shrado angle
+
+### Changed
+
+-   shrado angle now checks by distance between note
+
 ## v2.2.1 [10-10-2021]
 
 ### Changed

@@ -4,11 +4,14 @@ import { BeatmapSettings, Tool } from '../template';
 import * as swing from '../swing';
 
 const defaultMaxTime = 0.15;
+const defaultDistance = 1;
 let localBPM!: beatmap.bpm.BeatPerMinute;
 
 const htmlContainer = document.createElement('div');
 const htmlInputCheck = document.createElement('input');
 const htmlLabelCheck = document.createElement('label');
+const htmlInputDistance = document.createElement('input');
+const htmlLabelDistance = document.createElement('label');
 const htmlInputMaxTime = document.createElement('input');
 const htmlLabelMaxTime = document.createElement('label');
 const htmlInputMaxBeat = document.createElement('input');
@@ -21,6 +24,15 @@ htmlInputCheck.className = 'input-toggle';
 htmlInputCheck.type = 'checkbox';
 htmlInputCheck.checked = false;
 htmlInputCheck.addEventListener('change', inputCheckHandler);
+
+htmlLabelDistance.textContent = 'min distance: ';
+htmlLabelDistance.htmlFor = 'input__tools-shrado-angle-distance';
+htmlInputDistance.id = 'input__tools-shrado-angle-distance';
+htmlInputDistance.className = 'input-toggle input--small';
+htmlInputDistance.type = 'number';
+htmlInputDistance.min = '0';
+htmlInputDistance.value = defaultDistance.toString();
+htmlInputDistance.addEventListener('change', inputDistanceHandler);
 
 htmlLabelMaxTime.textContent = 'max time (ms): ';
 htmlLabelMaxTime.htmlFor = 'input__tools-shrado-angle-time';
@@ -43,6 +55,9 @@ htmlInputMaxBeat.addEventListener('change', inputBeatHandler);
 htmlContainer.appendChild(htmlInputCheck);
 htmlContainer.appendChild(htmlLabelCheck);
 htmlContainer.appendChild(document.createElement('br'));
+htmlContainer.appendChild(htmlLabelDistance);
+htmlContainer.appendChild(htmlInputDistance);
+htmlContainer.appendChild(document.createElement('br'));
 htmlContainer.appendChild(htmlLabelMaxTime);
 htmlContainer.appendChild(htmlInputMaxTime);
 htmlContainer.appendChild(htmlLabelMaxBeat);
@@ -59,6 +74,7 @@ const tool: Tool = {
     input: {
         enabled: htmlInputCheck.checked,
         params: {
+            distance: defaultDistance,
             maxTime: defaultMaxTime,
         },
         html: htmlContainer,
@@ -80,6 +96,11 @@ function adjustTimeHandler(bpm: beatmap.bpm.BeatPerMinute) {
 
 function inputCheckHandler(this: HTMLInputElement) {
     tool.input.enabled = this.checked;
+}
+
+function inputDistanceHandler(this: HTMLInputElement) {
+    tool.input.params.distance = Math.max(parseInt(this.value), 0);
+    this.value = tool.input.params.distance.toString();
 }
 
 function inputTimeHandler(this: HTMLInputElement) {
@@ -107,7 +128,9 @@ function inputBeatHandler(this: HTMLInputElement) {
 function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData) {
     const { _bpm: bpm } = mapSettings;
     const { _notes: notes } = mapSet._data;
-    const { maxTime: temp } = <{ maxTime: number }>tool.input.params;
+    const { maxTime: temp, distance } = <{ maxTime: number; distance: number }>(
+        tool.input.params
+    );
     const maxTime = bpm.toBeatTime(temp) + 0.001;
 
     const lastNote: { [key: number]: beatmap.note.Note } = {};
@@ -131,6 +154,7 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
                         beatmap.note.flipDirection[lastNoteDirection[note._type]];
                 }
                 if (
+                    beatmap.note.distance(note, lastNote[note._type]) >= distance &&
                     checkShrAngle(
                         note._cutDirection,
                         lastNoteDirection[note._type],
@@ -149,6 +173,7 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
             } else {
                 if (
                     startNoteDot[note._type] &&
+                    beatmap.note.distance(note, lastNote[note._type]) >= distance &&
                     checkShrAngle(
                         note._cutDirection,
                         lastNoteDirection[note._type],
