@@ -1,5 +1,19 @@
 # Changelog
 
+## v2.2.2 [17-10-2021]
+
+### Added
+
+-   Distance input for shrado angle
+
+### Changed
+
+-   shrado angle now checks by distance between note
+
+### Fixed
+
+-   Potential fix for NJS HJD minimum
+
 ## v2.2.1 [10-10-2021]
 
 ### Changed

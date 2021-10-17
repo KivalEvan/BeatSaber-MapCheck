@@ -62,13 +62,13 @@ export class NoteJumpSpeed {
         while (noteJumpMovementSpeed * num * hjd > maxHalfJump) {
             hjd /= 2;
         }
-        if (hjd < NoteJumpSpeed.HJD_MIN) {
+        if (hjd < 1) {
             hjd = 1;
         }
         return hjd;
     }
     public calcHalfJumpDuration(offset: number = this.offset): number {
-        return Math.max(this.calcHalfJumpDurationRaw() + offset, 1);
+        return Math.max(this.calcHalfJumpDurationRaw() + offset, NoteJumpSpeed.HJD_MIN);
     }
     public calcHalfJumpDurationFromJD(jd: number = this.calcJumpDistance()): number {
         return jd / ((60 / this._bpm.value) * this._njs * 2);
