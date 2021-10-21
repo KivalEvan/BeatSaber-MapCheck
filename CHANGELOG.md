@@ -1,5 +1,16 @@
 # Changelog
 
+## v2.2.3 [21-10-2021]
+
+### Added
+
+-   Note color check (EXPERIMENTAL)
+    -   Similarity (including arrow)
+
+### Fixed
+
+-   Scary error for progression when audio is not loaded
+
 ## v2.2.2 [17-10-2021]
 
 ### Added

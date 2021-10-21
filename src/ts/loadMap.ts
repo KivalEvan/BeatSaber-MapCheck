@@ -241,6 +241,7 @@ export const loadMap = async (mapZip: JSZip) => {
                         _difficulty: diffInfo._difficulty,
                         _info: diffInfo,
                         _data: mapData,
+                        _environment: savedData._mapInfo._environmentName,
                     });
                 } else {
                     console.error(

@@ -1,5 +1,6 @@
 import { CharacteristicName } from './characteristic';
 import { DifficultyData, DifficultyName } from './difficulty';
+import { EnvironmentName } from './environment';
 import { BeatmapInfoSetDifficulty } from './info';
 import * as obstacle from './obstacle';
 
@@ -8,6 +9,7 @@ export interface BeatmapSetData {
     _difficulty: DifficultyName;
     _info: BeatmapInfoSetDifficulty;
     _data: DifficultyData;
+    _environment: EnvironmentName;
 }
 
 export const findFirstInteractiveObstacleTime = (
