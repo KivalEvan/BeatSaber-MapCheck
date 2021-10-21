@@ -30,7 +30,8 @@ function run(
 ): void {
     const { _audioDuration: audioDuration } = mapSettings;
     if (!audioDuration) {
-        throw new Error('no audio');
+        tool.output.html = null;
+        return;
     }
     if (!sps) {
         throw new Error('no sps');

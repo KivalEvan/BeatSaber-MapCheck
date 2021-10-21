@@ -14,3 +14,4 @@ export { default as parity } from './parity';
 export { default as doubleDirectional } from './doubleDirectional';
 export { default as visionBlock } from './visionBlock';
 export { default as stackedNote } from './stackedNote';
+export { default as colorCheck } from './colorCheck';

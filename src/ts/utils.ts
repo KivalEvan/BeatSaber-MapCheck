@@ -29,6 +29,14 @@ export const round = (num: number, d: number = 0): number => {
     return Math.round(num * Math.pow(10, d)) / Math.pow(10, d);
 };
 
+export const radToDeg = (x: number) => {
+    return x * (180 / Math.PI);
+};
+
+export const degToRad = (x: number) => {
+    return x * (Math.PI / 180);
+};
+
 // thanks Top_Cat#1961
 export const mod = (x: number, m: number): number => {
     if (m < 0) {

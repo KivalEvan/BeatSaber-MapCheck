@@ -1,6 +1,6 @@
 const versionMajor: number = 2;
 const versionMinor: number = 2;
-const versionPatch: number = 2;
+const versionPatch: number = 3;
 const watermark: string = 'Kival Evan#5480';
 
 class Version {
