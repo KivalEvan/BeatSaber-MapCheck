@@ -3,7 +3,7 @@ import { round } from '../../utils';
 import { ColorArray, deltaE00, toRGBArray } from '../../colors';
 import { BeatmapSettings, Tool } from '../template';
 
-const arrowColor: ColorArray = [0.90625, 0.90625, 0.90625];
+const arrowColor: ColorArray = [1, 1, 1];
 
 const deltaELevel: { [key: number]: string } = {
     1: 'Indistinguishable',
@@ -17,7 +17,7 @@ const deltaELevel: { [key: number]: string } = {
 
 const levelMsg = (level: { [key: number]: string }, perc: number): string => {
     let findKey = Object.keys(level).find((s) => parseFloat(s) >= perc) ?? '100';
-    let key = <number>parseFloat(findKey);
+    let key = parseFloat(findKey);
     return level[key];
 };
 

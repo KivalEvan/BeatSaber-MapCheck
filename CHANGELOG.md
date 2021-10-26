@@ -1,5 +1,15 @@
 # Changelog
 
+## v2.2.4 [26-10-2021]
+
+### Added
+
+-   Spooky Environment support
+
+### Changed
+
+-   Note color check tweaked arrow color
+
 ## v2.2.3 [21-10-2021]
 
 ### Added
