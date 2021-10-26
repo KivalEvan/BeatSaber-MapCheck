@@ -1,6 +1,10 @@
 # Changelog
 
-## v2.2.4 [TBD]
+## v2.2.4 [26-10-2021]
+
+### Added
+
+-   Spooky Environment support
 
 ### Changed
 
