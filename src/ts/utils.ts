@@ -87,6 +87,10 @@ export const sanitizeBeatSaverID = (id: string): string => {
     throw new Error('Invalid ID');
 };
 
+export const isHex = (hex: string): boolean => {
+    return /[a-fA-F0-9]*/g.test(hex);
+};
+
 export const removeOptions = (selectElement: HTMLSelectElement): void => {
     for (let i = selectElement.options.length - 1; i >= 0; i--) {
         selectElement.remove(i);

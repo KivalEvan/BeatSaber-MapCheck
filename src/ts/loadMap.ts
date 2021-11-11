@@ -7,11 +7,11 @@ import * as uiStats from './ui/stats';
 import { disableInput } from './ui/input';
 import * as beatmap from './beatmap';
 import * as analyse from './tools/analyse';
-import { round, sanitizeBeatSaverID, sanitizeURL } from './utils';
+import { round, isHex, sanitizeBeatSaverID, sanitizeURL } from './utils';
 import settings from './settings';
 import flag from './flag';
 import savedData, { clearData } from './savedData';
-import { getZipURL } from './beatsaver';
+import { getIdZipURL, getHashZipURL } from './beatsaver';
 
 export const downloadFromURL = async (input: string): Promise<void> => {
     // sanitize & validate url
@@ -53,11 +53,42 @@ export const downloadFromID = async (input: string): Promise<void> => {
         disableInput(true);
         console.log(`fetching download URL from BeatSaver for map ID ${id}`);
         uiLoading.status('info', 'Fetching download URL from BeatSaver', 0);
-        const url = await getZipURL(id);
+        const url = await getIdZipURL(id);
         console.log(`downloading from BeatSaver for map ID ${id}`);
         uiLoading.status('info', 'Requesting download from BeatSaver', 0);
         const res = await downloadMap(url);
         uiHeader.setCoverLink('https://beatsaver.com/maps/' + id, id);
+        extractZip(res);
+    } catch (err) {
+        disableInput(false);
+        uiLoading.status('error', err, 100);
+        console.error(err);
+    }
+};
+
+export const downloadFromHash = async (input: string): Promise<void> => {
+    // sanitize & validate id
+    let hash;
+    try {
+        if (isHex(input.trim())) {
+            hash = input.trim();
+        } else {
+            throw new Error('invalid hash');
+        }
+    } catch (err) {
+        uiLoading.status('info', err, 0);
+        console.error(err);
+        throw new Error(err);
+    }
+
+    try {
+        disableInput(true);
+        console.log(`fetching download URL from BeatSaver for map hash ${hash}`);
+        uiLoading.status('info', 'Fetching download URL from BeatSaver', 0);
+        const url = await getHashZipURL(hash);
+        console.log(`downloading from BeatSaver for map hash ${hash}`);
+        uiLoading.status('info', 'Requesting download from BeatSaver', 0);
+        const res = await downloadMap(url);
         extractZip(res);
     } catch (err) {
         disableInput(false);

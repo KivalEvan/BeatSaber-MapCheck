@@ -1,5 +1,16 @@
 # Changelog
 
+## v2.2.5 [11-11-2021]
+
+### Added
+
+-   Download by hash from BeatSaver
+-   LightID to Chroma Environment Enhancement info
+
+### Fixed
+
+-   Light value 8 no longer considered as invalid
+
 ## v2.2.4 [26-10-2021]
 
 ### Added

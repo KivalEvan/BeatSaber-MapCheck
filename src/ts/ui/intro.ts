@@ -1,11 +1,19 @@
 import * as uiLoading from './loading';
-import { downloadFromID, downloadFromURL, extractZip } from '../loadMap';
+import {
+    downloadFromID,
+    downloadFromURL,
+    downloadFromHash,
+    extractZip,
+} from '../loadMap';
 
 const logPrefix = 'UI Intro: ';
 
 const htmlInputURL = document.querySelector<HTMLInputElement>('.input__intro-url');
 const htmlInputID = document.querySelector<HTMLInputElement>('.input__intro-id');
-const htmlInputSearchButton = document.querySelector<HTMLInputElement>('.input__search-button');
+const htmlInputHash = document.querySelector<HTMLInputElement>('.input__intro-hash');
+const htmlInputSearchButton = document.querySelector<HTMLInputElement>(
+    '.input__search-button'
+);
 const htmlInputFile = document.querySelector<HTMLInputElement>('.input__file');
 const htmlInputFileZone = document.querySelector<HTMLInputElement>('.input__file-zone');
 
@@ -18,6 +26,11 @@ if (htmlInputID) {
     htmlInputID.addEventListener('keydown', introInputTextHandler);
 } else {
     console.error(logPrefix + 'ID input is missing');
+}
+if (htmlInputHash) {
+    htmlInputHash.addEventListener('keydown', introInputTextHandler);
+} else {
+    console.error(logPrefix + 'Hash input is missing');
 }
 if (htmlInputSearchButton) {
     htmlInputSearchButton.addEventListener('click', introButtonTextHandler);
@@ -57,6 +70,10 @@ function introButtonTextHandler(ev: Event): void {
         downloadFromID(htmlInputID.value);
         return;
     }
+    if (htmlInputHash && htmlInputHash.value !== '') {
+        downloadFromHash(htmlInputHash.value);
+        return;
+    }
 }
 
 // TODO: maybe break up into individual function
@@ -69,7 +86,10 @@ function inputFileHandler(ev: Event): void {
             uiLoading.status('info', 'No file input', 0);
             throw new Error('No file input');
         }
-        if (file && (file.name.substr(-4) === '.zip' || file.name.substr(-4) === '.bsl')) {
+        if (
+            file &&
+            (file.name.substr(-4) === '.zip' || file.name.substr(-4) === '.bsl')
+        ) {
             const fr = new FileReader();
             fr.readAsArrayBuffer(file);
             fr.addEventListener('load', () => {
@@ -94,7 +114,10 @@ function inputFileDropHandler(ev: DragEvent): void {
         if (ev.dataTransfer.items) {
             if (ev.dataTransfer.items[0].kind === 'file') {
                 let file = ev.dataTransfer.items[0].getAsFile() as File;
-                if (file && (file.name.substr(-4) === '.zip' || file.name.substr(-4) === '.bsl')) {
+                if (
+                    file &&
+                    (file.name.substr(-4) === '.zip' || file.name.substr(-4) === '.bsl')
+                ) {
                     const fr = new FileReader();
                     fr.readAsArrayBuffer(file);
                     fr.addEventListener('load', () => {

@@ -13,20 +13,22 @@ export enum ChromaDataEnvAbbr {
     _localPosition = 'Lp',
     _rotation = 'R',
     _localRotation = 'Lr',
+    _lightID = 'Li',
     _track = 'T',
 }
 
 export interface ChromaEnvironment {
     _id: string;
     _lookupMethod: LookupMethod;
-    _duplicate: number;
-    _active: boolean;
-    _scale: Array3DPoint;
-    _position: Array3DPoint;
-    _localPosition: Array3DPoint;
-    _rotation: Array3DPoint;
-    _localRotation: Array3DPoint;
-    _track: string;
+    _duplicate?: number;
+    _active?: boolean;
+    _scale?: Array3DPoint;
+    _position?: Array3DPoint;
+    _localPosition?: Array3DPoint;
+    _rotation?: Array3DPoint;
+    _localRotation?: Array3DPoint;
+    _lightID?: number;
+    _track?: string;
 }
 
 export interface CCustomData {

@@ -155,7 +155,7 @@ export const isValid = (event: Event): boolean => {
     return (
         isValidType(event) &&
         event._value >= 0 &&
-        !(!isLaserRotationEvent(event) && event._value > 7 && !hasOldChroma(event))
+        !(!isLaserRotationEvent(event) && event._value > 8 && !hasOldChroma(event))
     );
 };
 

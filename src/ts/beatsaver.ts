@@ -140,7 +140,7 @@ const fetchJSON = async (url: string): Promise<any> => {
                 resolve(xhr.response);
             }
             if (xhr.status === 404) {
-                reject('Error 404: ID/map does not exist');
+                reject('Error 404: Map does not exist');
             }
             if (xhr.status === 403) {
                 reject('Error 403: Forbidden');
@@ -160,8 +160,17 @@ const fetchJSON = async (url: string): Promise<any> => {
     });
 };
 
-export const getZipURL = async (id: string): Promise<string> => {
+export const getIdZipURL = async (id: string): Promise<string> => {
     const url = `https://api.beatsaver.com/maps/id/${id}`;
+    const json = (await fetchJSON(url)) as MapDetail;
+    if (json?.versions.length) {
+        return json.versions[json.versions.length - 1].downloadURL;
+    }
+    throw new Error('could not find map download link');
+};
+
+export const getHashZipURL = async (hash: string): Promise<string> => {
+    const url = `https://api.beatsaver.com/maps/hash/${hash}`;
     const json = (await fetchJSON(url)) as MapDetail;
     if (json?.versions.length) {
         return json.versions[json.versions.length - 1].downloadURL;
