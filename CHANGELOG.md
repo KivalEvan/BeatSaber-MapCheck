@@ -1,5 +1,12 @@
 # Changelog
 
+## v2.3.0 [TBD]
+
+### Changed
+
+-   Switched from Webpack to Vite
+-   Cleaned up and updated dependencies
+
 ## v2.2.5 [11-11-2021]
 
 ### Added
