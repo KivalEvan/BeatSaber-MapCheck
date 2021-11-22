@@ -7,18 +7,17 @@ aimed to reduce error before modding & release.
 
 by **Kival Evan#5480**
 
-## Features
-
-Map tools to spot specific error, and map stats per each difficulty in one place.
-
 ## How to use
 
-Visit the [github.io page](https://kivalevan.github.io/BeatSaber-MapCheck/) or download a copy and run `index.html` locally on any browser.
+Visit the [github.io page](https://kivalevan.github.io/BeatSaber-MapCheck/), more information in the [GitHub Wiki](https://github.com/KivalEvan/BeatSaber-MapCheck/wiki).
+
+## Development
+
+Clone or fork the project and install dependencies with `npm install`, then run the development server with `npm run dev`.
 
 ## Planned
 
 -   Rewrite swing detection
--   Basic parity check
 -   Save tools parameter
 
 ## Known Issues
