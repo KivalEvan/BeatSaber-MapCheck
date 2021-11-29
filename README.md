@@ -1,4 +1,4 @@
-<img align="left" src="https://github.com/KivalEvan/BeatSaber-MapCheck/blob/main/assets/icon-large.png" height="176" width="176">
+<img align="left" src="./public/img/icon-large.png" height="180" width="180">
 
 # Beat Saber Map Check
 
@@ -13,16 +13,20 @@ Visit the [github.io page](https://kivalevan.github.io/BeatSaber-MapCheck/), mor
 
 ## Development
 
-Clone or fork the project and install dependencies with `npm install`, then run the development server with `npm run dev`.
+### Installing
+
+Clone or fork the project and install dependencies with `npm install`.
+
+### Deploying
+
+Run the development server with `npm run dev`, the URL will be given in the CLI.
+
+To run the app locally, `npm run build` for the first time setup, then `npm run serve` to run the server.
 
 ## Planned
 
 -   Rewrite swing detection
 -   Save tools parameter
-
-## Known Issues
-
--   Due to pepega that is MediocreMapper BPM change, it may not show correct beat numbering
 
 ## Note
 

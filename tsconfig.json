@@ -4,7 +4,6 @@
         "module": "es6",
         "lib": ["ESNext", "DOM"],
         "moduleResolution": "node",
-        "useUnknownInCatchVariables": false,
         "strict": true,
         "sourceMap": true,
         "resolveJsonModule": true,
@@ -16,6 +15,7 @@
         "strictNullChecks": true,
         "strictFunctionTypes": true,
         "strictPropertyInitialization": true,
+        "useUnknownInCatchVariables": false,
         "allowSyntheticDefaultImports": true
     },
     "include": ["./src"]
