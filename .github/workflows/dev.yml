@@ -23,7 +23,7 @@ jobs:
               run: |
                   npm run build
                   mkdir ./dist/dev
-                  mv ./dist/* ./dist/dev/
+                  mv !(./dist/*) ./dist/dev/
                   touch ./dist/.nojekyll
 
             - name: Push to pages repo
