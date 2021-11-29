@@ -1,6 +1,6 @@
 env:
     githubEmail: 5645391+KivalEvan@users.noreply.github.com
-    deployToRepo: kivalevan.github.io
+    deployToRepo: BeatSaber-MapCheck
 
 name: Github Pages CI
 on:
