@@ -60,55 +60,92 @@ export const cutDirectionSpace: { [key: number]: [number, number] } = {
     8: [0, 0],
 };
 
-export const distance = (n1: Note, n2: Note): number => {
-    return Math.max(
-        Math.abs(n1._lineIndex - n2._lineIndex),
-        Math.abs(n1._lineLayer - n2._lineLayer)
-    );
-};
-
 export const isNote = (n: Note): boolean => {
     return n._type === 0 || n._type === 1;
 };
 
-// TODO: Mapping Extensions and Noodle Extensions note position support
-// TODO: probably do standardised position instead
-export const isVertical = (n1: Note, n2: Note): boolean => {
-    if (n1._customData?._position && n2._customData?._position) {
-        return n1._customData._position[1] - n2._customData._position[1] === 0;
+export const isBomb = (n: Note): boolean => {
+    return n._type === 3;
+};
+
+export const getPosition = (n: Note): [number, number] => {
+    if (n._customData?._position) {
+        return [n._customData._position[0], n._customData._position[1]];
     }
-    return n1._lineIndex - n2._lineIndex === 0;
+    return [
+        (n._lineIndex <= -1000
+            ? n._lineIndex / 1000
+            : n._lineIndex >= 1000
+            ? n._lineIndex / 1000
+            : n._lineIndex) - 2,
+        n._lineLayer <= -1000
+            ? n._lineLayer / 1000
+            : n._lineLayer >= 1000
+            ? n._lineLayer / 1000
+            : n._lineLayer,
+    ];
+};
+
+export const getAngle = (n: Note): number => {
+    if (n._customData?._cutDirection) {
+        return n._customData._cutDirection > 0
+            ? n._customData._cutDirection % 360
+            : 360 + (n._customData._cutDirection % 360);
+    }
+    if (n._cutDirection >= 1000) {
+        return Math.abs(((n._cutDirection % 1000) % 360) - 360);
+    }
+    return cutAngle[n._cutDirection] || 0;
+};
+
+export const distance = (n1: Note, n2: Note): number => {
+    const [nX1, nY1] = getPosition(n1);
+    const [nX2, nY2] = getPosition(n2);
+    return Math.sqrt(Math.pow(nX2 - nX1, 2) + Math.pow(nY2 - nY1, 2));
+};
+
+export const isVertical = (n1: Note, n2: Note): boolean => {
+    const [nX1] = getPosition(n1);
+    const [nX2] = getPosition(n2);
+    return nX1 - nX2 === 0;
 };
 
 export const isHorizontal = (n1: Note, n2: Note): boolean => {
-    if (n1._customData?._position && n2._customData?._position) {
-        return n1._customData._position[0] - n2._customData._position[0] === 0;
-    }
-    return n1._lineLayer - n2._lineLayer === 0;
+    const [_, nY1] = getPosition(n1);
+    const [_2, nY2] = getPosition(n2);
+    return nY1 - nY2 === 0;
 };
 
 export const isDiagonal = (n1: Note, n2: Note): boolean => {
-    if (n1._customData?._position && n2._customData?._position) {
-        return (
-            Math.abs(n1._customData._position[1] - n2._customData._position[1]) ===
-            Math.abs(n1._customData._position[0] - n2._customData._position[0])
-        );
-    }
-    return (
-        Math.abs(n1._lineIndex - n2._lineIndex) ===
-        Math.abs(n1._lineLayer - n2._lineLayer)
-    );
+    const [nX1, nY1] = getPosition(n1);
+    const [nX2, nY2] = getPosition(n2);
+    return Math.abs(nX1 - nX2) === Math.abs(nY1 - nY2);
 };
 
 export const isInline = (n1: Note, n2: Note): boolean => {
-    if (n1._customData?._position && n2._customData?._position) {
-        return (
-            n1._customData._position[1] === n2._customData._position[1] &&
-            n1._customData._position[0] === n2._customData._position[0]
-        );
-    }
-    return n1._lineLayer === n2._lineLayer && n1._lineIndex === n2._lineIndex;
+    const [nX1, nY1] = getPosition(n1);
+    const [nX2, nY2] = getPosition(n2);
+    return nX1 === nX2 && nY1 === nY2;
 };
+
+console.log(
+    isInline(
+        {
+            _type: 0,
+            _cutDirection: 0,
+            _lineIndex: 2,
+            _lineLayer: 0,
+            _time: 0,
+        },
+        {
+            _type: 0,
+            _cutDirection: 0,
+            _lineIndex: 3,
+            _lineLayer: 1,
+            _time: 0,
+        }
+    )
+);
 
 export const isDouble = (n: Note, notes: Note[], index: number): boolean => {
     for (let i = index, len = notes.length; i < len; i++) {
@@ -463,21 +500,6 @@ export const peak = (notes: Note[], beat: number, bpm: number): number => {
     }
 
     return peakNPS;
-};
-
-// TODO: make support for NE and ME
-export const getPosition = (n: Note): [number, number] => {
-    return [0, 0];
-};
-
-export const getAngle = (n: Note): number => {
-    if (n._customData?._cutDirection) {
-        return n._customData._cutDirection;
-    }
-    if (n._cutDirection >= 1000) {
-        return n._cutDirection % 1000;
-    }
-    return cutAngle[n._cutDirection];
 };
 
 export const checkDirection = (

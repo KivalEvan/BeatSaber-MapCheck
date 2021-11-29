@@ -3,9 +3,6 @@ import { round } from '../../utils';
 import { BeatmapSettings, Tool } from '../template';
 import * as swing from '../swing';
 
-const defaultEBPM = 450;
-const defaultEBPMS = 350;
-
 const htmlContainer = document.createElement('div');
 const htmlInputCheck = document.createElement('input');
 const htmlLabelCheck = document.createElement('label');

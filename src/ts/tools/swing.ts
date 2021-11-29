@@ -161,11 +161,15 @@ export const calcMinSliderSpeed = (
 ): number => {
     return bpm.toRealTime(
         Math.max(
-            ...notes.map(
-                (n, i) =>
+            ...notes.map((_, i) => {
+                if (i === 0) {
+                    return 0;
+                }
+                return (
                     (notes[i]._time - notes[Math.max(i - 1, 0)]._time) /
-                    (i ? beatmap.note.distance(notes[i], notes[i - 1]) : 1)
-            )
+                    (beatmap.note.distance(notes[i], notes[i - 1]) || 1)
+                );
+            })
         )
     );
 };
@@ -176,13 +180,13 @@ export const calcMaxSliderSpeed = (
 ): number => {
     return bpm.toRealTime(
         Math.min(
-            ...notes.map((n, i) => {
+            ...notes.map((_, i) => {
                 if (i === 0) {
                     return Number.MAX_SAFE_INTEGER;
                 }
                 return (
                     (notes[i]._time - notes[Math.max(i - 1, 0)]._time) /
-                    (i ? beatmap.note.distance(notes[i], notes[i - 1]) : 1)
+                    (beatmap.note.distance(notes[i], notes[i - 1]) || 1)
                 );
             })
         )

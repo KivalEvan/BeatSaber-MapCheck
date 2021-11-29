@@ -2,6 +2,13 @@
 
 ## v2.3.0 [TBD]
 
+### Added
+
+-   Standardised note and obstacle position and rotation with [BeatWalls system](https://camo.githubusercontent.com/295a4c05e569c99c6bf07cfabda8d80afdec1b7d/68747470733a2f2f692e696d6775722e636f6d2f557a37614944672e706e673d31303078313030) to allow modded content support
+    -   This allows NE/ME map to use the error check functionality
+    -   This also allows for more advanced checking in the future
+    -   Because of the change, some functionality may not work as intended (please report if you find them)
+
 ### Changed
 
 -   Switched from Webpack to Vite
