@@ -44,7 +44,6 @@ function inputCheckHandler(this: HTMLInputElement) {
 function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData) {
     const { _bpm: bpm } = mapSettings;
     const { _notes: notes } = mapSet._data;
-
     return swing
         .getSliderNote(notes, bpm)
         .filter((n) => Math.abs(n._minSpeed - n._maxSpeed) > 0.002)

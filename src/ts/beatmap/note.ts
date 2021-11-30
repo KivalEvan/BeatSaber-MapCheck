@@ -107,45 +107,32 @@ export const distance = (n1: Note, n2: Note): number => {
 export const isVertical = (n1: Note, n2: Note): boolean => {
     const [nX1] = getPosition(n1);
     const [nX2] = getPosition(n2);
-    return nX1 - nX2 === 0;
+    const d = nX1 - nX2;
+    return d > -0.001 && d < 0.001;
 };
 
 export const isHorizontal = (n1: Note, n2: Note): boolean => {
     const [_, nY1] = getPosition(n1);
     const [_2, nY2] = getPosition(n2);
-    return nY1 - nY2 === 0;
+    const d = nY1 - nY2;
+    return d > -0.001 && d < 0.001;
 };
 
 export const isDiagonal = (n1: Note, n2: Note): boolean => {
     const [nX1, nY1] = getPosition(n1);
     const [nX2, nY2] = getPosition(n2);
-    return Math.abs(nX1 - nX2) === Math.abs(nY1 - nY2);
+    const dX = Math.abs(nX1 - nX2);
+    const dY = Math.abs(nY1 - nY2);
+    return dX === dY;
 };
 
 export const isInline = (n1: Note, n2: Note): boolean => {
     const [nX1, nY1] = getPosition(n1);
     const [nX2, nY2] = getPosition(n2);
-    return nX1 === nX2 && nY1 === nY2;
+    const dX = nX1 - nX2;
+    const dY = nY1 - nY2;
+    return dX > -0.5 && dX < 0.5 && dY > -0.5 && dY < 0.5;
 };
-
-console.log(
-    isInline(
-        {
-            _type: 0,
-            _cutDirection: 0,
-            _lineIndex: 2,
-            _lineLayer: 0,
-            _time: 0,
-        },
-        {
-            _type: 0,
-            _cutDirection: 0,
-            _lineIndex: 3,
-            _lineLayer: 1,
-            _time: 0,
-        }
-    )
-);
 
 export const isDouble = (n: Note, notes: Note[], index: number): boolean => {
     for (let i = index, len = notes.length; i < len; i++) {
@@ -160,11 +147,12 @@ export const isDouble = (n: Note, notes: Note[], index: number): boolean => {
 };
 
 export const isAdjacent = (n1: Note, n2: Note): boolean => {
-    return distance(n1, n2) === 1;
+    const d = distance(n1, n2);
+    return d > 0.499 && d < 1.001;
 };
 
 export const isWindow = (n1: Note, n2: Note): boolean => {
-    return distance(n1, n2) >= 2;
+    return distance(n1, n2) > 1.8;
 };
 
 export const isSlantedWindow = (n1: Note, n2: Note): boolean => {
@@ -176,6 +164,7 @@ export const isSlantedWindow = (n1: Note, n2: Note): boolean => {
     );
 };
 
+// TODO: update with new position/rotation system
 export const isIntersect = (n1: Note, n2: Note, maxDistance: number): boolean => {
     for (let i = 1; i <= maxDistance; i++) {
         if (n1._cutDirection !== 8) {
@@ -210,6 +199,7 @@ export const isIntersect = (n1: Note, n2: Note, maxDistance: number): boolean =>
     return false;
 };
 
+// TODO: update with new position/rotation system
 export const isEnd = (currNote: Note, prevNote: Note, cd: number): boolean => {
     // fuck u and ur dot note stack
     if (currNote._cutDirection === 8 && prevNote._cutDirection === 8 && cd !== 8) {
@@ -315,6 +305,7 @@ export const isEnd = (currNote: Note, prevNote: Note, cd: number): boolean => {
     return false;
 };
 
+// TODO: update with new position/rotation system
 export const predictDirection = (currNote: Note, prevNote: Note): number => {
     if (isEnd(currNote, prevNote, 8)) {
         return currNote._cutDirection === 8
