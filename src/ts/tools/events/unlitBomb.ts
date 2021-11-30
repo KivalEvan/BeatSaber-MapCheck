@@ -5,9 +5,9 @@ const htmlContainer = document.createElement('div');
 const htmlInputCheck = document.createElement('input');
 const htmlLabelCheck = document.createElement('label');
 
-htmlLabelCheck.textContent = ' Insufficient lighting event';
-htmlLabelCheck.htmlFor = 'input__tools-insufficient-light-check';
-htmlInputCheck.id = 'input__tools-insufficient-light-check';
+htmlLabelCheck.textContent = ' Unlit bomb';
+htmlLabelCheck.htmlFor = 'input__tools-unlit-bomb';
+htmlInputCheck.id = 'input__tools-unlit-bomb';
 htmlInputCheck.className = 'input-toggle';
 htmlInputCheck.type = 'checkbox';
 htmlInputCheck.checked = true;
@@ -17,12 +17,12 @@ htmlContainer.appendChild(htmlInputCheck);
 htmlContainer.appendChild(htmlLabelCheck);
 
 const tool: Tool = {
-    name: 'Insufficient Light',
+    name: 'Unlit Bomb',
     description: 'Placeholder',
     type: 'event',
     order: {
-        input: 0,
-        output: 0,
+        input: 3,
+        output: 3,
     },
     input: {
         enabled: htmlInputCheck.checked,

@@ -200,20 +200,3 @@ export const count = (events: Event[]): EventCount => {
     }
     return eventCount;
 };
-
-export const sufficientLight = (events: Event[]): boolean => {
-    let count = 0;
-    for (let i = events.length - 1; i >= 0; i--) {
-        if (
-            isLightEvent(events[i]) &&
-            events[i]._value !== 0 &&
-            events[i]._value !== 4
-        ) {
-            count++;
-            if (count > 10) {
-                return true;
-            }
-        }
-    }
-    return false;
-};

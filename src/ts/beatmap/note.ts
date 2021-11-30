@@ -1,4 +1,4 @@
-import { shortRotDistance } from '../utils';
+import { degToRad, radToDeg, shortRotDistance } from '../utils';
 import { CustomDataNote } from './customData';
 
 export interface Note {
@@ -24,29 +24,9 @@ interface NoteCountStats {
     mappingExtensions: number;
 }
 
-export const cutAngle = [
-    0, // 0
-    180, // 1
-    270, // 2
-    90, // 3
-    315, // 4
-    45, // 5
-    225, // 6
-    135, // 7
-    0, // 8
-];
+export const cutAngle = [180, 0, 270, 90, 225, 135, 315, 45, 0];
 
-export const flipDirection = [
-    1, // 0
-    0, // 1
-    3, // 2
-    2, // 3
-    7, // 4
-    6, // 5
-    5, // 6
-    4, // 7
-    8, // 8
-];
+export const flipDirection = [1, 0, 3, 2, 7, 6, 5, 4, 8];
 
 export const cutDirectionSpace: { [key: number]: [number, number] } = {
     0: [0, 1],
@@ -164,39 +144,46 @@ export const isSlantedWindow = (n1: Note, n2: Note): boolean => {
     );
 };
 
-// TODO: update with new position/rotation system
+// a fkin abomination that's what this is
 export const isIntersect = (n1: Note, n2: Note, maxDistance: number): boolean => {
-    for (let i = 1; i <= maxDistance; i++) {
-        if (n1._cutDirection !== 8) {
-            let noteOccupyLineIndex =
-                n1._lineIndex +
-                cutDirectionSpace[flipDirection[n1._cutDirection]][0] * i;
-            let noteOccupyLineLayer =
-                n1._lineLayer +
-                cutDirectionSpace[flipDirection[n1._cutDirection]][1] * i;
-            if (
-                n2._lineIndex === noteOccupyLineIndex &&
-                n2._lineLayer === noteOccupyLineLayer
-            ) {
-                return true;
-            }
-        }
-        if (n2._cutDirection !== 8) {
-            let noteOccupyLineIndex =
-                n2._lineIndex +
-                cutDirectionSpace[flipDirection[n2._cutDirection]][0] * i;
-            let noteOccupyLineLayer =
-                n2._lineLayer +
-                cutDirectionSpace[flipDirection[n2._cutDirection]][1] * i;
-            if (
-                n1._lineIndex === noteOccupyLineIndex &&
-                n1._lineLayer === noteOccupyLineLayer
-            ) {
-                return true;
-            }
-        }
+    const [nX1, nY1] = getPosition(n1);
+    const [nX2, nY2] = getPosition(n2);
+    const nA1 = getAngle(n1);
+    const nA2 = getAngle(n2);
+    let result = false;
+    if (n1._cutDirection !== 8) {
+        const a = (radToDeg(Math.atan2(nY1 - nY2, nX1 - nX2)) + 450) % 360;
+        const aS1 = (nA1 + 315) % 360;
+        const aE1 = (nA1 + 405) % 360;
+        const aS2 = (nA1 + 345) % 360;
+        const aE2 = (nA1 + 375) % 360;
+        result =
+            (1 >= Math.sqrt(Math.pow(nX1 - nX2, 2) + Math.pow(nY1 - nY2, 2)) &&
+                ((aS1 < aE1 && aS1 <= a && a <= aE1) ||
+                    (aS1 >= aE1 && (a <= aE1 || a >= aS1)))) ||
+            (maxDistance >=
+                Math.sqrt(Math.pow(nX1 - nX2, 2) + Math.pow(nY1 - nY2, 2)) &&
+                ((aS2 < aE2 && aS2 <= a && a <= aE2) ||
+                    (aS2 >= aE2 && (a <= aE2 || a >= aS2)))) ||
+            result;
     }
-    return false;
+    if (n2._cutDirection !== 8 && !result) {
+        const a = (radToDeg(Math.atan2(nY2 - nY1, nX2 - nX1)) + 450) % 360;
+        const aS1 = (nA2 + 315) % 360;
+        const aE1 = (nA2 + 405) % 360;
+        const aS2 = (nA2 + 345) % 360;
+        const aE2 = (nA2 + 375) % 360;
+        result =
+            (1 >= Math.sqrt(Math.pow(nX1 - nX2, 2) + Math.pow(nY1 - nY2, 2)) &&
+                ((aS1 < aE1 && aS1 <= a && a <= aE1) ||
+                    (aS1 >= aE1 && (a <= aE1 || a >= aS1)))) ||
+            (maxDistance >=
+                Math.sqrt(Math.pow(nX1 - nX2, 2) + Math.pow(nY1 - nY2, 2)) &&
+                ((aS2 < aE2 && aS2 <= a && a <= aE2) ||
+                    (aS2 >= aE2 && (a <= aE2 || a >= aS2)))) ||
+            result;
+    }
+    return result;
 };
 
 // TODO: update with new position/rotation system
@@ -494,36 +481,33 @@ export const peak = (notes: Note[], beat: number, bpm: number): number => {
 };
 
 export const checkDirection = (
-    n1: Note | number,
-    n2: Note | number,
+    n1: Note | number | null,
+    n2: Note | number | null,
     angleTol: number,
     equal: boolean
 ): boolean => {
-    let n1Angle!: number;
-    let n2Angle!: number;
+    let nA1!: number;
+    let nA2!: number;
+    if (n1 === null || n2 === null) {
+        return false;
+    }
     if (typeof n1 === 'number') {
-        if (n1 === 8) {
-            return false;
-        }
-        n1Angle = cutAngle[n1];
+        nA1 = n1;
     } else {
         if (n1._cutDirection === 8) {
             return false;
         }
-        n1Angle = getAngle(n1);
+        nA1 = getAngle(n1);
     }
     if (typeof n2 === 'number') {
-        if (n2 === 8) {
-            return false;
-        }
-        n2Angle = cutAngle[n2];
+        nA2 = n2;
     } else {
         if (n2._cutDirection === 8) {
             return false;
         }
-        n2Angle = getAngle(n2);
+        nA2 = getAngle(n2);
     }
     return equal
-        ? shortRotDistance(n1Angle, n2Angle, 360) <= angleTol
-        : shortRotDistance(n1Angle, n2Angle, 360) >= angleTol;
+        ? shortRotDistance(nA1, nA2, 360) <= angleTol
+        : shortRotDistance(nA1, nA2, 360) >= angleTol;
 };

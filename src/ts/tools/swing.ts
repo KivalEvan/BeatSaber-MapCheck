@@ -169,19 +169,19 @@ export const calcMinSliderSpeed = (
                     return 0;
                 }
                 if (
-                    (beatmap.note.isDiagonal(notes[i], notes[i - 1]) ||
-                        beatmap.note.isSlantedWindow(notes[i], notes[i - 1])) &&
-                    !hasDiagonal
+                    (beatmap.note.isHorizontal(notes[i], notes[i - 1]) ||
+                        beatmap.note.isVertical(notes[i], notes[i - 1])) &&
+                    !hasStraight
                 ) {
-                    hasDiagonal = true;
+                    hasStraight = true;
                     curvedSpeed =
                         (notes[i]._time - notes[i - 1]._time) /
                         (beatmap.note.distance(notes[i], notes[i - 1]) || 1);
                 }
-                hasStraight =
-                    beatmap.note.isHorizontal(notes[i], notes[i - 1]) ||
-                    beatmap.note.isVertical(notes[i], notes[i - 1]) ||
-                    hasStraight;
+                hasDiagonal =
+                    beatmap.note.isDiagonal(notes[i], notes[i - 1]) ||
+                    beatmap.note.isSlantedWindow(notes[i], notes[i - 1]) ||
+                    hasDiagonal;
                 return (
                     (notes[i]._time - notes[i - 1]._time) /
                     (beatmap.note.distance(notes[i], notes[i - 1]) || 1)
@@ -209,19 +209,19 @@ export const calcMaxSliderSpeed = (
                     return Number.MAX_SAFE_INTEGER;
                 }
                 if (
-                    (beatmap.note.isDiagonal(notes[i], notes[i - 1]) ||
-                        beatmap.note.isSlantedWindow(notes[i], notes[i - 1])) &&
-                    !hasDiagonal
+                    (beatmap.note.isHorizontal(notes[i], notes[i - 1]) ||
+                        beatmap.note.isVertical(notes[i], notes[i - 1])) &&
+                    !hasStraight
                 ) {
-                    hasDiagonal = true;
+                    hasStraight = true;
                     curvedSpeed =
                         (notes[i]._time - notes[i - 1]._time) /
                         (beatmap.note.distance(notes[i], notes[i - 1]) || 1);
                 }
-                hasStraight =
-                    beatmap.note.isHorizontal(notes[i], notes[i - 1]) ||
-                    beatmap.note.isVertical(notes[i], notes[i - 1]) ||
-                    hasStraight;
+                hasDiagonal =
+                    beatmap.note.isDiagonal(notes[i], notes[i - 1]) ||
+                    beatmap.note.isSlantedWindow(notes[i], notes[i - 1]) ||
+                    hasDiagonal;
                 return (
                     (notes[i]._time - notes[i - 1]._time) /
                     (beatmap.note.distance(notes[i], notes[i - 1]) || 1)
