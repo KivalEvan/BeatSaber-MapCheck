@@ -44,123 +44,134 @@ interface EventCountStats {
     mappingExtensions: number;
 }
 
-export const isValidType = (event: Event): boolean => {
-    return (event._type >= 0 && event._type <= 17) || event._type === 100;
+export const isOff = (e: Event): boolean => {
+    return e._value === 0;
 };
 
-export const isLightEvent = (event: Event): boolean => {
-    return (
-        event._type >= 0 &&
-        event._type <= 11 &&
-        !isRingEvent(event) &&
-        !isColorBoost(event)
-    );
+export const isOn = (e: Event): boolean => {
+    return e._value === 1 || e._value === 5;
 };
 
-export const isColorBoost = (event: Event): boolean => {
-    return event._type === 5;
+export const isFlash = (e: Event): boolean => {
+    return e._value === 2 || e._value === 6;
 };
 
-export const isRingEvent = (event: Event): boolean => {
-    return event._type === 8 || event._type === 9;
+export const isFade = (e: Event): boolean => {
+    return e._value === 3 || e._value === 7;
 };
 
-export const isLaserRotationEvent = (event: Event): boolean => {
-    return event._type === 12 || event._type === 13;
+export const isTransition = (e: Event): boolean => {
+    return e._value === 4 || e._value === 8;
 };
 
-export const isLaneRotationEvent = (event: Event): boolean => {
-    return event._type === 14 || event._type === 15;
+export const isValidType = (e: Event): boolean => {
+    return (e._type >= 0 && e._type <= 17) || e._type === 100;
 };
 
-export const isHydraulicEvent = (event: Event): boolean => {
-    return event._type === 16 || event._type === 17;
+export const isLightEvent = (e: Event): boolean => {
+    return e._type >= 0 && e._type <= 11 && !isRingEvent(e) && !isColorBoost(e);
 };
 
-export const isBPMChangeEvent = (event: Event): boolean => {
-    return event._type === 100;
+export const isColorBoost = (e: Event): boolean => {
+    return e._type === 5;
+};
+
+export const isRingEvent = (e: Event): boolean => {
+    return e._type === 8 || e._type === 9;
+};
+
+export const isLaserRotationEvent = (e: Event): boolean => {
+    return e._type === 12 || e._type === 13;
+};
+
+export const isLaneRotationEvent = (e: Event): boolean => {
+    return e._type === 14 || e._type === 15;
+};
+
+export const isHydraulicEvent = (e: Event): boolean => {
+    return e._type === 16 || e._type === 17;
+};
+
+export const isBPMChangeEvent = (e: Event): boolean => {
+    return e._type === 100;
 };
 
 // not to be confused with isLightEvent, this checks for event that affects the environment/lighting
-export const isLightingEvent = (event: Event): boolean => {
+export const isLightingEvent = (e: Event): boolean => {
     return (
-        isLightEvent(event) ||
-        isRingEvent(event) ||
-        isLaserRotationEvent(event) ||
-        isHydraulicEvent(event)
+        isLightEvent(e) ||
+        isRingEvent(e) ||
+        isLaserRotationEvent(e) ||
+        isHydraulicEvent(e)
     );
 };
 
-export const hasChroma = (event: Event): boolean => {
-    if (isLightEvent(event)) {
+export const hasChroma = (e: Event): boolean => {
+    if (isLightEvent(e)) {
         return (
-            Array.isArray(event._customData?._color) ||
-            typeof event._customData?._lightID === 'number' ||
-            Array.isArray(event._customData?._lightID) ||
-            typeof event._customData?._propID === 'number' ||
-            typeof event._customData?._lightGradient === 'object'
+            Array.isArray(e._customData?._color) ||
+            typeof e._customData?._lightID === 'number' ||
+            Array.isArray(e._customData?._lightID) ||
+            typeof e._customData?._propID === 'number' ||
+            typeof e._customData?._lightGradient === 'object'
         );
     }
-    if (event._type === 8) {
+    if (e._type === 8) {
         return (
-            typeof event._customData?._nameFilter === 'string' ||
-            typeof event._customData?._reset === 'boolean' ||
-            typeof event._customData?._rotation === 'number' ||
-            typeof event._customData?._step === 'number' ||
-            typeof event._customData?._prop === 'number' ||
-            typeof event._customData?._speed === 'number' ||
-            typeof event._customData?._direction === 'number' ||
-            typeof event._customData?._counterSpin === 'boolean' ||
-            typeof event._customData?._stepMult === 'number' ||
-            typeof event._customData?._propMult === 'number' ||
-            typeof event._customData?._speedMult === 'number'
+            typeof e._customData?._nameFilter === 'string' ||
+            typeof e._customData?._reset === 'boolean' ||
+            typeof e._customData?._rotation === 'number' ||
+            typeof e._customData?._step === 'number' ||
+            typeof e._customData?._prop === 'number' ||
+            typeof e._customData?._speed === 'number' ||
+            typeof e._customData?._direction === 'number' ||
+            typeof e._customData?._counterSpin === 'boolean' ||
+            typeof e._customData?._stepMult === 'number' ||
+            typeof e._customData?._propMult === 'number' ||
+            typeof e._customData?._speedMult === 'number'
         );
     }
-    if (event._type === 9) {
-        return typeof event._customData?._step === 'number';
+    if (e._type === 9) {
+        return typeof e._customData?._step === 'number';
     }
-    if (isLaserRotationEvent(event)) {
+    if (isLaserRotationEvent(e)) {
         return (
-            typeof event._customData?._lockPosition === 'boolean' ||
-            typeof event._customData?._speed === 'number' ||
-            typeof event._customData?._preciseSpeed === 'number' ||
-            typeof event._customData?._direction === 'number'
+            typeof e._customData?._lockPosition === 'boolean' ||
+            typeof e._customData?._speed === 'number' ||
+            typeof e._customData?._preciseSpeed === 'number' ||
+            typeof e._customData?._direction === 'number'
         );
     }
     return false;
 };
 
-export const hasOldChroma = (event: Event): boolean => {
-    return event._value >= 2000000000;
+export const hasOldChroma = (e: Event): boolean => {
+    return e._value >= 2000000000;
 };
 
-export const hasNoodleExtensions = (event: Event): boolean => {
-    if (event._type === 14 || event._type === 15) {
-        if (typeof event._customData?._rotation === 'number') {
+export const hasNoodleExtensions = (e: Event): boolean => {
+    if (e._type === 14 || e._type === 15) {
+        if (typeof e._customData?._rotation === 'number') {
             return true;
         }
     }
     return false;
 };
 
-export const hasMappingExtensions = (event: Event): boolean => {
-    return (
-        (event._type === 14 || event._type === 15) &&
-        event._value >= 1000 &&
-        event._value <= 1720
-    );
+export const hasMappingExtensions = (e: Event): boolean => {
+    return (e._type === 14 || e._type === 15) && e._value >= 1000 && e._value <= 1720;
 };
 
-export const isValid = (event: Event): boolean => {
+export const isValid = (e: Event): boolean => {
     return (
-        isValidType(event) &&
-        event._value >= 0 &&
-        !(!isLaserRotationEvent(event) && event._value > 8 && !hasOldChroma(event))
+        isValidType(e) &&
+        e._value >= 0 &&
+        !(!isLaserRotationEvent(e) && e._value > 8 && !hasOldChroma(e))
     );
 };
 
 const commonEvent = [0, 1, 2, 3, 4, 8, 9, 12, 13];
-export const count = (events: Event[]): EventCount => {
+export const count = (ev: Event[]): EventCount => {
     const eventCount: EventCount = {};
     for (let i = commonEvent.length - 1; i >= 0; i--) {
         eventCount[commonEvent[i]] = {
@@ -172,10 +183,10 @@ export const count = (events: Event[]): EventCount => {
         };
     }
 
-    for (let i = events.length - 1; i >= 0; i--) {
-        if (isValidType(events[i])) {
-            if (!eventCount[events[i]._type]) {
-                eventCount[events[i]._type] = {
+    for (let i = ev.length - 1; i >= 0; i--) {
+        if (isValidType(ev[i])) {
+            if (!eventCount[ev[i]._type]) {
+                eventCount[ev[i]._type] = {
                     total: 0,
                     chroma: 0,
                     chromaOld: 0,
@@ -183,37 +194,20 @@ export const count = (events: Event[]): EventCount => {
                     mappingExtensions: 0,
                 };
             }
-            eventCount[events[i]._type].total++;
-            if (hasChroma(events[i])) {
-                eventCount[events[i]._type].chroma++;
+            eventCount[ev[i]._type].total++;
+            if (hasChroma(ev[i])) {
+                eventCount[ev[i]._type].chroma++;
             }
-            if (hasOldChroma(events[i])) {
-                eventCount[events[i]._type].chromaOld++;
+            if (hasOldChroma(ev[i])) {
+                eventCount[ev[i]._type].chromaOld++;
             }
-            if (hasNoodleExtensions(events[i])) {
-                eventCount[events[i]._type].noodleExtensions++;
+            if (hasNoodleExtensions(ev[i])) {
+                eventCount[ev[i]._type].noodleExtensions++;
             }
-            if (hasMappingExtensions(events[i])) {
-                eventCount[events[i]._type].mappingExtensions++;
+            if (hasMappingExtensions(ev[i])) {
+                eventCount[ev[i]._type].mappingExtensions++;
             }
         }
     }
     return eventCount;
-};
-
-export const sufficientLight = (events: Event[]): boolean => {
-    let count = 0;
-    for (let i = events.length - 1; i >= 0; i--) {
-        if (
-            isLightEvent(events[i]) &&
-            events[i]._value !== 0 &&
-            events[i]._value !== 4
-        ) {
-            count++;
-            if (count > 10) {
-                return true;
-            }
-        }
-    }
-    return false;
 };

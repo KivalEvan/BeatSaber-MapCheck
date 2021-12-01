@@ -121,7 +121,7 @@ const setContributorsImage = (src: string | null): void => {
         console.error(logPrefix + 'missing HTML element for contributor image');
         return;
     }
-    htmlInfoContributorsImage.src = src || './assets/unknown.jpg';
+    htmlInfoContributorsImage.src = src || './img/unknown.jpg';
 };
 
 const setContributorsName = (str: string): void => {

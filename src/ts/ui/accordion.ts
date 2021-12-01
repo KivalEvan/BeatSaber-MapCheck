@@ -42,7 +42,9 @@ export const create = (
     }
 
     const accCollapsible = document.createElement('div');
-    accCollapsible.className = isFlex ? prefix + 'collapsible-flex' : prefix + 'collapsible';
+    accCollapsible.className = isFlex
+        ? prefix + 'collapsible-flex'
+        : prefix + 'collapsible';
     accCollapsible.id = id + '-content';
 
     accBase.appendChild(accButton);
