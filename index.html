@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="An extensive Beat Saber map overview by Kival Evan#5480">
+  <meta name="theme-color" content="#dd0000">
+  <link rel="shortcut icon" type="image/png" href="./img/favicon.png">
+  <title>BS Map Check</title>
+  <script type="module" crossorigin src="/BeatSaber-MapCheck/assets/index.04d7c659.js"></script>
+  <link rel="modulepreload" href="/BeatSaber-MapCheck/assets/vendor.6089e67f.js">
+  <link rel="stylesheet" href="/BeatSaber-MapCheck/assets/index.098bedba.css">
+</head>
+
+<body>
+  <div class="wrapper wrapper--shadow">
+    <noscript>JavaScript is required to be enabled in order to use this app.</noscript>
+    <header>
+      <div class="cover">
+        <img class="cover__image" src="./img/unknown.jpg" alt="cover image">
+        <a class="cover__link disabled" id="map-link" href="#" target="_blank"></a>
+      </div>
+      <div class="container">
+        <div class="metadata hidden">
+          <div class="metadata__container">
+            <div class="panel panel--max panel--offset">
+              <span class="metadata__song-name" title="Song Name">Song Name</span>
+              <span class="metadata__song-subname" title="Song Subname">Song Subname</span><br>
+              <span class="metadata__song-author" title="Song Author">Song Author</span><br>
+              <span class="metadata__song-bpm" title="Song BPM">Song BPM</span><br>
+              <span class="metadata__song-duration" title="Song Duration">Song Duration</span><br>
+              <audio class="audio" controls preload='auto'>
+                <p>Your browser does not support HTML 5 audio. Audio player will
+                  not display here.</p>
+              </audio>
+            </div>
+          </div>
+        </div>
+        <div class="intro">
+          <div class="intro__container">
+            <div class="panel panel--small panel--offset">
+              <span class="intro__title">Beat Saber</span><br>
+              <span class="intro__subtitle">Map Check</span><br>
+              <label for="input__intro-url">Map zip link: </label>
+              <input type="text" class="input__intro-url input-toggle" id="input__intro-url"
+                placeholder="https://example.com/map.zip"><br>
+              <label for="input__intro-id">BeatSaver ID: </label>
+              <input type="text" class="input__intro-id input-toggle" id="input__intro-id" placeholder="1d28c"><br>
+              <label for="input__intro-id">Hash: </label>
+              <input type="text" class="input__intro-hash input-toggle" id="input__intro-hash"
+                placeholder="66f2eb99f41fb5b9d872c3019e9fb90033b52c1f"><br>
+              <input type="button" class="input__search-button input-toggle" id="input__search-button"
+                value="Get map from input">
+            </div>
+            <div class="panel panel--large panel--offset-half">
+              <input type="file" class="input__file input-toggle" id="input__file" accept=".zip,.bsl">
+              <label class="input__file-zone" for="input__file">
+                <span class="input__file-zone-span">UPLOAD ZIP FILE HERE<br>DRAG & DROP ZONE</span>
+              </label>
+            </div>
+          </div>
+        </div>
+        <input type="button" class="input__reset-button input-toggle" id="input__reset-button" value="Reset">
+      </div>
+    </header>
+    <div class="loading">
+      <div class="loading__bar"></div>
+      <span class="loading__text">No map loaded</span>
+    </div>
+    <div class="accordion" id="info">
+      <input type="checkbox" class="accordion__button" id="accordion__info">
+      <label class="accordion__label accordion__label--medium accordion__label--upper unselectable"
+        for="accordion__info"><span>Information</span></label>
+      <div class="accordion__collapsible-flex">
+        <div class="panel panel--small panel--offset-half">
+          <div class="info__level-author" title="Level Author">Level Author</div>
+          <div class="info__environment" title="Environment">Environment</div>
+          <div class="info__tags hidden">Tag</div>
+          <div class="info__editors hidden">Editors</div>
+          <div class="info__contributors hidden">
+            <label class="info__label" for="info__contributors-select">
+              <span>Contributors:</span>
+            </label>
+            <select class="info__select info__contributors-select" id="info__contributors-select">
+            </select>
+            <div class="info__contributors-card">
+              <img class="info__contributors-image" src="./img/unknown.jpg" alt="contributor image">
+              <div class="info__contributors-content">
+                <span class="info__contributors-name">Name</span><br>
+                <span class="info__contributors-role">Role</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel panel--large panel--offset-half">
+          <div class="panel panel--max panel--flex">
+            <div class="panel panel--medium panel--flex">
+              <label class="tools__label tools__label-select input-toggle" for="tools__select-mode-1">
+                <span>Characteristic:</span>
+              </label>
+              <select class="tools__select tools__select-mode" id="tools__select-mode-1">
+              </select>
+            </div>
+            <div class="panel panel--medium panel--flex">
+              <label class="tools__label tools__label-select input-toggle" for="tools__select-difficulty-1">
+                <span>Difficulty:</span>
+              </label>
+              <select class="tools__select tools__select-difficulty" id="tools__select-difficulty-1">
+              </select>
+            </div>
+          </div>
+          <div class="panel panel--max">
+            <span class="difficulty__label" id="output-difficulty-label">Difficulty Label</span>
+          </div>
+          <div class="panel panel--max">
+            <table class="info__table">
+              <tbody>
+                <tr class="info__table-row info__version hidden">
+                  <th class="info__table-header">Version</th>
+                  <td class="info__table-element"></td>
+                </tr>
+                <tr class="info__table-row info__time-spend hidden">
+                  <th class="info__table-header">Time Spent</th>
+                  <td class="info__table-element"></td>
+                </tr>
+                <tr class="info__table-row info__custom-color hidden">
+                  <th class="info__table-header">Custom Color</th>
+                  <td class="info__table-element"></td>
+                </tr>
+                <tr class="info__table-row info__requirements hidden">
+                  <th class="info__table-header">Requirements</th>
+                  <td class="info__table-element"></td>
+                </tr>
+                <tr class="info__table-row info__suggestions hidden">
+                  <th class="info__table-header">Suggestions</th>
+                  <td class="info__table-element"></td>
+                </tr>
+                <tr class="info__table-row info__information hidden">
+                  <th class="info__table-header">Information</th>
+                  <td class="info__table-element"></td>
+                </tr>
+                <tr class="info__table-row info__warnings hidden">
+                  <th class="info__table-header">Warnings</th>
+                  <td class="info__table-element"></td>
+                </tr>
+                <tr class="info__table-row info__bookmarks hidden">
+                  <th class="info__table-header">Bookmarks</th>
+                  <td class="info__table-element"></td>
+                </tr>
+                <tr class="info__table-row info__bpm-changes hidden">
+                  <th class="info__table-header">BPM Changes</th>
+                  <td class="info__table-element"></td>
+                </tr>
+                <tr class="info__table-row info__environment-enhancement hidden">
+                  <th class="info__table-header">Environment</th>
+                  <td class="info__table-element"></td>
+                </tr>
+                <tr class="info__table-row info__point-definitions hidden">
+                  <th class="info__table-header">Point Definitions</th>
+                  <td class="info__table-element"></td>
+                </tr>
+                <tr class="info__table-row info__custom-events hidden">
+                  <th class="info__table-header">Custom Events</th>
+                  <td class="info__table-element"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="accordion" id="tools">
+      <input type="checkbox" class="accordion__button" id="accordion__tools">
+      <label class="accordion__label accordion__label--medium accordion__label--upper unselectable"
+        for="accordion__tools">
+        <span>Tools</span>
+      </label>
+      <div class="accordion__collapsible-flex">
+        <div class="panel panel--medium panel--flex-column panel--offset-half">
+          <input type="radio" class="tools__radio tools__note" id="tools__note" name="tools__radio" value="note"
+            checked>
+          <input type="radio" class="tools__radio tools__obstacle" id="tools__obstacle" name="tools__radio"
+            value="obstacle">
+          <input type="radio" class="tools__radio tools__event" id="tools__event" name="tools__radio" value="event">
+          <input type="radio" class="tools__radio tools__other" id="tools__other" name="tools__radio" value="other">
+          <div class="tools__nav">
+            <label class="tools__label tools__label-tab tools__label-note unselectable" for="tools__note">Note</label>
+            <label class="tools__label tools__label-tab tools__label-obstacle unselectable"
+              for="tools__obstacle">Obstacle</label>
+            <label class="tools__label tools__label-tab tools__label-event unselectable"
+              for="tools__event">Event</label>
+            <label class="tools__label tools__label-tab tools__label-other unselectable"
+              for="tools__other">Other</label>
+          </div>
+          <div class="tools__tab tools__note-content"></div>
+          <div class="tools__tab tools__obstacle-content"></div>
+          <div class="tools__tab tools__event-content"></div>
+          <div class="tools__tab tools__other-content"></div>
+          <div class="tools__apply">
+            <hr>
+            <span>Apply changes to:</span>
+            <input type="button" class="tools__apply-this input-toggle" value="This difficulty">
+            <input type="button" class="tools__apply-all input-toggle" value="All difficulty">
+          </div>
+        </div>
+        <div class="panel panel--medium panel--offset-half">
+          <div class="panel panel--max panel--flex">
+            <div class="panel panel--medium panel--flex">
+              <label class="tools__label tools__label-select" for="tools__select-mode-2">
+                <span>Characteristic:</span>
+              </label>
+              <select class="tools__select tools__select-mode input-toggle" id="tools__select-mode-2">
+              </select>
+            </div>
+            <div class="panel panel--medium panel--flex">
+              <label class="tools__label tools__label-select" for="tools__select-difficulty-2">
+                <span>Difficulty:</span>
+              </label>
+              <select class="tools__select tools__select-difficulty input-toggle" id="tools__select-difficulty-2">
+              </select>
+            </div>
+          </div>
+          <span class="tools__output-text">Map:</span><br>
+          <div class="tools__output-box tools__output-diff">
+            No output.
+          </div>
+          <span class="tools__output-text">General:</span><br>
+          <div class="tools__output-box tools__output-general">
+            No output.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="accordion" id="stats">
+      <input type="checkbox" class="accordion__button" id="accordion__stats">
+      <label class="accordion__label accordion__label--medium accordion__label--upper unselectable"
+        for="accordion__stats">
+        <span>Stats</span>
+      </label>
+      <div class="accordion__collapsible"></div>
+    </div>
+    <div class="accordion" id="settings">
+      <input type="checkbox" class="accordion__button" id="accordion__settings">
+      <label class="accordion__label accordion__label--medium accordion__label--upper unselectable"
+        for="accordion__settings">
+        <span>Settings</span>
+      </label>
+      <div class="accordion__collapsible-flex">
+        <div class="panel panel--small panel--offset-half">
+          <span>Map zip loading:</span><br>
+          <input type="checkbox" class="settings__checkbox settings__load" id="settings__load-audio" name="audio">
+          <label for="settings__load-audio">
+            <span>Load audio</span>
+          </label><br>
+          <input type="checkbox" class="settings__checkbox settings__load" id="settings__load-imagecover"
+            name="imageCover">
+          <label for="settings__load-imagecover">
+            <span>Load cover image</span>
+          </label><br>
+          <input type="checkbox" class="settings__checkbox settings__load" id="settings__load-imagecontributor"
+            name="imageContributor">
+          <label for="settings__load-imagecontributor">
+            <span>Load contributor image</span>
+          </label><br>
+          <input type="checkbox" class="settings__checkbox settings__sort" id="settings__sort">
+          <label for="settings__sort">
+            <span>Sorting</span>
+          </label><br>
+          <br>
+          <div>Disabling these speeds up loading time but may cause unintended result.</div>
+        </div>
+        <div class="panel panel--small panel--offset-half">
+          <span>Show on launch:</span><br>
+          <input type="checkbox" class="settings__checkbox settings__show" id="settings__show-info">
+          <label for="settings__show-info">
+            <span>Information</span>
+          </label><br>
+          <input type="checkbox" class="settings__checkbox settings__show" id="settings__show-tools">
+          <label for="settings__show-tools">
+            <span>Tools</span>
+          </label><br>
+          <input type="checkbox" class="settings__checkbox settings__show" id="settings__show-stats">
+          <label for="settings__show-stats">
+            <span>Stats</span>
+          </label><br>
+          <input type="checkbox" class="settings__checkbox settings__show" id="settings__show-settings">
+          <label for="settings__show-settings">
+            <span>Settings</span>
+          </label><br>
+          <br>
+          <span>On map load:</span><br>
+          <input type="checkbox" class="settings__checkbox settings__onload" id="settings__onload-stats" name="stats">
+          <label for="settings__onload-stats">
+            <span>Show difficulty stats</span>
+          </label><br>
+        </div>
+        <div class="panel panel--small panel--offset-half">
+          <span>Preferences:</span><br>
+          <label for="settings__theme">
+            <span>Theme:</span>
+          </label>
+          <select class="settings__theme" id="settings__theme"></select><br>
+          <br>
+          <input type="button" class="settings__clear-button input-toggle" id="settings__clear-button"
+            value="Clear Settings">
+        </div>
+      </div>
+    </div>
+    <footer>
+      <div>
+        <a class="link link__watermark" href="https://kivalevan.github.io/">watermark</a>
+        <span> | </span>
+        <a class="link link__version"
+          href="https://github.com/KivalEvan/BeatSaber-MapCheck/blob/main/CHANGELOG.md">version</a>
+        <a class="link link__github" href="https://github.com/KivalEvan/BeatSaber-MapCheck">github</a>
+        <a class="link link__wiki" href="https://github.com/KivalEvan/BeatSaber-MapCheck/wiki">wiki</a>
+        <a class="link link__utility" href="https://kivalevan.github.io/BeatSaber-MappingUtility/">utility</a>
+      </div>
+    </footer>
+  </div>
+  
+</body>
+
+</html>
