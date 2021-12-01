@@ -1,4 +1,4 @@
-import { degToRad, radToDeg, shortRotDistance } from '../utils';
+import { shortRotDistance } from '../utils';
 import { CustomDataNote } from './customData';
 
 export interface Note {
@@ -24,9 +24,29 @@ interface NoteCountStats {
     mappingExtensions: number;
 }
 
-export const cutAngle = [180, 0, 270, 90, 225, 135, 315, 45, 0];
+export const cutAngle = [
+    0, // 0
+    180, // 1
+    270, // 2
+    90, // 3
+    315, // 4
+    45, // 5
+    225, // 6
+    135, // 7
+    0, // 8
+];
 
-export const flipDirection = [1, 0, 3, 2, 7, 6, 5, 4, 8];
+export const flipDirection = [
+    1, // 0
+    0, // 1
+    3, // 2
+    2, // 3
+    7, // 4
+    6, // 5
+    5, // 6
+    4, // 7
+    8, // 8
+];
 
 export const cutDirectionSpace: { [key: number]: [number, number] } = {
     0: [0, 1],
@@ -40,78 +60,54 @@ export const cutDirectionSpace: { [key: number]: [number, number] } = {
     8: [0, 0],
 };
 
+export const distance = (n1: Note, n2: Note): number => {
+    return Math.max(
+        Math.abs(n1._lineIndex - n2._lineIndex),
+        Math.abs(n1._lineLayer - n2._lineLayer)
+    );
+};
+
 export const isNote = (n: Note): boolean => {
     return n._type === 0 || n._type === 1;
 };
 
-export const isBomb = (n: Note): boolean => {
-    return n._type === 3;
-};
-
-export const getPosition = (n: Note): [number, number] => {
-    if (n._customData?._position) {
-        return [n._customData._position[0], n._customData._position[1]];
-    }
-    return [
-        (n._lineIndex <= -1000
-            ? n._lineIndex / 1000
-            : n._lineIndex >= 1000
-            ? n._lineIndex / 1000
-            : n._lineIndex) - 2,
-        n._lineLayer <= -1000
-            ? n._lineLayer / 1000
-            : n._lineLayer >= 1000
-            ? n._lineLayer / 1000
-            : n._lineLayer,
-    ];
-};
-
-export const getAngle = (n: Note): number => {
-    if (n._customData?._cutDirection) {
-        return n._customData._cutDirection > 0
-            ? n._customData._cutDirection % 360
-            : 360 + (n._customData._cutDirection % 360);
-    }
-    if (n._cutDirection >= 1000) {
-        return Math.abs(((n._cutDirection % 1000) % 360) - 360);
-    }
-    return cutAngle[n._cutDirection] || 0;
-};
-
-export const distance = (n1: Note, n2: Note): number => {
-    const [nX1, nY1] = getPosition(n1);
-    const [nX2, nY2] = getPosition(n2);
-    return Math.sqrt(Math.pow(nX2 - nX1, 2) + Math.pow(nY2 - nY1, 2));
-};
-
+// TODO: Mapping Extensions and Noodle Extensions note position support
+// TODO: probably do standardised position instead
 export const isVertical = (n1: Note, n2: Note): boolean => {
-    const [nX1] = getPosition(n1);
-    const [nX2] = getPosition(n2);
-    const d = nX1 - nX2;
-    return d > -0.001 && d < 0.001;
+    if (n1._customData?._position && n2._customData?._position) {
+        return n1._customData._position[1] - n2._customData._position[1] === 0;
+    }
+    return n1._lineIndex - n2._lineIndex === 0;
 };
 
 export const isHorizontal = (n1: Note, n2: Note): boolean => {
-    const [_, nY1] = getPosition(n1);
-    const [_2, nY2] = getPosition(n2);
-    const d = nY1 - nY2;
-    return d > -0.001 && d < 0.001;
+    if (n1._customData?._position && n2._customData?._position) {
+        return n1._customData._position[0] - n2._customData._position[0] === 0;
+    }
+    return n1._lineLayer - n2._lineLayer === 0;
 };
 
 export const isDiagonal = (n1: Note, n2: Note): boolean => {
-    const [nX1, nY1] = getPosition(n1);
-    const [nX2, nY2] = getPosition(n2);
-    const dX = Math.abs(nX1 - nX2);
-    const dY = Math.abs(nY1 - nY2);
-    return dX === dY;
+    if (n1._customData?._position && n2._customData?._position) {
+        return (
+            Math.abs(n1._customData._position[1] - n2._customData._position[1]) ===
+            Math.abs(n1._customData._position[0] - n2._customData._position[0])
+        );
+    }
+    return (
+        Math.abs(n1._lineIndex - n2._lineIndex) ===
+        Math.abs(n1._lineLayer - n2._lineLayer)
+    );
 };
 
 export const isInline = (n1: Note, n2: Note): boolean => {
-    const [nX1, nY1] = getPosition(n1);
-    const [nX2, nY2] = getPosition(n2);
-    const dX = nX1 - nX2;
-    const dY = nY1 - nY2;
-    return dX > -0.5 && dX < 0.5 && dY > -0.5 && dY < 0.5;
+    if (n1._customData?._position && n2._customData?._position) {
+        return (
+            n1._customData._position[1] === n2._customData._position[1] &&
+            n1._customData._position[0] === n2._customData._position[0]
+        );
+    }
+    return n1._lineLayer === n2._lineLayer && n1._lineIndex === n2._lineIndex;
 };
 
 export const isDouble = (n: Note, notes: Note[], index: number): boolean => {
@@ -127,12 +123,11 @@ export const isDouble = (n: Note, notes: Note[], index: number): boolean => {
 };
 
 export const isAdjacent = (n1: Note, n2: Note): boolean => {
-    const d = distance(n1, n2);
-    return d > 0.499 && d < 1.001;
+    return distance(n1, n2) === 1;
 };
 
 export const isWindow = (n1: Note, n2: Note): boolean => {
-    return distance(n1, n2) > 1.8;
+    return distance(n1, n2) >= 2;
 };
 
 export const isSlantedWindow = (n1: Note, n2: Note): boolean => {
@@ -144,49 +139,40 @@ export const isSlantedWindow = (n1: Note, n2: Note): boolean => {
     );
 };
 
-// a fkin abomination that's what this is
 export const isIntersect = (n1: Note, n2: Note, maxDistance: number): boolean => {
-    const [nX1, nY1] = getPosition(n1);
-    const [nX2, nY2] = getPosition(n2);
-    const nA1 = getAngle(n1);
-    const nA2 = getAngle(n2);
-    let result = false;
-    if (n1._cutDirection !== 8) {
-        const a = (radToDeg(Math.atan2(nY1 - nY2, nX1 - nX2)) + 450) % 360;
-        const aS1 = (nA1 + 315) % 360;
-        const aE1 = (nA1 + 405) % 360;
-        const aS2 = (nA1 + 345) % 360;
-        const aE2 = (nA1 + 375) % 360;
-        result =
-            (1 >= Math.sqrt(Math.pow(nX1 - nX2, 2) + Math.pow(nY1 - nY2, 2)) &&
-                ((aS1 < aE1 && aS1 <= a && a <= aE1) ||
-                    (aS1 >= aE1 && (a <= aE1 || a >= aS1)))) ||
-            (maxDistance >=
-                Math.sqrt(Math.pow(nX1 - nX2, 2) + Math.pow(nY1 - nY2, 2)) &&
-                ((aS2 < aE2 && aS2 <= a && a <= aE2) ||
-                    (aS2 >= aE2 && (a <= aE2 || a >= aS2)))) ||
-            result;
+    for (let i = 1; i <= maxDistance; i++) {
+        if (n1._cutDirection !== 8) {
+            let noteOccupyLineIndex =
+                n1._lineIndex +
+                cutDirectionSpace[flipDirection[n1._cutDirection]][0] * i;
+            let noteOccupyLineLayer =
+                n1._lineLayer +
+                cutDirectionSpace[flipDirection[n1._cutDirection]][1] * i;
+            if (
+                n2._lineIndex === noteOccupyLineIndex &&
+                n2._lineLayer === noteOccupyLineLayer
+            ) {
+                return true;
+            }
+        }
+        if (n2._cutDirection !== 8) {
+            let noteOccupyLineIndex =
+                n2._lineIndex +
+                cutDirectionSpace[flipDirection[n2._cutDirection]][0] * i;
+            let noteOccupyLineLayer =
+                n2._lineLayer +
+                cutDirectionSpace[flipDirection[n2._cutDirection]][1] * i;
+            if (
+                n1._lineIndex === noteOccupyLineIndex &&
+                n1._lineLayer === noteOccupyLineLayer
+            ) {
+                return true;
+            }
+        }
     }
-    if (n2._cutDirection !== 8 && !result) {
-        const a = (radToDeg(Math.atan2(nY2 - nY1, nX2 - nX1)) + 450) % 360;
-        const aS1 = (nA2 + 315) % 360;
-        const aE1 = (nA2 + 405) % 360;
-        const aS2 = (nA2 + 345) % 360;
-        const aE2 = (nA2 + 375) % 360;
-        result =
-            (1 >= Math.sqrt(Math.pow(nX1 - nX2, 2) + Math.pow(nY1 - nY2, 2)) &&
-                ((aS1 < aE1 && aS1 <= a && a <= aE1) ||
-                    (aS1 >= aE1 && (a <= aE1 || a >= aS1)))) ||
-            (maxDistance >=
-                Math.sqrt(Math.pow(nX1 - nX2, 2) + Math.pow(nY1 - nY2, 2)) &&
-                ((aS2 < aE2 && aS2 <= a && a <= aE2) ||
-                    (aS2 >= aE2 && (a <= aE2 || a >= aS2)))) ||
-            result;
-    }
-    return result;
+    return false;
 };
 
-// TODO: update with new position/rotation system
 export const isEnd = (currNote: Note, prevNote: Note, cd: number): boolean => {
     // fuck u and ur dot note stack
     if (currNote._cutDirection === 8 && prevNote._cutDirection === 8 && cd !== 8) {
@@ -292,7 +278,6 @@ export const isEnd = (currNote: Note, prevNote: Note, cd: number): boolean => {
     return false;
 };
 
-// TODO: update with new position/rotation system
 export const predictDirection = (currNote: Note, prevNote: Note): number => {
     if (isEnd(currNote, prevNote, 8)) {
         return currNote._cutDirection === 8
@@ -480,34 +465,52 @@ export const peak = (notes: Note[], beat: number, bpm: number): number => {
     return peakNPS;
 };
 
+// TODO: make support for NE and ME
+export const getPosition = (n: Note): [number, number] => {
+    return [0, 0];
+};
+
+export const getAngle = (n: Note): number => {
+    if (n._customData?._cutDirection) {
+        return n._customData._cutDirection;
+    }
+    if (n._cutDirection >= 1000) {
+        return n._cutDirection % 1000;
+    }
+    return cutAngle[n._cutDirection];
+};
+
 export const checkDirection = (
-    n1: Note | number | null,
-    n2: Note | number | null,
+    n1: Note | number,
+    n2: Note | number,
     angleTol: number,
     equal: boolean
 ): boolean => {
-    let nA1!: number;
-    let nA2!: number;
-    if (n1 === null || n2 === null) {
-        return false;
-    }
+    let n1Angle!: number;
+    let n2Angle!: number;
     if (typeof n1 === 'number') {
-        nA1 = n1;
+        if (n1 === 8) {
+            return false;
+        }
+        n1Angle = cutAngle[n1];
     } else {
         if (n1._cutDirection === 8) {
             return false;
         }
-        nA1 = getAngle(n1);
+        n1Angle = getAngle(n1);
     }
     if (typeof n2 === 'number') {
-        nA2 = n2;
+        if (n2 === 8) {
+            return false;
+        }
+        n2Angle = cutAngle[n2];
     } else {
         if (n2._cutDirection === 8) {
             return false;
         }
-        nA2 = getAngle(n2);
+        n2Angle = getAngle(n2);
     }
     return equal
-        ? shortRotDistance(nA1, nA2, 360) <= angleTol
-        : shortRotDistance(nA1, nA2, 360) >= angleTol;
+        ? shortRotDistance(n1Angle, n2Angle, 360) <= angleTol
+        : shortRotDistance(n1Angle, n2Angle, 360) >= angleTol;
 };

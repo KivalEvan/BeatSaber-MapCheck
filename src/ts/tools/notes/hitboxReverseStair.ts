@@ -62,18 +62,17 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
                 swingNoteArray[note._type] = [];
             }
         }
-        // FIXME: change to new position
         for (const other of swingNoteArray[(note._type + 1) % 2]) {
             if (other._cutDirection !== 8) {
                 let noteOccupyLineIndex =
                     other._lineIndex +
                     beatmap.note.cutDirectionSpace[
-                        beatmap.note.flipDirection[other._cutDirection] ?? 8
+                        beatmap.note.flipDirection[other._cutDirection]
                     ][0];
                 let noteOccupyLineLayer =
                     other._lineLayer +
                     beatmap.note.cutDirectionSpace[
-                        beatmap.note.flipDirection[other._cutDirection] ?? 8
+                        beatmap.note.flipDirection[other._cutDirection]
                     ][1];
                 if (
                     !(njs.value > bpm.value / (60 * (note._time - other._time))) &&

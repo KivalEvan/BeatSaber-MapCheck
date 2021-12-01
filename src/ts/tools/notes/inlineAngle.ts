@@ -111,7 +111,7 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
     const maxTime = bpm.toBeatTime(temp) + 0.001;
 
     const lastNote: { [key: number]: beatmap.note.Note } = {};
-    const lastNoteAngle: { [key: number]: number } = {};
+    const lastNoteDirection: { [key: number]: number } = {};
     const startNoteDot: { [key: number]: beatmap.note.Note | null } = {};
     const swingNoteArray: { [key: number]: beatmap.note.Note[] } = {
         0: [],
@@ -129,13 +129,14 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
             ) {
                 if (startNoteDot[note._type]) {
                     startNoteDot[note._type] = null;
-                    lastNoteAngle[note._type] = (lastNoteAngle[note._type] + 180) % 360;
+                    lastNoteDirection[note._type] =
+                        beatmap.note.flipDirection[lastNoteDirection[note._type]];
                 }
                 if (
                     checkInline(note, notes, lastIndex, maxTime) &&
                     beatmap.note.checkDirection(
-                        note,
-                        lastNoteAngle[note._type],
+                        note._cutDirection,
+                        lastNoteDirection[note._type],
                         90,
                         true
                     )
@@ -145,7 +146,7 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
                 if (note._cutDirection === 8) {
                     startNoteDot[note._type] = note;
                 } else {
-                    lastNoteAngle[note._type] = beatmap.note.getAngle(note);
+                    lastNoteDirection[note._type] = note._cutDirection;
                 }
                 swingNoteArray[note._type] = [];
             } else {
@@ -153,8 +154,8 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
                     startNoteDot[note._type] &&
                     checkInline(note, notes, lastIndex, maxTime) &&
                     beatmap.note.checkDirection(
-                        note,
-                        lastNoteAngle[note._type],
+                        note._cutDirection,
+                        lastNoteDirection[note._type],
                         90,
                         true
                     )
@@ -163,11 +164,11 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
                     startNoteDot[note._type] = null;
                 }
                 if (note._cutDirection !== 8) {
-                    lastNoteAngle[note._type] = beatmap.note.getAngle(note);
+                    lastNoteDirection[note._type] = note._cutDirection;
                 }
             }
         } else {
-            lastNoteAngle[note._type] = beatmap.note.getAngle(note);
+            lastNoteDirection[note._type] = note._cutDirection;
         }
         if (lastTime < note._time - maxTime) {
             lastTime = note._time - maxTime;
@@ -180,12 +181,12 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
             if (note._lineLayer === 0) {
                 //on right center
                 if (note._lineIndex === 1) {
-                    lastNoteAngle[0] = beatmap.note.cutAngle[0];
+                    lastNoteDirection[0] = 0;
                     startNoteDot[0] = null;
                 }
                 //on left center
                 if (note._lineIndex === 2) {
-                    lastNoteAngle[1] = beatmap.note.cutAngle[0];
+                    lastNoteDirection[1] = 0;
                     startNoteDot[1] = null;
                 }
                 //on top row
@@ -193,12 +194,12 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
             if (note._lineLayer === 2) {
                 //on right center
                 if (note._lineIndex === 1) {
-                    lastNoteAngle[0] = beatmap.note.cutAngle[1];
+                    lastNoteDirection[0] = 1;
                     startNoteDot[0] = null;
                 }
                 //on left center
                 if (note._lineIndex === 2) {
-                    lastNoteAngle[1] = beatmap.note.cutAngle[1];
+                    lastNoteDirection[1] = 1;
                     startNoteDot[1] = null;
                 }
             }

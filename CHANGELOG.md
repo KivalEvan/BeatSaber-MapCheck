@@ -1,21 +1,5 @@
 # Changelog
 
-## v2.3.0 [1-12-2021]
-
-### Added
-
--   Standardised note and obstacle position and rotation with [BeatWalls system](https://camo.githubusercontent.com/295a4c05e569c99c6bf07cfabda8d80afdec1b7d/68747470733a2f2f692e696d6775722e636f6d2f557a37614944672e706e673d31303078313030) to allow modded content support
-    -   This allows NE/ME map to use the error check functionality
-    -   This also allows for more advanced checking in the future
-    -   Updated check and threshold to better fit with the system
-    -   Because of the change, some functionality may not work as intended (please report if you find them)
--   Unlit bomb check
-
-### Changed
-
--   Switched from Webpack to Vite
--   Cleaned up and updated dependencies
-
 ## v2.2.5 [11-11-2021]
 
 ### Added

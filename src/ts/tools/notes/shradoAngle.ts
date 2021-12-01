@@ -148,11 +148,10 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
             if (
                 swing.next(note, lastNote[note._type], bpm, swingNoteArray[note._type])
             ) {
-                // FIXME: maybe fix rotation or something
                 if (startNoteDot[note._type]) {
                     startNoteDot[note._type] = null;
                     lastNoteDirection[note._type] =
-                        beatmap.note.flipDirection[lastNoteDirection[note._type]] ?? 8;
+                        beatmap.note.flipDirection[lastNoteDirection[note._type]];
                 }
                 if (
                     beatmap.note.distance(note, lastNote[note._type]) >= distance &&

@@ -22,8 +22,8 @@ const tool: Tool = {
     description: 'Placeholder',
     type: 'event',
     order: {
-        input: 2,
-        output: 2,
+        input: 0,
+        output: 0,
     },
     input: {
         enabled: htmlInputCheck.checked,
