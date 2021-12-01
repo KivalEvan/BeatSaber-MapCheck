@@ -2,11 +2,16 @@
 
 ## v2.3.1 [TBD]
 
+### Added
+
+-   Event type list per environment
+
 ### Changed
 
 -   Updated parsing
     -   Checks for type
     -   Handle missing properties
+-   Basic Chroma check for unlit bomb check
 
 ## v2.3.0 [1-12-2021]
 
