@@ -138,7 +138,3 @@ function dragOverHandler(ev: Event): void {
     ev.preventDefault();
     ev.stopPropagation();
 }
-
-function clearStats(): void {}
-
-function clearToolsOutput(): void {}

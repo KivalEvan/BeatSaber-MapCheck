@@ -1,18 +1,22 @@
 {
     "compilerOptions": {
-        "outDir": "src",
         "target": "es6",
         "module": "es6",
-        "allowJs": true,
+        "lib": ["ESNext", "DOM"],
         "moduleResolution": "node",
-        "watch": true,
-        "removeComments": true,
+        "strict": true,
+        "sourceMap": true,
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "noEmit": true,
         "noImplicitAny": true,
         "noImplicitThis": true,
         "noImplicitReturns": true,
         "strictNullChecks": true,
         "strictFunctionTypes": true,
         "strictPropertyInitialization": true,
+        "useUnknownInCatchVariables": false,
         "allowSyntheticDefaultImports": true
-    }
+    },
+    "include": ["./src"]
 }

@@ -1,4 +1,4 @@
-<img align="left" src="https://github.com/KivalEvan/BeatSaber-MapCheck/blob/main/assets/icon-large.png" height="176" width="176">
+<img align="left" src="./public/img/icon-large.png" height="180" width="180">
 
 # Beat Saber Map Check
 
@@ -7,23 +7,26 @@ aimed to reduce error before modding & release.
 
 by **Kival Evan#5480**
 
-## Features
-
-Map tools to spot specific error, and map stats per each difficulty in one place.
-
 ## How to use
 
-Visit the [github.io page](https://kivalevan.github.io/BeatSaber-MapCheck/) or download a copy and run `index.html` locally on any browser.
+Visit the [github.io page](https://kivalevan.github.io/BeatSaber-MapCheck/), more information in the [GitHub Wiki](https://github.com/KivalEvan/BeatSaber-MapCheck/wiki).
+
+## Development
+
+### Installing
+
+Clone or fork the project and install dependencies with `npm install`.
+
+### Deploying
+
+Run the development server with `npm run dev`, the URL will be given in the CLI.
+
+To run the app locally, `npm run build` for the first time setup, then `npm run serve` to run the server.
 
 ## Planned
 
 -   Rewrite swing detection
--   Basic parity check
 -   Save tools parameter
-
-## Known Issues
-
--   Due to pepega that is MediocreMapper BPM change, it may not show correct beat numbering
 
 ## Note
 

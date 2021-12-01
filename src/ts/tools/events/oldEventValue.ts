@@ -22,8 +22,8 @@ const tool: Tool = {
     description: 'Placeholder',
     type: 'event',
     order: {
-        input: 0,
-        output: 0,
+        input: 1,
+        output: 1,
     },
     input: {
         enabled: htmlInputCheck.checked,
@@ -46,7 +46,7 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
 
     const arr: beatmap.event.Event[] = [];
     if (beatmap.version.compare(mapSet._data._version, 'difficulty') === 'old') {
-        for (let i = 0; i < events.length; i++) {
+        for (let i = events.length - 1; i >= 0; i--) {
             if (beatmap.event.isLightEvent(events[i]) && events[i]._value === 4) {
                 arr.push(events[i]);
             }
