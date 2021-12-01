@@ -19,65 +19,65 @@ interface ObstacleCount {
     mappingExtensions: number;
 }
 
-// FIXME: do i bother with Mapping Extension for obstacle Y position?
-export const getPosition = (o: Obstacle): [number, number] => {
-    if (o._customData?._position) {
-        return [o._customData._position[0], o._customData._position[1]];
-    }
-    return [
-        (o._lineIndex <= -1000
-            ? o._lineIndex / 1000
-            : o._lineIndex >= 1000
-            ? o._lineIndex / 1000
-            : o._lineIndex) - 2,
-        o._type <= -1000 ? o._type / 1000 : o._type >= 1000 ? o._type / 1000 : o._type,
-    ];
+export const isInteractive = (obstacle: Obstacle): boolean => {
+    return obstacle._width >= 2 || obstacle._lineIndex === 1 || obstacle._lineIndex === 2;
 };
 
-export const isInteractive = (o: Obstacle): boolean => {
-    return o._width >= 2 || o._lineIndex === 1 || o._lineIndex === 2;
-};
-
-export const isCrouch = (o: Obstacle): boolean => {
-    return o._type === 1 && (o._width > 2 || (o._width === 2 && o._lineIndex === 1));
-};
-
-export const isZero = (o: Obstacle): boolean => {
-    return o._duration === 0 || o._width === 0;
-};
-
-export const isLonger = (cO: Obstacle, pO: Obstacle, offset: number = 0): boolean => {
-    return cO._time + cO._duration > pO._time + pO._duration + offset;
-};
-
-export const hasChroma = (o: Obstacle): boolean => {
-    return Array.isArray(o._customData?._color);
-};
-
-export const hasNoodleExtensions = (o: Obstacle): boolean => {
+export const isCrouch = (obstacle: Obstacle): boolean => {
     return (
-        Array.isArray(o._customData?._animation) ||
-        typeof o._customData?._fake === 'boolean' ||
-        typeof o._customData?._interactable === 'boolean' ||
-        Array.isArray(o._customData?._localRotation) ||
-        typeof o._customData?._noteJumpMovementSpeed === 'number' ||
-        typeof o._customData?._noteJumpStartBeatOffset === 'number' ||
-        Array.isArray(o._customData?._position) ||
-        Array.isArray(o._customData?._rotation) ||
-        Array.isArray(o._customData?._scale) ||
-        typeof o._customData?._track === 'string'
+        obstacle._type === 1 &&
+        (obstacle._width > 2 || (obstacle._width === 2 && obstacle._lineIndex === 1))
     );
 };
 
-export const hasMappingExtensions = (o: Obstacle): boolean => {
-    return o._width >= 1000 || o._type >= 1000 || o._lineIndex > 3 || o._lineIndex < 0;
+export const isZero = (obstacle: Obstacle): boolean => {
+    return obstacle._duration === 0 || obstacle._width === 0;
 };
 
-export const isValid = (o: Obstacle): boolean => {
-    return !hasMappingExtensions(o) && o._width > 0 && o._width <= 4;
+export const isLonger = (
+    currObstacle: Obstacle,
+    prevObstacle: Obstacle,
+    offset: number = 0
+): boolean => {
+    return (
+        currObstacle._time + currObstacle._duration >
+        prevObstacle._time + prevObstacle._duration + offset
+    );
 };
 
-export const count = (o: Obstacle[]): ObstacleCount => {
+export const hasChroma = (obstacle: Obstacle): boolean => {
+    return Array.isArray(obstacle._customData?._color);
+};
+
+export const hasNoodleExtensions = (obstacle: Obstacle): boolean => {
+    return (
+        Array.isArray(obstacle._customData?._animation) ||
+        typeof obstacle._customData?._fake === 'boolean' ||
+        typeof obstacle._customData?._interactable === 'boolean' ||
+        Array.isArray(obstacle._customData?._localRotation) ||
+        typeof obstacle._customData?._noteJumpMovementSpeed === 'number' ||
+        typeof obstacle._customData?._noteJumpStartBeatOffset === 'number' ||
+        Array.isArray(obstacle._customData?._position) ||
+        Array.isArray(obstacle._customData?._rotation) ||
+        Array.isArray(obstacle._customData?._scale) ||
+        typeof obstacle._customData?._track === 'string'
+    );
+};
+
+export const hasMappingExtensions = (obstacle: Obstacle): boolean => {
+    return (
+        obstacle._width >= 1000 ||
+        obstacle._type >= 1000 ||
+        obstacle._lineIndex > 3 ||
+        obstacle._lineIndex < 0
+    );
+};
+
+export const isValid = (obstacle: Obstacle): boolean => {
+    return !hasMappingExtensions(obstacle) && obstacle._width > 0 && obstacle._width <= 4;
+};
+
+export const count = (obstacles: Obstacle[]): ObstacleCount => {
     const obstacleCount: ObstacleCount = {
         total: 0,
         interactive: 0,
@@ -86,21 +86,21 @@ export const count = (o: Obstacle[]): ObstacleCount => {
         noodleExtensions: 0,
         mappingExtensions: 0,
     };
-    for (let i = o.length - 1; i >= 0; i--) {
+    for (let i = obstacles.length - 1; i >= 0; i--) {
         obstacleCount.total++;
-        if (isInteractive(o[i])) {
+        if (isInteractive(obstacles[i])) {
             obstacleCount.interactive++;
         }
-        if (isCrouch(o[i])) {
+        if (isCrouch(obstacles[i])) {
             obstacleCount.crouch++;
         }
-        if (hasChroma(o[i])) {
+        if (hasChroma(obstacles[i])) {
             obstacleCount.chroma++;
         }
-        if (hasNoodleExtensions(o[i])) {
+        if (hasNoodleExtensions(obstacles[i])) {
             obstacleCount.noodleExtensions++;
         }
-        if (hasMappingExtensions(o[i])) {
+        if (hasMappingExtensions(obstacles[i])) {
             obstacleCount.mappingExtensions++;
         }
     }

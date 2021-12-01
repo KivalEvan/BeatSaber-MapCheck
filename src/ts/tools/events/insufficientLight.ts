@@ -39,28 +39,11 @@ function inputCheckHandler(this: HTMLInputElement) {
     tool.input.enabled = this.checked;
 }
 
-const sufficientLight = (events: beatmap.event.Event[]): boolean => {
-    let count = 0;
-    for (let i = events.length - 1; i >= 0; i--) {
-        if (
-            beatmap.event.isLightEvent(events[i]) &&
-            events[i]._value !== 0 &&
-            events[i]._value !== 4
-        ) {
-            count++;
-            if (count > 10) {
-                return true;
-            }
-        }
-    }
-    return false;
-};
-
 function run(mapSettings: BeatmapSettings, mapSet?: beatmap.map.BeatmapSetData): void {
     if (!mapSet) {
         throw new Error('something went wrong!');
     }
-    const result = sufficientLight(mapSet._data._events);
+    const result = beatmap.event.sufficientLight(mapSet._data._events);
 
     if (!result) {
         const htmlResult = document.createElement('div');

@@ -25,7 +25,7 @@ body {
     max-width: $-max-width;
     margin: 0 auto;
     &--shadow {
-        box-shadow: 0 0 0.75rem #000a;
+        box-shadow: 0 0 1rem black;
     }
 }
 .panel {

@@ -129,9 +129,7 @@ function run(mapSettings: BeatmapSettings, mapSet?: beatmap.map.BeatmapSetData):
         const htmlResult = document.createElement('div');
         htmlResult.innerHTML = `<b>Slow slider (>${round(minSpeed * 1000, 1)}ms) [${
             result.length
-        }]:</b> ${result
-            .map((n) => round(mapSettings._bpm.adjustTime(n), 3))
-            .join(', ')}`;
+        }]:</b> ${result.map((n) => round(mapSettings._bpm.adjustTime(n), 3)).join(', ')}`;
         tool.output.html = htmlResult;
     } else {
         tool.output.html = null;

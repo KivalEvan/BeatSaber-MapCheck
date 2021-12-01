@@ -60,7 +60,6 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
         3: { _time: 0, _type: 3, _cutDirection: 0, _lineIndex: 0, _lineLayer: 0 },
     };
 
-    // FIXME: use new system
     const arr: beatmap.note.Note[] = [];
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
