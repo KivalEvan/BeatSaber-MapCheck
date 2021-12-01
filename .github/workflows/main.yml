@@ -21,14 +21,14 @@ jobs:
                   npm run build
                   touch ./dist/.nojekyll
 
-            - name: Push to pages repo
-              uses: cpina/github-action-push-to-another-repository@main
-              env:
-                  API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
-              with:
-                  source-directory: 'dist'
-                  destination-github-username: ${{ github.actor }}
-                  destination-repository-name: ${{ env.deployToRepo }}
-                  user-email: ${{ env.githubEmail }}
-                  commit-message: Deploy ORIGIN_COMMIT
-                  target-branch: gh-pages
+            - name: Deploy to github pages
+                uses: JamesIves/github-pages-deploy-action@4.1.0
+                with:
+                    branch: gh-pages
+                    folder: dist
+
+            - name: Publish deployed code 
+                uses: actions/upload-artifact@v2
+                with:
+                    name: published
+                    path: dist
