@@ -3,9 +3,6 @@ import { round } from '../../utils';
 import { BeatmapSettings, Tool } from '../template';
 import * as swing from '../swing';
 
-const defaultEBPM = 450;
-const defaultEBPMS = 350;
-
 const htmlContainer = document.createElement('div');
 const htmlInputCheck = document.createElement('input');
 const htmlLabelCheck = document.createElement('label');
@@ -47,7 +44,6 @@ function inputCheckHandler(this: HTMLInputElement) {
 function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData) {
     const { _bpm: bpm } = mapSettings;
     const { _notes: notes } = mapSet._data;
-
     return swing
         .getSliderNote(notes, bpm)
         .filter((n) => Math.abs(n._minSpeed - n._maxSpeed) > 0.002)

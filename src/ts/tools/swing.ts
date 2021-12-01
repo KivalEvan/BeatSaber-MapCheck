@@ -159,34 +159,80 @@ export const calcMinSliderSpeed = (
     notes: beatmap.note.Note[],
     bpm: beatmap.bpm.BeatPerMinute
 ): number => {
-    return bpm.toRealTime(
+    let hasStraight = false;
+    let hasDiagonal = false;
+    let curvedSpeed = 0;
+    let speed = bpm.toRealTime(
         Math.max(
-            ...notes.map(
-                (n, i) =>
-                    (notes[i]._time - notes[Math.max(i - 1, 0)]._time) /
-                    (i ? beatmap.note.distance(notes[i], notes[i - 1]) : 1)
-            )
+            ...notes.map((_, i) => {
+                if (i === 0) {
+                    return 0;
+                }
+                if (
+                    (beatmap.note.isHorizontal(notes[i], notes[i - 1]) ||
+                        beatmap.note.isVertical(notes[i], notes[i - 1])) &&
+                    !hasStraight
+                ) {
+                    hasStraight = true;
+                    curvedSpeed =
+                        (notes[i]._time - notes[i - 1]._time) /
+                        (beatmap.note.distance(notes[i], notes[i - 1]) || 1);
+                }
+                hasDiagonal =
+                    beatmap.note.isDiagonal(notes[i], notes[i - 1]) ||
+                    beatmap.note.isSlantedWindow(notes[i], notes[i - 1]) ||
+                    hasDiagonal;
+                return (
+                    (notes[i]._time - notes[i - 1]._time) /
+                    (beatmap.note.distance(notes[i], notes[i - 1]) || 1)
+                );
+            })
         )
     );
+    if (hasStraight && hasDiagonal) {
+        return bpm.toRealTime(curvedSpeed);
+    }
+    return speed;
 };
 
 export const calcMaxSliderSpeed = (
     notes: beatmap.note.Note[],
     bpm: beatmap.bpm.BeatPerMinute
 ): number => {
-    return bpm.toRealTime(
+    let hasStraight = false;
+    let hasDiagonal = false;
+    let curvedSpeed = Number.MAX_SAFE_INTEGER;
+    let speed = bpm.toRealTime(
         Math.min(
-            ...notes.map((n, i) => {
+            ...notes.map((_, i) => {
                 if (i === 0) {
                     return Number.MAX_SAFE_INTEGER;
                 }
+                if (
+                    (beatmap.note.isHorizontal(notes[i], notes[i - 1]) ||
+                        beatmap.note.isVertical(notes[i], notes[i - 1])) &&
+                    !hasStraight
+                ) {
+                    hasStraight = true;
+                    curvedSpeed =
+                        (notes[i]._time - notes[i - 1]._time) /
+                        (beatmap.note.distance(notes[i], notes[i - 1]) || 1);
+                }
+                hasDiagonal =
+                    beatmap.note.isDiagonal(notes[i], notes[i - 1]) ||
+                    beatmap.note.isSlantedWindow(notes[i], notes[i - 1]) ||
+                    hasDiagonal;
                 return (
-                    (notes[i]._time - notes[Math.max(i - 1, 0)]._time) /
-                    (i ? beatmap.note.distance(notes[i], notes[i - 1]) : 1)
+                    (notes[i]._time - notes[i - 1]._time) /
+                    (beatmap.note.distance(notes[i], notes[i - 1]) || 1)
                 );
             })
         )
     );
+    if (hasStraight && hasDiagonal) {
+        return bpm.toRealTime(curvedSpeed);
+    }
+    return speed;
 };
 
 export const getSliderNote = (

@@ -4,10 +4,11 @@
     "description": "map check or somethin",
     "private": true,
     "scripts": {
-        "build": "webpack --config webpack.prod.js",
-        "dev": "webpack --config webpack.dev.js",
-        "clean": "npm cache clean --force",
-        "madge": "madge ./src/ts --extensions ts,js -c --warning"
+        "dev": "vite",
+        "build": "tsc && vite build",
+        "preview": "vite preview",
+        "serve": "vite preview --port 8080",
+        "clean": "npm cache clean --force"
     },
     "repository": {
         "type": "git",
@@ -20,19 +21,12 @@
     },
     "homepage": "https://github.com/KivalEvan/BeatSaber-MapCheck#readme",
     "dependencies": {
-        "jszip": "^3.6.0"
+        "jszip": "^3.7.1"
     },
     "devDependencies": {
-        "css-loader": "^5.2.6",
-        "mini-css-extract-plugin": "^2.0.0",
-        "sass": "^1.35.1",
-        "sass-loader": "^12.1.0",
-        "style-loader": "^3.0.0",
-        "ts-jest": "^27.0.3",
-        "ts-loader": "^9.2.3",
-        "typescript": "^4.3.5",
-        "webpack": "^5.41.1",
-        "webpack-cli": "^4.7.2",
-        "webpack-merge": "^5.8.0"
+        "@types/node": "^16.11.11",
+        "sass": "^1.43.5",
+        "typescript": "^4.5.2",
+        "vite": "^2.6.14"
     }
 }
