@@ -1,5 +1,13 @@
 # Changelog
 
+## v2.3.1 [TBD]
+
+### Changed
+
+-   Updated parsing
+    -   Checks for type
+    -   Handle missing properties
+
 ## v2.3.0 [1-12-2021]
 
 ### Added
