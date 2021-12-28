@@ -1,5 +1,5 @@
 import { Easings } from './easings';
-type LookupMethod = 'Regex' | 'Exact' | 'Contains';
+type LookupMethod = 'Regex' | 'Exact' | 'Contains' | 'StartsWith' | 'EndsWith';
 type Array3DPoint = [number, number, number];
 type ArrayColor = [number, number, number] | [number, number, number, number];
 
@@ -54,8 +54,8 @@ export interface ChromaEventLight extends ChromaBase {
     _propID?: number;
     _lightGradient?: {
         _duration: number;
-        _startColor: number[];
-        _endColor: number[];
+        _startColor: ArrayColor;
+        _endColor: ArrayColor;
         _easing?: Easings;
     };
     _lerpType?: 'HSV' | 'RGB';

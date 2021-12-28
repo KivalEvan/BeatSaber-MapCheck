@@ -64,9 +64,19 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
             if (
                 ((beatmap.note.isHorizontal(notes[i], notes[j]) ||
                     beatmap.note.isVertical(notes[i], notes[j])) &&
-                    beatmap.note.isIntersect(notes[i], notes[j], 2)) ||
+                    beatmap.note
+                        .isIntersect(notes[i], notes[j], [
+                            [45, 1],
+                            [15, 2],
+                        ])
+                        .some((b) => b)) ||
                 (beatmap.note.isDiagonal(notes[i], notes[j]) &&
-                    beatmap.note.isIntersect(notes[i], notes[j], 1))
+                    beatmap.note
+                        .isIntersect(notes[i], notes[j], [
+                            [45, 1],
+                            [15, 1.5],
+                        ])
+                        .some((b) => b))
             ) {
                 arr.push(notes[i]);
                 lastTime = bpm.toRealTime(notes[i]._time);

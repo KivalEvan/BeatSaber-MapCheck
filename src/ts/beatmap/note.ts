@@ -1,4 +1,4 @@
-import { degToRad, radToDeg, shortRotDistance } from '../utils';
+import { radToDeg, shortRotDistance } from '../utils';
 import { CustomDataNote } from './customData';
 
 export interface Note {
@@ -145,45 +145,44 @@ export const isSlantedWindow = (n1: Note, n2: Note): boolean => {
 };
 
 // a fkin abomination that's what this is
-export const isIntersect = (n1: Note, n2: Note, maxDistance: number): boolean => {
+export const isIntersect = (
+    n1: Note,
+    n2: Note,
+    angleDistances: [number, number][]
+): [boolean, boolean] => {
     const [nX1, nY1] = getPosition(n1);
     const [nX2, nY2] = getPosition(n2);
     const nA1 = getAngle(n1);
     const nA2 = getAngle(n2);
-    let result = false;
+    let resultN1 = false;
     if (n1._cutDirection !== 8) {
         const a = (radToDeg(Math.atan2(nY1 - nY2, nX1 - nX2)) + 450) % 360;
-        const aS1 = (nA1 + 315) % 360;
-        const aE1 = (nA1 + 405) % 360;
-        const aS2 = (nA1 + 345) % 360;
-        const aE2 = (nA1 + 375) % 360;
-        result =
-            (1 >= Math.sqrt(Math.pow(nX1 - nX2, 2) + Math.pow(nY1 - nY2, 2)) &&
-                ((aS1 < aE1 && aS1 <= a && a <= aE1) ||
-                    (aS1 >= aE1 && (a <= aE1 || a >= aS1)))) ||
-            (maxDistance >=
-                Math.sqrt(Math.pow(nX1 - nX2, 2) + Math.pow(nY1 - nY2, 2)) &&
-                ((aS2 < aE2 && aS2 <= a && a <= aE2) ||
-                    (aS2 >= aE2 && (a <= aE2 || a >= aS2)))) ||
-            result;
+        for (const [angleRange, maxDistance] of angleDistances) {
+            const aS = (nA1 + 360 - angleRange) % 360;
+            const aE = (nA1 + 360 + angleRange) % 360;
+            resultN1 =
+                (maxDistance >=
+                    Math.sqrt(Math.pow(nX1 - nX2, 2) + Math.pow(nY1 - nY2, 2)) &&
+                    ((aS < aE && aS <= a && a <= aE) ||
+                        (aS >= aE && (a <= aE || a >= aS)))) ||
+                resultN1;
+        }
     }
-    if (n2._cutDirection !== 8 && !result) {
+    let resultN2 = false;
+    if (n2._cutDirection !== 8) {
         const a = (radToDeg(Math.atan2(nY2 - nY1, nX2 - nX1)) + 450) % 360;
-        const aS1 = (nA2 + 315) % 360;
-        const aE1 = (nA2 + 405) % 360;
-        const aS2 = (nA2 + 345) % 360;
-        const aE2 = (nA2 + 375) % 360;
-        result =
-            (1 >= Math.sqrt(Math.pow(nX1 - nX2, 2) + Math.pow(nY1 - nY2, 2)) &&
-                ((aS1 < aE1 && aS1 <= a && a <= aE1) ||
-                    (aS1 >= aE1 && (a <= aE1 || a >= aS1)))) ||
-            (maxDistance >=
-                Math.sqrt(Math.pow(nX1 - nX2, 2) + Math.pow(nY1 - nY2, 2)) &&
-                ((aS2 < aE2 && aS2 <= a && a <= aE2) ||
-                    (aS2 >= aE2 && (a <= aE2 || a >= aS2)))) ||
-            result;
+        for (const [angleRange, maxDistance] of angleDistances) {
+            const aS = (nA2 + 360 - angleRange) % 360;
+            const aE = (nA2 + 360 + angleRange) % 360;
+            resultN2 =
+                (maxDistance >=
+                    Math.sqrt(Math.pow(nX1 - nX2, 2) + Math.pow(nY1 - nY2, 2)) &&
+                    ((aS < aE && aS <= a && a <= aE) ||
+                        (aS >= aE && (a <= aE || a >= aS)))) ||
+                resultN2;
+        }
     }
-    return result;
+    return [resultN1, resultN2];
 };
 
 // TODO: update with new position/rotation system

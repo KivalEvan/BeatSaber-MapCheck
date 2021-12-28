@@ -64,41 +64,23 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
                 swingNoteArray[note._type] = [];
             }
         }
-        // FIXME: change to new position
         for (const other of swingNoteArray[(note._type + 1) % 2]) {
             if (other._cutDirection !== 8) {
-                const noteOccupyLineIndex =
-                    other._lineIndex +
-                    beatmap.note.cutDirectionSpace[
-                        beatmap.note.flipDirection[other._cutDirection] ?? 8
-                    ][0];
-                const noteOccupyLineLayer =
-                    other._lineLayer +
-                    beatmap.note.cutDirectionSpace[
-                        beatmap.note.flipDirection[other._cutDirection] ?? 8
-                    ][1];
-                const isDiagonal = beatmap.note.cutAngle[other._cutDirection] % 90 > 0;
+                if (
+                    !(bpm.toRealTime(note._time) > bpm.toRealTime(other._time) + 0.01)
+                ) {
+                    continue;
+                }
+                const isDiagonal =
+                    beatmap.note.getAngle(other) % 90 > 15 &&
+                    beatmap.note.getAngle(other) % 90 < 75;
                 // magic number 1.425 from saber length + good/bad hitbox
                 if (
-                    !isDiagonal &&
                     njs.value <
                         1.425 /
                             ((60 * (note._time - other._time)) / bpm.value +
-                                constant) &&
-                    note._lineIndex === noteOccupyLineIndex &&
-                    note._lineLayer === noteOccupyLineLayer
-                ) {
-                    arr.push(other);
-                    break;
-                }
-                if (
-                    isDiagonal &&
-                    njs.value <
-                        1.425 /
-                            ((60 * (note._time - other._time)) / bpm.value +
-                                constantDiagonal) &&
-                    note._lineIndex === noteOccupyLineIndex &&
-                    note._lineLayer === noteOccupyLineLayer
+                                (isDiagonal ? constantDiagonal : constant)) &&
+                    beatmap.note.isIntersect(note, other, [[15, 1.5]])[1]
                 ) {
                     arr.push(other);
                     break;

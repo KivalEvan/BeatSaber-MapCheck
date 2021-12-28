@@ -14,6 +14,7 @@
     -   Checks for type
     -   Handle missing properties
 -   Updated Chroma properties
+-   Updated hitbox check now uses new position/rotation system (except staircase)
 
 ### Fixed
 

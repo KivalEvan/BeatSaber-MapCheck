@@ -69,8 +69,7 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
                 njs.value <
                     1.425 /
                         ((60 * (note._time - other._time)) / bpm.value + constant) &&
-                note._lineIndex === other._lineIndex &&
-                note._lineLayer === other._lineLayer
+                beatmap.note.distance(note, other) < 0.25
             ) {
                 arr.push(note);
                 break;
