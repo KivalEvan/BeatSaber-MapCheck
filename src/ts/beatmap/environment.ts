@@ -48,12 +48,13 @@ export type EnvironmentName =
     | 'SkrillexEnvironment'
     | 'BillieEnvironment'
     | 'HalloweenEnvironment'
+    | 'GagaEnvironment'
     | 'GlassDesertEnvironment';
 
 export enum EnvironmentRename {
     DefaultEnvironment = 'The First',
     OriginsEnvironment = 'Origins',
-    Origins = 'Origins', // because beat games
+    Origins = 'Origins (Triangle)', // because beat games
     TriangleEnvironment = 'Triangle',
     NiceEnvironment = 'Nice',
     BigMirrorEnvironment = 'Big Mirror',
@@ -74,6 +75,7 @@ export enum EnvironmentRename {
     SkrillexEnvironment = 'Skrillex',
     BillieEnvironment = 'Billie',
     HalloweenEnvironment = 'Spooky',
+    GagaEnvironment = 'Gaga',
     GlassDesertEnvironment = 'Glass Desert',
 }
 
@@ -104,7 +106,7 @@ export enum EnvironmentColor {
     GlassDesertEnvironment = 'Glass Desert',
 }
 
-export const colorScheme: EnvironmentScheme = {
+export const colorScheme: Readonly<EnvironmentScheme> = {
     'Default Custom': {
         _colorLeft: {
             r: 0.7529412,
@@ -634,6 +636,43 @@ export const colorScheme: EnvironmentScheme = {
             b: 0.85849059,
         },
     },
+    Gaga: {
+        _colorLeft: {
+            r: 0.81960785,
+            g: 0.49807876,
+            b: 0.27702752,
+        },
+        _colorRight: {
+            r: 0.37894738,
+            g: 0.35789475,
+            b: 0.40000001,
+        },
+        _envColorLeft: {
+            r: 0.90196079,
+            g: 0.23009226,
+            b: 0,
+        },
+        _envColorRight: {
+            r: 0.46005884,
+            g: 0.56889427,
+            b: 0.92941177,
+        },
+        _obstacleColor: {
+            r: 0.81960791,
+            g: 0.44313729,
+            b: 0.18431373,
+        },
+        _envColorLeftBoost: {
+            r: 0.33768433,
+            g: 0.63207543,
+            b: 0.33690813,
+        },
+        _envColorRightBoost: {
+            r: 0.60209066,
+            g: 0.3280082,
+            b: 0.85849059,
+        },
+    },
     'Glass Desert': {
         _colorLeft: {
             r: 0.6792453,
@@ -663,7 +702,7 @@ export const colorScheme: EnvironmentScheme = {
     },
 };
 
-export const EnvironmentEventList = {
+export const EnvironmentEventList: Record<EnvironmentName, number[]> = {
     DefaultEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
     OriginsEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
     Origins: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
@@ -687,5 +726,6 @@ export const EnvironmentEventList = {
     SkrillexEnvironment: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13],
     BillieEnvironment: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 16, 17],
     HalloweenEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
+    GagaEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
     GlassDesertEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
 };

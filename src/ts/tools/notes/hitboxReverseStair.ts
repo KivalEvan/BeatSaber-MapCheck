@@ -41,6 +41,8 @@ function inputCheckHandler(this: HTMLInputElement) {
     tool.input.enabled = this.checked;
 }
 
+const constant = 0.03414823529;
+const constantDiagonal = 0.03414823529;
 function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData) {
     const { _bpm: bpm, _njs: njs } = mapSettings;
     const { _notes: notes } = mapSet._data;
@@ -65,18 +67,36 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
         // FIXME: change to new position
         for (const other of swingNoteArray[(note._type + 1) % 2]) {
             if (other._cutDirection !== 8) {
-                let noteOccupyLineIndex =
+                const noteOccupyLineIndex =
                     other._lineIndex +
                     beatmap.note.cutDirectionSpace[
                         beatmap.note.flipDirection[other._cutDirection] ?? 8
                     ][0];
-                let noteOccupyLineLayer =
+                const noteOccupyLineLayer =
                     other._lineLayer +
                     beatmap.note.cutDirectionSpace[
                         beatmap.note.flipDirection[other._cutDirection] ?? 8
                     ][1];
+                const isDiagonal = beatmap.note.cutAngle[other._cutDirection] % 90 > 0;
+                // magic number 1.425 from saber length + good/bad hitbox
                 if (
-                    !(njs.value > bpm.value / (60 * (note._time - other._time))) &&
+                    !isDiagonal &&
+                    njs.value <
+                        1.425 /
+                            ((60 * (note._time - other._time)) / bpm.value +
+                                constant) &&
+                    note._lineIndex === noteOccupyLineIndex &&
+                    note._lineLayer === noteOccupyLineLayer
+                ) {
+                    arr.push(other);
+                    break;
+                }
+                if (
+                    isDiagonal &&
+                    njs.value <
+                        1.425 /
+                            ((60 * (note._time - other._time)) / bpm.value +
+                                constantDiagonal) &&
                     note._lineIndex === noteOccupyLineIndex &&
                     note._lineLayer === noteOccupyLineLayer
                 ) {

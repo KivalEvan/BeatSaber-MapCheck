@@ -1,7 +1,7 @@
 import { Easings } from './easings';
 type LookupMethod = 'Regex' | 'Exact' | 'Contains';
 type Array3DPoint = [number, number, number];
-type ArrayColor = [number, number, number, number] | [number, number, number];
+type ArrayColor = [number, number, number] | [number, number, number, number];
 
 export enum ChromaDataEnvAbbr {
     _id = 'Ct',
@@ -58,6 +58,8 @@ export interface ChromaEventLight extends ChromaBase {
         _endColor: number[];
         _easing?: Easings;
     };
+    _lerpType?: 'HSV' | 'RGB';
+    _easing?: Easings;
 }
 
 export interface ChromaEventLaser {
@@ -83,6 +85,7 @@ export interface ChromaEventRotation {
 
 export interface ChromaEventZoom {
     _step?: number;
+    _speed?: number;
 }
 
 export type ChromaEvent = ChromaEventLaser &

@@ -1,4 +1,5 @@
 import { CustomDataEvent } from './customData';
+import { EnvironmentEventList, EnvironmentName } from './environment';
 
 // it took me long enough to realise Event is a built in JS interface, but it has no effect here anyway
 export interface Event {
@@ -170,8 +171,10 @@ export const isValid = (e: Event): boolean => {
     );
 };
 
-const commonEvent = [0, 1, 2, 3, 4, 8, 9, 12, 13];
-export const count = (ev: Event[]): EventCount => {
+export const count = (ev: Event[], environment: EnvironmentName): EventCount => {
+    const commonEvent = EnvironmentEventList[environment] ?? [
+        0, 1, 2, 3, 4, 8, 9, 12, 13,
+    ];
     const eventCount: EventCount = {};
     for (let i = commonEvent.length - 1; i >= 0; i--) {
         eventCount[commonEvent[i]] = {

@@ -41,6 +41,7 @@ function inputCheckHandler(this: HTMLInputElement) {
     tool.input.enabled = this.checked;
 }
 
+const constant = 0;
 function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData) {
     const { _bpm: bpm, _njs: njs } = mapSettings;
     const { _notes: notes } = mapSet._data;
@@ -65,10 +66,9 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
         for (const other of swingNoteArray[(note._type + 1) % 2]) {
             // magic number 1.425 from saber length + good/bad hitbox
             if (
-                !(
-                    njs.value >
-                    (1.425 * bpm.value) / (60 * (note._time - other._time))
-                ) &&
+                njs.value <
+                    1.425 /
+                        ((60 * (note._time - other._time)) / bpm.value + constant) &&
                 note._lineIndex === other._lineIndex &&
                 note._lineLayer === other._lineLayer
             ) {

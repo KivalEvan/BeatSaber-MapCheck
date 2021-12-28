@@ -5,13 +5,19 @@
 ### Added
 
 -   Event type list per environment
+-   Basic Chroma check for unlit bomb check
+-   Gaga environment support
 
 ### Changed
 
 -   Updated parsing
     -   Checks for type
     -   Handle missing properties
--   Basic Chroma check for unlit bomb check
+-   Updated Chroma properties
+
+### Fixed
+
+-   Hitbox inline and reverse staircase calculation fix
 
 ## v2.3.0 [1-12-2021]
 
