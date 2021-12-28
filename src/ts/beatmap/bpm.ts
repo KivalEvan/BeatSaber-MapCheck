@@ -51,7 +51,9 @@ export class BeatPerMinute {
             };
             if (temp) {
                 curBPMC._newTime = Math.ceil(
-                    ((curBPMC._time - temp._time) / this._bpm) * temp._BPM + temp._newTime - 0.01
+                    ((curBPMC._time - temp._time) / this._bpm) * temp._BPM +
+                        temp._newTime -
+                        0.01
                 );
             } else {
                 curBPMC._newTime = Math.ceil(
@@ -76,7 +78,8 @@ export class BeatPerMinute {
         for (let i = this._bpmChange.length - 1; i >= 0; i--) {
             if (beat > this._bpmChange[i]._time) {
                 return (
-                    ((beat - this._bpmChange[i]._time) / this._bpm) * this._bpmChange[i]._BPM +
+                    ((beat - this._bpmChange[i]._time) / this._bpm) *
+                        this._bpmChange[i]._BPM +
                     this._bpmChange[i]._newTime
                 );
             }
@@ -85,6 +88,10 @@ export class BeatPerMinute {
     }
 }
 
-export const create = (bpm: number, bpmChange?: BPMChange[], offset?: number): BeatPerMinute => {
+export const create = (
+    bpm: number,
+    bpmChange?: BPMChange[],
+    offset?: number
+): BeatPerMinute => {
     return new BeatPerMinute(bpm, bpmChange, offset);
 };

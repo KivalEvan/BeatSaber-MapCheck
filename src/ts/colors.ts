@@ -1,6 +1,6 @@
 import { round, radToDeg, degToRad } from './utils';
 
-export interface Color {
+export interface ColorObject {
     r: number;
     g: number;
     b: number;
@@ -8,14 +8,14 @@ export interface Color {
     [key: string]: number | undefined;
 }
 
-export type ColorArray = [number, number, number, number?];
+export type ColorArray = [number, number, number] | [number, number, number, number];
 
-export const toRGBArray = (c: Color): ColorArray => {
+export const toRGBArray = (c: ColorObject): ColorArray => {
     return [c.r, c.g, c.b];
 };
 
 export const compToHex = (c: number): string => {
-    let hex = c.toString(16);
+    const hex = c.toString(16);
     return hex.length === 1 ? '0' + hex : hex;
 };
 
@@ -23,13 +23,13 @@ export const cDenorm = (c: number): number => {
     return c > 1 && !(c < 0) ? 255 : round(c * 255);
 };
 
-export const rgbaToHex = (colorObj?: Color | null): string | null => {
+export const rgbaToHex = (colorObj?: ColorObject | null): string | null => {
     if (!colorObj) {
         return null;
     }
-    let color: Color = { r: 0, g: 0, b: 0 };
+    const color: ColorObject = { r: 0, g: 0, b: 0 };
     for (const c in colorObj) {
-        let num: number | undefined = colorObj[c];
+        const num: number | undefined = colorObj[c];
         if (num === undefined) {
             continue;
         }

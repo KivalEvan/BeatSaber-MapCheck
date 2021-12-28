@@ -1,28 +1,24 @@
-import { Color } from '../colors';
+import { ColorObject } from '../colors';
 
 export interface ColorScheme {
-    _colorLeft?: Color;
-    _colorRight?: Color;
-    _envColorLeft?: Color;
-    _envColorRight?: Color;
-    _envColorLeftBoost?: Color;
-    _envColorRightBoost?: Color;
-    _obstacleColor?: Color;
+    _colorLeft?: ColorObject;
+    _colorRight?: ColorObject;
+    _envColorLeft?: ColorObject;
+    _envColorRight?: ColorObject;
+    _envColorLeftBoost?: ColorObject;
+    _envColorRightBoost?: ColorObject;
+    _obstacleColor?: ColorObject;
 }
 
-export enum ColorSchemeRename {
-    '_colorLeft' = 'Left Note Color',
-    '_colorRight' = 'Right Note Color',
-    '_envColorLeft' = 'Left Environment Color',
-    '_envColorRight' = 'Right Environment Color',
-    '_envColorLeftBoost' = 'Left Environment Boost Color',
-    '_envColorRightBoost' = 'Right Environment Boost Color',
-    '_obstacleColor' = 'Obstacle Color',
-}
-
-export interface EnvironmentScheme {
-    [key: string]: ColorScheme;
-}
+export const ColorSchemeRename: { [k in keyof ColorScheme]: string } = {
+    _colorLeft: 'Left Note Color',
+    _colorRight: 'Right Note Color',
+    _envColorLeft: 'Left Environment Color',
+    _envColorRight: 'Right Environment Color',
+    _envColorLeftBoost: 'Left Environment Boost Color',
+    _envColorRightBoost: 'Right Environment Boost Color',
+    _obstacleColor: 'Obstacle Color',
+};
 
 export type EnvironmentName =
     | 'DefaultEnvironment'
@@ -51,62 +47,88 @@ export type EnvironmentName =
     | 'GagaEnvironment'
     | 'GlassDesertEnvironment';
 
-export enum EnvironmentRename {
-    DefaultEnvironment = 'The First',
-    OriginsEnvironment = 'Origins',
-    Origins = 'Origins (Triangle)', // because beat games
-    TriangleEnvironment = 'Triangle',
-    NiceEnvironment = 'Nice',
-    BigMirrorEnvironment = 'Big Mirror',
-    DragonsEnvironment = 'Dragons',
-    KDAEnvironment = 'K/DA',
-    MonstercatEnvironment = 'Monstercat',
-    CrabRaveEnvironment = 'Crab Rave',
-    PanicEnvironment = 'Panic',
-    RocketEnvironment = 'Rocket',
-    GreenDayEnvironment = 'Green Day',
-    GreenDayGrenadeEnvironment = 'Green Day Grenade',
-    TimbalandEnvironment = 'Timbaland',
-    FitBeatEnvironment = 'FitBeat',
-    LinkinParkEnvironment = 'Linkin Park',
-    BTSEnvironment = 'BTS',
-    KaleidoscopeEnvironment = 'Kaleidoscope',
-    InterscopeEnvironment = 'Interscope',
-    SkrillexEnvironment = 'Skrillex',
-    BillieEnvironment = 'Billie',
-    HalloweenEnvironment = 'Spooky',
-    GagaEnvironment = 'Gaga',
-    GlassDesertEnvironment = 'Glass Desert',
-}
+type ColorSchemeList =
+    | 'Default Custom'
+    | 'The First'
+    | 'Origins'
+    | 'KDA'
+    | 'Crab Rave'
+    | 'Noir'
+    | 'Rocket'
+    | 'Green Day'
+    | 'Timbaland'
+    | 'FitBeat'
+    | 'Linkin Park'
+    | 'BTS'
+    | 'Kaleidoscope'
+    | 'Interscope'
+    | 'Skrillex'
+    | 'Billie Eilish'
+    | 'Spooky'
+    | 'Gaga'
+    | 'Glass Desert';
 
-export enum EnvironmentColor {
-    DefaultEnvironment = 'The First',
-    OriginsEnvironment = 'Origins',
-    Origins = 'Origins', // because beat games
-    TriangleEnvironment = 'The First',
-    NiceEnvironment = 'The First',
-    BigMirrorEnvironment = 'The First',
-    DragonsEnvironment = 'The First',
-    KDAEnvironment = 'KDA',
-    MonstercatEnvironment = 'The First',
-    CrabRaveEnvironment = 'Crab Rave',
-    PanicEnvironment = 'The First',
-    RocketEnvironment = 'Rocket',
-    GreenDayEnvironment = 'Green Day',
-    GreenDayGrenadeEnvironment = 'Green Day',
-    TimbalandEnvironment = 'Timbaland',
-    FitBeatEnvironment = 'FitBeat',
-    LinkinParkEnvironment = 'Linkin Park',
-    BTSEnvironment = 'BTS',
-    KaleidoscopeEnvironment = 'Kaleidoscope',
-    InterscopeEnvironment = 'Interscope',
-    SkrillexEnvironment = 'Skrillex',
-    BillieEnvironment = 'Billie Eilish',
-    HalloweenEnvironment = 'Spooky',
-    GlassDesertEnvironment = 'Glass Desert',
-}
+export type EnvironmentScheme = {
+    [key in ColorSchemeList]: ColorScheme;
+};
 
-export const colorScheme: Readonly<EnvironmentScheme> = {
+export const EnvironmentRename: Readonly<Record<EnvironmentName, string>> = {
+    DefaultEnvironment: 'The First',
+    OriginsEnvironment: 'Origins',
+    Origins: 'Origins (Triangle)', // because beat games
+    TriangleEnvironment: 'Triangle',
+    NiceEnvironment: 'Nice',
+    BigMirrorEnvironment: 'Big Mirror',
+    DragonsEnvironment: 'Dragons',
+    KDAEnvironment: 'K/DA',
+    MonstercatEnvironment: 'Monstercat',
+    CrabRaveEnvironment: 'Crab Rave',
+    PanicEnvironment: 'Panic',
+    RocketEnvironment: 'Rocket',
+    GreenDayEnvironment: 'Green Day',
+    GreenDayGrenadeEnvironment: 'Green Day Grenade',
+    TimbalandEnvironment: 'Timbaland',
+    FitBeatEnvironment: 'FitBeat',
+    LinkinParkEnvironment: 'Linkin Park',
+    BTSEnvironment: 'BTS',
+    KaleidoscopeEnvironment: 'Kaleidoscope',
+    InterscopeEnvironment: 'Interscope',
+    SkrillexEnvironment: 'Skrillex',
+    BillieEnvironment: 'Billie',
+    HalloweenEnvironment: 'Spooky',
+    GagaEnvironment: 'Gaga',
+    GlassDesertEnvironment: 'Glass Desert',
+};
+
+export const EnvironmentColor: Readonly<Record<EnvironmentName, ColorSchemeList>> = {
+    DefaultEnvironment: 'The First',
+    OriginsEnvironment: 'Origins',
+    Origins: 'Origins', // because beat games
+    TriangleEnvironment: 'The First',
+    NiceEnvironment: 'The First',
+    BigMirrorEnvironment: 'The First',
+    DragonsEnvironment: 'The First',
+    KDAEnvironment: 'KDA',
+    MonstercatEnvironment: 'The First',
+    CrabRaveEnvironment: 'Crab Rave',
+    PanicEnvironment: 'The First',
+    RocketEnvironment: 'Rocket',
+    GreenDayEnvironment: 'Green Day',
+    GreenDayGrenadeEnvironment: 'Green Day',
+    TimbalandEnvironment: 'Timbaland',
+    FitBeatEnvironment: 'FitBeat',
+    LinkinParkEnvironment: 'Linkin Park',
+    BTSEnvironment: 'BTS',
+    KaleidoscopeEnvironment: 'Kaleidoscope',
+    InterscopeEnvironment: 'Interscope',
+    SkrillexEnvironment: 'Skrillex',
+    BillieEnvironment: 'Billie Eilish',
+    HalloweenEnvironment: 'Spooky',
+    GagaEnvironment: 'Gaga',
+    GlassDesertEnvironment: 'Glass Desert',
+};
+
+export const colorScheme: EnvironmentScheme = {
     'Default Custom': {
         _colorLeft: {
             r: 0.7529412,
