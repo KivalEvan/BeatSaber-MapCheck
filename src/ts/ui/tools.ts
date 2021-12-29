@@ -111,7 +111,7 @@ export const setDifficultyLabel = (str: string): void => {
     htmlToolsDifficultyLabel.forEach((elem) => (elem.textContent = str));
 };
 
-const populateSelectDiff = (mapSet?: beatmap.info.BeatmapInfoSet): void => {
+const populateSelectDiff = (mapSet?: beatmap.info.InfoSetData): void => {
     if (!mapSet) {
         return;
     }
@@ -155,7 +155,7 @@ const populateSelectDiff = (mapSet?: beatmap.info.BeatmapInfoSet): void => {
     });
 };
 
-export const populateSelect = (mapInfo?: beatmap.info.BeatmapInfo): void => {
+export const populateSelect = (mapInfo?: beatmap.info.InfoData): void => {
     if (!mapInfo) {
         htmlToolsSelectMode.forEach((elem) => removeOptions(elem));
         htmlToolsSelectDifficulty.forEach((elem) => removeOptions(elem));

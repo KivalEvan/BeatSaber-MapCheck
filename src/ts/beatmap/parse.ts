@@ -1,6 +1,6 @@
 import { CharacteristicOrder } from './characteristic';
 import { DifficultyRank, DifficultyData } from './difficulty';
-import { BeatmapInfo } from './info';
+import { InfoData } from './info';
 import { compare } from './version';
 import { Note } from './note';
 import { Obstacle } from './obstacle';
@@ -10,7 +10,7 @@ import settings from '../settings';
 
 // TODO: more error check
 // TODO: contemplate whether to make pure function or keep as is
-export const info = (mapInfo: BeatmapInfo): BeatmapInfo => {
+export const info = (mapInfo: InfoData): InfoData => {
     if (settings.sorting) {
         mapInfo._difficultyBeatmapSets.sort(
             (a, b) =>

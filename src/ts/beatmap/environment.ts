@@ -1,5 +1,16 @@
 import { ColorObject } from '../colors';
 
+/**
+ * Color Scheme interface for difficulty info custom data.
+ *
+ *     _colorLeft?: { r: float, g: float, b: float },
+ *     _colorRight?: { r: float, g: float, b: float },
+ *     _envColorLeft?: { r: float, g: float, b: float },
+ *     _envColorRight?: { r: float, g: float, b: float },
+ *     _envColorLeftBoost?: { r: float, g: float, b: float },
+ *     _envColorRightBoost?: { r: float, g: float, b: float },
+ *     _obstacleColor?: { r: float, g: float, b: float },
+ */
 export interface ColorScheme {
     _colorLeft?: ColorObject;
     _colorRight?: ColorObject;
@@ -10,6 +21,9 @@ export interface ColorScheme {
     _obstacleColor?: ColorObject;
 }
 
+/**
+ * Color Scheme property rename to human readable.
+ */
 export const ColorSchemeRename: { [k in keyof ColorScheme]: string } = {
     _colorLeft: 'Left Note Color',
     _colorRight: 'Right Note Color',
@@ -20,6 +34,9 @@ export const ColorSchemeRename: { [k in keyof ColorScheme]: string } = {
     _obstacleColor: 'Obstacle Color',
 };
 
+/**
+ * List of available environment in base game.
+ */
 export type EnvironmentName =
     | 'DefaultEnvironment'
     | 'OriginsEnvironment'
@@ -44,9 +61,13 @@ export type EnvironmentName =
     | 'SkrillexEnvironment'
     | 'BillieEnvironment'
     | 'HalloweenEnvironment'
-    | 'GagaEnvironment'
-    | 'GlassDesertEnvironment';
+    | 'GagaEnvironment';
+export type Environment360Name = 'GlassDesertEnvironment';
+export type EnvironmentAllName = EnvironmentName | Environment360Name;
 
+/**
+ * List of available color scheme in base game.
+ */
 type ColorSchemeList =
     | 'Default Custom'
     | 'The First'
@@ -72,7 +93,10 @@ export type EnvironmentScheme = {
     [key in ColorSchemeList]: ColorScheme;
 };
 
-export const EnvironmentRename: Readonly<Record<EnvironmentName, string>> = {
+/**
+ * Environment rename to human readable.
+ */
+export const EnvironmentRename: Readonly<Record<EnvironmentAllName, string>> = {
     DefaultEnvironment: 'The First',
     OriginsEnvironment: 'Origins',
     Origins: 'Origins (Triangle)', // because beat games
@@ -100,10 +124,13 @@ export const EnvironmentRename: Readonly<Record<EnvironmentName, string>> = {
     GlassDesertEnvironment: 'Glass Desert',
 };
 
-export const EnvironmentColor: Readonly<Record<EnvironmentName, ColorSchemeList>> = {
+/**
+ * Record of Environment Color to Color Scheme.
+ */
+export const EnvironmentColor: Readonly<Record<EnvironmentAllName, ColorSchemeList>> = {
     DefaultEnvironment: 'The First',
     OriginsEnvironment: 'Origins',
-    Origins: 'Origins', // because beat games
+    Origins: 'The First', // because beat games
     TriangleEnvironment: 'The First',
     NiceEnvironment: 'The First',
     BigMirrorEnvironment: 'The First',
@@ -128,6 +155,9 @@ export const EnvironmentColor: Readonly<Record<EnvironmentName, ColorSchemeList>
     GlassDesertEnvironment: 'Glass Desert',
 };
 
+/**
+ * Color scheme definition.
+ */
 export const colorScheme: EnvironmentScheme = {
     'Default Custom': {
         _colorLeft: {
@@ -724,7 +754,10 @@ export const colorScheme: EnvironmentScheme = {
     },
 };
 
-export const EnvironmentEventList: Record<EnvironmentName, number[]> = {
+/**
+ * List of available event type in environment.
+ */
+export const EnvironmentEventList: Record<EnvironmentAllName, number[]> = {
     DefaultEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
     OriginsEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
     Origins: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
@@ -748,6 +781,6 @@ export const EnvironmentEventList: Record<EnvironmentName, number[]> = {
     SkrillexEnvironment: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13],
     BillieEnvironment: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 16, 17],
     HalloweenEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
-    GagaEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
+    GagaEnvironment: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 16, 17],
     GlassDesertEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
 };

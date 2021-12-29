@@ -256,31 +256,37 @@ export const isSlantedWindow = (n1: Note, n2: Note): boolean => {
  * @param {Note} n1 - First beatmap note
  * @param {Note} n2 - Second beatmap note
  * @param {[number,number,number?][]} angleDistances - Array of tuple by maxAngle (applies on both positive and negative), maxDistance, and offsetAngle
+ * @param {boolean} ahead - Look ahead of the note path, otherwise behind the note path
  * @returns {[boolean,boolean]} Tuple of boolean for result of n1 and n2
  */
 // a fkin abomination that's what this is
 export const isIntersect = (
     n1: Note,
     n2: Note,
-    angleDistances: [number, number, number?][]
+    angleDistances: [number, number, number?][],
+    ahead = false
 ): [boolean, boolean] => {
     const [nX1, nY1] = getPosition(n1);
     const [nX2, nY2] = getPosition(n2);
     const nA1 = getAngle(n1);
     const nA2 = getAngle(n2);
+    const angle = ahead ? 540 : 360;
     let resultN1 = false;
     if (n1._cutDirection !== 8) {
         const a = (radToDeg(Math.atan2(nY1 - nY2, nX1 - nX2)) + 450) % 360;
         for (const [angleRange, maxDistance, offsetT] of angleDistances) {
             const offset = offsetT ?? 0;
-            const aS = (nA1 + 360 - angleRange + offset) % 360;
-            const aE = (nA1 + 360 + angleRange + offset) % 360;
+            const aS = (nA1 + angle - angleRange + offset) % 360;
+            const aE = (nA1 + angle + angleRange + offset) % 360;
             resultN1 =
                 (maxDistance >=
                     Math.sqrt(Math.pow(nX1 - nX2, 2) + Math.pow(nY1 - nY2, 2)) &&
                     ((aS < aE && aS <= a && a <= aE) ||
                         (aS >= aE && (a <= aE || a >= aS)))) ||
                 resultN1;
+            if (resultN1) {
+                break;
+            }
         }
     }
     let resultN2 = false;
@@ -288,14 +294,17 @@ export const isIntersect = (
         const a = (radToDeg(Math.atan2(nY2 - nY1, nX2 - nX1)) + 450) % 360;
         for (const [angleRange, maxDistance, offsetT] of angleDistances) {
             const offset = offsetT ?? 0;
-            const aS = (nA2 + 360 - angleRange + offset) % 360;
-            const aE = (nA2 + 360 + angleRange + offset) % 360;
+            const aS = (nA2 + angle - angleRange + offset) % 360;
+            const aE = (nA2 + angle + angleRange + offset) % 360;
             resultN2 =
                 (maxDistance >=
                     Math.sqrt(Math.pow(nX1 - nX2, 2) + Math.pow(nY1 - nY2, 2)) &&
                     ((aS < aE && aS <= a && a <= aE) ||
                         (aS >= aE && (a <= aE || a >= aS)))) ||
                 resultN2;
+            if (resultN2) {
+                break;
+            }
         }
     }
     return [resultN1, resultN2];

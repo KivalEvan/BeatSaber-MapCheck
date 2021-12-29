@@ -33,7 +33,7 @@ export interface ToolOutput {
 export type ToolRun = (
     mapSettings: BeatmapSettings,
     mapSet?: beatmap.map.BeatmapSetData,
-    mapInfo?: beatmap.info.BeatmapInfo,
+    mapInfo?: beatmap.info.InfoData,
     sps?: SwingAnalysis[]
 ) => void;
 

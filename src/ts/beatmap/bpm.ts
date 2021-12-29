@@ -1,3 +1,12 @@
+/**
+ * Beatmap difficulty custom data interface for BPM Change.
+ *
+ *     _time: float,
+ *     _BPM: float,
+ *     _bpm: never,
+ *     _beatsPerBar: int,
+ *     _metronomeOffset: float
+ */
 export interface BPMChange {
     _time: number;
     _BPM: number;
@@ -6,10 +15,18 @@ export interface BPMChange {
     _metronomeOffset?: number;
 }
 
+/**
+ * @extends BPMChange
+ *
+ *     _newTime: float,
+ */
 export interface BPMChangeTime extends BPMChange {
     _newTime: number;
 }
 
+/**
+ * Class to store beat per minute value, BPM changes, and other properties affecting BPM.
+ */
 export class BeatPerMinute {
     private _bpm: number;
     private _bpmChange: BPMChangeTime[];
@@ -40,11 +57,16 @@ export class BeatPerMinute {
         this._offset = val / 1000;
     }
 
+    /**
+     * Create new BPM change object that allow time to be read according to editor.
+     * @param {BPMChange[]} bpmc - Array of BPM change
+     * @returns {BPMChangeTime[]} Array of new BPM change
+     */
     private getBPMChangeTime(bpmc: BPMChange[] = []): BPMChangeTime[] {
         let temp!: BPMChangeTime;
         const bpmChange: BPMChangeTime[] = [];
         for (let i = 0; i < bpmc.length; i++) {
-            let curBPMC: BPMChangeTime = {
+            const curBPMC: BPMChangeTime = {
                 _BPM: bpmc[i]._BPM ?? bpmc[i]._bpm,
                 _time: bpmc[i]._time,
                 _newTime: 0,
@@ -65,15 +87,39 @@ export class BeatPerMinute {
         }
         return bpmChange;
     }
+
+    /**
+     * Adjust beat time by offset.
+     * @param {number} beat - Beat time
+     * @returns {number} Adjusted beat time
+     */
     private offsetBegone(beat: number): number {
         return ((this.toRealTime(beat) - this._offset) * this._bpm) / 60;
     }
+
+    /**
+     * Change beat time to real time in second.
+     * @param {number} beat - Beat time
+     * @returns {number} Real time second
+     */
     public toRealTime(beat: number): number {
         return (beat / this._bpm) * 60;
     }
+
+    /**
+     * Change real time in second to beat time.
+     * @param {number} num - Real time second
+     * @returns {number} Beat time
+     */
     public toBeatTime(num: number): number {
         return (num * this._bpm) / 60;
     }
+
+    /**
+     * Adjust beat time from BPM changes and offset.
+     * @param {number} beat - Beat time
+     * @returns {number} Adjusted beat time
+     */
     public adjustTime(beat: number): number {
         for (let i = this._bpmChange.length - 1; i >= 0; i--) {
             if (beat > this._bpmChange[i]._time) {
@@ -88,6 +134,13 @@ export class BeatPerMinute {
     }
 }
 
+/**
+ * Create and return an instance of BeatPerMinute class.
+ * @param {number} bpm - BPM value
+ * @param {BPMChange[]} bpmChange - Array of BPM change
+ * @param {number} offset - Editor offset
+ * @returns {BeatPerMinute} BeatPerMinute class
+ */
 export const create = (
     bpm: number,
     bpmChange?: BPMChange[],

@@ -14,7 +14,7 @@ const prefix = 'stats__';
 const htmlStats = document.querySelector('#stats .accordion__collapsible');
 
 const createSettingsTable = (
-    mapInfo: beatmap.info.BeatmapInfo,
+    mapInfo: beatmap.info.InfoData,
     mapSet: beatmap.map.BeatmapSetData
 ): HTMLTableElement => {
     const bpm = beatmap.bpm.create(mapInfo._beatsPerMinute);
@@ -53,7 +53,7 @@ const createSettingsTable = (
 };
 
 const createNPSTable = (
-    mapInfo: beatmap.info.BeatmapInfo,
+    mapInfo: beatmap.info.InfoData,
     mapSet: beatmap.map.BeatmapSetData
 ): HTMLTableElement => {
     const bpm = beatmap.bpm.create(mapInfo._beatsPerMinute);
@@ -106,7 +106,7 @@ const createNPSTable = (
 };
 
 const createSPSTable = (
-    mapInfo: beatmap.info.BeatmapInfo,
+    mapInfo: beatmap.info.InfoData,
     mapSet: beatmap.map.BeatmapSetData
 ): HTMLTableElement => {
     const bpm = beatmap.bpm.create(mapInfo._beatsPerMinute);
@@ -150,7 +150,7 @@ const createSPSTable = (
 };
 
 const createNoteCountTable = (
-    mapInfo: beatmap.info.BeatmapInfo,
+    mapInfo: beatmap.info.InfoData,
     mapSet: beatmap.map.BeatmapSetData
 ): HTMLTableElement => {
     const noteCount = beatmap.note.count(mapSet._data._notes);
@@ -295,7 +295,7 @@ function notePlacementTableString(notes: beatmap.note.Note[]): string {
 }
 
 const createNotePlacementTable = (
-    mapInfo: beatmap.info.BeatmapInfo,
+    mapInfo: beatmap.info.InfoData,
     mapSet: beatmap.map.BeatmapSetData
 ): HTMLTableElement => {
     const htmlSelect = uiSelect.create(
@@ -390,7 +390,7 @@ function noteAngleTableString(notes: beatmap.note.Note[]): string {
 }
 
 const createNoteAngleTable = (
-    mapInfo: beatmap.info.BeatmapInfo,
+    mapInfo: beatmap.info.InfoData,
     mapSet: beatmap.map.BeatmapSetData
 ): HTMLTableElement => {
     const htmlSelect = uiSelect.create(
@@ -421,7 +421,7 @@ const createNoteAngleTable = (
 };
 
 const createInfoTable = (
-    mapInfo: beatmap.info.BeatmapInfo,
+    mapInfo: beatmap.info.InfoData,
     mapSet: beatmap.map.BeatmapSetData
 ): HTMLTableElement => {
     const bpm = beatmap.bpm.create(mapInfo._beatsPerMinute);
@@ -471,7 +471,7 @@ const createInfoTable = (
 };
 
 const createEventCountTable = (
-    mapInfo: beatmap.info.BeatmapInfo,
+    mapInfo: beatmap.info.InfoData,
     mapSet: beatmap.map.BeatmapSetData
 ): HTMLTableElement => {
     const eventCount = beatmap.event.count(mapSet._data._events, mapSet._environment);
@@ -527,7 +527,7 @@ const createEventCountTable = (
 };
 
 const createObstacleCountTable = (
-    mapInfo: beatmap.info.BeatmapInfo,
+    mapInfo: beatmap.info.InfoData,
     mapSet: beatmap.map.BeatmapSetData
 ): HTMLTableElement => {
     const obstacleCount = beatmap.obstacle.count(mapSet._data._obstacles);

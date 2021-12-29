@@ -1,12 +1,13 @@
 # Changelog
 
-## v2.3.1 [TBD]
+## v2.3.1 [01-01-2022]
 
 ### Added
 
 -   Event type list per environment
 -   Basic Chroma check for unlit bomb check
 -   Gaga environment support
+-   JSDoc for development purpose
 
 ### Changed
 
@@ -20,7 +21,7 @@
 
 -   Hitbox inline and reverse staircase calculation fix
 
-## v2.3.0 [1-12-2021]
+## v2.3.0 [01-12-2021]
 
 ### Added
 

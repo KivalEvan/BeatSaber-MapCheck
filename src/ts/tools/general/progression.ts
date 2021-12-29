@@ -25,7 +25,7 @@ const tool: Tool = {
 function run(
     mapSettings: BeatmapSettings,
     mapSet?: beatmap.map.BeatmapSetData,
-    mapInfo?: beatmap.info.BeatmapInfo,
+    mapInfo?: beatmap.info.InfoData,
     sps?: SwingAnalysis[]
 ): void {
     const { _audioDuration: audioDuration } = mapSettings;

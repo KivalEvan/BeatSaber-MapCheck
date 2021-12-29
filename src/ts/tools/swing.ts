@@ -87,7 +87,7 @@ export const getEffectiveBPMNote = (
     notes: beatmap.note.Note[],
     bpm: beatmap.bpm.BeatPerMinute
 ): NoteEBPM[] => {
-    let noteEBPM: NoteEBPM[] = [];
+    const noteEBPM: NoteEBPM[] = [];
     const lastNote: { [key: number]: NoteEBPM } = {};
     const swingNoteArray: { [key: number]: NoteEBPM[] } = {
         0: [],
@@ -115,7 +115,7 @@ export const getEffectiveBPMSwingNote = (
     notes: beatmap.note.Note[],
     bpm: beatmap.bpm.BeatPerMinute
 ): NoteEBPM[] => {
-    let noteEBPM: NoteEBPM[] = [];
+    const noteEBPM: NoteEBPM[] = [];
     const lastNote: { [key: number]: NoteEBPM } = {};
     const swingNoteArray: { [key: number]: NoteEBPM[] } = {
         0: [],
@@ -162,7 +162,7 @@ export const calcMinSliderSpeed = (
     let hasStraight = false;
     let hasDiagonal = false;
     let curvedSpeed = 0;
-    let speed = bpm.toRealTime(
+    const speed = bpm.toRealTime(
         Math.max(
             ...notes.map((_, i) => {
                 if (i === 0) {
@@ -202,7 +202,7 @@ export const calcMaxSliderSpeed = (
     let hasStraight = false;
     let hasDiagonal = false;
     let curvedSpeed = Number.MAX_SAFE_INTEGER;
-    let speed = bpm.toRealTime(
+    const speed = bpm.toRealTime(
         Math.min(
             ...notes.map((_, i) => {
                 if (i === 0) {
@@ -239,7 +239,7 @@ export const getSliderNote = (
     notes: beatmap.note.Note[],
     bpm: beatmap.bpm.BeatPerMinute
 ): NoteSlider[] => {
-    let noteSlider: NoteSlider[] = [];
+    const noteSlider: NoteSlider[] = [];
     const lastNote: { [key: number]: NoteSlider } = {};
     const swingNoteArray: { [key: number]: NoteSlider[] } = {
         0: [],
@@ -254,8 +254,8 @@ export const getSliderNote = (
         note._maxSpeed = Number.MAX_SAFE_INTEGER;
         if (lastNote[note._type]) {
             if (next(note, lastNote[note._type], bpm, swingNoteArray[note._type])) {
-                let minSpeed = calcMinSliderSpeed(swingNoteArray[note._type], bpm);
-                let maxSpeed = calcMaxSliderSpeed(swingNoteArray[note._type], bpm);
+                const minSpeed = calcMinSliderSpeed(swingNoteArray[note._type], bpm);
+                const maxSpeed = calcMaxSliderSpeed(swingNoteArray[note._type], bpm);
                 if (minSpeed > 0 && maxSpeed !== Infinity) {
                     lastNote[note._type]._minSpeed = minSpeed;
                     lastNote[note._type]._maxSpeed = maxSpeed;
@@ -271,8 +271,8 @@ export const getSliderNote = (
     }
     for (let i = 0; i < 2; i++) {
         if (lastNote[i]) {
-            let minSpeed = calcMinSliderSpeed(swingNoteArray[i], bpm);
-            let maxSpeed = calcMaxSliderSpeed(swingNoteArray[i], bpm);
+            const minSpeed = calcMinSliderSpeed(swingNoteArray[i], bpm);
+            const maxSpeed = calcMaxSliderSpeed(swingNoteArray[i], bpm);
             if (minSpeed > 0 && maxSpeed !== Infinity) {
                 lastNote[i]._minSpeed = minSpeed;
                 lastNote[i]._maxSpeed = maxSpeed;

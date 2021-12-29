@@ -1,12 +1,12 @@
 import { BeatmapSetData } from './beatmap/mapSet';
 import { Contributor } from './beatmap/contributor';
-import { BeatmapInfo } from './beatmap/info';
+import { InfoData } from './beatmap/info';
 import { BPMChange } from './beatmap/bpm';
 import { Analysis } from './tools/analysis';
 
 // TODO: structure bpm change for certain use
 interface SavedData {
-    _mapInfo?: BeatmapInfo;
+    _mapInfo?: InfoData;
     _mapSet?: BeatmapSetData[];
     _contributors?: Contributor[];
     _analysis?: Analysis;
