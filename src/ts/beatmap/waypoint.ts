@@ -5,5 +5,4 @@ export interface Waypoint {
     _lineIndex: number;
     _lineLayer: number;
     _offsetDirection: number;
-    [key: string]: number;
 }

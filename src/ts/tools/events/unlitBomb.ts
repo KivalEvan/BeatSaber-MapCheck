@@ -101,7 +101,7 @@ const unlitBomb = (
                 time: ev._time,
                 fadeTime: 0,
             };
-            let e = eventLitTime[ev._type].find((e) => e[0] >= ev._time && !ev[1]);
+            let e = eventLitTime[ev._type].find((e) => e[0] >= ev._time && !e[1]);
             if (e) {
                 e[0] = ev._time;
                 e[1] = true;
@@ -115,7 +115,7 @@ const unlitBomb = (
                 time: ev._time,
                 fadeTime: fadeTime,
             };
-            let e = eventLitTime[ev._type].find((e) => e[0] >= ev._time && !ev[1]);
+            let e = eventLitTime[ev._type].find((e) => e[0] >= ev._time && !e[1]);
             if (e) {
                 e[0] = ev._time;
                 e[1] = true;

@@ -7,7 +7,6 @@ export interface Obstacle {
     _duration: number;
     _width: number;
     _customData?: CustomDataObstacle;
-    [key: string]: number | CustomDataObstacle | undefined;
 }
 
 interface ObstacleCount {

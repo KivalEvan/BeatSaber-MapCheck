@@ -8,7 +8,6 @@ export interface Event {
     _value: number;
     _floatValue?: number;
     _customData?: CustomDataEvent;
-    [key: string]: number | CustomDataEvent | undefined;
 }
 
 export enum EventRename {
