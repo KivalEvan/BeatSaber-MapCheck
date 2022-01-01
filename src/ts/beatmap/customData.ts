@@ -3,6 +3,7 @@ import { BPMChange } from './bpm';
 import { Contributor } from './contributor';
 import { Editor } from './editor';
 import { ColorScheme } from './environment';
+import { HeckCustomData } from './heck';
 import {
     CCustomData,
     ChromaEnvironmentOld,
@@ -49,11 +50,13 @@ export interface CustomDataInfo extends CustomData {
  *
  * @extends CustomData
  * @extends ColorScheme
+ * @extends HeckCustomData
  * @extends ChromaEnvironmentOld
  */
 export interface CustomDataInfoDifficulty
     extends CustomData,
         ColorScheme,
+        HeckCustomData,
         ChromaEnvironmentOld {
     _difficultyLabel?: string;
     _editorOffset?: number;
