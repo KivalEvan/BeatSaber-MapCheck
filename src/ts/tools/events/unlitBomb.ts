@@ -77,17 +77,10 @@ const unlitBomb = (
     };
     const eventLitTime: {
         [key: number]: [number, boolean][];
-    } = {
-        0: [[0, false]],
-        1: [[0, false]],
-        2: [[0, false]],
-        3: [[0, false]],
-        4: [[0, false]],
-        6: [[0, false]],
-        7: [[0, false]],
-        10: [[0, false]],
-        11: [[0, false]],
-    };
+    } = {};
+    beatmap.environment.EnvironmentEventList[environment].forEach(
+        (e) => (eventLitTime[e] = [[0, false]])
+    );
     const fadeTime = bpm.toBeatTime(1);
     const reactTime = bpm.toBeatTime(0.25);
     for (let i = 0, len = eventsLight.length; i < len; i++) {
