@@ -170,9 +170,7 @@ export const loadMap = async (mapZip: JSZip) => {
     if (fileInfo) {
         disableInput(true);
         let infoFileStr = await fileInfo.async('string');
-        savedData._mapInfo = (await JSON.parse(
-            infoFileStr
-        )) as beatmap.info.BeatmapInfo;
+        savedData._mapInfo = (await JSON.parse(infoFileStr)) as beatmap.info.InfoData;
 
         beatmap.parse.info(savedData._mapInfo);
         uiInfo.setInfo(savedData._mapInfo);

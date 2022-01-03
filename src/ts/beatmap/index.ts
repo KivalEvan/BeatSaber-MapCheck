@@ -13,6 +13,8 @@ export * as info from './info';
 export * as map from './mapSet';
 export * as njs from './njs';
 export * as noodleExtensions from './noodleExtensions';
+export * as keysound from './keysound';
+export * as heck from './heck';
 export * as parse from './parse';
 export * as note from './note';
 export * as obstacle from './obstacle';

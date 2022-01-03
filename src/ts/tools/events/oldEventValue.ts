@@ -41,7 +41,6 @@ function inputCheckHandler(this: HTMLInputElement) {
 }
 
 function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData) {
-    const { _bpm: bpm, _audioDuration: duration } = mapSettings;
     const { _events: events } = mapSet._data;
 
     const arr: beatmap.event.Event[] = [];

@@ -1,6 +1,27 @@
 # Changelog
 
-## v2.3.0 [1-12-2021]
+## v2.3.1 [04-01-2022]
+
+### Added
+
+-   Event type list per environment
+-   Basic Chroma check for unlit bomb check
+-   Gaga environment support
+-   JSDoc for development purpose
+
+### Changed
+
+-   Updated parsing
+    -   Checks for type
+    -   Handle missing properties
+-   Updated Chroma properties
+-   Updated hitbox check now uses new position/rotation system (except staircase)
+
+### Fixed
+
+-   Hitbox inline and reverse staircase calculation fix
+
+## v2.3.0 [01-12-2021]
 
 ### Added
 

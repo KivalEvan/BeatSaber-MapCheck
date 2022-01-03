@@ -5,6 +5,7 @@ import * as colors from '../colors';
 import * as uiPanel from './panel';
 import { removeOptions, round, toMMSS } from '../utils';
 import savedData from '../savedData';
+import { NECustomEvent } from '../beatmap/noodleExtensions';
 
 const logPrefix = 'UI Info: ';
 
@@ -557,7 +558,7 @@ export const setCustomEvents = (
             if (key == '_duration' || key == '_easing' || key == '_track') {
                 continue;
             }
-            let k =
+            const k =
                 beatmap.noodleExtensions.NEDataAbbr[
                     key as keyof typeof beatmap.noodleExtensions.NEDataAbbr
                 ];
@@ -570,12 +571,14 @@ export const setCustomEvents = (
         }
         return `${round(elem._time, 3)}${rt ? ' | ' + toMMSS(rt) : ''} -- ${
             elem._type
-        } -> [${keyArr.join('')}]${elem._data._track ? `(${elem._data._track})` : ''}`;
+        } -> [${keyArr.join('')}]${
+            elem._type !== 'AssignTrackParent' ? `(${elem._data._track})` : ''
+        }`;
     });
     displayTableRow(htmlTableCustomEvents, customEv);
 };
 
-export const setInfo = (mapInfo: beatmap.info.BeatmapInfo): void => {
+export const setInfo = (mapInfo: beatmap.info.InfoData): void => {
     uiHeader.setSongName(mapInfo._songName);
     uiHeader.setSongSubname(mapInfo._songSubName);
     uiHeader.setSongAuthor(mapInfo._songAuthorName);

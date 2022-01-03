@@ -1,29 +1,42 @@
-import { Color } from '../colors';
+import { ColorObject } from '../colors';
 
+/**
+ * Color Scheme interface for difficulty info custom data.
+ *
+ *     _colorLeft?: { r: float, g: float, b: float },
+ *     _colorRight?: { r: float, g: float, b: float },
+ *     _envColorLeft?: { r: float, g: float, b: float },
+ *     _envColorRight?: { r: float, g: float, b: float },
+ *     _envColorLeftBoost?: { r: float, g: float, b: float },
+ *     _envColorRightBoost?: { r: float, g: float, b: float },
+ *     _obstacleColor?: { r: float, g: float, b: float },
+ */
 export interface ColorScheme {
-    _colorLeft?: Color;
-    _colorRight?: Color;
-    _envColorLeft?: Color;
-    _envColorRight?: Color;
-    _envColorLeftBoost?: Color;
-    _envColorRightBoost?: Color;
-    _obstacleColor?: Color;
+    _colorLeft?: ColorObject;
+    _colorRight?: ColorObject;
+    _envColorLeft?: ColorObject;
+    _envColorRight?: ColorObject;
+    _envColorLeftBoost?: ColorObject;
+    _envColorRightBoost?: ColorObject;
+    _obstacleColor?: ColorObject;
 }
 
-export enum ColorSchemeRename {
-    '_colorLeft' = 'Left Note Color',
-    '_colorRight' = 'Right Note Color',
-    '_envColorLeft' = 'Left Environment Color',
-    '_envColorRight' = 'Right Environment Color',
-    '_envColorLeftBoost' = 'Left Environment Boost Color',
-    '_envColorRightBoost' = 'Right Environment Boost Color',
-    '_obstacleColor' = 'Obstacle Color',
-}
+/**
+ * Color Scheme property rename to human readable.
+ */
+export const ColorSchemeRename: { [k in keyof ColorScheme]: string } = {
+    _colorLeft: 'Left Note Color',
+    _colorRight: 'Right Note Color',
+    _envColorLeft: 'Left Environment Color',
+    _envColorRight: 'Right Environment Color',
+    _envColorLeftBoost: 'Left Environment Boost Color',
+    _envColorRightBoost: 'Right Environment Boost Color',
+    _obstacleColor: 'Obstacle Color',
+};
 
-export interface EnvironmentScheme {
-    [key: string]: ColorScheme;
-}
-
+/**
+ * List of available environment in base game.
+ */
 export type EnvironmentName =
     | 'DefaultEnvironment'
     | 'OriginsEnvironment'
@@ -48,62 +61,103 @@ export type EnvironmentName =
     | 'SkrillexEnvironment'
     | 'BillieEnvironment'
     | 'HalloweenEnvironment'
-    | 'GlassDesertEnvironment';
+    | 'GagaEnvironment';
+export type Environment360Name = 'GlassDesertEnvironment';
+export type EnvironmentAllName = EnvironmentName | Environment360Name;
 
-export enum EnvironmentRename {
-    DefaultEnvironment = 'The First',
-    OriginsEnvironment = 'Origins',
-    Origins = 'Origins', // because beat games
-    TriangleEnvironment = 'Triangle',
-    NiceEnvironment = 'Nice',
-    BigMirrorEnvironment = 'Big Mirror',
-    DragonsEnvironment = 'Dragons',
-    KDAEnvironment = 'K/DA',
-    MonstercatEnvironment = 'Monstercat',
-    CrabRaveEnvironment = 'Crab Rave',
-    PanicEnvironment = 'Panic',
-    RocketEnvironment = 'Rocket',
-    GreenDayEnvironment = 'Green Day',
-    GreenDayGrenadeEnvironment = 'Green Day Grenade',
-    TimbalandEnvironment = 'Timbaland',
-    FitBeatEnvironment = 'FitBeat',
-    LinkinParkEnvironment = 'Linkin Park',
-    BTSEnvironment = 'BTS',
-    KaleidoscopeEnvironment = 'Kaleidoscope',
-    InterscopeEnvironment = 'Interscope',
-    SkrillexEnvironment = 'Skrillex',
-    BillieEnvironment = 'Billie',
-    HalloweenEnvironment = 'Spooky',
-    GlassDesertEnvironment = 'Glass Desert',
-}
+/**
+ * List of available color scheme in base game.
+ */
+type ColorSchemeList =
+    | 'Default Custom'
+    | 'The First'
+    | 'Origins'
+    | 'KDA'
+    | 'Crab Rave'
+    | 'Noir'
+    | 'Rocket'
+    | 'Green Day'
+    | 'Timbaland'
+    | 'FitBeat'
+    | 'Linkin Park'
+    | 'BTS'
+    | 'Kaleidoscope'
+    | 'Interscope'
+    | 'Skrillex'
+    | 'Billie Eilish'
+    | 'Spooky'
+    | 'Gaga'
+    | 'Glass Desert';
 
-export enum EnvironmentColor {
-    DefaultEnvironment = 'The First',
-    OriginsEnvironment = 'Origins',
-    Origins = 'Origins', // because beat games
-    TriangleEnvironment = 'The First',
-    NiceEnvironment = 'The First',
-    BigMirrorEnvironment = 'The First',
-    DragonsEnvironment = 'The First',
-    KDAEnvironment = 'KDA',
-    MonstercatEnvironment = 'The First',
-    CrabRaveEnvironment = 'Crab Rave',
-    PanicEnvironment = 'The First',
-    RocketEnvironment = 'Rocket',
-    GreenDayEnvironment = 'Green Day',
-    GreenDayGrenadeEnvironment = 'Green Day',
-    TimbalandEnvironment = 'Timbaland',
-    FitBeatEnvironment = 'FitBeat',
-    LinkinParkEnvironment = 'Linkin Park',
-    BTSEnvironment = 'BTS',
-    KaleidoscopeEnvironment = 'Kaleidoscope',
-    InterscopeEnvironment = 'Interscope',
-    SkrillexEnvironment = 'Skrillex',
-    BillieEnvironment = 'Billie Eilish',
-    HalloweenEnvironment = 'Spooky',
-    GlassDesertEnvironment = 'Glass Desert',
-}
+export type EnvironmentScheme = {
+    [key in ColorSchemeList]: ColorScheme;
+};
 
+/**
+ * Environment rename to human readable.
+ */
+export const EnvironmentRename: Readonly<Record<EnvironmentAllName, string>> = {
+    DefaultEnvironment: 'The First',
+    OriginsEnvironment: 'Origins',
+    Origins: 'Origins (Triangle)', // because beat games
+    TriangleEnvironment: 'Triangle',
+    NiceEnvironment: 'Nice',
+    BigMirrorEnvironment: 'Big Mirror',
+    DragonsEnvironment: 'Dragons',
+    KDAEnvironment: 'K/DA',
+    MonstercatEnvironment: 'Monstercat',
+    CrabRaveEnvironment: 'Crab Rave',
+    PanicEnvironment: 'Panic',
+    RocketEnvironment: 'Rocket',
+    GreenDayEnvironment: 'Green Day',
+    GreenDayGrenadeEnvironment: 'Green Day Grenade',
+    TimbalandEnvironment: 'Timbaland',
+    FitBeatEnvironment: 'FitBeat',
+    LinkinParkEnvironment: 'Linkin Park',
+    BTSEnvironment: 'BTS',
+    KaleidoscopeEnvironment: 'Kaleidoscope',
+    InterscopeEnvironment: 'Interscope',
+    SkrillexEnvironment: 'Skrillex',
+    BillieEnvironment: 'Billie',
+    HalloweenEnvironment: 'Spooky',
+    GagaEnvironment: 'Gaga',
+    GlassDesertEnvironment: 'Glass Desert',
+};
+
+/**
+ * Record of Environment Color to Color Scheme.
+ */
+export const EnvironmentColor: Readonly<Record<EnvironmentAllName, ColorSchemeList>> = {
+    DefaultEnvironment: 'The First',
+    OriginsEnvironment: 'Origins',
+    Origins: 'The First', // because beat games
+    TriangleEnvironment: 'The First',
+    NiceEnvironment: 'The First',
+    BigMirrorEnvironment: 'The First',
+    DragonsEnvironment: 'The First',
+    KDAEnvironment: 'KDA',
+    MonstercatEnvironment: 'The First',
+    CrabRaveEnvironment: 'Crab Rave',
+    PanicEnvironment: 'The First',
+    RocketEnvironment: 'Rocket',
+    GreenDayEnvironment: 'Green Day',
+    GreenDayGrenadeEnvironment: 'Green Day',
+    TimbalandEnvironment: 'Timbaland',
+    FitBeatEnvironment: 'FitBeat',
+    LinkinParkEnvironment: 'Linkin Park',
+    BTSEnvironment: 'BTS',
+    KaleidoscopeEnvironment: 'Kaleidoscope',
+    InterscopeEnvironment: 'Interscope',
+    SkrillexEnvironment: 'Skrillex',
+    BillieEnvironment: 'Billie Eilish',
+    HalloweenEnvironment: 'Spooky',
+    GagaEnvironment: 'Gaga',
+    GlassDesertEnvironment: 'Glass Desert',
+};
+
+/**
+ * Color scheme definition.
+ */
 export const colorScheme: EnvironmentScheme = {
     'Default Custom': {
         _colorLeft: {
@@ -634,6 +688,43 @@ export const colorScheme: EnvironmentScheme = {
             b: 0.85849059,
         },
     },
+    Gaga: {
+        _colorLeft: {
+            r: 0.81960785,
+            g: 0.49807876,
+            b: 0.27702752,
+        },
+        _colorRight: {
+            r: 0.37894738,
+            g: 0.35789475,
+            b: 0.40000001,
+        },
+        _envColorLeft: {
+            r: 0.90196079,
+            g: 0.23009226,
+            b: 0,
+        },
+        _envColorRight: {
+            r: 0.46005884,
+            g: 0.56889427,
+            b: 0.92941177,
+        },
+        _obstacleColor: {
+            r: 0.81960791,
+            g: 0.44313729,
+            b: 0.18431373,
+        },
+        _envColorLeftBoost: {
+            r: 0.33768433,
+            g: 0.63207543,
+            b: 0.33690813,
+        },
+        _envColorRightBoost: {
+            r: 0.60209066,
+            g: 0.3280082,
+            b: 0.85849059,
+        },
+    },
     'Glass Desert': {
         _colorLeft: {
             r: 0.6792453,
@@ -661,4 +752,35 @@ export const colorScheme: EnvironmentScheme = {
             b: 0.3962264,
         },
     },
+};
+
+/**
+ * List of available event type in environment.
+ */
+export const EnvironmentEventList: Record<EnvironmentAllName, number[]> = {
+    DefaultEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
+    OriginsEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
+    Origins: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
+    TriangleEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
+    NiceEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
+    BigMirrorEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
+    DragonsEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
+    KDAEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
+    MonstercatEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
+    CrabRaveEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
+    PanicEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
+    RocketEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
+    GreenDayEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
+    GreenDayGrenadeEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
+    TimbalandEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
+    FitBeatEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
+    LinkinParkEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
+    BTSEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
+    KaleidoscopeEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
+    InterscopeEnvironment: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13, 16, 17],
+    SkrillexEnvironment: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13],
+    BillieEnvironment: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 16, 17],
+    HalloweenEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
+    GagaEnvironment: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 16, 17],
+    GlassDesertEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
 };

@@ -22,12 +22,13 @@ const tool: Tool = {
 function run(
     mapSettings: BeatmapSettings,
     mapSet?: beatmap.map.BeatmapSetData,
-    mapInfo?: beatmap.info.BeatmapInfo
+    mapInfo?: beatmap.info.InfoData
 ): void {
     if (!mapInfo) {
         throw new Error('something went wrong!');
     }
-    const { _previewStartTime: previewStartTime, _previewDuration: previewDuration } = mapInfo;
+    const { _previewStartTime: previewStartTime, _previewDuration: previewDuration } =
+        mapInfo;
 
     if (previewStartTime === 12 && previewDuration === 10) {
         const htmlResult = document.createElement('div');

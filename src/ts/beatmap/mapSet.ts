@@ -1,13 +1,13 @@
 import { CharacteristicName } from './characteristic';
 import { DifficultyData, DifficultyName } from './difficulty';
 import { EnvironmentName } from './environment';
-import { BeatmapInfoSetDifficulty } from './info';
+import { InfoSetDifficultyData } from './info';
 import * as obstacle from './obstacle';
 
 export interface BeatmapSetData {
     _mode: CharacteristicName;
     _difficulty: DifficultyName;
-    _info: BeatmapInfoSetDifficulty;
+    _info: InfoSetDifficultyData;
     _data: DifficultyData;
     _environment: EnvironmentName;
 }

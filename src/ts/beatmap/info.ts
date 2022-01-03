@@ -1,9 +1,30 @@
 import { CharacteristicName } from './characteristic';
 import { CustomDataInfo, CustomDataInfoDifficulty } from './customData';
 import { DifficultyName, DifficultyRank } from './difficulty';
-import { EnvironmentName } from './environment';
+import { EnvironmentName, Environment360Name } from './environment';
 
-export interface BeatmapInfo {
+/**
+ * Info interface for info file.
+ *
+ *     _version: string,
+ *     _songName: string,
+ *     _songSubName: string,
+ *     _songAuthorName: string,
+ *     _levelAuthorName: string,
+ *     _beatsPerMinute: float,
+ *     _shuffle: float,
+ *     _shufflePeriod: float,
+ *     _previewStartTime: float,
+ *     _previewDuration: float,
+ *     _songFilename: string,
+ *     _coverImageFilename: string,
+ *     _environmentName: EnvironmentName,
+ *     _allDirectionsEnvironmentName: EnvironmentName,
+ *     _songTimeOffset: float;
+ *     _customData?: CustomDataInfo;
+ *     _difficultyBeatmapSets: InfoSetData[];
+ */
+export interface InfoData {
     _version: string;
     _songName: string;
     _songSubName: string;
@@ -17,18 +38,34 @@ export interface BeatmapInfo {
     _songFilename: string;
     _coverImageFilename: string;
     _environmentName: EnvironmentName;
-    _allDirectionsEnvironmentName: EnvironmentName;
+    _allDirectionsEnvironmentName: Environment360Name;
     _songTimeOffset: number;
     _customData?: CustomDataInfo;
-    _difficultyBeatmapSets: BeatmapInfoSet[];
+    _difficultyBeatmapSets: InfoSetData[];
 }
 
-export interface BeatmapInfoSet {
+/**
+ * Info Set interface for info.
+ *
+ *     _beatmapCharacteristicName: CharacteristicName,
+ *     _difficultyBeatmaps: InfoSetDifficultyData[]
+ */
+export interface InfoSetData {
     _beatmapCharacteristicName: CharacteristicName;
-    _difficultyBeatmaps: BeatmapInfoSetDifficulty[];
+    _difficultyBeatmaps: InfoSetDifficultyData[];
 }
 
-export interface BeatmapInfoSetDifficulty {
+/**
+ * Info Set interface for info.
+ *
+ *     _difficulty: DifficultyName,
+ *     _difficultyRank: DifficultyRank,
+ *     _beatmapFilename: string,
+ *     _noteJumpMovementSpeed: float,
+ *     _noteJumpStartBeatOffset: float,
+ *     _customData?: CustomDataInfoDifficulty
+ */
+export interface InfoSetDifficultyData {
     _difficulty: DifficultyName;
     _difficultyRank: DifficultyRank;
     _beatmapFilename: string;
