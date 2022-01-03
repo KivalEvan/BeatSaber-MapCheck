@@ -12,6 +12,7 @@ import {
     ChromaObstacle,
 } from './chroma';
 import { NECustomData, NEEvent, NENote, NEObstacle } from './noodleExtensions';
+import { KeysoundMap, KeysoundNote } from './keysound';
 
 /**
  * Base custom data interface.
@@ -79,13 +80,17 @@ export interface CustomDataInfoDifficulty
  * @extends CCustomData
  * @extends NECustomData
  */
-export interface CustomDataDifficulty extends CustomData, CCustomData, NECustomData {
+export interface CustomDataDifficulty
+    extends CustomData,
+        CCustomData,
+        NECustomData,
+        KeysoundMap {
     _time?: number;
     _bpmChanges?: BPMChange[];
     _BPMChanges?: BPMChange[];
     _bookmarks?: Bookmark[];
 }
 
-export type CustomDataNote = CustomData & ChromaNote & NENote;
+export type CustomDataNote = CustomData & ChromaNote & NENote & KeysoundNote;
 export type CustomDataObstacle = CustomData & ChromaObstacle & NEObstacle;
 export type CustomDataEvent = CustomData & ChromaEvent & NEEvent;

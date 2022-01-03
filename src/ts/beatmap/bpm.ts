@@ -3,16 +3,31 @@
  *
  *     _time: float,
  *     _BPM: float,
- *     _bpm: never,
  *     _beatsPerBar: int,
  *     _metronomeOffset: float
  */
 export interface BPMChange {
     _time: number;
+    _bpm?: never;
     _BPM: number;
-    _bpm?: number;
-    _beatsPerBar?: number;
-    _metronomeOffset?: number;
+    _beatsPerBar: number;
+    _metronomeOffset: number;
+}
+
+/**
+ * Beatmap difficulty custom data interface for MediocreMapper BPM Change.
+ *
+ *     _time: float,
+ *     _bpm: float,
+ *     _beatsPerBar: int,
+ *     _metronomeOffset: float
+ */
+export interface BPMChangeOld {
+    _time: number;
+    _bpm: number;
+    _BPM: never;
+    _beatsPerBar: number;
+    _metronomeOffset: number;
 }
 
 /**
@@ -32,7 +47,11 @@ export class BeatPerMinute {
     private _bpmChange: BPMChangeTime[];
     private _offset: number;
 
-    constructor(bpm: number, bpmChange: BPMChange[] = [], offset: number = 0) {
+    constructor(
+        bpm: number,
+        bpmChange: (BPMChange | BPMChangeOld)[] = [],
+        offset: number = 0
+    ) {
         this._bpm = bpm;
         this._offset = offset / 1000;
         this._bpmChange = this.getBPMChangeTime([...bpmChange]);
@@ -47,7 +66,7 @@ export class BeatPerMinute {
     get change(): BPMChangeTime[] {
         return this._bpmChange;
     }
-    set change(val: BPMChange[] | BPMChangeTime[]) {
+    set change(val: BPMChangeTime[]) {
         this._bpmChange = this.getBPMChangeTime([...val]);
     }
     get offset(): number {
@@ -59,16 +78,18 @@ export class BeatPerMinute {
 
     /**
      * Create new BPM change object that allow time to be read according to editor.
-     * @param {BPMChange[]} bpmc - Array of BPM change
+     * @param {(BPMChange | BPMChangeOld)[]} bpmc - Array of BPM change
      * @returns {BPMChangeTime[]} Array of new BPM change
      */
-    private getBPMChangeTime(bpmc: BPMChange[] = []): BPMChangeTime[] {
+    private getBPMChangeTime(bpmc: (BPMChange | BPMChangeOld)[] = []): BPMChangeTime[] {
         let temp!: BPMChangeTime;
         const bpmChange: BPMChangeTime[] = [];
         for (let i = 0; i < bpmc.length; i++) {
             const curBPMC: BPMChangeTime = {
                 _BPM: bpmc[i]._BPM ?? bpmc[i]._bpm,
                 _time: bpmc[i]._time,
+                _beatsPerBar: bpmc[i]._beatsPerBar,
+                _metronomeOffset: bpmc[i]._metronomeOffset,
                 _newTime: 0,
             };
             if (temp) {
@@ -137,13 +158,13 @@ export class BeatPerMinute {
 /**
  * Create and return an instance of BeatPerMinute class.
  * @param {number} bpm - BPM value
- * @param {BPMChange[]} bpmChange - Array of BPM change
+ * @param {(BPMChange|BPMChangeOld)[]} bpmChange - Array of BPM change
  * @param {number} offset - Editor offset
  * @returns {BeatPerMinute} BeatPerMinute class
  */
 export const create = (
     bpm: number,
-    bpmChange?: BPMChange[],
+    bpmChange?: (BPMChange | BPMChangeOld)[],
     offset?: number
 ): BeatPerMinute => {
     return new BeatPerMinute(bpm, bpmChange, offset);
