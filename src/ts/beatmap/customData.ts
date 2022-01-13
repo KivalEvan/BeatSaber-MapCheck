@@ -3,21 +3,30 @@ import { BPMChange } from './bpm';
 import { Contributor } from './contributor';
 import { Editor } from './editor';
 import { ColorScheme } from './environment';
-import { HeckCustomData } from './heck';
+import { HeckInfoCustomData, HeckCustomData, HeckCustomEvent } from './heck';
 import {
-    CCustomData,
     ChromaEnvironmentOld,
     ChromaEvent,
     ChromaNote,
     ChromaObstacle,
+    ChromaCustomData,
+    ChromaCustomEvent,
 } from './chroma';
-import { NECustomData, NEEvent, NENote, NEObstacle } from './noodleExtensions';
+import {
+    NECustomData,
+    NECustomEvent,
+    NEEvent,
+    NENote,
+    NEObstacle,
+} from './noodleExtensions';
 import { KeysoundMap, KeysoundNote } from './keysound';
+import { Merge } from '../utils';
 
 /**
  * Base custom data interface.
  */
 export interface CustomData {
+    // deno-lint-ignore no-explicit-any
     [key: string]: any;
 }
 
@@ -51,13 +60,13 @@ export interface CustomDataInfo extends CustomData {
  *
  * @extends CustomData
  * @extends ColorScheme
- * @extends HeckCustomData
+ * @extends HeckInfoCustomData
  * @extends ChromaEnvironmentOld
  */
 export interface CustomDataInfoDifficulty
     extends CustomData,
         ColorScheme,
-        HeckCustomData,
+        HeckInfoCustomData,
         ChromaEnvironmentOld {
     _difficultyLabel?: string;
     _editorOffset?: number;
@@ -80,11 +89,16 @@ export interface CustomDataInfoDifficulty
  * @extends CCustomData
  * @extends NECustomData
  */
+
+export type CustomEvent = HeckCustomEvent | ChromaCustomEvent | NECustomEvent;
+
 export interface CustomDataDifficulty
     extends CustomData,
-        CCustomData,
-        NECustomData,
+        Omit<HeckCustomData, '_customEvents'>,
+        Omit<ChromaCustomData, '_customEvents'>,
+        Omit<NECustomData, '_customEvents'>,
         KeysoundMap {
+    _customEvents?: CustomEvent[];
     _time?: number;
     _bpmChanges?: BPMChange[];
     _BPMChanges?: BPMChange[];

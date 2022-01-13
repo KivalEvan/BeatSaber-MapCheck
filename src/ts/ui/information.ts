@@ -3,9 +3,8 @@ import * as uiHeader from './header';
 import * as beatmap from '../beatmap';
 import * as colors from '../colors';
 import * as uiPanel from './panel';
-import { removeOptions, round, toMMSS } from '../utils';
+import { removeOptions, round, toMMSS, toHHMMSS } from '../utils';
 import savedData from '../savedData';
-import { NECustomEvent } from '../beatmap/noodleExtensions';
 
 const logPrefix = 'UI Info: ';
 
@@ -233,7 +232,7 @@ export const setTimeSpend = (num?: number): void => {
         hideTableRow(htmlTableTimeSpend);
         return;
     }
-    displayTableRow(htmlTableTimeSpend, toMMSS(num));
+    displayTableRow(htmlTableTimeSpend, toHHMMSS(num));
 };
 
 export const setCustomColor = (
@@ -515,9 +514,7 @@ export const setEnvironmentEnhancement = (
     displayTableRow(htmlTableEnvironmentEnhancement, envEnhance);
 };
 
-export const setPointDefinitions = (
-    arr?: beatmap.noodleExtensions.NEPointDefinition[]
-): void => {
+export const setPointDefinitions = (arr?: beatmap.heck.HeckPointDefinition[]): void => {
     if (!htmlTablePointDefinitions) {
         console.error(logPrefix + 'missing table row for point definitions');
         return;
@@ -535,7 +532,7 @@ export const setPointDefinitions = (
 };
 
 export const setCustomEvents = (
-    arr?: beatmap.noodleExtensions.NECustomEvent[],
+    arr?: beatmap.customData.CustomEvent[],
     bpm?: beatmap.bpm.BeatPerMinute | null
 ): void => {
     if (!htmlTableCustomEvents) {
@@ -558,15 +555,9 @@ export const setCustomEvents = (
             if (key == '_duration' || key == '_easing' || key == '_track') {
                 continue;
             }
-            const k =
-                beatmap.noodleExtensions.NEDataAbbr[
-                    key as keyof typeof beatmap.noodleExtensions.NEDataAbbr
-                ];
-            if (
-                elem._data[key as keyof beatmap.noodleExtensions.NECustomEventData] !=
-                null
-            ) {
-                keyArr.push(k);
+            //@ts-ignore shut up i dont care
+            if (elem._data[key] != null) {
+                keyArr.push(key);
             }
         }
         return `${round(elem._time, 3)}${rt ? ' | ' + toMMSS(rt) : ''} -- ${

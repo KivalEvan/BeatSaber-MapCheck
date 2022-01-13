@@ -12,6 +12,16 @@ export const toMMSS = (seconds: number): string => {
     return `${min}:${sec}`;
 };
 
+export const toHHMMSS = (minutes: number): string => {
+    if (!minutes) {
+        return '0:00:00';
+    }
+    const sec = Math.round((minutes * 60) % 60)
+        .toString()
+        .padStart(2, '0');
+    return `${toMMSS(minutes)}:${sec}`;
+};
+
 export const toMMSSMS = (seconds: number): string => {
     if (!seconds) {
         return '0:00.000';
@@ -95,4 +105,10 @@ export const removeOptions = (selectElement: HTMLSelectElement): void => {
     for (let i = selectElement.options.length - 1; i >= 0; i--) {
         selectElement.remove(i);
     }
+};
+
+export type Merge<X, Y> = {
+    [K in keyof X | keyof Y]:
+        | (K extends keyof X ? X[K] : never)
+        | (K extends keyof Y ? Y[K] : never);
 };

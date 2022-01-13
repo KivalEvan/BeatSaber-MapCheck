@@ -1,5 +1,13 @@
 # Changelog
 
+## v2.3.2 [TBD]
+
+### Changed
+
+-   Time spent now shows HH:MM:SS instead of HH:MM
+-   Actually added Gaga color scheme
+-   Restructured custom mod stuff
+
 ## v2.3.1 [04-01-2022]
 
 ### Added

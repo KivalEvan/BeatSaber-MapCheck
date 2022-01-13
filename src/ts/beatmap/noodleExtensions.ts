@@ -1,21 +1,11 @@
-import { Easings } from './easings';
-type Array2DPoint = [number, number];
-type Array3DPoint = [number, number, number];
-type ArrayColorPointDefinition = [number, number, number, number, number, Easings?];
-type ArrayPercentPointDefinition = [number, number, Easings?];
-type Array2DPointDefinition = [number, number, number, Easings?, 'splineCatmullRom'?];
-type Array3DPointDefinition = [
-    number,
-    number,
-    number,
-    number,
-    Easings?,
-    'splineCatmullRom'?
-];
-type ArrayPointDefinition =
-    | Array2DPointDefinition[]
-    | Array3DPointDefinition[]
-    | ArrayColorPointDefinition[];
+import {
+    HeckCustomEventDataBase,
+    Array2DPoint,
+    Array3DPoint,
+    ArrayColorPointDefinition,
+    ArrayPercentPointDefinition,
+    Array3DPointDefinition,
+} from './heck';
 
 export const NEName = 'Noodle Extensions';
 
@@ -99,171 +89,7 @@ export interface NEEvent {
     _rotation?: number;
 }
 
-/**
- * Noodle Extensions Custom Event interface for AnimateTrack.
- *
- *     _time: float,
- *     _type: 'AnimateTrack',
- *     _data: NECustomEventDataAnimateTrack
- */
-export interface NECustomEventAnimateTrack {
-    _time: number;
-    _type: 'AnimateTrack';
-    _data: NECustomEventDataAnimateTrack;
-}
-
-/**
- * Noodle Extensions Custom Event interface for AssignPathAnimation.
- *
- *     _time: float,
- *     _type: 'AssignPathAnimation',
- *     _data: NECustomEventDataAssignPathAnimation
- */
-export interface NECustomEventAssignPathAnimation {
-    _time: number;
-    _type: 'AssignPathAnimation';
-    _data: NECustomEventDataAssignPathAnimation;
-}
-
-/**
- * Noodle Extensions Custom Event interface for AssignTrackParent.
- *
- *     _time: float,
- *     _type: 'AssignTrackParent',
- *     _data: NECustomEventDataAssignTrackParent
- */
-export interface NECustomEventAssignTrackParent {
-    _time: number;
-    _type: 'AssignTrackParent';
-    _data: NECustomEventDataAssignTrackParent;
-}
-
-/**
- * Noodle Extensions Custom Event interface for AssignPlayerToTrack.
- *
- *     _time: float,
- *     _type: 'AssignPlayerToTrack',
- *     _data: NECustomEventDataAssignPlayerToTrack
- */
-export interface NECustomEventAssignPlayerToTrack {
-    _time: number;
-    _type: 'AssignPlayerToTrack';
-    _data: NECustomEventDataAssignPlayerToTrack;
-}
-
-/**
- * Noodle Extensions Custom Event interface for AssignFogTrack.
- *
- *     _time: float,
- *     _type: 'AssignFogTrack',
- *     _data: NECustomEventDataAssignFogTrack
- */
-export interface NECustomEventAssignFogTrack {
-    _time: number;
-    _type: 'AssignFogTrack';
-    _data: NECustomEventDataAssignFogTrack;
-}
-
-export type NECustomEvent =
-    | NECustomEventAnimateTrack
-    | NECustomEventAssignPathAnimation
-    | NECustomEventAssignTrackParent
-    | NECustomEventAssignPlayerToTrack
-    | NECustomEventAssignFogTrack;
-
-/**
- * Noodle Extensions Point Definition interface.
- *
- *     _name: string,
- *     _points: ArrayPointDefinition[];
- */
-export interface NEPointDefinition {
-    _name: string;
-    _points: ArrayPointDefinition[];
-}
-
-/**
- * Noodle Extensions Base Custom Event interface.
- *
- *     _track: string,
- */
-export interface NECustomEventDataBase {
-    _track: string;
-}
-
-/**
- * Noodle Extensions Custom Data interface for difficulty custom data.
- *
- *     _track: string,
- */
-export interface NECustomData {
-    _customEvents?: NECustomEvent[];
-    _pointDefinitions?: NEPointDefinition[];
-}
-
 // lmao wtf
-/**
- * AnimateTrack interface for Noodle Extensions Custom Event.
- *
- *     _duration: float,
- *     _easing?: Easings,
- *     _position?: string | Array3DPointDefinition[],
- *     _rotation?: string | Array3DPointDefinition[],
- *     _localRotation?: string | Array3DPointDefinition[],
- *     _scale?: string | Array3DPointDefinition[],
- *     _dissolve?: string | ArrayPercentPointDefinition[],
- *     _dissolveArrow?: string | ArrayPercentPointDefinition[],
- *     _color?: string | ArrayColorPointDefinition[],
- *     _interactable?: string | ArrayPercentPointDefinition[],
- *     _time?: string | ArrayPercentPointDefinition[]
- *
- * @extends NECustomEventDataBase
- */
-export interface NECustomEventDataAnimateTrack extends NECustomEventDataBase {
-    _duration: number;
-    _easing?: Easings;
-    _position?: string | Array3DPointDefinition[];
-    _rotation?: string | Array3DPointDefinition[];
-    _localRotation?: string | Array3DPointDefinition[];
-    _scale?: string | Array3DPointDefinition[];
-    _dissolve?: string | ArrayPercentPointDefinition[];
-    _dissolveArrow?: string | ArrayPercentPointDefinition[];
-    _color?: string | ArrayColorPointDefinition[];
-    _interactable?: string | ArrayPercentPointDefinition[];
-    _time?: string | ArrayPercentPointDefinition[];
-}
-
-/**
- * AssignPathAnimation interface for Noodle Extensions Custom Event.
- *
- *     _duration: float,
- *     _easing?: Easings,
- *     _position?: string | Array3DPointDefinition[],
- *     _rotation?: string | Array3DPointDefinition[],
- *     _localRotation?: string | Array3DPointDefinition[],
- *     _scale?: string | Array3DPointDefinition[],
- *     _dissolve?: string | ArrayPercentPointDefinition[],
- *     _dissolveArrow?: string | ArrayPercentPointDefinition[],
- *     _color?: string | ArrayColorPointDefinition[],
- *     _interactable?: string | ArrayPercentPointDefinition[],
- *     _definitePosition?: string | Array3DPointDefinition[]
- *
- * @extends NECustomEventDataBase
- */
-export interface NECustomEventDataAssignPathAnimation extends NECustomEventDataBase {
-    _duration: number;
-    _easing?: Easings;
-    _position?: string | Array3DPointDefinition[];
-    _rotation?: string | Array3DPointDefinition[];
-    _localRotation?: string | Array3DPointDefinition[];
-    _scale?: string | Array3DPointDefinition[];
-    _dissolve?: string | ArrayPercentPointDefinition[];
-    _dissolveArrow?: string | ArrayPercentPointDefinition[];
-    _color?: string | ArrayColorPointDefinition[];
-    _interactable?: string | ArrayPercentPointDefinition[];
-    _definitePosition?: string | Array3DPointDefinition[];
-}
-
 /**
  * AssignPathAnimation interface for Noodle Extensions Custom Event.
  *
@@ -279,22 +105,7 @@ export interface NECustomEventDataAssignTrackParent {
  * AssignPlayerToTrack interface for Noodle Extensions Custom Event.
  * @extends NECustomEventDataBase
  */
-export interface NECustomEventDataAssignPlayerToTrack extends NECustomEventDataBase {}
-
-/**
- * AssignFogTrack interface for Noodle Extensions Custom Event.
- *
- *     _attenuation: float | Array2DPointDefinition[];
- *     _offset: float | Array2DPointDefinition[];
- *     _startY: float | Array2DPointDefinition[];
- *     _height: float | Array2DPointDefinition[];
- */
-export interface NECustomEventDataAssignFogTrack extends NECustomEventDataBase {
-    _attenuation: number | Array2DPointDefinition[];
-    _offset: number | Array2DPointDefinition[];
-    _startY: number | Array2DPointDefinition[];
-    _height: number | Array2DPointDefinition[];
-}
+export interface NECustomEventDataAssignPlayerToTrack extends HeckCustomEventDataBase {}
 
 /**
  * Noodle Extensions Animation interface for Noodle Extensions Object.
@@ -323,9 +134,41 @@ export interface NEAnimation {
     _time?: string | ArrayPercentPointDefinition[];
 }
 
-export type NECustomEventData =
-    | NECustomEventDataAnimateTrack
-    | NECustomEventDataAssignPathAnimation
-    | NECustomEventDataAssignTrackParent
-    | NECustomEventDataAssignPlayerToTrack
-    | NECustomEventDataAssignFogTrack;
+/**
+ * Noodle Extensions Custom Event interface for AssignTrackParent.
+ *
+ *     _time: float,
+ *     _type: 'AssignTrackParent',
+ *     _data: NECustomEventDataAssignTrackParent
+ */
+export interface NECustomEventAssignTrackParent {
+    _time: number;
+    _type: 'AssignTrackParent';
+    _data: NECustomEventDataAssignTrackParent;
+}
+
+/**
+ * Noodle Extensions Custom Event interface for AssignPlayerToTrack.
+ *
+ *     _time: float,
+ *     _type: 'AssignPlayerToTrack',
+ *     _data: NECustomEventDataAssignPlayerToTrack
+ */
+export interface NECustomEventAssignPlayerToTrack {
+    _time: number;
+    _type: 'AssignPlayerToTrack';
+    _data: NECustomEventDataAssignPlayerToTrack;
+}
+
+export type NECustomEvent =
+    | NECustomEventAssignTrackParent
+    | NECustomEventAssignPlayerToTrack;
+
+/**
+ * Noodle Extensions Custom Data interface for difficulty custom data.
+ *
+ *     _track: string,
+ */
+export interface NECustomData {
+    _customEvents?: NECustomEvent[];
+}
