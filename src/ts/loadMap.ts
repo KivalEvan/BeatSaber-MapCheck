@@ -13,31 +13,6 @@ import flag from './flag';
 import savedData, { clearData } from './savedData';
 import { getIdZipURL, getHashZipURL } from './beatsaver';
 
-export const downloadFromURL = async (input: string): Promise<void> => {
-    // sanitize & validate url
-    let url: string;
-    try {
-        url = sanitizeURL(input);
-    } catch (err) {
-        uiLoading.status('info', err, 0);
-        console.error(err);
-        return;
-    }
-
-    try {
-        disableInput(true);
-        uiLoading.status('info', 'Requesting download from link', 0);
-        console.log(`downloading from ${url}`);
-        // apparently i need cors proxy
-        let res = await downloadMap(url);
-        uiHeader.setCoverLink(url);
-        extractZip(res);
-    } catch (err) {
-        disableInput(false);
-        uiLoading.status('error', err, 100);
-    }
-};
-
 export const downloadFromID = async (input: string): Promise<void> => {
     // sanitize & validate id
     let id;
@@ -63,6 +38,40 @@ export const downloadFromID = async (input: string): Promise<void> => {
         disableInput(false);
         uiLoading.status('error', err, 100);
         console.error(err);
+    }
+};
+
+export const downloadFromURL = async (input: string): Promise<void> => {
+    // sanitize & validate url
+    let url: string;
+    try {
+        url = sanitizeURL(input);
+    } catch (err) {
+        uiLoading.status('info', err, 0);
+        console.error(err);
+        return;
+    }
+
+    if (url.match(/^(https?:\/\/)?(www\.)?beatsaver\.com\/maps\//)) {
+        downloadFromID(
+            url
+                .replace(/^https?:\/\/(www\.)?beatsaver\.com\/maps\//, '')
+                .match(/[a-fA-F0-9]*/)![0]
+        );
+        return;
+    }
+
+    try {
+        disableInput(true);
+        uiLoading.status('info', 'Requesting download from link', 0);
+        console.log(`downloading from ${url}`);
+        // apparently i need cors proxy
+        let res = await downloadMap(url);
+        uiHeader.setCoverLink(url);
+        extractZip(res);
+    } catch (err) {
+        disableInput(false);
+        uiLoading.status('error', err, 100);
     }
 };
 

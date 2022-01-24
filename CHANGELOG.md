@@ -4,6 +4,7 @@
 
 ### Changed
 
+-   Download from URL changes to download from ID if it detects valid BeatSaver map link
 -   Time spent now shows HH:MM:SS instead of HH:MM
 -   Actually added Gaga color scheme
 -   Restructured custom mod stuff
