@@ -29,7 +29,7 @@ export const downloadFromURL = async (input: string): Promise<void> => {
         uiLoading.status('info', 'Requesting download from link', 0);
         console.log(`downloading from ${url}`);
         // apparently i need cors proxy
-        let res = await downloadMap('https://cors-anywhere.herokuapp.com/' + url);
+        let res = await downloadMap(url);
         uiHeader.setCoverLink(url);
         extractZip(res);
     } catch (err) {

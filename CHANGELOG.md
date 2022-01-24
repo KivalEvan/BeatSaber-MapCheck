@@ -8,6 +8,10 @@
 -   Actually added Gaga color scheme
 -   Restructured custom mod stuff
 
+### Removed
+
+-   CORS proxy (I don't think this is even needed anymore; I would've done own server, but cost is too much)
+
 ## v2.3.1 [04-01-2022]
 
 ### Added
