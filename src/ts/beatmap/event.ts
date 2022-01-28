@@ -5,7 +5,7 @@ import {
     ChromaEventZoom,
 } from './chroma';
 import { NEEvent } from './noodleExtensions';
-import { EnvironmentEventList, EnvironmentAllName } from './environment';
+import { environmentEventList, EnvironmentAllName } from './environment';
 
 /**
  * Beatmap object interface for Event.
@@ -352,7 +352,7 @@ export const count = (
     events: Event[],
     environment: EnvironmentAllName = 'DefaultEnvironment'
 ): EventCount => {
-    const commonEvent = EnvironmentEventList[environment] ?? [
+    const commonEvent = environmentEventList[environment] ?? [
         0, 1, 2, 3, 4, 8, 9, 12, 13,
     ];
     const eventCount: EventCount = {};

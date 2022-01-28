@@ -94,7 +94,7 @@ export const setEnvironment = (str?: beatmap.environment.EnvironmentName): void 
         return;
     }
     htmlInfoEnvironment.textContent =
-        (beatmap.environment.EnvironmentRename[str] || 'Unknown') + ' Environment';
+        (beatmap.environment.environmentRename[str] || 'Unknown') + ' Environment';
 };
 
 export const setEditors = (obj?: beatmap.editor.Editor): void => {
@@ -263,43 +263,43 @@ export const setCustomColor = (
         _colorLeft:
             colors.rgbaToHex(
                 beatmap.environment.colorScheme[
-                    beatmap.environment.EnvironmentColor[environment]
+                    beatmap.environment.environmentColor[environment]
                 ]?._colorLeft
             ) || null,
         _colorRight:
             colors.rgbaToHex(
                 beatmap.environment.colorScheme[
-                    beatmap.environment.EnvironmentColor[environment]
+                    beatmap.environment.environmentColor[environment]
                 ]?._colorRight
             ) || null,
         _envColorLeft:
             colors.rgbaToHex(
                 beatmap.environment.colorScheme[
-                    beatmap.environment.EnvironmentColor[environment]
+                    beatmap.environment.environmentColor[environment]
                 ]?._envColorLeft
             ) || null,
         _envColorRight:
             colors.rgbaToHex(
                 beatmap.environment.colorScheme[
-                    beatmap.environment.EnvironmentColor[environment]
+                    beatmap.environment.environmentColor[environment]
                 ]?._envColorRight
             ) || null,
         _envColorLeftBoost:
             colors.rgbaToHex(
                 beatmap.environment.colorScheme[
-                    beatmap.environment.EnvironmentColor[environment]
+                    beatmap.environment.environmentColor[environment]
                 ]?._envColorLeftBoost
             ) || null,
         _envColorRightBoost:
             colors.rgbaToHex(
                 beatmap.environment.colorScheme[
-                    beatmap.environment.EnvironmentColor[environment]
+                    beatmap.environment.environmentColor[environment]
                 ]?._envColorRightBoost
             ) || null,
         _obstacleColor:
             colors.rgbaToHex(
                 beatmap.environment.colorScheme[
-                    beatmap.environment.EnvironmentColor[environment]
+                    beatmap.environment.environmentColor[environment]
                 ]?._obstacleColor
             ) || null,
     };
@@ -332,7 +332,7 @@ export const setCustomColor = (
         envBL =
             colors.rgbaToHex(
                 beatmap.environment.colorScheme[
-                    beatmap.environment.EnvironmentColor[environment]
+                    beatmap.environment.environmentColor[environment]
                 ]?._envColorLeftBoost
             ) || hexColor._envColorLeft;
     }
@@ -343,7 +343,7 @@ export const setCustomColor = (
         envBR =
             colors.rgbaToHex(
                 beatmap.environment.colorScheme[
-                    beatmap.environment.EnvironmentColor[environment]
+                    beatmap.environment.environmentColor[environment]
                 ]?._envColorRightBoost
             ) || hexColor._envColorRight;
     }
@@ -375,8 +375,8 @@ export const setCustomColor = (
 
         textContainer.className = 'info__color-text';
         textContainer.textContent = ` -- ${
-            beatmap.environment.ColorSchemeRename[
-                key as keyof typeof beatmap.environment.ColorSchemeRename
+            beatmap.environment.colorSchemeRename[
+                key as keyof typeof beatmap.environment.colorSchemeRename
             ]
         }`;
 

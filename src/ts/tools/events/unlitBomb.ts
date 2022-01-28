@@ -56,7 +56,7 @@ const unlitBomb = (
         .filter(
             (ev) =>
                 beatmap.event.isLightEvent(ev) &&
-                beatmap.environment.EnvironmentEventList[environment].includes(ev._type)
+                beatmap.environment.environmentEventList[environment].includes(ev._type)
         )
         .sort((a, b) => a._type - b._type);
     const eventState: {
@@ -79,7 +79,7 @@ const unlitBomb = (
     const eventLitTime: {
         [key: number]: [number, boolean][];
     } = {};
-    beatmap.environment.EnvironmentEventList[environment].forEach(
+    beatmap.environment.environmentEventList[environment].forEach(
         (e) => (eventLitTime[e] = [[0, false]])
     );
     const fadeTime = bpm.toBeatTime(1);

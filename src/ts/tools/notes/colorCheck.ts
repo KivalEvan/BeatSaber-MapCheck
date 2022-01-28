@@ -66,12 +66,12 @@ function customColorSimilarity(
     const checkColorLeft =
         mapSet._info._customData?._colorLeft ??
         beatmap.environment.colorScheme[
-            beatmap.environment.EnvironmentColor[mapSet._environment]
+            beatmap.environment.environmentColor[mapSet._environment]
         ]._colorLeft;
     const checkColorRight =
         mapSet._info._customData?._colorRight ??
         beatmap.environment.colorScheme[
-            beatmap.environment.EnvironmentColor[mapSet._environment]
+            beatmap.environment.environmentColor[mapSet._environment]
         ]._colorRight;
     if (checkColorLeft && checkColorRight) {
         return deltaE00(toRGBArray(checkColorLeft), toRGBArray(checkColorRight));
@@ -88,12 +88,12 @@ function customColorArrowSimilarity(
     const checkColorLeft =
         mapSet._info._customData?._colorLeft ??
         beatmap.environment.colorScheme[
-            beatmap.environment.EnvironmentColor[mapSet._environment]
+            beatmap.environment.environmentColor[mapSet._environment]
         ]._colorLeft;
     const checkColorRight =
         mapSet._info._customData?._colorRight ??
         beatmap.environment.colorScheme[
-            beatmap.environment.EnvironmentColor[mapSet._environment]
+            beatmap.environment.environmentColor[mapSet._environment]
         ]._colorRight;
     if (checkColorLeft) {
         deltaELeft = deltaE00(arrowColor, toRGBArray(checkColorLeft));
