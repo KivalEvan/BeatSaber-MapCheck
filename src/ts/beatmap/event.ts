@@ -1,4 +1,10 @@
-import { CustomDataEvent } from './customData';
+import {
+    ChromaEventLight,
+    ChromaEventLaser,
+    ChromaEventRotation,
+    ChromaEventZoom,
+} from './chroma';
+import { NEEvent } from './noodleExtensions';
 import { EnvironmentEventList, EnvironmentAllName } from './environment';
 
 /**
@@ -11,13 +17,61 @@ import { EnvironmentEventList, EnvironmentAllName } from './environment';
  *     _customData?: JSON
  */
 // it took me long enough to realise Event is a built in JS class/interface, but it has no effect here anyway
-export interface Event {
+export interface EventBase {
     _time: number;
     _type: number;
     _value: number;
     _floatValue: number;
-    _customData?: CustomDataEvent;
+    _customData?: Record<never, never>;
 }
+
+export interface EventLight extends EventBase {
+    _type: 0 | 1 | 2 | 3 | 4 | 6 | 7 | 10 | 11;
+    _customData?: ChromaEventLight;
+}
+
+export interface EventBoost extends EventBase {
+    _type: 5;
+    _value: 0 | 1;
+}
+
+export interface EventRing extends EventBase {
+    _type: 8;
+    _customData?: ChromaEventRotation;
+}
+
+export interface EventZoom extends EventBase {
+    _type: 9;
+    _customData?: ChromaEventRotation | ChromaEventZoom;
+}
+
+export interface EventLaser extends EventBase {
+    _type: 12 | 13;
+    _customData?: ChromaEventLaser;
+}
+
+export interface EventLaneRotation extends EventBase {
+    _type: 14 | 15;
+    _customData?: NEEvent;
+}
+
+export interface EventExtra extends EventBase {
+    _type: 16 | 17;
+}
+
+export interface EventBPMChange extends EventBase {
+    _type: 100;
+}
+
+export type Event =
+    | EventLight
+    | EventBoost
+    | EventRing
+    | EventZoom
+    | EventLaser
+    | EventLaneRotation
+    | EventExtra
+    | EventBPMChange;
 
 /**
  * Enum for beatmap event type name.
@@ -166,7 +220,7 @@ export const isLaneRotationEvent = (event: Event): boolean => {
  * @param {Event} event - Beatmap event
  * @returns {boolean} If event is a hydraulic event
  */
-export const isHydraulicEvent = (event: Event): boolean => {
+export const isExtraEvent = (event: Event): boolean => {
     return event._type === 16 || event._type === 17;
 };
 
@@ -189,7 +243,7 @@ export const isLightingEvent = (event: Event): boolean => {
         isLightEvent(event) ||
         isRingEvent(event) ||
         isLaserRotationEvent(event) ||
-        isHydraulicEvent(event)
+        isExtraEvent(event)
     );
 };
 
@@ -200,6 +254,7 @@ export const isLightingEvent = (event: Event): boolean => {
  */
 export const hasChroma = (event: Event): boolean => {
     if (isLightEvent(event)) {
+        event = event as EventLight;
         return (
             Array.isArray(event._customData?._color) ||
             typeof event._customData?._lightID === 'number' ||
@@ -227,6 +282,7 @@ export const hasChroma = (event: Event): boolean => {
         return typeof event._customData?._step === 'number';
     }
     if (isLaserRotationEvent(event)) {
+        event = event as EventLaser;
         return (
             typeof event._customData?._lockPosition === 'boolean' ||
             typeof event._customData?._speed === 'number' ||

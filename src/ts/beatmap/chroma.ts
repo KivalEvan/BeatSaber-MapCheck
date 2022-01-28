@@ -161,11 +161,6 @@ export interface ChromaEventZoom {
     _speed?: number;
 }
 
-export type ChromaEvent = ChromaEventLaser &
-    ChromaEventLight &
-    ChromaEventRotation &
-    ChromaEventZoom;
-
 /**
  * AssignFogTrack interface for Noodle Extensions Custom Event.
  *

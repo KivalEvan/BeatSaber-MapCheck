@@ -6,21 +6,13 @@ import { ColorScheme } from './environment';
 import { HeckInfoCustomData, HeckCustomData, HeckCustomEvent } from './heck';
 import {
     ChromaEnvironmentOld,
-    ChromaEvent,
     ChromaNote,
     ChromaObstacle,
     ChromaCustomData,
     ChromaCustomEvent,
 } from './chroma';
-import {
-    NECustomData,
-    NECustomEvent,
-    NEEvent,
-    NENote,
-    NEObstacle,
-} from './noodleExtensions';
+import { NECustomData, NECustomEvent, NENote, NEObstacle } from './noodleExtensions';
 import { KeysoundMap, KeysoundNote } from './keysound';
-import { Merge } from '../utils';
 
 /**
  * Base custom data interface.
@@ -40,7 +32,7 @@ export interface CustomData {
  *
  * @extends CustomData
  */
-export interface CustomDataInfo extends CustomData {
+export interface CustomDataInfo extends CustomData, KeysoundMap {
     _editors?: Editor;
     _contributors?: Contributor[];
     _customEnvironment?: string;
@@ -96,8 +88,7 @@ export interface CustomDataDifficulty
     extends CustomData,
         Omit<HeckCustomData, '_customEvents'>,
         Omit<ChromaCustomData, '_customEvents'>,
-        Omit<NECustomData, '_customEvents'>,
-        KeysoundMap {
+        Omit<NECustomData, '_customEvents'> {
     _customEvents?: CustomEvent[];
     _time?: number;
     _bpmChanges?: BPMChange[];
@@ -107,4 +98,3 @@ export interface CustomDataDifficulty
 
 export type CustomDataNote = CustomData & ChromaNote & NENote & KeysoundNote;
 export type CustomDataObstacle = CustomData & ChromaObstacle & NEObstacle;
-export type CustomDataEvent = CustomData & ChromaEvent & NEEvent;

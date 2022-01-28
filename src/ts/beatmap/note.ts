@@ -11,14 +11,21 @@ import { CustomDataNote } from './customData';
  *     _cutDirection: int,
  *     _customData?: JSON
  */
-export interface Note {
+export interface NoteBase {
     _time: number;
     _lineIndex: number;
     _lineLayer: number;
     _type: number;
     _cutDirection: number;
+    _customData?: Record<never, never>;
+}
+
+export interface NoteGeneric extends NoteBase {
+    _type: 0 | 1 | 3;
     _customData?: CustomDataNote;
 }
+
+export type Note = NoteGeneric;
 
 interface NoteCount {
     red: NoteCountStats;

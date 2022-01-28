@@ -1,4 +1,5 @@
 import * as beatmap from '../../beatmap';
+import { EventLight } from '../../beatmap/event';
 import { round } from '../../utils';
 import { BeatmapSettings, Tool } from '../template';
 
@@ -84,7 +85,7 @@ const unlitBomb = (
     const fadeTime = bpm.toBeatTime(1);
     const reactTime = bpm.toBeatTime(0.25);
     for (let i = 0, len = eventsLight.length; i < len; i++) {
-        const ev = eventsLight[i];
+        const ev = eventsLight[i] as EventLight;
         if (
             (beatmap.event.isOn(ev) || beatmap.event.isFlash(ev)) &&
             eventState[ev._type].state !== 'on'
