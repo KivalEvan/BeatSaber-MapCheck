@@ -40,7 +40,10 @@ function inputCheckHandler(this: HTMLInputElement) {
     tool.input.enabled = this.checked;
 }
 
-function run(mapSettings: BeatmapSettings, mapSet?: beatmap.map.BeatmapSetData): void {
+function run(
+    mapSettings: BeatmapSettings,
+    mapSet?: beatmap.types.set.BeatmapSetData
+): void {
     if (!mapSet) {
         throw new Error('something went wrong!');
     }
@@ -52,23 +55,26 @@ function run(mapSettings: BeatmapSettings, mapSet?: beatmap.map.BeatmapSetData):
         let endBeat = bpm.toBeatTime(duration);
         if (notes.length && notes[0]._time < 0) {
             htmlString.push(
-                `<b>Note(s) before start time:</b> ${round(notes[0]._time, 3)} (${toMMSS(
-                    bpm.toRealTime(notes[0]._time)
-                )})`
+                `<b>Note(s) before start time:</b> ${round(
+                    notes[0]._time,
+                    3
+                )} (${toMMSS(bpm.toRealTime(notes[0]._time))})`
             );
         }
         if (obstacles.length && obstacles[0]._time < 0) {
             htmlString.push(
-                `<b>Obstacle(s) before start time:</b> ${round(obstacles[0]._time, 3)} (${toMMSS(
-                    bpm.toRealTime(obstacles[0]._time)
-                )})`
+                `<b>Obstacle(s) before start time:</b> ${round(
+                    obstacles[0]._time,
+                    3
+                )} (${toMMSS(bpm.toRealTime(obstacles[0]._time))})`
             );
         }
         if (events.length && events[0]._time < 0) {
             htmlString.push(
-                `<b>Event(s) before start time:</b> ${round(events[0]._time, 3)} (${toMMSS(
-                    bpm.toRealTime(events[0]._time)
-                )})`
+                `<b>Event(s) before start time:</b> ${round(
+                    events[0]._time,
+                    3
+                )} (${toMMSS(bpm.toRealTime(events[0]._time))})`
             );
         }
         if (notes.length && notes[notes.length - 1]._time > endBeat) {

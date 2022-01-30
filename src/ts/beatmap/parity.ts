@@ -2,7 +2,8 @@
 // TODO: proper rotation check based on position
 // TODO: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA there's still more work needed for parity check
 // TODO: cleanup the implementation
-import * as beatmap from '../beatmap';
+import { Note } from './types/note';
+import { predictDirection } from './note';
 
 type ParityState = 'forehand' | 'backhand' | 'neutral';
 type ParityStatus = 'error' | 'warning' | 'none';
@@ -53,7 +54,7 @@ export class Parity {
     ];
 
     constructor(
-        notes: beatmap.note.Note[],
+        notes: Note[],
         type: number,
         warningThreshold: number,
         errorThreshold: number,
@@ -81,10 +82,7 @@ export class Parity {
         return this._rotation;
     }
 
-    public check(
-        noteContext: beatmap.note.Note[],
-        bombContext: beatmap.note.Note[]
-    ): ParityStatus {
+    public check(noteContext: Note[], bombContext: Note[]): ParityStatus {
         if (this._state === 'neutral') {
             return 'none';
         }
@@ -115,14 +113,14 @@ export class Parity {
             }
         });
 
-        let prevNote!: beatmap.note.Note;
+        let prevNote!: Note;
         let expectedDirection = 8;
         for (const note of noteContext) {
             if (note._cutDirection !== 8) {
                 expectedDirection = note._cutDirection;
             }
             if (prevNote && expectedDirection === 8) {
-                expectedDirection = beatmap.note.predictDirection(note, prevNote);
+                expectedDirection = predictDirection(note, prevNote);
             }
             prevNote = note;
         }
@@ -166,10 +164,7 @@ export class Parity {
 
         return 'none';
     }
-    public next(
-        noteContext: beatmap.note.Note[],
-        bombContext: beatmap.note.Note[]
-    ): void {
+    public next(noteContext: Note[], bombContext: Note[]): void {
         if (this.check(noteContext, bombContext) !== 'error') {
             switch (this._state) {
                 case 'forehand': {
@@ -237,14 +232,14 @@ export class Parity {
             }
         });
 
-        let prevNote!: beatmap.note.Note;
+        let prevNote!: Note;
         let expectedDirection = 8;
         for (const note of noteContext) {
             if (note._cutDirection !== 8) {
                 expectedDirection = note._cutDirection;
             }
             if (prevNote && expectedDirection === 8) {
-                expectedDirection = beatmap.note.predictDirection(note, prevNote);
+                expectedDirection = predictDirection(note, prevNote);
             }
             prevNote = note;
         }
@@ -254,7 +249,7 @@ export class Parity {
         }
     }
 
-    private predictStartState(notes: beatmap.note.Note[], type: number): ParityState {
+    private predictStartState(notes: Note[], type: number): ParityState {
         let startParity: ParityState = 'neutral';
         for (let i = 0, len = notes.length; i < len; i++) {
             let note = notes[i];
@@ -310,7 +305,7 @@ export class Parity {
         }
         return startParity;
     }
-    private predictStartRotation(notes: beatmap.note.Note[], type: number): number {
+    private predictStartRotation(notes: Note[], type: number): number {
         let rotation = 0;
         for (let i = 0, len = notes.length; i < len; i++) {
             let note = notes[i];
@@ -363,10 +358,7 @@ export class Parity {
         return rotation;
     }
     // "predict" btw
-    private predictStartPosition(
-        notes: beatmap.note.Note[],
-        type: number
-    ): [number, number] {
+    private predictStartPosition(notes: Note[], type: number): [number, number] {
         return type ? [-0.5, 1] : [0.5, 1];
     }
 }

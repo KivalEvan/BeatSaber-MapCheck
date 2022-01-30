@@ -40,10 +40,10 @@ function inputCheckHandler(this: HTMLInputElement) {
     tool.input.enabled = this.checked;
 }
 
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData) {
+function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.set.BeatmapSetData) {
     const { _events: events } = mapSet._data;
 
-    const arr: beatmap.event.Event[] = [];
+    const arr: beatmap.types.event.Event[] = [];
     if (beatmap.version.compare(mapSet._data._version, 'difficulty') === 'old') {
         for (let i = events.length - 1; i >= 0; i--) {
             if (beatmap.event.isLightEvent(events[i]) && events[i]._value === 4) {
@@ -60,7 +60,10 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
         });
 }
 
-function run(mapSettings: BeatmapSettings, mapSet?: beatmap.map.BeatmapSetData): void {
+function run(
+    mapSettings: BeatmapSettings,
+    mapSet?: beatmap.types.set.BeatmapSetData
+): void {
     if (!mapSet) {
         throw new Error('something went wrong!');
     }

@@ -1,4 +1,3 @@
-import * as beatmap from '../../beatmap';
 import { toMMSS } from '../../utils';
 import { BeatmapSettings, Tool } from '../template';
 import flag from '../../flag';
@@ -33,7 +32,9 @@ function run(mapSettings: BeatmapSettings): void {
         tool.output.html = htmlResult;
     } else if (!flag.map.load.audio) {
         htmlResult.innerHTML = `<b>No audio:</b> ${
-            settings.load.audio ? 'could not be loaded or not found' : 'no audio mode is enabled'
+            settings.load.audio
+                ? 'could not be loaded or not found'
+                : 'no audio mode is enabled'
         }`;
         tool.output.html = htmlResult;
     } else {

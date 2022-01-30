@@ -1,9 +1,9 @@
-import { Easings } from './easings';
 import { HeckCustomEventDataBase, Array3DPoint, Array2DPointDefinition } from './heck';
+import { Easings } from './easings';
+import { ColorArray } from './colors';
 type LookupMethod = 'Regex' | 'Exact' | 'Contains' | 'StartsWith' | 'EndsWith';
-type ArrayColor = [number, number, number] | [number, number, number, number];
 
-export const ChromaName = 'Chroma';
+export const name = 'Chroma';
 
 export enum ChromaDataEnvAbbr {
     _id = 'Ct',
@@ -64,7 +64,7 @@ export interface ChromaEnvironmentOld {
  *     _disableSpawnEffect?: boolean
  */
 export interface ChromaNote {
-    _color?: ArrayColor;
+    _color?: ColorArray;
     _disableSpawnEffect?: boolean;
 }
 
@@ -74,7 +74,7 @@ export interface ChromaNote {
  *     _color?: [float, float, float, float?]
  */
 export interface ChromaObstacle {
-    _color?: ArrayColor;
+    _color?: ColorArray;
 }
 
 /**
@@ -93,13 +93,13 @@ export interface ChromaObstacle {
  *     _easing?: Easings
  */
 export interface ChromaEventLight {
-    _color?: ArrayColor;
+    _color?: ColorArray;
     _lightID?: number | number[];
     _propID?: number;
     _lightGradient?: {
         _duration: number;
-        _startColor: ArrayColor;
-        _endColor: ArrayColor;
+        _startColor: ColorArray;
+        _endColor: ColorArray;
         _easing?: Easings;
     };
     _lerpType?: 'HSV' | 'RGB';

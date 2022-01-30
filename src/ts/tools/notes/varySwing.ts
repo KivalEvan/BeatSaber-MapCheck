@@ -1,7 +1,6 @@
 import * as beatmap from '../../beatmap';
 import { round } from '../../utils';
 import { BeatmapSettings, Tool } from '../template';
-import * as swing from '../swing';
 
 const htmlContainer = document.createElement('div');
 const htmlInputCheck = document.createElement('input');
@@ -41,10 +40,10 @@ function inputCheckHandler(this: HTMLInputElement) {
     tool.input.enabled = this.checked;
 }
 
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData) {
+function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.set.BeatmapSetData) {
     const { _bpm: bpm } = mapSettings;
     const { _notes: notes } = mapSet._data;
-    return swing
+    return beatmap.swing
         .getSliderNote(notes, bpm)
         .filter((n) => Math.abs(n._minSpeed - n._maxSpeed) > 0.002)
         .map((n) => n._time)
@@ -53,7 +52,10 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
         });
 }
 
-function run(mapSettings: BeatmapSettings, mapSet?: beatmap.map.BeatmapSetData): void {
+function run(
+    mapSettings: BeatmapSettings,
+    mapSet?: beatmap.types.set.BeatmapSetData
+): void {
     if (!mapSet) {
         throw new Error('something went wrong!');
     }

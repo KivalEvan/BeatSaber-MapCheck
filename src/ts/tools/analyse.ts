@@ -1,7 +1,7 @@
 import * as beatmap from '../beatmap';
 import * as component from './component';
 import * as template from './template';
-import * as swing from './swing';
+import * as swing from '../beatmap/swing';
 import savedData from '../savedData';
 
 const init = (): void => {
@@ -39,7 +39,9 @@ export const general = (): void => {
         _mapDuration: 0,
     };
 
-    const toolList = component.getGeneral().sort((a, b) => a.order.output - b.order.output);
+    const toolList = component
+        .getGeneral()
+        .sort((a, b) => a.order.output - b.order.output);
     console.log(`analysing general`);
     const htmlArr: HTMLElement[] = [];
     toolList.forEach((tool) => {
@@ -61,8 +63,8 @@ export const general = (): void => {
 };
 
 export const difficulty = (
-    mode: beatmap.characteristic.CharacteristicName,
-    difficulty: beatmap.difficulty.DifficultyName
+    mode: beatmap.types.characteristic.CharacteristicName,
+    difficulty: beatmap.types.difficulty.DifficultyName
 ): void => {
     const mapInfo = savedData._mapInfo;
     if (!mapInfo) {
@@ -101,10 +103,14 @@ export const difficulty = (
         _bpm: bpm,
         _njs: njs,
         _audioDuration: savedData._duration ?? null,
-        _mapDuration: bpm.toRealTime(beatmap.map.getLastInteractiveTime(mapSet._data)),
+        _mapDuration: bpm.toRealTime(
+            beatmap.difficulty.getLastInteractiveTime(mapSet._data)
+        ),
     };
 
-    const toolList = component.getDifficulty().sort((a, b) => a.order.output - b.order.output);
+    const toolList = component
+        .getDifficulty()
+        .sort((a, b) => a.order.output - b.order.output);
     console.log(`analysing ${mode} ${difficulty}`);
     const htmlArr: HTMLElement[] = [];
     toolList.forEach((tool) => {
@@ -132,7 +138,9 @@ export const difficulty = (
 };
 
 export const adjustTime = (bpm: beatmap.bpm.BeatPerMinute): void => {
-    const toolList = component.getDifficulty().sort((a, b) => a.order.output - b.order.output);
+    const toolList = component
+        .getDifficulty()
+        .sort((a, b) => a.order.output - b.order.output);
     toolList.forEach((tool) => {
         if (tool.input.adjustTime) {
             tool.input.adjustTime(bpm);
@@ -156,7 +164,7 @@ export const sps = (): void => {
         savedData._analysis?.sps.push({
             mode: set._mode,
             difficulty: set._difficulty,
-            sps: swing.info(set, bpm),
+            sps: swing.info(set._data, bpm),
         })
     );
 };

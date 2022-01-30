@@ -1,165 +1,10 @@
-import { ColorObject } from '../colors';
-import { EventLight } from './event';
-
-/**
- * Color Scheme interface for difficulty info custom data.
- *
- *     _colorLeft?: { r: float, g: float, b: float },
- *     _colorRight?: { r: float, g: float, b: float },
- *     _envColorLeft?: { r: float, g: float, b: float },
- *     _envColorRight?: { r: float, g: float, b: float },
- *     _envColorLeftBoost?: { r: float, g: float, b: float },
- *     _envColorRightBoost?: { r: float, g: float, b: float },
- *     _obstacleColor?: { r: float, g: float, b: float },
- */
-export interface ColorScheme {
-    _colorLeft?: ColorObject;
-    _colorRight?: ColorObject;
-    _envColorLeft?: ColorObject;
-    _envColorRight?: ColorObject;
-    _envColorLeftBoost?: ColorObject;
-    _envColorRightBoost?: ColorObject;
-    _obstacleColor?: ColorObject;
-}
-
-/**
- * Color Scheme property rename to human readable.
- */
-export const colorSchemeRename: { [k in keyof ColorScheme]: string } = {
-    _colorLeft: 'Left Note Color',
-    _colorRight: 'Right Note Color',
-    _envColorLeft: 'Left Environment Color',
-    _envColorRight: 'Right Environment Color',
-    _envColorLeftBoost: 'Left Environment Boost Color',
-    _envColorRightBoost: 'Right Environment Boost Color',
-    _obstacleColor: 'Obstacle Color',
-};
-
-/**
- * List of available environment in base game.
- */
-export type EnvironmentName =
-    | 'DefaultEnvironment'
-    | 'OriginsEnvironment'
-    | 'Origins'
-    | 'TriangleEnvironment'
-    | 'NiceEnvironment'
-    | 'BigMirrorEnvironment'
-    | 'DragonsEnvironment'
-    | 'KDAEnvironment'
-    | 'MonstercatEnvironment'
-    | 'CrabRaveEnvironment'
-    | 'PanicEnvironment'
-    | 'RocketEnvironment'
-    | 'GreenDayEnvironment'
-    | 'GreenDayGrenadeEnvironment'
-    | 'TimbalandEnvironment'
-    | 'FitBeatEnvironment'
-    | 'LinkinParkEnvironment'
-    | 'BTSEnvironment'
-    | 'KaleidoscopeEnvironment'
-    | 'InterscopeEnvironment'
-    | 'SkrillexEnvironment'
-    | 'BillieEnvironment'
-    | 'HalloweenEnvironment'
-    | 'GagaEnvironment';
-export type Environment360Name = 'GlassDesertEnvironment';
-export type EnvironmentAllName = EnvironmentName | Environment360Name;
-
-/**
- * List of available color scheme in base game.
- */
-type ColorSchemeList =
-    | 'Default Custom'
-    | 'The First'
-    | 'Origins'
-    | 'KDA'
-    | 'Crab Rave'
-    | 'Noir'
-    | 'Rocket'
-    | 'Green Day'
-    | 'Timbaland'
-    | 'FitBeat'
-    | 'Linkin Park'
-    | 'BTS'
-    | 'Kaleidoscope'
-    | 'Interscope'
-    | 'Skrillex'
-    | 'Billie Eilish'
-    | 'Spooky'
-    | 'Gaga'
-    | 'Glass Desert';
-
-export type EnvironmentScheme = {
-    [key in ColorSchemeList]: ColorScheme;
-};
-
-/**
- * Environment rename to human readable.
- */
-export const environmentRename: Readonly<Record<EnvironmentAllName, string>> = {
-    DefaultEnvironment: 'The First',
-    OriginsEnvironment: 'Origins',
-    Origins: 'Origins (Triangle)', // because beat games
-    TriangleEnvironment: 'Triangle',
-    NiceEnvironment: 'Nice',
-    BigMirrorEnvironment: 'Big Mirror',
-    DragonsEnvironment: 'Dragons',
-    KDAEnvironment: 'K/DA',
-    MonstercatEnvironment: 'Monstercat',
-    CrabRaveEnvironment: 'Crab Rave',
-    PanicEnvironment: 'Panic',
-    RocketEnvironment: 'Rocket',
-    GreenDayEnvironment: 'Green Day',
-    GreenDayGrenadeEnvironment: 'Green Day Grenade',
-    TimbalandEnvironment: 'Timbaland',
-    FitBeatEnvironment: 'FitBeat',
-    LinkinParkEnvironment: 'Linkin Park',
-    BTSEnvironment: 'BTS',
-    KaleidoscopeEnvironment: 'Kaleidoscope',
-    InterscopeEnvironment: 'Interscope',
-    SkrillexEnvironment: 'Skrillex',
-    BillieEnvironment: 'Billie',
-    HalloweenEnvironment: 'Spooky',
-    GagaEnvironment: 'Gaga',
-    GlassDesertEnvironment: 'Glass Desert',
-};
-
-/**
- * Record of Environment Color to Color Scheme.
- */
-export const environmentColor: Readonly<Record<EnvironmentAllName, ColorSchemeList>> = {
-    DefaultEnvironment: 'The First',
-    OriginsEnvironment: 'Origins',
-    Origins: 'The First', // because beat games
-    TriangleEnvironment: 'The First',
-    NiceEnvironment: 'The First',
-    BigMirrorEnvironment: 'The First',
-    DragonsEnvironment: 'The First',
-    KDAEnvironment: 'KDA',
-    MonstercatEnvironment: 'The First',
-    CrabRaveEnvironment: 'Crab Rave',
-    PanicEnvironment: 'The First',
-    RocketEnvironment: 'Rocket',
-    GreenDayEnvironment: 'Green Day',
-    GreenDayGrenadeEnvironment: 'Green Day',
-    TimbalandEnvironment: 'Timbaland',
-    FitBeatEnvironment: 'FitBeat',
-    LinkinParkEnvironment: 'Linkin Park',
-    BTSEnvironment: 'BTS',
-    KaleidoscopeEnvironment: 'Kaleidoscope',
-    InterscopeEnvironment: 'Interscope',
-    SkrillexEnvironment: 'Skrillex',
-    BillieEnvironment: 'Billie Eilish',
-    HalloweenEnvironment: 'Spooky',
-    GagaEnvironment: 'Gaga',
-    GlassDesertEnvironment: 'Glass Desert',
-};
+import { EnvironmentScheme, EnvironmentAllName } from './types/environment';
+import { EventLight } from './types/event';
 
 /**
  * Color scheme definition.
  */
-export const colorScheme: EnvironmentScheme = {
+export const colorScheme: Readonly<EnvironmentScheme> = {
     'Default Custom': {
         _colorLeft: {
             r: 0.7529412,
@@ -758,7 +603,7 @@ export const colorScheme: EnvironmentScheme = {
 /**
  * List of available event type in environment.
  */
-export const environmentEventList: Readonly<Record<EnvironmentAllName, number[]>> = {
+export const eventList: Readonly<Record<EnvironmentAllName, number[]>> = {
     DefaultEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
     OriginsEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
     Origins: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
@@ -787,7 +632,8 @@ export const environmentEventList: Readonly<Record<EnvironmentAllName, number[]>
 };
 
 // very readable code :+1:
-export const environmentEventLightID: Readonly<
+// should predefine it for performance but it might be longer and hard to trace
+export const lightIDList: Readonly<
     Record<EnvironmentAllName, Partial<{ [t in EventLight['_type']]: number[] }>>
 > = {
     DefaultEnvironment: {

@@ -1,14 +1,5 @@
+import { ColorArray, ColorObject } from './beatmap/types/colors';
 import { round, radToDeg, degToRad } from './utils';
-
-export interface ColorObject {
-    r: number;
-    g: number;
-    b: number;
-    a?: number;
-    [key: string]: number | undefined;
-}
-
-export type ColorArray = [number, number, number] | [number, number, number, number];
 
 export const toRGBArray = (c: ColorObject): ColorArray => {
     return [c.r, c.g, c.b];
@@ -29,11 +20,11 @@ export const rgbaToHex = (colorObj?: ColorObject | null): string | null => {
     }
     const color: ColorObject = { r: 0, g: 0, b: 0 };
     for (const c in colorObj) {
-        const num: number | undefined = colorObj[c];
+        const num: number | undefined = colorObj[c as keyof ColorObject];
         if (num === undefined) {
             continue;
         }
-        color[c] = cDenorm(num);
+        color[c as keyof ColorObject] = cDenorm(num);
     }
     return `#${compToHex(color.r)}${compToHex(color.g)}${compToHex(color.b)}${
         color.a ? compToHex(color.a) : ''

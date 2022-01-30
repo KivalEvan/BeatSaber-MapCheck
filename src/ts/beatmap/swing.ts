@@ -1,4 +1,18 @@
-import * as beatmap from '../beatmap';
+import { CharacteristicName } from './types/characteristic';
+import { DifficultyName, DifficultyData } from './types/difficulty';
+import { Note } from './types/note';
+import { BeatPerMinute } from './bpm';
+import { getFirstInteractiveTime, getLastInteractiveTime } from './difficulty';
+import {
+    isNote,
+    isDiagonal,
+    isHorizontal,
+    isVertical,
+    isWindow,
+    isSlantedWindow,
+    distance,
+    checkDirection,
+} from './note';
 import { median } from '../utils';
 
 interface SwingCount {
@@ -20,26 +34,26 @@ interface SwingPerSecondInfo {
 }
 
 export interface SwingAnalysis {
-    mode: beatmap.characteristic.CharacteristicName;
-    difficulty: beatmap.difficulty.DifficultyName;
+    mode: CharacteristicName;
+    difficulty: DifficultyName;
     sps: SwingPerSecondInfo;
 }
 
-interface NoteEBPM extends beatmap.note.Note {
+interface NoteEBPM extends Note {
     _ebpm: number;
 }
 
-interface NoteSlider extends beatmap.note.Note {
+interface NoteSlider extends Note {
     _minSpeed: number;
     _maxSpeed: number;
 }
 
 // Thanks Qwasyx#3000 for improved swing detection
 export const next = (
-    currNote: beatmap.note.Note,
-    prevNote: beatmap.note.Note,
-    bpm: beatmap.bpm.BeatPerMinute,
-    context?: beatmap.note.Note[]
+    currNote: Note,
+    prevNote: Note,
+    bpm: BeatPerMinute,
+    context?: Note[]
 ): boolean => {
     if (
         context &&
@@ -48,10 +62,7 @@ export const next = (
         currNote._cutDirection !== 8
     ) {
         for (const n of context) {
-            if (
-                n._cutDirection !== 8 &&
-                beatmap.note.checkDirection(currNote, n, 90, false)
-            ) {
+            if (n._cutDirection !== 8 && checkDirection(currNote, n, 90, false)) {
                 return true;
             }
         }
@@ -69,24 +80,21 @@ export const next = (
         }
     }
     return (
-        (beatmap.note.isWindow(currNote, prevNote) &&
+        (isWindow(currNote, prevNote) &&
             bpm.toRealTime(currNote._time - prevNote._time) > 0.08) ||
         bpm.toRealTime(currNote._time - prevNote._time) > 0.07
     );
 };
 
 export const calcEBPMBetweenNote = (
-    currNote: beatmap.note.Note,
-    prevNote: beatmap.note.Note,
+    currNote: Note,
+    prevNote: Note,
     bpm: number
 ): number => {
     return bpm / ((currNote._time - prevNote._time) * 2);
 };
 
-export const getEffectiveBPMNote = (
-    notes: beatmap.note.Note[],
-    bpm: beatmap.bpm.BeatPerMinute
-): NoteEBPM[] => {
+export const getEffectiveBPMNote = (notes: Note[], bpm: BeatPerMinute): NoteEBPM[] => {
     const noteEBPM: NoteEBPM[] = [];
     const lastNote: { [key: number]: NoteEBPM } = {};
     const swingNoteArray: { [key: number]: NoteEBPM[] } = {
@@ -94,7 +102,7 @@ export const getEffectiveBPMNote = (
         1: [],
     };
     for (let i = 0, len = notes.length; i < len; i++) {
-        if (!beatmap.note.isNote(notes[i])) {
+        if (!isNote(notes[i])) {
             continue;
         }
         const note: NoteEBPM = JSON.parse(JSON.stringify(notes[i]));
@@ -112,8 +120,8 @@ export const getEffectiveBPMNote = (
 };
 
 export const getEffectiveBPMSwingNote = (
-    notes: beatmap.note.Note[],
-    bpm: beatmap.bpm.BeatPerMinute
+    notes: Note[],
+    bpm: BeatPerMinute
 ): NoteEBPM[] => {
     const noteEBPM: NoteEBPM[] = [];
     const lastNote: { [key: number]: NoteEBPM } = {};
@@ -122,7 +130,7 @@ export const getEffectiveBPMSwingNote = (
         1: [],
     };
     for (let i = 0, len = notes.length; i < len; i++) {
-        if (!beatmap.note.isNote(notes[i])) {
+        if (!isNote(notes[i])) {
             continue;
         }
         const note: NoteEBPM = JSON.parse(JSON.stringify(notes[i]));
@@ -141,24 +149,15 @@ export const getEffectiveBPMSwingNote = (
     return noteEBPM;
 };
 
-export const getMaxEffectiveBPM = (
-    notes: beatmap.note.Note[],
-    bpm: beatmap.bpm.BeatPerMinute
-): number => {
+export const getMaxEffectiveBPM = (notes: Note[], bpm: BeatPerMinute): number => {
     return Math.max(...getEffectiveBPMNote(notes, bpm).map((n) => n._ebpm), 0);
 };
 
-export const getMaxEffectiveBPMSwing = (
-    notes: beatmap.note.Note[],
-    bpm: beatmap.bpm.BeatPerMinute
-): number => {
+export const getMaxEffectiveBPMSwing = (notes: Note[], bpm: BeatPerMinute): number => {
     return Math.max(...getEffectiveBPMSwingNote(notes, bpm).map((n) => n._ebpm), 0);
 };
 
-export const calcMinSliderSpeed = (
-    notes: beatmap.note.Note[],
-    bpm: beatmap.bpm.BeatPerMinute
-): number => {
+export const calcMinSliderSpeed = (notes: Note[], bpm: BeatPerMinute): number => {
     let hasStraight = false;
     let hasDiagonal = false;
     let curvedSpeed = 0;
@@ -169,22 +168,22 @@ export const calcMinSliderSpeed = (
                     return 0;
                 }
                 if (
-                    (beatmap.note.isHorizontal(notes[i], notes[i - 1]) ||
-                        beatmap.note.isVertical(notes[i], notes[i - 1])) &&
+                    (isHorizontal(notes[i], notes[i - 1]) ||
+                        isVertical(notes[i], notes[i - 1])) &&
                     !hasStraight
                 ) {
                     hasStraight = true;
                     curvedSpeed =
                         (notes[i]._time - notes[i - 1]._time) /
-                        (beatmap.note.distance(notes[i], notes[i - 1]) || 1);
+                        (distance(notes[i], notes[i - 1]) || 1);
                 }
                 hasDiagonal =
-                    beatmap.note.isDiagonal(notes[i], notes[i - 1]) ||
-                    beatmap.note.isSlantedWindow(notes[i], notes[i - 1]) ||
+                    isDiagonal(notes[i], notes[i - 1]) ||
+                    isSlantedWindow(notes[i], notes[i - 1]) ||
                     hasDiagonal;
                 return (
                     (notes[i]._time - notes[i - 1]._time) /
-                    (beatmap.note.distance(notes[i], notes[i - 1]) || 1)
+                    (distance(notes[i], notes[i - 1]) || 1)
                 );
             })
         )
@@ -195,10 +194,7 @@ export const calcMinSliderSpeed = (
     return speed;
 };
 
-export const calcMaxSliderSpeed = (
-    notes: beatmap.note.Note[],
-    bpm: beatmap.bpm.BeatPerMinute
-): number => {
+export const calcMaxSliderSpeed = (notes: Note[], bpm: BeatPerMinute): number => {
     let hasStraight = false;
     let hasDiagonal = false;
     let curvedSpeed = Number.MAX_SAFE_INTEGER;
@@ -209,22 +205,22 @@ export const calcMaxSliderSpeed = (
                     return Number.MAX_SAFE_INTEGER;
                 }
                 if (
-                    (beatmap.note.isHorizontal(notes[i], notes[i - 1]) ||
-                        beatmap.note.isVertical(notes[i], notes[i - 1])) &&
+                    (isHorizontal(notes[i], notes[i - 1]) ||
+                        isVertical(notes[i], notes[i - 1])) &&
                     !hasStraight
                 ) {
                     hasStraight = true;
                     curvedSpeed =
                         (notes[i]._time - notes[i - 1]._time) /
-                        (beatmap.note.distance(notes[i], notes[i - 1]) || 1);
+                        (distance(notes[i], notes[i - 1]) || 1);
                 }
                 hasDiagonal =
-                    beatmap.note.isDiagonal(notes[i], notes[i - 1]) ||
-                    beatmap.note.isSlantedWindow(notes[i], notes[i - 1]) ||
+                    isDiagonal(notes[i], notes[i - 1]) ||
+                    isSlantedWindow(notes[i], notes[i - 1]) ||
                     hasDiagonal;
                 return (
                     (notes[i]._time - notes[i - 1]._time) /
-                    (beatmap.note.distance(notes[i], notes[i - 1]) || 1)
+                    (distance(notes[i], notes[i - 1]) || 1)
                 );
             })
         )
@@ -235,10 +231,7 @@ export const calcMaxSliderSpeed = (
     return speed;
 };
 
-export const getSliderNote = (
-    notes: beatmap.note.Note[],
-    bpm: beatmap.bpm.BeatPerMinute
-): NoteSlider[] => {
+export const getSliderNote = (notes: Note[], bpm: BeatPerMinute): NoteSlider[] => {
     const noteSlider: NoteSlider[] = [];
     const lastNote: { [key: number]: NoteSlider } = {};
     const swingNoteArray: { [key: number]: NoteSlider[] } = {
@@ -246,7 +239,7 @@ export const getSliderNote = (
         1: [],
     };
     for (let i = 0, len = notes.length; i < len; i++) {
-        if (!beatmap.note.isNote(notes[i])) {
+        if (!isNote(notes[i])) {
             continue;
         }
         const note: NoteSlider = JSON.parse(JSON.stringify(notes[i]));
@@ -283,17 +276,11 @@ export const getSliderNote = (
     return noteSlider;
 };
 
-export const getMinSliderSpeed = (
-    notes: beatmap.note.Note[],
-    bpm: beatmap.bpm.BeatPerMinute
-): number => {
+export const getMinSliderSpeed = (notes: Note[], bpm: BeatPerMinute): number => {
     return Math.max(...getSliderNote(notes, bpm).map((n) => n._minSpeed), 0);
 };
 
-export const getMaxSliderSpeed = (
-    notes: beatmap.note.Note[],
-    bpm: beatmap.bpm.BeatPerMinute
-): number => {
+export const getMaxSliderSpeed = (notes: Note[], bpm: BeatPerMinute): number => {
     const arr = getSliderNote(notes, bpm).map((n) => n._maxSpeed);
     return arr.length ? Math.min(...arr) : 0;
 };
@@ -302,16 +289,16 @@ export const getMaxSliderSpeed = (
 // some variable or function may have been modified
 // translating from Python to JavaScript is hard
 export const count = (
-    notes: beatmap.note.Note[],
+    notes: Note[],
     duration: number,
-    bpm: beatmap.bpm.BeatPerMinute
+    bpm: BeatPerMinute
 ): SwingCount => {
     const swingCount: SwingCount = {
         left: new Array(Math.floor(duration + 1)).fill(0),
         right: new Array(Math.floor(duration + 1)).fill(0),
     };
-    let lastRed!: beatmap.note.Note;
-    let lastBlue!: beatmap.note.Note;
+    let lastRed!: Note;
+    let lastBlue!: Note;
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         const realTime = bpm.toRealTime(note._time);
@@ -356,8 +343,8 @@ export const calcMaxRollingSPS = (swingArray: number[], x: number): number => {
 };
 
 export const info = (
-    mapSetData: beatmap.map.BeatmapSetData,
-    bpm: beatmap.bpm.BeatPerMinute
+    difficulty: DifficultyData,
+    bpm: BeatPerMinute
 ): SwingPerSecondInfo => {
     const interval = 10;
     const spsInfo = {
@@ -367,16 +354,12 @@ export const info = (
     };
     const duration = Math.max(
         bpm.toRealTime(
-            beatmap.map.getLastInteractiveTime(mapSetData._data) -
-                beatmap.map.getFirstInteractiveTime(mapSetData._data)
+            getLastInteractiveTime(difficulty) - getFirstInteractiveTime(difficulty)
         ),
         0
     );
-    const mapDuration = Math.max(
-        bpm.toRealTime(beatmap.map.getLastInteractiveTime(mapSetData._data)),
-        0
-    );
-    const swing = count(mapSetData._data._notes, mapDuration, bpm);
+    const mapDuration = Math.max(bpm.toRealTime(getLastInteractiveTime(difficulty)), 0);
+    const swing = count(difficulty._notes, mapDuration, bpm);
     const swingTotal = swing.left.map((num, i) => num + swing.right[i]);
     if (swingTotal.reduce((a, b) => a + b) === 0) {
         return spsInfo;

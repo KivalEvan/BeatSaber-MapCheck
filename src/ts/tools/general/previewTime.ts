@@ -21,8 +21,8 @@ const tool: Tool = {
 
 function run(
     mapSettings: BeatmapSettings,
-    mapSet?: beatmap.map.BeatmapSetData,
-    mapInfo?: beatmap.info.InfoData
+    mapSet?: beatmap.types.set.BeatmapSetData,
+    mapInfo?: beatmap.types.info.InfoData
 ): void {
     if (!mapInfo) {
         throw new Error('something went wrong!');

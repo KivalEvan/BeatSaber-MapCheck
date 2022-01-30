@@ -42,34 +42,34 @@ function inputCheckHandler(this: HTMLInputElement) {
     tool.input.enabled = this.checked;
 }
 
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData) {
+function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.set.BeatmapSetData) {
     const { _obstacles: obstacles } = mapSet._data;
     const { _bpm: bpm } = mapSettings;
     const { minDur: temp } = <{ minDur: number }>tool.input.params;
     const minDur = bpm.toBeatTime(temp);
-    const arr: beatmap.obstacle.Obstacle[] = [];
-    let obstacleLFull: beatmap.obstacle.Obstacle = {
+    const arr: beatmap.types.obstacle.Obstacle[] = [];
+    let obstacleLFull: beatmap.types.obstacle.Obstacle = {
         _time: 0,
         _duration: 0,
         _lineIndex: 0,
         _type: 0,
         _width: 0,
     };
-    let obstacleRFull: beatmap.obstacle.Obstacle = {
+    let obstacleRFull: beatmap.types.obstacle.Obstacle = {
         _time: 0,
         _duration: 0,
         _lineIndex: 0,
         _type: 0,
         _width: 0,
     };
-    let obstacleLHalf: beatmap.obstacle.Obstacle = {
+    let obstacleLHalf: beatmap.types.obstacle.Obstacle = {
         _time: 0,
         _duration: 0,
         _lineIndex: 0,
         _type: 0,
         _width: 0,
     };
-    let obstacleRHalf: beatmap.obstacle.Obstacle = {
+    let obstacleRHalf: beatmap.types.obstacle.Obstacle = {
         _time: 0,
         _duration: 0,
         _lineIndex: 0,
@@ -204,7 +204,10 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
         });
 }
 
-function run(mapSettings: BeatmapSettings, mapSet?: beatmap.map.BeatmapSetData): void {
+function run(
+    mapSettings: BeatmapSettings,
+    mapSet?: beatmap.types.set.BeatmapSetData
+): void {
     if (!mapSet) {
         throw new Error('something went wrong!');
     }

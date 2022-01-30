@@ -1,7 +1,7 @@
-import { BeatmapSetData } from './beatmap/mapSet';
-import { Contributor } from './beatmap/contributor';
-import { InfoData } from './beatmap/info';
-import { BPMChange } from './beatmap/bpm';
+import { BeatmapSetData } from './beatmap/types/set';
+import { Contributor } from './beatmap/types/contributor';
+import { InfoData } from './beatmap/types/info';
+import { BPMChange } from './beatmap/types/bpm';
 import { Analysis } from './tools/analysis';
 
 // TODO: structure bpm change for certain use

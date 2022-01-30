@@ -1,49 +1,45 @@
-import { CharacteristicOrder } from './characteristic';
-import { DifficultyRank, DifficultyData } from './difficulty';
-import { InfoData } from './info';
+import { InfoData } from './types/info';
+import { CharacteristicOrder } from './types/characteristic';
+import { DifficultyRank, DifficultyData } from './types/difficulty';
+import { Note } from './types/note';
+import { Obstacle } from './types/obstacle';
+import { Event } from './types/event';
+import { Waypoint } from './types/waypoint';
 import { compare } from './version';
-import { Note } from './note';
-import { Obstacle } from './obstacle';
-import { Event } from './event';
-import { Waypoint } from './waypoint';
-import settings from '../settings';
 
 // TODO: more error check
 // TODO: contemplate whether to make pure function or keep as is
 export const info = (mapInfo: InfoData): InfoData => {
-    if (settings.sorting) {
-        mapInfo._difficultyBeatmapSets.sort(
-            (a, b) =>
-                CharacteristicOrder[a._beatmapCharacteristicName] -
-                CharacteristicOrder[b._beatmapCharacteristicName]
-        );
-        mapInfo._difficultyBeatmapSets.forEach((mode) => {
-            let num = 0;
-            mode._difficultyBeatmaps.forEach((a) => {
-                if (a._difficultyRank - num <= 0) {
-                    console.error(a._difficulty + ' may be unordered');
-                }
-                if (DifficultyRank[a._difficulty] !== a._difficultyRank) {
-                    console.error(a._difficulty + ' has invalid rank');
-                }
-                num = a._difficultyRank;
-            });
-            mode._difficultyBeatmaps.sort(
-                (a, b) => b._difficultyRank - a._difficultyRank
-            );
+    mapInfo._difficultyBeatmapSets.sort(
+        (a, b) =>
+            CharacteristicOrder[a._beatmapCharacteristicName] -
+            CharacteristicOrder[b._beatmapCharacteristicName]
+    );
+    mapInfo._difficultyBeatmapSets.forEach((mode) => {
+        let num = 0;
+        mode._difficultyBeatmaps.forEach((a) => {
+            if (a._difficultyRank - num <= 0) {
+                console.error(a._difficulty + ' may be unordered');
+            }
+            if (DifficultyRank[a._difficulty] !== a._difficultyRank) {
+                console.error(a._difficulty + ' has invalid rank');
+            }
+            num = a._difficultyRank;
         });
-    }
+        mode._difficultyBeatmaps.sort((a, b) => b._difficultyRank - a._difficultyRank);
+    });
 
     return mapInfo;
 };
 
 // FIXME: need more elegant solution
+// FIXME: floatValue is optional to certain condition
 export const difficulty = (difficultyData: DifficultyData): DifficultyData => {
     const { _version, _notes, _obstacles, _events, _waypoints } = difficultyData;
 
     if (!_version) {
-        console.error('missing version, applying 2.0.0');
-        difficultyData._version = '2.0.0';
+        console.error('missing version, applying 2.5.0');
+        difficultyData._version = '2.5.0';
     }
     _notes.forEach((obj) => {
         for (const key in obj) {
@@ -175,12 +171,10 @@ export const difficulty = (difficultyData: DifficultyData): DifficultyData => {
             }
         }
     });
-    if (settings.sorting) {
-        _notes.sort((a, b) => a._time - b._time);
-        _obstacles.sort((a, b) => a._time - b._time);
-        _events.sort((a, b) => a._time - b._time);
-        _waypoints?.sort((a, b) => a._time - b._time);
-    }
+    _notes.sort((a, b) => a._time - b._time);
+    _obstacles.sort((a, b) => a._time - b._time);
+    _events.sort((a, b) => a._time - b._time);
+    _waypoints?.sort((a, b) => a._time - b._time);
 
     return difficultyData;
 };

@@ -3,7 +3,6 @@ import * as uiAccordion from './accordion';
 import * as uiPanel from './panel';
 import * as uiSelect from './select';
 import * as beatmap from '../beatmap';
-import * as swing from '../tools/swing';
 import savedData from '../savedData';
 import settings from '../settings';
 import { formatNumber, round } from '../utils';
@@ -14,8 +13,8 @@ const prefix = 'stats__';
 const htmlStats = document.querySelector('#stats .accordion__collapsible');
 
 const createSettingsTable = (
-    mapInfo: beatmap.info.InfoData,
-    mapSet: beatmap.map.BeatmapSetData
+    mapInfo: beatmap.types.info.InfoData,
+    mapSet: beatmap.types.set.BeatmapSetData
 ): HTMLTableElement => {
     const bpm = beatmap.bpm.create(mapInfo._beatsPerMinute);
     const njs = beatmap.njs.create(
@@ -53,13 +52,13 @@ const createSettingsTable = (
 };
 
 const createNPSTable = (
-    mapInfo: beatmap.info.InfoData,
-    mapSet: beatmap.map.BeatmapSetData
+    mapInfo: beatmap.types.info.InfoData,
+    mapSet: beatmap.types.set.BeatmapSetData
 ): HTMLTableElement => {
     const bpm = beatmap.bpm.create(mapInfo._beatsPerMinute);
     const duration = savedData._duration || 0;
     const mapDuration = bpm.toRealTime(
-        beatmap.map.getLastInteractiveTime(mapSet._data)
+        beatmap.difficulty.getLastInteractiveTime(mapSet._data)
     );
 
     const htmlTable = document.createElement('table');
@@ -106,11 +105,11 @@ const createNPSTable = (
 };
 
 const createSPSTable = (
-    mapInfo: beatmap.info.InfoData,
-    mapSet: beatmap.map.BeatmapSetData
+    mapInfo: beatmap.types.info.InfoData,
+    mapSet: beatmap.types.set.BeatmapSetData
 ): HTMLTableElement => {
     const bpm = beatmap.bpm.create(mapInfo._beatsPerMinute);
-    const swingInfo = swing.info(mapSet, bpm);
+    const swingInfo = beatmap.swing.info(mapSet._data, bpm);
 
     const htmlTable = document.createElement('table');
     htmlTable.className = prefix + 'table';
@@ -150,8 +149,8 @@ const createSPSTable = (
 };
 
 const createNoteCountTable = (
-    mapInfo: beatmap.info.InfoData,
-    mapSet: beatmap.map.BeatmapSetData
+    mapInfo: beatmap.types.info.InfoData,
+    mapSet: beatmap.types.set.BeatmapSetData
 ): HTMLTableElement => {
     const noteCount = beatmap.note.count(mapSet._data._notes);
 
@@ -223,22 +222,24 @@ function notePlacementSelectHandler(ev: Event) {
         console.error(logPrefix + 'note could not be found');
         return;
     }
-    let filteredNotes!: beatmap.note.Note[];
+    let filteredNotes!: beatmap.types.note.Note[];
     switch (target.value) {
         case 'note': {
-            filteredNotes = notes.filter((n) => beatmap.note.isNote(n));
+            filteredNotes = notes.filter((n: beatmap.types.note.Note) =>
+                beatmap.note.isNote(n)
+            );
             break;
         }
         case 'red': {
-            filteredNotes = notes.filter((n) => n._type === 0);
+            filteredNotes = notes.filter((n: beatmap.types.note.Note) => n._type === 0);
             break;
         }
         case 'blue': {
-            filteredNotes = notes.filter((n) => n._type === 1);
+            filteredNotes = notes.filter((n: beatmap.types.note.Note) => n._type === 1);
             break;
         }
         case 'bomb': {
-            filteredNotes = notes.filter((n) => n._type === 3);
+            filteredNotes = notes.filter((n: beatmap.types.note.Note) => n._type === 3);
             break;
         }
         default: {
@@ -255,7 +256,7 @@ function notePlacementSelectHandler(ev: Event) {
     htmlTableBody.innerHTML = notePlacementTableString(filteredNotes);
 }
 
-function notePlacementTableString(notes: beatmap.note.Note[]): string {
+function notePlacementTableString(notes: beatmap.types.note.Note[]): string {
     const totalNote = notes.length || 1;
     let htmlString = '';
     for (let l = 2; l >= 0; l--) {
@@ -295,8 +296,8 @@ function notePlacementTableString(notes: beatmap.note.Note[]): string {
 }
 
 const createNotePlacementTable = (
-    mapInfo: beatmap.info.InfoData,
-    mapSet: beatmap.map.BeatmapSetData
+    mapInfo: beatmap.types.info.InfoData,
+    mapSet: beatmap.types.set.BeatmapSetData
 ): HTMLTableElement => {
     const htmlSelect = uiSelect.create(
         `${prefix}table-select-placement-${mapSet._mode}-${mapSet._difficulty}`,
@@ -338,22 +339,24 @@ function noteAngleSelectHandler(ev: Event) {
         console.error(logPrefix + 'note could not be found');
         return;
     }
-    let filteredNotes!: beatmap.note.Note[];
+    let filteredNotes!: beatmap.types.note.Note[];
     switch (target.value) {
         case 'note': {
-            filteredNotes = notes.filter((n) => beatmap.note.isNote(n));
+            filteredNotes = notes.filter((n: beatmap.types.note.Note) =>
+                beatmap.note.isNote(n)
+            );
             break;
         }
         case 'red': {
-            filteredNotes = notes.filter((n) => n._type === 0);
+            filteredNotes = notes.filter((n: beatmap.types.note.Note) => n._type === 0);
             break;
         }
         case 'blue': {
-            filteredNotes = notes.filter((n) => n._type === 1);
+            filteredNotes = notes.filter((n: beatmap.types.note.Note) => n._type === 1);
             break;
         }
         case 'bomb': {
-            filteredNotes = notes.filter((n) => n._type === 3);
+            filteredNotes = notes.filter((n: beatmap.types.note.Note) => n._type === 3);
             break;
         }
         default: {
@@ -371,7 +374,7 @@ function noteAngleSelectHandler(ev: Event) {
 }
 
 // TODO: use angle instead of cut direction
-function noteAngleTableString(notes: beatmap.note.Note[]): string {
+function noteAngleTableString(notes: beatmap.types.note.Note[]): string {
     const totalNote = notes.length || 1;
     const cutOrder = [4, 0, 5, 2, 8, 3, 6, 1, 7];
     let htmlString = '';
@@ -390,8 +393,8 @@ function noteAngleTableString(notes: beatmap.note.Note[]): string {
 }
 
 const createNoteAngleTable = (
-    mapInfo: beatmap.info.InfoData,
-    mapSet: beatmap.map.BeatmapSetData
+    mapInfo: beatmap.types.info.InfoData,
+    mapSet: beatmap.types.set.BeatmapSetData
 ): HTMLTableElement => {
     const htmlSelect = uiSelect.create(
         `${prefix}table-select-angle-${mapSet._mode}-${mapSet._difficulty}`,
@@ -421,8 +424,8 @@ const createNoteAngleTable = (
 };
 
 const createInfoTable = (
-    mapInfo: beatmap.info.InfoData,
-    mapSet: beatmap.map.BeatmapSetData
+    mapInfo: beatmap.types.info.InfoData,
+    mapSet: beatmap.types.set.BeatmapSetData
 ): HTMLTableElement => {
     const bpm = beatmap.bpm.create(mapInfo._beatsPerMinute);
     const noteCount = beatmap.note.count(mapSet._data._notes);
@@ -437,20 +440,26 @@ const createInfoTable = (
     <tr>
     <th class="${prefix}table-header" colspan="2">Effective BPM</th>
     <td class="${prefix}table-element">${round(
-        swing.getMaxEffectiveBPM(mapSet._data._notes, bpm),
+        beatmap.swing.getMaxEffectiveBPM(mapSet._data._notes, bpm),
         2
     )}</td>
     </tr>
     <tr>
     <th class="${prefix}table-header" colspan="2">Effective BPM (swing)</th>
     <td class="${prefix}table-element">${round(
-        swing.getMaxEffectiveBPMSwing(mapSet._data._notes, bpm),
+        beatmap.swing.getMaxEffectiveBPMSwing(mapSet._data._notes, bpm),
         2
     )}</td>
     </tr>`;
 
-    let minSpeed = round(swing.getMinSliderSpeed(mapSet._data._notes, bpm) * 1000, 1);
-    let maxSpeed = round(swing.getMaxSliderSpeed(mapSet._data._notes, bpm) * 1000, 1);
+    let minSpeed = round(
+        beatmap.swing.getMinSliderSpeed(mapSet._data._notes, bpm) * 1000,
+        1
+    );
+    let maxSpeed = round(
+        beatmap.swing.getMaxSliderSpeed(mapSet._data._notes, bpm) * 1000,
+        1
+    );
     if (minSpeed && maxSpeed) {
         htmlString += `
         <tr>
@@ -471,8 +480,8 @@ const createInfoTable = (
 };
 
 const createEventCountTable = (
-    mapInfo: beatmap.info.InfoData,
-    mapSet: beatmap.map.BeatmapSetData
+    mapInfo: beatmap.types.info.InfoData,
+    mapSet: beatmap.types.set.BeatmapSetData
 ): HTMLTableElement => {
     const eventCount = beatmap.event.count(mapSet._data._events, mapSet._environment);
     let chroma = 0;
@@ -490,7 +499,7 @@ const createEventCountTable = (
         noodleExtensions += eventCount[key].noodleExtensions;
         mappingExtensions += eventCount[key].mappingExtensions;
         htmlString += `<tr>
-        <th class="${prefix}table-header" colspan="2">${beatmap.event.EventRename[key]}</th>
+        <th class="${prefix}table-header" colspan="2">${beatmap.types.event.EventRename[key]}</th>
         <td class="${prefix}table-element">${eventCount[key].total}</td>
         </tr>`;
     }
@@ -527,8 +536,8 @@ const createEventCountTable = (
 };
 
 const createObstacleCountTable = (
-    mapInfo: beatmap.info.InfoData,
-    mapSet: beatmap.map.BeatmapSetData
+    mapInfo: beatmap.types.info.InfoData,
+    mapSet: beatmap.types.set.BeatmapSetData
 ): HTMLTableElement => {
     const obstacleCount = beatmap.obstacle.count(mapSet._data._obstacles);
 
@@ -584,14 +593,16 @@ export const populate = (): void => {
     }
     const mapInfo = savedData._mapInfo;
 
-    mapInfo._difficultyBeatmapSets.forEach((set) => {
+    mapInfo._difficultyBeatmapSets.forEach((set: beatmap.types.info.InfoSetData) => {
         const htmlContainer = document.createElement('div');
         htmlContainer.className = prefix + 'mode-' + set._beatmapCharacteristicName;
 
         const htmlTitle = document.createElement('div');
         htmlTitle.className = prefix + 'title';
         htmlTitle.textContent =
-            beatmap.characteristic.CharacteristicRename[set._beatmapCharacteristicName];
+            beatmap.types.characteristic.CharacteristicRename[
+                set._beatmapCharacteristicName
+            ];
         htmlContainer.appendChild(htmlTitle);
 
         set._difficultyBeatmaps.forEach((diff) => {
@@ -606,7 +617,7 @@ export const populate = (): void => {
 
             const htmlAccordion = uiAccordion.create(
                 `${prefix}${set._beatmapCharacteristicName}-${diff._difficulty}`,
-                beatmap.difficulty.DifficultyRename[diff._difficulty] +
+                beatmap.types.difficulty.DifficultyRename[diff._difficulty] +
                     (diff._customData?._difficultyLabel
                         ? ' -- ' + diff._customData?._difficultyLabel
                         : ''),

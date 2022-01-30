@@ -1,115 +1,6 @@
-import {
-    ChromaEventLight,
-    ChromaEventLaser,
-    ChromaEventRotation,
-    ChromaEventZoom,
-} from './chroma';
-import { NEEvent } from './noodleExtensions';
-import { environmentEventList, EnvironmentAllName } from './environment';
-
-/**
- * Beatmap object interface for Event.
- *
- *     _time: float,
- *     _type: int,
- *     _value: int,
- *     _floatValue: int,
- *     _customData?: JSON
- */
-// it took me long enough to realise Event is a built in JS class/interface, but it has no effect here anyway
-export interface EventBase {
-    _time: number;
-    _type: number;
-    _value: number;
-    _floatValue: number;
-    _customData?: Record<never, never>;
-}
-
-export interface EventLight extends EventBase {
-    _type: 0 | 1 | 2 | 3 | 4 | 6 | 7 | 10 | 11;
-    _customData?: ChromaEventLight;
-}
-
-export interface EventBoost extends EventBase {
-    _type: 5;
-    _value: 0 | 1;
-}
-
-export interface EventRing extends EventBase {
-    _type: 8;
-    _customData?: ChromaEventRotation;
-}
-
-export interface EventZoom extends EventBase {
-    _type: 9;
-    _customData?: ChromaEventRotation | ChromaEventZoom;
-}
-
-export interface EventLaser extends EventBase {
-    _type: 12 | 13;
-    _customData?: ChromaEventLaser;
-}
-
-export interface EventLaneRotation extends EventBase {
-    _type: 14 | 15;
-    _customData?: NEEvent;
-}
-
-export interface EventExtra extends EventBase {
-    _type: 16 | 17;
-}
-
-export interface EventBPMChange extends EventBase {
-    _type: 100;
-}
-
-export type Event =
-    | EventLight
-    | EventBoost
-    | EventRing
-    | EventZoom
-    | EventLaser
-    | EventLaneRotation
-    | EventExtra
-    | EventBPMChange;
-
-/**
- * Enum for beatmap event type name.
- * @enum {number} Event type name
- */
-export enum EventRename {
-    'Back Lasers',
-    'Ring Lights',
-    'Left Lasers',
-    'Right Lasers',
-    'Center Lights',
-    'Light Boost',
-    'Extra Left Lights',
-    'Extra Right Lights',
-    'Ring Rotation',
-    'Ring Zoom',
-    'Extra Left Lasers',
-    'Extra Right Lasers',
-    'Left Laser Rotation',
-    'Right Laser Rotation',
-    'Early Lane Rotation',
-    'Late Lane Rotation',
-    'Lower Hydraulic',
-    'Raise Hydraulic',
-    'BPM Change' = 100,
-}
-
-interface EventCount {
-    [key: number]: EventCountStats;
-}
-
-interface EventCountStats {
-    total: number;
-    chroma: number;
-    chromaOld: number;
-    noodleExtensions: number;
-    mappingExtensions: number;
-}
+import { Event, EventLight, EventLaser, EventCount } from './types/event';
+import { EnvironmentAllName } from './types/environment';
+import { eventList } from './environment';
 
 /**
  * Check if light event is an off event.
@@ -352,9 +243,7 @@ export const count = (
     events: Event[],
     environment: EnvironmentAllName = 'DefaultEnvironment'
 ): EventCount => {
-    const commonEvent = environmentEventList[environment] ?? [
-        0, 1, 2, 3, 4, 8, 9, 12, 13,
-    ];
+    const commonEvent = eventList[environment] ?? [0, 1, 2, 3, 4, 8, 9, 12, 13];
     const eventCount: EventCount = {};
     for (let i = commonEvent.length - 1; i >= 0; i--) {
         eventCount[commonEvent[i]] = {

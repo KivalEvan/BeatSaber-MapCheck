@@ -160,13 +160,21 @@ export class NoteJumpSpeed {
 
 /**
  * Create and return new instance of NJS class.
- * @param {BeatPerMinute} bpm - BeatPerMinute class
+ * @param {BeatPerMinute|number} bpm - BeatPerMinute class or float value
  * @param {number} [njs=10] - NJS value
  * @param {number} [sdm=0] - NJS offset value
  * @returns {NoteJumpSpeed} NoteJumpSpeed class
  */
-export const create = (bpm: BeatPerMinute, njs = 10, sdm = 0): NoteJumpSpeed => {
-    return new NoteJumpSpeed(bpm, njs, sdm);
+export const create = (
+    bpm: BeatPerMinute | number,
+    njs = 10,
+    sdm = 0
+): NoteJumpSpeed => {
+    if (typeof bpm === 'number') {
+        return new NoteJumpSpeed(new BeatPerMinute(bpm), njs, sdm);
+    } else {
+        return new NoteJumpSpeed(bpm, njs, sdm);
+    }
 };
 
 /**

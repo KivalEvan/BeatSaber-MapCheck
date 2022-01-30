@@ -1,9 +1,10 @@
 # Changelog
 
-## v2.3.2 [TBD]
+## v2.4.0 [TBD]
 
 ### Changed
 
+-   Major structure change (for better development)
 -   Download from URL changes to download from ID if it detects valid BeatSaver map link
 -   Time spent now shows HH:MM:SS instead of HH:MM
 -   Actually added Gaga color scheme
@@ -11,7 +12,7 @@
 
 ### Removed
 
--   CORS proxy (I don't think this is even needed anymore; I would've done own server, but cost is too much)
+-   CORS proxy (I don't think this is even needed anymore; I would've done own server, but too costly)
 
 ## v2.3.1 [04-01-2022]
 

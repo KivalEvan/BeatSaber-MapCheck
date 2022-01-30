@@ -40,11 +40,11 @@ function inputCheckHandler(this: HTMLInputElement) {
     tool.input.enabled = this.checked;
 }
 
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData) {
+function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.set.BeatmapSetData) {
     const { _bpm: bpm, _njs: njs } = mapSettings;
     const { _notes: notes } = mapSet._data;
 
-    const arr: beatmap.note.Note[] = [];
+    const arr: beatmap.types.note.Note[] = [];
     // to avoid multiple of stack popping up, ignore anything within this time
     let lastTime: number = 0;
     for (let i = 0, len = notes.length; i < len; i++) {
@@ -90,7 +90,10 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
         });
 }
 
-function run(mapSettings: BeatmapSettings, mapSet?: beatmap.map.BeatmapSetData): void {
+function run(
+    mapSettings: BeatmapSettings,
+    mapSet?: beatmap.types.set.BeatmapSetData
+): void {
     if (!mapSet) {
         throw new Error('something went wrong!');
     }

@@ -1,7 +1,6 @@
 import * as beatmap from '../../beatmap';
 import { round } from '../../utils';
 import { BeatmapSettings, Tool } from '../template';
-import * as swing from '../swing';
 
 const htmlContainer = document.createElement('div');
 const htmlInputCheck = document.createElement('input');
@@ -43,23 +42,28 @@ function inputCheckHandler(this: HTMLInputElement) {
 
 const constant = 0.03414823529;
 const constantDiagonal = 0.03414823529;
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData) {
+function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.set.BeatmapSetData) {
     const { _bpm: bpm, _njs: njs } = mapSettings;
     const { _notes: notes } = mapSet._data;
 
-    const lastNote: { [key: number]: beatmap.note.Note } = {};
-    const swingNoteArray: { [key: number]: beatmap.note.Note[] } = {
+    const lastNote: { [key: number]: beatmap.types.note.Note } = {};
+    const swingNoteArray: { [key: number]: beatmap.types.note.Note[] } = {
         0: [],
         1: [],
         3: [],
     };
 
-    const arr: beatmap.note.Note[] = [];
+    const arr: beatmap.types.note.Note[] = [];
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         if (beatmap.note.isNote(note) && lastNote[note._type]) {
             if (
-                swing.next(note, lastNote[note._type], bpm, swingNoteArray[note._type])
+                beatmap.swing.next(
+                    note,
+                    lastNote[note._type],
+                    bpm,
+                    swingNoteArray[note._type]
+                )
             ) {
                 swingNoteArray[note._type] = [];
             }
@@ -97,7 +101,10 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
         });
 }
 
-function run(mapSettings: BeatmapSettings, mapSet?: beatmap.map.BeatmapSetData): void {
+function run(
+    mapSettings: BeatmapSettings,
+    mapSet?: beatmap.types.set.BeatmapSetData
+): void {
     if (!mapSet) {
         throw new Error('something went wrong!');
     }

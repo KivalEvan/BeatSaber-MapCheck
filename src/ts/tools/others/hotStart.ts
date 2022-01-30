@@ -1,7 +1,6 @@
 import * as beatmap from '../../beatmap';
 import { round } from '../../utils';
 import { BeatmapSettings, Tool } from '../template';
-import * as swing from '../swing';
 
 const defaultTime = 1.5;
 
@@ -48,12 +47,17 @@ function inputTimeHandler(this: HTMLInputElement) {
     this.value = tool.input.params.time.toString();
 }
 
-function run(mapSettings: BeatmapSettings, mapSet?: beatmap.map.BeatmapSetData): void {
+function run(
+    mapSettings: BeatmapSettings,
+    mapSet?: beatmap.types.set.BeatmapSetData
+): void {
     if (!mapSet) {
         throw new Error('something went wrong!');
     }
     const { time } = <{ time: number }>tool.input.params;
-    const result = mapSettings._bpm.toRealTime(beatmap.map.getFirstInteractiveTime(mapSet._data));
+    const result = mapSettings._bpm.toRealTime(
+        beatmap.difficulty.getFirstInteractiveTime(mapSet._data)
+    );
 
     if (result < time) {
         const htmlResult = document.createElement('div');

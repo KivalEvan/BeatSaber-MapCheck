@@ -1,3 +1,5 @@
+import { ColorArray } from './colors';
+
 /**
  * Beatmap difficulty custom data interface for Bookmark.
  *
@@ -7,4 +9,5 @@
 export interface Bookmark {
     _time: number;
     _name: string;
+    _color?: ColorArray;
 }

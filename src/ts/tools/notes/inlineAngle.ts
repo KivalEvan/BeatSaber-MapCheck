@@ -1,7 +1,6 @@
 import * as beatmap from '../../beatmap';
 import { round } from '../../utils';
 import { BeatmapSettings, Tool } from '../template';
-import * as swing from '../swing';
 
 const defaultMaxTime = 0.15;
 let localBPM!: beatmap.bpm.BeatPerMinute;
@@ -104,28 +103,33 @@ function inputBeatHandler(this: HTMLInputElement) {
     this.value = val.toString();
 }
 
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData) {
+function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.set.BeatmapSetData) {
     const { _bpm: bpm } = mapSettings;
     const { _notes: notes } = mapSet._data;
     const { maxTime: temp } = <{ maxTime: number }>tool.input.params;
     const maxTime = bpm.toBeatTime(temp) + 0.001;
 
-    const lastNote: { [key: number]: beatmap.note.Note } = {};
+    const lastNote: { [key: number]: beatmap.types.note.Note } = {};
     const lastNoteAngle: { [key: number]: number } = {};
-    const startNoteDot: { [key: number]: beatmap.note.Note | null } = {};
-    const swingNoteArray: { [key: number]: beatmap.note.Note[] } = {
+    const startNoteDot: { [key: number]: beatmap.types.note.Note | null } = {};
+    const swingNoteArray: { [key: number]: beatmap.types.note.Note[] } = {
         0: [],
         1: [],
         3: [],
     };
-    const arr: beatmap.note.Note[] = [];
+    const arr: beatmap.types.note.Note[] = [];
     let lastTime = 0;
     let lastIndex = 0;
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         if (beatmap.note.isNote(note) && lastNote[note._type]) {
             if (
-                swing.next(note, lastNote[note._type], bpm, swingNoteArray[note._type])
+                beatmap.swing.next(
+                    note,
+                    lastNote[note._type],
+                    bpm,
+                    swingNoteArray[note._type]
+                )
             ) {
                 if (startNoteDot[note._type]) {
                     startNoteDot[note._type] = null;
@@ -159,7 +163,7 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
                         true
                     )
                 ) {
-                    arr.push(startNoteDot[note._type] as beatmap.note.Note);
+                    arr.push(startNoteDot[note._type] as beatmap.types.note.Note);
                     startNoteDot[note._type] = null;
                 }
                 if (note._cutDirection !== 8) {
@@ -212,8 +216,8 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
 }
 
 function checkInline(
-    n: beatmap.note.Note,
-    notes: beatmap.note.Note[],
+    n: beatmap.types.note.Note,
+    notes: beatmap.types.note.Note[],
     index: number,
     maxTime: number
 ) {
@@ -225,7 +229,10 @@ function checkInline(
     return false;
 }
 
-function run(mapSettings: BeatmapSettings, mapSet?: beatmap.map.BeatmapSetData): void {
+function run(
+    mapSettings: BeatmapSettings,
+    mapSet?: beatmap.types.set.BeatmapSetData
+): void {
     if (!mapSet) {
         throw new Error('something went wrong!');
     }

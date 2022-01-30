@@ -7,7 +7,7 @@ import {
     Array3DPointDefinition,
 } from './heck';
 
-export const NEName = 'Noodle Extensions';
+export const name = 'Noodle Extensions';
 
 export enum NEDataAbbr {
     _childrenTracks = 'Ct',
@@ -26,7 +26,6 @@ export enum NEDataAbbr {
     _time = 'T',
     _track = 'Tr',
 }
-
 /**
  * Noodle Extensions Object interface for Beatmap Object.
  *

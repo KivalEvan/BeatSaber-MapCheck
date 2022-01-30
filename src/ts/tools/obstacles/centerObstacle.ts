@@ -103,19 +103,19 @@ function inputBeatHandler(this: HTMLInputElement) {
     this.value = val.toString();
 }
 
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData) {
+function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.set.BeatmapSetData) {
     const { _obstacles: obstacles } = mapSet._data;
     const { _bpm: bpm } = mapSettings;
     const { recovery } = <{ recovery: number }>tool.input.params;
-    const arr: beatmap.obstacle.Obstacle[] = [];
-    let obstacleLeftFull: beatmap.obstacle.Obstacle = {
+    const arr: beatmap.types.obstacle.Obstacle[] = [];
+    let obstacleLeftFull: beatmap.types.obstacle.Obstacle = {
         _time: 0,
         _duration: 0,
         _lineIndex: 0,
         _type: 0,
         _width: 0,
     };
-    let obstacleRightFull: beatmap.obstacle.Obstacle = {
+    let obstacleRightFull: beatmap.types.obstacle.Obstacle = {
         _time: 0,
         _duration: 0,
         _lineIndex: 0,
@@ -141,7 +141,8 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
                                 bpm.toRealTime(obstacleRightFull._time) - recovery &&
                             bpm.toRealTime(o._time) <
                                 bpm.toRealTime(
-                                    obstacleRightFull._time + obstacleRightFull._duration
+                                    obstacleRightFull._time +
+                                        obstacleRightFull._duration
                                 ) +
                                     recovery
                         ) {
@@ -184,7 +185,8 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
                                 bpm.toRealTime(obstacleRightFull._time) - recovery &&
                             bpm.toRealTime(o._time) <
                                 bpm.toRealTime(
-                                    obstacleRightFull._time + obstacleRightFull._duration
+                                    obstacleRightFull._time +
+                                        obstacleRightFull._duration
                                 ) +
                                     recovery
                         ) {
@@ -219,7 +221,10 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
         });
 }
 
-function run(mapSettings: BeatmapSettings, mapSet?: beatmap.map.BeatmapSetData): void {
+function run(
+    mapSettings: BeatmapSettings,
+    mapSet?: beatmap.types.set.BeatmapSetData
+): void {
     if (!mapSet) {
         throw new Error('something went wrong!');
     }
@@ -228,9 +233,11 @@ function run(mapSettings: BeatmapSettings, mapSet?: beatmap.map.BeatmapSetData):
 
     if (result.length) {
         const htmlResult = document.createElement('div');
-        htmlResult.innerHTML = `<b>2-wide center obstacle (<${round(recovery * 1000)}ms) [${
-            result.length
-        }]:</b> ${result.map((n) => round(mapSettings._bpm.adjustTime(n), 3)).join(', ')}`;
+        htmlResult.innerHTML = `<b>2-wide center obstacle (<${round(
+            recovery * 1000
+        )}ms) [${result.length}]:</b> ${result
+            .map((n) => round(mapSettings._bpm.adjustTime(n), 3))
+            .join(', ')}`;
         tool.output.html = htmlResult;
     } else {
         tool.output.html = null;

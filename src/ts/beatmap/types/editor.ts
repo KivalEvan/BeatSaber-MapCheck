@@ -10,7 +10,7 @@ export interface EditorInfo {
 /**
  * Editor interface for info custom data.
  *
- *     _lastEditedBy?: string
+ *     _lastEditedBy?: string,
  *     _editorName?: EditorInfo
  */
 export interface Editor {

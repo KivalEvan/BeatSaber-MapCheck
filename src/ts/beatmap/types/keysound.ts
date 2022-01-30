@@ -1,7 +1,7 @@
-export const KeysoundName = 'Keysound';
+export const name = 'Keysound';
 
 /**
- * Keysound Map interface for difficulty custom data.
+ * Keysound Map interface for info custom data.
  *
  *     _id: number,
  *     _file: string,

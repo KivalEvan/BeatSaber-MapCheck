@@ -29,7 +29,7 @@ export default (function () {
                 uiSettings.setOnLoadCheck(id, settings.onLoad[id]);
             }
             uiTheme.set(settings.theme);
-            console.log('user interface initialised');
+            console.log('user interface initialised.');
         }
     };
 })();
