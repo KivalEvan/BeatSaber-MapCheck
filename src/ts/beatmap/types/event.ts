@@ -6,6 +6,40 @@ import {
 } from './chroma';
 import { NEEvent } from './noodleExtensions';
 
+export enum Type {
+    BACK_LASERS,
+    RING_LIGHTS,
+    LEFT_LASERS,
+    RIGHT_LASERS,
+    CENTER_LIGHTS,
+    LIGHT_BOOST,
+    EXTRA_LEFT_LIGHTS,
+    EXTRA_RIGHT_LIGHTS,
+    RING_ROTATION,
+    RING_ZOOM,
+    EXTRA_LEFT_LASERS,
+    EXTRA_RIGHT_LASERS,
+    LEFT_LASER_ROTATION,
+    RIGHT_LASER_ROTATION,
+    EARLY_LANE_ROTATION,
+    LATE_LANE_ROTATION,
+    LOWER_HYDRAULIC,
+    RAISE_HYDRAULIC,
+    BPM_CHANGE = 100,
+}
+
+export enum Value {
+    OFF,
+    BLUE_ON,
+    BLUE_FLASH,
+    BLUE_FADE,
+    BLUE_TRANSITION,
+    RED_ON,
+    RED_FLASH,
+    RED_FADE,
+    RED_TRANSITION,
+}
+
 /**
  * Beatmap object interface for Event.
  *
@@ -41,7 +75,7 @@ export interface EventRing extends EventBase {
 
 export interface EventZoom extends EventBase {
     _type: 9;
-    _customData?: ChromaEventRotation | ChromaEventZoom;
+    _customData?: ChromaEventRotation & ChromaEventZoom;
 }
 
 export interface EventLaser extends EventBase {
@@ -71,40 +105,6 @@ export type Event =
     | EventLaneRotation
     | EventExtra
     | EventBPMChange;
-
-export enum Type {
-    BACK_LASERS,
-    RING_LIGHTS,
-    LEFT_LASERS,
-    RIGHT_LASERS,
-    CENTER_LIGHTS,
-    LIGHT_BOOST,
-    EXTRA_LEFT_LIGHTS,
-    EXTRA_RIGHT_LIGHTS,
-    RING_ROTATION,
-    RING_ZOOM,
-    EXTRA_LEFT_LASERS,
-    EXTRA_RIGHT_LASERS,
-    LEFT_LASER_ROTATION,
-    RIGHT_LASER_ROTATION,
-    EARLY_LANE_ROTATION,
-    LATE_LANE_ROTATION,
-    LOWER_HYDRAULIC,
-    RAISE_HYDRAULIC,
-    BPM_CHANGE = 100,
-}
-
-export enum Value {
-    OFF,
-    BLUE_ON,
-    BLUE_FLASH,
-    BLUE_FADE,
-    BLUE_TRANSITION,
-    RED_ON,
-    RED_FLASH,
-    RED_FADE,
-    RED_TRANSITION,
-}
 
 /**
  * Enum for beatmap event type name.

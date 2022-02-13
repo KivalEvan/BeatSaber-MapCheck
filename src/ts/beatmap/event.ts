@@ -1,4 +1,12 @@
-import { Event, EventLight, EventLaser, EventCount } from './types/event';
+import {
+    Event,
+    EventLight,
+    EventLaser,
+    EventCount,
+    EventRing,
+    EventZoom,
+    EventLaneRotation,
+} from './types/event';
 import { EnvironmentAllName } from './types/environment';
 import { eventList } from './environment';
 
@@ -61,12 +69,17 @@ export const isValidType = (event: Event): boolean => {
  * @param {Event} event - Beatmap event
  * @returns {boolean} If event is a light event
  */
-export const isLightEvent = (event: Event): boolean => {
+export const isLightEvent = (event: Event): event is EventLight => {
     return (
-        event._type >= 0 &&
-        event._type <= 11 &&
-        !isRingEvent(event) &&
-        !isColorBoost(event)
+        event._type === 0 ||
+        event._type === 1 ||
+        event._type === 2 ||
+        event._type === 3 ||
+        event._type === 4 ||
+        event._type === 6 ||
+        event._type === 7 ||
+        event._type === 10 ||
+        event._type === 11
     );
 };
 
@@ -84,8 +97,17 @@ export const isColorBoost = (event: Event): boolean => {
  * @param {Event} event - Beatmap event
  * @returns {boolean} If event is a ring event
  */
-export const isRingEvent = (event: Event): boolean => {
-    return event._type === 8 || event._type === 9;
+export const isRingEvent = (event: Event): event is EventRing => {
+    return event._type === 8;
+};
+
+/**
+ * Check if event is a ring zoom event.
+ * @param {Event} event - Beatmap event
+ * @returns {boolean} If event is a ring zoom event
+ */
+export const isZoomEvent = (event: Event): event is EventZoom => {
+    return event._type === 9;
 };
 
 /**
@@ -93,7 +115,7 @@ export const isRingEvent = (event: Event): boolean => {
  * @param {Event} event - Beatmap event
  * @returns {boolean} If event is a laser rotation event
  */
-export const isLaserRotationEvent = (event: Event): boolean => {
+export const isLaserRotationEvent = (event: Event): event is EventLaser => {
     return event._type === 12 || event._type === 13;
 };
 
@@ -102,7 +124,7 @@ export const isLaserRotationEvent = (event: Event): boolean => {
  * @param {Event} event - Beatmap event
  * @returns {boolean} If event is a lane rotation event
  */
-export const isLaneRotationEvent = (event: Event): boolean => {
+export const isLaneRotationEvent = (event: Event): event is EventLaneRotation => {
     return event._type === 14 || event._type === 15;
 };
 
@@ -133,6 +155,7 @@ export const isLightingEvent = (event: Event): boolean => {
     return (
         isLightEvent(event) ||
         isRingEvent(event) ||
+        isZoomEvent(event) ||
         isLaserRotationEvent(event) ||
         isExtraEvent(event)
     );
@@ -143,9 +166,9 @@ export const isLightingEvent = (event: Event): boolean => {
  * @param {Event} event - Beatmap event
  * @returns {boolean} If event has Chroma properties
  */
+// holy shit i hate type guard
 export const hasChroma = (event: Event): boolean => {
     if (isLightEvent(event)) {
-        event = event as EventLight;
         return (
             Array.isArray(event._customData?._color) ||
             typeof event._customData?._lightID === 'number' ||
@@ -154,7 +177,8 @@ export const hasChroma = (event: Event): boolean => {
             typeof event._customData?._lightGradient === 'object'
         );
     }
-    if (event._type === 8) {
+    event = event as Event;
+    if (isRingEvent(event)) {
         return (
             typeof event._customData?._nameFilter === 'string' ||
             typeof event._customData?._reset === 'boolean' ||
@@ -169,11 +193,24 @@ export const hasChroma = (event: Event): boolean => {
             typeof event._customData?._speedMult === 'number'
         );
     }
-    if (event._type === 9) {
-        return typeof event._customData?._step === 'number';
+    event = event as Event;
+    if (isZoomEvent(event)) {
+        return (
+            typeof event._customData?._nameFilter === 'string' ||
+            typeof event._customData?._reset === 'boolean' ||
+            typeof event._customData?._rotation === 'number' ||
+            typeof event._customData?._step === 'number' ||
+            typeof event._customData?._prop === 'number' ||
+            typeof event._customData?._speed === 'number' ||
+            typeof event._customData?._direction === 'number' ||
+            typeof event._customData?._counterSpin === 'boolean' ||
+            typeof event._customData?._stepMult === 'number' ||
+            typeof event._customData?._propMult === 'number' ||
+            typeof event._customData?._speedMult === 'number'
+        );
     }
+    event = event as Event;
     if (isLaserRotationEvent(event)) {
-        event = event as EventLaser;
         return (
             typeof event._customData?._lockPosition === 'boolean' ||
             typeof event._customData?._speed === 'number' ||
@@ -229,7 +266,11 @@ export const isValid = (event: Event): boolean => {
     return (
         isValidType(event) &&
         event._value >= 0 &&
-        !(!isLaserRotationEvent(event) && event._value > 8 && !hasOldChroma(event))
+        !(
+            !isLaserRotationEvent(event) &&
+            (event as Event)._value > 8 &&
+            !hasOldChroma(event)
+        )
     );
 };
 

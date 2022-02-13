@@ -2,7 +2,7 @@ import * as beatmap from '../../beatmap';
 import { round } from '../../utils';
 import { BeatmapSettings, Tool } from '../template';
 
-const defaultPrec = [4, 3];
+const defaultPrec = [8, 6];
 
 const htmlContainer = document.createElement('div');
 const htmlInputPrec = document.createElement('input');

@@ -57,7 +57,7 @@ const unlitBomb = (
                 beatmap.event.isLightEvent(ev) &&
                 beatmap.environment.eventList[environment].includes(ev._type)
         )
-        .sort((a, b) => a._type - b._type);
+        .sort((a, b) => a._type - b._type) as beatmap.types.event.EventLight[];
     const eventState: {
         [key: number]: {
             state: 'off' | 'fading' | 'on';
@@ -84,7 +84,7 @@ const unlitBomb = (
     const fadeTime = bpm.toBeatTime(1);
     const reactTime = bpm.toBeatTime(0.25);
     for (let i = 0, len = eventsLight.length; i < len; i++) {
-        const ev = eventsLight[i] as beatmap.types.event.EventLight;
+        const ev = eventsLight[i];
         if (
             (beatmap.event.isOn(ev) || beatmap.event.isFlash(ev)) &&
             eventState[ev._type].state !== 'on'
