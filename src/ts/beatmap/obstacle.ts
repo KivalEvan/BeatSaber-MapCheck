@@ -1,9 +1,9 @@
 import { Obstacle, ObstacleCount } from './types/obstacle';
 
-/**
- * Get obstacle and return the Beatwalls' position x and y value in tuple.
- * @param {Obstacle} obstacle - Beatmap obstacle
- * @returns {[number, number]} Beatwalls' position x and y value in tuple
+/** Get obstacle and return the Beatwalls' position x and y value in tuple.
+ * ```ts
+ * const obstaclePos = getPosition(wall);
+ * ```
  */
 // FIXME: do i bother with Mapping Extension for obstacle Y position?
 export const getPosition = (obstacle: Obstacle): [number, number] => {
@@ -24,10 +24,10 @@ export const getPosition = (obstacle: Obstacle): [number, number] => {
     ];
 };
 
-/**
- * Check if obstacle is interactive.
- * @param {Obstacle} obstacle - Beatmap obstacle
- * @returns {boolean} If obstacle is interactive
+/** Check if obstacle is interactive.
+ * ```ts
+ * if (isInteractive(wall)) {}
+ * ```
  */
 export const isInteractive = (obstacle: Obstacle): boolean => {
     return (
@@ -35,10 +35,10 @@ export const isInteractive = (obstacle: Obstacle): boolean => {
     );
 };
 
-/**
- * Check if obstacle is crouch.
- * @param {Obstacle} obstacle - Beatmap obstacle
- * @returns {boolean} If obstacle is crouch
+/** Check if obstacle is crouch.
+ * ```ts
+ * if (isCrouch(wall)) {}
+ * ```
  */
 export const isCrouch = (obstacle: Obstacle): boolean => {
     return (
@@ -47,21 +47,19 @@ export const isCrouch = (obstacle: Obstacle): boolean => {
     );
 };
 
-/**
- * Check if obstacle is crouch.
- * @param {Obstacle} obstacle - Beatmap obstacle
- * @returns {boolean} If obstacle is crouch
+/** Check if obstacle has zero value.
+ * ```ts
+ * if (isZero(wall)) {}
+ * ```
  */
 export const isZero = (obstacle: Obstacle): boolean => {
     return obstacle._duration === 0 || obstacle._width === 0;
 };
 
-/**
- * Check if current obstacle is longer than previous obstacle.
- * @param {Obstacle} obstacle - Current beatmap obstacle
- * @param {Obstacle} obstacle - Previous beatmap obstacle
- * @param {number} offset - Add offset to previous beatmap obstacle
- * @returns {boolean} If current obstacle is longer than previous obstacle
+/** Check if current obstacle is longer than previous obstacle.
+ * ```ts
+ * if (isLonger(currWall, prevWall)) {}
+ * ```
  */
 export const isLonger = (
     currObstacle: Obstacle,
@@ -74,19 +72,19 @@ export const isLonger = (
     );
 };
 
-/**
- * Check if obstacle has Chroma properties.
- * @param {Obstacle} obstacle - Beatmap obstacle
- * @returns {boolean} If obstacle has Chroma properties
+/** Check if obstacle has Chroma properties.
+ * ```ts
+ * if (hasChroma(wall)) {}
+ * ```
  */
 export const hasChroma = (obstacle: Obstacle): boolean => {
     return Array.isArray(obstacle._customData?._color);
 };
 
-/**
- * Check if obstacle has Noodle Extensions properties.
- * @param {Obstacle} obstacle - Beatmap obstacle
- * @returns {boolean} If obstacle has Noodle Extensions properties
+/** Check if obstacle has Noodle Extensions properties.
+ * ```ts
+ * if (hasNoodleExtensions(wall)) {}
+ * ```
  */
 export const hasNoodleExtensions = (obstacle: Obstacle): boolean => {
     return (
@@ -103,10 +101,10 @@ export const hasNoodleExtensions = (obstacle: Obstacle): boolean => {
     );
 };
 
-/**
- * Check if obstacle has Mapping Extensions properties.
- * @param {Obstacle} obstacle - Beatmap obstacle
- * @returns {boolean} If obstacle has Mapping Extensions properties
+/** Check if obstacle has Mapping Extensions properties.
+ * ```ts
+ * if (hasMappingExtensions(wall)) {}
+ * ```
  */
 export const hasMappingExtensions = (obstacle: Obstacle): boolean => {
     return (
@@ -117,10 +115,10 @@ export const hasMappingExtensions = (obstacle: Obstacle): boolean => {
     );
 };
 
-/**
- * Check if obstacle is a valid, vanilla obstacle.
- * @param {Obstacle} obstacle - Beatmap obstacle
- * @returns {boolean} If obstacle is a valid, vanilla obstacle
+/** Check if obstacle is a valid, vanilla obstacle.
+ * ```ts
+ * if (isValid(wall)) {}
+ * ```
  */
 export const isValid = (obstacle: Obstacle): boolean => {
     return (
@@ -128,10 +126,11 @@ export const isValid = (obstacle: Obstacle): boolean => {
     );
 };
 
-/**
- * Count number of type of obstacles with their properties in given array and return a obstacle count object.
- * @param {Obstacle[]} obstacles - Array of beatmap obstacle
- * @returns {EventCount} Obstacle count object
+/** Count number of type of obstacles with their properties in given array and return a obstacle count object.
+ * ```ts
+ * const list = count(walls);
+ * console.log(list);
+ * ```
  */
 export const count = (obstacles: Obstacle[]): ObstacleCount => {
     const obstacleCount: ObstacleCount = {

@@ -1,10 +1,10 @@
-/**
- * Beatmap object interface for Waypoint.
- *
- *     _time: float,
- *     _lineIndex: int,
- *     _lineLayer: int,
- *     _offsetDirection: int,
+/** Beatmap object interface for Waypoint.
+ * ```ts
+ * _time: float,
+ * _lineIndex: int,
+ * _lineLayer: int,
+ * _offsetDirection: int
+ * ```
  */
 // as far as i know, it does not have customData as of yet
 // what does this do anyway?

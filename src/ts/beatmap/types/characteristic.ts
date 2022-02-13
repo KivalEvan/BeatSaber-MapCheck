@@ -1,6 +1,4 @@
-/**
- * Available characteristic from both base game and modded.
- */
+/** Available characteristic from both base game and modded. */
 export type CharacteristicName =
     | 'Standard'
     | 'NoArrows'
@@ -10,9 +8,7 @@ export type CharacteristicName =
     | 'Lightshow'
     | 'Lawless';
 
-/**
- * Rename characteristic to human readable.
- */
+/** Rename characteristic to human readable. */
 export enum CharacteristicRename {
     Standard = 'Standard',
     NoArrows = 'No Arrows',
@@ -23,9 +19,7 @@ export enum CharacteristicRename {
     Lawless = 'Lawless',
 }
 
-/**
- * Standard characteristic ordering.
- */
+/** Standard characteristic ordering. */
 export enum CharacteristicOrder {
     'Standard',
     'NoArrows',

@@ -1,35 +1,36 @@
 import { Note, NoteCount } from './types/note';
+import { BeatPerMinute } from './bpm';
 import { radToDeg, shortRotDistance } from '../utils';
 
-/**
- * Array index mapped to cut angle corresponding to the `_cutDirection`.
- *
- *     0 -> 180,
- *     1 -> 0,
- *     2 -> 270,
- *     3 -> 90,
- *     4 -> 225,
- *     5 -> 135,
- *     6 -> 315,
- *     7 -> 45,
- *     8 -> 0
+/** Array index mapped to cut angle corresponding to the `_cutDirection`.
+ * ```ts
+ * 0 -> 180,
+ * 1 -> 0,
+ * 2 -> 270,
+ * 3 -> 90,
+ * 4 -> 225,
+ * 5 -> 135,
+ * 6 -> 315,
+ * 7 -> 45,
+ * 8 -> 0
+ * ```
  */
 export const cutAngle: Readonly<number[]> = [180, 0, 270, 90, 225, 135, 315, 45, 0];
 
 export const flipDirection: Readonly<number[]> = [1, 0, 3, 2, 7, 6, 5, 4, 8];
 
-/**
- * Array index mapped to tuple of `_lineIndex` and `_lineLayer` corresponding to the `_cutDirection`.
- *
- *     0 -> [0, 1],
- *     1 -> [0, -1],
- *     2 -> [-1, 0],
- *     3 -> [1, 0],
- *     4 -> [-1, 1],
- *     5 -> [1, 1],
- *     6 -> [-1, -1],
- *     7 -> [1, -1],
- *     8 -> [0, 0]
+/** Array index mapped to tuple of `_lineIndex` and `_lineLayer` corresponding to the `_cutDirection`.
+ * ```ts
+ * 0 -> [0, 1],
+ * 1 -> [0, -1],
+ * 2 -> [-1, 0],
+ * 3 -> [1, 0],
+ * 4 -> [-1, 1],
+ * 5 -> [1, 1],
+ * 6 -> [-1, -1],
+ * 7 -> [1, -1],
+ * 8 -> [0, 0]
+ * ```
  */
 export const cutDirectionSpace: { [key: number]: readonly [number, number] } = {
     0: [0, 1],
@@ -43,28 +44,28 @@ export const cutDirectionSpace: { [key: number]: readonly [number, number] } = {
     8: [0, 0],
 };
 
-/**
- * Check if note is a red or blue note.
- * @param {Note} note - Beatmap note
- * @returns {boolean} If note is a red or blue note
+/** Check if note is a red or blue note.
+ * ```ts
+ * if (isNote(note)) {}
+ * ```
  */
 export const isNote = (note: Note): boolean => {
     return note._type === 0 || note._type === 1;
 };
 
-/**
- * Check if note is a bomb note
- * @param {Note} note - Beatmap note
- * @returns {boolean} If note is a bomb note
+/** Check if note is a bomb note
+ * ```ts
+ * if (isBomb(note)) {}
+ * ```
  */
 export const isBomb = (note: Note): boolean => {
     return note._type === 3;
 };
 
-/**
- * Get note and return the Beatwalls' position x and y value in tuple.
- * @param {Note} note - Beatmap note
- * @returns {[number, number]} Beatwalls' position x and y value in tuple
+/** Get note and return the Beatwalls' position x and y value in tuple.
+ * ```ts
+ * const notePos = getPosition(note);
+ * ```
  */
 export const getPosition = (note: Note): [number, number] => {
     if (note._customData?._position) {
@@ -84,10 +85,10 @@ export const getPosition = (note: Note): [number, number] => {
     ];
 };
 
-/**
- * Get note and return standardised note angle.
- * @param {Note} note - Beatmap note
- * @returns {number} Standardised note angle
+/** Get note and return standardised note angle.
+ * ```ts
+ * const noteAngle = getAngle(note);
+ * ```
  */
 export const getAngle = (note: Note): number => {
     if (note._customData?._cutDirection) {
@@ -101,11 +102,10 @@ export const getAngle = (note: Note): number => {
     return cutAngle[note._cutDirection] || 0;
 };
 
-/**
- * Get two notes and return the distance between two notes.
- * @param {Note} n1 - First beatmap note
- * @param {Note} n2 - Second beatmap note
- * @returns {number} The distance between note
+/** Get two notes and return the distance between two notes.
+ * ```ts
+ * const noteDistance = distance(note1, note2);
+ * ```
  */
 export const distance = (n1: Note, n2: Note): number => {
     const [nX1, nY1] = getPosition(n1);
@@ -113,11 +113,10 @@ export const distance = (n1: Note, n2: Note): number => {
     return Math.sqrt(Math.pow(nX2 - nX1, 2) + Math.pow(nY2 - nY1, 2));
 };
 
-/**
- * Compare two notes and return if the notes is in vertical alignment.
- * @param {Note} n1 - First beatmap note
- * @param {Note} n2 - Second beatmap note
- * @returns {number} If the notes is in vertical alignment
+/** Compare two notes and return if the notes is in vertical alignment.
+ * ```ts
+ * if (isVertical(note1, note2)) {}
+ * ```
  */
 export const isVertical = (n1: Note, n2: Note): boolean => {
     const [nX1] = getPosition(n1);
@@ -126,11 +125,10 @@ export const isVertical = (n1: Note, n2: Note): boolean => {
     return d > -0.001 && d < 0.001;
 };
 
-/**
- * Compare two notes and return if the notes is in horizontal alignment.
- * @param {Note} n1 - First beatmap note
- * @param {Note} n2 - Second beatmap note
- * @returns {number} If the notes is in horizontal alignment
+/** Compare two notes and return if the notes is in horizontal alignment.
+ * ```ts
+ * if (isHorizontal(note1, note2)) {}
+ * ```
  */
 export const isHorizontal = (n1: Note, n2: Note): boolean => {
     const [_, nY1] = getPosition(n1);
@@ -139,11 +137,10 @@ export const isHorizontal = (n1: Note, n2: Note): boolean => {
     return d > -0.001 && d < 0.001;
 };
 
-/**
- * Compare two notes and return if the notes is in diagonal alignment.
- * @param {Note} n1 - First beatmap note
- * @param {Note} n2 - Second beatmap note
- * @returns {number} If the notes is in diagonal alignment
+/** Compare two notes and return if the notes is in diagonal alignment.
+ * ```ts
+ * if (isDiagonal(note1, note2)) {}
+ * ```
  */
 export const isDiagonal = (n1: Note, n2: Note): boolean => {
     const [nX1, nY1] = getPosition(n1);
@@ -153,23 +150,19 @@ export const isDiagonal = (n1: Note, n2: Note): boolean => {
     return dX === dY;
 };
 
-/**
- * Compare two notes and return if the notes is an inline.
- * @param {Note} n1 - First beatmap note
- * @param {Note} n2 - Second beatmap note
- * @param {number} [lapping=0.5] - Distance in x and y between two notes
- * @returns {number} If the notes is an inline
+/** Compare two notes and return if the notes is an inline.
+ * ```ts
+ * if (isInline(note1, note2)) {}
+ * ```
  */
 export const isInline = (n1: Note, n2: Note, lapping = 0.5): boolean => {
     return distance(n1, n2) <= lapping;
 };
 
-/**
- * Compare current note with the note ahead of it and return if the notes is a double.
- * @param {Note} note - Current beatmap note
- * @param {Note[]} notes - Array of beatmap note
- * @param {number} index - Index of array of beatmap note
- * @returns {number} If the notes is a double
+/** Compare current note with the note ahead of it and return if the notes is a double.
+ * ```ts
+ * if (isDouble(note, notes, index)) {}
+ * ```
  */
 export const isDouble = (note: Note, notes: Note[], index: number): boolean => {
     for (let i = index, len = notes.length; i < len; i++) {
@@ -183,32 +176,29 @@ export const isDouble = (note: Note, notes: Note[], index: number): boolean => {
     return false;
 };
 
-/**
- * Compare two notes and return if the notes is adjacent.
- * @param {Note} n1 - First beatmap note
- * @param {Note} n2 - Second beatmap note
- * @returns {number} If the notes is adjacent
+/** Compare two notes and return if the notes is adjacent.
+ * ```ts
+ * if (isAdjacent(note1, note2)) {}
+ * ```
  */
 export const isAdjacent = (n1: Note, n2: Note): boolean => {
     const d = distance(n1, n2);
     return d > 0.499 && d < 1.001;
 };
 
-/**
- * Compare two notes and return if the notes is a window.
- * @param {Note} n1 - First beatmap note
- * @param {Note} n2 - Second beatmap note
- * @returns {number} If the notes is a window
+/** Compare two notes and return if the notes is a window.
+ * ```ts
+ * if (isWindow(note1, note2)) {}
+ * ```
  */
 export const isWindow = (n1: Note, n2: Note): boolean => {
     return distance(n1, n2) > 1.8;
 };
 
-/**
- * Compare two notes and return if the notes is a slanted window.
- * @param {Note} n1 - First beatmap note
- * @param {Note} n2 - Second beatmap note
- * @returns {number} If the notes is a slanted window
+/** Compare two notes and return if the notes is a slanted window.
+ * ```ts
+ * if (isSlantedWindow(note1, note2)) {}
+ * ```
  */
 export const isSlantedWindow = (n1: Note, n2: Note): boolean => {
     return (
@@ -219,13 +209,10 @@ export const isSlantedWindow = (n1: Note, n2: Note): boolean => {
     );
 };
 
-/**
- * Check if the note intersect on swing path by angle and distance.
- * @param {Note} n1 - First beatmap note
- * @param {Note} n2 - Second beatmap note
- * @param {[number,number,number?][]} angleDistances - Array of tuple by maxAngle (applies on both positive and negative), maxDistance, and offsetAngle
- * @param {boolean} ahead - Look ahead of the note path, otherwise behind the note path
- * @returns {[boolean,boolean]} Tuple of boolean for result of n1 and n2
+/** Check if the note intersect on swing path by angle and distance.
+ * ```ts
+ * if (isIntersect(note1, note2, [[20, 1.5]])) {}
+ * ```
  */
 // a fkin abomination that's what this is
 export const isIntersect = (
@@ -435,10 +422,10 @@ export const predictDirection = (currNote: Note, prevNote: Note): number => {
     return 8;
 };
 
-/**
- * Check if note has Chroma properties.
- * @param {Note} note - Beatmap note
- * @returns {boolean} If note has Chroma properties
+/** Check if note has Chroma properties.
+ * ```ts
+ * if (hasChroma(note)) {}
+ * ```
  */
 export const hasChroma = (note: Note): boolean => {
     return (
@@ -447,10 +434,10 @@ export const hasChroma = (note: Note): boolean => {
     );
 };
 
-/**
- * Check if note has Noodle Extensions properties.
- * @param {Note} note - Beatmap note
- * @returns {boolean} If note has Noodle Extensions properties
+/** Check if note has Noodle Extensions properties.
+ * ```ts
+ * if (hasNoodleExtensions(note)) {}
+ * ```
  */
 // god i hate these
 export const hasNoodleExtensions = (note: Note): boolean => {
@@ -471,10 +458,10 @@ export const hasNoodleExtensions = (note: Note): boolean => {
     );
 };
 
-/**
- * Check if note has Mapping Extensions properties.
- * @param {Note} note - Beatmap note
- * @returns {boolean} If note has Mapping Extensions properties
+/** Check if note has Mapping Extensions properties.
+ * ```ts
+ * if (hasMappingExtensions(note)) {}
+ * ```
  */
 export const hasMappingExtensions = (note: Note): boolean => {
     return (
@@ -486,28 +473,29 @@ export const hasMappingExtensions = (note: Note): boolean => {
     );
 };
 
-/**
- * Check if note has a valid cut direction.
- * @param {Note} note - Beatmap note
- * @returns {boolean} If note has a valid cut direction
+/** Check if note has a valid cut direction.
+ * ```ts
+ * if (isValidDirection(note)) {}
+ * ```
  */
 export const isValidDirection = (note: Note): boolean => {
     return note._cutDirection >= 0 && note._cutDirection <= 8;
 };
 
-/**
- * Check if note is a valid, vanilla note.
- * @param {Note} note - Beatmap note
- * @returns {boolean} If note is a valid, vanilla note
+/** Check if note is a valid, vanilla note.
+ * ```ts
+ * if (isValid(note)) {}
+ * ```
  */
 export const isValid = (note: Note): boolean => {
     return !hasMappingExtensions(note) && isValidDirection(note);
 };
 
-/**
- * Count number of red, blue, and bomb notes with their properties in given array and return a note count object.
- * @param {Note[]} notes - Array of beatmap note
- * @returns {NoteCount} Note count object
+/** Count number of red, blue, and bomb notes with their properties in given array and return a note count object.
+ * ```ts
+ * const list = count(notes);
+ * console.log(list);
+ * ```
  */
 export const count = (notes: Note[]): NoteCount => {
     const noteCount: NoteCount = {
@@ -560,78 +548,74 @@ export const count = (notes: Note[]): NoteCount => {
     return noteCount;
 };
 
-/**
- * Count number of specified line index in a given array and return a counted number of line index.
- * @param {Note[]} notes - Array of beatmap note
- * @param {number} i - From which line index to count
- * @returns {number} Counted number of line index
+/** Count number of specified line index in a given array and return a counted number of line index.
+ * ```ts
+ * const indexCount = countIndex(notes, 0);
+ * ```
  */
 export const countIndex = (notes: Note[], i: number): number => {
     return notes.filter((n) => n._lineIndex === i).length;
 };
 
-/**
- * Count number of specified line layer in a given array and return a counted number of line layer.
- * @param {Note[]} notes - Array of beatmap note
- * @param {number} l - From which line layer to count
- * @returns {number} Counted number of line layer
+/** Count number of specified line layer in a given array and return a counted number of line layer.
+ * ```ts
+ * const layerCount = countLayer(notes, 0);
+ * ```
  */
 export const countLayer = (notes: Note[], l: number): number => {
     return notes.filter((n) => n._lineLayer === l).length;
 };
 
-/**
- * Count number of specified line index and line layer in a given array and return a counted number of line index and line layer.
- * @param {Note[]} notes - Array of beatmap note
- * @param {number} i - From which line index to count
- * @param {number} l - From which line layer to count
- * @returns {number} Counted number of line index and line layer
+/** Count number of specified line index and line layer in a given array and return a counted number of line index and line layer.
+ * ```ts
+ * const indexLayerCount = countIndexLayer(notes, 0, 0);
+ * ```
  */
 export const countIndexLayer = (notes: Note[], i: number, l: number): number => {
     return notes.filter((n) => n._lineIndex === i && n._lineLayer === l).length;
 };
 
-/**
- * Count number of specified `_cutDirection` in a given array and return a counted number of `_cutDirection`.
- * @param {Note[]} notes - Array of beatmap note
- * @param {number} cd - `_cutDirection` to count
- * @returns {number} Counted number of `_cutDirection`
+/** Count number of specified `_cutDirection` in a given array and return a counted number of `_cutDirection`.
+ * ```ts
+ * const cdCount = countDirection(notes, 0);
+ * ```
  */
 export const countDirection = (notes: Note[], cd: number): number => {
     return notes.filter((n) => n._cutDirection === cd).length;
 };
 
-/**
- * Count number of specified angle in a given array and return a counted number of angle.
- * @param {Note[]} notes - Array of beatmap note
- * @param {number} angle - Note angle to count
- * @returns {number} Counted number of angle
+/** Count number of specified angle in a given array and return a counted number of angle.
+ * ```ts
+ * const angleCount = countAngle(notes, 0);
+ * ```
  */
 export const countAngle = (notes: Note[], angle: number): number => {
     return notes.filter((n) => getAngle(n) === angle).length;
 };
 
-/**
- * Calculate note per second.
- * @param {Note[]} notes - Array of beatmap note
- * @param {number} number - Duration of the map
- * @returns {number} Note per second value
+/** Calculate note per second.
+ * ```ts
+ * const nps = nps(notes, 10);
+ * ```
  */
 export const nps = (notes: Note[], duration: number): number => {
     return duration ? notes.filter((n) => isNote(n)).length / duration : 0;
 };
 
-/**
- * Calculate the peak by rolling average.
- * @param {Note[]} notes - Array of beatmap note
- * @param {number} beat - Beat time period
- * @param {number} bpm - BPM of the map
- * @returns {number} Peak NPS value
+/** Calculate the peak by rolling average.
+ * ```ts
+ * const peakNPS = peak(notes, 10, BPM ?? 128);
+ * ```
  */
-export const peak = (notes: Note[], beat: number, bpm: number): number => {
-    const nArr = notes.filter((n) => n._type === 0 || n._type === 1);
+export const peak = (
+    notes: Note[],
+    beat: number,
+    bpm: BeatPerMinute | number
+): number => {
+    const nArr = notes.filter(isNote);
     let peakNPS = 0;
     let currentSectionStart = 0;
+    const bpmV = typeof bpm === 'number' ? bpm : bpm.value;
 
     for (let i = 0; i < nArr.length; i++) {
         while (nArr[i]._time - nArr[currentSectionStart]._time > beat) {
@@ -639,15 +623,14 @@ export const peak = (notes: Note[], beat: number, bpm: number): number => {
         }
         peakNPS = Math.max(
             peakNPS,
-            (i - currentSectionStart + 1) / ((beat / bpm) * 60)
+            (i - currentSectionStart + 1) / ((beat / bpmV) * 60)
         );
     }
 
     return peakNPS;
 };
 
-/**
- * Check the angle equality of the two notes.
+/** Check the angle equality of the two notes.
  * @param {(Note|number|null)} n1 - First beatmap note, note `_cutDirection`, or null value
  * @param {(Note|number|null)} n2 - Second beatmap note, note `_cutDirection`, or null value
  * @param {number} angleTol - Angle tolerance

@@ -1,15 +1,15 @@
 import { ColorObject } from './colors';
 
-/**
- * Color Scheme interface for difficulty info custom data.
- *
- *     _colorLeft?: { r: float, g: float, b: float },
- *     _colorRight?: { r: float, g: float, b: float },
- *     _envColorLeft?: { r: float, g: float, b: float },
- *     _envColorRight?: { r: float, g: float, b: float },
- *     _envColorLeftBoost?: { r: float, g: float, b: float },
- *     _envColorRightBoost?: { r: float, g: float, b: float },
- *     _obstacleColor?: { r: float, g: float, b: float },
+/** Color Scheme interface for difficulty info custom data.
+ * ```ts
+ * _colorLeft?: { r: float, g: float, b: float },
+ * _colorRight?: { r: float, g: float, b: float },
+ * _envColorLeft?: { r: float, g: float, b: float },
+ * _envColorRight?: { r: float, g: float, b: float },
+ * _envColorLeftBoost?: { r: float, g: float, b: float },
+ * _envColorRightBoost?: { r: float, g: float, b: float },
+ * _obstacleColor?: { r: float, g: float, b: float }
+ * ```
  */
 export interface ColorScheme {
     _colorLeft?: ColorObject;
@@ -21,10 +21,10 @@ export interface ColorScheme {
     _obstacleColor?: ColorObject;
 }
 
-/**
- * Color Scheme property rename to human readable.
- */
-export const colorSchemeRename: Readonly<{ [k in keyof ColorScheme]: string }> = {
+/** Color Scheme property rename to human readable. */
+export const colorSchemeRename: Readonly<{
+    [k in keyof Required<ColorScheme>]: string;
+}> = {
     _colorLeft: 'Left Note Color',
     _colorRight: 'Right Note Color',
     _envColorLeft: 'Left Environment Color',
@@ -34,9 +34,7 @@ export const colorSchemeRename: Readonly<{ [k in keyof ColorScheme]: string }> =
     _obstacleColor: 'Obstacle Color',
 };
 
-/**
- * List of available environment in base game.
- */
+/** List of available environment in base game. */
 export type EnvironmentName =
     | 'DefaultEnvironment'
     | 'OriginsEnvironment'
@@ -62,12 +60,12 @@ export type EnvironmentName =
     | 'BillieEnvironment'
     | 'HalloweenEnvironment'
     | 'GagaEnvironment';
+/** List of available 360 environment in base game. */
 export type Environment360Name = 'GlassDesertEnvironment';
+/** List of all available environment in base game. */
 export type EnvironmentAllName = EnvironmentName | Environment360Name;
 
-/**
- * List of available color scheme in base game.
- */
+/** List of available color scheme in base game. */
 type ColorSchemeList =
     | 'Default Custom'
     | 'The First'
@@ -93,9 +91,7 @@ export type EnvironmentScheme = {
     [key in ColorSchemeList]: ColorScheme;
 };
 
-/**
- * Environment rename to human readable.
- */
+/** Environment rename to human readable. */
 export const rename: Readonly<Record<EnvironmentAllName, string>> = {
     DefaultEnvironment: 'The First',
     OriginsEnvironment: 'Origins',
@@ -124,9 +120,7 @@ export const rename: Readonly<Record<EnvironmentAllName, string>> = {
     GlassDesertEnvironment: 'Glass Desert',
 };
 
-/**
- * Record of Environment Color to Color Scheme.
- */
+/** Record of Environment Color to Color Scheme. */
 export const scheme: Readonly<Record<EnvironmentAllName, ColorSchemeList>> = {
     DefaultEnvironment: 'The First',
     OriginsEnvironment: 'Origins',

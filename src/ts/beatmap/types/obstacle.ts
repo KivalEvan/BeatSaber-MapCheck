@@ -1,14 +1,14 @@
 import { CustomDataObstacle } from './customData';
 
-/**
- * Beatmap object interface for Obstacle.
- *
- *     _time: float,
- *     _lineIndex: int,
- *     _type: int,
- *     _duration: float,
- *     _width: int,
- *     _customData?: JSON
+/** Beatmap object interface for Obstacle.
+ * ```ts
+ * _time: float,
+ * _lineIndex: int,
+ * _type: int,
+ * _duration: float,
+ * _width: int,
+ * _customData?: JSON
+ * ```
  */
 export interface Obstacle {
     _time: number;

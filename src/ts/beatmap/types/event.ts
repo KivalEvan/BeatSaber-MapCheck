@@ -40,14 +40,14 @@ export enum Value {
     RED_TRANSITION,
 }
 
-/**
- * Beatmap object interface for Event.
- *
- *     _time: float,
- *     _type: int,
- *     _value: int,
- *     _floatValue: int,
- *     _customData?: JSON
+/** Beatmap object interface for Event.
+ * ```ts
+ * _time: float,
+ * _type: int,
+ * _value: int,
+ * _floatValue: float,
+ * _customData?: JSON
+ * ```
  */
 // it took me long enough to realise Event is a built in JS class/interface, but it has no effect here anyway
 export interface EventBase {
@@ -106,8 +106,7 @@ export type Event =
     | EventExtra
     | EventBPMChange;
 
-/**
- * Enum for beatmap event type name.
+/** Enum for beatmap event type name.
  * @enum {number} Event type name
  */
 export enum EventRename {

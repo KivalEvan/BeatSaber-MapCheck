@@ -19,20 +19,20 @@ export enum ChromaDataEnvAbbr {
     _track = 'T',
 }
 
-/**
- * Chroma interface for Environment Enhancement.
- *
- *     _id: string,
- *     _lookupMethod: LookupMethod,
- *     _track?: string,
- *     _duplicate?: int,
- *     _active?: boolean,
- *     _scale?: [float, float, float],
- *     _position?: [float, float, float],
- *     _localPosition?: [float, float, float],
- *     _rotation?: [float, float, float],
- *     _localRotation?: [float, float, float],
- *     _lightID?: int
+/** Chroma interface for Environment Enhancement.
+ * ```ts
+ * _id: string,
+ * _lookupMethod: LookupMethod,
+ * _track?: string,
+ * _duplicate?: int,
+ * _active?: boolean,
+ * _scale?: [float, float, float],
+ * _position?: [float, float, float],
+ * _localPosition?: [float, float, float],
+ * _rotation?: [float, float, float],
+ * _localRotation?: [float, float, float],
+ * _lightID?: int
+ * ```
  */
 export interface ChromaEnvironment {
     _id: string;
@@ -48,49 +48,49 @@ export interface ChromaEnvironment {
     _lightID?: number;
 }
 
-/**
- * Chroma interface for Difficulty Info Custom Data.
- *
- *     _environmentalRemoval?: string[]
+/** Chroma interface for Difficulty Info Custom Data.
+ * ```ts
+ * _environmentalRemoval?: string[]
+ * ```
  */
 export interface ChromaEnvironmentOld {
     _environmentalRemoval?: string[];
 }
 
-/**
- * Chroma interface for Beatmap Note Custom Data.
- *
- *     _color?: [float, float, float, float?],
- *     _disableSpawnEffect?: boolean
+/** Chroma interface for Beatmap Note Custom Data.
+ * ```ts
+ * _color?: [float, float, float, float?],
+ * _disableSpawnEffect?: boolean
+ * ```
  */
 export interface ChromaNote {
     _color?: ColorArray;
     _disableSpawnEffect?: boolean;
 }
 
-/**
- * Chroma interface for Beatmap Obstacle Custom Data.
- *
- *     _color?: [float, float, float, float?]
+/** Chroma interface for Beatmap Obstacle Custom Data.
+ * ```ts
+ * _color?: [float, float, float, float?]
+ * ```
  */
 export interface ChromaObstacle {
     _color?: ColorArray;
 }
 
-/**
- * Chroma interface for Beatmap Event Light Custom Data.
- *
- *     _color?: [float, float, float, float?],
- *     _lightID?: int | int[],
- *     _propID?: int,
- *     _lightGradient?: {
- *         _duration: float,
- *         _startColor?: [float, float, float, float?],
- *         _endColor?: [float, float, float, float?],
- *         _easing?: Easings
- *     },
- *     _lerpType?: 'HSV' | 'RGB',
+/** Chroma interface for Beatmap Event Light Custom Data.
+ * ```ts
+ * _color?: [float, float, float, float?],
+ * _lightID?: int | int[],
+ * _propID?: int,
+ * _lightGradient?: {
+ *     _duration: float,
+ *     _startColor?: [float, float, float, float?],
+ *     _endColor?: [float, float, float, float?],
  *     _easing?: Easings
+ * },
+ * _lerpType?: 'HSV' | 'RGB',
+ * _easing?: Easings
+ * ```
  */
 export interface ChromaEventLight {
     _color?: ColorArray;
@@ -106,13 +106,13 @@ export interface ChromaEventLight {
     _easing?: Easings;
 }
 
-/**
- * Chroma interface for Beatmap Event Laser Rotation Custom Data.
- *
- *     _lockPosition?: boolean,
- *     _speed?: float,
- *     _preciseSpeed?: float,
- *     _direction?: int
+/** Chroma interface for Beatmap Event Laser Rotation Custom Data.
+ * ```ts
+ * _lockPosition?: boolean,
+ * _speed?: float,
+ * _preciseSpeed?: float,
+ * _direction?: int
+ * ```
  */
 export interface ChromaEventLaser {
     _lockPosition?: boolean;
@@ -121,20 +121,20 @@ export interface ChromaEventLaser {
     _direction?: number;
 }
 
-/**
- * Chroma interface for Beatmap Event Ring Spin Custom Data.
- *
- *     _nameFilter?: string,
- *     _reset?: boolean,
- *     _rotation?: float,
- *     _step?: float,
- *     _prop?: float,
- *     _speed?: float,
- *     _direction?: int,
- *     _counterSpin?: boolean,
- *     _stepMult?: float,
- *     _propMult?: float,
- *     _speedMult?: float
+/** Chroma interface for Beatmap Event Ring Spin Custom Data.
+ * ```ts
+ * _nameFilter?: string,
+ * _reset?: boolean,
+ * _rotation?: float,
+ * _step?: float,
+ * _prop?: float,
+ * _speed?: float,
+ * _direction?: int,
+ * _counterSpin?: boolean,
+ * _stepMult?: float,
+ * _propMult?: float,
+ * _speedMult?: float
+ * ```
  */
 export interface ChromaEventRotation {
     _nameFilter?: string;
@@ -150,24 +150,24 @@ export interface ChromaEventRotation {
     _speedMult?: number;
 }
 
-/**
- * Chroma interface for Beatmap Event Ring Zoom Custom Data.
- *
- *     _step?: float,
- *     _speed?: float,
+/** Chroma interface for Beatmap Event Ring Zoom Custom Data.
+ * ```ts
+ * _step?: float,
+ * _speed?: float
+ * ```
  */
 export interface ChromaEventZoom {
     _step?: number;
     _speed?: number;
 }
 
-/**
- * AssignFogTrack interface for Noodle Extensions Custom Event.
- *
- *     _attenuation: float | Array2DPointDefinition[];
- *     _offset: float | Array2DPointDefinition[];
- *     _startY: float | Array2DPointDefinition[];
- *     _height: float | Array2DPointDefinition[];
+/** AssignFogTrack interface for Noodle Extensions Custom Event.
+ * ```ts
+ * _attenuation: float | Array2DPointDefinition[];
+ * _offset: float | Array2DPointDefinition[];
+ * _startY: float | Array2DPointDefinition[];
+ * _height: float | Array2DPointDefinition[];
+ * ```
  */
 export interface ChromaCustomEventDataAssignFogTrack extends HeckCustomEventDataBase {
     _attenuation?: number | Array2DPointDefinition[];
@@ -176,12 +176,12 @@ export interface ChromaCustomEventDataAssignFogTrack extends HeckCustomEventData
     _height?: number | Array2DPointDefinition[];
 }
 
-/**
- * Chroma Custom Event interface for AssignFogTrack.
- *
- *     _time: float,
- *     _type: 'AssignFogTrack',
- *     _data: NECustomEventDataAssignFogTrack
+/** Chroma Custom Event interface for AssignFogTrack.
+ * ```ts
+ * _time: float,
+ * _type: 'AssignFogTrack',
+ * _data: NECustomEventDataAssignFogTrack
+ * ```
  */
 export interface ChromaCustomEventAssignFogTrack {
     _time: number;
@@ -191,10 +191,11 @@ export interface ChromaCustomEventAssignFogTrack {
 
 export type ChromaCustomEvent = ChromaCustomEventAssignFogTrack;
 
-/**
- * Chroma Custom Data interface for difficulty custom data.
- *
- *     _track: string,
+/** Chroma Custom Data interface for difficulty custom data.
+ * ```ts
+ * _customEvents?: ChromaCustomEvent[];
+ * _environment?: ChromaEnvironment[];
+ * ```
  */
 export interface ChromaCustomData {
     _customEvents?: ChromaCustomEvent[];

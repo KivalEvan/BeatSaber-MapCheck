@@ -1,9 +1,7 @@
 import { EnvironmentScheme, EnvironmentAllName } from './types/environment';
 import { EventLight } from './types/event';
 
-/**
- * Color scheme definition.
- */
+/** Color scheme definition. */
 export const colorScheme: Readonly<EnvironmentScheme> = {
     'Default Custom': {
         _colorLeft: {
@@ -600,9 +598,7 @@ export const colorScheme: Readonly<EnvironmentScheme> = {
     },
 };
 
-/**
- * List of available event type in environment.
- */
+/** List of available event type in environment. */
 export const eventList: Readonly<Record<EnvironmentAllName, number[]>> = {
     DefaultEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
     OriginsEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],

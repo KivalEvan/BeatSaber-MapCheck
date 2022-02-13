@@ -1,10 +1,10 @@
 import { Easings, EasingsExclude } from './types/easings';
 
-/**
- * Easings function methods, can define own function.
- *
- *     Call: method.name(number) => number
- *     Define: method.name = (x) => x
+/** Easings function methods, able to define own function.
+ * ```
+ * Call: method.name(number) => number
+ * Define: method.name = (x) => x
+ * ```
  */
 // unfortunately, even if i wanted to include all easings algorithm from easings.net, license conflict may not allow it; they can however extend it
 export const method: {

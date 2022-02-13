@@ -1,10 +1,10 @@
-/**
- * Beatmap difficulty custom data interface for BPM Change.
- *
- *     _time: float,
- *     _BPM: float,
- *     _beatsPerBar: int,
- *     _metronomeOffset: float
+/** Beatmap difficulty custom data interface for BPM Change.
+ * ```ts
+ * _time: float,
+ * _BPM: float,
+ * _beatsPerBar: int,
+ * _metronomeOffset: float
+ * ```
  */
 export interface BPMChange {
     _time: number;
@@ -14,13 +14,13 @@ export interface BPMChange {
     _metronomeOffset: number;
 }
 
-/**
- * Beatmap difficulty custom data interface for MediocreMapper BPM Change.
- *
- *     _time: float,
- *     _bpm: float,
- *     _beatsPerBar: int,
- *     _metronomeOffset: float
+/** Beatmap difficulty custom data interface for MediocreMapper BPM Change.
+ * ```ts
+ * _time: float,
+ * _bpm: float,
+ * _beatsPerBar: int,
+ * _metronomeOffset: float
+ * ```
  */
 export interface BPMChangeOld {
     _time: number;
@@ -31,9 +31,10 @@ export interface BPMChangeOld {
 }
 
 /**
+ * ```ts
+ * _newTime: float
+ * ```
  * @extends BPMChange
- *
- *     _newTime: float,
  */
 export interface BPMChangeTime extends BPMChange {
     _newTime: number;
