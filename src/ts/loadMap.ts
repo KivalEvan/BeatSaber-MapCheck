@@ -179,9 +179,7 @@ export const loadMap = async (mapZip: JSZip) => {
     if (fileInfo) {
         disableInput(true);
         let infoFileStr = await fileInfo.async('string');
-        savedData._mapInfo = (await JSON.parse(
-            infoFileStr
-        )) as beatmap.types.info.InfoData;
+        savedData._mapInfo = (await JSON.parse(infoFileStr)) as beatmap.types.InfoData;
 
         beatmap.parse.info(savedData._mapInfo);
         uiInfo.setInfo(savedData._mapInfo);
@@ -265,11 +263,12 @@ export const loadMap = async (mapZip: JSZip) => {
                     console.log(
                         `parsing ${mapSet[i]._beatmapCharacteristicName} ${diffInfo._difficulty}`
                     );
-                    let diffFileStr: beatmap.types.difficulty.DifficultyData =
-                        JSON.parse(await diffFile.async('string'));
-                    let mapData: beatmap.types.difficulty.DifficultyData;
+                    let diffFileStr: beatmap.v2.types.DifficultyData = JSON.parse(
+                        await diffFile.async('string')
+                    );
+                    let mapData: beatmap.v2.types.DifficultyData;
                     try {
-                        mapData = beatmap.parse.difficulty(diffFileStr);
+                        mapData = beatmap.parse.difficultyLegacy(diffFileStr);
                     } catch (err) {
                         throw new Error(
                             `${mapSet[i]._beatmapCharacteristicName} ${diffInfo._difficulty} ${err}`

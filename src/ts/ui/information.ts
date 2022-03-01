@@ -84,9 +84,7 @@ export const setLevelAuthor = (str?: string): void => {
     htmlInfoLevelAuthor.textContent = 'Mapped by ' + str;
 };
 
-export const setEnvironment = (
-    str?: beatmap.types.environment.EnvironmentName
-): void => {
+export const setEnvironment = (str?: beatmap.types.EnvironmentName): void => {
     if (!htmlInfoEnvironment) {
         console.error(logPrefix + 'missing HTML element for environment');
         return;
@@ -96,10 +94,10 @@ export const setEnvironment = (
         return;
     }
     htmlInfoEnvironment.textContent =
-        (beatmap.types.environment.rename[str] || 'Unknown') + ' Environment';
+        (beatmap.types.environmentRename[str] || 'Unknown') + ' Environment';
 };
 
-export const setEditors = (obj?: beatmap.types.editor.Editor): void => {
+export const setEditors = (obj?: beatmap.v2.types.Editor): void => {
     if (!htmlInfoEditors) {
         console.error(logPrefix + 'missing HTML element for editor');
         return;
@@ -112,7 +110,7 @@ export const setEditors = (obj?: beatmap.types.editor.Editor): void => {
     const lastEdited = obj._lastEditedBy || 'Undefined';
     let text = 'Last edited on ' + lastEdited;
     if (obj[lastEdited]) {
-        const mapper = obj[lastEdited] as beatmap.types.editor.EditorInfo;
+        const mapper = obj[lastEdited] as beatmap.v2.types.EditorInfo;
         text += ' v' + mapper.version;
     }
     htmlInfoEditors.textContent = text;
@@ -142,15 +140,13 @@ const setContributorsRole = (str: string): void => {
     htmlInfoContributorsRole.textContent = str;
 };
 
-export const setContributors = (obj: beatmap.types.contributor.Contributor): void => {
+export const setContributors = (obj: beatmap.v2.types.Contributor): void => {
     setContributorsImage(obj._base64 ? 'data:image;base64,' + obj._base64 : null);
     setContributorsName(obj._name);
     setContributorsRole(obj._role);
 };
 
-export const populateContributors = (
-    arr?: beatmap.types.contributor.Contributor[]
-): void => {
+export const populateContributors = (arr?: beatmap.v2.types.Contributor[]): void => {
     if (!htmlInfoContributors || !htmlInfoContributorsSelect) {
         console.error(logPrefix + 'missing HTML element for contributor');
         return;
@@ -240,8 +236,8 @@ export const setTimeSpend = (num?: number): void => {
 };
 
 export const setCustomColor = (
-    customColor?: beatmap.types.environment.ColorScheme,
-    environment?: beatmap.types.environment.EnvironmentName
+    customColor?: beatmap.types.ColorScheme,
+    environment?: beatmap.types.EnvironmentName
 ): void => {
     if (!htmlTableCustomColor) {
         console.error(logPrefix + 'missing table row for custom colors');
@@ -267,43 +263,43 @@ export const setCustomColor = (
         _colorLeft:
             colors.rgbaToHex(
                 beatmap.environment.colorScheme[
-                    beatmap.types.environment.scheme[environment]
+                    beatmap.types.environmentScheme[environment]
                 ]?._colorLeft
             ) || null,
         _colorRight:
             colors.rgbaToHex(
                 beatmap.environment.colorScheme[
-                    beatmap.types.environment.scheme[environment]
+                    beatmap.types.environmentScheme[environment]
                 ]?._colorRight
             ) || null,
         _envColorLeft:
             colors.rgbaToHex(
                 beatmap.environment.colorScheme[
-                    beatmap.types.environment.scheme[environment]
+                    beatmap.types.environmentScheme[environment]
                 ]?._envColorLeft
             ) || null,
         _envColorRight:
             colors.rgbaToHex(
                 beatmap.environment.colorScheme[
-                    beatmap.types.environment.scheme[environment]
+                    beatmap.types.environmentScheme[environment]
                 ]?._envColorRight
             ) || null,
         _envColorLeftBoost:
             colors.rgbaToHex(
                 beatmap.environment.colorScheme[
-                    beatmap.types.environment.scheme[environment]
+                    beatmap.types.environmentScheme[environment]
                 ]?._envColorLeftBoost
             ) || null,
         _envColorRightBoost:
             colors.rgbaToHex(
                 beatmap.environment.colorScheme[
-                    beatmap.types.environment.scheme[environment]
+                    beatmap.types.environmentScheme[environment]
                 ]?._envColorRightBoost
             ) || null,
         _obstacleColor:
             colors.rgbaToHex(
                 beatmap.environment.colorScheme[
-                    beatmap.types.environment.scheme[environment]
+                    beatmap.types.environmentScheme[environment]
                 ]?._obstacleColor
             ) || null,
     };
@@ -336,7 +332,7 @@ export const setCustomColor = (
         envBL =
             colors.rgbaToHex(
                 beatmap.environment.colorScheme[
-                    beatmap.types.environment.scheme[environment]
+                    beatmap.types.environmentScheme[environment]
                 ]?._envColorLeftBoost
             ) || hexColor._envColorLeft;
     }
@@ -347,7 +343,7 @@ export const setCustomColor = (
         envBR =
             colors.rgbaToHex(
                 beatmap.environment.colorScheme[
-                    beatmap.types.environment.scheme[environment]
+                    beatmap.types.environmentScheme[environment]
                 ]?._envColorRightBoost
             ) || hexColor._envColorRight;
     }
@@ -379,8 +375,8 @@ export const setCustomColor = (
 
         textContainer.className = 'info__color-text';
         textContainer.textContent = ` -- ${
-            beatmap.types.environment.colorSchemeRename[
-                key as keyof typeof beatmap.types.environment.colorSchemeRename
+            beatmap.types.colorSchemeRename[
+                key as keyof typeof beatmap.types.colorSchemeRename
             ]
         }`;
 
@@ -443,7 +439,7 @@ export const setWarnings = (arr?: string[]): void => {
 };
 
 export const setBookmarks = (
-    arr?: beatmap.types.bookmark.Bookmark[],
+    arr?: beatmap.v2.types.Bookmark[],
     bpm?: beatmap.bpm.BeatPerMinute | null
 ): void => {
     if (!htmlTableBookmarks) {
@@ -487,7 +483,7 @@ export const setBPMChanges = (bpm?: beatmap.bpm.BeatPerMinute | null): void => {
 
 // this implementation looks hideous but whatever
 export const setEnvironmentEnhancement = (
-    arr?: beatmap.types.chroma.ChromaEnvironment[]
+    arr?: beatmap.v2.types.ChromaEnvironment[]
 ): void => {
     if (!htmlTableEnvironmentEnhancement) {
         console.error(logPrefix + 'missing table row for environment enhancement');
@@ -504,10 +500,10 @@ export const setEnvironmentEnhancement = (
                 continue;
             }
             let k =
-                beatmap.types.chroma.ChromaDataEnvAbbr[
-                    key as keyof typeof beatmap.types.chroma.ChromaDataEnvAbbr
+                beatmap.v2.types.ChromaDataEnvAbbr[
+                    key as keyof typeof beatmap.v2.types.ChromaDataEnvAbbr
                 ];
-            if (elem[key as keyof beatmap.types.chroma.ChromaEnvironment] != null) {
+            if (elem[key as keyof beatmap.v2.types.ChromaEnvironment] != null) {
                 keyArr.push(k);
             }
         }
@@ -519,7 +515,7 @@ export const setEnvironmentEnhancement = (
 };
 
 export const setPointDefinitions = (
-    arr?: beatmap.types.heck.HeckPointDefinition[]
+    arr?: beatmap.v2.types.HeckPointDefinition[]
 ): void => {
     if (!htmlTablePointDefinitions) {
         console.error(logPrefix + 'missing table row for point definitions');
@@ -538,7 +534,7 @@ export const setPointDefinitions = (
 };
 
 export const setCustomEvents = (
-    arr?: beatmap.types.customData.CustomEvent[],
+    arr?: beatmap.v2.types.CustomEvent[],
     bpm?: beatmap.bpm.BeatPerMinute | null
 ): void => {
     if (!htmlTableCustomEvents) {
@@ -575,7 +571,7 @@ export const setCustomEvents = (
     displayTableRow(htmlTableCustomEvents, customEv);
 };
 
-export const setInfo = (mapInfo: beatmap.types.info.InfoData): void => {
+export const setInfo = (mapInfo: beatmap.types.InfoData): void => {
     uiHeader.setSongName(mapInfo._songName);
     uiHeader.setSongSubname(mapInfo._songSubName);
     uiHeader.setSongAuthor(mapInfo._songAuthorName);
@@ -585,7 +581,7 @@ export const setInfo = (mapInfo: beatmap.types.info.InfoData): void => {
     setEditors(mapInfo._customData?._editors);
 };
 
-export const setDiffInfoTable = (mapData: beatmap.types.set.BeatmapSetData): void => {
+export const setDiffInfoTable = (mapData: beatmap.types.BeatmapSetData): void => {
     setVersion(mapData._data._version);
     if (mapData._info?._customData) {
         setCustomColor(mapData._info._customData);

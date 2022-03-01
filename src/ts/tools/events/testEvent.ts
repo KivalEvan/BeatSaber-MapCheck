@@ -40,7 +40,7 @@ function inputCheckHandler(this: HTMLInputElement) {
     tool.input.enabled = this.checked;
 }
 
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.set.BeatmapSetData) {
+function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
     const { _bpm: bpm, _audioDuration: duration } = mapSettings;
     const { _events: events } = mapSet._data;
 
@@ -64,7 +64,7 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.set.BeatmapSe
 
 function run(
     mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.set.BeatmapSetData
+    mapSet?: beatmap.types.BeatmapSetData
 ): void {
     if (!mapSet) {
         throw new Error('something went wrong!');

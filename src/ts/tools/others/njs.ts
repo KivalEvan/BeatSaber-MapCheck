@@ -22,7 +22,7 @@ const tool: Tool = {
 
 function run(
     mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.set.BeatmapSetData
+    mapSet?: beatmap.types.BeatmapSetData
 ): void {
     if (!mapSet) {
         throw new Error('something went wrong!');

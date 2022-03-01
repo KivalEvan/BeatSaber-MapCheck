@@ -41,23 +41,23 @@ function inputCheckHandler(this: HTMLInputElement) {
 }
 
 const constant = 0;
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.set.BeatmapSetData) {
+function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
     const { _bpm: bpm, _njs: njs } = mapSettings;
     const { _notes: notes } = mapSet._data;
 
-    const lastNote: { [key: number]: beatmap.types.note.Note } = {};
-    const swingNoteArray: { [key: number]: beatmap.types.note.Note[] } = {
+    const lastNote: { [key: number]: beatmap.v2.types.Note } = {};
+    const swingNoteArray: { [key: number]: beatmap.v2.types.Note[] } = {
         0: [],
         1: [],
         3: [],
     };
 
-    const arr: beatmap.types.note.Note[] = [];
+    const arr: beatmap.v2.types.Note[] = [];
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
-        if (beatmap.note.isNote(note) && lastNote[note._type]) {
+        if (beatmap.v2.note.isNote(note) && lastNote[note._type]) {
             if (
-                beatmap.swing.next(
+                beatmap.v2.swing.next(
                     note,
                     lastNote[note._type],
                     bpm,
@@ -73,7 +73,7 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.set.BeatmapSe
                 njs.value <
                     1.425 /
                         ((60 * (note._time - other._time)) / bpm.value + constant) &&
-                beatmap.note.isInline(note, other)
+                beatmap.v2.note.isInline(note, other)
             ) {
                 arr.push(note);
                 break;
@@ -91,7 +91,7 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.set.BeatmapSe
 
 function run(
     mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.set.BeatmapSetData
+    mapSet?: beatmap.types.BeatmapSetData
 ): void {
     if (!mapSet) {
         throw new Error('something went wrong!');

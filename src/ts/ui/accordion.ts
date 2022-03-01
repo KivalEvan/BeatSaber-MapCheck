@@ -1,4 +1,4 @@
-import { DifficultyName } from '../beatmap/types/difficulty';
+import { DifficultyName } from '../beatmap/shared/types/difficulty';
 
 const logPrefix = 'UI Accordion: ';
 const prefix = 'accordion__';

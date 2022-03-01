@@ -103,12 +103,12 @@ function inputPrecHandler(this: HTMLInputElement) {
     this.value = val.toString();
 }
 
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.set.BeatmapSetData) {
+function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
     const { _bpm: bpm } = mapSettings;
     const { _notes: notes } = mapSet._data;
     const { minSpeed } = <{ minSpeed: number }>tool.input.params;
 
-    return beatmap.swing
+    return beatmap.v2.swing
         .getSliderNote(notes, bpm)
         .filter((n) => n._maxSpeed > minSpeed || n._minSpeed > minSpeed)
         .map((n) => n._time)
@@ -119,7 +119,7 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.set.BeatmapSe
 
 function run(
     mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.set.BeatmapSetData
+    mapSet?: beatmap.types.BeatmapSetData
 ): void {
     if (!mapSet) {
         throw new Error('something went wrong!');

@@ -1,6 +1,6 @@
 # Changelog
 
-## v2.4.0 [TBD]
+## v2.4.0 [02-03-2022]
 
 ### Changed
 

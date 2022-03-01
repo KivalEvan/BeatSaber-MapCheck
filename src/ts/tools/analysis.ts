@@ -4,7 +4,7 @@ export interface Analysis {
     missing: [];
     general: AnalysisBase;
     mapSet: AnalysisSet[];
-    sps: beatmap.swing.SwingAnalysis[];
+    sps: beatmap.v2.swing.SwingAnalysis[];
 }
 
 interface AnalysisBase {
@@ -12,6 +12,6 @@ interface AnalysisBase {
 }
 
 export interface AnalysisSet extends AnalysisBase {
-    mode: beatmap.types.characteristic.CharacteristicName;
-    difficulty: beatmap.types.difficulty.DifficultyName;
+    mode: beatmap.types.CharacteristicName;
+    difficulty: beatmap.types.DifficultyName;
 }

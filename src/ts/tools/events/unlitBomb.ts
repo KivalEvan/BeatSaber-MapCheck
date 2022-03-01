@@ -42,22 +42,22 @@ function inputCheckHandler(this: HTMLInputElement) {
 
 // omega scuffed clusterfuck help me pls im cryin rn
 const unlitBomb = (
-    notes: beatmap.types.note.Note[],
-    events: beatmap.types.event.Event[],
+    notes: beatmap.v2.types.Note[],
+    events: beatmap.v2.types.Event[],
     bpm: beatmap.bpm.BeatPerMinute,
-    environment: beatmap.types.environment.EnvironmentName
+    environment: beatmap.types.EnvironmentName
 ) => {
     if (!events.length) {
         return [];
     }
-    const arr: beatmap.types.note.Note[] = [];
+    const arr: beatmap.v2.types.Note[] = [];
     const eventsLight = events
         .filter(
             (ev) =>
-                beatmap.event.isLightEvent(ev) &&
+                beatmap.v2.event.isLightEvent(ev) &&
                 beatmap.environment.eventList[environment].includes(ev._type)
         )
-        .sort((a, b) => a._type - b._type) as beatmap.types.event.EventLight[];
+        .sort((a, b) => a._type - b._type) as beatmap.v2.types.EventLight[];
     const eventState: {
         [key: number]: {
             state: 'off' | 'fading' | 'on';
@@ -86,7 +86,7 @@ const unlitBomb = (
     for (let i = 0, len = eventsLight.length; i < len; i++) {
         const ev = eventsLight[i];
         if (
-            (beatmap.event.isOn(ev) || beatmap.event.isFlash(ev)) &&
+            (beatmap.v2.event.isOn(ev) || beatmap.v2.event.isFlash(ev)) &&
             eventState[ev._type].state !== 'on'
         ) {
             eventState[ev._type] = {
@@ -102,7 +102,7 @@ const unlitBomb = (
                 eventLitTime[ev._type].push([ev._time, true]);
             }
         }
-        if (beatmap.event.isFade(ev)) {
+        if (beatmap.v2.event.isFade(ev)) {
             eventState[ev._type] = {
                 state: 'off',
                 time: ev._time,
@@ -119,7 +119,7 @@ const unlitBomb = (
         }
         if (
             ((ev?._floatValue ?? 1) < 0.25 ||
-                beatmap.event.isOff(ev) ||
+                beatmap.v2.event.isOff(ev) ||
                 (ev._customData?._color &&
                     ((typeof ev._customData._color[3] === 'number' &&
                         ev._customData._color[3] < 0.25) ||
@@ -152,7 +152,7 @@ const unlitBomb = (
     }
     for (let i = 0, len = notes.length, isLit = false; i < len; i++) {
         const note = notes[i];
-        if (!beatmap.note.isBomb(note)) {
+        if (!beatmap.v2.note.isBomb(note)) {
             continue;
         }
         isLit = false;
@@ -176,7 +176,7 @@ const unlitBomb = (
 
 function run(
     mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.set.BeatmapSetData
+    mapSet?: beatmap.types.BeatmapSetData
 ): void {
     if (!mapSet) {
         throw new Error('something went wrong!');

@@ -1,7 +1,7 @@
 import * as beatmap from '../beatmap';
 import * as component from './component';
 import * as template from './template';
-import * as swing from '../beatmap/swing';
+import * as swing from '../beatmap/v2/swing';
 import savedData from '../savedData';
 
 const init = (): void => {
@@ -63,8 +63,8 @@ export const general = (): void => {
 };
 
 export const difficulty = (
-    mode: beatmap.types.characteristic.CharacteristicName,
-    difficulty: beatmap.types.difficulty.DifficultyName
+    mode: beatmap.types.CharacteristicName,
+    difficulty: beatmap.types.DifficultyName
 ): void => {
     const mapInfo = savedData._mapInfo;
     if (!mapInfo) {
@@ -104,7 +104,7 @@ export const difficulty = (
         _njs: njs,
         _audioDuration: savedData._duration ?? null,
         _mapDuration: bpm.toRealTime(
-            beatmap.difficulty.getLastInteractiveTime(mapSet._data)
+            beatmap.v2.difficulty.getLastInteractiveTime(mapSet._data)
         ),
     };
 

@@ -103,39 +103,43 @@ function inputBeatHandler(this: HTMLInputElement) {
     this.value = val.toString();
 }
 
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.set.BeatmapSetData) {
+function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
     const { _obstacles: obstacles } = mapSet._data;
     const { _bpm: bpm } = mapSettings;
     const { recovery } = <{ recovery: number }>tool.input.params;
-    const arr: beatmap.types.obstacle.Obstacle[] = [];
-    let obstacleLeftFull: beatmap.types.obstacle.Obstacle = {
+    const arr: beatmap.v2.types.Obstacle[] = [];
+    let obstacleLeftFull: beatmap.v2.types.Obstacle = {
         _time: 0,
         _duration: 0,
         _lineIndex: 0,
+        _lineLayer: 0,
         _type: 0,
         _width: 0,
+        _height: 0,
     };
-    let obstacleRightFull: beatmap.types.obstacle.Obstacle = {
+    let obstacleRightFull: beatmap.v2.types.Obstacle = {
         _time: 0,
         _duration: 0,
         _lineIndex: 0,
+        _lineLayer: 0,
         _type: 0,
         _width: 0,
+        _height: 0,
     };
     obstacles.forEach((o) => {
         if (o._type === 0) {
             if (o._width > 2) {
                 arr.push(o);
-                if (beatmap.obstacle.isLonger(o, obstacleLeftFull)) {
+                if (beatmap.v2.obstacle.isLonger(o, obstacleLeftFull)) {
                     obstacleLeftFull = o;
                 }
-                if (beatmap.obstacle.isLonger(o, obstacleRightFull)) {
+                if (beatmap.v2.obstacle.isLonger(o, obstacleRightFull)) {
                     obstacleRightFull = o;
                 }
             }
             if (o._width === 2) {
                 if (o._lineIndex === 0) {
-                    if (beatmap.obstacle.isLonger(o, obstacleLeftFull)) {
+                    if (beatmap.v2.obstacle.isLonger(o, obstacleLeftFull)) {
                         if (
                             bpm.toRealTime(o._time) >
                                 bpm.toRealTime(obstacleRightFull._time) - recovery &&
@@ -153,15 +157,15 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.set.BeatmapSe
                 }
                 if (o._lineIndex === 1) {
                     arr.push(o);
-                    if (beatmap.obstacle.isLonger(o, obstacleLeftFull)) {
+                    if (beatmap.v2.obstacle.isLonger(o, obstacleLeftFull)) {
                         obstacleLeftFull = o;
                     }
-                    if (beatmap.obstacle.isLonger(o, obstacleRightFull)) {
+                    if (beatmap.v2.obstacle.isLonger(o, obstacleRightFull)) {
                         obstacleRightFull = o;
                     }
                 }
                 if (o._lineIndex === 2) {
-                    if (beatmap.obstacle.isLonger(o, obstacleRightFull)) {
+                    if (beatmap.v2.obstacle.isLonger(o, obstacleRightFull)) {
                         if (
                             bpm.toRealTime(o._time) >
                                 bpm.toRealTime(obstacleLeftFull._time) - recovery &&
@@ -179,7 +183,7 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.set.BeatmapSe
             }
             if (o._width === 1) {
                 if (o._lineIndex === 1) {
-                    if (beatmap.obstacle.isLonger(o, obstacleLeftFull)) {
+                    if (beatmap.v2.obstacle.isLonger(o, obstacleLeftFull)) {
                         if (
                             bpm.toRealTime(o._time) >
                                 bpm.toRealTime(obstacleRightFull._time) - recovery &&
@@ -196,7 +200,7 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.set.BeatmapSe
                     }
                 }
                 if (o._lineIndex === 2) {
-                    if (beatmap.obstacle.isLonger(o, obstacleRightFull)) {
+                    if (beatmap.v2.obstacle.isLonger(o, obstacleRightFull)) {
                         if (
                             bpm.toRealTime(o._time) >
                                 bpm.toRealTime(obstacleLeftFull._time) - recovery &&
@@ -223,7 +227,7 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.set.BeatmapSe
 
 function run(
     mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.set.BeatmapSetData
+    mapSet?: beatmap.types.BeatmapSetData
 ): void {
     if (!mapSet) {
         throw new Error('something went wrong!');

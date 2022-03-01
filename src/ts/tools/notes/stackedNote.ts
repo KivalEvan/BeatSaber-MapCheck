@@ -40,14 +40,11 @@ function inputCheckHandler(this: HTMLInputElement) {
     tool.input.enabled = this.checked;
 }
 
-function checkNote(
-    mapSettings: BeatmapSettings,
-    mapSet: beatmap.types.set.BeatmapSetData
-) {
+function checkNote(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
     const { _bpm: bpm } = mapSettings;
     const { _notes: notes } = mapSet._data;
 
-    const arr: beatmap.types.note.Note[] = [];
+    const arr: beatmap.v2.types.Note[] = [];
     // to avoid multiple of stack popping up, ignore anything within this time
     let lastTime: number = 0;
     for (let i = 0, len = notes.length; i < len; i++) {
@@ -61,7 +58,7 @@ function checkNote(
             ) {
                 break;
             }
-            if (beatmap.note.isInline(notes[i], notes[j])) {
+            if (beatmap.v2.note.isInline(notes[i], notes[j])) {
                 arr.push(notes[i]);
                 lastTime = bpm.toRealTime(notes[i]._time);
             }
@@ -74,14 +71,11 @@ function checkNote(
         });
 }
 
-function checkBomb(
-    mapSettings: BeatmapSettings,
-    mapSet: beatmap.types.set.BeatmapSetData
-) {
+function checkBomb(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
     const { _bpm: bpm, _njs: njs } = mapSettings;
     const { _notes: notes } = mapSet._data;
 
-    const arr: beatmap.types.note.Note[] = [];
+    const arr: beatmap.v2.types.Note[] = [];
     for (let i = 0, len = notes.length; i < len; i++) {
         if (notes[i]._type !== 3) {
             continue;
@@ -92,7 +86,7 @@ function checkBomb(
                 break;
             }
             if (
-                beatmap.note.isInline(notes[i], notes[j]) &&
+                beatmap.v2.note.isInline(notes[i], notes[j]) &&
                 (njs.value < bpm.value / (120 * (notes[j]._time - notes[i]._time)) ||
                     bpm.toRealTime(notes[j]._time) <
                         bpm.toRealTime(notes[i]._time) + 0.02)
@@ -110,7 +104,7 @@ function checkBomb(
 
 function run(
     mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.set.BeatmapSetData
+    mapSet?: beatmap.types.BeatmapSetData
 ): void {
     if (!mapSet) {
         throw new Error('something went wrong!');

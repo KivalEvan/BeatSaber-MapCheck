@@ -49,14 +49,14 @@ function inputTimeHandler(this: HTMLInputElement) {
 
 function run(
     mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.set.BeatmapSetData
+    mapSet?: beatmap.types.BeatmapSetData
 ): void {
     if (!mapSet) {
         throw new Error('something went wrong!');
     }
     const { time } = <{ time: number }>tool.input.params;
     const result = mapSettings._bpm.toRealTime(
-        beatmap.difficulty.getFirstInteractiveTime(mapSet._data)
+        beatmap.v2.difficulty.getFirstInteractiveTime(mapSet._data)
     );
 
     if (result < time) {

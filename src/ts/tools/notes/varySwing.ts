@@ -40,10 +40,10 @@ function inputCheckHandler(this: HTMLInputElement) {
     tool.input.enabled = this.checked;
 }
 
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.set.BeatmapSetData) {
+function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
     const { _bpm: bpm } = mapSettings;
     const { _notes: notes } = mapSet._data;
-    return beatmap.swing
+    return beatmap.v2.swing
         .getSliderNote(notes, bpm)
         .filter((n) => Math.abs(n._minSpeed - n._maxSpeed) > 0.002)
         .map((n) => n._time)
@@ -54,7 +54,7 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.set.BeatmapSe
 
 function run(
     mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.set.BeatmapSetData
+    mapSet?: beatmap.types.BeatmapSetData
 ): void {
     if (!mapSet) {
         throw new Error('something went wrong!');

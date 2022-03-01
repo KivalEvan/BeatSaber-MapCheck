@@ -237,7 +237,7 @@ function inputMaxBeatHandler(this: HTMLInputElement) {
     this.value = round(val, 2).toString();
 }
 
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.set.BeatmapSetData) {
+function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
     const { _bpm: bpm, _njs: njs } = mapSettings;
     const { _notes: notes } = mapSet._data;
     const {
@@ -254,9 +254,9 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.set.BeatmapSe
             ? bpm.toBeatTime(temp2)
             : Math.min(njs.hjd, bpm.toBeatTime(vbDiff[mapSet._difficulty].max));
 
-    let lastMidL!: beatmap.types.note.Note | null;
-    let lastMidR!: beatmap.types.note.Note | null;
-    const arr: beatmap.types.note.Note[] = [];
+    let lastMidL!: beatmap.v2.types.Note | null;
+    let lastMidR!: beatmap.v2.types.Note | null;
+    const arr: beatmap.v2.types.Note[] = [];
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         if (lastMidL) {
@@ -301,7 +301,7 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.set.BeatmapSe
 
 function run(
     mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.set.BeatmapSetData
+    mapSet?: beatmap.types.BeatmapSetData
 ): void {
     if (!mapSet) {
         throw new Error('something went wrong!');

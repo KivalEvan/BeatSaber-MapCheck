@@ -106,3 +106,14 @@ export const removeOptions = (selectElement: HTMLSelectElement): void => {
         selectElement.remove(i);
     }
 };
+
+export const deepCopy = <T>(object: T): T => {
+    if (typeof object !== 'object') {
+        console.error('Received non-object type');
+    }
+    return JSON.parse(JSON.stringify(object));
+};
+
+export const clamp = (value: number, min: number, max: number): number => {
+    return Math.min(Math.max(min, value), max);
+};

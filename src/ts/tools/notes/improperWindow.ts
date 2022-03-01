@@ -40,22 +40,22 @@ function inputCheckHandler(this: HTMLInputElement) {
     tool.input.enabled = this.checked;
 }
 
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.set.BeatmapSetData) {
+function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
     const { _bpm: bpm } = mapSettings;
     const { _notes: notes } = mapSet._data;
-    const lastNote: { [key: number]: beatmap.types.note.Note } = {};
-    const swingNoteArray: { [key: number]: beatmap.types.note.Note[] } = {
+    const lastNote: { [key: number]: beatmap.v2.types.Note } = {};
+    const swingNoteArray: { [key: number]: beatmap.v2.types.Note[] } = {
         0: [],
         1: [],
         3: [],
     };
 
-    const arr: beatmap.types.note.Note[] = [];
+    const arr: beatmap.v2.types.Note[] = [];
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
-        if (beatmap.note.isNote(note) && lastNote[note._type]) {
+        if (beatmap.v2.note.isNote(note) && lastNote[note._type]) {
             if (
-                beatmap.swing.next(
+                beatmap.v2.swing.next(
                     note,
                     lastNote[note._type],
                     bpm,
@@ -65,7 +65,7 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.set.BeatmapSe
                 lastNote[note._type] = note;
                 swingNoteArray[note._type] = [];
             } else if (
-                beatmap.note.isSlantedWindow(note, lastNote[note._type]) &&
+                beatmap.v2.note.isSlantedWindow(note, lastNote[note._type]) &&
                 note._time - lastNote[note._type]._time >= 0.001 &&
                 note._cutDirection === lastNote[note._type]._cutDirection &&
                 note._cutDirection !== 8 &&
@@ -87,7 +87,7 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.set.BeatmapSe
 
 function run(
     mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.set.BeatmapSetData
+    mapSet?: beatmap.types.BeatmapSetData
 ): void {
     if (!mapSet) {
         throw new Error('something went wrong!');

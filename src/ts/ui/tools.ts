@@ -72,14 +72,12 @@ export const displayOutputGeneral = (): void => {
 };
 
 export const displayOutputDifficulty = (
-    mode?: beatmap.types.characteristic.CharacteristicName,
-    difficulty?: beatmap.types.difficulty.DifficultyName
+    mode?: beatmap.types.CharacteristicName,
+    difficulty?: beatmap.types.DifficultyName
 ): void => {
     if (!mode && !difficulty) {
-        mode = htmlToolsSelectMode[0]
-            .value as beatmap.types.characteristic.CharacteristicName;
-        difficulty = htmlToolsSelectDifficulty[0]
-            .value as beatmap.types.difficulty.DifficultyName;
+        mode = htmlToolsSelectMode[0].value as beatmap.types.CharacteristicName;
+        difficulty = htmlToolsSelectDifficulty[0].value as beatmap.types.DifficultyName;
     }
     if (!mode || !difficulty) {
         throw new Error(logPrefix + 'something went wrong!');
@@ -111,7 +109,7 @@ export const setDifficultyLabel = (str: string): void => {
     htmlToolsDifficultyLabel.forEach((elem) => (elem.textContent = str));
 };
 
-const populateSelectDiff = (mapSet?: beatmap.types.info.InfoSetData): void => {
+const populateSelectDiff = (mapSet?: beatmap.types.InfoSetData): void => {
     if (!mapSet) {
         return;
     }
@@ -126,7 +124,7 @@ const populateSelectDiff = (mapSet?: beatmap.types.info.InfoSetData): void => {
             const optDiff = document.createElement('option');
             optDiff.value = diff._difficulty;
             optDiff.textContent =
-                beatmap.types.difficulty.DifficultyRename[diff._difficulty] +
+                beatmap.types.DifficultyRename[diff._difficulty] +
                 (diff._customData?._difficultyLabel
                     ? ' -- ' + diff._customData?._difficultyLabel
                     : '');
@@ -142,7 +140,7 @@ const populateSelectDiff = (mapSet?: beatmap.types.info.InfoSetData): void => {
                 setDiffInfoTable(diffData);
                 setDifficultyLabel(
                     diff._customData?._difficultyLabel ||
-                        beatmap.types.difficulty.DifficultyRename[diff._difficulty]
+                        beatmap.types.DifficultyRename[diff._difficulty]
                 );
                 displayOutputDifficulty(
                     mapSet._beatmapCharacteristicName,
@@ -155,7 +153,7 @@ const populateSelectDiff = (mapSet?: beatmap.types.info.InfoSetData): void => {
     });
 };
 
-export const populateSelect = (mapInfo?: beatmap.types.info.InfoData): void => {
+export const populateSelect = (mapInfo?: beatmap.types.InfoData): void => {
     if (!mapInfo) {
         htmlToolsSelectMode.forEach((elem) => removeOptions(elem));
         htmlToolsSelectDifficulty.forEach((elem) => removeOptions(elem));
@@ -167,9 +165,7 @@ export const populateSelect = (mapInfo?: beatmap.types.info.InfoData): void => {
             const optMode = document.createElement('option');
             optMode.value = mode._beatmapCharacteristicName;
             optMode.textContent =
-                beatmap.types.characteristic.CharacteristicRename[
-                    mode._beatmapCharacteristicName
-                ];
+                beatmap.types.CharacteristicRename[mode._beatmapCharacteristicName];
             elem.add(optMode);
         });
         if (first) {
@@ -223,8 +219,8 @@ function selectDifficultyHandler(ev: Event): void {
         setDiffInfoTable(diff);
         setDifficultyLabel(
             diff._info?._customData?._difficultyLabel ||
-                beatmap.types.difficulty.DifficultyRename[
-                    target.value as keyof typeof beatmap.types.difficulty.DifficultyRename
+                beatmap.types.DifficultyRename[
+                    target.value as keyof typeof beatmap.types.DifficultyRename
                 ]
         );
         displayOutputDifficulty(diff._mode, diff._difficulty);
@@ -232,10 +228,9 @@ function selectDifficultyHandler(ev: Event): void {
 }
 
 function applyThisHandler(): void {
-    const mode = htmlToolsSelectMode[0]
-        .value as beatmap.types.characteristic.CharacteristicName;
+    const mode = htmlToolsSelectMode[0].value as beatmap.types.CharacteristicName;
     const difficulty = htmlToolsSelectDifficulty[0]
-        .value as beatmap.types.difficulty.DifficultyName;
+        .value as beatmap.types.DifficultyName;
     if (!mode || !difficulty) {
         throw new Error(logPrefix + 'mode/difficulty does not exist');
     }
@@ -246,10 +241,9 @@ function applyThisHandler(): void {
 }
 
 function applyAllHandler(): void {
-    const mode = htmlToolsSelectMode[0]
-        .value as beatmap.types.characteristic.CharacteristicName;
+    const mode = htmlToolsSelectMode[0].value as beatmap.types.CharacteristicName;
     const difficulty = htmlToolsSelectDifficulty[0]
-        .value as beatmap.types.difficulty.DifficultyName;
+        .value as beatmap.types.DifficultyName;
     if (!mode || !difficulty) {
         throw new Error(logPrefix + 'mode/difficulty does not exist');
     }

@@ -1,4 +1,4 @@
-import { ColorArray, ColorObject } from './beatmap/types/colors';
+import { ColorArray, ColorObject } from './beatmap/shared/types/colors';
 import { round, radToDeg, degToRad } from './utils';
 
 export const toRGBArray = (c: ColorObject): ColorArray => {

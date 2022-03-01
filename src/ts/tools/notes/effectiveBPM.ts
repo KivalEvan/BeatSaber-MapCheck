@@ -77,18 +77,18 @@ function inputEBPMSHandler(this: HTMLInputElement) {
     this.value = tool.input.params.ebpmsThres.toString();
 }
 
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.set.BeatmapSetData) {
+function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
     const { _bpm: bpm } = mapSettings;
     const { _notes: notes } = mapSet._data;
     const { ebpmThres, ebpmsThres } = <{ ebpmThres: number; ebpmsThres: number }>(
         tool.input.params
     );
 
-    const noteEBPM = beatmap.swing
+    const noteEBPM = beatmap.v2.swing
         .getEffectiveBPMNote(notes, bpm)
         .filter((n) => n._ebpm > ebpmThres)
         .map((n) => n._time);
-    const noteEBPMS = beatmap.swing
+    const noteEBPMS = beatmap.v2.swing
         .getEffectiveBPMSwingNote(notes, bpm)
         .filter((n) => n._ebpm > ebpmsThres)
         .map((n) => n._time);
@@ -98,7 +98,7 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.set.BeatmapSe
 
 function run(
     mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.set.BeatmapSetData
+    mapSet?: beatmap.types.BeatmapSetData
 ): void {
     if (!mapSet) {
         throw new Error('something went wrong!');
