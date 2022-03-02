@@ -1,8 +1,6 @@
 import * as beatmap from '../../beatmap';
 import { round } from '../../utils';
 import { BeatmapSettings, Tool } from '../template';
-import * as swing from '../swing';
-import { Parity } from '../parity';
 import { create as selectCreate } from '../../ui/select';
 
 const htmlContainer = document.createElement('div');
@@ -78,43 +76,48 @@ function inputCheckHandler(this: HTMLInputElement) {
 function inputSelectRotateHandler(this: HTMLInputElement) {}
 function inputSelectParityHandler(this: HTMLInputElement) {}
 
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData) {
+function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
     const { _bpm: bpm } = mapSettings;
     const { _notes: notes } = mapSet._data;
     const { warningThres, errorThres, allowedRot } = <
         { warningThres: number; errorThres: number; allowedRot: number }
     >tool.input.params;
 
-    const lastNote: { [key: number]: beatmap.note.Note } = {};
-    const swingNoteArray: { [key: number]: beatmap.note.Note[] } = {
+    const lastNote: { [key: number]: beatmap.v2.types.Note } = {};
+    const swingNoteArray: { [key: number]: beatmap.v2.types.Note[] } = {
         0: [],
         1: [],
         3: [],
     };
-    const bombContext: { [key: number]: beatmap.note.Note[] } = {
+    const bombContext: { [key: number]: beatmap.v2.types.Note[] } = {
         0: [],
         1: [],
     };
-    const lastBombContext: { [key: number]: beatmap.note.Note[] } = {
+    const lastBombContext: { [key: number]: beatmap.v2.types.Note[] } = {
         0: [],
         1: [],
     };
 
-    const swingParity: { [key: number]: Parity } = {
-        0: new Parity(notes, 0, warningThres, errorThres, allowedRot),
-        1: new Parity(notes, 1, warningThres, errorThres, allowedRot),
+    const swingParity: { [key: number]: beatmap.v2.parity.Parity } = {
+        0: new beatmap.v2.parity.Parity(notes, 0, warningThres, errorThres, allowedRot),
+        1: new beatmap.v2.parity.Parity(notes, 1, warningThres, errorThres, allowedRot),
     };
     const parity: { warning: number[]; error: number[] } = {
         warning: [],
         error: [],
     };
 
-    const arr: beatmap.note.Note[] = [];
+    const arr: beatmap.v2.types.Note[] = [];
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
-        if (beatmap.note.isNote(note) && lastNote[note._type]) {
+        if (beatmap.v2.note.isNote(note) && lastNote[note._type]) {
             if (
-                swing.next(note, lastNote[note._type], bpm, swingNoteArray[note._type])
+                beatmap.v2.swing.next(
+                    note,
+                    lastNote[note._type],
+                    bpm,
+                    swingNoteArray[note._type]
+                )
             ) {
                 // check previous swing parity
                 const parityStatus = swingParity[note._type].check(
@@ -169,7 +172,10 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
     return parity;
 }
 
-function run(mapSettings: BeatmapSettings, mapSet?: beatmap.map.BeatmapSetData): void {
+function run(
+    mapSettings: BeatmapSettings,
+    mapSet?: beatmap.types.BeatmapSetData
+): void {
     if (!mapSet) {
         throw new Error('something went wrong!');
     }

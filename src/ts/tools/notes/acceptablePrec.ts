@@ -1,9 +1,8 @@
 import * as beatmap from '../../beatmap';
 import { round } from '../../utils';
 import { BeatmapSettings, Tool } from '../template';
-import * as swing from '../swing';
 
-const defaultPrec = [4, 3];
+const defaultPrec = [8, 6];
 
 const htmlContainer = document.createElement('div');
 const htmlInputPrec = document.createElement('input');
@@ -50,13 +49,13 @@ function inputPrecHandler(this: HTMLInputElement) {
     this.value = tool.input.params.prec.join(' ');
 }
 
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData) {
+function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
     const { _bpm: bpm } = mapSettings;
     const { _notes: notes } = mapSet._data;
     // god this hurt me, but typescript sees this as number instead of number[]
     const { prec } = <{ prec: number[] }>tool.input.params;
 
-    return swing
+    return beatmap.v2.swing
         .getEffectiveBPMSwingNote(notes, bpm)
         .map((n) => n._time)
         .filter((x, i, ary) => {
@@ -75,7 +74,10 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
         });
 }
 
-function run(mapSettings: BeatmapSettings, mapSet?: beatmap.map.BeatmapSetData): void {
+function run(
+    mapSettings: BeatmapSettings,
+    mapSet?: beatmap.types.BeatmapSetData
+): void {
     if (!mapSet) {
         throw new Error('something went wrong!');
     }

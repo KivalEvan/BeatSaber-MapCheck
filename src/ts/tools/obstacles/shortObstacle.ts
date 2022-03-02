@@ -42,50 +42,58 @@ function inputCheckHandler(this: HTMLInputElement) {
     tool.input.enabled = this.checked;
 }
 
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData) {
+function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
     const { _obstacles: obstacles } = mapSet._data;
     const { _bpm: bpm } = mapSettings;
     const { minDur: temp } = <{ minDur: number }>tool.input.params;
     const minDur = bpm.toBeatTime(temp);
-    const arr: beatmap.obstacle.Obstacle[] = [];
-    let obstacleLFull: beatmap.obstacle.Obstacle = {
+    const arr: beatmap.v2.types.Obstacle[] = [];
+    let obstacleLFull: beatmap.v2.types.Obstacle = {
         _time: 0,
         _duration: 0,
         _lineIndex: 0,
+        _lineLayer: 0,
         _type: 0,
         _width: 0,
+        _height: 0,
     };
-    let obstacleRFull: beatmap.obstacle.Obstacle = {
+    let obstacleRFull: beatmap.v2.types.Obstacle = {
         _time: 0,
         _duration: 0,
         _lineIndex: 0,
+        _lineLayer: 0,
         _type: 0,
         _width: 0,
+        _height: 0,
     };
-    let obstacleLHalf: beatmap.obstacle.Obstacle = {
+    let obstacleLHalf: beatmap.v2.types.Obstacle = {
         _time: 0,
         _duration: 0,
         _lineIndex: 0,
+        _lineLayer: 0,
         _type: 0,
         _width: 0,
+        _height: 0,
     };
-    let obstacleRHalf: beatmap.obstacle.Obstacle = {
+    let obstacleRHalf: beatmap.v2.types.Obstacle = {
         _time: 0,
         _duration: 0,
         _lineIndex: 0,
+        _lineLayer: 0,
         _type: 0,
         _width: 0,
+        _height: 0,
     };
     obstacles.forEach((o) => {
         if (o._type === 0 && o._duration > 0) {
             if (o._width > 2 || (o._width > 1 && o._lineIndex === 1)) {
-                if (beatmap.obstacle.isLonger(o, obstacleLFull)) {
+                if (beatmap.v2.obstacle.isLonger(o, obstacleLFull)) {
                     if (o._duration < minDur) {
                         arr.push(o);
                     }
                     obstacleLFull = o;
                 }
-                if (beatmap.obstacle.isLonger(o, obstacleRFull)) {
+                if (beatmap.v2.obstacle.isLonger(o, obstacleRFull)) {
                     if (o._duration < minDur) {
                         arr.push(o);
                     }
@@ -93,14 +101,14 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
                 }
             } else if (o._width === 2) {
                 if (o._lineIndex === 0) {
-                    if (beatmap.obstacle.isLonger(o, obstacleLFull)) {
+                    if (beatmap.v2.obstacle.isLonger(o, obstacleLFull)) {
                         if (o._duration < minDur) {
                             arr.push(o);
                         }
                         obstacleLFull = o;
                     }
                 } else if (o._lineIndex === 2) {
-                    if (beatmap.obstacle.isLonger(o, obstacleRFull)) {
+                    if (beatmap.v2.obstacle.isLonger(o, obstacleRFull)) {
                         if (o._duration < minDur) {
                             arr.push(o);
                         }
@@ -109,14 +117,14 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
                 }
             } else if (o._width === 1) {
                 if (o._lineIndex === 1) {
-                    if (beatmap.obstacle.isLonger(o, obstacleLFull)) {
+                    if (beatmap.v2.obstacle.isLonger(o, obstacleLFull)) {
                         if (o._duration < minDur) {
                             arr.push(o);
                         }
                         obstacleLFull = o;
                     }
                 } else if (o._lineIndex === 2) {
-                    if (beatmap.obstacle.isLonger(o, obstacleRFull)) {
+                    if (beatmap.v2.obstacle.isLonger(o, obstacleRFull)) {
                         if (o._duration < minDur) {
                             arr.push(o);
                         }
@@ -126,21 +134,21 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
             }
         } else if (o._type === 1 && o._duration > 0) {
             if (o._width > 2 || (o._width > 1 && o._lineIndex === 1)) {
-                if (beatmap.obstacle.isLonger(o, obstacleLHalf)) {
+                if (beatmap.v2.obstacle.isLonger(o, obstacleLHalf)) {
                     if (
                         o._duration < minDur &&
-                        beatmap.obstacle.isLonger(o, obstacleLFull, minDur) &&
-                        beatmap.obstacle.isLonger(o, obstacleLHalf, minDur)
+                        beatmap.v2.obstacle.isLonger(o, obstacleLFull, minDur) &&
+                        beatmap.v2.obstacle.isLonger(o, obstacleLHalf, minDur)
                     ) {
                         arr.push(o);
                     }
                     obstacleLHalf = o;
                 }
-                if (beatmap.obstacle.isLonger(o, obstacleRHalf)) {
+                if (beatmap.v2.obstacle.isLonger(o, obstacleRHalf)) {
                     if (
                         o._duration < minDur &&
-                        beatmap.obstacle.isLonger(o, obstacleRFull, minDur) &&
-                        beatmap.obstacle.isLonger(o, obstacleRHalf, minDur)
+                        beatmap.v2.obstacle.isLonger(o, obstacleRFull, minDur) &&
+                        beatmap.v2.obstacle.isLonger(o, obstacleRHalf, minDur)
                     ) {
                         arr.push(o);
                     }
@@ -148,22 +156,22 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
                 }
             } else if (o._width === 2) {
                 if (o._lineIndex === 0) {
-                    if (beatmap.obstacle.isLonger(o, obstacleLHalf)) {
+                    if (beatmap.v2.obstacle.isLonger(o, obstacleLHalf)) {
                         if (
                             o._duration < minDur &&
-                            beatmap.obstacle.isLonger(o, obstacleLFull, minDur) &&
-                            beatmap.obstacle.isLonger(o, obstacleLHalf, minDur)
+                            beatmap.v2.obstacle.isLonger(o, obstacleLFull, minDur) &&
+                            beatmap.v2.obstacle.isLonger(o, obstacleLHalf, minDur)
                         ) {
                             arr.push(o);
                         }
                         obstacleLHalf = o;
                     }
                 } else if (o._lineIndex === 2) {
-                    if (beatmap.obstacle.isLonger(o, obstacleRHalf)) {
+                    if (beatmap.v2.obstacle.isLonger(o, obstacleRHalf)) {
                         if (
                             o._duration < minDur &&
-                            beatmap.obstacle.isLonger(o, obstacleRFull, minDur) &&
-                            beatmap.obstacle.isLonger(o, obstacleRHalf, minDur)
+                            beatmap.v2.obstacle.isLonger(o, obstacleRFull, minDur) &&
+                            beatmap.v2.obstacle.isLonger(o, obstacleRHalf, minDur)
                         ) {
                             arr.push(o);
                         }
@@ -172,22 +180,22 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
                 }
             } else if (o._width === 1) {
                 if (o._lineIndex === 1) {
-                    if (beatmap.obstacle.isLonger(o, obstacleLHalf)) {
+                    if (beatmap.v2.obstacle.isLonger(o, obstacleLHalf)) {
                         if (
                             o._duration < minDur &&
-                            beatmap.obstacle.isLonger(o, obstacleLFull, minDur) &&
-                            beatmap.obstacle.isLonger(o, obstacleLHalf, minDur)
+                            beatmap.v2.obstacle.isLonger(o, obstacleLFull, minDur) &&
+                            beatmap.v2.obstacle.isLonger(o, obstacleLHalf, minDur)
                         ) {
                             arr.push(o);
                         }
                         obstacleLHalf = o;
                     }
                 } else if (o._lineIndex === 2) {
-                    if (beatmap.obstacle.isLonger(o, obstacleRHalf)) {
+                    if (beatmap.v2.obstacle.isLonger(o, obstacleRHalf)) {
                         if (
                             o._duration < minDur &&
-                            beatmap.obstacle.isLonger(o, obstacleRFull, minDur) &&
-                            beatmap.obstacle.isLonger(o, obstacleRHalf, minDur)
+                            beatmap.v2.obstacle.isLonger(o, obstacleRFull, minDur) &&
+                            beatmap.v2.obstacle.isLonger(o, obstacleRHalf, minDur)
                         ) {
                             arr.push(o);
                         }
@@ -204,7 +212,10 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
         });
 }
 
-function run(mapSettings: BeatmapSettings, mapSet?: beatmap.map.BeatmapSetData): void {
+function run(
+    mapSettings: BeatmapSettings,
+    mapSet?: beatmap.types.BeatmapSetData
+): void {
     if (!mapSet) {
         throw new Error('something went wrong!');
     }

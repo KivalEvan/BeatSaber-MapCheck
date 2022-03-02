@@ -40,14 +40,17 @@ function inputCheckHandler(this: HTMLInputElement) {
     tool.input.enabled = this.checked;
 }
 
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData) {
+function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
     const { _notes: notes } = mapSet._data;
     return notes
-        .filter((n) => beatmap.note.hasMappingExtensions(n))
+        .filter((n) => beatmap.v2.note.hasMappingExtensions(n))
         .map((n) => n._time);
 }
 
-function run(mapSettings: BeatmapSettings, mapSet?: beatmap.map.BeatmapSetData): void {
+function run(
+    mapSettings: BeatmapSettings,
+    mapSet?: beatmap.types.BeatmapSetData
+): void {
     if (!mapSet) {
         throw new Error('something went wrong!');
     }
@@ -61,28 +64,28 @@ function run(mapSettings: BeatmapSettings, mapSet?: beatmap.map.BeatmapSetData):
             noteResult = notes
                 .filter(
                     (n) =>
-                        beatmap.note.hasMappingExtensions(n) &&
-                        !beatmap.note.hasNoodleExtensions(n)
+                        beatmap.v2.note.hasMappingExtensions(n) &&
+                        !beatmap.v2.note.hasNoodleExtensions(n)
                 )
                 .map((n) => n._time);
             obstacleResult = obstacles
                 .filter(
                     (o) =>
-                        beatmap.obstacle.hasMappingExtensions(o) &&
-                        !beatmap.obstacle.hasNoodleExtensions(o)
+                        beatmap.v2.obstacle.hasMappingExtensions(o) &&
+                        !beatmap.v2.obstacle.hasNoodleExtensions(o)
                 )
                 .map((o) => o._time);
         } else {
             noteResult = notes
-                .filter((n) => !beatmap.note.isValid(n))
+                .filter((n) => !beatmap.v2.note.isValid(n))
                 .map((n) => n._time);
             obstacleResult = obstacles
-                .filter((o) => !beatmap.obstacle.isValid(o))
+                .filter((o) => !beatmap.v2.obstacle.isValid(o))
                 .map((o) => o._time);
         }
     }
     const eventResult = events
-        .filter((e) => !beatmap.event.isValid(e))
+        .filter((e) => !beatmap.v2.event.isValid(e))
         .map((e) => e._time);
 
     const htmlString: string[] = [];

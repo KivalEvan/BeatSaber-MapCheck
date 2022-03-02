@@ -40,11 +40,11 @@ function inputCheckHandler(this: HTMLInputElement) {
     tool.input.enabled = this.checked;
 }
 
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData) {
+function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
     const { _bpm: bpm, _njs: njs } = mapSettings;
     const { _notes: notes } = mapSet._data;
 
-    const arr: beatmap.note.Note[] = [];
+    const arr: beatmap.v2.types.Note[] = [];
     // to avoid multiple of stack popping up, ignore anything within this time
     let lastTime: number = 0;
     for (let i = 0, len = notes.length; i < len; i++) {
@@ -62,16 +62,16 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
                 continue;
             }
             if (
-                ((beatmap.note.isHorizontal(notes[i], notes[j]) ||
-                    beatmap.note.isVertical(notes[i], notes[j])) &&
-                    beatmap.note
+                ((beatmap.v2.note.isHorizontal(notes[i], notes[j]) ||
+                    beatmap.v2.note.isVertical(notes[i], notes[j])) &&
+                    beatmap.v2.note
                         .isIntersect(notes[i], notes[j], [
                             [45, 1],
                             [15, 2],
                         ])
                         .some((b) => b)) ||
-                (beatmap.note.isDiagonal(notes[i], notes[j]) &&
-                    beatmap.note
+                (beatmap.v2.note.isDiagonal(notes[i], notes[j]) &&
+                    beatmap.v2.note
                         .isIntersect(notes[i], notes[j], [
                             [45, 1],
                             [15, 1.5],
@@ -90,7 +90,10 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
         });
 }
 
-function run(mapSettings: BeatmapSettings, mapSet?: beatmap.map.BeatmapSetData): void {
+function run(
+    mapSettings: BeatmapSettings,
+    mapSet?: beatmap.types.BeatmapSetData
+): void {
     if (!mapSet) {
         throw new Error('something went wrong!');
     }

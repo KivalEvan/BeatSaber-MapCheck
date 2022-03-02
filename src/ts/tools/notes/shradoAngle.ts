@@ -1,7 +1,6 @@
 import * as beatmap from '../../beatmap';
 import { round } from '../../utils';
 import { BeatmapSettings, Tool } from '../template';
-import * as swing from '../swing';
 
 const defaultMaxTime = 0.15;
 const defaultDistance = 1;
@@ -125,7 +124,7 @@ function inputBeatHandler(this: HTMLInputElement) {
     this.value = val.toString();
 }
 
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData) {
+function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
     const { _bpm: bpm } = mapSettings;
     const { _notes: notes } = mapSet._data;
     const { maxTime: temp, distance } = <{ maxTime: number; distance: number }>(
@@ -133,29 +132,35 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
     );
     const maxTime = bpm.toBeatTime(temp) + 0.001;
 
-    const lastNote: { [key: number]: beatmap.note.Note } = {};
+    const lastNote: { [key: number]: beatmap.v2.types.Note } = {};
     const lastNoteDirection: { [key: number]: number } = {};
-    const startNoteDot: { [key: number]: beatmap.note.Note | null } = {};
-    const swingNoteArray: { [key: number]: beatmap.note.Note[] } = {
+    const startNoteDot: { [key: number]: beatmap.v2.types.Note | null } = {};
+    const swingNoteArray: { [key: number]: beatmap.v2.types.Note[] } = {
         0: [],
         1: [],
         3: [],
     };
-    const arr: beatmap.note.Note[] = [];
+    const arr: beatmap.v2.types.Note[] = [];
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
-        if (beatmap.note.isNote(note) && lastNote[note._type]) {
+        if (beatmap.v2.note.isNote(note) && lastNote[note._type]) {
             if (
-                swing.next(note, lastNote[note._type], bpm, swingNoteArray[note._type])
+                beatmap.v2.swing.next(
+                    note,
+                    lastNote[note._type],
+                    bpm,
+                    swingNoteArray[note._type]
+                )
             ) {
                 // FIXME: maybe fix rotation or something
                 if (startNoteDot[note._type]) {
                     startNoteDot[note._type] = null;
                     lastNoteDirection[note._type] =
-                        beatmap.note.flipDirection[lastNoteDirection[note._type]] ?? 8;
+                        beatmap.v2.note.flipDirection[lastNoteDirection[note._type]] ??
+                        8;
                 }
                 if (
-                    beatmap.note.distance(note, lastNote[note._type]) >= distance &&
+                    beatmap.v2.note.distance(note, lastNote[note._type]) >= distance &&
                     checkShrAngle(
                         note._cutDirection,
                         lastNoteDirection[note._type],
@@ -174,7 +179,7 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
             } else {
                 if (
                     startNoteDot[note._type] &&
-                    beatmap.note.distance(note, lastNote[note._type]) >= distance &&
+                    beatmap.v2.note.distance(note, lastNote[note._type]) >= distance &&
                     checkShrAngle(
                         note._cutDirection,
                         lastNoteDirection[note._type],
@@ -182,7 +187,7 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
                     ) &&
                     note._time - lastNote[note._type]._time <= maxTime
                 ) {
-                    arr.push(startNoteDot[note._type] as beatmap.note.Note);
+                    arr.push(startNoteDot[note._type] as beatmap.v2.types.Note);
                     startNoteDot[note._type] = null;
                 }
                 if (note._cutDirection !== 8) {
@@ -219,7 +224,10 @@ function checkShrAngle(
     return false;
 }
 
-function run(mapSettings: BeatmapSettings, mapSet?: beatmap.map.BeatmapSetData): void {
+function run(
+    mapSettings: BeatmapSettings,
+    mapSet?: beatmap.types.BeatmapSetData
+): void {
     if (!mapSet) {
         throw new Error('something went wrong!');
     }

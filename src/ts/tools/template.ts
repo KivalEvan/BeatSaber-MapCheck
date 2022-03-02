@@ -1,5 +1,4 @@
 import * as beatmap from '../beatmap';
-import { SwingAnalysis } from './swing';
 
 export interface BeatmapSettings {
     _bpm: beatmap.bpm.BeatPerMinute;
@@ -32,9 +31,9 @@ export interface ToolOutput {
 
 export type ToolRun = (
     mapSettings: BeatmapSettings,
-    mapSet?: beatmap.map.BeatmapSetData,
-    mapInfo?: beatmap.info.InfoData,
-    sps?: SwingAnalysis[]
+    mapSet?: beatmap.types.BeatmapSetData,
+    mapInfo?: beatmap.types.InfoData,
+    sps?: beatmap.v2.swing.SwingAnalysis[]
 ) => void;
 
 export interface Tool {

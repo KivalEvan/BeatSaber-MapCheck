@@ -13,31 +13,6 @@ import flag from './flag';
 import savedData, { clearData } from './savedData';
 import { getIdZipURL, getHashZipURL } from './beatsaver';
 
-export const downloadFromURL = async (input: string): Promise<void> => {
-    // sanitize & validate url
-    let url: string;
-    try {
-        url = sanitizeURL(input);
-    } catch (err) {
-        uiLoading.status('info', err, 0);
-        console.error(err);
-        return;
-    }
-
-    try {
-        disableInput(true);
-        uiLoading.status('info', 'Requesting download from link', 0);
-        console.log(`downloading from ${url}`);
-        // apparently i need cors proxy
-        let res = await downloadMap('https://cors-anywhere.herokuapp.com/' + url);
-        uiHeader.setCoverLink(url);
-        extractZip(res);
-    } catch (err) {
-        disableInput(false);
-        uiLoading.status('error', err, 100);
-    }
-};
-
 export const downloadFromID = async (input: string): Promise<void> => {
     // sanitize & validate id
     let id;
@@ -63,6 +38,40 @@ export const downloadFromID = async (input: string): Promise<void> => {
         disableInput(false);
         uiLoading.status('error', err, 100);
         console.error(err);
+    }
+};
+
+export const downloadFromURL = async (input: string): Promise<void> => {
+    // sanitize & validate url
+    let url: string;
+    try {
+        url = sanitizeURL(input);
+    } catch (err) {
+        uiLoading.status('info', err, 0);
+        console.error(err);
+        return;
+    }
+
+    if (url.match(/^(https?:\/\/)?(www\.)?beatsaver\.com\/maps\//)) {
+        downloadFromID(
+            url
+                .replace(/^https?:\/\/(www\.)?beatsaver\.com\/maps\//, '')
+                .match(/[a-fA-F0-9]*/)![0]
+        );
+        return;
+    }
+
+    try {
+        disableInput(true);
+        uiLoading.status('info', 'Requesting download from link', 0);
+        console.log(`downloading from ${url}`);
+        // apparently i need cors proxy
+        let res = await downloadMap(url);
+        uiHeader.setCoverLink(url);
+        extractZip(res);
+    } catch (err) {
+        disableInput(false);
+        uiLoading.status('error', err, 100);
     }
 };
 
@@ -170,7 +179,7 @@ export const loadMap = async (mapZip: JSZip) => {
     if (fileInfo) {
         disableInput(true);
         let infoFileStr = await fileInfo.async('string');
-        savedData._mapInfo = (await JSON.parse(infoFileStr)) as beatmap.info.InfoData;
+        savedData._mapInfo = (await JSON.parse(infoFileStr)) as beatmap.types.InfoData;
 
         beatmap.parse.info(savedData._mapInfo);
         uiInfo.setInfo(savedData._mapInfo);
@@ -254,12 +263,12 @@ export const loadMap = async (mapZip: JSZip) => {
                     console.log(
                         `parsing ${mapSet[i]._beatmapCharacteristicName} ${diffInfo._difficulty}`
                     );
-                    let diffFileStr: beatmap.difficulty.DifficultyData = JSON.parse(
+                    let diffFileStr: beatmap.v2.types.DifficultyData = JSON.parse(
                         await diffFile.async('string')
                     );
-                    let mapData: beatmap.difficulty.DifficultyData;
+                    let mapData: beatmap.v2.types.DifficultyData;
                     try {
-                        mapData = beatmap.parse.difficulty(diffFileStr);
+                        mapData = beatmap.parse.difficultyLegacy(diffFileStr);
                     } catch (err) {
                         throw new Error(
                             `${mapSet[i]._beatmapCharacteristicName} ${diffInfo._difficulty} ${err}`

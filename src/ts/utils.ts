@@ -12,6 +12,16 @@ export const toMMSS = (seconds: number): string => {
     return `${min}:${sec}`;
 };
 
+export const toHHMMSS = (minutes: number): string => {
+    if (!minutes) {
+        return '0:00:00';
+    }
+    const sec = Math.round((minutes * 60) % 60)
+        .toString()
+        .padStart(2, '0');
+    return `${toMMSS(minutes)}:${sec}`;
+};
+
 export const toMMSSMS = (seconds: number): string => {
     if (!seconds) {
         return '0:00.000';
@@ -95,4 +105,15 @@ export const removeOptions = (selectElement: HTMLSelectElement): void => {
     for (let i = selectElement.options.length - 1; i >= 0; i--) {
         selectElement.remove(i);
     }
+};
+
+export const deepCopy = <T>(object: T): T => {
+    if (typeof object !== 'object') {
+        console.error('Received non-object type');
+    }
+    return JSON.parse(JSON.stringify(object));
+};
+
+export const clamp = (value: number, min: number, max: number): number => {
+    return Math.min(Math.max(min, value), max);
 };

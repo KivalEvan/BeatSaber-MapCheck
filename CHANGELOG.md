@@ -1,5 +1,19 @@
 # Changelog
 
+## v2.4.0 [02-03-2022]
+
+### Changed
+
+-   Major structure change (for better development)
+-   Download from URL changes to download from ID if it detects valid BeatSaver map link
+-   Time spent now shows HH:MM:SS instead of HH:MM
+-   Actually added Gaga color scheme
+-   Restructured custom mod stuff
+
+### Removed
+
+-   CORS proxy (I don't think this is even needed anymore; I would've done own server, but too costly)
+
 ## v2.3.1 [04-01-2022]
 
 ### Added

@@ -1,7 +1,6 @@
 import * as beatmap from '../../beatmap';
 import { round } from '../../utils';
 import { BeatmapSettings, Tool } from '../template';
-import * as swing from '../swing';
 
 const defaultMaxTime = 0.075;
 
@@ -104,35 +103,43 @@ function inputPrecHandler(this: HTMLInputElement) {
     this.value = val.toString();
 }
 
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData) {
+function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
     const { _bpm: bpm } = mapSettings;
     const { _notes: notes } = mapSet._data;
     const { maxTime: temp } = <{ maxTime: number }>tool.input.params;
     const maxTime = bpm.toBeatTime(temp) + 0.001;
 
-    const lastNote: { [key: number]: beatmap.note.Note } = {};
-    const lastNotePause: { [key: number]: beatmap.note.Note } = {};
+    const lastNote: { [key: number]: beatmap.v2.types.Note } = {};
+    const lastNotePause: { [key: number]: beatmap.v2.types.Note } = {};
     const maybePause: { [key: number]: boolean } = {
         0: false,
         1: false,
         3: false,
     };
-    const swingNoteArray: { [key: number]: beatmap.note.Note[] } = {
+    const swingNoteArray: { [key: number]: beatmap.v2.types.Note[] } = {
         0: [],
         1: [],
         3: [],
     };
 
-    const arr: beatmap.note.Note[] = [];
+    const arr: beatmap.v2.types.Note[] = [];
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
-        if (beatmap.note.isNote(note) && lastNote[note._type]) {
-            if (swing.next(note, lastNote[note._type], bpm, swingNoteArray[note._type])) {
+        if (beatmap.v2.note.isNote(note) && lastNote[note._type]) {
+            if (
+                beatmap.v2.swing.next(
+                    note,
+                    lastNote[note._type],
+                    bpm,
+                    swingNoteArray[note._type]
+                )
+            ) {
                 if (note._time - lastNote[note._type]._time <= maxTime * 2) {
                     if (
                         maybePause[0] &&
                         maybePause[1] &&
-                        lastNote[note._type]._time - lastNotePause[note._type]._time <= maxTime * 3
+                        lastNote[note._type]._time - lastNotePause[note._type]._time <=
+                            maxTime * 3
                     ) {
                         arr.push(lastNote[note._type]);
                     }
@@ -156,17 +163,27 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
         });
 }
 
-function checkShrAngle(currCutDirection: number, prevCutDirection: number, type: number) {
+function checkShrAngle(
+    currCutDirection: number,
+    prevCutDirection: number,
+    type: number
+) {
     if (currCutDirection === 8 || prevCutDirection === 8) {
         return false;
     }
-    if ((type === 0 ? prevCutDirection === 7 : prevCutDirection === 6) && currCutDirection === 0) {
+    if (
+        (type === 0 ? prevCutDirection === 7 : prevCutDirection === 6) &&
+        currCutDirection === 0
+    ) {
         return true;
     }
     return false;
 }
 
-function run(mapSettings: BeatmapSettings, mapSet?: beatmap.map.BeatmapSetData): void {
+function run(
+    mapSettings: BeatmapSettings,
+    mapSet?: beatmap.types.BeatmapSetData
+): void {
     if (!mapSet) {
         throw new Error('something went wrong!');
     }

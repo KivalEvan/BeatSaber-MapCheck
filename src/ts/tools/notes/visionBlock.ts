@@ -204,7 +204,10 @@ function inputMinBeatHandler(this: HTMLInputElement) {
     this.value = round(val, 2).toString();
     if (tool.input.params.minTime > tool.input.params.maxTime) {
         tool.input.params.maxTime = tool.input.params.minTime;
-        htmlInputMaxTime.value = round((tool.input.params.maxTime as number) * 1000, 1).toString();
+        htmlInputMaxTime.value = round(
+            (tool.input.params.maxTime as number) * 1000,
+            1
+        ).toString();
         htmlInputMaxBeat.value = round(
             localBPM.toBeatTime(tool.input.params.maxTime as number),
             2
@@ -234,7 +237,7 @@ function inputMaxBeatHandler(this: HTMLInputElement) {
     this.value = round(val, 2).toString();
 }
 
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData) {
+function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
     const { _bpm: bpm, _njs: njs } = mapSettings;
     const { _notes: notes } = mapSet._data;
     const {
@@ -251,13 +254,16 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
             ? bpm.toBeatTime(temp2)
             : Math.min(njs.hjd, bpm.toBeatTime(vbDiff[mapSet._difficulty].max));
 
-    let lastMidL!: beatmap.note.Note | null;
-    let lastMidR!: beatmap.note.Note | null;
-    const arr: beatmap.note.Note[] = [];
+    let lastMidL!: beatmap.v2.types.Note | null;
+    let lastMidR!: beatmap.v2.types.Note | null;
+    const arr: beatmap.v2.types.Note[] = [];
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         if (lastMidL) {
-            if (note._time - lastMidL._time >= minTime && note._time - lastMidL._time <= maxTime) {
+            if (
+                note._time - lastMidL._time >= minTime &&
+                note._time - lastMidL._time <= maxTime
+            ) {
                 if (note._lineIndex < 2) {
                     arr.push(note);
                 }
@@ -268,7 +274,10 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
             }
         }
         if (lastMidR) {
-            if (note._time - lastMidR._time >= minTime && note._time - lastMidR._time <= maxTime) {
+            if (
+                note._time - lastMidR._time >= minTime &&
+                note._time - lastMidR._time <= maxTime
+            ) {
                 if (note._lineIndex > 1) {
                     arr.push(note);
                 }
@@ -290,7 +299,10 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.map.BeatmapSetData)
         });
 }
 
-function run(mapSettings: BeatmapSettings, mapSet?: beatmap.map.BeatmapSetData): void {
+function run(
+    mapSettings: BeatmapSettings,
+    mapSet?: beatmap.types.BeatmapSetData
+): void {
     if (!mapSet) {
         throw new Error('something went wrong!');
     }
