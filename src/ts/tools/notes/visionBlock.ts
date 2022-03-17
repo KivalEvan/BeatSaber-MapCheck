@@ -254,9 +254,9 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetDat
             ? bpm.toBeatTime(temp2)
             : Math.min(njs.hjd, bpm.toBeatTime(vbDiff[mapSet._difficulty].max));
 
-    let lastMidL!: beatmap.v2.types.Note | null;
-    let lastMidR!: beatmap.v2.types.Note | null;
-    const arr: beatmap.v2.types.Note[] = [];
+    let lastMidL!: beatmap.types.open.Note | null;
+    let lastMidR!: beatmap.types.open.Note | null;
+    const arr: beatmap.types.open.Note[] = [];
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         if (lastMidL) {

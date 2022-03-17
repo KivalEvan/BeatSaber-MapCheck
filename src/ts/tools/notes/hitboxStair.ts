@@ -45,22 +45,22 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetDat
     const { _notes: notes } = mapSet._data;
     const hitboxTime = bpm.toBeatTime(0.15);
 
-    const lastNote: { [key: number]: beatmap.v2.types.Note } = {};
+    const lastNote: { [key: number]: beatmap.types.open.Note } = {};
     const lastNoteDirection: { [key: number]: number } = {};
     const lastSpeed: { [key: number]: number } = {};
-    const swingNoteArray: { [key: number]: beatmap.v2.types.Note[] } = {
+    const swingNoteArray: { [key: number]: beatmap.types.open.Note[] } = {
         0: [],
         1: [],
         3: [],
     };
-    const noteOccupy: { [key: number]: beatmap.v2.types.Note } = {
+    const noteOccupy: { [key: number]: beatmap.types.open.Note } = {
         0: { _time: 0, _type: 0, _cutDirection: 0, _lineIndex: 0, _lineLayer: 0 },
         1: { _time: 0, _type: 1, _cutDirection: 0, _lineIndex: 0, _lineLayer: 0 },
         3: { _time: 0, _type: 3, _cutDirection: 0, _lineIndex: 0, _lineLayer: 0 },
     };
 
     // FIXME: use new system
-    const arr: beatmap.v2.types.Note[] = [];
+    const arr: beatmap.types.open.Note[] = [];
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         if (beatmap.v2.note.isNote(note) && lastNote[note._type]) {

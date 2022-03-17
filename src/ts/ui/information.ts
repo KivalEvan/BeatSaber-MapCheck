@@ -1,10 +1,22 @@
 // may god help you maintain these
 import * as uiHeader from './header';
-import * as beatmap from '../beatmap';
-import * as colors from '../colors';
 import * as uiPanel from './panel';
-import { removeOptions, round, toMMSS, toHHMMSS } from '../utils';
+import { removeOptions, round, toMMSS, toHHMMSS, rgbaToHex } from '../utils';
 import savedData from '../savedData';
+import {
+    IColorScheme,
+    EnvironmentName,
+    EnvironmentRename,
+    EnvironmentScheme,
+    ColorSchemeRename,
+    IInfoData,
+} from '../types';
+import { IContributorB64, IBeatmapDataItem } from '../types/mapcheck/';
+import { IEditor, IEditorInfo } from '../types/beatmap/shared/editor';
+import { BeatPerMinute, ColorScheme } from '../beatmap';
+import { ChromaDataEnvAbbr, IChromaEnvironment } from '../types/beatmap/v2/chroma';
+import { IHeckPointDefinition, ICustomEvent } from '../types/beatmap/v2';
+import { IBookmark } from '../types/beatmap/v3/bookmark';
 
 const logPrefix = 'UI Info: ';
 
@@ -84,7 +96,7 @@ export const setLevelAuthor = (str?: string): void => {
     htmlInfoLevelAuthor.textContent = 'Mapped by ' + str;
 };
 
-export const setEnvironment = (str?: beatmap.types.EnvironmentName): void => {
+export const setEnvironment = (str?: EnvironmentName): void => {
     if (!htmlInfoEnvironment) {
         console.error(logPrefix + 'missing HTML element for environment');
         return;
@@ -94,10 +106,10 @@ export const setEnvironment = (str?: beatmap.types.EnvironmentName): void => {
         return;
     }
     htmlInfoEnvironment.textContent =
-        (beatmap.types.environmentRename[str] || 'Unknown') + ' Environment';
+        (EnvironmentRename[str] || 'Unknown') + ' Environment';
 };
 
-export const setEditors = (obj?: beatmap.v2.types.Editor): void => {
+export const setEditors = (obj?: IEditor): void => {
     if (!htmlInfoEditors) {
         console.error(logPrefix + 'missing HTML element for editor');
         return;
@@ -110,7 +122,7 @@ export const setEditors = (obj?: beatmap.v2.types.Editor): void => {
     const lastEdited = obj._lastEditedBy || 'Undefined';
     let text = 'Last edited on ' + lastEdited;
     if (obj[lastEdited]) {
-        const mapper = obj[lastEdited] as beatmap.v2.types.EditorInfo;
+        const mapper = obj[lastEdited] as IEditorInfo;
         text += ' v' + mapper.version;
     }
     htmlInfoEditors.textContent = text;
@@ -140,13 +152,13 @@ const setContributorsRole = (str: string): void => {
     htmlInfoContributorsRole.textContent = str;
 };
 
-export const setContributors = (obj: beatmap.v2.types.Contributor): void => {
+export const setContributors = (obj: IContributorB64): void => {
     setContributorsImage(obj._base64 ? 'data:image;base64,' + obj._base64 : null);
     setContributorsName(obj._name);
     setContributorsRole(obj._role);
 };
 
-export const populateContributors = (arr?: beatmap.v2.types.Contributor[]): void => {
+export const populateContributors = (arr?: IContributorB64[]): void => {
     if (!htmlInfoContributors || !htmlInfoContributorsSelect) {
         console.error(logPrefix + 'missing HTML element for contributor');
         return;
@@ -236,8 +248,8 @@ export const setTimeSpend = (num?: number): void => {
 };
 
 export const setCustomColor = (
-    customColor?: beatmap.types.ColorScheme,
-    environment?: beatmap.types.EnvironmentName
+    customColor?: IColorScheme,
+    environment?: EnvironmentName
 ): void => {
     if (!htmlTableCustomColor) {
         console.error(logPrefix + 'missing table row for custom colors');
@@ -261,63 +273,42 @@ export const setCustomColor = (
     }
     let hexColor: { [key: string]: string | null } = {
         _colorLeft:
-            colors.rgbaToHex(
-                beatmap.environment.colorScheme[
-                    beatmap.types.environmentScheme[environment]
-                ]?._colorLeft
-            ) || null,
+            rgbaToHex(ColorScheme[EnvironmentScheme[environment]]?._colorLeft) || null,
         _colorRight:
-            colors.rgbaToHex(
-                beatmap.environment.colorScheme[
-                    beatmap.types.environmentScheme[environment]
-                ]?._colorRight
-            ) || null,
+            rgbaToHex(ColorScheme[EnvironmentScheme[environment]]?._colorRight) || null,
         _envColorLeft:
-            colors.rgbaToHex(
-                beatmap.environment.colorScheme[
-                    beatmap.types.environmentScheme[environment]
-                ]?._envColorLeft
-            ) || null,
+            rgbaToHex(ColorScheme[EnvironmentScheme[environment]]?._envColorLeft) ||
+            null,
         _envColorRight:
-            colors.rgbaToHex(
-                beatmap.environment.colorScheme[
-                    beatmap.types.environmentScheme[environment]
-                ]?._envColorRight
-            ) || null,
+            rgbaToHex(ColorScheme[EnvironmentScheme[environment]]?._envColorRight) ||
+            null,
         _envColorLeftBoost:
-            colors.rgbaToHex(
-                beatmap.environment.colorScheme[
-                    beatmap.types.environmentScheme[environment]
-                ]?._envColorLeftBoost
+            rgbaToHex(
+                ColorScheme[EnvironmentScheme[environment]]?._envColorLeftBoost
             ) || null,
         _envColorRightBoost:
-            colors.rgbaToHex(
-                beatmap.environment.colorScheme[
-                    beatmap.types.environmentScheme[environment]
-                ]?._envColorRightBoost
+            rgbaToHex(
+                ColorScheme[EnvironmentScheme[environment]]?._envColorRightBoost
             ) || null,
         _obstacleColor:
-            colors.rgbaToHex(
-                beatmap.environment.colorScheme[
-                    beatmap.types.environmentScheme[environment]
-                ]?._obstacleColor
-            ) || null,
+            rgbaToHex(ColorScheme[EnvironmentScheme[environment]]?._obstacleColor) ||
+            null,
     };
     if (customColor._colorLeft) {
-        hexColor._colorLeft = colors.rgbaToHex(customColor._colorLeft);
+        hexColor._colorLeft = rgbaToHex(customColor._colorLeft);
     }
     if (customColor._colorRight) {
-        hexColor._colorRight = colors.rgbaToHex(customColor._colorRight);
+        hexColor._colorRight = rgbaToHex(customColor._colorRight);
     }
     if (customColor._envColorLeft) {
-        hexColor._envColorLeft = colors.rgbaToHex(customColor._envColorLeft);
+        hexColor._envColorLeft = rgbaToHex(customColor._envColorLeft);
     } else if (customColor._colorLeft) {
-        hexColor._envColorLeft = colors.rgbaToHex(customColor._colorLeft);
+        hexColor._envColorLeft = rgbaToHex(customColor._colorLeft);
     }
     if (customColor._envColorRight) {
-        hexColor._envColorRight = colors.rgbaToHex(customColor._envColorRight);
+        hexColor._envColorRight = rgbaToHex(customColor._envColorRight);
     } else if (customColor._colorRight) {
-        hexColor._envColorRight = colors.rgbaToHex(customColor._colorRight);
+        hexColor._envColorRight = rgbaToHex(customColor._colorRight);
     }
 
     // tricky stuff
@@ -326,25 +317,21 @@ export const setCustomColor = (
         envBR!: string | null,
         envBoost = false;
     if (customColor._envColorLeftBoost) {
-        envBL = colors.rgbaToHex(customColor._envColorLeftBoost);
+        envBL = rgbaToHex(customColor._envColorLeftBoost);
         envBoost = true;
     } else {
         envBL =
-            colors.rgbaToHex(
-                beatmap.environment.colorScheme[
-                    beatmap.types.environmentScheme[environment]
-                ]?._envColorLeftBoost
+            rgbaToHex(
+                ColorScheme[EnvironmentScheme[environment]]?._envColorLeftBoost
             ) || hexColor._envColorLeft;
     }
     if (customColor._envColorRightBoost) {
-        envBR = colors.rgbaToHex(customColor._envColorRightBoost);
+        envBR = rgbaToHex(customColor._envColorRightBoost);
         envBoost = true;
     } else {
         envBR =
-            colors.rgbaToHex(
-                beatmap.environment.colorScheme[
-                    beatmap.types.environmentScheme[environment]
-                ]?._envColorRightBoost
+            rgbaToHex(
+                ColorScheme[EnvironmentScheme[environment]]?._envColorRightBoost
             ) || hexColor._envColorRight;
     }
 
@@ -354,7 +341,7 @@ export const setCustomColor = (
     }
 
     if (customColor._obstacleColor) {
-        hexColor._obstacleColor = colors.rgbaToHex(customColor._obstacleColor);
+        hexColor._obstacleColor = rgbaToHex(customColor._obstacleColor);
     }
 
     const panel = uiPanel.create('max', 'none', true);
@@ -375,9 +362,7 @@ export const setCustomColor = (
 
         textContainer.className = 'info__color-text';
         textContainer.textContent = ` -- ${
-            beatmap.types.colorSchemeRename[
-                key as keyof typeof beatmap.types.colorSchemeRename
-            ]
+            ColorSchemeRename[key as keyof typeof ColorSchemeRename]
         }`;
 
         container.appendChild(colorContainer);
@@ -438,10 +423,7 @@ export const setWarnings = (arr?: string[]): void => {
     displayTableRow(htmlTableWarnings, arr);
 };
 
-export const setBookmarks = (
-    arr?: beatmap.v2.types.Bookmark[],
-    bpm?: beatmap.bpm.BeatPerMinute | null
-): void => {
+export const setBookmarks = (arr?: IBookmark[], bpm?: BeatPerMinute | null): void => {
     if (!htmlTableBookmarks) {
         console.error(logPrefix + 'missing table row for bookmarks');
         return;
@@ -451,20 +433,20 @@ export const setBookmarks = (
         return;
     }
     const bookmarkText = arr.map((elem) => {
-        let time = elem._time;
+        let time = elem.b;
         let rt!: number;
         if (bpm) {
             time = bpm.adjustTime(time);
             rt = bpm.toRealTime(time);
         }
-        return `${round(elem._time, 3)}${rt ? ' | ' + toMMSS(rt) : ''} -- ${
-            elem._name !== '' ? elem._name : '**EMPTY NAME**'
+        return `${round(elem.b, 3)}${rt ? ' | ' + toMMSS(rt) : ''} -- ${
+            elem.n !== '' ? elem.b : '**EMPTY NAME**'
         }`;
     });
     displayTableRow(htmlTableBookmarks, bookmarkText);
 };
 
-export const setBPMChanges = (bpm?: beatmap.bpm.BeatPerMinute | null): void => {
+export const setBPMChanges = (bpm?: BeatPerMinute | null): void => {
     if (!htmlTableBPMChanges) {
         console.error(logPrefix + 'missing table row for bookmarks');
         return;
@@ -482,9 +464,7 @@ export const setBPMChanges = (bpm?: beatmap.bpm.BeatPerMinute | null): void => {
 };
 
 // this implementation looks hideous but whatever
-export const setEnvironmentEnhancement = (
-    arr?: beatmap.v2.types.ChromaEnvironment[]
-): void => {
+export const setEnvironmentEnhancement = (arr?: IChromaEnvironment[]): void => {
     if (!htmlTableEnvironmentEnhancement) {
         console.error(logPrefix + 'missing table row for environment enhancement');
         return;
@@ -499,11 +479,8 @@ export const setEnvironmentEnhancement = (
             if (key == '_lookupMethod' || key == '_id') {
                 continue;
             }
-            let k =
-                beatmap.v2.types.ChromaDataEnvAbbr[
-                    key as keyof typeof beatmap.v2.types.ChromaDataEnvAbbr
-                ];
-            if (elem[key as keyof beatmap.v2.types.ChromaEnvironment] != null) {
+            let k = ChromaDataEnvAbbr[key as keyof typeof ChromaDataEnvAbbr];
+            if (elem[key as keyof IChromaEnvironment] != null) {
                 keyArr.push(k);
             }
         }
@@ -514,9 +491,7 @@ export const setEnvironmentEnhancement = (
     displayTableRow(htmlTableEnvironmentEnhancement, envEnhance);
 };
 
-export const setPointDefinitions = (
-    arr?: beatmap.v2.types.HeckPointDefinition[]
-): void => {
+export const setPointDefinitions = (arr?: IHeckPointDefinition[]): void => {
     if (!htmlTablePointDefinitions) {
         console.error(logPrefix + 'missing table row for point definitions');
         return;
@@ -534,8 +509,8 @@ export const setPointDefinitions = (
 };
 
 export const setCustomEvents = (
-    arr?: beatmap.v2.types.CustomEvent[],
-    bpm?: beatmap.bpm.BeatPerMinute | null
+    arr?: ICustomEvent[],
+    bpm?: BeatPerMinute | null
 ): void => {
     if (!htmlTableCustomEvents) {
         console.error(logPrefix + 'missing table row for custom events');
@@ -571,7 +546,7 @@ export const setCustomEvents = (
     displayTableRow(htmlTableCustomEvents, customEv);
 };
 
-export const setInfo = (mapInfo: beatmap.types.InfoData): void => {
+export const setInfo = (mapInfo: IInfoData): void => {
     uiHeader.setSongName(mapInfo._songName);
     uiHeader.setSongSubname(mapInfo._songSubName);
     uiHeader.setSongAuthor(mapInfo._songAuthorName);
@@ -581,39 +556,39 @@ export const setInfo = (mapInfo: beatmap.types.InfoData): void => {
     setEditors(mapInfo._customData?._editors);
 };
 
-export const setDiffInfoTable = (mapData: beatmap.types.BeatmapSetData): void => {
-    setVersion(mapData._data._version);
-    if (mapData._info?._customData) {
-        setCustomColor(mapData._info._customData);
-        setRequirements(mapData._info._customData._requirements);
-        setSuggestions(mapData._info._customData._suggestions);
-        setInformation(mapData._info._customData._information);
-        setWarnings(mapData._info._customData._warnings);
+export const setDiffInfoTable = (mapData: IBeatmapDataItem): void => {
+    setVersion(mapData.data.version);
+    if (mapData.info?._customData) {
+        setCustomColor(mapData.info._customData);
+        setRequirements(mapData.info._customData._requirements);
+        setSuggestions(mapData.info._customData._suggestions);
+        setInformation(mapData.info._customData._information);
+        setWarnings(mapData.info._customData._warnings);
     }
-    if (mapData._data?._customData) {
-        const bpm = savedData._mapInfo?._beatsPerMinute
-            ? beatmap.bpm.create(
-                  savedData._mapInfo._beatsPerMinute,
-                  mapData._data._customData._bpmChanges ||
-                      mapData._data._customData._BPMChanges
+    if (mapData.data?.customData) {
+        const bpm = savedData.beatmapInfo?._beatsPerMinute
+            ? BeatPerMinute.create(
+                  savedData.beatmapInfo._beatsPerMinute,
+                  mapData.data.customData._bpmChanges ||
+                      mapData.data.customData._BPMChanges
               )
             : null;
-        setTimeSpend(mapData._data._customData._time);
-        setBookmarks(mapData._data._customData._bookmarks, bpm);
+        setTimeSpend(mapData.data.customData._time);
+        setBookmarks(mapData.data.customData._bookmarks, bpm);
         setBPMChanges(bpm);
-        setEnvironmentEnhancement(mapData._data._customData._environment);
-        setPointDefinitions(mapData._data._customData._pointDefinitions);
-        setCustomEvents(mapData._data._customData._customEvents, bpm);
+        setEnvironmentEnhancement(mapData.data.customData._environment);
+        setPointDefinitions(mapData.data.customData._pointDefinitions);
+        setCustomEvents(mapData.data.customData._customEvents, bpm);
     }
 };
 
 function contributorsSelectHandler(ev: Event): void {
-    if (!savedData._contributors) {
+    if (!savedData.contributors) {
         console.error(logPrefix + 'no saved data for contributors');
         return;
     }
     const target = ev.target as HTMLSelectElement;
-    setContributors(savedData._contributors[parseInt(target.value)]);
+    setContributors(savedData.contributors[parseInt(target.value)]);
 }
 
 export const reset = (): void => {

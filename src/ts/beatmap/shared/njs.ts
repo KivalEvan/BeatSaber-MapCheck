@@ -1,3 +1,4 @@
+import { DifficultyName } from '../../types/beatmap/shared/difficulty';
 import { BeatPerMinute } from './bpm';
 
 /** Class to store NJS value, BPM, and other properties affecting NJS. */
@@ -12,27 +13,59 @@ export class NoteJumpSpeed {
     private _jdMin!: number;
     private _reactionTime!: number;
 
-    constructor(bpm: BeatPerMinute, njs: number = 10, sdm: number = 0) {
+    private constructor(bpm: BeatPerMinute, njs: number = 10, sdm: number = 0) {
         this._bpm = bpm;
         this._njs = njs;
         this._sdm = sdm;
         this.update();
     }
 
+    /** Create and return new instance of NJS class.
+     * ```ts
+     * const NJS = NoteJumpSpeed.create(BPM ?? 128, 16, 0);
+     * ```
+     */
+    static create = (bpm: BeatPerMinute | number, njs = 10, sdm = 0): NoteJumpSpeed => {
+        if (typeof bpm === 'number') {
+            return new NoteJumpSpeed(BeatPerMinute.create(bpm), njs, sdm);
+        } else {
+            return new NoteJumpSpeed(bpm, njs, sdm);
+        }
+    };
+
+    /** Fallback value used if NJS value is null or 0.
+     * ```ts
+     * 'ExpertPlus' -> 16,
+     * 'Expert' -> 12,
+     * 'Hard' -> 10,
+     * 'Normal' -> 10,
+     * 'Easy' -> 10
+     * ```
+     */
+    static FallbackNJS: Record<DifficultyName, number> = {
+        ExpertPlus: 16,
+        Expert: 12,
+        Hard: 10,
+        Normal: 10,
+        Easy: 10,
+    };
+
+    get value(): number {
+        return this._njs;
+    }
     set value(val: number) {
         this._njs = val;
         this.update();
     }
-    get value(): number {
-        return this._njs;
+
+    get offset(): number {
+        return this._sdm;
     }
     set offset(val: number) {
         this._sdm = val;
         this.update();
     }
-    get offset(): number {
-        return this._sdm;
-    }
+
     get hjd(): number {
         return this._hjd;
     }
@@ -58,7 +91,7 @@ export class NoteJumpSpeed {
 
     /** Calculate raw half jump duration
      * ```ts
-     * const rawHJD = calcHalfJumpDurationRaw();
+     * const rawHJD = NJS.calcHalfJumpDurationRaw();
      * ```
      */
     public calcHalfJumpDurationRaw(): number {
@@ -77,8 +110,8 @@ export class NoteJumpSpeed {
 
     /** Calculate half jump duration given NJS offset
      * ```ts
-     * const HJD = calcHalfJumpDuration();
-     * const HJDOffset = calcHalfJumpDuration(0.5);
+     * const HJD = NJS.calcHalfJumpDuration();
+     * const HJDOffset = NJS.calcHalfJumpDuration(0.5);
      * ```
      */
     public calcHalfJumpDuration(offset: number = this.offset): number {
@@ -87,8 +120,8 @@ export class NoteJumpSpeed {
 
     /** Calculate half jump duration given jump distance.
      * ```ts
-     * const HJD = calcHalfJumpDurationFromJD();
-     * const HJDSpecified = calcHalfJumpDurationFromJD(21);
+     * const HJD = NJS.calcHalfJumpDurationFromJD();
+     * const HJDSpecified = NJS.calcHalfJumpDurationFromJD(21);
      * ```
      */
     public calcHalfJumpDurationFromJD(jd: number = this.calcJumpDistance()): number {
@@ -97,8 +130,8 @@ export class NoteJumpSpeed {
 
     /** Calculate half jump duration given real time in second.
      * ```ts
-     * const HJD = calcHalfJumpDurationFromRT();
-     * const HJDSpecified = calcHalfJumpDurationFromRT(4.5);
+     * const HJD = NJS.calcHalfJumpDurationFromRT();
+     * const HJDSpecified = NJS.calcHalfJumpDurationFromRT(4.5);
      * ```
      */
     public calcHalfJumpDurationFromRT(
@@ -109,8 +142,8 @@ export class NoteJumpSpeed {
 
     /** Calculate jump distance given half jump duration.
      * ```ts
-     * const JD = calcJumpDistance();
-     * const JDSpecified = calcJumpDistance(1.5);
+     * const JD = NJS.calcJumpDistance();
+     * const JDSpecified = NJS.calcJumpDistance(1.5);
      * ```
      */
     public calcJumpDistance(hjd: number = this.calcHalfJumpDuration()): number {
@@ -119,7 +152,7 @@ export class NoteJumpSpeed {
 
     /** Calculate highest optimal jump distance.
      * ```ts
-     * const optimalHighJD = calcJumpDistanceOptimalHigh();
+     * const optimalHighJD = NJS.calcJumpDistanceOptimalHigh();
      * ```
      */
     public calcJumpDistanceOptimalHigh(): number {
@@ -128,7 +161,7 @@ export class NoteJumpSpeed {
 
     /** Calculate lowest optimal jump distance.
      * ```ts
-     * const optimalLowJD = calcJumpDistanceOptimalLow();
+     * const optimalLowJD = NJS.calcJumpDistanceOptimalLow();
      * ```
      */
     public calcJumpDistanceOptimalLow(): number {
@@ -137,8 +170,8 @@ export class NoteJumpSpeed {
 
     /** Calculate reaction time given jump distance.
      * ```ts
-     * const JD = calcReactionTimeFromJD();
-     * const JDSpecified = calcReactionTimeFromJD(21);
+     * const JD = NJS.calcReactionTimeFromJD();
+     * const JDSpecified = NJS.calcReactionTimeFromJD(21);
      * ```
      */
     public calcReactionTimeFromJD(jd: number = this.calcJumpDistance()): number {
@@ -147,8 +180,8 @@ export class NoteJumpSpeed {
 
     /** Calculate reaction time given half jump duration.
      * ```ts
-     * const JD = calcReactionTimeFromHJD();
-     * const JDSpecified = calcReactionTimeFromHJD(1.5);
+     * const JD = NJS.calcReactionTimeFromHJD();
+     * const JDSpecified = NJS.calcReactionTimeFromHJD(1.5);
      * ```
      */
     public calcReactionTimeFromHJD(hjd: number = this.calcHalfJumpDuration()): number {
@@ -157,44 +190,10 @@ export class NoteJumpSpeed {
 
     /** Calculate distance given beat.
      * ```ts
-     * const distance = calcDistance(1);
+     * const distance = NJS.calcDistance(1);
      * ```
      */
     public calcDistance(beat: number): number {
         return ((this._njs * 60) / this._bpm.value) * beat * 2;
     }
-}
-
-/** Create and return new instance of NJS class.
- * ```ts
- * const NJS = create(BPM ?? 128, 16, 0);
- * ```
- */
-export const create = (
-    bpm: BeatPerMinute | number,
-    njs = 10,
-    sdm = 0
-): NoteJumpSpeed => {
-    if (typeof bpm === 'number') {
-        return new NoteJumpSpeed(new BeatPerMinute(bpm), njs, sdm);
-    } else {
-        return new NoteJumpSpeed(bpm, njs, sdm);
-    }
-};
-
-/** Fallback value used if NJS value is null or 0.
- * ```ts
- * 'ExpertPlus' -> 16,
- * 'Expert' -> 12,
- * 'Hard' -> 10,
- * 'Normal' -> 10,
- * 'Easy' -> 10
- * ```
- */
-export enum FallbackNJS {
-    'ExpertPlus' = 16,
-    'Expert' = 12,
-    'Hard' = 10,
-    'Normal' = 10,
-    'Easy' = 10,
 }

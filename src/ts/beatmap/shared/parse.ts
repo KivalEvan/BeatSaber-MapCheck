@@ -1,11 +1,16 @@
-import { InfoData } from './types/info';
-import { CharacteristicOrder } from './types/characteristic';
-import { DifficultyRank } from './types/difficulty';
+import { IInfoData, DifficultyRank } from '../../types';
+import { CharacteristicOrder } from './characteristic';
+import logger from '../../logger';
+
+// deno-lint-ignore ban-types
+const tag = (func: Function) => {
+    return `[shared::parse::${func.name}]`;
+};
 
 // TODO: more error check
 // TODO: contemplate whether to make pure function or keep as is
-export const info = (infoData: InfoData): InfoData => {
-    console.log('Parsing info');
+export const info = (infoData: IInfoData): IInfoData => {
+    logger.info(tag(info), 'Parsing beatmap info v2.x.x');
     infoData._difficultyBeatmapSets.sort(
         (a, b) =>
             CharacteristicOrder[a._beatmapCharacteristicName] -
@@ -15,14 +20,14 @@ export const info = (infoData: InfoData): InfoData => {
         let num = 0;
         set._difficultyBeatmaps.forEach((a) => {
             if (a._difficultyRank - num <= 0) {
-                console.warn(a._difficulty + ' is unordered');
+                logger.warn(tag(info), a._difficulty + ' is unordered');
             }
             if (DifficultyRank[a._difficulty] !== a._difficultyRank) {
-                console.error(a._difficulty + ' has invalid rank');
+                logger.error(tag(info), a._difficulty + ' has invalid rank');
             }
             num = a._difficultyRank;
         });
-        set._difficultyBeatmaps.sort((a, b) => b._difficultyRank - a._difficultyRank);
+        set._difficultyBeatmaps.sort((a, b) => a._difficultyRank - b._difficultyRank);
     });
 
     return infoData;

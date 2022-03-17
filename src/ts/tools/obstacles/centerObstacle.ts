@@ -107,8 +107,8 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetDat
     const { _obstacles: obstacles } = mapSet._data;
     const { _bpm: bpm } = mapSettings;
     const { recovery } = <{ recovery: number }>tool.input.params;
-    const arr: beatmap.v2.types.Obstacle[] = [];
-    let obstacleLeftFull: beatmap.v2.types.Obstacle = {
+    const arr: beatmap.types.open.Obstacle[] = [];
+    let obstacleLeftFull: beatmap.types.open.Obstacle = {
         _time: 0,
         _duration: 0,
         _lineIndex: 0,
@@ -117,7 +117,7 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetDat
         _width: 0,
         _height: 0,
     };
-    let obstacleRightFull: beatmap.v2.types.Obstacle = {
+    let obstacleRightFull: beatmap.types.open.Obstacle = {
         _time: 0,
         _duration: 0,
         _lineIndex: 0,

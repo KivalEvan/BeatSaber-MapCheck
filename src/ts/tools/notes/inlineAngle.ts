@@ -109,15 +109,15 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetDat
     const { maxTime: temp } = <{ maxTime: number }>tool.input.params;
     const maxTime = bpm.toBeatTime(temp) + 0.001;
 
-    const lastNote: { [key: number]: beatmap.v2.types.Note } = {};
+    const lastNote: { [key: number]: beatmap.types.open.Note } = {};
     const lastNoteAngle: { [key: number]: number } = {};
-    const startNoteDot: { [key: number]: beatmap.v2.types.Note | null } = {};
-    const swingNoteArray: { [key: number]: beatmap.v2.types.Note[] } = {
+    const startNoteDot: { [key: number]: beatmap.types.open.Note | null } = {};
+    const swingNoteArray: { [key: number]: beatmap.types.open.Note[] } = {
         0: [],
         1: [],
         3: [],
     };
-    const arr: beatmap.v2.types.Note[] = [];
+    const arr: beatmap.types.open.Note[] = [];
     let lastTime = 0;
     let lastIndex = 0;
     for (let i = 0, len = notes.length; i < len; i++) {
@@ -163,7 +163,7 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetDat
                         true
                     )
                 ) {
-                    arr.push(startNoteDot[note._type] as beatmap.v2.types.Note);
+                    arr.push(startNoteDot[note._type] as beatmap.types.open.Note);
                     startNoteDot[note._type] = null;
                 }
                 if (note._cutDirection !== 8) {
@@ -216,8 +216,8 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetDat
 }
 
 function checkInline(
-    n: beatmap.v2.types.Note,
-    notes: beatmap.v2.types.Note[],
+    n: beatmap.types.open.Note,
+    notes: beatmap.types.open.Note[],
     index: number,
     maxTime: number
 ) {

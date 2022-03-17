@@ -1,11 +1,12 @@
 import * as beatmap from '../beatmap';
 import * as component from './component';
-import * as template from './template';
-import * as swing from '../beatmap/v2/swing';
 import savedData from '../savedData';
+import { BeatPerMinute } from '../beatmap';
+import { CharacteristicName, DifficultyName } from '../types';
+import { BeatmapSettings } from '../types/mapcheck/tools/template';
 
 const init = (): void => {
-    savedData._analysis = {
+    savedData.analysis = {
         general: {
             html: null,
         },
@@ -16,26 +17,26 @@ const init = (): void => {
 };
 
 export const general = (): void => {
-    const mapInfo = savedData._mapInfo;
+    const mapInfo = savedData.beatmapInfo;
     if (!mapInfo) {
         console.error('could not analyse, missing map info');
         return;
     }
 
-    if (!savedData._analysis) {
+    if (!savedData.analysis) {
         init();
     }
 
-    const analysisExist = savedData._analysis?.general;
-    const spsSet = savedData._analysis?.sps;
+    const analysisExist = savedData.analysis?.general;
+    const spsSet = savedData.analysis?.sps;
 
-    const bpm = beatmap.bpm.create(mapInfo._beatsPerMinute);
-    const njs = beatmap.njs.create(bpm);
+    const bpm = beatmap.BeatPerMinute.create(mapInfo._beatsPerMinute);
+    const njs = beatmap.NoteJumpSpeed.create(bpm);
 
-    const mapSettings: template.BeatmapSettings = {
+    const mapSettings: BeatmapSettings = {
         _bpm: bpm,
         _njs: njs,
-        _audioDuration: savedData._duration ?? null,
+        _audioDuration: savedData.duration ?? null,
         _mapDuration: 0,
     };
 
@@ -63,16 +64,16 @@ export const general = (): void => {
 };
 
 export const difficulty = (
-    mode: beatmap.types.CharacteristicName,
-    difficulty: beatmap.types.DifficultyName
+    mode: CharacteristicName,
+    difficulty: DifficultyName
 ): void => {
-    const mapInfo = savedData._mapInfo;
+    const mapInfo = savedData.beatmapInfo;
     if (!mapInfo) {
         console.error('could not analyse, missing map info');
         return;
     }
 
-    const mapSet = savedData._mapSet?.find(
+    const mapSet = savedData.beatmapSet?.find(
         (set) => set._mode === mode && set._difficulty === difficulty
     );
     if (!mapSet) {
@@ -80,11 +81,11 @@ export const difficulty = (
         return;
     }
 
-    if (!savedData._analysis) {
+    if (!savedData.analysis) {
         init();
     }
 
-    const analysisExist = savedData._analysis?.mapSet.find(
+    const analysisExist = savedData.analysis?.mapSet.find(
         (set) => set.difficulty === difficulty && set.mode === mode
     );
 
@@ -99,10 +100,10 @@ export const difficulty = (
         mapSet._info._noteJumpStartBeatOffset
     );
 
-    const mapSettings: template.BeatmapSettings = {
+    const mapSettings: BeatmapSettings = {
         _bpm: bpm,
         _njs: njs,
-        _audioDuration: savedData._duration ?? null,
+        _audioDuration: savedData.duration ?? null,
         _mapDuration: bpm.toRealTime(
             beatmap.v2.difficulty.getLastInteractiveTime(mapSet._data)
         ),
@@ -129,7 +130,7 @@ export const difficulty = (
     if (analysisExist) {
         analysisExist.html = htmlArr;
     } else {
-        savedData._analysis?.mapSet.push({
+        savedData.analysis?.mapSet.push({
             mode: mode,
             difficulty: difficulty,
             html: htmlArr,
@@ -137,7 +138,7 @@ export const difficulty = (
     }
 };
 
-export const adjustTime = (bpm: beatmap.bpm.BeatPerMinute): void => {
+export const adjustTime = (bpm: BeatPerMinute): void => {
     const toolList = component
         .getDifficulty()
         .sort((a, b) => a.order.output - b.order.output);
@@ -149,26 +150,26 @@ export const adjustTime = (bpm: beatmap.bpm.BeatPerMinute): void => {
 };
 
 export const sps = (): void => {
-    let mapInfo = savedData._mapInfo;
+    let mapInfo = savedData.beatmapInfo;
     if (!mapInfo) {
         console.error('could not analyse, missing map info');
         return;
     }
 
-    let bpm = beatmap.bpm.create(mapInfo._beatsPerMinute);
-    if (!savedData._analysis) {
+    let bpm = BeatPerMinute.create(mapInfo._beatsPerMinute);
+    if (!savedData.analysis) {
         init();
     }
 
-    savedData._mapSet?.forEach((set) =>
-        savedData._analysis?.sps.push({
+    savedData.beatmapSet?.forEach((set) =>
+        savedData.analysis?.sps.push({
             mode: set._mode,
             difficulty: set._difficulty,
-            sps: swing.info(set._data, bpm),
+            sps: beatmap.open.swing.info(set._data, bpm),
         })
     );
 };
 
 export const all = (): void => {
-    savedData._mapSet?.forEach((set) => difficulty(set._mode, set._difficulty));
+    savedData.beatmapSet?.forEach((set) => difficulty(set._mode, set._difficulty));
 };

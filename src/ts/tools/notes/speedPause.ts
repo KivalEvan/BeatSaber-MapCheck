@@ -109,20 +109,20 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetDat
     const { maxTime: temp } = <{ maxTime: number }>tool.input.params;
     const maxTime = bpm.toBeatTime(temp) + 0.001;
 
-    const lastNote: { [key: number]: beatmap.v2.types.Note } = {};
-    const lastNotePause: { [key: number]: beatmap.v2.types.Note } = {};
+    const lastNote: { [key: number]: beatmap.types.open.Note } = {};
+    const lastNotePause: { [key: number]: beatmap.types.open.Note } = {};
     const maybePause: { [key: number]: boolean } = {
         0: false,
         1: false,
         3: false,
     };
-    const swingNoteArray: { [key: number]: beatmap.v2.types.Note[] } = {
+    const swingNoteArray: { [key: number]: beatmap.types.open.Note[] } = {
         0: [],
         1: [],
         3: [],
     };
 
-    const arr: beatmap.v2.types.Note[] = [];
+    const arr: beatmap.types.open.Note[] = [];
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         if (beatmap.v2.note.isNote(note) && lastNote[note._type]) {

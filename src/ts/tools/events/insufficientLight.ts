@@ -1,4 +1,5 @@
 import * as beatmap from '../../beatmap';
+import { IBeatmapDataItem } from '../../types/mapcheck';
 import { BeatmapSettings, Tool } from '../template';
 
 const htmlContainer = document.createElement('div');
@@ -39,13 +40,12 @@ function inputCheckHandler(this: HTMLInputElement) {
     tool.input.enabled = this.checked;
 }
 
-const sufficientLight = (events: beatmap.v2.types.Event[]): boolean => {
+const sufficientLight = (events: BasicEvent[]): boolean => {
     let count = 0;
     for (let i = events.length - 1; i >= 0; i--) {
         if (
-            beatmap.v2.event.isLightEvent(events[i]) &&
-            events[i]._value !== 0 &&
-            events[i]._value !== 4
+            beatmap.open.basicEvent.isLightEvent(events[i]) &&
+            !beatmap.open.basicEvent.isOff(events[i])
         ) {
             count++;
             if (count > 10) {
@@ -58,12 +58,12 @@ const sufficientLight = (events: beatmap.v2.types.Event[]): boolean => {
 
 function run(
     mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.BeatmapSetData
-): void {
-    if (!mapSet) {
+    mapData?: IBeatmapDataItem
+): ReturnType<Tool['run']> {
+    if (!mapData) {
         throw new Error('something went wrong!');
     }
-    const result = sufficientLight(mapSet._data._events);
+    const result = sufficientLight(mapData._data._events);
 
     if (!result) {
         const htmlResult = document.createElement('div');

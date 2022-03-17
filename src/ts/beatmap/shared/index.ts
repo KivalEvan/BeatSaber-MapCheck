@@ -1,5 +1,7 @@
-export * as bpm from './bpm';
+export * from './bpm';
+export * from './constants';
+export * from './difficulty';
 export * as easings from './easings';
-export * as environment from './environment';
-export * as njs from './njs';
-export * as types from './types';
+export * from './environment';
+export * from './njs';
+export * from './version';

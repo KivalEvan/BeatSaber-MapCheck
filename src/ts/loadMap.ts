@@ -179,26 +179,30 @@ export const loadMap = async (mapZip: JSZip) => {
     if (fileInfo) {
         disableInput(true);
         let infoFileStr = await fileInfo.async('string');
-        savedData._mapInfo = (await JSON.parse(infoFileStr)) as beatmap.types.InfoData;
+        savedData.beatmapInfo = (await JSON.parse(
+            infoFileStr
+        )) as beatmap.types.InfoData;
 
-        beatmap.parse.info(savedData._mapInfo);
-        uiInfo.setInfo(savedData._mapInfo);
+        beatmap.parse.info(savedData.beatmapInfo);
+        uiInfo.setInfo(savedData.beatmapInfo);
 
         // load cover image
         uiLoading.status('info', 'Loading image...', 10.4375);
         console.log('loading cover image');
-        let imageFile = mapZip.file(savedData._mapInfo._coverImageFilename);
+        let imageFile = mapZip.file(savedData.beatmapInfo._coverImageFilename);
         if (settings.load.imageCover && imageFile) {
             let imgBase64 = await imageFile.async('base64');
             uiHeader.setCoverImage('data:image;base64,' + imgBase64);
             flag.map.load.image = true;
         } else {
-            console.error(`${savedData._mapInfo._coverImageFilename} does not exists.`);
+            console.error(
+                `${savedData.beatmapInfo._coverImageFilename} does not exists.`
+            );
         }
 
-        savedData._contributors = [];
-        if (savedData._mapInfo?._customData?._contributors) {
-            for (const contr of savedData._mapInfo._customData._contributors) {
+        savedData.contributors = [];
+        if (savedData.beatmapInfo?._customData?._contributors) {
+            for (const contr of savedData.beatmapInfo._customData._contributors) {
                 console.log('loading contributor image ' + contr._name);
                 imageFile = mapZip.file(contr._iconPath);
                 if (settings.load.imageContributor && imageFile) {
@@ -206,14 +210,14 @@ export const loadMap = async (mapZip: JSZip) => {
                 } else {
                     console.error(`${contr._iconPath} does not exists.`);
                 }
-                savedData._contributors.push(contr);
+                savedData.contributors.push(contr);
             }
         }
 
         // load audio
         uiLoading.status('info', 'Loading audio...', 20.875);
         console.log('loading audio');
-        let audioFile = mapZip.file(savedData._mapInfo._songFilename);
+        let audioFile = mapZip.file(savedData.beatmapInfo._songFilename);
         if (settings.load.audio && audioFile) {
             let loaded = false;
             setTimeout(() => {
@@ -232,7 +236,7 @@ export const loadMap = async (mapZip: JSZip) => {
                 .then((buffer) => {
                     loaded = true;
                     let duration = buffer.duration;
-                    savedData._duration = duration;
+                    savedData.duration = duration;
                     uiHeader.setSongDuration(duration);
                     flag.map.load.audio = true;
                 })
@@ -242,13 +246,13 @@ export const loadMap = async (mapZip: JSZip) => {
                 });
         } else {
             uiHeader.setSongDuration();
-            console.error(`${savedData._mapInfo._songFilename} does not exist.`);
+            console.error(`${savedData.beatmapInfo._songFilename} does not exist.`);
         }
 
         // load diff map
         uiLoading.status('info', 'Parsing difficulty...', 70);
-        savedData._mapSet = [];
-        const mapSet = savedData._mapInfo._difficultyBeatmapSets;
+        savedData.beatmapSet = [];
+        const mapSet = savedData.beatmapInfo._difficultyBeatmapSets;
         for (let i = mapSet.length - 1; i >= 0; i--) {
             const mapDiff = mapSet[i]._difficultyBeatmaps;
             if (mapDiff.length === 0 || !mapDiff) {
@@ -274,12 +278,12 @@ export const loadMap = async (mapZip: JSZip) => {
                             `${mapSet[i]._beatmapCharacteristicName} ${diffInfo._difficulty} ${err}`
                         );
                     }
-                    savedData._mapSet?.push({
+                    savedData.beatmapSet?.push({
                         _mode: mapSet[i]._beatmapCharacteristicName,
                         _difficulty: diffInfo._difficulty,
                         _info: diffInfo,
                         _data: mapData,
-                        _environment: savedData._mapInfo._environmentName,
+                        _environment: savedData.beatmapInfo._environmentName,
                     });
                 } else {
                     console.error(
@@ -302,7 +306,7 @@ export const loadMap = async (mapZip: JSZip) => {
         uiLoading.status('info', 'Adding map difficulty stats...', 80);
         console.log('adding map stats');
         uiStats.populate();
-        uiInfo.populateContributors(savedData._contributors);
+        uiInfo.populateContributors(savedData.contributors);
 
         uiLoading.status('info', 'Analysing map...', 85);
         console.log('analysing map');
@@ -312,7 +316,7 @@ export const loadMap = async (mapZip: JSZip) => {
 
         uiLoading.status('info', 'Analysing difficulty...', 90);
         analyse.all();
-        uiTools.populateSelect(savedData._mapInfo);
+        uiTools.populateSelect(savedData.beatmapInfo);
         uiTools.displayOutputDifficulty();
 
         disableInput(false);

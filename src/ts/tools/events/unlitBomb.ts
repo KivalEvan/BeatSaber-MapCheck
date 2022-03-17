@@ -42,22 +42,22 @@ function inputCheckHandler(this: HTMLInputElement) {
 
 // omega scuffed clusterfuck help me pls im cryin rn
 const unlitBomb = (
-    notes: beatmap.v2.types.Note[],
-    events: beatmap.v2.types.Event[],
+    notes: beatmap.types.open.Note[],
+    events: beatmap.types.open.Event[],
     bpm: beatmap.bpm.BeatPerMinute,
     environment: beatmap.types.EnvironmentName
 ) => {
     if (!events.length) {
         return [];
     }
-    const arr: beatmap.v2.types.Note[] = [];
+    const arr: beatmap.types.open.Note[] = [];
     const eventsLight = events
         .filter(
             (ev) =>
                 beatmap.v2.event.isLightEvent(ev) &&
                 beatmap.environment.eventList[environment].includes(ev._type)
         )
-        .sort((a, b) => a._type - b._type) as beatmap.v2.types.EventLight[];
+        .sort((a, b) => a._type - b._type) as beatmap.types.open.EventLight[];
     const eventState: {
         [key: number]: {
             state: 'off' | 'fading' | 'on';

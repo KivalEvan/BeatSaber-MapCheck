@@ -83,17 +83,17 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetDat
         { warningThres: number; errorThres: number; allowedRot: number }
     >tool.input.params;
 
-    const lastNote: { [key: number]: beatmap.v2.types.Note } = {};
-    const swingNoteArray: { [key: number]: beatmap.v2.types.Note[] } = {
+    const lastNote: { [key: number]: beatmap.types.open.Note } = {};
+    const swingNoteArray: { [key: number]: beatmap.types.open.Note[] } = {
         0: [],
         1: [],
         3: [],
     };
-    const bombContext: { [key: number]: beatmap.v2.types.Note[] } = {
+    const bombContext: { [key: number]: beatmap.types.open.Note[] } = {
         0: [],
         1: [],
     };
-    const lastBombContext: { [key: number]: beatmap.v2.types.Note[] } = {
+    const lastBombContext: { [key: number]: beatmap.types.open.Note[] } = {
         0: [],
         1: [],
     };
@@ -107,7 +107,7 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetDat
         error: [],
     };
 
-    const arr: beatmap.v2.types.Note[] = [];
+    const arr: beatmap.types.open.Note[] = [];
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         if (beatmap.v2.note.isNote(note) && lastNote[note._type]) {

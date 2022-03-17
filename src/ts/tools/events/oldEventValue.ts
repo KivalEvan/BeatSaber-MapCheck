@@ -43,7 +43,7 @@ function inputCheckHandler(this: HTMLInputElement) {
 function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
     const { _events: events } = mapSet._data;
 
-    const arr: beatmap.v2.types.Event[] = [];
+    const arr: beatmap.types.open.Event[] = [];
     if (beatmap.v2.version.compare(mapSet._data._version, 'difficulty') === 'old') {
         for (let i = events.length - 1; i >= 0; i--) {
             if (beatmap.v2.event.isLightEvent(events[i]) && events[i]._value === 4) {

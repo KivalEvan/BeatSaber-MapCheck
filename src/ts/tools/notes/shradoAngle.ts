@@ -132,15 +132,15 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetDat
     );
     const maxTime = bpm.toBeatTime(temp) + 0.001;
 
-    const lastNote: { [key: number]: beatmap.v2.types.Note } = {};
+    const lastNote: { [key: number]: beatmap.types.open.Note } = {};
     const lastNoteDirection: { [key: number]: number } = {};
-    const startNoteDot: { [key: number]: beatmap.v2.types.Note | null } = {};
-    const swingNoteArray: { [key: number]: beatmap.v2.types.Note[] } = {
+    const startNoteDot: { [key: number]: beatmap.types.open.Note | null } = {};
+    const swingNoteArray: { [key: number]: beatmap.types.open.Note[] } = {
         0: [],
         1: [],
         3: [],
     };
-    const arr: beatmap.v2.types.Note[] = [];
+    const arr: beatmap.types.open.Note[] = [];
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         if (beatmap.v2.note.isNote(note) && lastNote[note._type]) {
@@ -187,7 +187,7 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetDat
                     ) &&
                     note._time - lastNote[note._type]._time <= maxTime
                 ) {
-                    arr.push(startNoteDot[note._type] as beatmap.v2.types.Note);
+                    arr.push(startNoteDot[note._type] as beatmap.types.open.Note);
                     startNoteDot[note._type] = null;
                 }
                 if (note._cutDirection !== 8) {

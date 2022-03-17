@@ -1,7 +1,10 @@
-import { EnvironmentAllName, EnvironmentScheme } from './types/environment';
+import {
+    EnvironmentAllName,
+    EnvironmentScheme,
+} from '../../types/beatmap/shared/environment';
 
 /** Color scheme definition. */
-export const colorScheme: Readonly<EnvironmentScheme> = {
+export const ColorScheme: Readonly<EnvironmentScheme> = {
     'Default Custom': {
         _colorLeft: {
             r: 0.7529412,
@@ -568,6 +571,44 @@ export const colorScheme: Readonly<EnvironmentScheme> = {
             b: 1,
         },
     },
+    // FIXME: unknown
+    Weave: {
+        _colorLeft: {
+            r: 0.65882355,
+            g: 0.1254902,
+            b: 0.1254902,
+        },
+        _colorRight: {
+            r: 0.28235295,
+            g: 0.28235295,
+            b: 0.28235295,
+        },
+        _envColorLeft: {
+            r: 0.65882355,
+            g: 0.1254902,
+            b: 0.1254902,
+        },
+        _envColorRight: {
+            r: 0.47058824,
+            g: 0.47058824,
+            b: 0.47058824,
+        },
+        _envColorLeftBoost: {
+            r: 0.50196081,
+            g: 0,
+            b: 0,
+        },
+        _envColorRightBoost: {
+            r: 0.49244517,
+            g: 0,
+            b: 0.53725493,
+        },
+        _obstacleColor: {
+            r: 0.25098041,
+            g: 0.25098041,
+            b: 0.25098041,
+        },
+    },
     'Glass Desert': {
         _colorLeft: {
             r: 0.6792453,
@@ -598,7 +639,7 @@ export const colorScheme: Readonly<EnvironmentScheme> = {
 };
 
 /** List of available event type in environment. */
-export const eventList: Readonly<Record<EnvironmentAllName, number[]>> = {
+export const EventList: Readonly<Record<EnvironmentAllName, number[]>> = {
     DefaultEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
     OriginsEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
     Origins: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
@@ -624,11 +665,12 @@ export const eventList: Readonly<Record<EnvironmentAllName, number[]>> = {
     HalloweenEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
     GagaEnvironment: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 16, 17],
     GlassDesertEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
+    WeaveEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
 };
 
 // very readable code :+1:
 // should predefine it for performance but it might be longer and hard to trace
-export const lightIDList: Readonly<
+export const LightIDList: Readonly<
     Record<EnvironmentAllName, Partial<{ [key: number]: number[] }>>
 > = {
     DefaultEnvironment: {
@@ -800,6 +842,7 @@ export const lightIDList: Readonly<
         3: Array.from(Array(23), (_, i) => i + 1),
         4: Array.from(Array(66), (_, i) => i + 1),
     },
+    // FIXME: unknown
     GagaEnvironment: {
         0: Array.from(Array(2), (_, i) => i + 1),
         1: Array.from(Array(66), (_, i) => i + 1),
@@ -816,5 +859,17 @@ export const lightIDList: Readonly<
         1: Array.from(Array(8), (_, i) => i + 1),
         2: Array.from(Array(10), (_, i) => i + 1),
         3: Array.from(Array(10), (_, i) => i + 1),
+    },
+    // FIXME: unknown
+    WeaveEnvironment: {
+        0: Array.from(Array(2), (_, i) => i + 1),
+        1: Array.from(Array(66), (_, i) => i + 1),
+        2: Array.from(Array(23), (_, i) => i + 1),
+        3: Array.from(Array(23), (_, i) => i + 1),
+        4: Array.from(Array(66), (_, i) => i + 1),
+        6: Array.from(Array(24), (_, i) => i + 1),
+        7: Array.from(Array(24), (_, i) => i + 1),
+        10: Array.from(Array(24), (_, i) => i + 1),
+        11: Array.from(Array(24), (_, i) => i + 1),
     },
 };

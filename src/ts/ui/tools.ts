@@ -5,6 +5,9 @@ import * as analyse from '../tools/analyse';
 import * as uiLoading from './loading';
 import { removeOptions } from '../utils';
 import { setDiffInfoTable } from './information';
+import { DifficultyRename } from '../beatmap';
+import { CharacteristicRename } from '../beatmap/shared/characteristic';
+import { CharacteristicName, DifficultyName, IInfoData, IInfoSetData } from '../types';
 
 const logPrefix = 'UI Tools: ';
 
@@ -54,7 +57,7 @@ export const displayOutputGeneral = (): void => {
     if (!htmlToolsOutputGeneral) {
         throw new Error(logPrefix + 'output general is missing');
     }
-    const analysis = savedData._analysis?.general;
+    const analysis = savedData.analysis?.general;
     if (!analysis) {
         htmlToolsOutputGeneral.textContent =
             'ERROR: could not find analysis for general';
@@ -72,12 +75,12 @@ export const displayOutputGeneral = (): void => {
 };
 
 export const displayOutputDifficulty = (
-    mode?: beatmap.types.CharacteristicName,
-    difficulty?: beatmap.types.DifficultyName
+    mode?: CharacteristicName,
+    difficulty?: DifficultyName
 ): void => {
     if (!mode && !difficulty) {
-        mode = htmlToolsSelectMode[0].value as beatmap.types.CharacteristicName;
-        difficulty = htmlToolsSelectDifficulty[0].value as beatmap.types.DifficultyName;
+        mode = htmlToolsSelectMode[0].value as CharacteristicName;
+        difficulty = htmlToolsSelectDifficulty[0].value as DifficultyName;
     }
     if (!mode || !difficulty) {
         throw new Error(logPrefix + 'something went wrong!');
@@ -86,7 +89,7 @@ export const displayOutputDifficulty = (
         throw new Error(logPrefix + 'output difficulty is missing');
     }
     htmlToolsOutputDifficulty.innerHTML = '';
-    const analysis = savedData._analysis?.mapSet.find(
+    const analysis = savedData.analysis?.mapSet.find(
         (set) => set.difficulty === difficulty && set.mode === mode
     );
     if (!analysis) {
@@ -109,7 +112,7 @@ export const setDifficultyLabel = (str: string): void => {
     htmlToolsDifficultyLabel.forEach((elem) => (elem.textContent = str));
 };
 
-const populateSelectDiff = (mapSet?: beatmap.types.InfoSetData): void => {
+const populateSelectDiff = (mapSet?: IInfoSetData): void => {
     if (!mapSet) {
         return;
     }
@@ -124,15 +127,15 @@ const populateSelectDiff = (mapSet?: beatmap.types.InfoSetData): void => {
             const optDiff = document.createElement('option');
             optDiff.value = diff._difficulty;
             optDiff.textContent =
-                beatmap.types.DifficultyRename[diff._difficulty] +
+                DifficultyRename[diff._difficulty] +
                 (diff._customData?._difficultyLabel
                     ? ' -- ' + diff._customData?._difficultyLabel
                     : '');
             if (first) {
-                const diffData = savedData._mapSet?.find(
+                const diffData = savedData.beatmapSet?.find(
                     (el) =>
-                        el._difficulty === diff._difficulty &&
-                        el._mode === mapSet._beatmapCharacteristicName
+                        el.difficulty === diff._difficulty &&
+                        el.characteristic === mapSet._beatmapCharacteristicName
                 );
                 if (!diffData) {
                     throw new Error('missing _mapSetData');
@@ -140,7 +143,7 @@ const populateSelectDiff = (mapSet?: beatmap.types.InfoSetData): void => {
                 setDiffInfoTable(diffData);
                 setDifficultyLabel(
                     diff._customData?._difficultyLabel ||
-                        beatmap.types.DifficultyRename[diff._difficulty]
+                        DifficultyRename[diff._difficulty]
                 );
                 displayOutputDifficulty(
                     mapSet._beatmapCharacteristicName,
@@ -153,7 +156,7 @@ const populateSelectDiff = (mapSet?: beatmap.types.InfoSetData): void => {
     });
 };
 
-export const populateSelect = (mapInfo?: beatmap.types.InfoData): void => {
+export const populateSelect = (mapInfo?: IInfoData): void => {
     if (!mapInfo) {
         htmlToolsSelectMode.forEach((elem) => removeOptions(elem));
         htmlToolsSelectDifficulty.forEach((elem) => removeOptions(elem));
@@ -164,8 +167,7 @@ export const populateSelect = (mapInfo?: beatmap.types.InfoData): void => {
         htmlToolsSelectMode.forEach((elem) => {
             const optMode = document.createElement('option');
             optMode.value = mode._beatmapCharacteristicName;
-            optMode.textContent =
-                beatmap.types.CharacteristicRename[mode._beatmapCharacteristicName];
+            optMode.textContent = CharacteristicRename[mode._beatmapCharacteristicName];
             elem.add(optMode);
         });
         if (first) {
@@ -176,11 +178,11 @@ export const populateSelect = (mapInfo?: beatmap.types.InfoData): void => {
 };
 
 export const adjustTime = (): void => {
-    const mapInfo = savedData._mapInfo;
+    const mapInfo = savedData.beatmapInfo;
     if (!mapInfo) {
         throw new Error(logPrefix + 'could not find map info');
     }
-    const bpm = beatmap.bpm.create(mapInfo._beatsPerMinute);
+    const bpm = beatmap.BeatPerMinute.create(mapInfo._beatsPerMinute);
     analyse.adjustTime(bpm);
 };
 
@@ -191,7 +193,7 @@ function selectModeHandler(ev: Event): void {
             elem.value = target.value;
         }
     });
-    const mode = savedData._mapInfo?._difficultyBeatmapSets.find(
+    const mode = savedData.beatmapInfo?._difficultyBeatmapSets.find(
         (elem) => elem._beatmapCharacteristicName === target.value
     );
     populateSelectDiff(mode);
@@ -204,33 +206,30 @@ function selectDifficultyHandler(ev: Event): void {
             elem.value = target.value;
         }
     });
-    const mode = savedData._mapInfo?._difficultyBeatmapSets.find(
+    const mode = savedData.beatmapInfo?._difficultyBeatmapSets.find(
         (elem) => elem._beatmapCharacteristicName === htmlToolsSelectMode.item(0).value
     );
     if (!mode) {
         throw new Error('aaaaaaaaaaaaaaaaaaa');
     }
-    const diff = savedData._mapSet?.find(
+    const diff = savedData.beatmapSet?.find(
         (elem) =>
-            elem._difficulty === target.value &&
-            elem._mode === mode._beatmapCharacteristicName
+            elem.difficulty === target.value &&
+            elem.characteristic === mode._beatmapCharacteristicName
     );
     if (diff) {
         setDiffInfoTable(diff);
         setDifficultyLabel(
-            diff._info?._customData?._difficultyLabel ||
-                beatmap.types.DifficultyRename[
-                    target.value as keyof typeof beatmap.types.DifficultyRename
-                ]
+            diff.info?._customData?._difficultyLabel ||
+                DifficultyRename[target.value as keyof typeof DifficultyRename]
         );
-        displayOutputDifficulty(diff._mode, diff._difficulty);
+        displayOutputDifficulty(diff.characteristic, diff.difficulty);
     }
 }
 
 function applyThisHandler(): void {
-    const mode = htmlToolsSelectMode[0].value as beatmap.types.CharacteristicName;
-    const difficulty = htmlToolsSelectDifficulty[0]
-        .value as beatmap.types.DifficultyName;
+    const mode = htmlToolsSelectMode[0].value as CharacteristicName;
+    const difficulty = htmlToolsSelectDifficulty[0].value as DifficultyName;
     if (!mode || !difficulty) {
         throw new Error(logPrefix + 'mode/difficulty does not exist');
     }
@@ -241,9 +240,8 @@ function applyThisHandler(): void {
 }
 
 function applyAllHandler(): void {
-    const mode = htmlToolsSelectMode[0].value as beatmap.types.CharacteristicName;
-    const difficulty = htmlToolsSelectDifficulty[0]
-        .value as beatmap.types.DifficultyName;
+    const mode = htmlToolsSelectMode[0].value as CharacteristicName;
+    const difficulty = htmlToolsSelectDifficulty[0].value as DifficultyName;
     if (!mode || !difficulty) {
         throw new Error(logPrefix + 'mode/difficulty does not exist');
     }

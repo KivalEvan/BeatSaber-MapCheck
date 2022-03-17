@@ -47,8 +47,8 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetDat
     const { _bpm: bpm } = mapSettings;
     const { minDur: temp } = <{ minDur: number }>tool.input.params;
     const minDur = bpm.toBeatTime(temp);
-    const arr: beatmap.v2.types.Obstacle[] = [];
-    let obstacleLFull: beatmap.v2.types.Obstacle = {
+    const arr: beatmap.types.open.Obstacle[] = [];
+    let obstacleLFull: beatmap.types.open.Obstacle = {
         _time: 0,
         _duration: 0,
         _lineIndex: 0,
@@ -57,7 +57,7 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetDat
         _width: 0,
         _height: 0,
     };
-    let obstacleRFull: beatmap.v2.types.Obstacle = {
+    let obstacleRFull: beatmap.types.open.Obstacle = {
         _time: 0,
         _duration: 0,
         _lineIndex: 0,
@@ -66,7 +66,7 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetDat
         _width: 0,
         _height: 0,
     };
-    let obstacleLHalf: beatmap.v2.types.Obstacle = {
+    let obstacleLHalf: beatmap.types.open.Obstacle = {
         _time: 0,
         _duration: 0,
         _lineIndex: 0,
@@ -75,7 +75,7 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetDat
         _width: 0,
         _height: 0,
     };
-    let obstacleRHalf: beatmap.v2.types.Obstacle = {
+    let obstacleRHalf: beatmap.types.open.Obstacle = {
         _time: 0,
         _duration: 0,
         _lineIndex: 0,

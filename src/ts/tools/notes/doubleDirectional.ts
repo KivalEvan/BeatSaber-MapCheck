@@ -43,16 +43,16 @@ function inputCheckHandler(this: HTMLInputElement) {
 function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
     const { _bpm: bpm } = mapSettings;
     const { _notes: notes } = mapSet._data;
-    const lastNote: { [key: number]: beatmap.v2.types.Note } = {};
+    const lastNote: { [key: number]: beatmap.types.open.Note } = {};
     const lastNoteAngle: { [key: number]: number } = {};
-    const startNoteDot: { [key: number]: beatmap.v2.types.Note | null } = {};
-    const swingNoteArray: { [key: number]: beatmap.v2.types.Note[] } = {
+    const startNoteDot: { [key: number]: beatmap.types.open.Note | null } = {};
+    const swingNoteArray: { [key: number]: beatmap.types.open.Note[] } = {
         0: [],
         1: [],
         3: [],
     };
 
-    const arr: beatmap.v2.types.Note[] = [];
+    const arr: beatmap.types.open.Note[] = [];
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         if (beatmap.v2.note.isNote(note) && lastNote[note._type]) {

@@ -44,7 +44,7 @@ function checkNote(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSe
     const { _bpm: bpm } = mapSettings;
     const { _notes: notes } = mapSet._data;
 
-    const arr: beatmap.v2.types.Note[] = [];
+    const arr: beatmap.types.open.Note[] = [];
     // to avoid multiple of stack popping up, ignore anything within this time
     let lastTime: number = 0;
     for (let i = 0, len = notes.length; i < len; i++) {
@@ -75,7 +75,7 @@ function checkBomb(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSe
     const { _bpm: bpm, _njs: njs } = mapSettings;
     const { _notes: notes } = mapSet._data;
 
-    const arr: beatmap.v2.types.Note[] = [];
+    const arr: beatmap.types.open.Note[] = [];
     for (let i = 0, len = notes.length; i < len; i++) {
         if (notes[i]._type !== 3) {
             continue;

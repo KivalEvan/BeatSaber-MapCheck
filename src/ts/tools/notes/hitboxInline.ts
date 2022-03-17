@@ -45,14 +45,14 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetDat
     const { _bpm: bpm, _njs: njs } = mapSettings;
     const { _notes: notes } = mapSet._data;
 
-    const lastNote: { [key: number]: beatmap.v2.types.Note } = {};
-    const swingNoteArray: { [key: number]: beatmap.v2.types.Note[] } = {
+    const lastNote: { [key: number]: beatmap.types.open.Note } = {};
+    const swingNoteArray: { [key: number]: beatmap.types.open.Note[] } = {
         0: [],
         1: [],
         3: [],
     };
 
-    const arr: beatmap.v2.types.Note[] = [];
+    const arr: beatmap.types.open.Note[] = [];
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         if (beatmap.v2.note.isNote(note) && lastNote[note._type]) {

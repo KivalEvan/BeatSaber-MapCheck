@@ -1,60 +1,19 @@
 // TODO: validate settings
-import { Theme } from './ui/theme';
 
-type SettingsFlag = { [key: string]: boolean };
+import { ISettingsProperty } from './types/mapcheck/settings';
 
-type BeatNumbering = 'beattime' | 'jsontime' | 'realtime';
-
-interface SettingsProperty {
-    _load: SettingsPropertyLoad;
-    _sorting: boolean;
-    _beatNumbering: BeatNumbering;
-    _rounding: number;
-    _theme: Theme;
-    _onLoad: SettingsPropertyOnLoad;
-    _show: SettingsPropertyShow;
-}
-
-export enum SettingsLoadRename {
-    audio = 'Audio',
-    imageCover = 'Cover Image',
-    imageContributor = 'Contributor Image',
-}
-interface SettingsPropertyLoad extends SettingsFlag {
-    audio: boolean;
-    imageCover: boolean;
-    imageContributor: boolean;
-}
-
-export enum SettingsShowRename {
-    info = 'Information',
-    tools = 'Tools',
-    stats = 'Stats',
-    settings = 'Settings',
-}
-interface SettingsPropertyShow extends SettingsFlag {
-    info: boolean;
-    tools: boolean;
-    stats: boolean;
-    settings: boolean;
-}
-
-interface SettingsPropertyOnLoad extends SettingsFlag {
-    stats: boolean;
-}
-
-const settingsDefault: SettingsProperty = {
-    _load: {
+const settingsDefault: ISettingsProperty = {
+    load: {
         audio: true,
         imageCover: true,
         imageContributor: true,
     },
-    _sorting: true,
-    _beatNumbering: 'beattime',
-    _rounding: 3,
-    _theme: 'Dark',
-    _onLoad: { stats: false },
-    _show: {
+    sorting: true,
+    beatNumbering: 'beattime',
+    rounding: 3,
+    theme: 'Dark',
+    onLoad: { stats: false },
+    show: {
         info: false,
         tools: false,
         stats: false,
@@ -63,44 +22,44 @@ const settingsDefault: SettingsProperty = {
 };
 
 class Settings {
-    private _property: SettingsProperty = JSON.parse(JSON.stringify(settingsDefault));
+    private _property: ISettingsProperty = JSON.parse(JSON.stringify(settingsDefault));
 
     constructor() {
         this.init();
     }
 
-    get load(): SettingsPropertyLoad {
-        return this._property._load;
+    get load(): ISettingsProperty['load'] {
+        return this._property.load;
     }
     get sorting(): boolean {
-        return this._property._sorting;
+        return this._property.sorting;
     }
     set sorting(val: boolean) {
-        this._property._sorting = val;
+        this._property.sorting = val;
     }
-    get beatNumbering(): BeatNumbering {
-        return this._property._beatNumbering;
+    get beatNumbering(): ISettingsProperty['beatNumbering'] {
+        return this._property.beatNumbering;
     }
-    set beatNumbering(val: BeatNumbering) {
-        this._property._beatNumbering = val;
+    set beatNumbering(val: ISettingsProperty['beatNumbering']) {
+        this._property.beatNumbering = val;
     }
     get rounding(): number {
-        return this._property._rounding;
+        return this._property.rounding;
     }
     set rounding(val: number) {
-        this._property._rounding = val;
+        this._property.rounding = val;
     }
-    get theme(): Theme {
-        return this._property._theme;
+    get theme(): ISettingsProperty['theme'] {
+        return this._property.theme;
     }
-    set theme(val: Theme) {
-        this._property._theme = val;
+    set theme(val: ISettingsProperty['theme']) {
+        this._property.theme = val;
     }
     get onLoad() {
-        return this._property._onLoad;
+        return this._property.onLoad;
     }
-    get show(): SettingsPropertyShow {
-        return this._property._show;
+    get show(): ISettingsProperty['show'] {
+        return this._property.show;
     }
 
     private stringify = (): string => {
