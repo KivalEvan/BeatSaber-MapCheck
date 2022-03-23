@@ -1,7 +1,7 @@
-import * as beatmap from '../../beatmap';
-import { round } from '../../utils';
-import { BeatmapSettings, Tool } from '../template';
+import { Tool, ToolArgs } from '../../types/mapcheck';
 import { create as selectCreate } from '../../ui/select';
+import { round } from '../../utils';
+import * as beatmap from '../../beatmap';
 
 const htmlContainer = document.createElement('div');
 const htmlInputCheck = document.createElement('input');
@@ -66,7 +66,7 @@ const tool: Tool = {
     output: {
         html: null,
     },
-    run: run,
+    run,
 };
 
 function inputCheckHandler(this: HTMLInputElement) {
@@ -76,48 +76,43 @@ function inputCheckHandler(this: HTMLInputElement) {
 function inputSelectRotateHandler(this: HTMLInputElement) {}
 function inputSelectParityHandler(this: HTMLInputElement) {}
 
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
-    const { _bpm: bpm } = mapSettings;
-    const { _notes: notes } = mapSet._data;
+function check(map: ToolArgs) {
+    const { bpm } = mapSettings;
+    const { colorNotes } = map.difficulty.data;
     const { warningThres, errorThres, allowedRot } = <
         { warningThres: number; errorThres: number; allowedRot: number }
     >tool.input.params;
 
-    const lastNote: { [key: number]: beatmap.types.open.Note } = {};
-    const swingNoteArray: { [key: number]: beatmap.types.open.Note[] } = {
+    const lastNote: { [key: number]: beatmap.v3.ColorNote } = {};
+    const swingNoteArray: { [key: number]: beatmap.v3.ColorNote[] } = {
         0: [],
         1: [],
         3: [],
     };
-    const bombContext: { [key: number]: beatmap.types.open.Note[] } = {
+    const bombContext: { [key: number]: beatmap.v3.ColorNote[] } = {
         0: [],
         1: [],
     };
-    const lastBombContext: { [key: number]: beatmap.types.open.Note[] } = {
+    const lastBombContext: { [key: number]: beatmap.v3.ColorNote[] } = {
         0: [],
         1: [],
     };
 
-    const swingParity: { [key: number]: beatmap.v2.parity.Parity } = {
-        0: new beatmap.v2.parity.Parity(notes, 0, warningThres, errorThres, allowedRot),
-        1: new beatmap.v2.parity.Parity(notes, 1, warningThres, errorThres, allowedRot),
+    const swingParity: { [key: number]: parity.Parity } = {
+        0: new parity.Parity(notes, 0, warningThres, errorThres, allowedRot),
+        1: new parity.Parity(notes, 1, warningThres, errorThres, allowedRot),
     };
     const parity: { warning: number[]; error: number[] } = {
         warning: [],
         error: [],
     };
 
-    const arr: beatmap.types.open.Note[] = [];
+    const arr: beatmap.v3.ColorNote[] = [];
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
-        if (beatmap.v2.note.isNote(note) && lastNote[note._type]) {
+        if (note.isNote(note) && lastNote[note._type]) {
             if (
-                beatmap.v2.swing.next(
-                    note,
-                    lastNote[note._type],
-                    bpm,
-                    swingNoteArray[note._type]
-                )
+                swing.next(note, lastNote[note._type], bpm, swingNoteArray[note._type])
             ) {
                 // check previous swing parity
                 const parityStatus = swingParity[note._type].check(
@@ -172,14 +167,8 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetDat
     return parity;
 }
 
-function run(
-    mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.BeatmapSetData
-): void {
-    if (!mapSet) {
-        throw new Error('something went wrong!');
-    }
-    const result = check(mapSettings, mapSet);
+function run(map: ToolArgs) {
+    const result = check(map);
 
     const htmlString: string[] = [];
     if (result.warning.length) {
@@ -189,7 +178,7 @@ function run(
                     return !i || x !== ary[i - 1];
                 })
                 .sort((a, b) => a - b)
-                .map((n) => round(mapSettings._bpm.adjustTime(n), 3))
+                .map((n) => round(map.settings.bpm.adjustTime(n), 3))
                 .join(', ')}`
         );
     }
@@ -200,7 +189,7 @@ function run(
                     return !i || x !== ary[i - 1];
                 })
                 .sort((a, b) => a - b)
-                .map((n) => round(mapSettings._bpm.adjustTime(n), 3))
+                .map((n) => round(map.settings.bpm.adjustTime(n), 3))
                 .join(', ')}`
         );
     }

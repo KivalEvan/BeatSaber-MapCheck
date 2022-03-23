@@ -25,9 +25,9 @@
     "jszip": "^3.7.1"
   },
   "devDependencies": {
-    "@types/node": "^16.11.21",
-    "sass": "^1.49.0",
-    "typescript": "^4.5.5",
-    "vite": "^2.7.13"
+    "@types/node": "^16.11.26",
+    "sass": "^1.49.9",
+    "typescript": "^4.6.2",
+    "vite": "^2.8.6"
   }
 }

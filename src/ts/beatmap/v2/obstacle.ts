@@ -32,7 +32,7 @@ export class Obstacle extends BeatmapObject<IObstacle> {
                     _type: n._type ?? Obstacle.default._type,
                     _lineIndex: n._lineIndex ?? Obstacle.default._lineIndex,
                     _lineLayer: n._lineLayer ?? Obstacle.default._lineLayer,
-                    _duration: n._width ?? Obstacle.default._duration,
+                    _duration: n._duration ?? Obstacle.default._duration,
                     _width: n._width ?? Obstacle.default._width,
                     _height: n._height ?? Obstacle.default._height,
                     _customData: n._customData ?? Obstacle.default._customData(),

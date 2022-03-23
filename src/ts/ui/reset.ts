@@ -1,4 +1,4 @@
-import { clearData } from '../savedData';
+import SavedData from '../savedData';
 import * as uiLoading from './loading';
 import * as uiHeader from './header';
 import * as uiInfo from './information';
@@ -15,7 +15,7 @@ function resetHandler(): void {
     uiInfo.reset();
     uiTools.reset();
     uiStats.reset();
-    clearData();
+    SavedData.clear();
 }
 
 export default resetHandler;

@@ -5,5 +5,4 @@ export * from './difficulty';
 export * from './easings';
 export * from './environment';
 export * from './info';
-export * from './swing';
 export * from './version';

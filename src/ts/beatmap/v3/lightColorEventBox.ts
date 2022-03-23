@@ -1,16 +1,17 @@
 import { ILightColorEventBox } from '../../types/beatmap/v3/lightColorEventBox';
 import { DeepPartial, ObjectToReturn } from '../../types/utils';
 import { EventBox } from './eventBox';
+import { IndexFilter } from './indexFilter';
 import { LightColorBase } from './lightColorBase';
 
 export class LightColorEventBox extends EventBox<ILightColorEventBox> {
     static default: ObjectToReturn<Required<ILightColorEventBox>> = {
         f: () => {
             return {
-                f: 1,
-                p: 1,
-                t: 1,
-                r: 0,
+                f: IndexFilter.default.f,
+                p: IndexFilter.default.p,
+                t: IndexFilter.default.t,
+                r: IndexFilter.default.r,
             };
         },
         w: 0,
@@ -25,6 +26,11 @@ export class LightColorEventBox extends EventBox<ILightColorEventBox> {
     private constructor(lightColorEventBox: Required<ILightColorEventBox>) {
         super(lightColorEventBox);
         this.e = lightColorEventBox.e.map((e) => LightColorBase.create(e));
+        const lastTime = Math.max(...this.e.map((e) => e.time));
+        if (this.beatDistributionType === 2) {
+            this.beatDistribution =
+                this.beatDistribution < lastTime ? lastTime : this.beatDistribution;
+        }
     }
 
     static create(): LightColorEventBox;

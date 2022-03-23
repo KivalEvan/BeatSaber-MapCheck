@@ -1,10 +1,6 @@
 import * as uiLoading from './loading';
-import {
-    downloadFromID,
-    downloadFromURL,
-    downloadFromHash,
-    extractZip,
-} from '../loadMap';
+import { downloadFromID, downloadFromURL, downloadFromHash } from '../download';
+import { extractZip } from '../extract';
 
 const logPrefix = 'UI Intro: ';
 

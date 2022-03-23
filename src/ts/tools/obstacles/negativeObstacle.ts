@@ -1,5 +1,4 @@
-import * as beatmap from '../../beatmap';
-import { BeatmapSettings, Tool } from '../template';
+import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
 
 const htmlContainer = document.createElement('div');
@@ -33,37 +32,31 @@ const tool: Tool = {
     output: {
         html: null,
     },
-    run: run,
+    run,
 };
 
 function inputCheckHandler(this: HTMLInputElement) {
     tool.input.enabled = this.checked;
 }
 
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
-    const { _obstacles: obstacles } = mapSet._data;
+function check(map: ToolArgs) {
+    const { obstacles } = map.difficulty.data;
     if (
-        mapSet._info._customData?._requirements?.includes('Mapping Extensions') ||
-        mapSet._info._customData?._requirements?.includes('Noodle Extensions')
+        map.info._customData?._requirements?.includes('Mapping Extensions') ||
+        map.info._customData?._requirements?.includes('Noodle Extensions')
     ) {
         return [];
     }
-    return obstacles.filter((o) => o._width < 0 || o._duration < 0).map((o) => o._time);
+    return obstacles.filter((o) => o.hasNegative()).map((o) => o.time);
 }
 
-function run(
-    mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.BeatmapSetData
-): void {
-    if (!mapSet) {
-        throw new Error('something went wrong!');
-    }
-    const result = check(mapSettings, mapSet);
+function run(map: ToolArgs) {
+    const result = check(map);
 
     if (result.length) {
         const htmlResult = document.createElement('div');
         htmlResult.innerHTML = `<b>Negative obstacle [${result.length}]:</b> ${result
-            .map((n) => round(mapSettings._bpm.adjustTime(n), 3))
+            .map((n) => round(map.settings.bpm.adjustTime(n), 3))
             .join(', ')}`;
         tool.output.html = htmlResult;
     } else {

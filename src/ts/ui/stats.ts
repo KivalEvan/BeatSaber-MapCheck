@@ -10,7 +10,7 @@ import { CharacteristicRename } from '../beatmap/shared/characteristic';
 import { ColorNote } from '../beatmap/v3';
 import { IInfoData } from '../types';
 import { EventRename } from '../types/beatmap/v2';
-import { IBeatmapDataItem } from '../types/mapcheck';
+import { IBeatmapItem } from '../types/mapcheck';
 import { Obstacle } from '../beatmap/v3';
 
 const logPrefix = 'UI Stats: ';
@@ -20,7 +20,7 @@ const htmlStats = document.querySelector('#stats .accordion__collapsible');
 
 const createSettingsTable = (
     mapInfo: IInfoData,
-    mapData: IBeatmapDataItem
+    mapData: IBeatmapItem
 ): HTMLTableElement => {
     const bpm = BeatPerMinute.create(mapInfo._beatsPerMinute);
     const njs = NoteJumpSpeed.create(
@@ -59,7 +59,7 @@ const createSettingsTable = (
 
 const createNPSTable = (
     mapInfo: IInfoData,
-    mapData: IBeatmapDataItem
+    mapData: IBeatmapItem
 ): HTMLTableElement => {
     const bpm = BeatPerMinute.create(mapInfo._beatsPerMinute);
     const duration = savedData.duration || 0;
@@ -98,7 +98,7 @@ const createNPSTable = (
 
 const createSPSTable = (
     mapInfo: IInfoData,
-    mapData: IBeatmapDataItem
+    mapData: IBeatmapItem
 ): HTMLTableElement => {
     const bpm = BeatPerMinute.create(mapInfo._beatsPerMinute);
     const swingInfo = swing.info(mapData.data, bpm);
@@ -142,7 +142,7 @@ const createSPSTable = (
 
 const createNoteCountTable = (
     mapInfo: IInfoData,
-    mapData: IBeatmapDataItem
+    mapData: IBeatmapItem
 ): HTMLTableElement => {
     const noteCount = note.count(mapData.data._notes);
 
@@ -287,7 +287,7 @@ function notePlacementTableString(notes: ColorNote[]): string {
 
 const createNotePlacementTable = (
     mapInfo: IInfoData,
-    mapData: IBeatmapDataItem
+    mapData: IBeatmapItem
 ): HTMLTableElement => {
     const htmlSelect = uiSelect.create(
         `${prefix}table-select-placement-${mapData.mode}-${mapData.difficulty}`,
@@ -382,7 +382,7 @@ function noteAngleTableString(notes: ColorNote[]): string {
 
 const createNoteAngleTable = (
     mapInfo: IInfoData,
-    mapData: IBeatmapDataItem
+    mapData: IBeatmapItem
 ): HTMLTableElement => {
     const htmlSelect = uiSelect.create(
         `${prefix}table-select-angle-${mapData.mode}-${mapData.difficulty}`,
@@ -413,7 +413,7 @@ const createNoteAngleTable = (
 
 const createInfoTable = (
     mapInfo: IInfoData,
-    mapData: IBeatmapDataItem
+    mapData: IBeatmapItem
 ): HTMLTableElement => {
     const bpm = BeatPerMinute.create(mapInfo._beatsPerMinute);
     const noteCount = note.count(mapData.data._notes);
@@ -463,7 +463,7 @@ const createInfoTable = (
 
 const createEventCountTable = (
     mapInfo: IInfoData,
-    mapData: IBeatmapDataItem
+    mapData: IBeatmapItem
 ): HTMLTableElement => {
     const eventCount = event.count(mapData.data._events, mapData.environment);
     let chroma = 0;
@@ -519,7 +519,7 @@ const createEventCountTable = (
 
 const createObstacleCountTable = (
     mapInfo: IInfoData,
-    mapData: IBeatmapDataItem
+    mapData: IBeatmapItem
 ): HTMLTableElement => {
     const obstacleCount = Obstacle.count(mapData.data.obstacles);
 

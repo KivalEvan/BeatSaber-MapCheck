@@ -1,6 +1,6 @@
-import * as beatmap from '../../beatmap';
+import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
-import { BeatmapSettings, Tool } from '../template';
+import * as beatmap from '../../beatmap';
 
 const defaultPrec = [8, 6];
 
@@ -37,7 +37,7 @@ const tool: Tool = {
     output: {
         html: null,
     },
-    run: run,
+    run,
 };
 
 function inputPrecHandler(this: HTMLInputElement) {
@@ -49,14 +49,14 @@ function inputPrecHandler(this: HTMLInputElement) {
     this.value = tool.input.params.prec.join(' ');
 }
 
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
-    const { _bpm: bpm } = mapSettings;
-    const { _notes: notes } = mapSet._data;
+function check(map: ToolArgs) {
+    const { bpm } = mapSettings;
+    const { colorNotes } = map.difficulty.data;
     // god this hurt me, but typescript sees this as number instead of number[]
     const { prec } = <{ prec: number[] }>tool.input.params;
 
-    return beatmap.v2.swing
-        .getEffectiveBPMSwingNote(notes, bpm)
+    return swing
+        .getEffectiveBPMSwingNote(colorNotes, bpm)
         .map((n) => n._time)
         .filter((x, i, ary) => {
             return !i || x !== ary[i - 1];
@@ -74,19 +74,13 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetDat
         });
 }
 
-function run(
-    mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.BeatmapSetData
-): void {
-    if (!mapSet) {
-        throw new Error('something went wrong!');
-    }
-    const result = check(mapSettings, mapSet);
+function run(map: ToolArgs) {
+    const result = check(map);
 
     if (result.length) {
         const htmlResult = document.createElement('div');
         htmlResult.innerHTML = `<b>Off-beat precision [${result.length}]:</b> ${result
-            .map((n) => round(mapSettings._bpm.adjustTime(n), 3))
+            .map((n) => round(map.settings.bpm.adjustTime(n), 3))
             .join(', ')}`;
         tool.output.html = htmlResult;
     } else {

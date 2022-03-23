@@ -1,6 +1,7 @@
-import * as beatmap from '../../beatmap';
+import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
-import { BeatmapSettings, Tool } from '../template';
+import * as beatmap from '../../beatmap';
+import { EnvironmentName } from '../../types/beatmap/shared/environment';
 
 const htmlContainer = document.createElement('div');
 const htmlInputCheck = document.createElement('input');
@@ -33,7 +34,7 @@ const tool: Tool = {
     output: {
         html: null,
     },
-    run: run,
+    run,
 };
 
 function inputCheckHandler(this: HTMLInputElement) {
@@ -42,22 +43,21 @@ function inputCheckHandler(this: HTMLInputElement) {
 
 // omega scuffed clusterfuck help me pls im cryin rn
 const unlitBomb = (
-    notes: beatmap.types.open.Note[],
-    events: beatmap.types.open.Event[],
-    bpm: beatmap.bpm.BeatPerMinute,
-    environment: beatmap.types.EnvironmentName
+    bombs: beatmap.v3.BombNote[],
+    events: beatmap.v3.BasicEvent[],
+    bpm: beatmap.BeatPerMinute,
+    environment: EnvironmentName
 ) => {
     if (!events.length) {
         return [];
     }
-    const arr: beatmap.types.open.Note[] = [];
+    const arr: beatmap.v3.BombNote[] = [];
     const eventsLight = events
         .filter(
             (ev) =>
-                beatmap.v2.event.isLightEvent(ev) &&
-                beatmap.environment.eventList[environment].includes(ev._type)
+                ev.isLightEvent() && beatmap.EventList[environment].includes(ev.type)
         )
-        .sort((a, b) => a._type - b._type) as beatmap.types.open.EventLight[];
+        .sort((a, b) => a.type - b.type) as beatmap.v3.BasicEvent[];
     const eventState: {
         [key: number]: {
             state: 'off' | 'fading' | 'on';
@@ -78,71 +78,66 @@ const unlitBomb = (
     const eventLitTime: {
         [key: number]: [number, boolean][];
     } = {};
-    beatmap.environment.eventList[environment].forEach(
-        (e) => (eventLitTime[e] = [[0, false]])
-    );
+    beatmap.EventList[environment].forEach((e) => (eventLitTime[e] = [[0, false]]));
     const fadeTime = bpm.toBeatTime(1);
     const reactTime = bpm.toBeatTime(0.25);
     for (let i = 0, len = eventsLight.length; i < len; i++) {
         const ev = eventsLight[i];
-        if (
-            (beatmap.v2.event.isOn(ev) || beatmap.v2.event.isFlash(ev)) &&
-            eventState[ev._type].state !== 'on'
-        ) {
-            eventState[ev._type] = {
+        if ((ev.isOn() || ev.isFlash()) && eventState[ev.type].state !== 'on') {
+            eventState[ev.type] = {
                 state: 'on',
-                time: ev._time,
+                time: ev.time,
                 fadeTime: 0,
             };
-            const elt = eventLitTime[ev._type].find((e) => e[0] >= ev._time);
+            const elt = eventLitTime[ev.type].find((e) => e[0] >= ev.time);
             if (elt) {
-                elt[0] = ev._time;
+                elt[0] = ev.time;
                 elt[1] = true;
             } else {
-                eventLitTime[ev._type].push([ev._time, true]);
+                eventLitTime[ev.type].push([ev.time, true]);
             }
         }
-        if (beatmap.v2.event.isFade(ev)) {
-            eventState[ev._type] = {
+        if (ev.isFade()) {
+            eventState[ev.type] = {
                 state: 'off',
-                time: ev._time,
+                time: ev.time,
                 fadeTime: fadeTime,
             };
-            const elt = eventLitTime[ev._type].find((e) => e[0] >= ev._time);
+            const elt = eventLitTime[ev.type].find((e) => e[0] >= ev.time);
             if (elt) {
-                elt[0] = ev._time;
+                elt[0] = ev.time;
                 elt[1] = true;
             } else {
-                eventLitTime[ev._type].push([ev._time, true]);
+                eventLitTime[ev.type].push([ev.time, true]);
             }
-            eventLitTime[ev._type].push([ev._time + fadeTime, false]);
+            eventLitTime[ev.type].push([ev.time + fadeTime, false]);
         }
         if (
-            ((ev?._floatValue ?? 1) < 0.25 ||
-                beatmap.v2.event.isOff(ev) ||
-                (ev._customData?._color &&
-                    ((typeof ev._customData._color[3] === 'number' &&
-                        ev._customData._color[3] < 0.25) ||
+            ((ev?.floatValue ?? 1) < 0.25 ||
+                ev.isOff() ||
+                (ev.customData?._color &&
+                    ((typeof ev.customData._color[3] === 'number' &&
+                        ev.customData._color[3] < 0.25) ||
                         Math.max(
-                            ev._customData._color[0],
-                            ev._customData._color[1],
-                            ev._customData._color[2]
+                            ev.customData._color[0],
+                            ev.customData._color[1],
+                            ev.customData._color[2]
                         ) < 0.25))) &&
-            eventState[ev._type].state !== 'off'
+            eventState[ev.type].state !== 'off'
         ) {
-            eventState[ev._type] = {
+            eventState[ev.type] = {
                 state: 'off',
-                time: ev._time,
+                time: ev.time,
                 fadeTime:
-                    eventState[ev._type].state === 'on'
+                    eventState[ev.type].state === 'on'
                         ? reactTime
-                        : Math.min(reactTime, eventState[ev._type].fadeTime),
+                        : Math.min(reactTime, eventState[ev.type].fadeTime),
             };
-            eventLitTime[ev._type].push([
-                ev._time +
-                    (eventState[ev._type].state === 'on'
+            eventLitTime[ev.type].push([
+                ev.time +
+                    (eventState[ev.type].state === 'on'
                         ? reactTime
-                        : Math.min(reactTime, eventState[ev._type].fadeTime)),
+                        : Math.min(reactTime, eventState[ev.type].fadeTime)),
                 false,
             ]);
         }
@@ -150,15 +145,12 @@ const unlitBomb = (
     for (const el in eventLitTime) {
         eventLitTime[el].reverse();
     }
-    for (let i = 0, len = notes.length, isLit = false; i < len; i++) {
-        const note = notes[i];
-        if (!beatmap.v2.note.isBomb(note)) {
-            continue;
-        }
+    for (let i = 0, len = bombs.length, isLit = false; i < len; i++) {
+        const note = bombs[i];
         isLit = false;
         // find lit event by time
         for (const el in eventLitTime) {
-            const t = eventLitTime[el].find((e) => e[0] <= note._time);
+            const t = eventLitTime[el].find((e) => e[0] <= note.time);
             if (t) {
                 isLit = isLit || t[1];
             }
@@ -168,30 +160,24 @@ const unlitBomb = (
         }
     }
     return arr
-        .map((n) => n._time)
+        .map((n) => n.time)
         .filter(function (x, i, ary) {
             return !i || x !== ary[i - 1];
         });
 };
 
-function run(
-    mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.BeatmapSetData
-): void {
-    if (!mapSet) {
-        throw new Error('something went wrong!');
-    }
+function run(map: ToolArgs) {
     const result = unlitBomb(
-        mapSet._data._notes,
-        mapSet._data._events,
-        mapSettings._bpm,
-        mapSet._environment
+        map.difficulty.data.bombNotes,
+        map.difficulty.data.basicBeatmapEvents,
+        map.settings.bpm,
+        map.info._environmentName
     );
 
     if (result.length) {
         const htmlResult = document.createElement('div');
         htmlResult.innerHTML = `<b>Unlit bomb [${result.length}]:</b> ${result
-            .map((n) => round(mapSettings._bpm.adjustTime(n), 3))
+            .map((n) => round(map.settings.bpm.adjustTime(n), 3))
             .join(', ')}`;
         tool.output.html = htmlResult;
     } else {

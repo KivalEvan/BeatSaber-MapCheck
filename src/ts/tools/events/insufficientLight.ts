@@ -1,6 +1,5 @@
+import { Tool, ToolArgs } from '../../types/mapcheck';
 import * as beatmap from '../../beatmap';
-import { IBeatmapDataItem } from '../../types/mapcheck';
-import { BeatmapSettings, Tool } from '../template';
 
 const htmlContainer = document.createElement('div');
 const htmlInputCheck = document.createElement('input');
@@ -33,20 +32,17 @@ const tool: Tool = {
     output: {
         html: null,
     },
-    run: run,
+    run,
 };
 
 function inputCheckHandler(this: HTMLInputElement) {
     tool.input.enabled = this.checked;
 }
 
-const sufficientLight = (events: BasicEvent[]): boolean => {
+const sufficientLight = (events: beatmap.v3.BasicEvent[]): boolean => {
     let count = 0;
     for (let i = events.length - 1; i >= 0; i--) {
-        if (
-            beatmap.open.basicEvent.isLightEvent(events[i]) &&
-            !beatmap.open.basicEvent.isOff(events[i])
-        ) {
+        if (events[i].isLightEvent() && !events[i].isOff()) {
             count++;
             if (count > 10) {
                 return true;
@@ -56,14 +52,8 @@ const sufficientLight = (events: BasicEvent[]): boolean => {
     return false;
 };
 
-function run(
-    mapSettings: BeatmapSettings,
-    mapData?: IBeatmapDataItem
-): ReturnType<Tool['run']> {
-    if (!mapData) {
-        throw new Error('something went wrong!');
-    }
-    const result = sufficientLight(mapData._data._events);
+function run(map: ToolArgs) {
+    const result = sufficientLight(map.difficulty.data.basicBeatmapEvents);
 
     if (!result) {
         const htmlResult = document.createElement('div');

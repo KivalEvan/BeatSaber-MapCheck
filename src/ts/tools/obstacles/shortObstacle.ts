@@ -1,6 +1,6 @@
-import * as beatmap from '../../beatmap';
-import { BeatmapSettings, Tool } from '../template';
+import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
+import * as beatmap from '../../beatmap';
 
 const htmlContainer = document.createElement('div');
 const htmlInputCheck = document.createElement('input');
@@ -35,167 +35,135 @@ const tool: Tool = {
     output: {
         html: null,
     },
-    run: run,
+    run,
 };
 
 function inputCheckHandler(this: HTMLInputElement) {
     tool.input.enabled = this.checked;
 }
 
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
-    const { _obstacles: obstacles } = mapSet._data;
-    const { _bpm: bpm } = mapSettings;
+function check(map: ToolArgs) {
+    const { obstacles } = map.difficulty.data;
+    const { bpm } = map.settings;
     const { minDur: temp } = <{ minDur: number }>tool.input.params;
     const minDur = bpm.toBeatTime(temp);
-    const arr: beatmap.types.open.Obstacle[] = [];
-    let obstacleLFull: beatmap.types.open.Obstacle = {
-        _time: 0,
-        _duration: 0,
-        _lineIndex: 0,
-        _lineLayer: 0,
-        _type: 0,
-        _width: 0,
-        _height: 0,
-    };
-    let obstacleRFull: beatmap.types.open.Obstacle = {
-        _time: 0,
-        _duration: 0,
-        _lineIndex: 0,
-        _lineLayer: 0,
-        _type: 0,
-        _width: 0,
-        _height: 0,
-    };
-    let obstacleLHalf: beatmap.types.open.Obstacle = {
-        _time: 0,
-        _duration: 0,
-        _lineIndex: 0,
-        _lineLayer: 0,
-        _type: 0,
-        _width: 0,
-        _height: 0,
-    };
-    let obstacleRHalf: beatmap.types.open.Obstacle = {
-        _time: 0,
-        _duration: 0,
-        _lineIndex: 0,
-        _lineLayer: 0,
-        _type: 0,
-        _width: 0,
-        _height: 0,
-    };
+    const arr: beatmap.v3.Obstacle[] = [];
+    let obstacleLFull: beatmap.v3.Obstacle = beatmap.v3.Obstacle.create();
+    let obstacleRFull: beatmap.v3.Obstacle = beatmap.v3.Obstacle.create();
+    let obstacleLHalf: beatmap.v3.Obstacle = beatmap.v3.Obstacle.create();
+    let obstacleRHalf: beatmap.v3.Obstacle = beatmap.v3.Obstacle.create();
     obstacles.forEach((o) => {
-        if (o._type === 0 && o._duration > 0) {
-            if (o._width > 2 || (o._width > 1 && o._lineIndex === 1)) {
-                if (beatmap.v2.obstacle.isLonger(o, obstacleLFull)) {
-                    if (o._duration < minDur) {
+        if (o.posY === 0 && o.height > 2 && o.duration > 0) {
+            if (o.width > 2 || (o.width > 1 && o.posX === 1)) {
+                if (o.isLonger(obstacleLFull)) {
+                    if (o.duration < minDur) {
                         arr.push(o);
                     }
                     obstacleLFull = o;
                 }
-                if (beatmap.v2.obstacle.isLonger(o, obstacleRFull)) {
-                    if (o._duration < minDur) {
+                if (o.isLonger(obstacleRFull)) {
+                    if (o.duration < minDur) {
                         arr.push(o);
                     }
                     obstacleRFull = o;
                 }
-            } else if (o._width === 2) {
-                if (o._lineIndex === 0) {
-                    if (beatmap.v2.obstacle.isLonger(o, obstacleLFull)) {
-                        if (o._duration < minDur) {
+            } else if (o.width === 2) {
+                if (o.posX === 0) {
+                    if (o.isLonger(obstacleLFull)) {
+                        if (o.duration < minDur) {
                             arr.push(o);
                         }
                         obstacleLFull = o;
                     }
-                } else if (o._lineIndex === 2) {
-                    if (beatmap.v2.obstacle.isLonger(o, obstacleRFull)) {
-                        if (o._duration < minDur) {
+                } else if (o.posX === 2) {
+                    if (o.isLonger(obstacleRFull)) {
+                        if (o.duration < minDur) {
                             arr.push(o);
                         }
                         obstacleRFull = o;
                     }
                 }
-            } else if (o._width === 1) {
-                if (o._lineIndex === 1) {
-                    if (beatmap.v2.obstacle.isLonger(o, obstacleLFull)) {
-                        if (o._duration < minDur) {
+            } else if (o.width === 1) {
+                if (o.posX === 1) {
+                    if (o.isLonger(obstacleLFull)) {
+                        if (o.duration < minDur) {
                             arr.push(o);
                         }
                         obstacleLFull = o;
                     }
-                } else if (o._lineIndex === 2) {
-                    if (beatmap.v2.obstacle.isLonger(o, obstacleRFull)) {
-                        if (o._duration < minDur) {
+                } else if (o.posX === 2) {
+                    if (o.isLonger(obstacleRFull)) {
+                        if (o.duration < minDur) {
                             arr.push(o);
                         }
                         obstacleRFull = o;
                     }
                 }
             }
-        } else if (o._type === 1 && o._duration > 0) {
-            if (o._width > 2 || (o._width > 1 && o._lineIndex === 1)) {
-                if (beatmap.v2.obstacle.isLonger(o, obstacleLHalf)) {
+        } else if (o.posY === 2 && o.height > 2 && o.duration > 0) {
+            if (o.width > 2 || (o.width > 1 && o.posX === 1)) {
+                if (o.isLonger(obstacleLHalf)) {
                     if (
-                        o._duration < minDur &&
-                        beatmap.v2.obstacle.isLonger(o, obstacleLFull, minDur) &&
-                        beatmap.v2.obstacle.isLonger(o, obstacleLHalf, minDur)
+                        o.duration < minDur &&
+                        o.isLonger(obstacleLFull, minDur) &&
+                        o.isLonger(obstacleLHalf, minDur)
                     ) {
                         arr.push(o);
                     }
                     obstacleLHalf = o;
                 }
-                if (beatmap.v2.obstacle.isLonger(o, obstacleRHalf)) {
+                if (o.isLonger(obstacleRHalf)) {
                     if (
-                        o._duration < minDur &&
-                        beatmap.v2.obstacle.isLonger(o, obstacleRFull, minDur) &&
-                        beatmap.v2.obstacle.isLonger(o, obstacleRHalf, minDur)
+                        o.duration < minDur &&
+                        o.isLonger(obstacleRFull, minDur) &&
+                        o.isLonger(obstacleRHalf, minDur)
                     ) {
                         arr.push(o);
                     }
                     obstacleRHalf = o;
                 }
-            } else if (o._width === 2) {
-                if (o._lineIndex === 0) {
-                    if (beatmap.v2.obstacle.isLonger(o, obstacleLHalf)) {
+            } else if (o.width === 2) {
+                if (o.posX === 0) {
+                    if (o.isLonger(obstacleLHalf)) {
                         if (
-                            o._duration < minDur &&
-                            beatmap.v2.obstacle.isLonger(o, obstacleLFull, minDur) &&
-                            beatmap.v2.obstacle.isLonger(o, obstacleLHalf, minDur)
+                            o.duration < minDur &&
+                            o.isLonger(obstacleLFull, minDur) &&
+                            o.isLonger(obstacleLHalf, minDur)
                         ) {
                             arr.push(o);
                         }
                         obstacleLHalf = o;
                     }
-                } else if (o._lineIndex === 2) {
-                    if (beatmap.v2.obstacle.isLonger(o, obstacleRHalf)) {
+                } else if (o.posX === 2) {
+                    if (o.isLonger(obstacleRHalf)) {
                         if (
-                            o._duration < minDur &&
-                            beatmap.v2.obstacle.isLonger(o, obstacleRFull, minDur) &&
-                            beatmap.v2.obstacle.isLonger(o, obstacleRHalf, minDur)
+                            o.duration < minDur &&
+                            o.isLonger(obstacleRFull, minDur) &&
+                            o.isLonger(obstacleRHalf, minDur)
                         ) {
                             arr.push(o);
                         }
                         obstacleRHalf = o;
                     }
                 }
-            } else if (o._width === 1) {
-                if (o._lineIndex === 1) {
-                    if (beatmap.v2.obstacle.isLonger(o, obstacleLHalf)) {
+            } else if (o.width === 1) {
+                if (o.posX === 1) {
+                    if (o.isLonger(obstacleLHalf)) {
                         if (
-                            o._duration < minDur &&
-                            beatmap.v2.obstacle.isLonger(o, obstacleLFull, minDur) &&
-                            beatmap.v2.obstacle.isLonger(o, obstacleLHalf, minDur)
+                            o.duration < minDur &&
+                            o.isLonger(obstacleLFull, minDur) &&
+                            o.isLonger(obstacleLHalf, minDur)
                         ) {
                             arr.push(o);
                         }
                         obstacleLHalf = o;
                     }
-                } else if (o._lineIndex === 2) {
-                    if (beatmap.v2.obstacle.isLonger(o, obstacleRHalf)) {
+                } else if (o.posX === 2) {
+                    if (o.isLonger(obstacleRHalf)) {
                         if (
-                            o._duration < minDur &&
-                            beatmap.v2.obstacle.isLonger(o, obstacleRFull, minDur) &&
-                            beatmap.v2.obstacle.isLonger(o, obstacleRHalf, minDur)
+                            o.duration < minDur &&
+                            o.isLonger(obstacleRFull, minDur) &&
+                            o.isLonger(obstacleRHalf, minDur)
                         ) {
                             arr.push(o);
                         }
@@ -206,25 +174,19 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetDat
         }
     });
     return arr
-        .map((o) => o._time)
+        .map((o) => o.time)
         .filter(function (x, i, ary) {
             return !i || x !== ary[i - 1];
         });
 }
 
-function run(
-    mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.BeatmapSetData
-): void {
-    if (!mapSet) {
-        throw new Error('something went wrong!');
-    }
-    const result = check(mapSettings, mapSet);
+function run(map: ToolArgs) {
+    const result = check(map);
 
     if (result.length) {
         const htmlResult = document.createElement('div');
         htmlResult.innerHTML = `<b><15ms obstacle [${result.length}]:</b> ${result
-            .map((n) => round(mapSettings._bpm.adjustTime(n), 3))
+            .map((n) => round(map.settings.bpm.adjustTime(n), 3))
             .join(', ')}`;
         tool.output.html = htmlResult;
     } else {

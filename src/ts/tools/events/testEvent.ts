@@ -1,6 +1,6 @@
-import * as beatmap from '../../beatmap';
+import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
-import { BeatmapSettings, Tool } from '../template';
+import * as beatmap from '../../beatmap';
 
 const htmlContainer = document.createElement('div');
 const htmlInputCheck = document.createElement('input');
@@ -33,22 +33,22 @@ const tool: Tool = {
     output: {
         html: null,
     },
-    run: run,
+    run,
 };
 
 function inputCheckHandler(this: HTMLInputElement) {
     tool.input.enabled = this.checked;
 }
 
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
-    const { _bpm: bpm, _audioDuration: duration } = mapSettings;
-    const { _events: events } = mapSet._data;
+function check(map: ToolArgs) {
+    const { bpm, audioDuration: duration } = map.settings;
+    const { basicBeatmapEvents: events } = map.difficulty.data;
 
     let second = bpm.toBeatTime(1);
     let peakEPS = 0;
     let currentSectionStart = 0;
     for (let i = 0; i < events.length; i++) {
-        while (events[i]._time - events[currentSectionStart]._time > second) {
+        while (events[i].time - events[currentSectionStart].time > second) {
             currentSectionStart++;
         }
         peakEPS = Math.max(
@@ -62,14 +62,8 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetDat
     };
 }
 
-function run(
-    mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.BeatmapSetData
-): void {
-    if (!mapSet) {
-        throw new Error('something went wrong!');
-    }
-    const result = check(mapSettings, mapSet);
+function run(map: ToolArgs) {
+    const result = check(map);
 
     if (result) {
         const htmlResult = document.createElement('div');

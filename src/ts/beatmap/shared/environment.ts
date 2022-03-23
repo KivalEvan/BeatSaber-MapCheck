@@ -1,10 +1,73 @@
 import {
+    ColorSchemeList,
     EnvironmentAllName,
-    EnvironmentScheme,
+    IEnvironmentScheme,
 } from '../../types/beatmap/shared/environment';
 
+/** Environment rename to human readable. */
+export const EnvironmentRename: Readonly<Record<EnvironmentAllName, string>> = {
+    DefaultEnvironment: 'The First',
+    OriginsEnvironment: 'Origins',
+    Origins: 'Origins (Triangle)', // because beat games
+    TriangleEnvironment: 'Triangle',
+    NiceEnvironment: 'Nice',
+    BigMirrorEnvironment: 'Big Mirror',
+    DragonsEnvironment: 'Dragons',
+    KDAEnvironment: 'K/DA',
+    MonstercatEnvironment: 'Monstercat',
+    CrabRaveEnvironment: 'Crab Rave',
+    PanicEnvironment: 'Panic',
+    RocketEnvironment: 'Rocket',
+    GreenDayEnvironment: 'Green Day',
+    GreenDayGrenadeEnvironment: 'Green Day Grenade',
+    TimbalandEnvironment: 'Timbaland',
+    FitBeatEnvironment: 'FitBeat',
+    LinkinParkEnvironment: 'Linkin Park',
+    BTSEnvironment: 'BTS',
+    KaleidoscopeEnvironment: 'Kaleidoscope',
+    InterscopeEnvironment: 'Interscope',
+    SkrillexEnvironment: 'Skrillex',
+    BillieEnvironment: 'Billie',
+    HalloweenEnvironment: 'Spooky',
+    GagaEnvironment: 'Gaga',
+    GlassDesertEnvironment: 'Glass Desert',
+    WeaveEnvironment: 'Weave',
+};
+
+/** Record of Environment Color to Color Scheme. */
+export const EnvironmentSchemeName: Readonly<
+    Record<EnvironmentAllName, ColorSchemeList>
+> = {
+    DefaultEnvironment: 'The First',
+    OriginsEnvironment: 'Origins',
+    Origins: 'The First', // because beat games
+    TriangleEnvironment: 'The First',
+    NiceEnvironment: 'The First',
+    BigMirrorEnvironment: 'The First',
+    DragonsEnvironment: 'The First',
+    KDAEnvironment: 'KDA',
+    MonstercatEnvironment: 'The First',
+    CrabRaveEnvironment: 'Crab Rave',
+    PanicEnvironment: 'The First',
+    RocketEnvironment: 'Rocket',
+    GreenDayEnvironment: 'Green Day',
+    GreenDayGrenadeEnvironment: 'Green Day',
+    TimbalandEnvironment: 'Timbaland',
+    FitBeatEnvironment: 'FitBeat',
+    LinkinParkEnvironment: 'Linkin Park',
+    BTSEnvironment: 'BTS',
+    KaleidoscopeEnvironment: 'Kaleidoscope',
+    InterscopeEnvironment: 'Interscope',
+    SkrillexEnvironment: 'Skrillex',
+    BillieEnvironment: 'Billie Eilish',
+    HalloweenEnvironment: 'Spooky',
+    GagaEnvironment: 'Gaga',
+    GlassDesertEnvironment: 'Glass Desert',
+    WeaveEnvironment: 'Weave',
+};
+
 /** Color scheme definition. */
-export const ColorScheme: Readonly<EnvironmentScheme> = {
+export const ColorScheme: Readonly<IEnvironmentScheme> = {
     'Default Custom': {
         _colorLeft: {
             r: 0.7529412,

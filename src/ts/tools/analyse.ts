@@ -3,18 +3,7 @@ import * as component from './component';
 import savedData from '../savedData';
 import { BeatPerMinute } from '../beatmap';
 import { CharacteristicName, DifficultyName } from '../types';
-import { BeatmapSettings } from '../types/mapcheck/tools/template';
-
-const init = (): void => {
-    savedData.analysis = {
-        general: {
-            html: null,
-        },
-        mapSet: [],
-        missing: [],
-        sps: [],
-    };
-};
+import { IBeatmapSettings } from '../types/mapcheck/tools/tool';
 
 export const general = (): void => {
     const mapInfo = savedData.beatmapInfo;
@@ -23,21 +12,17 @@ export const general = (): void => {
         return;
     }
 
-    if (!savedData.analysis) {
-        init();
-    }
-
     const analysisExist = savedData.analysis?.general;
     const spsSet = savedData.analysis?.sps;
 
     const bpm = beatmap.BeatPerMinute.create(mapInfo._beatsPerMinute);
     const njs = beatmap.NoteJumpSpeed.create(bpm);
 
-    const mapSettings: BeatmapSettings = {
-        _bpm: bpm,
-        _njs: njs,
-        _audioDuration: savedData.duration ?? null,
-        _mapDuration: 0,
+    const mapSettings: IBeatmapSettings = {
+        bpm: bpm,
+        njs: njs,
+        audioDuration: savedData.duration ?? null,
+        mapDuration: 0,
     };
 
     const toolList = component
@@ -100,11 +85,11 @@ export const difficulty = (
         mapSet._info._noteJumpStartBeatOffset
     );
 
-    const mapSettings: BeatmapSettings = {
-        _bpm: bpm,
-        _njs: njs,
-        _audioDuration: savedData.duration ?? null,
-        _mapDuration: bpm.toRealTime(
+    const mapSettings: IBeatmapSettings = {
+        bpm: bpm,
+        njs: njs,
+        audioDuration: savedData.duration ?? null,
+        mapDuration: bpm.toRealTime(
             beatmap.v2.difficulty.getLastInteractiveTime(mapSet._data)
         ),
     };

@@ -1,6 +1,6 @@
-import * as beatmap from '../../beatmap';
+import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
-import { BeatmapSettings, Tool } from '../template';
+import * as beatmap from '../../beatmap';
 
 const htmlContainer = document.createElement('div');
 const htmlInputCheck = document.createElement('input');
@@ -33,18 +33,18 @@ const tool: Tool = {
     output: {
         html: null,
     },
-    run: run,
+    run,
 };
 
 function inputCheckHandler(this: HTMLInputElement) {
     tool.input.enabled = this.checked;
 }
 
-function checkNote(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
-    const { _bpm: bpm } = mapSettings;
-    const { _notes: notes } = mapSet._data;
+function checkNote(mapSettings: BeatmapSettings, mapSet: BeatmapSetData) {
+    const { bpm } = mapSettings;
+    const { colorNotes } = map.difficulty.data;
 
-    const arr: beatmap.types.open.Note[] = [];
+    const arr: beatmap.v3.ColorNote[] = [];
     // to avoid multiple of stack popping up, ignore anything within this time
     let lastTime: number = 0;
     for (let i = 0, len = notes.length; i < len; i++) {
@@ -58,7 +58,7 @@ function checkNote(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSe
             ) {
                 break;
             }
-            if (beatmap.v2.note.isInline(notes[i], notes[j])) {
+            if (note.isInline(notes[i], notes[j])) {
                 arr.push(notes[i]);
                 lastTime = bpm.toRealTime(notes[i]._time);
             }
@@ -71,11 +71,11 @@ function checkNote(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSe
         });
 }
 
-function checkBomb(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
-    const { _bpm: bpm, _njs: njs } = mapSettings;
-    const { _notes: notes } = mapSet._data;
+function checkBomb(mapSettings: BeatmapSettings, mapSet: BeatmapSetData) {
+    const { bpm, _njs: njs } = mapSettings;
+    const { colorNotes } = map.difficulty.data;
 
-    const arr: beatmap.types.open.Note[] = [];
+    const arr: beatmap.v3.ColorNote[] = [];
     for (let i = 0, len = notes.length; i < len; i++) {
         if (notes[i]._type !== 3) {
             continue;
@@ -86,7 +86,7 @@ function checkBomb(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSe
                 break;
             }
             if (
-                beatmap.v2.note.isInline(notes[i], notes[j]) &&
+                note.isInline(notes[i], notes[j]) &&
                 (njs.value < bpm.value / (120 * (notes[j]._time - notes[i]._time)) ||
                     bpm.toRealTime(notes[j]._time) <
                         bpm.toRealTime(notes[i]._time) + 0.02)
@@ -102,13 +102,7 @@ function checkBomb(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSe
         });
 }
 
-function run(
-    mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.BeatmapSetData
-): void {
-    if (!mapSet) {
-        throw new Error('something went wrong!');
-    }
+function run(map: ToolArgs) {
     const resultNote = checkNote(mapSettings, mapSet);
     const resultBomb = checkBomb(mapSettings, mapSet);
 
@@ -116,14 +110,14 @@ function run(
     if (resultNote.length) {
         htmlString.push(
             `<b>Stacked note [${resultNote.length}]:</b> ${resultNote
-                .map((n) => round(mapSettings._bpm.adjustTime(n), 3))
+                .map((n) => round(map.settings.bpm.adjustTime(n), 3))
                 .join(', ')}`
         );
     }
     if (resultBomb.length) {
         htmlString.push(
             `<b>Stacked bomb [${resultBomb.length}]:</b> ${resultBomb
-                .map((n) => round(mapSettings._bpm.adjustTime(n), 3))
+                .map((n) => round(map.settings.bpm.adjustTime(n), 3))
                 .join(', ')}`
         );
     }

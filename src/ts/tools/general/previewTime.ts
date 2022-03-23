@@ -1,5 +1,4 @@
-import * as beatmap from '../../beatmap';
-import { BeatmapSettings, Tool } from '../template';
+import { Tool, ToolArgs } from '../../types/mapcheck';
 
 const tool: Tool = {
     name: 'Preview Time',
@@ -16,19 +15,12 @@ const tool: Tool = {
     output: {
         html: null,
     },
-    run: run,
+    run,
 };
 
-function run(
-    mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.BeatmapSetData,
-    mapInfo?: beatmap.types.InfoData
-): void {
-    if (!mapInfo) {
-        throw new Error('something went wrong!');
-    }
+function run(map: ToolArgs) {
     const { _previewStartTime: previewStartTime, _previewDuration: previewDuration } =
-        mapInfo;
+        map.info;
 
     if (previewStartTime === 12 && previewDuration === 10) {
         const htmlResult = document.createElement('div');

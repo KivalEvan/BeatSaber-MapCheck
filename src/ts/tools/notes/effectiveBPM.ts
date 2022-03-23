@@ -1,6 +1,6 @@
-import * as beatmap from '../../beatmap';
+import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
-import { BeatmapSettings, Tool } from '../template';
+import * as beatmap from '../../beatmap';
 
 const defaultEBPM = 450;
 const defaultEBPMS = 350;
@@ -57,7 +57,7 @@ const tool: Tool = {
     run: run,
 };
 
-function adjustTimeHandler(bpm: beatmap.bpm.BeatPerMinute) {
+function adjustTimeHandler(bpm: beatmap.BeatPerMinute) {
     tool.input.params.ebpmThres = round(
         Math.min(defaultEBPM, bpm.value * 2 * 1.285714),
         1
@@ -77,18 +77,18 @@ function inputEBPMSHandler(this: HTMLInputElement) {
     this.value = tool.input.params.ebpmsThres.toString();
 }
 
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
-    const { _bpm: bpm } = mapSettings;
-    const { _notes: notes } = mapSet._data;
+function check(map: ToolArgs) {
+    const { bpm: bpm } = mapSettings;
+    const { notes: notes } = map.difficulty.data;
     const { ebpmThres, ebpmsThres } = <{ ebpmThres: number; ebpmsThres: number }>(
         tool.input.params
     );
 
-    const noteEBPM = beatmap.v2.swing
+    const noteEBPM = swing
         .getEffectiveBPMNote(notes, bpm)
         .filter((n) => n._ebpm > ebpmThres)
         .map((n) => n._time);
-    const noteEBPMS = beatmap.v2.swing
+    const noteEBPMS = swing
         .getEffectiveBPMSwingNote(notes, bpm)
         .filter((n) => n._ebpm > ebpmsThres)
         .map((n) => n._time);
@@ -96,14 +96,8 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetDat
     return { base: noteEBPM, swing: noteEBPMS };
 }
 
-function run(
-    mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.BeatmapSetData
-): void {
-    if (!mapSet) {
-        throw new Error('something went wrong!');
-    }
-    const result = check(mapSettings, mapSet);
+function run(map: ToolArgs) {
+    const result = check(map);
     const { ebpmThres, ebpmsThres } = <{ ebpmThres: number; ebpmsThres: number }>(
         tool.input.params
     );
@@ -112,7 +106,7 @@ function run(
     if (result.base.length) {
         htmlString.push(
             `<b>>${ebpmThres}EBPM warning [${result.base.length}]:</b> ${result.base
-                .map((n) => round(mapSettings._bpm.adjustTime(n), 3))
+                .map((n) => round(map.settings.bpm.adjustTime(n), 3))
                 .join(', ')}`
         );
     }
@@ -121,7 +115,7 @@ function run(
             `<b>>${ebpmsThres}EBPM (swing) warning [${
                 result.swing.length
             }]:</b> ${result.swing
-                .map((n) => round(mapSettings._bpm.adjustTime(n), 3))
+                .map((n) => round(map.settings.bpm.adjustTime(n), 3))
                 .join(', ')}`
         );
     }

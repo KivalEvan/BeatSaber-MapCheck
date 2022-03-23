@@ -4,13 +4,16 @@ import { Serializable } from '../shared/serializable';
 export class IndexFilter extends Serializable<IIndexFilter> {
     static default: Required<IIndexFilter> = {
         f: 1,
-        p: 1,
-        t: 1,
+        p: 0,
+        t: 0,
         r: 0,
     };
 
     private constructor(indexFilter: IIndexFilter) {
         super(indexFilter);
+        if (this.data.f === 1) {
+            this.p0 = this.p0 ? this.p0 : 1;
+        }
     }
 
     static create(indexFilter: Partial<IIndexFilter> = {}): IndexFilter {

@@ -1,6 +1,6 @@
-import * as beatmap from '../../beatmap';
+import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
-import { BeatmapSettings, Tool } from '../template';
+import * as beatmap from '../../beatmap';
 
 const defaultSpeed = 0.025;
 
@@ -12,7 +12,7 @@ const htmlLabelMinTime = document.createElement('label');
 const htmlInputMinPrec = document.createElement('input');
 const htmlLabelMinPrec = document.createElement('label');
 
-let localBPM!: beatmap.bpm.BeatPerMinute;
+let localBPM!: beatmap.BeatPerMinute;
 
 htmlLabelCheck.textContent = ' Slow slider';
 htmlLabelCheck.htmlFor = 'input__tools-slow-slider-check';
@@ -66,10 +66,10 @@ const tool: Tool = {
     output: {
         html: null,
     },
-    run: run,
+    run,
 };
 
-function adjustTimeHandler(bpm: beatmap.bpm.BeatPerMinute) {
+function adjustTimeHandler(bpm: beatmap.BeatPerMinute) {
     localBPM = bpm;
     htmlInputMinPrec.value = round(
         1 / localBPM.toBeatTime(tool.input.params.minSpeed as number),
@@ -103,12 +103,12 @@ function inputPrecHandler(this: HTMLInputElement) {
     this.value = val.toString();
 }
 
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
-    const { _bpm: bpm } = mapSettings;
-    const { _notes: notes } = mapSet._data;
+function check(map: ToolArgs) {
+    const { bpm } = mapSettings;
+    const { colorNotes } = map.difficulty.data;
     const { minSpeed } = <{ minSpeed: number }>tool.input.params;
 
-    return beatmap.v2.swing
+    return swing
         .getSliderNote(notes, bpm)
         .filter((n) => n._maxSpeed > minSpeed || n._minSpeed > minSpeed)
         .map((n) => n._time)
@@ -117,22 +117,16 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetDat
         });
 }
 
-function run(
-    mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.BeatmapSetData
-): void {
-    if (!mapSet) {
-        throw new Error('something went wrong!');
-    }
+function run(map: ToolArgs) {
     const { minSpeed } = <{ minSpeed: number }>tool.input.params;
-    const result = check(mapSettings, mapSet);
+    const result = check(map);
 
     if (result.length) {
         const htmlResult = document.createElement('div');
         htmlResult.innerHTML = `<b>Slow slider (>${round(minSpeed * 1000, 1)}ms) [${
             result.length
         }]:</b> ${result
-            .map((n) => round(mapSettings._bpm.adjustTime(n), 3))
+            .map((n) => round(map.settings.bpm.adjustTime(n), 3))
             .join(', ')}`;
         tool.output.html = htmlResult;
     } else {

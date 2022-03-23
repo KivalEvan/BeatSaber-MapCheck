@@ -1,6 +1,6 @@
-import * as beatmap from '../../beatmap';
+import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
-import { BeatmapSettings, Tool } from '../template';
+import * as beatmap from '../../beatmap';
 
 const htmlContainer = document.createElement('div');
 const htmlInputCheck = document.createElement('input');
@@ -33,18 +33,18 @@ const tool: Tool = {
     output: {
         html: null,
     },
-    run: run,
+    run,
 };
 
 function inputCheckHandler(this: HTMLInputElement) {
     tool.input.enabled = this.checked;
 }
 
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
-    const { _bpm: bpm, _njs: njs } = mapSettings;
-    const { _notes: notes } = mapSet._data;
+function check(map: ToolArgs) {
+    const { bpm, _njs: njs } = mapSettings;
+    const { colorNotes } = map.difficulty.data;
 
-    const arr: beatmap.types.open.Note[] = [];
+    const arr: beatmap.v3.ColorNote[] = [];
     // to avoid multiple of stack popping up, ignore anything within this time
     let lastTime: number = 0;
     for (let i = 0, len = notes.length; i < len; i++) {
@@ -62,16 +62,16 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetDat
                 continue;
             }
             if (
-                ((beatmap.v2.note.isHorizontal(notes[i], notes[j]) ||
-                    beatmap.v2.note.isVertical(notes[i], notes[j])) &&
-                    beatmap.v2.note
+                ((note.isHorizontal(notes[i], notes[j]) ||
+                    note.isVertical(notes[i], notes[j])) &&
+                    note
                         .isIntersect(notes[i], notes[j], [
                             [45, 1],
                             [15, 2],
                         ])
                         .some((b) => b)) ||
-                (beatmap.v2.note.isDiagonal(notes[i], notes[j]) &&
-                    beatmap.v2.note
+                (note.isDiagonal(notes[i], notes[j]) &&
+                    note
                         .isIntersect(notes[i], notes[j], [
                             [45, 1],
                             [15, 1.5],
@@ -90,19 +90,13 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetDat
         });
 }
 
-function run(
-    mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.BeatmapSetData
-): void {
-    if (!mapSet) {
-        throw new Error('something went wrong!');
-    }
-    const result = check(mapSettings, mapSet);
+function run(map: ToolArgs) {
+    const result = check(map);
 
     if (result.length) {
         const htmlResult = document.createElement('div');
         htmlResult.innerHTML = `<b>Hitbox path [${result.length}]:</b> ${result
-            .map((n) => round(mapSettings._bpm.adjustTime(n), 3))
+            .map((n) => round(map.settings.bpm.adjustTime(n), 3))
             .join(', ')}`;
         tool.output.html = htmlResult;
     } else {

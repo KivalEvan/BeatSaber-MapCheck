@@ -1,5 +1,5 @@
 import { CharacteristicName, DifficultyName } from '../../beatmap';
-import { SwingAnalysis } from '../../beatmap/shared/swing';
+import { ISwingAnalysis } from '../../beatmap/analyser/swing';
 
 interface IAnalysisBase {
     html: HTMLElement[] | null;
@@ -8,11 +8,10 @@ interface IAnalysisBase {
 export interface IAnalysisSet extends IAnalysisBase {
     mode: CharacteristicName;
     difficulty: DifficultyName;
+    sps: ISwingAnalysis;
 }
 
 export interface IAnalysis {
-    missing: [];
     general: IAnalysisBase;
-    mapSet: IAnalysisSet[];
-    sps: SwingAnalysis[];
+    map: IAnalysisSet[];
 }

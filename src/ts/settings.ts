@@ -21,50 +21,50 @@ const settingsDefault: ISettingsProperty = {
     },
 };
 
-class Settings {
-    private _property: ISettingsProperty = JSON.parse(JSON.stringify(settingsDefault));
+export default new (class Settings {
+    private property: ISettingsProperty = JSON.parse(JSON.stringify(settingsDefault));
 
     constructor() {
         this.init();
     }
 
     get load(): ISettingsProperty['load'] {
-        return this._property.load;
+        return this.property.load;
     }
     get sorting(): boolean {
-        return this._property.sorting;
+        return this.property.sorting;
     }
     set sorting(val: boolean) {
-        this._property.sorting = val;
+        this.property.sorting = val;
     }
     get beatNumbering(): ISettingsProperty['beatNumbering'] {
-        return this._property.beatNumbering;
+        return this.property.beatNumbering;
     }
     set beatNumbering(val: ISettingsProperty['beatNumbering']) {
-        this._property.beatNumbering = val;
+        this.property.beatNumbering = val;
     }
     get rounding(): number {
-        return this._property.rounding;
+        return this.property.rounding;
     }
     set rounding(val: number) {
-        this._property.rounding = val;
+        this.property.rounding = val;
     }
     get theme(): ISettingsProperty['theme'] {
-        return this._property.theme;
+        return this.property.theme;
     }
     set theme(val: ISettingsProperty['theme']) {
-        this._property.theme = val;
+        this.property.theme = val;
     }
     get onLoad() {
-        return this._property.onLoad;
+        return this.property.onLoad;
     }
     get show(): ISettingsProperty['show'] {
-        return this._property.show;
+        return this.property.show;
     }
 
     private stringify = (): string => {
         return JSON.stringify({
-            _property: this._property,
+            _property: this.property,
         });
     };
     private init = (): void => {
@@ -74,7 +74,7 @@ class Settings {
         const storage = localStorage.getItem('settings');
         if (storage) {
             const temp = JSON.parse(storage);
-            this._property = temp._property ?? this._property;
+            this.property = temp._property ?? this.property;
             this.save();
         }
     };
@@ -89,8 +89,6 @@ class Settings {
         }
     };
     public reset = (): void => {
-        this._property = JSON.parse(JSON.stringify(settingsDefault));
+        this.property = JSON.parse(JSON.stringify(settingsDefault));
     };
-}
-
-export default new Settings();
+})();

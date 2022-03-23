@@ -1,9 +1,9 @@
+import { Tool, ToolArgs } from '../../types/mapcheck';
+import { ColorArray } from '../../types/beatmap/shared/colors';
+import { deltaE00, toRGBArray, round } from '../../utils';
 import * as beatmap from '../../beatmap';
-import { round } from '../../utils';
-import { deltaE00, toRGBArray } from '../../colors';
-import { BeatmapSettings, Tool } from '../template';
 
-const arrowColor: beatmap.types.ColorArray = [1, 1, 1];
+const arrowColor: ColorArray = [1, 1, 1];
 
 const deltaELevel: { [key: number]: string } = {
     1: 'Indistinguishable',
@@ -52,49 +52,39 @@ const tool: Tool = {
     output: {
         html: null,
     },
-    run: run,
+    run,
 };
 
 function inputCheckHandler(this: HTMLInputElement) {
     tool.input.enabled = this.checked;
 }
 
-function customColorSimilarity(
-    mapSettings: BeatmapSettings,
-    mapSet: beatmap.types.BeatmapSetData
-) {
+function customColorSimilarity(map: ToolArgs) {
     const checkColorLeft =
-        mapSet._info._customData?._colorLeft ??
-        beatmap.environment.colorScheme[
-            beatmap.types.environmentScheme[mapSet._environment]
-        ]._colorLeft;
+        map.info._customData?._colorLeft ??
+        beatmap.ColorScheme[beatmap.EnvironmentSchemeName[map.info._environmentName]]
+            ._colorLeft;
     const checkColorRight =
-        mapSet._info._customData?._colorRight ??
-        beatmap.environment.colorScheme[
-            beatmap.types.environmentScheme[mapSet._environment]
-        ]._colorRight;
+        map.info._customData?._colorRight ??
+        beatmap.ColorScheme[beatmap.EnvironmentSchemeName[map.info._environmentName]]
+            ._colorRight;
     if (checkColorLeft && checkColorRight) {
         return deltaE00(toRGBArray(checkColorLeft), toRGBArray(checkColorRight));
     }
     return 100;
 }
 
-function customColorArrowSimilarity(
-    mapSettings: BeatmapSettings,
-    mapSet: beatmap.types.BeatmapSetData
-) {
+function customColorArrowSimilarity(map: ToolArgs) {
     let deltaELeft = 100,
         deltaERight = 100;
     const checkColorLeft =
-        mapSet._info._customData?._colorLeft ??
-        beatmap.environment.colorScheme[
-            beatmap.types.environmentScheme[mapSet._environment]
-        ]._colorLeft;
+        map.info._customData?._colorLeft ??
+        beatmap.ColorScheme[beatmap.EnvironmentSchemeName[map.info._environmentName]]
+            ._colorLeft;
     const checkColorRight =
-        mapSet._info._customData?._colorRight ??
-        beatmap.environment.colorScheme[
-            beatmap.types.environmentScheme[mapSet._environment]
-        ]._colorRight;
+        map.info._customData?._colorRight ??
+        beatmap.ColorScheme[beatmap.EnvironmentSchemeName[map.info._environmentName]]
+            ._colorRight;
     if (checkColorLeft) {
         deltaELeft = deltaE00(arrowColor, toRGBArray(checkColorLeft));
     }
@@ -104,23 +94,13 @@ function customColorArrowSimilarity(
     return Math.min(deltaELeft, deltaERight);
 }
 
-function run(
-    mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.BeatmapSetData
-): void {
-    if (!mapSet) {
-        throw new Error('something went wrong!');
-    }
-
-    if (
-        !mapSet._info._customData?._colorLeft &&
-        !mapSet._info._customData?._colorRight
-    ) {
+function run(map: ToolArgs) {
+    if (!map.info._customData?._colorLeft && !map.info._customData?._colorRight) {
         return;
     }
 
-    const ccSimilar = customColorSimilarity(mapSettings, mapSet);
-    const ccaSimilar = customColorArrowSimilarity(mapSettings, mapSet);
+    const ccSimilar = customColorSimilarity(map);
+    const ccaSimilar = customColorArrowSimilarity(map);
 
     const htmlString: string[] = [];
     if (ccSimilar <= 20) {

@@ -1,6 +1,6 @@
-import * as beatmap from '../../beatmap';
+import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
-import { BeatmapSettings, Tool } from '../template';
+import * as beatmap from '../../beatmap';
 
 const htmlContainer = document.createElement('div');
 const htmlInputCheck = document.createElement('input');
@@ -33,46 +33,47 @@ const tool: Tool = {
     output: {
         html: null,
     },
-    run: run,
+    run,
 };
 
 function inputCheckHandler(this: HTMLInputElement) {
     tool.input.enabled = this.checked;
 }
 
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
-    const { _events: events } = mapSet._data;
+function check(map: ToolArgs) {
+    const { basicBeatmapEvents } = map.difficulty.data;
 
-    const arr: beatmap.types.open.Event[] = [];
-    if (beatmap.v2.version.compare(mapSet._data._version, 'difficulty') === 'old') {
-        for (let i = events.length - 1; i >= 0; i--) {
-            if (beatmap.v2.event.isLightEvent(events[i]) && events[i]._value === 4) {
-                arr.push(events[i]);
+    const arr: beatmap.v3.BasicEvent[] = [];
+    if (
+        map.difficulty.rawVersion === 2 &&
+        map.difficulty.rawData._version !== '2.5.0' &&
+        map.difficulty.rawData._version !== '2.6.0'
+    ) {
+        for (let i = basicBeatmapEvents.length - 1; i >= 0; i--) {
+            if (
+                basicBeatmapEvents[i].isLightEvent() &&
+                basicBeatmapEvents[i].value === 4
+            ) {
+                arr.push(basicBeatmapEvents[i]);
             }
         }
     } else {
         return [];
     }
     return arr
-        .map((n) => n._time)
+        .map((n) => n.time)
         .filter(function (x, i, ary) {
             return !i || x !== ary[i - 1];
         });
 }
 
-function run(
-    mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.BeatmapSetData
-): void {
-    if (!mapSet) {
-        throw new Error('something went wrong!');
-    }
-    const result = check(mapSettings, mapSet);
+function run(map: ToolArgs) {
+    const result = check(map);
 
     if (result.length) {
         const htmlResult = document.createElement('div');
         htmlResult.innerHTML = `<b>Event with value 4 [${result.length}]:</b> ${result
-            .map((n) => round(mapSettings._bpm.adjustTime(n), 3))
+            .map((n) => round(map.settings.bpm.adjustTime(n), 3))
             .join(', ')}`;
         tool.output.html = htmlResult;
     } else {

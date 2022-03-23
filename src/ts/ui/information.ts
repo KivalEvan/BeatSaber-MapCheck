@@ -3,17 +3,10 @@ import * as uiHeader from './header';
 import * as uiPanel from './panel';
 import { removeOptions, round, toMMSS, toHHMMSS, rgbaToHex } from '../utils';
 import savedData from '../savedData';
-import {
-    IColorScheme,
-    EnvironmentName,
-    EnvironmentRename,
-    EnvironmentScheme,
-    ColorSchemeRename,
-    IInfoData,
-} from '../types';
-import { IContributorB64, IBeatmapDataItem } from '../types/mapcheck/';
+import { IColorScheme, EnvironmentName, ColorSchemeRename, IInfoData } from '../types';
+import { IContributorB64, IBeatmapItem } from '../types/mapcheck/';
 import { IEditor, IEditorInfo } from '../types/beatmap/shared/editor';
-import { BeatPerMinute, ColorScheme } from '../beatmap';
+import { BeatPerMinute, ColorScheme, EnvironmentSchemeName } from '../beatmap';
 import { ChromaDataEnvAbbr, IChromaEnvironment } from '../types/beatmap/v2/chroma';
 import { IHeckPointDefinition, ICustomEvent } from '../types/beatmap/v2';
 import { IBookmark } from '../types/beatmap/v3/bookmark';
@@ -273,26 +266,30 @@ export const setCustomColor = (
     }
     let hexColor: { [key: string]: string | null } = {
         _colorLeft:
-            rgbaToHex(ColorScheme[EnvironmentScheme[environment]]?._colorLeft) || null,
+            rgbaToHex(ColorScheme[EnvironmentSchemeName[environment]]?._colorLeft) ||
+            null,
         _colorRight:
-            rgbaToHex(ColorScheme[EnvironmentScheme[environment]]?._colorRight) || null,
+            rgbaToHex(ColorScheme[EnvironmentSchemeName[environment]]?._colorRight) ||
+            null,
         _envColorLeft:
-            rgbaToHex(ColorScheme[EnvironmentScheme[environment]]?._envColorLeft) ||
+            rgbaToHex(ColorScheme[EnvironmentSchemeName[environment]]?._envColorLeft) ||
             null,
         _envColorRight:
-            rgbaToHex(ColorScheme[EnvironmentScheme[environment]]?._envColorRight) ||
-            null,
+            rgbaToHex(
+                ColorScheme[EnvironmentSchemeName[environment]]?._envColorRight
+            ) || null,
         _envColorLeftBoost:
             rgbaToHex(
-                ColorScheme[EnvironmentScheme[environment]]?._envColorLeftBoost
+                ColorScheme[EnvironmentSchemeName[environment]]?._envColorLeftBoost
             ) || null,
         _envColorRightBoost:
             rgbaToHex(
-                ColorScheme[EnvironmentScheme[environment]]?._envColorRightBoost
+                ColorScheme[EnvironmentSchemeName[environment]]?._envColorRightBoost
             ) || null,
         _obstacleColor:
-            rgbaToHex(ColorScheme[EnvironmentScheme[environment]]?._obstacleColor) ||
-            null,
+            rgbaToHex(
+                ColorScheme[EnvironmentSchemeName[environment]]?._obstacleColor
+            ) || null,
     };
     if (customColor._colorLeft) {
         hexColor._colorLeft = rgbaToHex(customColor._colorLeft);
@@ -322,7 +319,7 @@ export const setCustomColor = (
     } else {
         envBL =
             rgbaToHex(
-                ColorScheme[EnvironmentScheme[environment]]?._envColorLeftBoost
+                ColorScheme[EnvironmentSchemeName[environment]]?._envColorLeftBoost
             ) || hexColor._envColorLeft;
     }
     if (customColor._envColorRightBoost) {
@@ -331,7 +328,7 @@ export const setCustomColor = (
     } else {
         envBR =
             rgbaToHex(
-                ColorScheme[EnvironmentScheme[environment]]?._envColorRightBoost
+                ColorScheme[EnvironmentSchemeName[environment]]?._envColorRightBoost
             ) || hexColor._envColorRight;
     }
 
@@ -556,7 +553,7 @@ export const setInfo = (mapInfo: IInfoData): void => {
     setEditors(mapInfo._customData?._editors);
 };
 
-export const setDiffInfoTable = (mapData: IBeatmapDataItem): void => {
+export const setDiffInfoTable = (mapData: IBeatmapItem): void => {
     setVersion(mapData.data.version);
     if (mapData.info?._customData) {
         setCustomColor(mapData.info._customData);

@@ -1,5 +1,4 @@
-import * as beatmap from '../../beatmap';
-import { BeatmapSettings, Tool } from '../template';
+import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
 
 const htmlContainer = document.createElement('div');
@@ -33,60 +32,46 @@ const tool: Tool = {
     output: {
         html: null,
     },
-    run: run,
+    run,
 };
 
 function inputCheckHandler(this: HTMLInputElement) {
     tool.input.enabled = this.checked;
 }
 
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
-    const { _notes: notes } = mapSet._data;
-    return notes
-        .filter((n) => beatmap.v2.note.hasMappingExtensions(n))
-        .map((n) => n._time);
+function check(map: ToolArgs) {
+    const { colorNotes } = map.difficulty.data;
+    return colorNotes.filter((n) => n.hasMappingExtensions()).map((n) => n.time);
 }
 
-function run(
-    mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.BeatmapSetData
-): void {
-    if (!mapSet) {
-        throw new Error('something went wrong!');
-    }
-    const { _bpm: bpm } = mapSettings;
-    const { _notes: notes, _obstacles: obstacles, _events: events } = mapSet._data;
+function run(map: ToolArgs) {
+    const { bpm } = map.settings;
+    const { colorNotes, obstacles, basicBeatmapEvents } = map.difficulty.data;
 
     let noteResult: number[] = [];
     let obstacleResult: number[] = [];
-    if (!mapSet._info._customData?._requirements?.includes('Mapping Extensions')) {
-        if (mapSet._info._customData?._requirements?.includes('Noodle Extensions')) {
-            noteResult = notes
-                .filter(
-                    (n) =>
-                        beatmap.v2.note.hasMappingExtensions(n) &&
-                        !beatmap.v2.note.hasNoodleExtensions(n)
-                )
-                .map((n) => n._time);
+    if (
+        !map.difficulty.info._customData?._requirements?.includes('Mapping Extensions')
+    ) {
+        if (
+            map.difficulty.info._customData?._requirements?.includes(
+                'Noodle Extensions'
+            )
+        ) {
+            noteResult = colorNotes
+                .filter((n) => n.hasMappingExtensions() && !n.hasNoodleExtensions())
+                .map((n) => n.time);
             obstacleResult = obstacles
-                .filter(
-                    (o) =>
-                        beatmap.v2.obstacle.hasMappingExtensions(o) &&
-                        !beatmap.v2.obstacle.hasNoodleExtensions(o)
-                )
-                .map((o) => o._time);
+                .filter((o) => o.hasMappingExtensions() && !o.hasNoodleExtensions())
+                .map((o) => o.time);
         } else {
-            noteResult = notes
-                .filter((n) => !beatmap.v2.note.isValid(n))
-                .map((n) => n._time);
-            obstacleResult = obstacles
-                .filter((o) => !beatmap.v2.obstacle.isValid(o))
-                .map((o) => o._time);
+            noteResult = colorNotes.filter((n) => !n.isValid()).map((n) => n.time);
+            obstacleResult = obstacles.filter((o) => !o.isValid()).map((o) => o.time);
         }
     }
-    const eventResult = events
-        .filter((e) => !beatmap.v2.event.isValid(e))
-        .map((e) => e._time);
+    const eventResult = basicBeatmapEvents
+        .filter((e) => !e.isValid())
+        .map((e) => e.time);
 
     const htmlString: string[] = [];
     if (noteResult.length) {

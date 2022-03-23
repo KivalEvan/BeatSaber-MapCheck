@@ -1,6 +1,6 @@
-import * as beatmap from '../../beatmap';
+import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
-import { BeatmapSettings, Tool } from '../template';
+import * as beatmap from '../../beatmap';
 
 const defaultMinTime = 0.1;
 const defaultMaxTime = 0.5;
@@ -28,7 +28,7 @@ const vbDiff: { [key: string]: { min: number; max: number } } = {
     },
 };
 
-let localBPM!: beatmap.bpm.BeatPerMinute;
+let localBPM!: beatmap.BeatPerMinute;
 
 const htmlContainer = document.createElement('div');
 const htmlInputCheck = document.createElement('input');
@@ -148,10 +148,10 @@ const tool: Tool = {
     output: {
         html: null,
     },
-    run: run,
+    run,
 };
 
-function adjustTimeHandler(bpm: beatmap.bpm.BeatPerMinute) {
+function adjustTimeHandler(bpm: beatmap.BeatPerMinute) {
     localBPM = bpm;
     htmlInputMinBeat.value = round(
         localBPM.toBeatTime(tool.input.params.minTime as number),
@@ -237,9 +237,9 @@ function inputMaxBeatHandler(this: HTMLInputElement) {
     this.value = round(val, 2).toString();
 }
 
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
-    const { _bpm: bpm, _njs: njs } = mapSettings;
-    const { _notes: notes } = mapSet._data;
+function check(map: ToolArgs) {
+    const { bpm, _njs: njs } = mapSettings;
+    const { colorNotes } = map.difficulty.data;
     const {
         minTime: temp1,
         maxTime: temp2,
@@ -248,15 +248,15 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetDat
     const minTime =
         vbSpecific === 'time'
             ? bpm.toBeatTime(temp1)
-            : bpm.toBeatTime(vbDiff[mapSet._difficulty].min);
+            : bpm.toBeatTime(vbDiff[map.difficulty.difficulty].min);
     const maxTime =
         vbSpecific === 'time'
             ? bpm.toBeatTime(temp2)
-            : Math.min(njs.hjd, bpm.toBeatTime(vbDiff[mapSet._difficulty].max));
+            : Math.min(njs.hjd, bpm.toBeatTime(vbDiff[map.difficulty.difficulty].max));
 
-    let lastMidL!: beatmap.types.open.Note | null;
-    let lastMidR!: beatmap.types.open.Note | null;
-    const arr: beatmap.types.open.Note[] = [];
+    let lastMidL!: beatmap.v3.ColorNote | null;
+    let lastMidR!: beatmap.v3.ColorNote | null;
+    const arr: beatmap.v3.ColorNote[] = [];
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
         if (lastMidL) {
@@ -299,19 +299,13 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetDat
         });
 }
 
-function run(
-    mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.BeatmapSetData
-): void {
-    if (!mapSet) {
-        throw new Error('something went wrong!');
-    }
-    const result = check(mapSettings, mapSet);
+function run(map: ToolArgs) {
+    const result = check(map);
 
     if (result.length) {
         const htmlResult = document.createElement('div');
         htmlResult.innerHTML = `<b>Vision block [${result.length}]:</b> ${result
-            .map((n) => round(mapSettings._bpm.adjustTime(n), 3))
+            .map((n) => round(map.settings.bpm.adjustTime(n), 3))
             .join(', ')}`;
         tool.output.html = htmlResult;
     } else {

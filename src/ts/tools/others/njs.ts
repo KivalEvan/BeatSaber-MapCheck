@@ -1,6 +1,5 @@
-import * as beatmap from '../../beatmap';
+import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
-import { BeatmapSettings, Tool } from '../template';
 
 const tool: Tool = {
     name: 'Note Jump Speed',
@@ -17,20 +16,14 @@ const tool: Tool = {
     output: {
         html: null,
     },
-    run: run,
+    run,
 };
 
-function run(
-    mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.BeatmapSetData
-): void {
-    if (!mapSet) {
-        throw new Error('something went wrong!');
-    }
-    const { _njs: njs, _bpm: bpm } = mapSettings;
+function run(map: ToolArgs) {
+    const { njs, bpm } = map.settings;
     const htmlString: string[] = [];
 
-    if (mapSet._info._noteJumpMovementSpeed === 0) {
+    if (map.difficulty.info._noteJumpMovementSpeed === 0) {
         htmlString.push(`<b>Unset NJS</b>: fallback NJS is used`);
     }
     if (njs.value > 23) {

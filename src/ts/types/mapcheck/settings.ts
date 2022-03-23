@@ -4,22 +4,12 @@ type SettingsFlag = { [key: string]: boolean };
 
 type BeatNumbering = 'beattime' | 'jsontime' | 'realtime';
 
-export interface ISettingsProperty {
-    load: SettingsPropertyLoad;
-    sorting: boolean;
-    beatNumbering: BeatNumbering;
-    rounding: number;
-    theme: UITheme;
-    onLoad: SettingsPropertyOnLoad;
-    show: SettingsPropertyShow;
-}
-
-export enum SettingsLoadRename {
+export enum ISettingsLoadRename {
     audio = 'Audio',
     imageCover = 'Cover Image',
     imageContributor = 'Contributor Image',
 }
-interface SettingsPropertyLoad extends SettingsFlag {
+interface ISettingsPropertyLoad extends SettingsFlag {
     audio: boolean;
     imageCover: boolean;
     imageContributor: boolean;
@@ -31,13 +21,23 @@ export enum SettingsShowRename {
     stats = 'Stats',
     settings = 'Settings',
 }
-interface SettingsPropertyShow extends SettingsFlag {
+interface ISettingsPropertyShow extends SettingsFlag {
     info: boolean;
     tools: boolean;
     stats: boolean;
     settings: boolean;
 }
 
-interface SettingsPropertyOnLoad extends SettingsFlag {
+interface ISettingsPropertyOnLoad extends SettingsFlag {
     stats: boolean;
+}
+
+export interface ISettingsProperty {
+    load: ISettingsPropertyLoad;
+    sorting: boolean;
+    beatNumbering: BeatNumbering;
+    rounding: number;
+    theme: UITheme;
+    onLoad: ISettingsPropertyOnLoad;
+    show: ISettingsPropertyShow;
 }

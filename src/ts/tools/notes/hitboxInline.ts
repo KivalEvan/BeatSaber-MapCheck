@@ -1,6 +1,6 @@
-import * as beatmap from '../../beatmap';
+import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
-import { BeatmapSettings, Tool } from '../template';
+import * as beatmap from '../../beatmap';
 
 const htmlContainer = document.createElement('div');
 const htmlInputCheck = document.createElement('input');
@@ -33,7 +33,7 @@ const tool: Tool = {
     output: {
         html: null,
     },
-    run: run,
+    run,
 };
 
 function inputCheckHandler(this: HTMLInputElement) {
@@ -41,28 +41,23 @@ function inputCheckHandler(this: HTMLInputElement) {
 }
 
 const constant = 0;
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
-    const { _bpm: bpm, _njs: njs } = mapSettings;
-    const { _notes: notes } = mapSet._data;
+function check(map: ToolArgs) {
+    const { bpm, njs } = mapSettings;
+    const { colorNotes } = map.difficulty.data;
 
-    const lastNote: { [key: number]: beatmap.types.open.Note } = {};
-    const swingNoteArray: { [key: number]: beatmap.types.open.Note[] } = {
+    const lastNote: { [key: number]: beatmap.v3.ColorNote } = {};
+    const swingNoteArray: { [key: number]: beatmap.v3.ColorNote[] } = {
         0: [],
         1: [],
         3: [],
     };
 
-    const arr: beatmap.types.open.Note[] = [];
-    for (let i = 0, len = notes.length; i < len; i++) {
-        const note = notes[i];
-        if (beatmap.v2.note.isNote(note) && lastNote[note._type]) {
+    const arr: beatmap.v3.ColorNote[] = [];
+    for (let i = 0, len = colorNotes.length; i < len; i++) {
+        const note = colorNotes[i];
+        if (note.isNote(note) && lastNote[note._type]) {
             if (
-                beatmap.v2.swing.next(
-                    note,
-                    lastNote[note._type],
-                    bpm,
-                    swingNoteArray[note._type]
-                )
+                swing.next(note, lastNote[note._type], bpm, swingNoteArray[note._type])
             ) {
                 swingNoteArray[note._type] = [];
             }
@@ -73,7 +68,7 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetDat
                 njs.value <
                     1.425 /
                         ((60 * (note._time - other._time)) / bpm.value + constant) &&
-                beatmap.v2.note.isInline(note, other)
+                note.isInline(note, other)
             ) {
                 arr.push(note);
                 break;
@@ -89,19 +84,13 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetDat
         });
 }
 
-function run(
-    mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.BeatmapSetData
-): void {
-    if (!mapSet) {
-        throw new Error('something went wrong!');
-    }
-    const result = check(mapSettings, mapSet);
+function run(map: ToolArgs) {
+    const result = check(map);
 
     if (result.length) {
         const htmlResult = document.createElement('div');
         htmlResult.innerHTML = `<b>Hitbox inline [${result.length}]:</b> ${result
-            .map((n) => round(mapSettings._bpm.adjustTime(n), 3))
+            .map((n) => round(map.settings.bpm.adjustTime(n), 3))
             .join(', ')}`;
         tool.output.html = htmlResult;
     } else {
