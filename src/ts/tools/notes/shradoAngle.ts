@@ -125,7 +125,7 @@ function inputBeatHandler(this: HTMLInputElement) {
 }
 
 function check(map: ToolArgs) {
-    const { bpm } = mapSettings;
+    const { bpm } = map.settings;
     const { colorNotes } = map.difficulty.data;
     const { maxTime: temp, distance } = <{ maxTime: number; distance: number }>(
         tool.input.params
@@ -141,61 +141,61 @@ function check(map: ToolArgs) {
         3: [],
     };
     const arr: beatmap.v3.ColorNote[] = [];
-    for (let i = 0, len = notes.length; i < len; i++) {
-        const note = notes[i];
-        if (note.isNote(note) && lastNote[note._type]) {
+    for (let i = 0, len = colorNotes.length; i < len; i++) {
+        const note = colorNotes[i];
+        if (note.isNote(note) && lastNote[note.color]) {
             if (
-                swing.next(note, lastNote[note._type], bpm, swingNoteArray[note._type])
+                swing.next(note, lastNote[note.color], bpm, swingNoteArray[note.color])
             ) {
                 // FIXME: maybe fix rotation or something
-                if (startNoteDot[note._type]) {
-                    startNoteDot[note._type] = null;
-                    lastNoteDirection[note._type] =
-                        note.flipDirection[lastNoteDirection[note._type]] ?? 8;
+                if (startNoteDot[note.color]) {
+                    startNoteDot[note.color] = null;
+                    lastNoteDirection[note.color] =
+                        note.flipDirection[lastNoteDirection[note.color]] ?? 8;
                 }
                 if (
-                    note.distance(note, lastNote[note._type]) >= distance &&
+                    note.distance(note, lastNote[note.color]) >= distance &&
                     checkShrAngle(
-                        note._cutDirection,
-                        lastNoteDirection[note._type],
-                        note._type
+                        note.direction,
+                        lastNoteDirection[note.color],
+                        note.color
                     ) &&
-                    note._time - lastNote[note._type]._time <= maxTime
+                    note.time - lastNote[note.color].time <= maxTime
                 ) {
                     arr.push(note);
                 }
-                if (note._cutDirection === 8) {
-                    startNoteDot[note._type] = note;
+                if (note.direction === 8) {
+                    startNoteDot[note.color] = note;
                 } else {
-                    lastNoteDirection[note._type] = note._cutDirection;
+                    lastNoteDirection[note.color] = note.direction;
                 }
-                swingNoteArray[note._type] = [];
+                swingNoteArray[note.color] = [];
             } else {
                 if (
-                    startNoteDot[note._type] &&
-                    note.distance(note, lastNote[note._type]) >= distance &&
+                    startNoteDot[note.color] &&
+                    note.distance(note, lastNote[note.color]) >= distance &&
                     checkShrAngle(
-                        note._cutDirection,
-                        lastNoteDirection[note._type],
-                        note._type
+                        note.direction,
+                        lastNoteDirection[note.color],
+                        note.color
                     ) &&
-                    note._time - lastNote[note._type]._time <= maxTime
+                    note.time - lastNote[note.color].time <= maxTime
                 ) {
-                    arr.push(startNoteDot[note._type] as beatmap.v3.ColorNote);
-                    startNoteDot[note._type] = null;
+                    arr.push(startNoteDot[note.color] as beatmap.v3.ColorNote);
+                    startNoteDot[note.color] = null;
                 }
-                if (note._cutDirection !== 8) {
-                    lastNoteDirection[note._type] = note._cutDirection;
+                if (note.direction !== 8) {
+                    lastNoteDirection[note.color] = note.direction;
                 }
             }
         } else {
-            lastNoteDirection[note._type] = note._cutDirection;
+            lastNoteDirection[note.color] = note.direction;
         }
-        lastNote[note._type] = note;
-        swingNoteArray[note._type].push(note);
+        lastNote[note.color] = note;
+        swingNoteArray[note.color].push(note);
     }
     return arr
-        .map((n) => n._time)
+        .map((n) => n.time)
         .filter(function (x, i, ary) {
             return !i || x !== ary[i - 1];
         });

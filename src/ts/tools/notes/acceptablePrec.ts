@@ -50,14 +50,13 @@ function inputPrecHandler(this: HTMLInputElement) {
 }
 
 function check(map: ToolArgs) {
-    const { bpm } = mapSettings;
-    const { colorNotes } = map.difficulty.data;
+    const { bpm } = map.settings;
+    const swingContainer = map.difficulty.swingAnalysis.container;
     // god this hurt me, but typescript sees this as number instead of number[]
     const { prec } = <{ prec: number[] }>tool.input.params;
 
-    return swing
-        .getEffectiveBPMSwingNote(colorNotes, bpm)
-        .map((n) => n._time)
+    return swingContainer
+        .map((n) => n.time)
         .filter((x, i, ary) => {
             return !i || x !== ary[i - 1];
         })

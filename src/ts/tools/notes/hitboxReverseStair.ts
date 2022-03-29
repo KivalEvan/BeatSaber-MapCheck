@@ -43,7 +43,7 @@ function inputCheckHandler(this: HTMLInputElement) {
 const constant = 0.03414823529;
 const constantDiagonal = 0.03414823529;
 function check(map: ToolArgs) {
-    const { bpm, _njs: njs } = mapSettings;
+    const { bpm, _njs: njs } = map.settings;
     const { colorNotes } = map.difficulty.data;
 
     const lastNote: { [key: number]: beatmap.v3.ColorNote } = {};
@@ -56,18 +56,16 @@ function check(map: ToolArgs) {
     const arr: beatmap.v3.ColorNote[] = [];
     for (let i = 0, len = notes.length; i < len; i++) {
         const note = notes[i];
-        if (note.isNote(note) && lastNote[note._type]) {
+        if (note.isNote(note) && lastNote[note.color]) {
             if (
-                swing.next(note, lastNote[note._type], bpm, swingNoteArray[note._type])
+                swing.next(note, lastNote[note.color], bpm, swingNoteArray[note.color])
             ) {
-                swingNoteArray[note._type] = [];
+                swingNoteArray[note.color] = [];
             }
         }
-        for (const other of swingNoteArray[(note._type + 1) % 2]) {
-            if (other._cutDirection !== 8) {
-                if (
-                    !(bpm.toRealTime(note._time) > bpm.toRealTime(other._time) + 0.01)
-                ) {
+        for (const other of swingNoteArray[(note.color + 1) % 2]) {
+            if (other.direction !== 8) {
+                if (!(bpm.toRealTime(note.time) > bpm.toRealTime(other.time) + 0.01)) {
                     continue;
                 }
                 const isDiagonal =
@@ -76,7 +74,7 @@ function check(map: ToolArgs) {
                 if (
                     njs.value <
                         1.425 /
-                            ((60 * (note._time - other._time)) / bpm.value +
+                            ((60 * (note.time - other.time)) / bpm.value +
                                 (isDiagonal ? constantDiagonal : constant)) &&
                     note.isIntersect(note, other, [[15, 1.5]])[1]
                 ) {
@@ -85,11 +83,11 @@ function check(map: ToolArgs) {
                 }
             }
         }
-        lastNote[note._type] = note;
-        swingNoteArray[note._type].push(note);
+        lastNote[note.color] = note;
+        swingNoteArray[note.color].push(note);
     }
     return arr
-        .map((n) => n._time)
+        .map((n) => n.time)
         .filter(function (x, i, ary) {
             return !i || x !== ary[i - 1];
         });

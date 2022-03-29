@@ -1,5 +1,6 @@
 import { BeatPerMinute, NoteJumpSpeed } from '../../../beatmap';
-import { IInfoData, ISwingAnalysis } from '../../beatmap';
+import { IInfoData } from '../../beatmap';
+import { IAnalysis } from './analysis';
 import { IBeatmapItem } from './beatmapItem';
 import { ToolInputOrder, ToolOutputOrder } from './order';
 
@@ -36,7 +37,7 @@ export interface ToolArgs {
     settings: IBeatmapSettings;
     difficulty: IBeatmapItem;
     info: IInfoData;
-    sps: ISwingAnalysis[];
+    sps: IAnalysis;
 }
 
 export type ToolRun = (args: ToolArgs) => void;

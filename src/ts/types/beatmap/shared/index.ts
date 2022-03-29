@@ -1,6 +1,7 @@
 export * from './bpm';
 export * from './characteristic';
 export * from './colors';
+export * from './coordinate';
 export * from './difficulty';
 export * from './easings';
 export * from './environment';

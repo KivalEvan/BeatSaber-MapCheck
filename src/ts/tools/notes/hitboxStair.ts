@@ -41,7 +41,7 @@ function inputCheckHandler(this: HTMLInputElement) {
 }
 
 function check(map: ToolArgs) {
-    const { bpm } = mapSettings;
+    const { bpm } = map.settings;
     const { colorNotes } = map.difficulty.data;
     const hitboxTime = bpm.toBeatTime(0.15);
 
@@ -51,83 +51,81 @@ function check(map: ToolArgs) {
     const swingNoteArray: { [key: number]: beatmap.v3.ColorNote[] } = {
         0: [],
         1: [],
-        3: [],
     };
     const noteOccupy: { [key: number]: beatmap.v3.ColorNote } = {
-        0: { _time: 0, _type: 0, _cutDirection: 0, _lineIndex: 0, _lineLayer: 0 },
-        1: { _time: 0, _type: 1, _cutDirection: 0, _lineIndex: 0, _lineLayer: 0 },
-        3: { _time: 0, _type: 3, _cutDirection: 0, _lineIndex: 0, _lineLayer: 0 },
+        0: beatmap.v3.ColorNote.create({ c: 0 }),
+        1: beatmap.v3.ColorNote.create({ c: 1 }),
     };
 
     // FIXME: use new system
     const arr: beatmap.v3.ColorNote[] = [];
     for (let i = 0, len = colorNotes.length; i < len; i++) {
         const note = colorNotes[i];
-        if (note.isNote(note) && lastNote[note._type]) {
+        if (note.isNote(note) && lastNote[note.color]) {
             if (
-                swing.next(note, lastNote[note._type], bpm, swingNoteArray[note._type])
+                swing.next(note, lastNote[note.color], bpm, swingNoteArray[note.color])
             ) {
-                lastSpeed[note._type] = note._time - lastNote[note._type]._time;
-                if (note._cutDirection !== 8) {
-                    noteOccupy[note._type]._lineIndex =
-                        note._lineIndex + note.cutDirectionSpace[note._cutDirection][0];
-                    noteOccupy[note._type]._lineLayer =
-                        note._lineLayer + note.cutDirectionSpace[note._cutDirection][1];
+                lastSpeed[note.color] = note.time - lastNote[note.color].time;
+                if (note.direction !== 8) {
+                    noteOccupy[note.color].posX =
+                        note.posX + note.cutDirectionSpace[note.direction][0];
+                    noteOccupy[note.color].posY =
+                        note.posY + note.cutDirectionSpace[note.direction][1];
                 } else {
-                    noteOccupy[note._type]._lineIndex = -1;
-                    noteOccupy[note._type]._lineLayer = -1;
+                    noteOccupy[note.color].posX = -1;
+                    noteOccupy[note.color].posY = -1;
                 }
-                swingNoteArray[note._type] = [];
-                lastNoteDirection[note._type] = note._cutDirection;
+                swingNoteArray[note.color] = [];
+                lastNoteDirection[note.color] = note.direction;
             } else if (
-                note.isEnd(note, lastNote[note._type], lastNoteDirection[note._type])
+                note.isEnd(note, lastNote[note.color], lastNoteDirection[note.color])
             ) {
-                if (note._cutDirection !== 8) {
-                    noteOccupy[note._type]._lineIndex =
-                        note._lineIndex + note.cutDirectionSpace[note._cutDirection][0];
-                    noteOccupy[note._type]._lineLayer =
-                        note._lineLayer + note.cutDirectionSpace[note._cutDirection][1];
-                    lastNoteDirection[note._type] = note._cutDirection;
+                if (note.direction !== 8) {
+                    noteOccupy[note.color].posX =
+                        note.posX + note.cutDirectionSpace[note.direction][0];
+                    noteOccupy[note.color].posY =
+                        note.posY + note.cutDirectionSpace[note.direction][1];
+                    lastNoteDirection[note.color] = note.direction;
                 } else {
-                    noteOccupy[note._type]._lineIndex =
-                        note._lineIndex +
-                        note.cutDirectionSpace[lastNoteDirection[note._type]][0];
-                    noteOccupy[note._type]._lineLayer =
-                        note._lineLayer +
-                        note.cutDirectionSpace[lastNoteDirection[note._type]][1];
+                    noteOccupy[note.color].posX =
+                        note.posX +
+                        note.cutDirectionSpace[lastNoteDirection[note.color]][0];
+                    noteOccupy[note.color].posY =
+                        note.posY +
+                        note.cutDirectionSpace[lastNoteDirection[note.color]][1];
                 }
             }
             if (
-                lastNote[(note._type + 1) % 2] &&
-                note._time - lastNote[(note._type + 1) % 2]._time !== 0 &&
-                note._time - lastNote[(note._type + 1) % 2]._time <
-                    Math.min(hitboxTime, lastSpeed[(note._type + 1) % 2])
+                lastNote[(note.color + 1) % 2] &&
+                note.time - lastNote[(note.color + 1) % 2].time !== 0 &&
+                note.time - lastNote[(note.color + 1) % 2].time <
+                    Math.min(hitboxTime, lastSpeed[(note.color + 1) % 2])
             ) {
                 if (
-                    note._lineIndex === noteOccupy[(note._type + 1) % 2]._lineIndex &&
-                    note._lineLayer === noteOccupy[(note._type + 1) % 2]._lineLayer &&
+                    note.posX === noteOccupy[(note.color + 1) % 2].posX &&
+                    note.posY === noteOccupy[(note.color + 1) % 2].posY &&
                     !note.isDouble(note, colorNotes, i)
                 ) {
                     arr.push(note);
                 }
             }
         } else {
-            if (note._cutDirection !== 8) {
-                noteOccupy[note._type]._lineIndex =
-                    note._lineIndex + note.cutDirectionSpace[note._cutDirection][0];
-                noteOccupy[note._type]._lineLayer =
-                    note._lineLayer + note.cutDirectionSpace[note._cutDirection][1];
+            if (note.direction !== 8) {
+                noteOccupy[note.color].posX =
+                    note.posX + note.cutDirectionSpace[note.direction][0];
+                noteOccupy[note.color].posY =
+                    note.posY + note.cutDirectionSpace[note.direction][1];
             } else {
-                noteOccupy[note._type]._lineIndex = -1;
-                noteOccupy[note._type]._lineLayer = -1;
+                noteOccupy[note.color].posX = -1;
+                noteOccupy[note.color].posY = -1;
             }
-            lastNoteDirection[note._type] = note._cutDirection;
+            lastNoteDirection[note.color] = note.direction;
         }
-        lastNote[note._type] = note;
-        swingNoteArray[note._type].push(note);
+        lastNote[note.color] = note;
+        swingNoteArray[note.color].push(note);
     }
     return arr
-        .map((n) => n._time)
+        .map((n) => n.time)
         .filter(function (x, i, ary) {
             return !i || x !== ary[i - 1];
         });

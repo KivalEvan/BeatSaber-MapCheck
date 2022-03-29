@@ -1,6 +1,7 @@
 import {
     ColorSchemeList,
     EnvironmentAllName,
+    IColorScheme,
     IEnvironmentScheme,
 } from '../../types/beatmap/shared/environment';
 
@@ -64,6 +65,19 @@ export const EnvironmentSchemeName: Readonly<
     GagaEnvironment: 'Gaga',
     GlassDesertEnvironment: 'Glass Desert',
     WeaveEnvironment: 'Weave',
+};
+
+/** Color Scheme property rename to human readable. */
+export const ColorSchemeRename: Readonly<{
+    [k in keyof Required<IColorScheme>]: string;
+}> = {
+    _colorLeft: 'Left Note Color',
+    _colorRight: 'Right Note Color',
+    _envColorLeft: 'Left Environment Color',
+    _envColorRight: 'Right Environment Color',
+    _envColorLeftBoost: 'Left Environment Boost Color',
+    _envColorRightBoost: 'Right Environment Boost Color',
+    _obstacleColor: 'Obstacle Color',
 };
 
 /** Color scheme definition. */

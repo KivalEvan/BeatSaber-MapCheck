@@ -104,14 +104,14 @@ function inputPrecHandler(this: HTMLInputElement) {
 }
 
 function check(map: ToolArgs) {
-    const { bpm } = mapSettings;
+    const { bpm } = map.settings;
     const { colorNotes } = map.difficulty.data;
     const { minSpeed } = <{ minSpeed: number }>tool.input.params;
 
     return swing
         .getSliderNote(notes, bpm)
         .filter((n) => n._maxSpeed > minSpeed || n._minSpeed > minSpeed)
-        .map((n) => n._time)
+        .map((n) => n.time)
         .filter((x, i, ary) => {
             return !i || x !== ary[i - 1];
         });

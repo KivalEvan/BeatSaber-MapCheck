@@ -104,7 +104,7 @@ function inputPrecHandler(this: HTMLInputElement) {
 }
 
 function check(map: ToolArgs) {
-    const { bpm } = mapSettings;
+    const { bpm } = map.settings;
     const { colorNotes } = map.difficulty.data;
     const { maxTime: temp } = <{ maxTime: number }>tool.input.params;
     const maxTime = bpm.toBeatTime(temp) + 0.001;
@@ -123,36 +123,36 @@ function check(map: ToolArgs) {
     };
 
     const arr: beatmap.v3.ColorNote[] = [];
-    for (let i = 0, len = notes.length; i < len; i++) {
-        const note = notes[i];
-        if (note.isNote(note) && lastNote[note._type]) {
+    for (let i = 0, len = colorNotes.length; i < len; i++) {
+        const note = colorNotes[i];
+        if (note.isNote(note) && lastNote[note.color]) {
             if (
-                swing.next(note, lastNote[note._type], bpm, swingNoteArray[note._type])
+                swing.next(note, lastNote[note.color], bpm, swingNoteArray[note.color])
             ) {
-                if (note._time - lastNote[note._type]._time <= maxTime * 2) {
+                if (note.time - lastNote[note.color].time <= maxTime * 2) {
                     if (
                         maybePause[0] &&
                         maybePause[1] &&
-                        lastNote[note._type]._time - lastNotePause[note._type]._time <=
+                        lastNote[note.color].time - lastNotePause[note.color].time <=
                             maxTime * 3
                     ) {
-                        arr.push(lastNote[note._type]);
+                        arr.push(lastNote[note.color]);
                     }
-                    maybePause[note._type] = false;
-                } else if (!maybePause[note._type]) {
-                    maybePause[note._type] = true;
-                    lastNotePause[note._type] = lastNote[note._type];
+                    maybePause[note.color] = false;
+                } else if (!maybePause[note.color]) {
+                    maybePause[note.color] = true;
+                    lastNotePause[note.color] = lastNote[note.color];
                 }
-                swingNoteArray[note._type] = [];
-                lastNote[note._type] = note;
+                swingNoteArray[note.color] = [];
+                lastNote[note.color] = note;
             }
         } else {
-            lastNote[note._type] = note;
+            lastNote[note.color] = note;
         }
-        swingNoteArray[note._type].push(note);
+        swingNoteArray[note.color].push(note);
     }
     return arr
-        .map((n) => n._time)
+        .map((n) => n.time)
         .filter(function (x, i, ary) {
             return !i || x !== ary[i - 1];
         });

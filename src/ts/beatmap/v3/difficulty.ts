@@ -14,7 +14,7 @@ import { RotationEvent } from './rotationEvent';
 import { Slider } from './slider';
 import { Waypoint } from './waypoint';
 import { BeatPerMinute } from '../shared/bpm';
-import { getNoteContainer } from './container';
+import { EventContainer, NoteContainer } from '../../types/beatmap/v3/container';
 
 export class DifficultyData extends Serializable<IDifficultyData> {
     version;
@@ -135,7 +135,7 @@ export class DifficultyData extends Serializable<IDifficultyData> {
      * **Note:** Duration can be either in any time type.
      */
     nps = (duration: number): number => {
-        const notes = getNoteContainer(this).filter((n) => n.type !== 'bomb');
+        const notes = this.getNoteContainer().filter((n) => n.type !== 'bomb');
         return duration ? notes.length / duration : 0;
     };
 
@@ -148,7 +148,7 @@ export class DifficultyData extends Serializable<IDifficultyData> {
         let peakNPS = 0;
         let currentSectionStart = 0;
         const bpmV = typeof bpm === 'number' ? bpm : bpm.value;
-        const notes = getNoteContainer(this).filter((n) => n.type !== 'bomb');
+        const notes = this.getNoteContainer().filter((n) => n.type !== 'bomb');
 
         for (let i = 0; i < notes.length; i++) {
             while (notes[i].data.time - notes[currentSectionStart].data.time > beat) {
@@ -169,7 +169,7 @@ export class DifficultyData extends Serializable<IDifficultyData> {
      * ```
      */
     getFirstInteractiveTime = (): number => {
-        const notes = getNoteContainer(this).filter((n) => n.type !== 'bomb');
+        const notes = this.getNoteContainer().filter((n) => n.type !== 'bomb');
         let firstNoteTime = Number.MAX_VALUE;
         if (notes.length > 0) {
             firstNoteTime = notes[0].data.time;
@@ -184,7 +184,7 @@ export class DifficultyData extends Serializable<IDifficultyData> {
      * ```
      */
     getLastInteractiveTime = (): number => {
-        const notes = getNoteContainer(this).filter((n) => n.type !== 'bomb');
+        const notes = this.getNoteContainer().filter((n) => n.type !== 'bomb');
         let lastNoteTime = 0;
         if (notes.length > 0) {
             lastNoteTime = notes[notes.length - 1].data.time;
@@ -223,5 +223,118 @@ export class DifficultyData extends Serializable<IDifficultyData> {
             }
         }
         return obstacleEnd;
+    };
+
+    /** Get container of color notes, sliders, burst sliders, and bombs.
+     * ```ts
+     * const noteCountainer = getNoteContainer(difficultyData);
+     * ```
+     */
+    getNoteContainer = (): NoteContainer[] => {
+        const nc: NoteContainer[] = [];
+        this.colorNotes.forEach((n) => nc.push({ type: 'note', data: n }));
+        this.sliders.forEach((s) => nc.push({ type: 'slider', data: s }));
+        this.burstSliders.forEach((bs) => nc.push({ type: 'burstSlider', data: bs }));
+        this.bombNotes.forEach((b) => nc.push({ type: 'bomb', data: b }));
+        return nc.sort((a, b) => a.data.time - b.data.time);
+    };
+
+    /** Get container of basic events and boost events.
+     * ```ts
+     * const noteCountainer = getNoteContainer(difficultyData);
+     * ```
+     */
+    getEventContainer = (): EventContainer[] => {
+        const ec: EventContainer[] = [];
+        this.basicBeatmapEvents.forEach((be) =>
+            ec.push({ type: 'basicEvent', data: be })
+        );
+        this.colorBoostBeatmapEvents.forEach((b) =>
+            ec.push({ type: 'boost', data: b })
+        );
+        return ec.sort((a, b) => a.data.time - b.data.time);
+    };
+
+    addBPMEvents = (...bpmEvents: Partial<IDifficultyData['bpmEvents'][number]>[]) => {
+        bpmEvents.forEach((bpme) => {
+            this.bpmEvents.push(BPMEvent.create(bpme));
+        });
+    };
+    addRotationEvents = (
+        ...rotationEvents: Partial<IDifficultyData['rotationEvents'][number]>[]
+    ) => {
+        rotationEvents.forEach((re) => {
+            this.rotationEvents.push(RotationEvent.create(re));
+        });
+    };
+    addColorNotes = (
+        ...colorNotes: Partial<IDifficultyData['colorNotes'][number]>[]
+    ) => {
+        colorNotes.forEach((cn) => {
+            this.colorNotes.push(ColorNote.create(cn));
+        });
+    };
+    addBombNotes = (...bombNotes: Partial<IDifficultyData['bombNotes'][number]>[]) => {
+        bombNotes.forEach((bn) => {
+            this.bombNotes.push(BombNote.create(bn));
+        });
+    };
+    addObstacles = (...obstacles: Partial<IDifficultyData['obstacles'][number]>[]) => {
+        obstacles.forEach((o) => {
+            this.obstacles.push(Obstacle.create(o));
+        });
+    };
+    addSliders = (...sliders: Partial<IDifficultyData['sliders'][number]>[]) => {
+        sliders.forEach((s) => {
+            this.sliders.push(Slider.create(s));
+        });
+    };
+    addBurstSliders = (
+        ...burstSliders: Partial<IDifficultyData['burstSliders'][number]>[]
+    ) => {
+        burstSliders.forEach((bs) => {
+            this.burstSliders.push(BurstSlider.create(bs));
+        });
+    };
+    addWaypoints = (...waypoints: Partial<IDifficultyData['waypoints'][number]>[]) => {
+        waypoints.forEach((w) => {
+            this.waypoints.push(Waypoint.create(w));
+        });
+    };
+    addBasicBeatmapEvents = (
+        ...basicEvents: Partial<IDifficultyData['basicBeatmapEvents'][number]>[]
+    ) => {
+        basicEvents.forEach((be) => {
+            this.basicBeatmapEvents.push(BasicEvent.create(be));
+        });
+    };
+    addColorBoostBeatmapEvents = (
+        ...colorBoostEvents: Partial<
+            IDifficultyData['colorBoostBeatmapEvents'][number]
+        >[]
+    ) => {
+        colorBoostEvents.forEach((cbe) => {
+            this.colorBoostBeatmapEvents.push(ColorBoostEvent.create(cbe));
+        });
+    };
+    addLightColorEventBoxGroups = (
+        ...lightColorEBGs: Partial<
+            IDifficultyData['lightColorEventBoxGroups'][number]
+        >[]
+    ) => {
+        lightColorEBGs.forEach((lcebg) => {
+            this.lightColorEventBoxGroups.push(LightColorEventBoxGroup.create(lcebg));
+        });
+    };
+    addLightRotationEventBoxGroups = (
+        ...lightRotationEBGs: Partial<
+            IDifficultyData['lightRotationEventBoxGroups'][number]
+        >[]
+    ) => {
+        lightRotationEBGs.forEach((lrebg) => {
+            this.lightRotationEventBoxGroups.push(
+                LightRotationEventBoxGroup.create(lrebg)
+            );
+        });
     };
 }

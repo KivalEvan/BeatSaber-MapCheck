@@ -1,11 +1,15 @@
 import { IColorNote } from '../../types/beatmap/v3/colorNote';
 import { BaseObject } from './baseObject';
 import { LINE_COUNT, NoteCutAngle } from '../shared/constants';
-import { radToDeg, shortRotDistance } from '../../utils/index';
+import { radToDeg, shortRotDistance } from '../../utils';
 import { ObjectToReturn } from '../../types/utils';
+import { ICoordinateNote } from '../../types/beatmap/shared/coordinate';
 
 /** Color note beatmap object. */
-export class ColorNote extends BaseObject<IColorNote> {
+export class ColorNote
+    extends BaseObject<IColorNote>
+    implements ICoordinateNote<ColorNote>
+{
     static default: ObjectToReturn<Required<IColorNote>> = {
         b: 0,
         c: 0,
@@ -281,7 +285,7 @@ export class ColorNote extends BaseObject<IColorNote> {
      * const noteAngle = note.getAngle(noteCompare);
      * ```
      */
-    getAngle(): number {
+    getAngle() {
         // if (this.customData?._cutDirection) {
         //     return this.customData._cutDirection > 0
         //         ? this.customData._cutDirection % 360
@@ -301,7 +305,7 @@ export class ColorNote extends BaseObject<IColorNote> {
      * const noteDistance = note.distance(noteCompare);
      * ```
      */
-    distance(compareTo: ColorNote): number {
+    getDistance(compareTo: ColorNote) {
         const [nX1, nY1] = this.getPosition();
         const [nX2, nY2] = compareTo.getPosition();
         return Math.sqrt(Math.pow(nX2 - nX1, 2) + Math.pow(nY2 - nY1, 2));
@@ -337,6 +341,10 @@ export class ColorNote extends BaseObject<IColorNote> {
             const d = nX1 - nX2;
             return d > -0.001 && d < 0.001;
         }
+        return (
+            22.5 <= (Math.abs(this.getAngle()) % 180) + 90 &&
+            (Math.abs(this.getAngle()) % 180) + 90 <= 67.5
+        );
     }
 
     /** Compare two notes and return if the notes is in horizontal alignment.
@@ -382,7 +390,7 @@ export class ColorNote extends BaseObject<IColorNote> {
      * ```
      */
     isInline(compareTo: ColorNote, lapping = 0.5) {
-        return this.distance(compareTo) <= lapping;
+        return this.getDistance(compareTo) <= lapping;
     }
 
     /** Compare current note with the note ahead of it and return if the notes is a double.
@@ -411,7 +419,7 @@ export class ColorNote extends BaseObject<IColorNote> {
      * ```
      */
     isAdjacent(compareTo: ColorNote) {
-        const d = this.distance(compareTo);
+        const d = this.getDistance(compareTo);
         return d > 0.499 && d < 1.001;
     }
 
@@ -421,7 +429,7 @@ export class ColorNote extends BaseObject<IColorNote> {
      * ```
      */
     isWindow(compareTo: ColorNote, distance = 1.8) {
-        return this.distance(compareTo) > distance;
+        return this.getDistance(compareTo) > distance;
     }
 
     /** Compare two notes and return if the notes is a slanted window.
@@ -644,7 +652,7 @@ export class ColorNote extends BaseObject<IColorNote> {
             this.posY > 2 ||
             this.posY < 0 ||
             (this.direction >= 1000 && this.direction <= 1360) ||
-            (this.direction === 8 && this.direction >= 2000 && this.direction <= 2360)
+            (this.direction >= 2000 && this.direction <= 2360)
         );
     }
 

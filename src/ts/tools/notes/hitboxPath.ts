@@ -41,24 +41,21 @@ function inputCheckHandler(this: HTMLInputElement) {
 }
 
 function check(map: ToolArgs) {
-    const { bpm, _njs: njs } = mapSettings;
+    const { bpm, _njs: njs } = map.settings;
     const { colorNotes } = map.difficulty.data;
 
     const arr: beatmap.v3.ColorNote[] = [];
     // to avoid multiple of stack popping up, ignore anything within this time
     let lastTime: number = 0;
     for (let i = 0, len = notes.length; i < len; i++) {
-        if (bpm.toRealTime(notes[i]._time) < lastTime + 0.01 || notes[i]._type === 3) {
+        if (bpm.toRealTime(notes[i].time) < lastTime + 0.01 || notes[i].color === 3) {
             continue;
         }
         for (let j = i + 1; j < len; j++) {
-            if (
-                bpm.toRealTime(notes[j]._time) >
-                bpm.toRealTime(notes[i]._time) + 0.01
-            ) {
+            if (bpm.toRealTime(notes[j].time) > bpm.toRealTime(notes[i].time) + 0.01) {
                 break;
             }
-            if (notes[i]._type === notes[j]._type || notes[j]._type === 3) {
+            if (notes[i].color === notes[j].color || notes[j].color === 3) {
                 continue;
             }
             if (
@@ -79,12 +76,12 @@ function check(map: ToolArgs) {
                         .some((b) => b))
             ) {
                 arr.push(notes[i]);
-                lastTime = bpm.toRealTime(notes[i]._time);
+                lastTime = bpm.toRealTime(notes[i].time);
             }
         }
     }
     return arr
-        .map((n) => n._time)
+        .map((n) => n.time)
         .filter(function (x, i, ary) {
             return !i || x !== ary[i - 1];
         });

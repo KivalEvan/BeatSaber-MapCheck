@@ -11,7 +11,7 @@ if (!htmlLoadingBar || !htmlLoadingText) {
     console.error(logPrefix + 'loading component is missing part');
 }
 
-export const status = (
+export const loadingStatus = (
     statusType: LoadingStatusType,
     statusString: string,
     percentage: number = 100
@@ -30,6 +30,6 @@ export const status = (
         : htmlLoadingBar.classList.remove(htmlLoadingBarDownload);
 };
 
-export const reset = (): void => {
-    status('info', 'No map loaded', 0);
+export const loadingReset = (): void => {
+    loadingStatus('info', 'No map loaded', 0);
 };

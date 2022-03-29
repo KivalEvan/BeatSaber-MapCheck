@@ -41,12 +41,12 @@ function inputCheckHandler(this: HTMLInputElement) {
 }
 
 function check(map: ToolArgs) {
-    const { bpm } = mapSettings;
-    const { colorNotes } = map.difficulty.data;
+    const { bpm } = map.settings;
+    const noteContainer = map.difficulty.noteContainer;
     return swing
         .getSliderNote(notes, bpm)
         .filter((n) => Math.abs(n._minSpeed - n._maxSpeed) > 0.002)
-        .map((n) => n._time)
+        .map((n) => n.time)
         .filter((x, i, ary) => {
             return !i || x !== ary[i - 1];
         });

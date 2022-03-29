@@ -1,9 +1,9 @@
-import { IBaseObject } from '../../types/beatmap/v3/baseObject.ts';
-import { IDifficultyData } from '../../types/beatmap/v3/difficulty.ts';
-import { DifficultyData } from './difficulty.ts';
-import { DifficultyDataCheck } from './dataCheck.ts';
-import { deepCheck } from '../shared/dataCheck.ts';
-import logger from '../../logger.ts';
+import { IBaseObject } from '../../types/beatmap/v3/baseObject';
+import { IDifficultyData } from '../../types/beatmap/v3/difficulty';
+import { DifficultyData } from './difficulty';
+import { DifficultyDataCheck } from './dataCheck';
+import { deepCheck } from '../shared/dataCheck';
+import logger from '../../logger';
 
 // deno-lint-ignore ban-types
 const tag = (func: Function) => {

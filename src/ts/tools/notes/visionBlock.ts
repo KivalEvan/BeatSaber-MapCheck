@@ -1,6 +1,7 @@
 import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
 import * as beatmap from '../../beatmap';
+import { NoteContainer } from '../../types/beatmap/v3/container';
 
 const defaultMinTime = 0.1;
 const defaultMaxTime = 0.5;
@@ -238,8 +239,10 @@ function inputMaxBeatHandler(this: HTMLInputElement) {
 }
 
 function check(map: ToolArgs) {
-    const { bpm, _njs: njs } = mapSettings;
-    const { colorNotes } = map.difficulty.data;
+    const { bpm, njs } = map.settings;
+    const noteContainer = map.difficulty.data
+        .getNoteContainer()
+        .filter((n) => n.type !== 'slider');
     const {
         minTime: temp1,
         maxTime: temp2,
@@ -254,46 +257,46 @@ function check(map: ToolArgs) {
             ? bpm.toBeatTime(temp2)
             : Math.min(njs.hjd, bpm.toBeatTime(vbDiff[map.difficulty.difficulty].max));
 
-    let lastMidL!: beatmap.v3.ColorNote | null;
-    let lastMidR!: beatmap.v3.ColorNote | null;
-    const arr: beatmap.v3.ColorNote[] = [];
-    for (let i = 0, len = notes.length; i < len; i++) {
-        const note = notes[i];
+    let lastMidL!: NoteContainer[number] | null;
+    let lastMidR!: NoteContainer[number] | null;
+    const arr: NoteContainer = [];
+    for (let i = 0, len = noteContainer.length; i < len; i++) {
+        const note = noteContainer[i];
         if (lastMidL) {
             if (
-                note._time - lastMidL._time >= minTime &&
-                note._time - lastMidL._time <= maxTime
+                note.data.time - lastMidL.data.time >= minTime &&
+                note.data.time - lastMidL.data.time <= maxTime
             ) {
-                if (note._lineIndex < 2) {
+                if (note.data.posX < 2) {
                     arr.push(note);
                 }
             }
             // yeet the last note if nothing else found so we dont have to perform check every note
-            else if (note._time - lastMidL._time > maxTime) {
+            else if (note.data.time - lastMidL.data.time > maxTime) {
                 lastMidL = null;
             }
         }
         if (lastMidR) {
             if (
-                note._time - lastMidR._time >= minTime &&
-                note._time - lastMidR._time <= maxTime
+                note.data.time - lastMidR.data.time >= minTime &&
+                note.data.time - lastMidR.data.time <= maxTime
             ) {
-                if (note._lineIndex > 1) {
+                if (note.data.posX > 1) {
                     arr.push(note);
                 }
-            } else if (note._time - lastMidR._time > maxTime) {
+            } else if (note.data.time - lastMidR.data.time > maxTime) {
                 lastMidR = null;
             }
         }
-        if (note._lineLayer === 1 && note._lineIndex === 1) {
+        if (note.data.posY === 1 && note.data.posX === 1) {
             lastMidL = note;
         }
-        if (note._lineLayer === 1 && note._lineIndex === 2) {
+        if (note.data.posY === 1 && note.data.posX === 2) {
             lastMidR = note;
         }
     }
     return arr
-        .map((n) => n._time)
+        .map((n) => n.data.time)
         .filter(function (x, i, ary) {
             return !i || x !== ary[i - 1];
         });

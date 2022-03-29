@@ -10,7 +10,7 @@ const htmlResetButton =
 htmlResetButton.forEach((elem) => elem.addEventListener('click', resetHandler));
 
 function resetHandler(): void {
-    uiLoading.reset();
+    uiLoading.loadingReset();
     uiHeader.reset();
     uiInfo.reset();
     uiTools.reset();

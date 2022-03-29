@@ -6,7 +6,6 @@ export * from './bpmEvent';
 export * from './burstSlider';
 export * from './colorBoostEvent';
 export * from './colorNote';
-export * from './container';
 export * from './difficulty';
 export * from './indexFilter';
 export * from './lightColorBase';

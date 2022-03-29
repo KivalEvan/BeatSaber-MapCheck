@@ -3,10 +3,16 @@ import * as uiHeader from './header';
 import * as uiPanel from './panel';
 import { removeOptions, round, toMMSS, toHHMMSS, rgbaToHex } from '../utils';
 import savedData from '../savedData';
-import { IColorScheme, EnvironmentName, ColorSchemeRename, IInfoData } from '../types';
+import { IColorScheme, EnvironmentName, IInfoData } from '../types';
 import { IContributorB64, IBeatmapItem } from '../types/mapcheck/';
 import { IEditor, IEditorInfo } from '../types/beatmap/shared/editor';
-import { BeatPerMinute, ColorScheme, EnvironmentSchemeName } from '../beatmap';
+import {
+    BeatPerMinute,
+    ColorScheme,
+    ColorSchemeRename,
+    EnvironmentRename,
+    EnvironmentSchemeName,
+} from '../beatmap';
 import { ChromaDataEnvAbbr, IChromaEnvironment } from '../types/beatmap/v2/chroma';
 import { IHeckPointDefinition, ICustomEvent } from '../types/beatmap/v2';
 import { IBookmark } from '../types/beatmap/v3/bookmark';

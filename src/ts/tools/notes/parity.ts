@@ -77,7 +77,7 @@ function inputSelectRotateHandler(this: HTMLInputElement) {}
 function inputSelectParityHandler(this: HTMLInputElement) {}
 
 function check(map: ToolArgs) {
-    const { bpm } = mapSettings;
+    const { bpm } = map.settings;
     const { colorNotes } = map.difficulty.data;
     const { warningThres, errorThres, allowedRot } = <
         { warningThres: number; errorThres: number; allowedRot: number }
@@ -99,8 +99,8 @@ function check(map: ToolArgs) {
     };
 
     const swingParity: { [key: number]: parity.Parity } = {
-        0: new parity.Parity(notes, 0, warningThres, errorThres, allowedRot),
-        1: new parity.Parity(notes, 1, warningThres, errorThres, allowedRot),
+        0: new parity.Parity(colorNotes, 0, warningThres, errorThres, allowedRot),
+        1: new parity.Parity(colorNotes, 1, warningThres, errorThres, allowedRot),
     };
     const parity: { warning: number[]; error: number[] } = {
         warning: [],
@@ -108,42 +108,42 @@ function check(map: ToolArgs) {
     };
 
     const arr: beatmap.v3.ColorNote[] = [];
-    for (let i = 0, len = notes.length; i < len; i++) {
-        const note = notes[i];
-        if (note.isNote(note) && lastNote[note._type]) {
+    for (let i = 0, len = colorNotes.length; i < len; i++) {
+        const note = colorNotes[i];
+        if (note.isNote(note) && lastNote[note.color]) {
             if (
-                swing.next(note, lastNote[note._type], bpm, swingNoteArray[note._type])
+                swing.next(note, lastNote[note.color], bpm, swingNoteArray[note.color])
             ) {
                 // check previous swing parity
-                const parityStatus = swingParity[note._type].check(
-                    swingNoteArray[note._type],
-                    lastBombContext[note._type]
+                const parityStatus = swingParity[note.color].check(
+                    swingNoteArray[note.color],
+                    lastBombContext[note.color]
                 );
                 switch (parityStatus) {
                     case 'warning': {
-                        parity.warning.push(swingNoteArray[note._type][0]._time);
+                        parity.warning.push(swingNoteArray[note.color][0].time);
                         break;
                     }
                     case 'error': {
-                        parity.error.push(swingNoteArray[note._type][0]._time);
+                        parity.error.push(swingNoteArray[note.color][0].time);
                         break;
                     }
                 }
-                swingParity[note._type].next(
-                    swingNoteArray[note._type],
-                    lastBombContext[note._type]
+                swingParity[note.color].next(
+                    swingNoteArray[note.color],
+                    lastBombContext[note.color]
                 );
-                lastBombContext[note._type] = bombContext[note._type];
-                bombContext[note._type] = [];
-                swingNoteArray[note._type] = [];
+                lastBombContext[note.color] = bombContext[note.color];
+                bombContext[note.color] = [];
+                swingNoteArray[note.color] = [];
             }
         }
-        if (note._type === 3) {
+        if (note.color === 3) {
             bombContext[0].push(note);
             bombContext[1].push(note);
         }
-        lastNote[note._type] = note;
-        swingNoteArray[note._type].push(note);
+        lastNote[note.color] = note;
+        swingNoteArray[note.color].push(note);
     }
     // final
     for (let i = 0; i < 2; i++) {
@@ -154,11 +154,11 @@ function check(map: ToolArgs) {
             );
             switch (parityStatus) {
                 case 'warning': {
-                    parity.warning.push(swingNoteArray[i][0]._time);
+                    parity.warning.push(swingNoteArray[i][0].time);
                     break;
                 }
                 case 'error': {
-                    parity.error.push(swingNoteArray[i][0]._time);
+                    parity.error.push(swingNoteArray[i][0].time);
                     break;
                 }
             }

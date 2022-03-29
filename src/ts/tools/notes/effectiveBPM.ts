@@ -78,20 +78,20 @@ function inputEBPMSHandler(this: HTMLInputElement) {
 }
 
 function check(map: ToolArgs) {
-    const { bpm: bpm } = mapSettings;
-    const { notes: notes } = map.difficulty.data;
+    const { bpm } = map.settings;
+    const { colorNotes } = map.difficulty.data;
     const { ebpmThres, ebpmsThres } = <{ ebpmThres: number; ebpmsThres: number }>(
         tool.input.params
     );
 
     const noteEBPM = swing
-        .getEffectiveBPMNote(notes, bpm)
+        .getEffectiveBPMNote(colorNotes, bpm)
         .filter((n) => n._ebpm > ebpmThres)
-        .map((n) => n._time);
+        .map((n) => n.time);
     const noteEBPMS = swing
-        .getEffectiveBPMSwingNote(notes, bpm)
+        .getEffectiveBPMSwingNote(colorNotes, bpm)
         .filter((n) => n._ebpm > ebpmsThres)
-        .map((n) => n._time);
+        .map((n) => n.time);
 
     return { base: noteEBPM, swing: noteEBPMS };
 }

@@ -75,11 +75,11 @@ function introButtonTextHandler(ev: Event): void {
 // TODO: maybe break up into individual function
 function inputFileHandler(ev: Event): void {
     const target = ev.target as HTMLInputElement;
-    uiLoading.status('info', 'Reading file input', 0);
+    uiLoading.loadingStatus('info', 'Reading file input', 0);
     const file = target.files ? target.files[0] : null;
     try {
         if (file == null) {
-            uiLoading.status('info', 'No file input', 0);
+            uiLoading.loadingStatus('info', 'No file input', 0);
             throw new Error('No file input');
         }
         if (
@@ -95,7 +95,7 @@ function inputFileHandler(ev: Event): void {
             throw new Error('Unsupported file format, please enter zip file');
         }
     } catch (err) {
-        uiLoading.status('error', err, 0);
+        uiLoading.loadingStatus('error', err, 0);
         console.error(err);
     }
 }
@@ -125,7 +125,7 @@ function inputFileDropHandler(ev: DragEvent): void {
             }
         }
     } catch (err) {
-        uiLoading.status('error', err, 0);
+        uiLoading.loadingStatus('error', err, 0);
         console.error(err);
     }
 }

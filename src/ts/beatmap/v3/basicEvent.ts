@@ -111,6 +111,13 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
         this.data.f = value;
     }
 
+    get customData() {
+        return this.data.cd;
+    }
+    set customData(value: typeof this.data.cd) {
+        this.data.cd = value;
+    }
+
     setType(value: IBasicEvent['et']) {
         this.type = value;
         return this;

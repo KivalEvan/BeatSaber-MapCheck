@@ -41,7 +41,7 @@ function inputCheckHandler(this: HTMLInputElement) {
 }
 
 function check(map: ToolArgs) {
-    const { bpm } = mapSettings;
+    const { bpm } = map.settings;
     const { colorNotes } = map.difficulty.data;
     const lastNote: { [key: number]: beatmap.v3.ColorNote } = {};
     const lastNoteAngle: { [key: number]: number } = {};
@@ -49,7 +49,6 @@ function check(map: ToolArgs) {
     const swingNoteArray: { [key: number]: beatmap.v3.ColorNote[] } = {
         0: [],
         1: [],
-        3: [],
     };
 
     const arr: beatmap.v3.ColorNote[] = [];
@@ -66,7 +65,7 @@ function check(map: ToolArgs) {
                 if (note.checkDirection(note, lastNoteAngle[note.color], 45, true)) {
                     arr.push(note);
                 }
-                if (note._cutDirection === 8) {
+                if (note.direction === 8) {
                     startNoteDot[note.color] = note;
                 } else {
                     lastNoteAngle[note.color] = note.getAngle(note);
@@ -81,7 +80,7 @@ function check(map: ToolArgs) {
                     startNoteDot[note.color] = null;
                     lastNoteAngle[note.color] = note.getAngle(note);
                 }
-                if (note._cutDirection !== 8) {
+                if (note.direction !== 8) {
                     startNoteDot[note.color] = null;
                     lastNoteAngle[note.color] = note.getAngle(note);
                 }
@@ -93,27 +92,27 @@ function check(map: ToolArgs) {
         swingNoteArray[note.color].push(note);
         if (note.color === 3) {
             // on bottom row
-            if (note._lineLayer === 0) {
+            if (note.posY === 0) {
                 //on right center
-                if (note._lineIndex === 1) {
+                if (note.posX === 1) {
                     lastNoteAngle[0] = note.cutAngle[0];
                     startNoteDot[0] = null;
                 }
                 //on left center
-                if (note._lineIndex === 2) {
+                if (note.posX === 2) {
                     lastNoteAngle[1] = note.cutAngle[0];
                     startNoteDot[1] = null;
                 }
                 //on top row
             }
-            if (note._lineLayer === 2) {
+            if (note.posY === 2) {
                 //on right center
-                if (note._lineIndex === 1) {
+                if (note.posX === 1) {
                     lastNoteAngle[0] = note.cutAngle[1];
                     startNoteDot[0] = null;
                 }
                 //on left center
-                if (note._lineIndex === 2) {
+                if (note.posX === 2) {
                     lastNoteAngle[1] = note.cutAngle[1];
                     startNoteDot[1] = null;
                 }

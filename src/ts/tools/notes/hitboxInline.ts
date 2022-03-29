@@ -42,7 +42,7 @@ function inputCheckHandler(this: HTMLInputElement) {
 
 const constant = 0;
 function check(map: ToolArgs) {
-    const { bpm, njs } = mapSettings;
+    const { bpm, njs } = map.settings;
     const { colorNotes } = map.difficulty.data;
 
     const lastNote: { [key: number]: beatmap.v3.ColorNote } = {};
@@ -55,30 +55,29 @@ function check(map: ToolArgs) {
     const arr: beatmap.v3.ColorNote[] = [];
     for (let i = 0, len = colorNotes.length; i < len; i++) {
         const note = colorNotes[i];
-        if (note.isNote(note) && lastNote[note._type]) {
+        if (lastNote[note.color]) {
             if (
-                swing.next(note, lastNote[note._type], bpm, swingNoteArray[note._type])
+                swing.next(note, lastNote[note.color], bpm, swingNoteArray[note.color])
             ) {
-                swingNoteArray[note._type] = [];
+                swingNoteArray[note.color] = [];
             }
         }
-        for (const other of swingNoteArray[(note._type + 1) % 2]) {
+        for (const other of swingNoteArray[(note.color + 1) % 2]) {
             // magic number 1.425 from saber length + good/bad hitbox
             if (
                 njs.value <
-                    1.425 /
-                        ((60 * (note._time - other._time)) / bpm.value + constant) &&
+                    1.425 / ((60 * (note.time - other.time)) / bpm.value + constant) &&
                 note.isInline(note, other)
             ) {
                 arr.push(note);
                 break;
             }
         }
-        lastNote[note._type] = note;
-        swingNoteArray[note._type].push(note);
+        lastNote[note.color] = note;
+        swingNoteArray[note.color].push(note);
     }
     return arr
-        .map((n) => n._time)
+        .map((n) => n.time)
         .filter(function (x, i, ary) {
             return !i || x !== ary[i - 1];
         });

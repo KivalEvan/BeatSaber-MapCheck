@@ -104,7 +104,7 @@ function inputBeatHandler(this: HTMLInputElement) {
 }
 
 function check(map: ToolArgs) {
-    const { bpm } = mapSettings;
+    const { bpm } = map.settings;
     const { colorNotes } = map.difficulty.data;
     const { maxTime: temp } = <{ maxTime: number }>tool.input.params;
     const maxTime = bpm.toBeatTime(temp) + 0.001;
@@ -120,73 +120,73 @@ function check(map: ToolArgs) {
     const arr: beatmap.v3.ColorNote[] = [];
     let lastTime = 0;
     let lastIndex = 0;
-    for (let i = 0, len = notes.length; i < len; i++) {
-        const note = notes[i];
-        if (note.isNote(note) && lastNote[note._type]) {
+    for (let i = 0, len = colorNotes.length; i < len; i++) {
+        const note = colorNotes[i];
+        if (note.isNote(note) && lastNote[note.color]) {
             if (
-                swing.next(note, lastNote[note._type], bpm, swingNoteArray[note._type])
+                swing.next(note, lastNote[note.color], bpm, swingNoteArray[note.color])
             ) {
-                if (startNoteDot[note._type]) {
-                    startNoteDot[note._type] = null;
-                    lastNoteAngle[note._type] = (lastNoteAngle[note._type] + 180) % 360;
+                if (startNoteDot[note.color]) {
+                    startNoteDot[note.color] = null;
+                    lastNoteAngle[note.color] = (lastNoteAngle[note.color] + 180) % 360;
                 }
                 if (
-                    checkInline(note, notes, lastIndex, maxTime) &&
-                    note.checkDirection(note, lastNoteAngle[note._type], 90, true)
+                    checkInline(note, colorNotes, lastIndex, maxTime) &&
+                    note.checkDirection(note, lastNoteAngle[note.color], 90, true)
                 ) {
                     arr.push(note);
                 }
-                if (note._cutDirection === 8) {
-                    startNoteDot[note._type] = note;
+                if (note.direction === 8) {
+                    startNoteDot[note.color] = note;
                 } else {
-                    lastNoteAngle[note._type] = note.getAngle(note);
+                    lastNoteAngle[note.color] = note.getAngle(note);
                 }
-                swingNoteArray[note._type] = [];
+                swingNoteArray[note.color] = [];
             } else {
                 if (
-                    startNoteDot[note._type] &&
-                    checkInline(note, notes, lastIndex, maxTime) &&
-                    note.checkDirection(note, lastNoteAngle[note._type], 90, true)
+                    startNoteDot[note.color] &&
+                    checkInline(note, colorNotes, lastIndex, maxTime) &&
+                    note.checkDirection(note, lastNoteAngle[note.color], 90, true)
                 ) {
-                    arr.push(startNoteDot[note._type] as beatmap.v3.ColorNote);
-                    startNoteDot[note._type] = null;
+                    arr.push(startNoteDot[note.color] as beatmap.v3.ColorNote);
+                    startNoteDot[note.color] = null;
                 }
-                if (note._cutDirection !== 8) {
-                    lastNoteAngle[note._type] = note.getAngle(note);
+                if (note.direction !== 8) {
+                    lastNoteAngle[note.color] = note.getAngle(note);
                 }
             }
         } else {
-            lastNoteAngle[note._type] = note.getAngle(note);
+            lastNoteAngle[note.color] = note.getAngle(note);
         }
-        if (lastTime < note._time - maxTime) {
-            lastTime = note._time - maxTime;
+        if (lastTime < note.time - maxTime) {
+            lastTime = note.time - maxTime;
             lastIndex = i;
         }
-        lastNote[note._type] = note;
-        swingNoteArray[note._type].push(note);
-        if (note._type === 3) {
+        lastNote[note.color] = note;
+        swingNoteArray[note.color].push(note);
+        if (note.color === 3) {
             // on bottom row
-            if (note._lineLayer === 0) {
+            if (note.posY === 0) {
                 //on right center
-                if (note._lineIndex === 1) {
+                if (note.posX === 1) {
                     lastNoteAngle[0] = note.cutAngle[0];
                     startNoteDot[0] = null;
                 }
                 //on left center
-                if (note._lineIndex === 2) {
+                if (note.posX === 2) {
                     lastNoteAngle[1] = note.cutAngle[0];
                     startNoteDot[1] = null;
                 }
                 //on top row
             }
-            if (note._lineLayer === 2) {
+            if (note.posY === 2) {
                 //on right center
-                if (note._lineIndex === 1) {
+                if (note.posX === 1) {
                     lastNoteAngle[0] = note.cutAngle[1];
                     startNoteDot[0] = null;
                 }
                 //on left center
-                if (note._lineIndex === 2) {
+                if (note.posX === 2) {
                     lastNoteAngle[1] = note.cutAngle[1];
                     startNoteDot[1] = null;
                 }
@@ -194,7 +194,7 @@ function check(map: ToolArgs) {
         }
     }
     return arr
-        .map((n) => n._time)
+        .map((n) => n.time)
         .filter(function (x, i, ary) {
             return !i || x !== ary[i - 1];
         });
@@ -206,8 +206,8 @@ function checkInline(
     index: number,
     maxTime: number
 ) {
-    for (let i = index; notes[i]._time < n._time; i++) {
-        if (note.isInline(n, notes[i]) && n._time - notes[i]._time <= maxTime) {
+    for (let i = index; notes[i].time < n.time; i++) {
+        if (note.isInline(n, notes[i]) && n.time - notes[i].time <= maxTime) {
             return true;
         }
     }
