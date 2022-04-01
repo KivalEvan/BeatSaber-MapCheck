@@ -1,48 +1,72 @@
-import JSZip from 'jszip';
-import * as uiHeader from './ui/header';
-import * as uiLoading from './ui/loading';
-import * as uiInfo from './ui/information';
-import * as uiTools from './ui/tools';
-import * as uiStats from './ui/stats';
-import { disableInput } from './ui/input';
+import uiHeader from './ui/header';
+import uiLoading from './ui/loading';
+import uiInfo from './ui/information';
+import uiTools from './ui/tools';
+import uiStats from './ui/stats';
+import uiInput from './ui/input';
 import * as beatmap from './beatmap';
 import * as analyse from './tools/analyse';
 import settings from './settings';
 import flag from './flag';
 import SavedData from './SavedData';
-import { IInfoData } from './types/beatmap/shared/info';
+import { loadDifficulty, loadInfo } from './load';
+import { downloadFromHash, downloadFromID, downloadFromURL } from './download';
+import { sanitizeBeatSaverID, sanitizeURL } from './utils/web';
+import { isHex } from './utils';
+import { extractZip } from './extract';
+
+interface LoadType {
+    link?: string | null;
+    id?: string | null;
+    hash?: string | null;
+    file?: File | null;
+}
 
 // TODO: break these to smaller functions, and probably slap in async while at it
 // TODO: possibly do more accurate & predictive loading bar based on the amount of file available (may be farfetched and likely not be implemented)
-export const loadMap = async (mapZip: JSZip) => {
-    uiLoading.loadingStatus('info', 'Parsing map info...', 0);
-    console.log('parsing map info');
-    const fileInfo = mapZip.file('Info.dat') || mapZip.file('info.dat');
-    if (fileInfo) {
-        disableInput(true);
-        let infoFileStr = await fileInfo.async('string');
-        SavedData.beatmapInfo = (await JSON.parse(infoFileStr)) as IInfoData;
+export default async (type: LoadType) => {
+    try {
+        uiInput.enable(false);
+        let file: ArrayBuffer | File;
+        if (type.file) {
+            file = type.file;
+        } else if (type.link) {
+            file = await downloadFromURL(sanitizeURL(decodeURI(type.link)));
+        } else if (type.id) {
+            file = await downloadFromID(sanitizeBeatSaverID(decodeURI(type.id)));
+        } else if (type.hash && isHex(decodeURI(type.hash).trim())) {
+            file = await downloadFromHash(decodeURI(type.hash).trim());
+        } else {
+            throw new Error('Could not search for file.');
+        }
+        uiLoading.status('info', 'Extracting zip', 0);
+        uiHeader.switchHeader(true);
+        const mapZip = await extractZip(file);
 
-        beatmap.parse.info(SavedData.beatmapInfo);
-        uiInfo.setInfo(SavedData.beatmapInfo);
+        uiInput.enable(false);
+        uiLoading.status('info', 'Parsing map info...', 0);
+        console.log('parsing map info');
+        const info = await loadInfo(mapZip);
+        SavedData.beatmapInfo = info;
+
+        beatmap.parse.info(info);
+        uiInfo.setInfo(info);
 
         // load cover image
-        uiLoading.loadingStatus('info', 'Loading image...', 10.4375);
+        uiLoading.status('info', 'Loading image...', 10.4375);
         console.log('loading cover image');
-        let imageFile = mapZip.file(SavedData.beatmapInfo._coverImageFilename);
+        let imageFile = mapZip.file(info._coverImageFilename);
         if (settings.load.imageCover && imageFile) {
             let imgBase64 = await imageFile.async('base64');
             uiHeader.setCoverImage('data:image;base64,' + imgBase64);
             flag.loading.coverImage = true;
         } else {
-            console.error(
-                `${SavedData.beatmapInfo._coverImageFilename} does not exists.`
-            );
+            console.error(`${info._coverImageFilename} does not exists.`);
         }
 
         SavedData.contributors = [];
-        if (SavedData.beatmapInfo?._customData?._contributors) {
-            for (const contr of SavedData.beatmapInfo._customData._contributors) {
+        if (info?._customData?._contributors) {
+            for (const contr of info._customData._contributors) {
                 console.log('loading contributor image ' + contr._name);
                 imageFile = mapZip.file(contr._iconPath);
                 let _base64 = null;
@@ -56,14 +80,14 @@ export const loadMap = async (mapZip: JSZip) => {
         }
 
         // load audio
-        uiLoading.loadingStatus('info', 'Loading audio...', 20.875);
+        uiLoading.status('info', 'Loading audio...', 20.875);
         console.log('loading audio');
-        let audioFile = mapZip.file(SavedData.beatmapInfo._songFilename);
+        let audioFile = mapZip.file(info._songFilename);
         if (settings.load.audio && audioFile) {
             let loaded = false;
             setTimeout(() => {
                 if (!loaded)
-                    uiLoading.loadingStatus(
+                    uiLoading.status(
                         'info',
                         'Loading audio... (this may take a while)',
                         20.875
@@ -87,82 +111,37 @@ export const loadMap = async (mapZip: JSZip) => {
                 });
         } else {
             uiHeader.setSongDuration();
-            console.error(`${SavedData.beatmapInfo._songFilename} does not exist.`);
+            console.error(`${info._songFilename} does not exist.`);
         }
 
         // load diff map
-        uiLoading.loadingStatus('info', 'Parsing difficulty...', 70);
-        SavedData.beatmapDifficulty = [];
-        const mapSet = SavedData.beatmapInfo._difficultyBeatmapSets;
-        for (let i = mapSet.length - 1; i >= 0; i--) {
-            const mapDiff = mapSet[i]._difficultyBeatmaps;
-            if (mapDiff.length === 0 || !mapDiff) {
-                console.error('Empty difficulty set, removing...');
-                mapSet.splice(i, 1);
-                continue;
-            }
-            for (let j = 0; j < mapDiff.length; j++) {
-                const diffInfo = mapDiff[j];
-                const diffFile = mapZip.file(diffInfo._beatmapFilename);
-                if (diffFile) {
-                    console.log(
-                        `parsing ${mapSet[i]._beatmapCharacteristicName} ${diffInfo._difficulty}`
-                    );
-                    let diffFileStr: beatmap.v2.DifficultyData = JSON.parse(
-                        await diffFile.async('string')
-                    );
-                    let mapData: beatmap.v2.DifficultyData;
-                    try {
-                        mapData = beatmap.parse.difficultyLegacy(diffFileStr);
-                    } catch (err) {
-                        throw new Error(
-                            `${mapSet[i]._beatmapCharacteristicName} ${diffInfo._difficulty} ${err}`
-                        );
-                    }
-                    SavedData.beatmapDifficulty.push({
-                        _mode: mapSet[i]._beatmapCharacteristicName,
-                        _difficulty: diffInfo._difficulty,
-                        _info: diffInfo,
-                        _data: mapData,
-                        _environment: SavedData.beatmapInfo._environmentName,
-                    });
-                } else {
-                    console.error(
-                        `Missing ${diffInfo._beatmapFilename} file for ${mapSet[i]._beatmapCharacteristicName} ${diffInfo._difficulty}, ignoring.`
-                    );
-                    mapSet[i]._difficultyBeatmaps.splice(j, 1);
-                    j--;
-                    if (mapSet[i]._difficultyBeatmaps.length < 1) {
-                        console.error(
-                            `${mapSet[i]._beatmapCharacteristicName} difficulty set now empty, ignoring.`
-                        );
-                        mapSet.splice(i, 1);
-                        continue;
-                    }
-                }
-            }
-        }
+        uiLoading.status('info', 'Parsing difficulty...', 70);
+        SavedData.beatmapDifficulty = await loadDifficulty(info, mapZip);
 
         uiTools.adjustTime();
-        uiLoading.loadingStatus('info', 'Adding map difficulty stats...', 80);
+        uiLoading.status('info', 'Adding map difficulty stats...', 80);
         console.log('adding map stats');
         uiStats.populate();
         uiInfo.populateContributors(SavedData.contributors);
 
-        uiLoading.loadingStatus('info', 'Analysing map...', 85);
+        uiLoading.status('info', 'Analysing map...', 85);
         console.log('analysing map');
         analyse.sps();
         analyse.general();
         uiTools.displayOutputGeneral();
 
-        uiLoading.loadingStatus('info', 'Analysing difficulty...', 90);
+        uiLoading.status('info', 'Analysing difficulty...', 90);
         analyse.all();
-        uiTools.populateSelect(SavedData.beatmapInfo);
+        uiTools.populateSelect(info);
         uiTools.displayOutputDifficulty();
 
-        disableInput(false);
-        uiLoading.loadingStatus('info', 'Map successfully loaded!');
-    } else {
-        throw new Error("Couldn't find Info.dat");
+        uiInput.enable(true);
+        uiLoading.status('info', 'Map successfully loaded!');
+    } catch (err) {
+        uiLoading.status('error', err, 100);
+        console.error(err);
+        SavedData.clear();
+        uiInput.enable(true);
+        uiHeader.switchHeader(false);
     }
 };

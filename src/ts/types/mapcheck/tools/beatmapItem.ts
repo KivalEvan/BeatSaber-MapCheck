@@ -1,3 +1,4 @@
+import { BeatPerMinute } from '../../../beatmap';
 import { DifficultyData } from '../../../beatmap/v3';
 import {
     CharacteristicName,
@@ -13,6 +14,7 @@ interface IBeatmapItemBase {
     info: IInfoSetDifficultyData;
     characteristic: CharacteristicName;
     difficulty: DifficultyName;
+    bpm: BeatPerMinute;
     data: DifficultyData;
     noteContainer: NoteContainer[];
     eventContainer: EventContainer[];

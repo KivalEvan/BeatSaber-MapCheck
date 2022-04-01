@@ -1,5 +1,7 @@
 import { round, isHex, sanitizeBeatSaverID, sanitizeURL } from './utils';
-import { getIdZipURL, getHashZipURL } from './beatsaver';
+import { getZipIdURL, getZipHashURL } from './beatsaver';
+import uiLoading from './ui/loading';
+import uiHeader from './ui/header';
 
 export const downloadMap = async (url: string): Promise<ArrayBuffer> => {
     return new Promise(function (resolve, reject) {
@@ -46,95 +48,55 @@ export const downloadMap = async (url: string): Promise<ArrayBuffer> => {
     });
 };
 
-export const downloadFromID = async (input: string): Promise<void> => {
+export const downloadFromID = async (input: string): Promise<ArrayBuffer> => {
     // sanitize & validate id
-    let id;
-    try {
-        id = sanitizeBeatSaverID(input);
-    } catch (err) {
-        uiLoading.status('info', err, 0);
-        console.error(err);
-        throw new Error(err);
-    }
+    const id = sanitizeBeatSaverID(input);
 
-    try {
-        disableInput(true);
-        console.log(`fetching download URL from BeatSaver for map ID ${id}`);
-        uiLoading.status('info', 'Fetching download URL from BeatSaver', 0);
-        const url = await getIdZipURL(id);
-        console.log(`downloading from BeatSaver for map ID ${id}`);
-        uiLoading.status('info', 'Requesting download from BeatSaver', 0);
-        const res = await downloadMap(url);
-        uiHeader.setCoverLink('https://beatsaver.com/maps/' + id, id);
-        extractZip(res);
-    } catch (err) {
-        disableInput(false);
-        uiLoading.status('error', err, 100);
-        console.error(err);
-    }
+    console.log(`fetching download URL from BeatSaver for map ID ${id}`);
+    uiLoading.status('info', 'Fetching download URL from BeatSaver', 0);
+    const url = await getZipIdURL(id);
+    console.log(`downloading from BeatSaver for map ID ${id}`);
+    uiLoading.status('info', 'Requesting download from BeatSaver', 0);
+    const res = await downloadMap(url);
+    uiHeader.setCoverLink('https://beatsaver.com/maps/' + id, id);
+    return res;
 };
 
-export const downloadFromURL = async (input: string): Promise<void> => {
+export const downloadFromURL = async (input: string): Promise<ArrayBuffer> => {
     // sanitize & validate url
-    let url: string;
-    try {
-        url = sanitizeURL(input);
-    } catch (err) {
-        uiLoading.status('info', err, 0);
-        console.error(err);
-        return;
-    }
+    const url = sanitizeURL(input);
 
+    // check if URL is BeatSaver map URL
     if (url.match(/^(https?:\/\/)?(www\.)?beatsaver\.com\/maps\//)) {
-        downloadFromID(
+        return downloadFromID(
             url
                 .replace(/^https?:\/\/(www\.)?beatsaver\.com\/maps\//, '')
                 .match(/[a-fA-F0-9]*/)![0]
         );
-        return;
     }
 
-    try {
-        disableInput(true);
-        uiLoading.status('info', 'Requesting download from link', 0);
-        console.log(`downloading from ${url}`);
-        // apparently i need cors proxy
-        let res = await downloadMap(url);
-        uiHeader.setCoverLink(url);
-        extractZip(res);
-    } catch (err) {
-        disableInput(false);
-        uiLoading.status('error', err, 100);
-    }
+    uiLoading.status('info', 'Requesting download from link', 0);
+    console.log(`downloading from ${url}`);
+    // apparently i need cors proxy
+    let res = await downloadMap(url);
+    uiHeader.setCoverLink(url);
+    return res;
 };
 
-export const downloadFromHash = async (input: string): Promise<void> => {
+export const downloadFromHash = async (input: string): Promise<ArrayBuffer> => {
     // sanitize & validate id
-    let hash;
-    try {
-        if (isHex(input.trim())) {
-            hash = input.trim();
-        } else {
-            throw new Error('invalid hash');
-        }
-    } catch (err) {
-        uiLoading.status('info', err, 0);
-        console.error(err);
-        throw new Error(err);
+    let hash: string;
+    if (isHex(input.trim())) {
+        hash = input.trim();
+    } else {
+        throw new Error('invalid hash');
     }
 
-    try {
-        disableInput(true);
-        console.log(`fetching download URL from BeatSaver for map hash ${hash}`);
-        uiLoading.status('info', 'Fetching download URL from BeatSaver', 0);
-        const url = await getHashZipURL(hash);
-        console.log(`downloading from BeatSaver for map hash ${hash}`);
-        uiLoading.status('info', 'Requesting download from BeatSaver', 0);
-        const res = await downloadMap(url);
-        extractZip(res);
-    } catch (err) {
-        disableInput(false);
-        uiLoading.status('error', err, 100);
-        console.error(err);
-    }
+    console.log(`fetching download URL from BeatSaver for map hash ${hash}`);
+    uiLoading.status('info', 'Fetching download URL from BeatSaver', 0);
+    const url = await getZipHashURL(hash);
+    console.log(`downloading from BeatSaver for map hash ${hash}`);
+    uiLoading.status('info', 'Requesting download from BeatSaver', 0);
+    const res = await downloadMap(url);
+    return res;
 };

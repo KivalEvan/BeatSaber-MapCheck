@@ -1,4 +1,4 @@
-import { UITheme } from './ui';
+import { UIThemeName } from './ui';
 
 type SettingsFlag = { [key: string]: boolean };
 
@@ -9,7 +9,7 @@ export enum ISettingsLoadRename {
     imageCover = 'Cover Image',
     imageContributor = 'Contributor Image',
 }
-interface ISettingsPropertyLoad extends SettingsFlag {
+interface ISettingsLoad extends SettingsFlag {
     audio: boolean;
     imageCover: boolean;
     imageContributor: boolean;
@@ -21,23 +21,23 @@ export enum SettingsShowRename {
     stats = 'Stats',
     settings = 'Settings',
 }
-interface ISettingsPropertyShow extends SettingsFlag {
+interface ISettingsShow extends SettingsFlag {
     info: boolean;
     tools: boolean;
     stats: boolean;
     settings: boolean;
 }
 
-interface ISettingsPropertyOnLoad extends SettingsFlag {
+interface ISettingsOnLoad extends SettingsFlag {
     stats: boolean;
 }
 
-export interface ISettingsProperty {
-    load: ISettingsPropertyLoad;
+export interface ISettings {
+    load: ISettingsLoad;
     sorting: boolean;
     beatNumbering: BeatNumbering;
     rounding: number;
-    theme: UITheme;
-    onLoad: ISettingsPropertyOnLoad;
-    show: ISettingsPropertyShow;
+    theme: UIThemeName;
+    onLoad: ISettingsOnLoad;
+    show: ISettingsShow;
 }

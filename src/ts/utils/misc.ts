@@ -5,6 +5,10 @@ const tag = (func: Function) => {
     return `[utils::misc::${func.name}]`;
 };
 
+export const isHex = (hex: string): boolean => {
+    return /[a-fA-F0-9]*/g.test(hex);
+};
+
 /** Fisher–Yates shuffle algorithm. */
 // deno-lint-ignore no-explicit-any
 export const shuffle = (array: any[]): void => {

@@ -1,10 +1,10 @@
 // may god help you maintain these
-import * as uiHeader from './header';
-import * as uiPanel from './panel';
+import uiHeader from './header';
+import uiPanel from './panel';
 import { removeOptions, round, toMMSS, toHHMMSS, rgbaToHex } from '../utils';
 import savedData from '../savedData';
 import { IColorScheme, EnvironmentName, IInfoData } from '../types';
-import { IContributorB64, IBeatmapItem } from '../types/mapcheck/';
+import { IContributorB64, IBeatmapItem } from '../types/mapcheck';
 import { IEditor, IEditorInfo } from '../types/beatmap/shared/editor';
 import {
     BeatPerMinute,
@@ -19,596 +19,554 @@ import { IBookmark } from '../types/beatmap/v3/bookmark';
 
 const logPrefix = 'UI Info: ';
 
-const htmlInfoLevelAuthor = document.querySelector<HTMLElement>('.info__level-author');
-const htmlInfoEnvironment = document.querySelector<HTMLElement>('.info__environment');
-const htmlInfoEditors = document.querySelector<HTMLElement>('.info__editors');
-const htmlInfoContributors = document.querySelector<HTMLElement>('.info__contributors');
-const htmlInfoContributorsSelect = document.querySelector<HTMLSelectElement>(
-    '.info__contributors-select'
-);
-const htmlInfoContributorsImage = document.querySelector<HTMLImageElement>(
-    '.info__contributors-image'
-);
-const htmlInfoContributorsName = document.querySelector<HTMLElement>(
-    '.info__contributors-name'
-);
-const htmlInfoContributorsRole = document.querySelector<HTMLElement>(
-    '.info__contributors-role'
-);
+export default new (class UIInformation {
+    private htmlInfoLevelAuthor: HTMLElement;
+    private htmlInfoEnvironment: HTMLElement;
+    private htmlInfoEditors: HTMLElement;
+    private htmlInfoContributors: HTMLElement;
+    private htmlInfoContributorsSelect: HTMLSelectElement;
+    private htmlInfoContributorsImage: HTMLImageElement;
+    private htmlInfoContributorsName: HTMLElement;
+    private htmlInfoContributorsRole: HTMLElement;
 
-const htmlTableVersion = document.querySelector<HTMLElement>('.info__version');
-const htmlTableTimeSpend = document.querySelector<HTMLElement>('.info__time-spend');
-const htmlTableCustomColor = document.querySelector<HTMLElement>('.info__custom-color');
-const htmlTableRequirements =
-    document.querySelector<HTMLElement>('.info__requirements');
-const htmlTableSuggestions = document.querySelector<HTMLElement>('.info__suggestions');
-const htmlTableInformation = document.querySelector<HTMLElement>('.info__information');
-const htmlTableWarnings = document.querySelector<HTMLElement>('.info__warnings');
-const htmlTableBookmarks = document.querySelector<HTMLElement>('.info__bookmarks');
-const htmlTableBPMChanges = document.querySelector<HTMLElement>('.info__bpm-changes');
-const htmlTableEnvironmentEnhancement = document.querySelector<HTMLElement>(
-    '.info__environment-enhancement'
-);
-const htmlTablePointDefinitions = document.querySelector<HTMLElement>(
-    '.info__point-definitions'
-);
-const htmlTableCustomEvents =
-    document.querySelector<HTMLElement>('.info__custom-events');
+    private htmlTableVersion: HTMLElement;
+    private htmlTableTimeSpend: HTMLElement;
+    private htmlTableCustomColor: HTMLElement;
+    private htmlTableRequirements: HTMLElement;
+    private htmlTableSuggestions: HTMLElement;
+    private htmlTableInformation: HTMLElement;
+    private htmlTableWarnings: HTMLElement;
+    private htmlTableBookmarks: HTMLElement;
+    private htmlTableBPMChanges: HTMLElement;
+    private htmlTableEnvironmentEnhancement: HTMLElement;
+    private htmlTablePointDefinitions: HTMLElement;
+    private htmlTableCustomEvents: HTMLElement;
 
-if (!htmlInfoLevelAuthor || !htmlInfoEnvironment || !htmlInfoEditors) {
-    console.error(logPrefix + 'info component is missing part');
-}
-if (!htmlInfoContributors || !htmlInfoContributorsName || !htmlInfoContributorsRole) {
-    console.error(logPrefix + 'contributors component is missing part');
-}
-if (htmlInfoContributorsSelect) {
-    htmlInfoContributorsSelect.addEventListener('change', contributorsSelectHandler);
-} else {
-    console.error(logPrefix + 'contributors select is missing');
-}
-if (
-    !htmlTableVersion ||
-    !htmlTableTimeSpend ||
-    !htmlTableCustomColor ||
-    !htmlTableRequirements ||
-    !htmlTableSuggestions ||
-    !htmlTableInformation ||
-    !htmlTableWarnings ||
-    !htmlTableBookmarks ||
-    !htmlTableBPMChanges ||
-    !htmlTableEnvironmentEnhancement ||
-    !htmlTablePointDefinitions ||
-    !htmlTableCustomEvents
-) {
-    console.error(logPrefix + 'table info component is missing part');
-}
+    constructor() {
+        this.htmlInfoLevelAuthor = document.querySelector('.info__level-author')!;
+        this.htmlInfoEnvironment = document.querySelector('.info__environment')!;
+        this.htmlInfoEditors = document.querySelector('.info__editors')!;
+        this.htmlInfoContributors = document.querySelector('.info__contributors')!;
+        this.htmlInfoContributorsSelect = document.querySelector(
+            '.info__contributors-select'
+        )!;
+        this.htmlInfoContributorsImage = document.querySelector(
+            '.info__contributors-image'
+        )!;
+        this.htmlInfoContributorsName = document.querySelector(
+            '.info__contributors-name'
+        )!;
+        this.htmlInfoContributorsRole = document.querySelector(
+            '.info__contributors-role'
+        )!;
 
-export const setLevelAuthor = (str?: string): void => {
-    if (!htmlInfoLevelAuthor) {
-        console.error(logPrefix + 'missing HTML element for level author');
-        return;
-    }
-    if (!str) {
-        htmlInfoLevelAuthor.textContent = '';
-        return;
-    }
-    htmlInfoLevelAuthor.textContent = 'Mapped by ' + str;
-};
+        this.htmlTableVersion = document.querySelector('.info__version')!;
+        this.htmlTableTimeSpend = document.querySelector('.info__time-spend')!;
+        this.htmlTableCustomColor = document.querySelector('.info__custom-color')!;
+        this.htmlTableRequirements = document.querySelector('.info__requirements')!;
+        this.htmlTableSuggestions = document.querySelector('.info__suggestions')!;
+        this.htmlTableInformation = document.querySelector('.info__information')!;
+        this.htmlTableWarnings = document.querySelector('.info__warnings')!;
+        this.htmlTableBookmarks = document.querySelector('.info__bookmarks')!;
+        this.htmlTableBPMChanges = document.querySelector('.info__bpm-changes')!;
+        this.htmlTableEnvironmentEnhancement = document.querySelector(
+            '.info__environment-enhancement'
+        )!;
+        this.htmlTablePointDefinitions = document.querySelector(
+            '.info__point-definitions'
+        )!;
+        this.htmlTableCustomEvents = document.querySelector('.info__custom-events')!;
 
-export const setEnvironment = (str?: EnvironmentName): void => {
-    if (!htmlInfoEnvironment) {
-        console.error(logPrefix + 'missing HTML element for environment');
-        return;
-    }
-    if (!str) {
-        htmlInfoEnvironment.textContent = '';
-        return;
-    }
-    htmlInfoEnvironment.textContent =
-        (EnvironmentRename[str] || 'Unknown') + ' Environment';
-};
-
-export const setEditors = (obj?: IEditor): void => {
-    if (!htmlInfoEditors) {
-        console.error(logPrefix + 'missing HTML element for editor');
-        return;
-    }
-    if (!obj || !obj._lastEditedBy) {
-        htmlInfoEditors.classList.add('hidden');
-        return;
-    }
-    htmlInfoEditors.classList.remove('hidden');
-    const lastEdited = obj._lastEditedBy || 'Undefined';
-    let text = 'Last edited on ' + lastEdited;
-    if (obj[lastEdited]) {
-        const mapper = obj[lastEdited] as IEditorInfo;
-        text += ' v' + mapper.version;
-    }
-    htmlInfoEditors.textContent = text;
-};
-
-const setContributorsImage = (src: string | null): void => {
-    if (!htmlInfoContributorsImage) {
-        console.error(logPrefix + 'missing HTML element for contributor image');
-        return;
-    }
-    htmlInfoContributorsImage.src = src || './img/unknown.jpg';
-};
-
-const setContributorsName = (str: string): void => {
-    if (!htmlInfoContributorsName) {
-        console.error(logPrefix + 'missing HTML element for contributor name');
-        return;
-    }
-    htmlInfoContributorsName.textContent = str;
-};
-
-const setContributorsRole = (str: string): void => {
-    if (!htmlInfoContributorsRole) {
-        console.error(logPrefix + 'missing HTML element for contributor role');
-        return;
-    }
-    htmlInfoContributorsRole.textContent = str;
-};
-
-export const setContributors = (obj: IContributorB64): void => {
-    setContributorsImage(obj._base64 ? 'data:image;base64,' + obj._base64 : null);
-    setContributorsName(obj._name);
-    setContributorsRole(obj._role);
-};
-
-export const populateContributors = (arr?: IContributorB64[]): void => {
-    if (!htmlInfoContributors || !htmlInfoContributorsSelect) {
-        console.error(logPrefix + 'missing HTML element for contributor');
-        return;
-    }
-    if (htmlInfoContributors && (!arr || !arr.length)) {
-        htmlInfoContributors.classList.add('hidden');
-        removeOptions(htmlInfoContributorsSelect);
-        return;
-    }
-    if (arr) {
-        htmlInfoContributors.classList.remove('hidden');
-        let first = true;
-        arr.forEach((el, index) => {
-            if (first) {
-                first = false;
-                setContributors(el);
-            }
-            const optCont = document.createElement('option');
-            optCont.value = index.toString();
-            optCont.text = el._name + ' -- ' + el._role;
-            htmlInfoContributorsSelect.add(optCont);
-        });
-    }
-};
-
-const hideTableRow = <T extends HTMLElement>(elem: T): void => {
-    const tableElem = elem.querySelector('.info__table-element');
-    if (tableElem) {
-        tableElem.innerHTML = '';
-    }
-    elem.classList.add('hidden');
-};
-
-const displayTableRow = <T extends HTMLElement>(
-    elem: T,
-    content: string | string[] | HTMLElement[]
-): void => {
-    const tableElem = elem.querySelector('.info__table-element');
-    if (tableElem) {
-        while (tableElem.firstChild) {
-            tableElem.removeChild(tableElem.firstChild);
+        if (
+            !this.htmlInfoLevelAuthor ||
+            !this.htmlInfoEnvironment ||
+            !this.htmlInfoEditors
+        ) {
+            console.error(logPrefix + 'info component is missing part');
         }
-        if (typeof content === 'string') {
-            tableElem.textContent = content;
+        if (
+            !this.htmlInfoContributors ||
+            !this.htmlInfoContributorsName ||
+            !this.htmlInfoContributorsRole
+        ) {
+            console.error(logPrefix + 'contributors component is missing part');
+        }
+        if (this.htmlInfoContributorsSelect) {
+            this.htmlInfoContributorsSelect.addEventListener(
+                'change',
+                this.contributorsSelectHandler
+            );
         } else {
-            content.forEach((c: string | HTMLElement) => {
-                if (typeof c === 'string') {
-                    let temp = document.createElement('span');
-                    temp.textContent = c;
-                    tableElem.appendChild(temp);
-                    tableElem.appendChild(document.createElement('br'));
-                } else {
-                    tableElem.appendChild(c);
-                    tableElem.appendChild(document.createElement('br'));
-                }
-            });
-            if (tableElem.lastChild) {
-                tableElem.removeChild(tableElem.lastChild);
-            }
+            console.error(logPrefix + 'contributors select is missing');
+        }
+        if (
+            !this.htmlTableVersion ||
+            !this.htmlTableTimeSpend ||
+            !this.htmlTableCustomColor ||
+            !this.htmlTableRequirements ||
+            !this.htmlTableSuggestions ||
+            !this.htmlTableInformation ||
+            !this.htmlTableWarnings ||
+            !this.htmlTableBookmarks ||
+            !this.htmlTableBPMChanges ||
+            !this.htmlTableEnvironmentEnhancement ||
+            !this.htmlTablePointDefinitions ||
+            !this.htmlTableCustomEvents
+        ) {
+            console.error(logPrefix + 'table info component is missing part');
         }
     }
-    elem.classList.remove('hidden');
-};
 
-export const setVersion = (ver?: string): void => {
-    if (!htmlTableVersion) {
-        console.error(logPrefix + 'missing table row for time spend');
-        return;
-    }
-    if (ver == null) {
-        hideTableRow(htmlTableVersion);
-        return;
-    }
-    displayTableRow(htmlTableVersion, ver);
-};
-
-export const setTimeSpend = (num?: number): void => {
-    if (!htmlTableTimeSpend) {
-        console.error(logPrefix + 'missing table row for time spend');
-        return;
-    }
-    if (num == null) {
-        hideTableRow(htmlTableTimeSpend);
-        return;
-    }
-    displayTableRow(htmlTableTimeSpend, toHHMMSS(num));
-};
-
-export const setCustomColor = (
-    customColor?: IColorScheme,
-    environment?: EnvironmentName
-): void => {
-    if (!htmlTableCustomColor) {
-        console.error(logPrefix + 'missing table row for custom colors');
-        return;
-    }
-    if (
-        !customColor ||
-        (!customColor._colorLeft &&
-            !customColor._colorRight &&
-            !customColor._envColorLeft &&
-            !customColor._envColorLeftBoost &&
-            !customColor._envColorRight &&
-            !customColor._envColorRightBoost &&
-            !customColor._obstacleColor)
-    ) {
-        hideTableRow(htmlTableCustomColor);
-        return;
-    }
-    if (!environment) {
-        environment = 'DefaultEnvironment';
-    }
-    let hexColor: { [key: string]: string | null } = {
-        _colorLeft:
-            rgbaToHex(ColorScheme[EnvironmentSchemeName[environment]]?._colorLeft) ||
-            null,
-        _colorRight:
-            rgbaToHex(ColorScheme[EnvironmentSchemeName[environment]]?._colorRight) ||
-            null,
-        _envColorLeft:
-            rgbaToHex(ColorScheme[EnvironmentSchemeName[environment]]?._envColorLeft) ||
-            null,
-        _envColorRight:
-            rgbaToHex(
-                ColorScheme[EnvironmentSchemeName[environment]]?._envColorRight
-            ) || null,
-        _envColorLeftBoost:
-            rgbaToHex(
-                ColorScheme[EnvironmentSchemeName[environment]]?._envColorLeftBoost
-            ) || null,
-        _envColorRightBoost:
-            rgbaToHex(
-                ColorScheme[EnvironmentSchemeName[environment]]?._envColorRightBoost
-            ) || null,
-        _obstacleColor:
-            rgbaToHex(
-                ColorScheme[EnvironmentSchemeName[environment]]?._obstacleColor
-            ) || null,
+    setLevelAuthor = (str?: string): void => {
+        if (!str) {
+            this.htmlInfoLevelAuthor.textContent = '';
+            return;
+        }
+        this.htmlInfoLevelAuthor.textContent = 'Mapped by ' + str;
     };
-    if (customColor._colorLeft) {
-        hexColor._colorLeft = rgbaToHex(customColor._colorLeft);
-    }
-    if (customColor._colorRight) {
-        hexColor._colorRight = rgbaToHex(customColor._colorRight);
-    }
-    if (customColor._envColorLeft) {
-        hexColor._envColorLeft = rgbaToHex(customColor._envColorLeft);
-    } else if (customColor._colorLeft) {
-        hexColor._envColorLeft = rgbaToHex(customColor._colorLeft);
-    }
-    if (customColor._envColorRight) {
-        hexColor._envColorRight = rgbaToHex(customColor._envColorRight);
-    } else if (customColor._colorRight) {
-        hexColor._envColorRight = rgbaToHex(customColor._colorRight);
-    }
 
-    // tricky stuff
-    // need to display both boost if one exist
-    let envBL!: string | null,
-        envBR!: string | null,
-        envBoost = false;
-    if (customColor._envColorLeftBoost) {
-        envBL = rgbaToHex(customColor._envColorLeftBoost);
-        envBoost = true;
-    } else {
-        envBL =
-            rgbaToHex(
-                ColorScheme[EnvironmentSchemeName[environment]]?._envColorLeftBoost
-            ) || hexColor._envColorLeft;
-    }
-    if (customColor._envColorRightBoost) {
-        envBR = rgbaToHex(customColor._envColorRightBoost);
-        envBoost = true;
-    } else {
-        envBR =
-            rgbaToHex(
-                ColorScheme[EnvironmentSchemeName[environment]]?._envColorRightBoost
-            ) || hexColor._envColorRight;
-    }
-
-    if (envBoost) {
-        hexColor._envColorLeftBoost = envBL;
-        hexColor._envColorRightBoost = envBR;
-    }
-
-    if (customColor._obstacleColor) {
-        hexColor._obstacleColor = rgbaToHex(customColor._obstacleColor);
-    }
-
-    const panel = uiPanel.create('max', 'none', true);
-    for (const key in hexColor) {
-        if (!hexColor[key]) {
-            continue;
+    setEnvironment = (str?: EnvironmentName): void => {
+        if (!str) {
+            this.htmlInfoEnvironment.textContent = '';
+            return;
         }
-        const container = document.createElement('div');
-        const colorContainer = document.createElement('div');
-        const textMonoContainer = document.createElement('div');
-        const textContainer = document.createElement('div');
+        this.htmlInfoEnvironment.textContent =
+            (EnvironmentRename[str] || 'Unknown') + ' Environment';
+    };
 
-        colorContainer.className = 'info__color-dot';
-        colorContainer.style.backgroundColor = hexColor[key] || '#000000';
-
-        textMonoContainer.className = 'info__color-text info__color-text--monospace';
-        textMonoContainer.textContent = `${hexColor[key]}`;
-
-        textContainer.className = 'info__color-text';
-        textContainer.textContent = ` -- ${
-            ColorSchemeRename[key as keyof typeof ColorSchemeRename]
-        }`;
-
-        container.appendChild(colorContainer);
-        container.appendChild(textMonoContainer);
-        container.appendChild(textContainer);
-
-        panel.appendChild(container);
-    }
-    const content: HTMLElement[] = [panel];
-    displayTableRow(htmlTableCustomColor, content);
-};
-
-export const setRequirements = (arr?: string[]): void => {
-    if (!htmlTableRequirements) {
-        console.error(logPrefix + 'missing table row for requirements');
-        return;
-    }
-    if (arr == null || !arr.length) {
-        hideTableRow(htmlTableRequirements);
-        return;
-    }
-    displayTableRow(htmlTableRequirements, arr.join(', '));
-};
-
-export const setSuggestions = (arr?: string[]): void => {
-    if (!htmlTableSuggestions) {
-        console.error(logPrefix + 'missing table row for suggestions');
-        return;
-    }
-    if (arr == null || !arr.length) {
-        hideTableRow(htmlTableSuggestions);
-        return;
-    }
-    displayTableRow(htmlTableSuggestions, arr.join(', '));
-};
-
-export const setInformation = (arr?: string[]): void => {
-    if (!htmlTableInformation) {
-        console.error(logPrefix + 'missing table row for information');
-        return;
-    }
-    if (arr == null || !arr.length) {
-        hideTableRow(htmlTableInformation);
-        return;
-    }
-    displayTableRow(htmlTableInformation, arr);
-};
-
-export const setWarnings = (arr?: string[]): void => {
-    if (!htmlTableWarnings) {
-        console.error(logPrefix + 'missing table row for warnings');
-        return;
-    }
-    if (arr == null || !arr.length) {
-        hideTableRow(htmlTableWarnings);
-        return;
-    }
-    displayTableRow(htmlTableWarnings, arr);
-};
-
-export const setBookmarks = (arr?: IBookmark[], bpm?: BeatPerMinute | null): void => {
-    if (!htmlTableBookmarks) {
-        console.error(logPrefix + 'missing table row for bookmarks');
-        return;
-    }
-    if (arr == null || !arr.length) {
-        hideTableRow(htmlTableBookmarks);
-        return;
-    }
-    const bookmarkText = arr.map((elem) => {
-        let time = elem.b;
-        let rt!: number;
-        if (bpm) {
-            time = bpm.adjustTime(time);
-            rt = bpm.toRealTime(time);
+    setEditors = (obj?: IEditor): void => {
+        if (!obj || !obj._lastEditedBy) {
+            this.htmlInfoEditors.classList.add('hidden');
+            return;
         }
-        return `${round(elem.b, 3)}${rt ? ' | ' + toMMSS(rt) : ''} -- ${
-            elem.n !== '' ? elem.b : '**EMPTY NAME**'
-        }`;
-    });
-    displayTableRow(htmlTableBookmarks, bookmarkText);
-};
+        this.htmlInfoEditors.classList.remove('hidden');
+        const lastEdited = obj._lastEditedBy || 'Undefined';
+        let text = 'Last edited on ' + lastEdited;
+        if (obj[lastEdited]) {
+            const mapper = obj[lastEdited] as IEditorInfo;
+            text += ' v' + mapper.version;
+        }
+        this.htmlInfoEditors.textContent = text;
+    };
 
-export const setBPMChanges = (bpm?: BeatPerMinute | null): void => {
-    if (!htmlTableBPMChanges) {
-        console.error(logPrefix + 'missing table row for bookmarks');
-        return;
-    }
-    if (!bpm || !bpm.change.length) {
-        hideTableRow(htmlTableBPMChanges);
-        return;
-    }
-    const bpmcText = bpm.change.map((bpmc) => {
-        let time = round(bpmc._newTime, 3);
-        let rt = bpm.toRealTime(bpmc._time);
-        return `${time} | ${toMMSS(rt)} -- ${bpmc._BPM}`;
-    });
-    displayTableRow(htmlTableBPMChanges, bpmcText);
-};
+    private setContributorsImage = (src: string | null): void => {
+        this.htmlInfoContributorsImage.src = src || './img/unknown.jpg';
+    };
 
-// this implementation looks hideous but whatever
-export const setEnvironmentEnhancement = (arr?: IChromaEnvironment[]): void => {
-    if (!htmlTableEnvironmentEnhancement) {
-        console.error(logPrefix + 'missing table row for environment enhancement');
-        return;
-    }
-    if (arr == null || !arr.length) {
-        hideTableRow(htmlTableEnvironmentEnhancement);
-        return;
-    }
-    const envEnhance = arr.map((elem) => {
-        let keyArr = [];
-        for (const key in elem) {
-            if (key == '_lookupMethod' || key == '_id') {
+    private setContributorsName = (str: string): void => {
+        this.htmlInfoContributorsName.textContent = str;
+    };
+
+    private setContributorsRole = (str: string): void => {
+        this.htmlInfoContributorsRole.textContent = str;
+    };
+
+    setContributors = (obj: IContributorB64): void => {
+        this.setContributorsImage(
+            obj._base64 ? 'data:image;base64,' + obj._base64 : null
+        );
+        this.setContributorsName(obj._name);
+        this.setContributorsRole(obj._role);
+    };
+
+    populateContributors = (arr?: IContributorB64[]): void => {
+        if (this.htmlInfoContributors && (!arr || !arr.length)) {
+            this.htmlInfoContributors.classList.add('hidden');
+            removeOptions(this.htmlInfoContributorsSelect);
+            return;
+        }
+        if (arr) {
+            this.htmlInfoContributors.classList.remove('hidden');
+            let first = true;
+            arr.forEach((el, index) => {
+                if (first) {
+                    first = false;
+                    this.setContributors(el);
+                }
+                const optCont = document.createElement('option');
+                optCont.value = index.toString();
+                optCont.text = el._name + ' -- ' + el._role;
+                this.htmlInfoContributorsSelect.add(optCont);
+            });
+        }
+    };
+
+    private hideTableRow = <T extends HTMLElement>(elem: T): void => {
+        const tableElem = elem.querySelector('.info__table-element');
+        if (tableElem) {
+            tableElem.innerHTML = '';
+        }
+        elem.classList.add('hidden');
+    };
+
+    private displayTableRow = <T extends HTMLElement>(
+        elem: T,
+        content: string | string[] | HTMLElement[]
+    ): void => {
+        const tableElem = elem.querySelector('.info__table-element');
+        if (tableElem) {
+            while (tableElem.firstChild) {
+                tableElem.removeChild(tableElem.firstChild);
+            }
+            if (typeof content === 'string') {
+                tableElem.textContent = content;
+            } else {
+                content.forEach((c: string | HTMLElement) => {
+                    if (typeof c === 'string') {
+                        let temp = document.createElement('span');
+                        temp.textContent = c;
+                        tableElem.appendChild(temp);
+                        tableElem.appendChild(document.createElement('br'));
+                    } else {
+                        tableElem.appendChild(c);
+                        tableElem.appendChild(document.createElement('br'));
+                    }
+                });
+                if (tableElem.lastChild) {
+                    tableElem.removeChild(tableElem.lastChild);
+                }
+            }
+        }
+        elem.classList.remove('hidden');
+    };
+
+    setVersion = (ver?: string): void => {
+        if (ver == null) {
+            this.hideTableRow(this.htmlTableVersion);
+            return;
+        }
+        this.displayTableRow(this.htmlTableVersion, ver);
+    };
+
+    setTimeSpend = (num?: number): void => {
+        if (num == null) {
+            this.hideTableRow(this.htmlTableTimeSpend);
+            return;
+        }
+        this.displayTableRow(this.htmlTableTimeSpend, toHHMMSS(num));
+    };
+
+    setCustomColor = (
+        customColor?: IColorScheme,
+        environment?: EnvironmentName
+    ): void => {
+        if (
+            !customColor ||
+            (!customColor._colorLeft &&
+                !customColor._colorRight &&
+                !customColor._envColorLeft &&
+                !customColor._envColorLeftBoost &&
+                !customColor._envColorRight &&
+                !customColor._envColorRightBoost &&
+                !customColor._obstacleColor)
+        ) {
+            this.hideTableRow(this.htmlTableCustomColor);
+            return;
+        }
+        if (!environment) {
+            environment = 'DefaultEnvironment';
+        }
+        let hexColor: { [key: string]: string | null } = {
+            _colorLeft:
+                rgbaToHex(
+                    ColorScheme[EnvironmentSchemeName[environment]]?._colorLeft
+                ) || null,
+            _colorRight:
+                rgbaToHex(
+                    ColorScheme[EnvironmentSchemeName[environment]]?._colorRight
+                ) || null,
+            _envColorLeft:
+                rgbaToHex(
+                    ColorScheme[EnvironmentSchemeName[environment]]?._envColorLeft
+                ) || null,
+            _envColorRight:
+                rgbaToHex(
+                    ColorScheme[EnvironmentSchemeName[environment]]?._envColorRight
+                ) || null,
+            _envColorLeftBoost:
+                rgbaToHex(
+                    ColorScheme[EnvironmentSchemeName[environment]]?._envColorLeftBoost
+                ) || null,
+            _envColorRightBoost:
+                rgbaToHex(
+                    ColorScheme[EnvironmentSchemeName[environment]]?._envColorRightBoost
+                ) || null,
+            _obstacleColor:
+                rgbaToHex(
+                    ColorScheme[EnvironmentSchemeName[environment]]?._obstacleColor
+                ) || null,
+        };
+        if (customColor._colorLeft) {
+            hexColor._colorLeft = rgbaToHex(customColor._colorLeft);
+        }
+        if (customColor._colorRight) {
+            hexColor._colorRight = rgbaToHex(customColor._colorRight);
+        }
+        if (customColor._envColorLeft) {
+            hexColor._envColorLeft = rgbaToHex(customColor._envColorLeft);
+        } else if (customColor._colorLeft) {
+            hexColor._envColorLeft = rgbaToHex(customColor._colorLeft);
+        }
+        if (customColor._envColorRight) {
+            hexColor._envColorRight = rgbaToHex(customColor._envColorRight);
+        } else if (customColor._colorRight) {
+            hexColor._envColorRight = rgbaToHex(customColor._colorRight);
+        }
+
+        // tricky stuff
+        // need to display both boost if one exist
+        let envBL!: string | null,
+            envBR!: string | null,
+            envBoost = false;
+        if (customColor._envColorLeftBoost) {
+            envBL = rgbaToHex(customColor._envColorLeftBoost);
+            envBoost = true;
+        } else {
+            envBL =
+                rgbaToHex(
+                    ColorScheme[EnvironmentSchemeName[environment]]?._envColorLeftBoost
+                ) || hexColor._envColorLeft;
+        }
+        if (customColor._envColorRightBoost) {
+            envBR = rgbaToHex(customColor._envColorRightBoost);
+            envBoost = true;
+        } else {
+            envBR =
+                rgbaToHex(
+                    ColorScheme[EnvironmentSchemeName[environment]]?._envColorRightBoost
+                ) || hexColor._envColorRight;
+        }
+
+        if (envBoost) {
+            hexColor._envColorLeftBoost = envBL;
+            hexColor._envColorRightBoost = envBR;
+        }
+
+        if (customColor._obstacleColor) {
+            hexColor._obstacleColor = rgbaToHex(customColor._obstacleColor);
+        }
+
+        const panel = uiPanel.create('max', 'none', true);
+        for (const key in hexColor) {
+            if (!hexColor[key]) {
                 continue;
             }
-            let k = ChromaDataEnvAbbr[key as keyof typeof ChromaDataEnvAbbr];
-            if (elem[key as keyof IChromaEnvironment] != null) {
-                keyArr.push(k);
-            }
+            const container = document.createElement('div');
+            const colorContainer = document.createElement('div');
+            const textMonoContainer = document.createElement('div');
+            const textContainer = document.createElement('div');
+
+            colorContainer.className = 'info__color-dot';
+            colorContainer.style.backgroundColor = hexColor[key] || '#000000';
+
+            textMonoContainer.className =
+                'info__color-text info__color-text--monospace';
+            textMonoContainer.textContent = `${hexColor[key]}`;
+
+            textContainer.className = 'info__color-text';
+            textContainer.textContent = ` -- ${
+                ColorSchemeRename[key as keyof typeof ColorSchemeRename]
+            }`;
+
+            container.appendChild(colorContainer);
+            container.appendChild(textMonoContainer);
+            container.appendChild(textContainer);
+
+            panel.appendChild(container);
         }
-        return `${elem._lookupMethod} [${keyArr.join('')}]${
-            elem._track ? `(${elem._track})` : ''
-        } -> ${elem._id}`;
-    });
-    displayTableRow(htmlTableEnvironmentEnhancement, envEnhance);
-};
+        const content: HTMLElement[] = [panel];
+        this.displayTableRow(this.htmlTableCustomColor, content);
+    };
 
-export const setPointDefinitions = (arr?: IHeckPointDefinition[]): void => {
-    if (!htmlTablePointDefinitions) {
-        console.error(logPrefix + 'missing table row for point definitions');
-        return;
-    }
-    if (arr == null || !arr.length) {
-        hideTableRow(htmlTablePointDefinitions);
-        return;
-    }
-    const pointDef = arr.map((elem) => {
-        return `${elem._name} -- ${elem._points.length} point${
-            elem._points.length > 1 ? 's' : ''
-        }`;
-    });
-    displayTableRow(htmlTablePointDefinitions, pointDef);
-};
-
-export const setCustomEvents = (
-    arr?: ICustomEvent[],
-    bpm?: BeatPerMinute | null
-): void => {
-    if (!htmlTableCustomEvents) {
-        console.error(logPrefix + 'missing table row for custom events');
-        return;
-    }
-    if (arr == null || !arr.length) {
-        hideTableRow(htmlTableCustomEvents);
-        return;
-    }
-    const customEv = arr.map((elem) => {
-        let time = elem._time;
-        let rt!: number;
-        if (bpm) {
-            time = bpm.adjustTime(time);
-            rt = bpm.toRealTime(time);
+    setRequirements = (arr?: string[]): void => {
+        if (arr == null || !arr.length) {
+            this.hideTableRow(this.htmlTableRequirements);
+            return;
         }
-        let keyArr = [];
-        for (const key in elem._data) {
-            if (key == '_duration' || key == '_easing' || key == '_track') {
-                continue;
-            }
-            //@ts-ignore shut up i dont care
-            if (elem._data[key] != null) {
-                keyArr.push(key);
-            }
+        this.displayTableRow(this.htmlTableRequirements, arr.join(', '));
+    };
+
+    setSuggestions = (arr?: string[]): void => {
+        if (arr == null || !arr.length) {
+            this.hideTableRow(this.htmlTableSuggestions);
+            return;
         }
-        return `${round(elem._time, 3)}${rt ? ' | ' + toMMSS(rt) : ''} -- ${
-            elem._type
-        } -> [${keyArr.join('')}]${
-            elem._type !== 'AssignTrackParent' ? `(${elem._data._track})` : ''
-        }`;
-    });
-    displayTableRow(htmlTableCustomEvents, customEv);
-};
+        this.displayTableRow(this.htmlTableSuggestions, arr.join(', '));
+    };
 
-export const setInfo = (mapInfo: IInfoData): void => {
-    uiHeader.setSongName(mapInfo._songName);
-    uiHeader.setSongSubname(mapInfo._songSubName);
-    uiHeader.setSongAuthor(mapInfo._songAuthorName);
-    uiHeader.setSongBPM(mapInfo._beatsPerMinute);
-    setLevelAuthor(mapInfo._levelAuthorName);
-    setEnvironment(mapInfo._environmentName);
-    setEditors(mapInfo._customData?._editors);
-};
+    setInformation = (arr?: string[]): void => {
+        if (arr == null || !arr.length) {
+            this.hideTableRow(this.htmlTableInformation);
+            return;
+        }
+        this.displayTableRow(this.htmlTableInformation, arr);
+    };
 
-export const setDiffInfoTable = (mapData: IBeatmapItem): void => {
-    setVersion(mapData.data.version);
-    if (mapData.info?._customData) {
-        setCustomColor(mapData.info._customData);
-        setRequirements(mapData.info._customData._requirements);
-        setSuggestions(mapData.info._customData._suggestions);
-        setInformation(mapData.info._customData._information);
-        setWarnings(mapData.info._customData._warnings);
-    }
-    if (mapData.data?.customData) {
-        const bpm = savedData.beatmapInfo?._beatsPerMinute
-            ? BeatPerMinute.create(
-                  savedData.beatmapInfo._beatsPerMinute,
-                  mapData.data.customData._bpmChanges ||
-                      mapData.data.customData._BPMChanges
-              )
-            : null;
-        setTimeSpend(mapData.data.customData._time);
-        setBookmarks(mapData.data.customData._bookmarks, bpm);
-        setBPMChanges(bpm);
-        setEnvironmentEnhancement(mapData.data.customData._environment);
-        setPointDefinitions(mapData.data.customData._pointDefinitions);
-        setCustomEvents(mapData.data.customData._customEvents, bpm);
-    }
-};
+    setWarnings = (arr?: string[]): void => {
+        if (arr == null || !arr.length) {
+            this.hideTableRow(this.htmlTableWarnings);
+            return;
+        }
+        this.displayTableRow(this.htmlTableWarnings, arr);
+    };
 
-function contributorsSelectHandler(ev: Event): void {
-    if (!savedData.contributors) {
-        console.error(logPrefix + 'no saved data for contributors');
-        return;
-    }
-    const target = ev.target as HTMLSelectElement;
-    setContributors(savedData.contributors[parseInt(target.value)]);
-}
+    setBookmarks = (arr?: IBookmark[], bpm?: BeatPerMinute | null): void => {
+        if (arr == null || !arr.length) {
+            this.hideTableRow(this.htmlTableBookmarks);
+            return;
+        }
+        const bookmarkText = arr.map((elem) => {
+            let time = elem.b;
+            let rt!: number;
+            if (bpm) {
+                time = bpm.adjustTime(time);
+                rt = bpm.toRealTime(time);
+            }
+            return `${round(elem.b, 3)}${rt ? ' | ' + toMMSS(rt) : ''} -- ${
+                elem.n !== '' ? elem.b : '**EMPTY NAME**'
+            }`;
+        });
+        this.displayTableRow(this.htmlTableBookmarks, bookmarkText);
+    };
 
-export const reset = (): void => {
-    setLevelAuthor();
-    setEnvironment();
-    setEditors();
-    populateContributors();
-    setVersion();
-    setTimeSpend();
-    setCustomColor();
-    setRequirements();
-    setSuggestions();
-    setInformation();
-    setWarnings();
-    setBookmarks();
-    setBPMChanges();
-    setEnvironmentEnhancement();
-    setPointDefinitions();
-    setCustomEvents();
-};
+    setBPMChanges = (bpm?: BeatPerMinute | null): void => {
+        if (!bpm || !bpm.change.length) {
+            this.hideTableRow(this.htmlTableBPMChanges);
+            return;
+        }
+        const bpmcText = bpm.change.map((bpmc) => {
+            let time = round(bpmc._newTime, 3);
+            let rt = bpm.toRealTime(bpmc._time);
+            return `${time} | ${toMMSS(rt)} -- ${bpmc._BPM}`;
+        });
+        this.displayTableRow(this.htmlTableBPMChanges, bpmcText);
+    };
+
+    // this implementation looks hideous but whatever
+    setEnvironmentEnhancement = (arr?: IChromaEnvironment[]): void => {
+        if (arr == null || !arr.length) {
+            this.hideTableRow(this.htmlTableEnvironmentEnhancement);
+            return;
+        }
+        const envEnhance = arr.map((elem) => {
+            let keyArr = [];
+            for (const key in elem) {
+                if (key == '_lookupMethod' || key == '_id') {
+                    continue;
+                }
+                let k = ChromaDataEnvAbbr[key as keyof typeof ChromaDataEnvAbbr];
+                if (elem[key as keyof IChromaEnvironment] != null) {
+                    keyArr.push(k);
+                }
+            }
+            return `${elem._lookupMethod} [${keyArr.join('')}]${
+                elem._track ? `(${elem._track})` : ''
+            } -> ${elem._id}`;
+        });
+        this.displayTableRow(this.htmlTableEnvironmentEnhancement, envEnhance);
+    };
+
+    setPointDefinitions = (arr?: IHeckPointDefinition[]): void => {
+        if (arr == null || !arr.length) {
+            this.hideTableRow(this.htmlTablePointDefinitions);
+            return;
+        }
+        const pointDef = arr.map((elem) => {
+            return `${elem._name} -- ${elem._points.length} point${
+                elem._points.length > 1 ? 's' : ''
+            }`;
+        });
+        this.displayTableRow(this.htmlTablePointDefinitions, pointDef);
+    };
+
+    setCustomEvents = (arr?: ICustomEvent[], bpm?: BeatPerMinute | null): void => {
+        if (arr == null || !arr.length) {
+            this.hideTableRow(this.htmlTableCustomEvents);
+            return;
+        }
+        const customEv = arr.map((elem) => {
+            let time = elem._time;
+            let rt!: number;
+            if (bpm) {
+                time = bpm.adjustTime(time);
+                rt = bpm.toRealTime(time);
+            }
+            let keyArr = [];
+            for (const key in elem._data) {
+                if (key == '_duration' || key == '_easing' || key == '_track') {
+                    continue;
+                }
+                //@ts-ignore shut up i dont care
+                if (elem._data[key] != null) {
+                    keyArr.push(key);
+                }
+            }
+            return `${round(elem._time, 3)}${rt ? ' | ' + toMMSS(rt) : ''} -- ${
+                elem._type
+            } -> [${keyArr.join('')}]${
+                elem._type !== 'AssignTrackParent' ? `(${elem._data._track})` : ''
+            }`;
+        });
+        this.displayTableRow(this.htmlTableCustomEvents, customEv);
+    };
+
+    setInfo = (mapInfo: IInfoData): void => {
+        uiHeader.setSongName(mapInfo._songName);
+        uiHeader.setSongSubname(mapInfo._songSubName);
+        uiHeader.setSongAuthor(mapInfo._songAuthorName);
+        uiHeader.setSongBPM(mapInfo._beatsPerMinute);
+        this.setLevelAuthor(mapInfo._levelAuthorName);
+        this.setEnvironment(mapInfo._environmentName);
+        this.setEditors(mapInfo._customData?._editors);
+    };
+
+    setDiffInfoTable = (mapData: IBeatmapItem): void => {
+        this.setVersion(mapData.data.version);
+        if (mapData.info?._customData) {
+            this.setCustomColor(mapData.info._customData);
+            this.setRequirements(mapData.info._customData._requirements);
+            this.setSuggestions(mapData.info._customData._suggestions);
+            this.setInformation(mapData.info._customData._information);
+            this.setWarnings(mapData.info._customData._warnings);
+        }
+        if (mapData.data?.customData) {
+            const bpm = savedData.beatmapInfo?._beatsPerMinute
+                ? BeatPerMinute.create(
+                      savedData.beatmapInfo._beatsPerMinute,
+                      mapData.data.customData._bpmChanges ||
+                          mapData.data.customData._BPMChanges
+                  )
+                : null;
+            this.setTimeSpend(mapData.data.customData._time);
+            this.setBookmarks(mapData.data.customData._bookmarks, bpm);
+            this.setBPMChanges(bpm);
+            this.setEnvironmentEnhancement(mapData.data.customData._environment);
+            this.setPointDefinitions(mapData.data.customData._pointDefinitions);
+            this.setCustomEvents(mapData.data.customData._customEvents, bpm);
+        }
+    };
+
+    private contributorsSelectHandler = (ev: Event): void => {
+        const target = ev.target as HTMLSelectElement;
+        this.setContributors(savedData.contributors[parseInt(target.value)]);
+    };
+
+    reset = (): void => {
+        this.setLevelAuthor();
+        this.setEnvironment();
+        this.setEditors();
+        this.populateContributors();
+        this.setVersion();
+        this.setTimeSpend();
+        this.setCustomColor();
+        this.setRequirements();
+        this.setSuggestions();
+        this.setInformation();
+        this.setWarnings();
+        this.setBookmarks();
+        this.setBPMChanges();
+        this.setEnvironmentEnhancement();
+        this.setPointDefinitions();
+        this.setCustomEvents();
+    };
+})();

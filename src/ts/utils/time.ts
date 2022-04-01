@@ -30,7 +30,3 @@ export const toMMSSMS = (seconds: number): string => {
         (seconds % 1).toString().split('.')[1]?.padEnd(3, '0').slice(0, 3) || '000';
     return `${toMMSS(seconds)}.${dec}`;
 };
-
-export const isHex = (hex: string): boolean => {
-    return /[a-fA-F0-9]*/g.test(hex);
-};

@@ -1,21 +1,27 @@
 import SavedData from '../savedData';
-import * as uiLoading from './loading';
-import * as uiHeader from './header';
-import * as uiInfo from './information';
-import * as uiTools from './tools';
-import * as uiStats from './stats';
+import uiLoading from './loading';
+import uiHeader from './header';
+import uiInfo from './information';
+import uiTools from './tools';
+import uiStats from './stats';
 
-const htmlResetButton =
-    document.querySelectorAll<HTMLInputElement>('.input__reset-button');
-htmlResetButton.forEach((elem) => elem.addEventListener('click', resetHandler));
+export default new (class UIReset {
+    private htmlResetButton: NodeListOf<HTMLInputElement>;
 
-function resetHandler(): void {
-    uiLoading.loadingReset();
-    uiHeader.reset();
-    uiInfo.reset();
-    uiTools.reset();
-    uiStats.reset();
-    SavedData.clear();
-}
+    constructor() {
+        this.htmlResetButton =
+            document.querySelectorAll<HTMLInputElement>('.input__reset-button');
+        this.htmlResetButton.forEach((elem) =>
+            elem.addEventListener('click', this.resetHandler)
+        );
+    }
 
-export default resetHandler;
+    resetHandler = () => {
+        uiLoading.reset();
+        uiHeader.reset();
+        uiInfo.reset();
+        uiTools.reset();
+        uiStats.reset();
+        SavedData.clear();
+    };
+})();

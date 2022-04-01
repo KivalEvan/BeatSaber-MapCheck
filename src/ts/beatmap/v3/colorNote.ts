@@ -674,51 +674,6 @@ export class ColorNote
         return !this.hasMappingExtensions() && this.isValidDirection();
     }
 
-    /** Count number of specified line index in a given array and return a counted number of line index.
-     * ```ts
-     * const XCount = ColorNote.countX(notes, 0);
-     * ```
-     */
-    static countX = (notes: ColorNote[], x: number) => {
-        return notes.filter((n) => n.posX === x).length;
-    };
-
-    /** Count number of specified line layer in a given array and return a counted number of line layer.
-     * ```ts
-     * const YCount = ColorNote.countY(notes, 0);
-     * ```
-     */
-    static countY = (notes: ColorNote[], y: number) => {
-        return notes.filter((n) => n.posY === y).length;
-    };
-
-    /** Count number of specified line index and line layer in a given array and return a counted number of line index and line layer.
-     * ```ts
-     * const XYCount = ColorNote.countXY(notes, 0, 0);
-     * ```
-     */
-    static countXY = (notes: ColorNote[], x: number, y: number) => {
-        return notes.filter((n) => n.posX === x && n.posY === y).length;
-    };
-
-    /** Count number of specified `_cutDirection` in a given array and return a counted number of `_cutDirection`.
-     * ```ts
-     * const cdCount = ColorNote.countDirection(notes, 0);
-     * ```
-     */
-    static countDirection = (notes: ColorNote[], direction: number) => {
-        return notes.filter((n) => n.direction === direction).length;
-    };
-
-    /** Count number of specified angle in a given array and return a counted number of angle.
-     * ```ts
-     * const angleCount = ColorNote.countAngle(notes, 0);
-     * ```
-     */
-    static countAngle = (notes: ColorNote[], angle: number) => {
-        return notes.filter((n) => n.getAngle() === angle).length;
-    };
-
     /** Check the angle equality of the two notes.
      * ```ts
      * if (ColorNote.checkDirection(note1, note2, 45, true)) {}

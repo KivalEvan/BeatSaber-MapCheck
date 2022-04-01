@@ -1,35 +1,37 @@
-type LoadingStatusType = 'info' | 'download' | 'error';
+import { UILoadingStatusType } from '../types/mapcheck/ui/loading';
 
 const logPrefix = 'UI Loading: ';
 
-const htmlLoadingBar = document.querySelector<HTMLElement>('.loading__bar');
-const htmlLoadingBarError = 'loading__bar--error';
-const htmlLoadingBarDownload = 'loading__bar--download';
-const htmlLoadingText = document.querySelector<HTMLElement>('.loading__text');
+export default new (class UILoading {
+    private htmlLoadingBar: HTMLElement;
+    private htmlLoadingBarError = 'loading__bar--error';
+    private htmlLoadingBarDownload = 'loading__bar--download';
+    private htmlLoadingText: HTMLElement;
 
-if (!htmlLoadingBar || !htmlLoadingText) {
-    console.error(logPrefix + 'loading component is missing part');
-}
+    constructor() {
+        this.htmlLoadingBar = document.querySelector('.loading__bar')!;
+        this.htmlLoadingText = document.querySelector('.loading__text')!;
 
-export const loadingStatus = (
-    statusType: LoadingStatusType,
-    statusString: string,
-    percentage: number = 100
-): void => {
-    if (!htmlLoadingBar || !htmlLoadingText) {
-        console.error(logPrefix + 'could not process, missing HTML element');
-        return;
+        if (!this.htmlLoadingBar || !this.htmlLoadingText) {
+            throw new Error(logPrefix + 'loading component is missing part');
+        }
     }
-    htmlLoadingText.textContent = statusString;
-    htmlLoadingBar.style.width = `${percentage}%`;
-    statusType === 'error'
-        ? htmlLoadingBar.classList.add(htmlLoadingBarError)
-        : htmlLoadingBar.classList.remove(htmlLoadingBarError);
-    statusType === 'download'
-        ? htmlLoadingBar.classList.add(htmlLoadingBarDownload)
-        : htmlLoadingBar.classList.remove(htmlLoadingBarDownload);
-};
+    status = (
+        statusType: UILoadingStatusType,
+        statusString: string,
+        percentage: number = 100
+    ): void => {
+        this.htmlLoadingText.textContent = statusString;
+        this.htmlLoadingBar.style.width = `${percentage}%`;
+        statusType === 'error'
+            ? this.htmlLoadingBar.classList.add(this.htmlLoadingBarError)
+            : this.htmlLoadingBar.classList.remove(this.htmlLoadingBarError);
+        statusType === 'download'
+            ? this.htmlLoadingBar.classList.add(this.htmlLoadingBarDownload)
+            : this.htmlLoadingBar.classList.remove(this.htmlLoadingBarDownload);
+    };
 
-export const loadingReset = (): void => {
-    loadingStatus('info', 'No map loaded', 0);
-};
+    reset = (): void => {
+        this.status('info', 'No map loaded', 0);
+    };
+})();

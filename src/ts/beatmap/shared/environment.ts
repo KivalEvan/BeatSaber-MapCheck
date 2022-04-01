@@ -33,6 +33,7 @@ export const EnvironmentRename: Readonly<Record<EnvironmentAllName, string>> = {
     GagaEnvironment: 'Gaga',
     GlassDesertEnvironment: 'Glass Desert',
     WeaveEnvironment: 'Weave',
+    PyroEnvironment: 'Pyro',
 };
 
 /** Record of Environment Color to Color Scheme. */
@@ -65,6 +66,7 @@ export const EnvironmentSchemeName: Readonly<
     GagaEnvironment: 'Gaga',
     GlassDesertEnvironment: 'Glass Desert',
     WeaveEnvironment: 'Weave',
+    PyroEnvironment: 'Pyro',
 };
 
 /** Color Scheme property rename to human readable. */
@@ -648,42 +650,78 @@ export const ColorScheme: Readonly<IEnvironmentScheme> = {
             b: 1,
         },
     },
-    // FIXME: unknown
     Weave: {
         _colorLeft: {
-            r: 0.65882355,
-            g: 0.1254902,
-            b: 0.1254902,
+            r: 0.7843137,
+            g: 0.07843138,
+            b: 0.07843138,
         },
         _colorRight: {
-            r: 0.28235295,
-            g: 0.28235295,
-            b: 0.28235295,
+            r: 0.1568627,
+            g: 0.5568627,
+            b: 0.8235294,
         },
         _envColorLeft: {
-            r: 0.65882355,
-            g: 0.1254902,
-            b: 0.1254902,
+            r: 0.85,
+            g: 0.08499997,
+            b: 0.08499997,
         },
         _envColorRight: {
-            r: 0.47058824,
-            g: 0.47058824,
-            b: 0.47058824,
+            r: 0.1882353,
+            g: 0.675294,
+            b: 1,
         },
         _envColorLeftBoost: {
-            r: 0.50196081,
-            g: 0,
-            b: 0,
+            r: 0.8218409,
+            g: 0.08627451,
+            b: 0.8509804,
         },
         _envColorRightBoost: {
-            r: 0.49244517,
-            g: 0,
-            b: 0.53725493,
+            r: 0.5320754,
+            g: 0.5320754,
+            b: 0.5320754,
         },
         _obstacleColor: {
-            r: 0.25098041,
-            g: 0.25098041,
-            b: 0.25098041,
+            r: 1,
+            g: 0.1882353,
+            b: 0.1882353,
+        },
+    },
+    Pyro: {
+        _colorLeft: {
+            r: 0.5764706,
+            g: 0,
+            b: 0.03921569,
+        },
+        _colorRight: {
+            r: 1,
+            g: 0.6705883,
+            b: 0,
+        },
+        _envColorLeft: {
+            r: 1,
+            g: 0.1098039,
+            b: 0.2039216,
+        },
+        _envColorRight: {
+            r: 0.8862745,
+            g: 0.7372549,
+            b: 0.2627451,
+        },
+        _envColorLeftBoost: {
+            r: 1,
+            g: 0,
+            b: 0.1764706,
+        },
+        _envColorRightBoost: {
+            r: 0.7647059,
+            g: 0.7647059,
+            b: 0.7647059,
+        },
+        _obstacleColor: {
+            r: 0.8490566,
+            g: 0.7037643,
+            b: 0.4285333,
         },
     },
     'Glass Desert': {
@@ -716,33 +754,40 @@ export const ColorScheme: Readonly<IEnvironmentScheme> = {
 };
 
 /** List of available event type in environment. */
-export const EventList: Readonly<Record<EnvironmentAllName, number[]>> = {
-    DefaultEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
-    OriginsEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
-    Origins: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
-    TriangleEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
-    NiceEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
-    BigMirrorEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
-    DragonsEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
-    KDAEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
-    MonstercatEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
-    CrabRaveEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
-    PanicEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
-    RocketEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
-    GreenDayEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
-    GreenDayGrenadeEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
-    TimbalandEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
-    FitBeatEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
-    LinkinParkEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
-    BTSEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
-    KaleidoscopeEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
-    InterscopeEnvironment: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13, 16, 17],
-    SkrillexEnvironment: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13],
-    BillieEnvironment: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 16, 17],
-    HalloweenEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
-    GagaEnvironment: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 16, 17],
-    GlassDesertEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
-    WeaveEnvironment: [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
+export const EventList: Readonly<Record<EnvironmentAllName, [number[], number[]]>> = {
+    DefaultEnvironment: [[0, 1, 2, 3, 4, 5, 8, 9, 12, 13], []],
+    OriginsEnvironment: [[0, 1, 2, 3, 4, 5, 8, 9, 12, 13], []],
+    Origins: [[0, 1, 2, 3, 4, 5, 8, 9, 12, 13], []],
+    TriangleEnvironment: [[0, 1, 2, 3, 4, 5, 8, 9, 12, 13], []],
+    NiceEnvironment: [[0, 1, 2, 3, 4, 5, 8, 9, 12, 13], []],
+    BigMirrorEnvironment: [[0, 1, 2, 3, 4, 5, 8, 9, 12, 13], []],
+    DragonsEnvironment: [[0, 1, 2, 3, 4, 5, 8, 9, 12, 13], []],
+    KDAEnvironment: [[0, 1, 2, 3, 4, 5, 8, 9, 12, 13], []],
+    MonstercatEnvironment: [[0, 1, 2, 3, 4, 5, 8, 9, 12, 13], []],
+    CrabRaveEnvironment: [[0, 1, 2, 3, 4, 5, 8, 9, 12, 13], []],
+    PanicEnvironment: [[0, 1, 2, 3, 4, 5, 8, 9, 12, 13], []],
+    RocketEnvironment: [[0, 1, 2, 3, 4, 5, 8, 9, 12, 13], []],
+    GreenDayEnvironment: [[0, 1, 2, 3, 4, 5, 8, 9, 12, 13], []],
+    GreenDayGrenadeEnvironment: [[0, 1, 2, 3, 4, 5, 8, 9, 12, 13], []],
+    TimbalandEnvironment: [[0, 1, 2, 3, 4, 5, 8, 9, 12, 13], []],
+    FitBeatEnvironment: [[0, 1, 2, 3, 4, 5, 8, 9, 12, 13], []],
+    LinkinParkEnvironment: [[0, 1, 2, 3, 4, 5, 8, 9, 12, 13], []],
+    BTSEnvironment: [[0, 1, 2, 3, 4, 5, 8, 9, 12, 13], []],
+    KaleidoscopeEnvironment: [[0, 1, 2, 3, 4, 5, 8, 9, 12, 13], []],
+    InterscopeEnvironment: [[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13, 16, 17], []],
+    SkrillexEnvironment: [[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13], []],
+    BillieEnvironment: [[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 16, 17], []],
+    HalloweenEnvironment: [[0, 1, 2, 3, 4, 5, 8, 9, 12, 13], []],
+    GagaEnvironment: [[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 16, 17], []],
+    GlassDesertEnvironment: [[0, 1, 2, 3, 4, 5, 8, 9, 12, 13], []],
+    WeaveEnvironment: [
+        [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+    ],
+    PyroEnvironment: [
+        [0, 1, 2, 3, 4, 6],
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+    ],
 };
 
 // very readable code :+1:
@@ -931,12 +976,6 @@ export const LightIDList: Readonly<
         10: Array.from(Array(24), (_, i) => i + 1),
         11: Array.from(Array(24), (_, i) => i + 1),
     },
-    GlassDesertEnvironment: {
-        0: Array.from(Array(6), (_, i) => i + 1),
-        1: Array.from(Array(8), (_, i) => i + 1),
-        2: Array.from(Array(10), (_, i) => i + 1),
-        3: Array.from(Array(10), (_, i) => i + 1),
-    },
     // FIXME: unknown
     WeaveEnvironment: {
         0: Array.from(Array(2), (_, i) => i + 1),
@@ -948,5 +987,20 @@ export const LightIDList: Readonly<
         7: Array.from(Array(24), (_, i) => i + 1),
         10: Array.from(Array(24), (_, i) => i + 1),
         11: Array.from(Array(24), (_, i) => i + 1),
+    },
+    // FIXME: unknown
+    PyroEnvironment: {
+        0: Array.from(Array(2), (_, i) => i + 1),
+        1: Array.from(Array(66), (_, i) => i + 1),
+        2: Array.from(Array(23), (_, i) => i + 1),
+        3: Array.from(Array(23), (_, i) => i + 1),
+        4: Array.from(Array(66), (_, i) => i + 1),
+        6: Array.from(Array(24), (_, i) => i + 1),
+    },
+    GlassDesertEnvironment: {
+        0: Array.from(Array(6), (_, i) => i + 1),
+        1: Array.from(Array(8), (_, i) => i + 1),
+        2: Array.from(Array(10), (_, i) => i + 1),
+        3: Array.from(Array(10), (_, i) => i + 1),
     },
 };

@@ -1,8 +1,9 @@
 // TODO: validate settings
 
-import { ISettingsProperty } from './types/mapcheck/settings';
+import { ISettings } from './types/mapcheck/settings';
+import { deepCopy } from './utils';
 
-const settingsDefault: ISettingsProperty = {
+const settingsDefault: ISettings = {
     load: {
         audio: true,
         imageCover: true,
@@ -21,14 +22,14 @@ const settingsDefault: ISettingsProperty = {
     },
 };
 
-export default new (class Settings {
-    private property: ISettingsProperty = JSON.parse(JSON.stringify(settingsDefault));
+export default new (class Settings implements ISettings {
+    private property: ISettings = deepCopy(settingsDefault);
 
     constructor() {
         this.init();
     }
 
-    get load(): ISettingsProperty['load'] {
+    get load(): ISettings['load'] {
         return this.property.load;
     }
     get sorting(): boolean {
@@ -37,10 +38,10 @@ export default new (class Settings {
     set sorting(val: boolean) {
         this.property.sorting = val;
     }
-    get beatNumbering(): ISettingsProperty['beatNumbering'] {
+    get beatNumbering(): ISettings['beatNumbering'] {
         return this.property.beatNumbering;
     }
-    set beatNumbering(val: ISettingsProperty['beatNumbering']) {
+    set beatNumbering(val: ISettings['beatNumbering']) {
         this.property.beatNumbering = val;
     }
     get rounding(): number {
@@ -49,16 +50,16 @@ export default new (class Settings {
     set rounding(val: number) {
         this.property.rounding = val;
     }
-    get theme(): ISettingsProperty['theme'] {
+    get theme(): ISettings['theme'] {
         return this.property.theme;
     }
-    set theme(val: ISettingsProperty['theme']) {
+    set theme(val: ISettings['theme']) {
         this.property.theme = val;
     }
     get onLoad() {
         return this.property.onLoad;
     }
-    get show(): ISettingsProperty['show'] {
+    get show(): ISettings['show'] {
         return this.property.show;
     }
 
@@ -89,6 +90,6 @@ export default new (class Settings {
         }
     };
     public reset = (): void => {
-        this.property = JSON.parse(JSON.stringify(settingsDefault));
+        this.property = deepCopy(settingsDefault);
     };
 })();

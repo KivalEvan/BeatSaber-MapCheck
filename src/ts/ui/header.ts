@@ -2,166 +2,135 @@ import { round, toMMSSMS } from '../utils';
 
 const logPrefix = 'UI Header: ';
 
-const htmlIntro = document.querySelector<HTMLElement>('.intro');
-const htmlMetadata = document.querySelector<HTMLElement>('.metadata');
+export default new (class UIHeader {
+    private htmlIntro: HTMLElement;
+    private htmlMetadata: HTMLElement;
+    private htmlCoverLink: HTMLLinkElement;
+    private htmlCoverImage: HTMLImageElement;
+    private htmlMetadataSongName: HTMLElement;
+    private htmlMetadataSongSubname: HTMLElement;
+    private htmlMetadataSongAuthor: HTMLElement;
+    private htmlMetadataSongBPM: HTMLElement;
+    private htmlMetadataSongDuration: HTMLElement;
+    private htmlAudio: HTMLAudioElement;
+    private audioURL = '';
 
-const htmlCoverLink = document.querySelector<HTMLLinkElement>('.cover__link');
-const htmlCoverImage = document.querySelector<HTMLImageElement>('.cover__image');
+    constructor() {
+        this.htmlIntro = document.querySelector('.intro')!;
+        this.htmlMetadata = document.querySelector('.metadata')!;
+        this.htmlCoverLink = document.querySelector('.cover__link')!;
+        this.htmlCoverImage = document.querySelector('.cover__image')!;
+        this.htmlMetadataSongName = document.querySelector('.metadata__song-name')!;
+        this.htmlMetadataSongSubname = document.querySelector(
+            '.metadata__song-subname'
+        )!;
+        this.htmlMetadataSongAuthor = document.querySelector('.metadata__song-author')!;
+        this.htmlMetadataSongBPM = document.querySelector('.metadata__song-bpm')!;
+        this.htmlMetadataSongDuration = document.querySelector(
+            '.metadata__song-duration'
+        )!;
+        this.htmlAudio = document.querySelector('.audio')!;
 
-const htmlMetadataSongName =
-    document.querySelector<HTMLElement>('.metadata__song-name');
-const htmlMetadataSongSubname = document.querySelector<HTMLElement>(
-    '.metadata__song-subname'
-);
-const htmlMetadataSongAuthor = document.querySelector<HTMLElement>(
-    '.metadata__song-author'
-);
-const htmlMetadataSongBPM = document.querySelector<HTMLElement>('.metadata__song-bpm');
-const htmlMetadataSongDuration = document.querySelector<HTMLElement>(
-    '.metadata__song-duration'
-);
-const htmlAudio = document.querySelector<HTMLAudioElement>('.audio');
+        if (!this.htmlIntro || !this.htmlMetadata) {
+            console.error(
+                logPrefix + 'header component is missing one of the two section'
+            );
+        }
+        if (!this.htmlCoverLink || !this.htmlCoverImage) {
+            console.error(logPrefix + 'cover component is missing');
+        }
+        if (
+            !this.htmlMetadataSongName ||
+            !this.htmlMetadataSongSubname ||
+            !this.htmlMetadataSongAuthor ||
+            !this.htmlMetadataSongBPM ||
+            !this.htmlMetadataSongDuration
+        ) {
+            console.error(logPrefix + 'metadata component is missing one of the part');
+        }
+    }
 
-if (!htmlIntro || !htmlMetadata) {
-    console.error(logPrefix + 'header component is missing one of the two section');
-}
-if (!htmlCoverLink || !htmlCoverImage) {
-    console.error(logPrefix + 'cover component is missing');
-}
-if (
-    !htmlMetadataSongName ||
-    !htmlMetadataSongSubname ||
-    !htmlMetadataSongAuthor ||
-    !htmlMetadataSongBPM ||
-    !htmlMetadataSongDuration
-) {
-    console.error(logPrefix + 'metadata component is missing one of the part');
-}
+    switchHeader = (isIntro: boolean): void => {
+        if (isIntro) {
+            this.htmlIntro.classList.remove('hidden');
+            this.htmlMetadata.classList.add('hidden');
+        } else {
+            this.htmlIntro.classList.add('hidden');
+            this.htmlMetadata.classList.remove('hidden');
+        }
+    };
 
-export const switchHeader = (bool: boolean): void => {
-    if (!htmlIntro || !htmlMetadata) {
-        console.error(
-            logPrefix + 'could not switch header, one of the section is missing'
-        );
-        return;
-    }
-    bool ? htmlIntro.classList.add('hidden') : htmlIntro.classList.remove('hidden');
-    !bool
-        ? htmlMetadata.classList.add('hidden')
-        : htmlMetadata.classList.remove('hidden');
-};
+    setCoverImage = (src: string | null): void => {
+        this.htmlCoverImage.src = src || './img/unknown.jpg';
+    };
 
-export const setCoverImage = (src: string | null): void => {
-    if (!htmlCoverImage) {
-        console.error(logPrefix + 'missing HTML element for cover image');
-        return;
-    }
-    htmlCoverImage.src = src || './img/unknown.jpg';
-};
+    getCoverImage = (): string | null => {
+        return this.htmlCoverImage.src;
+    };
 
-export const getCoverImage = (): string | null => {
-    if (!htmlCoverImage) {
-        console.error(logPrefix + 'missing HTML element for cover image');
-        return null;
-    }
-    return htmlCoverImage.src;
-};
+    setCoverLink = (url?: string, id?: string): void => {
+        if (url == null && id == null) {
+            this.htmlCoverLink.textContent = '';
+            this.htmlCoverLink.href = '';
+            this.htmlCoverLink.classList.add('disabled');
+            return;
+        }
+        if (url != null) {
+            this.htmlCoverLink.textContent = id ?? 'Download Link';
+            this.htmlCoverLink.href = url;
+            this.htmlCoverLink.classList.remove('disabled');
+        }
+    };
 
-export const setCoverLink = (url?: string, id?: string): void => {
-    if (!htmlCoverLink) {
-        console.error(logPrefix + 'missing HTML element for cover link');
-        return;
-    }
-    if (url == null && id == null) {
-        htmlCoverLink.textContent = '';
-        htmlCoverLink.href = '';
-        htmlCoverLink.classList.add('disabled');
-        return;
-    }
-    if (url != null) {
-        htmlCoverLink.textContent = id ?? 'Download Link';
-        htmlCoverLink.href = url;
-        htmlCoverLink.classList.remove('disabled');
-    }
-};
+    setSongName = (str: string): void => {
+        this.htmlMetadataSongName.textContent = str;
+    };
 
-export const setSongName = (str: string): void => {
-    if (!htmlMetadataSongName) {
-        console.error(logPrefix + 'missing HTML element for song name');
-        return;
-    }
-    htmlMetadataSongName.textContent = str;
-};
+    setSongSubname = (str: string): void => {
+        this.htmlMetadataSongSubname.textContent = str;
+    };
 
-export const setSongSubname = (str: string): void => {
-    if (!htmlMetadataSongSubname) {
-        console.error(logPrefix + 'missing HTML element for song subname');
-        return;
-    }
-    htmlMetadataSongSubname.textContent = str;
-};
+    setSongAuthor = (str: string): void => {
+        this.htmlMetadataSongAuthor.textContent = str;
+    };
 
-export const setSongAuthor = (str: string): void => {
-    if (!htmlMetadataSongAuthor) {
-        console.error(logPrefix + 'missing HTML element for song author');
-        return;
-    }
-    htmlMetadataSongAuthor.textContent = str;
-};
+    // TODO: some way to save bpm change
+    setSongBPM = (num: number, minBPM?: number, maxBPM?: number): void => {
+        if ((minBPM === null || minBPM === undefined) && typeof maxBPM === 'number') {
+            minBPM = Math.min(num, maxBPM);
+        }
+        if ((maxBPM === null || maxBPM === undefined) && typeof minBPM === 'number') {
+            maxBPM = Math.max(num, minBPM);
+        }
+        let text = round(num, 2).toString() + 'BPM';
+        if (minBPM && maxBPM) {
+        }
+        this.htmlMetadataSongBPM.textContent = text;
+    };
 
-// TODO: some way to save bpm change
-export const setSongBPM = (num: number, minBPM?: number, maxBPM?: number): void => {
-    if (!htmlMetadataSongBPM) {
-        console.error(logPrefix + 'missing HTML element for song bpm');
-        return;
-    }
-    if ((minBPM === null || minBPM === undefined) && typeof maxBPM === 'number') {
-        minBPM = Math.min(num, maxBPM);
-    }
-    if ((maxBPM === null || maxBPM === undefined) && typeof minBPM === 'number') {
-        maxBPM = Math.max(num, minBPM);
-    }
-    let text = round(num, 2).toString() + 'BPM';
-    if (minBPM && maxBPM) {
-    }
-    htmlMetadataSongBPM.textContent = text;
-};
+    setSongDuration = (num?: number): void => {
+        if (num) {
+            this.htmlMetadataSongDuration.textContent = toMMSSMS(num);
+        } else {
+            this.htmlMetadataSongDuration.textContent = 'No audio';
+        }
+    };
 
-export const setSongDuration = (num?: number): void => {
-    if (!htmlMetadataSongDuration) {
-        console.error(logPrefix + 'missing HTML element for song duration');
-        return;
-    }
-    if (num) {
-        htmlMetadataSongDuration.textContent = toMMSSMS(num);
-    } else {
-        htmlMetadataSongDuration.textContent = 'No audio';
-    }
-};
+    setAudio = async (arrayBuffer: ArrayBuffer): Promise<void> => {
+        const blob = new Blob([arrayBuffer], { type: 'audio/ogg' });
+        this.htmlAudio.src = window.URL.createObjectURL(blob);
+    };
 
-let audioURL: string;
-export const setAudio = async (arrayBuffer: ArrayBuffer): Promise<void> => {
-    if (!htmlAudio) {
-        console.error(logPrefix + 'missing HTML element for audio');
-        return;
-    }
-    const blob = new Blob([arrayBuffer], { type: 'audio/ogg' });
-    htmlAudio.src = window.URL.createObjectURL(blob);
-};
+    unloadAudio = (): void => {
+        this.htmlAudio.src = '';
+        window.URL.revokeObjectURL(this.audioURL);
+    };
 
-export const unloadAudio = (): void => {
-    if (!htmlAudio) {
-        console.error(logPrefix + 'missing HTML element for audio');
-        return;
-    }
-    htmlAudio.src = '';
-    window.URL.revokeObjectURL(audioURL);
-};
-
-export const reset = (): void => {
-    switchHeader(false);
-    setCoverImage(null);
-    setCoverLink();
-    setSongDuration(0);
-    unloadAudio();
-};
+    reset = (): void => {
+        this.switchHeader(false);
+        this.setCoverImage(null);
+        this.setCoverLink();
+        this.setSongDuration(0);
+        this.unloadAudio();
+    };
+})();

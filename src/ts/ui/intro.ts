@@ -1,136 +1,153 @@
-import * as uiLoading from './loading';
-import { downloadFromID, downloadFromURL, downloadFromHash } from '../download';
-import { extractZip } from '../extract';
+import main from '../main';
+import uiLoading from './loading';
 
 const logPrefix = 'UI Intro: ';
 
-const htmlInputURL = document.querySelector<HTMLInputElement>('.input__intro-url');
-const htmlInputID = document.querySelector<HTMLInputElement>('.input__intro-id');
-const htmlInputHash = document.querySelector<HTMLInputElement>('.input__intro-hash');
-const htmlInputSearchButton = document.querySelector<HTMLInputElement>(
-    '.input__search-button'
-);
-const htmlInputFile = document.querySelector<HTMLInputElement>('.input__file');
-const htmlInputFileZone = document.querySelector<HTMLInputElement>('.input__file-zone');
+export default new (class UIIntro {
+    private htmlInputURL: HTMLInputElement;
+    private htmlInputID: HTMLInputElement;
+    private htmlInputHash: HTMLInputElement;
+    private htmlInputSearchButton: HTMLInputElement;
+    private htmlInputFile: HTMLInputElement;
+    private htmlInputFileZone: HTMLInputElement;
 
-if (htmlInputURL) {
-    htmlInputURL.addEventListener('keydown', introInputTextHandler);
-} else {
-    console.error(logPrefix + 'URL input is missing');
-}
-if (htmlInputID) {
-    htmlInputID.addEventListener('keydown', introInputTextHandler);
-} else {
-    console.error(logPrefix + 'ID input is missing');
-}
-if (htmlInputHash) {
-    htmlInputHash.addEventListener('keydown', introInputTextHandler);
-} else {
-    console.error(logPrefix + 'Hash input is missing');
-}
-if (htmlInputSearchButton) {
-    htmlInputSearchButton.addEventListener('click', introButtonTextHandler);
-} else {
-    console.error(logPrefix + 'search button is missing');
-}
-if (htmlInputFile) {
-    htmlInputFile.addEventListener('change', inputFileHandler);
-} else {
-    console.error(logPrefix + 'file input is missing');
-}
-if (htmlInputFileZone) {
-    htmlInputFileZone.addEventListener('drop', inputFileDropHandler);
-    htmlInputFileZone.addEventListener('dragover', dragOverHandler);
-} else {
-    console.error(logPrefix + 'file drop zone is missing');
-}
+    constructor() {
+        this.htmlInputURL = document.querySelector('.input__intro-url')!;
+        this.htmlInputID = document.querySelector('.input__intro-id')!;
+        this.htmlInputHash = document.querySelector('.input__intro-hash')!;
+        this.htmlInputSearchButton = document.querySelector('.input__search-button')!;
+        this.htmlInputFile = document.querySelector('.input__file')!;
+        this.htmlInputFileZone = document.querySelector('.input__file-zone')!;
 
-function introInputTextHandler(ev: KeyboardEvent): void {
-    const target = ev.target as HTMLInputElement;
-    if (ev.key === 'Enter' && target.value !== '') {
-        if (target.classList.contains('input__intro-url')) {
-            downloadFromURL(target.value);
-        }
-        if (target.classList.contains('input__intro-id')) {
-            downloadFromID(target.value);
-        }
-    }
-}
-
-function introButtonTextHandler(ev: Event): void {
-    if (htmlInputURL && htmlInputURL.value !== '') {
-        downloadFromURL(htmlInputURL.value);
-        return;
-    }
-    if (htmlInputID && htmlInputID.value !== '') {
-        downloadFromID(htmlInputID.value);
-        return;
-    }
-    if (htmlInputHash && htmlInputHash.value !== '') {
-        downloadFromHash(htmlInputHash.value);
-        return;
-    }
-}
-
-// TODO: maybe break up into individual function
-function inputFileHandler(ev: Event): void {
-    const target = ev.target as HTMLInputElement;
-    uiLoading.loadingStatus('info', 'Reading file input', 0);
-    const file = target.files ? target.files[0] : null;
-    try {
-        if (file == null) {
-            uiLoading.loadingStatus('info', 'No file input', 0);
-            throw new Error('No file input');
-        }
-        if (
-            file &&
-            (file.name.substr(-4) === '.zip' || file.name.substr(-4) === '.bsl')
-        ) {
-            const fr = new FileReader();
-            fr.readAsArrayBuffer(file);
-            fr.addEventListener('load', () => {
-                extractZip(file);
-            });
+        if (this.htmlInputURL) {
+            this.htmlInputURL.addEventListener('keydown', this.introInputTextHandler);
         } else {
-            throw new Error('Unsupported file format, please enter zip file');
+            throw new Error(logPrefix + 'URL input is missing');
         }
-    } catch (err) {
-        uiLoading.loadingStatus('error', err, 0);
-        console.error(err);
+        if (this.htmlInputID) {
+            this.htmlInputID.addEventListener('keydown', this.introInputTextHandler);
+        } else {
+            throw new Error(logPrefix + 'ID input is missing');
+        }
+        if (this.htmlInputHash) {
+            this.htmlInputHash.addEventListener('keydown', this.introInputTextHandler);
+        } else {
+            throw new Error(logPrefix + 'Hash input is missing');
+        }
+        if (this.htmlInputSearchButton) {
+            this.htmlInputSearchButton.addEventListener(
+                'click',
+                this.introButtonTextHandler
+            );
+        } else {
+            throw new Error(logPrefix + 'search button is missing');
+        }
+        if (this.htmlInputFile) {
+            this.htmlInputFile.addEventListener('change', this.inputFileHandler);
+        } else {
+            throw new Error(logPrefix + 'file input is missing');
+        }
+        if (this.htmlInputFileZone) {
+            this.htmlInputFileZone.addEventListener('drop', this.inputFileDropHandler);
+            this.htmlInputFileZone.addEventListener('dragover', this.dragOverHandler);
+        } else {
+            throw new Error(logPrefix + 'file drop zone is missing');
+        }
     }
-}
 
-function inputFileDropHandler(ev: DragEvent): void {
-    ev.preventDefault();
-    ev.stopPropagation();
-    try {
-        if (ev.dataTransfer == null) {
-            throw new Error('No file input');
-        }
-        if (ev.dataTransfer.items) {
-            if (ev.dataTransfer.items[0].kind === 'file') {
-                let file = ev.dataTransfer.items[0].getAsFile() as File;
-                if (
-                    file &&
-                    (file.name.substr(-4) === '.zip' || file.name.substr(-4) === '.bsl')
-                ) {
-                    const fr = new FileReader();
-                    fr.readAsArrayBuffer(file);
-                    fr.addEventListener('load', () => {
-                        extractZip(file);
-                    });
-                } else {
-                    throw new Error('Unsupported file format, please enter zip file');
-                }
+    private introInputTextHandler(ev: KeyboardEvent): void {
+        const target = ev.target as HTMLInputElement;
+        if (ev.key === 'Enter' && target.value !== '') {
+            if (target.classList.contains('input__intro-url')) {
+                main({ link: target.value });
+            }
+            if (target.classList.contains('input__intro-id')) {
+                main({ id: target.value });
+            }
+            if (target.classList.contains('input__intro-hash')) {
+                main({ hash: target.value });
             }
         }
-    } catch (err) {
-        uiLoading.loadingStatus('error', err, 0);
-        console.error(err);
     }
-}
 
-function dragOverHandler(ev: Event): void {
-    ev.preventDefault();
-    ev.stopPropagation();
-}
+    private introButtonTextHandler(ev: Event): void {
+        if (this.htmlInputURL && this.htmlInputURL.value !== '') {
+            main({ link: this.htmlInputURL.value });
+            return;
+        }
+        if (this.htmlInputID && this.htmlInputID.value !== '') {
+            main({ id: this.htmlInputID.value });
+            return;
+        }
+        if (this.htmlInputHash && this.htmlInputHash.value !== '') {
+            main({ hash: this.htmlInputHash.value });
+            return;
+        }
+    }
+
+    // TODO: maybe break up into individual function
+    private inputFileHandler(ev: Event): void {
+        const target = ev.target as HTMLInputElement;
+        uiLoading.status('info', 'Reading file input', 0);
+        const file = target.files ? target.files[0] : null;
+        try {
+            if (file == null) {
+                uiLoading.status('info', 'No file input', 0);
+                throw new Error('No file input');
+            }
+            if (
+                file &&
+                (file.name.substr(-4) === '.zip' || file.name.substr(-4) === '.bsl')
+            ) {
+                const fr = new FileReader();
+                fr.readAsArrayBuffer(file);
+                fr.addEventListener('load', () => {
+                    main({ file });
+                });
+            } else {
+                throw new Error('Unsupported file format, please enter zip file');
+            }
+        } catch (err) {
+            uiLoading.status('error', err, 0);
+            console.error(err);
+        }
+    }
+
+    private inputFileDropHandler(ev: DragEvent): void {
+        ev.preventDefault();
+        ev.stopPropagation();
+        try {
+            if (ev.dataTransfer == null) {
+                throw new Error('No file input');
+            }
+            if (ev.dataTransfer.items) {
+                if (ev.dataTransfer.items[0].kind === 'file') {
+                    let file = ev.dataTransfer.items[0].getAsFile() as File;
+                    if (
+                        file &&
+                        (file.name.substr(-4) === '.zip' ||
+                            file.name.substr(-4) === '.bsl')
+                    ) {
+                        const fr = new FileReader();
+                        fr.readAsArrayBuffer(file);
+                        fr.addEventListener('load', () => {
+                            main({ file });
+                        });
+                    } else {
+                        throw new Error(
+                            'Unsupported file format, please enter zip file'
+                        );
+                    }
+                }
+            }
+        } catch (err) {
+            uiLoading.status('error', err, 0);
+            console.error(err);
+        }
+    }
+
+    private dragOverHandler(ev: Event): void {
+        ev.preventDefault();
+        ev.stopPropagation();
+    }
+})();

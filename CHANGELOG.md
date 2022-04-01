@@ -1,14 +1,15 @@
 # Changelog
 
-## v2.5.0 [TBD]
+## v2.5.0 [2022-04-##]
 
 ### Added
 
--   v2 to v3 beatmap conversion
+-   v2 to v3 beatmap internal conversion
 
 ### Changed
 
 -   Yet another major structure changes
+-   Better internal user interface work
 -   Updated changelog date format
 
 ### Deprecated

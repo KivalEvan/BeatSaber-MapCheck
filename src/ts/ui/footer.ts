@@ -3,17 +3,24 @@
 // otherwise i dont need the queryselectorall
 const logPrefix = 'UI Footer: ';
 
-const htmlWatermark = document.querySelectorAll<HTMLElement>('.link__watermark');
-const htmlVersion = document.querySelectorAll<HTMLElement>('.link__version');
+export default new (class UIFooter {
+    private htmlWatermark: NodeListOf<HTMLElement>;
+    private htmlVersion: NodeListOf<HTMLElement>;
 
-if (!htmlWatermark.length || !htmlVersion.length) {
-    console.error(logPrefix + 'missing part');
-}
+    constructor() {
+        this.htmlWatermark = document.querySelectorAll<HTMLElement>('.link__watermark');
+        this.htmlVersion = document.querySelectorAll<HTMLElement>('.link__version');
 
-export const setWatermark = (str: string): void => {
-    htmlWatermark.forEach((elem) => (elem.textContent = str));
-};
+        if (!this.htmlWatermark.length || !this.htmlVersion.length) {
+            console.error(logPrefix + 'missing part');
+        }
+    }
 
-export const setVersion = (str: string): void => {
-    htmlVersion.forEach((elem) => (elem.textContent = str));
-};
+    setWatermark = (str: string): void => {
+        this.htmlWatermark.forEach((elem) => (elem.textContent = str));
+    };
+
+    setVersion = (str: string): void => {
+        this.htmlVersion.forEach((elem) => (elem.textContent = str));
+    };
+})();
