@@ -1,5 +1,5 @@
 import { Tool } from '../../types/mapcheck';
-import { getCoverImage } from '../../ui/header';
+import uiHeader from '../../ui/header';
 import flag from '../../flag';
 import settings from '../../settings';
 
@@ -23,7 +23,7 @@ const tool: Tool = {
 
 function run() {
     const img = new Image();
-    const src = getCoverImage();
+    const src = uiHeader.getCoverImage();
 
     const htmlString: string[] = [];
     if (flag.loading.coverImage && src !== null) {

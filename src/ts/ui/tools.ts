@@ -1,12 +1,10 @@
 import * as beatmap from '../beatmap';
-import savedData from '../savedData';
-import * as tools from '../tools';
-import * as analyse from '../tools/analyse';
-import uiLoading from './loading';
-import uiInformation from './information';
+import SavedData from '../savedData';
+import Analyser from '../tools/analyser';
+import UILoading from './loading';
+import UIInformation from './information';
 import { removeOptions } from '../utils';
-import { DifficultyRename } from '../beatmap';
-import { CharacteristicRename } from '../beatmap/shared/characteristic';
+import { DifficultyRename, CharacteristicRename } from '../beatmap/shared';
 import { CharacteristicName, DifficultyName, IInfoData, IInfoSetData } from '../types';
 
 const logPrefix = 'UI Tools: ';
@@ -46,16 +44,16 @@ export default new (class UITools {
             !this.htmlToolsEvent ||
             !this.htmlToolsOther
         ) {
-            console.error(logPrefix + 'missing content element');
+            throw new Error(logPrefix + 'missing content element');
         }
         if (!this.htmlToolsOutputDifficulty || !this.htmlToolsOutputGeneral) {
-            console.error(logPrefix + 'missing output element');
+            throw new Error(logPrefix + 'missing output element');
         }
         if (this.htmlToolsApplyThis && this.htmlToolsApplyAll) {
             this.htmlToolsApplyThis.addEventListener('click', this.applyThisHandler);
             this.htmlToolsApplyAll.addEventListener('click', this.applyAllHandler);
         } else {
-            console.error(logPrefix + 'missing apply element');
+            throw new Error(logPrefix + 'missing apply element');
         }
 
         this.htmlToolsSelectMode.forEach((elem) =>
@@ -65,8 +63,9 @@ export default new (class UITools {
             elem.addEventListener('change', this.selectDifficultyHandler)
         );
     }
+
     displayOutputGeneral = (): void => {
-        const analysis = savedData.analysis?.general;
+        const analysis = SavedData.analysis?.general;
         if (!analysis) {
             this.htmlToolsOutputGeneral.textContent =
                 'ERROR: could not find analysis for general';
@@ -96,7 +95,7 @@ export default new (class UITools {
             throw new Error(logPrefix + 'something went wrong!');
         }
         this.htmlToolsOutputDifficulty.innerHTML = '';
-        const analysis = savedData.analysis?.map.find(
+        const analysis = SavedData.analysis?.map.find(
             (set) => set.difficulty === difficulty && set.mode === mode
         );
         if (!analysis) {
@@ -139,7 +138,7 @@ export default new (class UITools {
                         ? ' -- ' + diff._customData?._difficultyLabel
                         : '');
                 if (first) {
-                    const diffData = savedData.beatmapDifficulty?.find(
+                    const diffData = SavedData.beatmapDifficulty?.find(
                         (el) =>
                             el.difficulty === diff._difficulty &&
                             el.characteristic === mapSet._beatmapCharacteristicName
@@ -147,7 +146,7 @@ export default new (class UITools {
                     if (!diffData) {
                         throw new Error('missing _mapSetData');
                     }
-                    uiInformation.setDiffInfoTable(diffData);
+                    UIInformation.setDiffInfoTable(diffData);
                     this.setDifficultyLabel(
                         diff._customData?._difficultyLabel ||
                             DifficultyRename[diff._difficulty]
@@ -186,12 +185,12 @@ export default new (class UITools {
     };
 
     adjustTime = (): void => {
-        const mapInfo = savedData.beatmapInfo;
+        const mapInfo = SavedData.beatmapInfo;
         if (!mapInfo) {
             throw new Error(logPrefix + 'could not find map info');
         }
         const bpm = beatmap.BeatPerMinute.create(mapInfo._beatsPerMinute);
-        analyse.adjustTime(bpm);
+        Analyser.adjustTime(bpm);
     };
 
     private selectModeHandler(ev: Event): void {
@@ -201,7 +200,7 @@ export default new (class UITools {
                 elem.value = target.value;
             }
         });
-        const mode = savedData.beatmapInfo?._difficultyBeatmapSets.find(
+        const mode = SavedData.beatmapInfo?._difficultyBeatmapSets.find(
             (elem) => elem._beatmapCharacteristicName === target.value
         );
         this.populateSelectDiff(mode);
@@ -214,7 +213,7 @@ export default new (class UITools {
                 elem.value = target.value;
             }
         });
-        const mode = savedData.beatmapInfo?._difficultyBeatmapSets.find(
+        const mode = SavedData.beatmapInfo?._difficultyBeatmapSets.find(
             (elem) =>
                 elem._beatmapCharacteristicName ===
                 this.htmlToolsSelectMode.item(0).value
@@ -222,13 +221,13 @@ export default new (class UITools {
         if (!mode) {
             throw new Error('aaaaaaaaaaaaaaaaaaa');
         }
-        const diff = savedData.beatmapDifficulty?.find(
+        const diff = SavedData.beatmapDifficulty?.find(
             (elem) =>
                 elem.difficulty === target.value &&
                 elem.characteristic === mode._beatmapCharacteristicName
         );
         if (diff) {
-            uiInformation.setDiffInfoTable(diff);
+            UIInformation.setDiffInfoTable(diff);
             this.setDifficultyLabel(
                 diff.info?._customData?._difficultyLabel ||
                     DifficultyRename[target.value as keyof typeof DifficultyRename]
@@ -243,9 +242,9 @@ export default new (class UITools {
         if (!mode || !difficulty) {
             throw new Error(logPrefix + 'mode/difficulty does not exist');
         }
-        uiLoading.status('info', `Re-analysing ${mode} ${difficulty}`, 100);
-        analyse.difficulty(mode, difficulty);
-        uiLoading.status('info', `Re-analysed ${mode} ${difficulty}`, 100);
+        UILoading.status('info', `Re-analysing ${mode} ${difficulty}`, 100);
+        Analyser.runDifficulty(mode, difficulty);
+        UILoading.status('info', `Re-analysed ${mode} ${difficulty}`, 100);
         this.displayOutputDifficulty(mode, difficulty);
     }
 
@@ -255,17 +254,14 @@ export default new (class UITools {
         if (!mode || !difficulty) {
             throw new Error(logPrefix + 'mode/difficulty does not exist');
         }
-        uiLoading.status('info', `Re-analysing all difficulties`, 100);
-        analyse.all();
-        uiLoading.status('info', `Re-analysed all difficulties`, 100);
+        UILoading.status('info', `Re-analysing all difficulties`, 100);
+        Analyser.applyAll();
+        UILoading.status('info', `Re-analysed all difficulties`, 100);
         this.displayOutputDifficulty(mode, difficulty);
     }
 
     populateTool = (): void => {
-        const toolList = tools.component
-            .getAll()
-            .sort((a, b) => a.order.input - b.order.input);
-        toolList.forEach((tl) => {
+        Analyser.toolList.forEach((tl) => {
             if (tl.input.html) {
                 switch (tl.type) {
                     case 'note': {

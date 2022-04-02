@@ -1,17 +1,16 @@
 // i hate implementing these so much
-import uiAccordion from './accordion';
-import uiPanel from './panel';
-import uiSelect from './select';
-import savedData from '../savedData';
-import settings from '../settings';
+import UIAccordion from './accordion';
+import UIPanel from './panel';
+import UISelect from './select';
+import SavedData from '../savedData';
+import Settings from '../settings';
 import { formatNumber, round } from '../utils';
 import { BeatPerMinute, NoteJumpSpeed, DifficultyRename } from '../beatmap';
 import { CharacteristicRename } from '../beatmap/shared/characteristic';
-import { ColorNote } from '../beatmap/v3';
 import { IInfoData } from '../types';
 import { EventRename } from '../types/beatmap/v2';
 import { IBeatmapItem } from '../types/mapcheck';
-import { Obstacle } from '../beatmap/v3';
+import { NoteContainer } from '../types/beatmap/v3/container';
 
 const logPrefix = 'UI Stats: ';
 const prefix = 'stats__';
@@ -63,7 +62,7 @@ export default new (class UIStats {
 
     createNPSTable = (mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTableElement => {
         const bpm = BeatPerMinute.create(mapInfo._beatsPerMinute);
-        const duration = savedData.duration || 0;
+        const duration = SavedData.duration || 0;
         const mapDuration = bpm.toRealTime(mapData.data.getLastInteractiveTime());
 
         const htmlTable = document.createElement('table');
@@ -208,33 +207,37 @@ export default new (class UIStats {
 
         const mode = id[0];
         const diff = id[1];
-        const data = savedData.beatmapDifficulty.find(
+        const noteContainer = SavedData.beatmapDifficulty.find(
             (set) => set.characteristic === mode && set.difficulty === diff
-        )?.data;
-        if (!data) {
+        )?.noteContainer;
+        if (!noteContainer) {
             console.error(logPrefix + 'note could not be found');
             return;
         }
-        let filteredNotes!: ColorNote[];
+        let filteredContainer!: NoteContainer[];
         switch (target.value) {
             case 'note': {
-                filteredNotes = notes.filter((n) => n._type === 0);
+                filteredContainer = noteContainer.filter((n) => n.type === 'note');
                 break;
             }
             case 'red': {
-                filteredNotes = notes.filter((n) => n._type === 0);
+                filteredContainer = noteContainer.filter(
+                    (n) => n.type === 'note' && n.data.color === 0
+                );
                 break;
             }
             case 'blue': {
-                filteredNotes = notes.filter((n) => n._type === 1);
+                filteredContainer = noteContainer.filter(
+                    (n) => n.type === 'note' && n.data.color === 1
+                );
                 break;
             }
             case 'bomb': {
-                filteredNotes = notes.filter((n) => n._type === 3);
+                filteredContainer = noteContainer.filter((n) => n.type === 'bomb');
                 break;
             }
             default: {
-                filteredNotes = notes;
+                filteredContainer = noteContainer;
             }
         }
         const htmlTableBody = document.querySelector(
@@ -244,42 +247,42 @@ export default new (class UIStats {
             console.error(logPrefix + 'table could not be found');
             return;
         }
-        htmlTableBody.innerHTML = this.notePlacementTableString(filteredNotes);
+        htmlTableBody.innerHTML = this.notePlacementTableString(filteredContainer);
     };
 
-    private notePlacementTableString = (notes: ColorNote[]): string => {
-        const totalNote = notes.length || 1;
+    private notePlacementTableString = (nc: NoteContainer[]): string => {
+        const totalNote = nc.length || 1;
         let htmlString = '';
         for (let l = 2; l >= 0; l--) {
             htmlString += '<tr>';
             for (let i = 0; i <= 3; i++) {
                 htmlString += `<td class="${prefix}table-element">${note.countIndexLayer(
-                    notes,
+                    nc,
                     i,
                     l
                 )}</td>`;
             }
             htmlString += `<td class="${prefix}table-element ${prefix}table--no-border">${round(
-                (note.countLayer(notes, l) / totalNote) * 100,
+                (note.countLayer(nc, l) / totalNote) * 100,
                 1
             )}%</td>
         </tr>`;
         }
         htmlString += `<tr>
     <td class="${prefix}table-element ${prefix}table--no-border">${round(
-            (note.countIndex(notes, 0) / totalNote) * 100,
+            (note.countIndex(nc, 0) / totalNote) * 100,
             1
         )}%</td>
     <td class="${prefix}table-element ${prefix}table--no-border">${round(
-            (note.countIndex(notes, 1) / totalNote) * 100,
+            (note.countIndex(nc, 1) / totalNote) * 100,
             1
         )}%</td>
     <td class="${prefix}table-element ${prefix}table--no-border">${round(
-            (note.countIndex(notes, 2) / totalNote) * 100,
+            (note.countIndex(nc, 2) / totalNote) * 100,
             1
         )}%</td>
     <td class="${prefix}table-element ${prefix}table--no-border">${round(
-            (note.countIndex(notes, 3) / totalNote) * 100,
+            (note.countIndex(nc, 3) / totalNote) * 100,
             1
         )}%</td>
     </tr>`;
@@ -290,7 +293,7 @@ export default new (class UIStats {
         mapInfo: IInfoData,
         mapData: IBeatmapItem
     ): HTMLTableElement => {
-        const htmlSelect = uiSelect.create(
+        const htmlSelect = UISelect.create(
             `${prefix}table-select-placement-${mapData.characteristic}-${mapData.difficulty}`,
             'Note Placement: ',
             'caption',
@@ -307,8 +310,8 @@ export default new (class UIStats {
 
         let htmlString = `<tbody id="${prefix}table-placement-${
             mapData.characteristic
-        }-${mapData.difficulty}">${notePlacementTableString(
-            mapData.data._notes
+        }-${mapData.difficulty}">${this.notePlacementTableString(
+            mapData.noteContainer
         )}</tbody>`;
 
         const htmlTable = document.createElement('table');
@@ -325,33 +328,29 @@ export default new (class UIStats {
 
         const mode = id[0];
         const diff = id[1];
-        const notes = savedData.beatmapDifficulty.find(
+        const noteContainer = SavedData.beatmapDifficulty.find(
             (set) => set.characteristic === mode && set.difficulty === diff
-        )?._data._notes;
-        if (!notes) {
+        )?.noteContainer;
+        if (!noteContainer) {
             console.error(logPrefix + 'note could not be found');
             return;
         }
-        let filteredNotes!: ColorNote[];
+        let filteredContainer!: NoteContainer[];
         switch (target.value) {
-            case 'note': {
-                filteredNotes = notes.filter((n: ColorNote) => note.isNote(n));
-                break;
-            }
             case 'red': {
-                filteredNotes = notes.filter((n: ColorNote) => n._type === 0);
+                filteredContainer = noteContainer.filter(
+                    (n: NoteContainer) => n.type === 'note' && n.data.color === 0
+                );
                 break;
             }
             case 'blue': {
-                filteredNotes = notes.filter((n: ColorNote) => n._type === 1);
-                break;
-            }
-            case 'bomb': {
-                filteredNotes = notes.filter((n: ColorNote) => n._type === 3);
+                filteredContainer = noteContainer.filter(
+                    (n: NoteContainer) => n.type === 'note' && n.data.color === 1
+                );
                 break;
             }
             default: {
-                filteredNotes = notes;
+                filteredContainer = noteContainer;
             }
         }
         const htmlTableBody = document.querySelector(
@@ -361,11 +360,11 @@ export default new (class UIStats {
             console.error(logPrefix + 'table could not be found');
             return;
         }
-        htmlTableBody.innerHTML = this.noteAngleTableString(filteredNotes);
+        htmlTableBody.innerHTML = this.noteAngleTableString(filteredContainer);
     };
 
     // TODO: use angle instead of cut direction
-    private noteAngleTableString = (notes: ColorNote[]): string => {
+    private noteAngleTableString = (notes: NoteContainer[]): string => {
         const totalNote = notes.length || 1;
         const cutOrder = [4, 0, 5, 2, 8, 3, 6, 1, 7];
         let htmlString = '';
@@ -387,7 +386,7 @@ export default new (class UIStats {
         mapInfo: IInfoData,
         mapData: IBeatmapItem
     ): HTMLTableElement => {
-        const htmlSelect = uiSelect.create(
+        const htmlSelect = UISelect.create(
             `${prefix}table-select-angle-${mapData.characteristic}-${mapData.difficulty}`,
             'Note Angle: ',
             'caption',
@@ -404,7 +403,7 @@ export default new (class UIStats {
 
         let htmlString = `<tbody id="${prefix}table-angle-${mapData.characteristic}-${
             mapData.difficulty
-        }">${this.noteAngleTableString(mapData.data._notes)}</tbody>`;
+        }">${this.noteAngleTableString(mapData.noteContainer)}</tbody>`;
 
         const htmlTable = document.createElement('table');
         htmlTable.className = prefix + 'table';
@@ -569,10 +568,10 @@ export default new (class UIStats {
     };
 
     populate = (): void => {
-        if (!savedData.beatmapInfo) {
+        if (!SavedData.beatmapInfo) {
             throw new Error(logPrefix + 'map info could not be found in savedData');
         }
-        const mapInfo = savedData.beatmapInfo;
+        const mapInfo = SavedData.beatmapInfo;
 
         mapInfo._difficultyBeatmapSets.forEach((set) => {
             const htmlContainer = document.createElement('div');
@@ -585,7 +584,7 @@ export default new (class UIStats {
             htmlContainer.appendChild(htmlTitle);
 
             set._difficultyBeatmaps.forEach((diff) => {
-                const mapData = savedData.beatmapDifficulty.find(
+                const mapData = SavedData.beatmapDifficulty.find(
                     (data) =>
                         data.characteristic === set._beatmapCharacteristicName &&
                         data.difficulty === diff._difficulty
@@ -594,7 +593,7 @@ export default new (class UIStats {
                     throw new Error(logPrefix + 'Could not find map data');
                 }
 
-                const htmlAccordion = uiAccordion.create(
+                const htmlAccordion = UIAccordion.create(
                     `${prefix}${set._beatmapCharacteristicName}-${diff._difficulty}`,
                     DifficultyRename[diff._difficulty] +
                         (diff._customData?.difficultyLabel
@@ -612,11 +611,11 @@ export default new (class UIStats {
                 if (!htmlContent || !htmlCheckbox) {
                     throw new Error(logPrefix + 'something went wrong!');
                 }
-                htmlCheckbox.checked = settings.onLoad.stats;
+                htmlCheckbox.checked = Settings.onLoad.stats;
 
-                const htmlPanelL = uiPanel.create('small', 'half');
-                const htmlPanelM = uiPanel.create('small', 'half');
-                const htmlPanelR = uiPanel.create('small', 'half');
+                const htmlPanelL = UIPanel.create('small', 'half');
+                const htmlPanelM = UIPanel.create('small', 'half');
+                const htmlPanelR = UIPanel.create('small', 'half');
 
                 htmlPanelL.append(this.createSettingsTable(mapInfo, mapData));
                 htmlPanelL.append(document.createElement('br'));
@@ -647,10 +646,6 @@ export default new (class UIStats {
     };
 
     reset = (): void => {
-        if (!this.htmlStats) {
-            console.error(logPrefix + 'HTML stats does not exist');
-            return;
-        }
         while (this.htmlStats.firstChild) {
             this.htmlStats.removeChild(this.htmlStats.firstChild);
         }

@@ -1,4 +1,4 @@
-import flag from './flag';
+import Flag from './flag';
 import { ISavedData } from './types/mapcheck/savedData';
 
 export default new (class SavedData implements ISavedData {
@@ -18,7 +18,7 @@ export default new (class SavedData implements ISavedData {
         if (this.duration === null) {
             throw new Error('Audio is not loaded.');
         }
-        if (flag.loading.finished) {
+        if (Flag.loading.finished) {
             return {
                 beatmapInfo: this.beatmapInfo as NonNullable<typeof this.beatmapInfo>,
                 beatmapDifficulty: this.beatmapDifficulty,
@@ -34,7 +34,7 @@ export default new (class SavedData implements ISavedData {
     }
 
     clear() {
-        flag.loading.finished = false;
+        Flag.loading.finished = false;
         this.beatmapInfo = null;
         this.beatmapDifficulty = [];
         this.contributors = [];

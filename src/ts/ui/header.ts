@@ -32,12 +32,12 @@ export default new (class UIHeader {
         this.htmlAudio = document.querySelector('.audio')!;
 
         if (!this.htmlIntro || !this.htmlMetadata) {
-            console.error(
+            throw new Error(
                 logPrefix + 'header component is missing one of the two section'
             );
         }
         if (!this.htmlCoverLink || !this.htmlCoverImage) {
-            console.error(logPrefix + 'cover component is missing');
+            throw new Error(logPrefix + 'cover component is missing');
         }
         if (
             !this.htmlMetadataSongName ||
@@ -46,7 +46,9 @@ export default new (class UIHeader {
             !this.htmlMetadataSongBPM ||
             !this.htmlMetadataSongDuration
         ) {
-            console.error(logPrefix + 'metadata component is missing one of the part');
+            throw new Error(
+                logPrefix + 'metadata component is missing one of the part'
+            );
         }
     }
 

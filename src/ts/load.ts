@@ -1,4 +1,4 @@
-import JSZip, { JSZipObject } from 'jszip';
+import JSZip from 'jszip';
 import { BeatPerMinute, swing } from './beatmap';
 import { V2toV3 } from './beatmap/convert';
 import {

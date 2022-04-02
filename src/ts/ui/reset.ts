@@ -1,9 +1,9 @@
 import SavedData from '../savedData';
-import uiLoading from './loading';
-import uiHeader from './header';
-import uiInfo from './information';
-import uiTools from './tools';
-import uiStats from './stats';
+import UILoading from './loading';
+import UIHeader from './header';
+import UIInfo from './information';
+import UITools from './tools';
+import UIStats from './stats';
 
 export default new (class UIReset {
     private htmlResetButton: NodeListOf<HTMLInputElement>;
@@ -17,11 +17,11 @@ export default new (class UIReset {
     }
 
     resetHandler = () => {
-        uiLoading.reset();
-        uiHeader.reset();
-        uiInfo.reset();
-        uiTools.reset();
-        uiStats.reset();
+        UILoading.reset();
+        UIHeader.reset();
+        UIInfo.reset();
+        UITools.reset();
+        UIStats.reset();
         SavedData.clear();
     };
 })();

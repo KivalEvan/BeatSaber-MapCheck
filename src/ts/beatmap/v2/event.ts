@@ -445,11 +445,11 @@ export class Event extends BeatmapObject<IEvent> {
      * console.log(list);
      * ```
      */
-    count = (
+    static count = (
         events: Event[],
         environment: EnvironmentAllName = 'DefaultEnvironment'
     ): IEventCount => {
-        const commonEvent = EventList[environment] ?? [0, 1, 2, 3, 4, 8, 9, 12, 13];
+        const commonEvent = EventList[environment][0] ?? [0, 1, 2, 3, 4, 8, 9, 12, 13];
         const eventCount: IEventCount = {};
         for (let i = commonEvent.length - 1; i >= 0; i--) {
             eventCount[commonEvent[i]] = {
@@ -462,7 +462,7 @@ export class Event extends BeatmapObject<IEvent> {
         }
 
         for (let i = events.length - 1; i >= 0; i--) {
-            if (this.isValidType()) {
+            if (events[i].isValidType()) {
                 if (!eventCount[events[i].type]) {
                     eventCount[events[i].type] = {
                         total: 0,
@@ -473,16 +473,16 @@ export class Event extends BeatmapObject<IEvent> {
                     };
                 }
                 eventCount[events[i].type].total++;
-                if (this.hasChroma()) {
+                if (events[i].hasChroma()) {
                     eventCount[events[i].type].chroma++;
                 }
-                if (this.hasOldChroma()) {
+                if (events[i].hasOldChroma()) {
                     eventCount[events[i].type].chromaOld++;
                 }
-                if (this.hasNoodleExtensions()) {
+                if (events[i].hasNoodleExtensions()) {
                     eventCount[events[i].type].noodleExtensions++;
                 }
-                if (this.hasMappingExtensions()) {
+                if (events[i].hasMappingExtensions()) {
                     eventCount[events[i].type].mappingExtensions++;
                 }
             }

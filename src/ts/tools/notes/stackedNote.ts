@@ -1,7 +1,6 @@
 import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
 import * as beatmap from '../../beatmap';
-import { NoteContainer } from '../../types/beatmap/v3/container';
 
 const htmlContainer = document.createElement('div');
 const htmlInputCheck = document.createElement('input');
@@ -43,30 +42,30 @@ function inputCheckHandler(this: HTMLInputElement) {
 
 function checkNote(map: ToolArgs) {
     const { bpm } = map.settings;
-    const noteContainer = map.difficulty.noteContainer;
+    const { colorNotes } = map.difficulty.data;
 
-    const arr: NoteContainer[] = [];
+    const arr: beatmap.v3.ColorNote[] = [];
     // to avoid multiple of stack popping up, ignore anything within this time
     let lastTime: number = 0;
-    for (let i = 0, len = noteContainer.length; i < len; i++) {
-        if (bpm.toRealTime(noteContainer[i].data.time) < lastTime + 0.01) {
+    for (let i = 0, len = colorNotes.length; i < len; i++) {
+        if (bpm.toRealTime(colorNotes[i].time) < lastTime + 0.01) {
             continue;
         }
         for (let j = i + 1; j < len; j++) {
             if (
-                bpm.toRealTime(noteContainer[j].data.time) >
-                bpm.toRealTime(noteContainer[i].data.time) + 0.01
+                bpm.toRealTime(colorNotes[j].time) >
+                bpm.toRealTime(colorNotes[i].time) + 0.01
             ) {
                 break;
             }
-            if (noteContainer[j].data.isInline(noteContainer[i].data)) {
-                arr.push(noteContainer[i]);
-                lastTime = bpm.toRealTime(noteContainer[i].data.time);
+            if (colorNotes[j].isInline(colorNotes[i])) {
+                arr.push(colorNotes[i]);
+                lastTime = bpm.toRealTime(colorNotes[i].time);
             }
         }
     }
     return arr
-        .map((n) => n.data.time)
+        .map((n) => n.time)
         .filter(function (x, i, ary) {
             return !i || x !== ary[i - 1];
         });

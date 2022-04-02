@@ -1,7 +1,7 @@
 // TODO: generate options instead of hardcoded in HTML
 import { UIThemeName } from '../types/mapcheck/ui';
-import uiTheme from './theme';
-import settings from '../settings';
+import UITheme from './theme';
+import Settings from '../settings';
 
 const logPrefix = 'UI Settings: ';
 
@@ -23,14 +23,14 @@ export default new (class UISettings {
 
         if (this.htmlSettingsTheme) {
             this.htmlSettingsTheme.addEventListener('change', this.themeChangeHandler);
-            uiTheme.list.forEach((th) => {
+            UITheme.list.forEach((th) => {
                 const optTheme = document.createElement('option');
                 optTheme.value = th;
                 optTheme.textContent = th;
                 this.htmlSettingsTheme.add(optTheme);
             });
         } else {
-            console.error(logPrefix + 'theme select is missing');
+            throw new Error(logPrefix + 'theme select is missing');
         }
         if (!this.htmlSettingsLoad.length) {
             console.error(logPrefix + 'empty load list, intentional or typo error?');
@@ -41,7 +41,7 @@ export default new (class UISettings {
         if (this.htmlSettingsSort) {
             this.htmlSettingsSort.addEventListener('change', this.sortCheckHandler);
         } else {
-            console.error(logPrefix + 'sort check is missing');
+            throw new Error(logPrefix + 'sort check is missing');
         }
         if (!this.htmlSettingsOnLoad.length) {
             console.error(logPrefix + 'empty onload list, intentional or typo error?');
@@ -58,23 +58,23 @@ export default new (class UISettings {
         if (this.htmlSettingsClear) {
             this.htmlSettingsClear.addEventListener('click', this.clear);
         } else {
-            console.error(logPrefix + 'clear button is missing');
+            throw new Error(logPrefix + 'clear button is missing');
         }
     }
 
     private themeChangeHandler(ev: Event): void {
         const target = ev.target as HTMLSelectElement;
-        settings.theme = target.options[target.options.selectedIndex]
+        Settings.theme = target.options[target.options.selectedIndex]
             .value as UIThemeName;
-        uiTheme.set(settings.theme);
-        settings.save();
+        UITheme.set(Settings.theme);
+        Settings.save();
     }
 
     private showCheckHandler(ev: Event): void {
         const target = ev.target as HTMLInputElement;
         const id = target.id.replace('settings__show-', '');
-        settings.show[id] = target.checked;
-        settings.save();
+        Settings.show[id] = target.checked;
+        Settings.save();
     }
 
     setShowCheck = (id: string, bool: boolean): void => {
@@ -87,8 +87,8 @@ export default new (class UISettings {
 
     private sortCheckHandler(ev: Event): void {
         const target = ev.target as HTMLInputElement;
-        settings.sorting = target.checked;
-        settings.save();
+        Settings.sorting = target.checked;
+        Settings.save();
     }
 
     setSortCheck = (bool: boolean): void => {
@@ -100,8 +100,8 @@ export default new (class UISettings {
     private loadCheckHandler(ev: Event): void {
         const target = ev.target as HTMLInputElement;
         const id = target.name;
-        settings.load[id] = target.checked;
-        settings.save();
+        Settings.load[id] = target.checked;
+        Settings.save();
     }
 
     setLoadCheck = (id: string, bool: boolean): void => {
@@ -115,8 +115,8 @@ export default new (class UISettings {
     private onLoadCheckHandler(ev: Event): void {
         const target = ev.target as HTMLInputElement;
         const id = target.name;
-        settings.onLoad[id] = target.checked;
-        settings.save();
+        Settings.onLoad[id] = target.checked;
+        Settings.save();
     }
 
     setOnLoadCheck = (id: string, bool: boolean): void => {
@@ -132,8 +132,8 @@ export default new (class UISettings {
     };
 
     clear(): void {
-        settings.clear();
-        settings.reset();
+        Settings.clear();
+        Settings.reset();
         location.reload();
     }
 })();

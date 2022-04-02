@@ -1,5 +1,3 @@
-// TODO: validate settings
-
 import { ISettings } from './types/mapcheck/settings';
 import { deepCopy } from './utils';
 
@@ -22,6 +20,7 @@ const settingsDefault: ISettings = {
     },
 };
 
+// TODO: validate settings
 export default new (class Settings implements ISettings {
     private property: ISettings = deepCopy(settingsDefault);
 

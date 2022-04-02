@@ -58,11 +58,13 @@ function run(map: ToolArgs) {
                 'Noodle Extensions'
             )
         ) {
+            // FIXME: add hasNoodleExtensions() later
             noteResult = colorNotes
-                .filter((n) => n.hasMappingExtensions() && !n.hasNoodleExtensions())
+                .filter((n) => n.hasMappingExtensions())
                 .map((n) => n.time);
+            // FIXME: add hasNoodleExtensions() later
             obstacleResult = obstacles
-                .filter((o) => o.hasMappingExtensions() && !o.hasNoodleExtensions())
+                .filter((o) => o.hasMappingExtensions())
                 .map((o) => o.time);
         } else {
             noteResult = colorNotes.filter((n) => !n.isValid()).map((n) => n.time);

@@ -1,4 +1,5 @@
 export * from './bpm';
+export * from './characteristic';
 export * from './constants';
 export * from './difficulty';
 export * as easings from './easings';

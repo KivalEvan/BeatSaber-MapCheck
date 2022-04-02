@@ -1,5 +1,5 @@
 import main from '../main';
-import uiLoading from './loading';
+import UILoading from './loading';
 
 const logPrefix = 'UI Intro: ';
 
@@ -88,11 +88,11 @@ export default new (class UIIntro {
     // TODO: maybe break up into individual function
     private inputFileHandler(ev: Event): void {
         const target = ev.target as HTMLInputElement;
-        uiLoading.status('info', 'Reading file input', 0);
+        UILoading.status('info', 'Reading file input', 0);
         const file = target.files ? target.files[0] : null;
         try {
             if (file == null) {
-                uiLoading.status('info', 'No file input', 0);
+                UILoading.status('info', 'No file input', 0);
                 throw new Error('No file input');
             }
             if (
@@ -108,7 +108,7 @@ export default new (class UIIntro {
                 throw new Error('Unsupported file format, please enter zip file');
             }
         } catch (err) {
-            uiLoading.status('error', err, 0);
+            UILoading.status('error', err, 0);
             console.error(err);
         }
     }
@@ -141,7 +141,7 @@ export default new (class UIIntro {
                 }
             }
         } catch (err) {
-            uiLoading.status('error', err, 0);
+            UILoading.status('error', err, 0);
             console.error(err);
         }
     }

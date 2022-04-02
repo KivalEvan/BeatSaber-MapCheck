@@ -3,7 +3,7 @@ const versionMinor: number = 5;
 const versionPatch: number = 0;
 const watermark: string = 'Kival Evan#5480';
 
-class Version {
+export default new (class Version {
     private _version: string = `v${versionMajor}.${versionMinor}.${versionPatch}`;
     private _wm: string = watermark;
 
@@ -13,6 +13,4 @@ class Version {
     get watermark(): string {
         return this._wm;
     }
-}
-
-export default new Version();
+})();

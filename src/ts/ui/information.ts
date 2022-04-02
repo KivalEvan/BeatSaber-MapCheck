@@ -1,8 +1,8 @@
 // may god help you maintain these
-import uiHeader from './header';
-import uiPanel from './panel';
+import UIHeader from './header';
+import UIPanel from './panel';
+import SavedData from '../savedData';
 import { removeOptions, round, toMMSS, toHHMMSS, rgbaToHex } from '../utils';
-import savedData from '../savedData';
 import { IColorScheme, EnvironmentName, IInfoData } from '../types';
 import { IContributorB64, IBeatmapItem } from '../types/mapcheck';
 import { IEditor, IEditorInfo } from '../types/beatmap/shared/editor';
@@ -82,14 +82,14 @@ export default new (class UIInformation {
             !this.htmlInfoEnvironment ||
             !this.htmlInfoEditors
         ) {
-            console.error(logPrefix + 'info component is missing part');
+            throw new Error(logPrefix + 'info component is missing part');
         }
         if (
             !this.htmlInfoContributors ||
             !this.htmlInfoContributorsName ||
             !this.htmlInfoContributorsRole
         ) {
-            console.error(logPrefix + 'contributors component is missing part');
+            throw new Error(logPrefix + 'contributors component is missing part');
         }
         if (this.htmlInfoContributorsSelect) {
             this.htmlInfoContributorsSelect.addEventListener(
@@ -97,7 +97,7 @@ export default new (class UIInformation {
                 this.contributorsSelectHandler
             );
         } else {
-            console.error(logPrefix + 'contributors select is missing');
+            throw new Error(logPrefix + 'contributors select is missing');
         }
         if (
             !this.htmlTableVersion ||
@@ -113,7 +113,7 @@ export default new (class UIInformation {
             !this.htmlTablePointDefinitions ||
             !this.htmlTableCustomEvents
         ) {
-            console.error(logPrefix + 'table info component is missing part');
+            throw new Error(logPrefix + 'table info component is missing part');
         }
     }
 
@@ -346,7 +346,7 @@ export default new (class UIInformation {
             hexColor._obstacleColor = rgbaToHex(customColor._obstacleColor);
         }
 
-        const panel = uiPanel.create('max', 'none', true);
+        const panel = UIPanel.create('max', 'none', true);
         for (const key in hexColor) {
             if (!hexColor[key]) {
                 continue;
@@ -511,10 +511,10 @@ export default new (class UIInformation {
     };
 
     setInfo = (mapInfo: IInfoData): void => {
-        uiHeader.setSongName(mapInfo._songName);
-        uiHeader.setSongSubname(mapInfo._songSubName);
-        uiHeader.setSongAuthor(mapInfo._songAuthorName);
-        uiHeader.setSongBPM(mapInfo._beatsPerMinute);
+        UIHeader.setSongName(mapInfo._songName);
+        UIHeader.setSongSubname(mapInfo._songSubName);
+        UIHeader.setSongAuthor(mapInfo._songAuthorName);
+        UIHeader.setSongBPM(mapInfo._beatsPerMinute);
         this.setLevelAuthor(mapInfo._levelAuthorName);
         this.setEnvironment(mapInfo._environmentName);
         this.setEditors(mapInfo._customData?._editors);
@@ -530,9 +530,9 @@ export default new (class UIInformation {
             this.setWarnings(mapData.info._customData._warnings);
         }
         if (mapData.data?.customData) {
-            const bpm = savedData.beatmapInfo?._beatsPerMinute
+            const bpm = SavedData.beatmapInfo?._beatsPerMinute
                 ? BeatPerMinute.create(
-                      savedData.beatmapInfo._beatsPerMinute,
+                      SavedData.beatmapInfo._beatsPerMinute,
                       mapData.data.customData._bpmChanges ||
                           mapData.data.customData._BPMChanges
                   )
@@ -548,7 +548,7 @@ export default new (class UIInformation {
 
     private contributorsSelectHandler = (ev: Event): void => {
         const target = ev.target as HTMLSelectElement;
-        this.setContributors(savedData.contributors[parseInt(target.value)]);
+        this.setContributors(SavedData.contributors[parseInt(target.value)]);
     };
 
     reset = (): void => {

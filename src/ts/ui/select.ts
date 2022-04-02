@@ -1,4 +1,4 @@
-export default new (class UISelect {
+export default class UISelect {
     static create = (
         id: string,
         label: string,
@@ -29,4 +29,4 @@ export default new (class UISelect {
 
         return htmlContainer;
     };
-})();
+}

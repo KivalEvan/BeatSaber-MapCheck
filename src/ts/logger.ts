@@ -17,7 +17,7 @@ const logPrefixes = new Map<LogLevels, string>([
     [LogLevels.NONE, 'NONE'],
 ]);
 
-class Logger {
+export default new (class Logger {
     logLevel = LogLevels.INFO;
 
     readonly logLevels = LogLevels;
@@ -82,6 +82,4 @@ class Logger {
     public error(...args: any[]) {
         this.log(LogLevels.ERROR, ...args);
     }
-}
-
-export default new Logger();
+})();
