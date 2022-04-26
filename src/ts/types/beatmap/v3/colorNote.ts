@@ -44,5 +44,5 @@ export interface IColorNote extends IBaseObject {
     d: number;
     /** Angle offset in degree counter-clockwise `<int>` of note.*/
     a: number;
-    cd?: CustomDataBase;
+    customData?: CustomDataBase;
 }

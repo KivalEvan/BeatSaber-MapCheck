@@ -48,7 +48,7 @@ export const ColorNoteDataCheck: Readonly<Record<keyof IColorNote, DataCheck>> =
         type: 'number',
         version: '3.0.0',
     },
-    cd: {
+    customData: {
         type: 'object',
         version: '3.0.0',
         check: {},
@@ -68,6 +68,12 @@ export const BombDataCheck: Readonly<Record<keyof IBombNote, DataCheck>> = {
     y: {
         type: 'number',
         version: '3.0.0',
+    },
+    customData: {
+        type: 'object',
+        version: '3.0.0',
+        check: {},
+        optional: true,
     },
 };
 
@@ -190,6 +196,12 @@ export const ObstacleDataCheck: Readonly<Record<keyof IObstacle, DataCheck>> = {
         type: 'number',
         version: '3.0.0',
     },
+    customData: {
+        type: 'object',
+        version: '3.0.0',
+        check: {},
+        optional: true,
+    },
 };
 
 export const BasicEventDataCheck: Readonly<Record<keyof IBasicEvent, DataCheck>> = {
@@ -209,7 +221,7 @@ export const BasicEventDataCheck: Readonly<Record<keyof IBasicEvent, DataCheck>>
         type: 'number',
         version: '3.0.0',
     },
-    cd: {
+    customData: {
         type: 'object',
         version: '3.0.0',
         check: {},

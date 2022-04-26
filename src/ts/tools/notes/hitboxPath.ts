@@ -41,42 +41,45 @@ function inputCheckHandler(this: HTMLInputElement) {
 }
 
 function check(map: ToolArgs) {
-    const { bpm, _njs: njs } = map.settings;
+    const { bpm, njs } = map.settings;
     const { colorNotes } = map.difficulty.data;
 
     const arr: beatmap.v3.ColorNote[] = [];
     // to avoid multiple of stack popping up, ignore anything within this time
     let lastTime: number = 0;
-    for (let i = 0, len = notes.length; i < len; i++) {
-        if (bpm.toRealTime(notes[i].time) < lastTime + 0.01 || notes[i].color === 3) {
+    for (let i = 0, len = colorNotes.length; i < len; i++) {
+        if (bpm.toRealTime(colorNotes[i].time) < lastTime + 0.01) {
             continue;
         }
         for (let j = i + 1; j < len; j++) {
-            if (bpm.toRealTime(notes[j].time) > bpm.toRealTime(notes[i].time) + 0.01) {
+            if (
+                bpm.toRealTime(colorNotes[j].time) >
+                bpm.toRealTime(colorNotes[i].time) + 0.01
+            ) {
                 break;
             }
-            if (notes[i].color === notes[j].color || notes[j].color === 3) {
+            if (colorNotes[i].color === colorNotes[j].color) {
                 continue;
             }
             if (
-                ((note.isHorizontal(notes[i], notes[j]) ||
-                    note.isVertical(notes[i], notes[j])) &&
-                    note
-                        .isIntersect(notes[i], notes[j], [
+                ((colorNotes[i].isHorizontal(colorNotes[j]) ||
+                    colorNotes[i].isVertical(colorNotes[j])) &&
+                    colorNotes[i]
+                        .isIntersect(colorNotes[j], [
                             [45, 1],
                             [15, 2],
                         ])
                         .some((b) => b)) ||
-                (note.isDiagonal(notes[i], notes[j]) &&
-                    note
-                        .isIntersect(notes[i], notes[j], [
+                (colorNotes[i].isDiagonal(colorNotes[j]) &&
+                    colorNotes[i]
+                        .isIntersect(colorNotes[j], [
                             [45, 1],
                             [15, 1.5],
                         ])
                         .some((b) => b))
             ) {
-                arr.push(notes[i]);
-                lastTime = bpm.toRealTime(notes[i].time);
+                arr.push(colorNotes[i]);
+                lastTime = bpm.toRealTime(colorNotes[i].time);
             }
         }
     }

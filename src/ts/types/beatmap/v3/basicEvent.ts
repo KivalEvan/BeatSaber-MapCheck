@@ -36,7 +36,7 @@ interface IBasicEventBase extends IBaseObject {
     i: number;
     /** Float value `<float>` of basic event. */
     f: number;
-    cd?: CustomDataBase;
+    customData?: CustomDataBase;
 }
 
 interface IBasicEventGeneric extends IBasicEventBase {

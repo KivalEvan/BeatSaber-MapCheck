@@ -1,6 +1,7 @@
 import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
 import * as beatmap from '../../beatmap';
+import { NoteContainer } from '../../types/beatmap/v3/container';
 
 const htmlContainer = document.createElement('div');
 const htmlInputCheck = document.createElement('input');
@@ -43,48 +44,60 @@ function inputCheckHandler(this: HTMLInputElement) {
 const constant = 0.03414823529;
 const constantDiagonal = 0.03414823529;
 function check(map: ToolArgs) {
-    const { bpm, _njs: njs } = map.settings;
+    const { bpm, njs } = map.settings;
     const { colorNotes } = map.difficulty.data;
 
     const lastNote: { [key: number]: beatmap.v3.ColorNote } = {};
-    const swingNoteArray: { [key: number]: beatmap.v3.ColorNote[] } = {
+    const swingNoteArray: { [key: number]: NoteContainer[] } = {
         0: [],
         1: [],
-        3: [],
     };
 
     const arr: beatmap.v3.ColorNote[] = [];
-    for (let i = 0, len = notes.length; i < len; i++) {
-        const note = notes[i];
-        if (note.isNote(note) && lastNote[note.color]) {
+    for (let i = 0, len = colorNotes.length; i < len; i++) {
+        const note = colorNotes[i];
+        if (lastNote[note.color]) {
             if (
-                swing.next(note, lastNote[note.color], bpm, swingNoteArray[note.color])
+                beatmap.swing.next(
+                    note,
+                    lastNote[note.color],
+                    bpm,
+                    swingNoteArray[note.color]
+                )
             ) {
                 swingNoteArray[note.color] = [];
             }
         }
         for (const other of swingNoteArray[(note.color + 1) % 2]) {
-            if (other.direction !== 8) {
-                if (!(bpm.toRealTime(note.time) > bpm.toRealTime(other.time) + 0.01)) {
+            if (other.type !== 'note') {
+                continue;
+            }
+            if (other.data.direction !== 8) {
+                if (
+                    !(
+                        bpm.toRealTime(note.time) >
+                        bpm.toRealTime(other.data.time) + 0.01
+                    )
+                ) {
                     continue;
                 }
                 const isDiagonal =
-                    note.getAngle(other) % 90 > 15 && note.getAngle(other) % 90 < 75;
+                    other.data.getAngle() % 90 > 15 && other.data.getAngle() % 90 < 75;
                 // magic number 1.425 from saber length + good/bad hitbox
                 if (
                     njs.value <
                         1.425 /
-                            ((60 * (note.time - other.time)) / bpm.value +
+                            ((60 * (note.time - other.data.time)) / bpm.value +
                                 (isDiagonal ? constantDiagonal : constant)) &&
-                    note.isIntersect(note, other, [[15, 1.5]])[1]
+                    note.isIntersect(other.data, [[15, 1.5]])[1]
                 ) {
-                    arr.push(other);
+                    arr.push(other.data);
                     break;
                 }
             }
         }
         lastNote[note.color] = note;
-        swingNoteArray[note.color].push(note);
+        swingNoteArray[note.color].push({ type: 'note', data: note });
     }
     return arr
         .map((n) => n.time)

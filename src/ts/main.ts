@@ -7,7 +7,7 @@ import UIInput from './ui/input';
 import Analyser from './tools/analyser';
 import Settings from './settings';
 import Flag from './flag';
-import SavedData from './SavedData';
+import SavedData from './savedData';
 import { loadDifficulty, loadInfo } from './load';
 import { downloadFromHash, downloadFromID, downloadFromURL } from './download';
 import { sanitizeBeatSaverID, sanitizeURL } from './utils/web';

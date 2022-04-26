@@ -1,6 +1,7 @@
 import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
 import * as beatmap from '../../beatmap';
+import { NoteContainer } from '../../types/beatmap/v3/container';
 
 const defaultMaxTime = 0.075;
 
@@ -116,7 +117,7 @@ function check(map: ToolArgs) {
         1: false,
         3: false,
     };
-    const swingNoteArray: { [key: number]: beatmap.v3.ColorNote[] } = {
+    const swingNoteArray: { [key: number]: NoteContainer[] } = {
         0: [],
         1: [],
         3: [],
@@ -125,9 +126,14 @@ function check(map: ToolArgs) {
     const arr: beatmap.v3.ColorNote[] = [];
     for (let i = 0, len = colorNotes.length; i < len; i++) {
         const note = colorNotes[i];
-        if (note.isNote(note) && lastNote[note.color]) {
+        if (lastNote[note.color]) {
             if (
-                swing.next(note, lastNote[note.color], bpm, swingNoteArray[note.color])
+                beatmap.swing.next(
+                    note,
+                    lastNote[note.color],
+                    bpm,
+                    swingNoteArray[note.color]
+                )
             ) {
                 if (note.time - lastNote[note.color].time <= maxTime * 2) {
                     if (
@@ -149,7 +155,7 @@ function check(map: ToolArgs) {
         } else {
             lastNote[note.color] = note;
         }
-        swingNoteArray[note.color].push(note);
+        swingNoteArray[note.color].push({ type: 'note', data: note });
     }
     return arr
         .map((n) => n.time)

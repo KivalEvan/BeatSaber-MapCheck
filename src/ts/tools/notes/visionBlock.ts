@@ -257,9 +257,9 @@ function check(map: ToolArgs) {
             ? bpm.toBeatTime(temp2)
             : Math.min(njs.hjd, bpm.toBeatTime(vbDiff[map.difficulty.difficulty].max));
 
-    let lastMidL!: NoteContainer[number] | null;
-    let lastMidR!: NoteContainer[number] | null;
-    const arr: NoteContainer = [];
+    let lastMidL: NoteContainer | null = null;
+    let lastMidR: NoteContainer | null = null;
+    const arr: NoteContainer[] = [];
     for (let i = 0, len = noteContainer.length; i < len; i++) {
         const note = noteContainer[i];
         if (lastMidL) {

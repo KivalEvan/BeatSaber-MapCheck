@@ -1,4 +1,5 @@
 import { IBaseObject } from './baseObject';
+import { CustomDataBase } from './customData';
 
 export interface IBombNote extends IBaseObject {
     /** Position x `<int>` of bomb.
@@ -22,4 +23,5 @@ export interface IBombNote extends IBaseObject {
      * Range: `0-2`
      */
     y: number;
+    customData?: CustomDataBase;
 }

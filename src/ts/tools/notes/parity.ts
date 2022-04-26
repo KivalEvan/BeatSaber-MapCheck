@@ -1,12 +1,12 @@
 import { Tool, ToolArgs } from '../../types/mapcheck';
-import { create as selectCreate } from '../../ui/select';
+import UISelect from '../../ui/select';
 import { round } from '../../utils';
 import * as beatmap from '../../beatmap';
 
 const htmlContainer = document.createElement('div');
 const htmlInputCheck = document.createElement('input');
 const htmlLabelCheck = document.createElement('label');
-const htmlSelectRotation = selectCreate(
+const htmlSelectRotation = UISelect.create(
     'input__tools-parity-rotation',
     'Wrist rotation type: ',
     'div',
@@ -15,7 +15,7 @@ const htmlSelectRotation = selectCreate(
     { text: 'Extended', value: '135' },
     { text: 'Squid', value: '180' }
 );
-const htmlSelectParityLeft = selectCreate(
+const htmlSelectParityLeft = UISelect.create(
     'input__tools-parity-left',
     'Left hand parity: ',
     'div',
@@ -24,7 +24,7 @@ const htmlSelectParityLeft = selectCreate(
     { text: 'Forehand', value: 'forehand' },
     { text: 'Backhand', value: 'backhand' }
 );
-const htmlSelectParityRight = selectCreate(
+const htmlSelectParityRight = UISelect.create(
     'input__tools-parity-right',
     'Right hand parity: ',
     'div',

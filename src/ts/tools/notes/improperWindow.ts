@@ -1,6 +1,7 @@
 import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
 import * as beatmap from '../../beatmap';
+import { NoteContainer } from '../../types/beatmap/v3/container';
 
 const htmlContainer = document.createElement('div');
 const htmlInputCheck = document.createElement('input');
@@ -44,7 +45,7 @@ function check(map: ToolArgs) {
     const { bpm } = map.settings;
     const { colorNotes } = map.difficulty.data;
     const lastNote: { [key: number]: beatmap.v3.ColorNote } = {};
-    const swingNoteArray: { [key: number]: beatmap.v3.ColorNote[] } = {
+    const swingNoteArray: { [key: number]: NoteContainer[] } = {
         0: [],
         1: [],
         3: [],
@@ -53,14 +54,19 @@ function check(map: ToolArgs) {
     const arr: beatmap.v3.ColorNote[] = [];
     for (let i = 0, len = colorNotes.length; i < len; i++) {
         const note = colorNotes[i];
-        if (note.isNote(note) && lastNote[note.color]) {
+        if (lastNote[note.color]) {
             if (
-                swing.next(note, lastNote[note.color], bpm, swingNoteArray[note.color])
+                beatmap.swing.next(
+                    note,
+                    lastNote[note.color],
+                    bpm,
+                    swingNoteArray[note.color]
+                )
             ) {
                 lastNote[note.color] = note;
                 swingNoteArray[note.color] = [];
             } else if (
-                note.isSlantedWindow(note, lastNote[note.color]) &&
+                note.isSlantedWindow(lastNote[note.color]) &&
                 note.time - lastNote[note.color].time >= 0.001 &&
                 note.direction === lastNote[note.color].direction &&
                 note.direction !== 8 &&
@@ -71,7 +77,7 @@ function check(map: ToolArgs) {
         } else {
             lastNote[note.color] = note;
         }
-        swingNoteArray[note.color].push(note);
+        swingNoteArray[note.color].push({ type: 'note', data: note });
     }
     return arr
         .map((n) => n.time)

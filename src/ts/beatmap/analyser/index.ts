@@ -1,1 +1,1 @@
-export * as swing from './swing';
+export { default as swing } from './swing';

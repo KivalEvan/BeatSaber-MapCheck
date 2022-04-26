@@ -41,6 +41,7 @@ export const V2toV3 = (
                     b: n.time,
                     x: n.lineIndex,
                     y: n.lineLayer,
+                    customData: n.customData,
                 })
             );
         }
@@ -69,7 +70,7 @@ export const V2toV3 = (
                                 : 1
                             : clamp(n.cutDirection, 0, 8),
                     a: a,
-                    cd: n.customData ?? {},
+                    customData: n.customData,
                 })
             );
         }
@@ -84,6 +85,7 @@ export const V2toV3 = (
                 d: o.duration,
                 w: o.width,
                 h: o.type === 2 ? o.height : o.type ? 3 : 5,
+                customData: o.customData,
             })
         )
     );
@@ -123,6 +125,7 @@ export const V2toV3 = (
                     et: e.type,
                     i: e.value,
                     f: e.floatValue,
+                    customData: e.customData,
                 })
             );
         }
@@ -166,12 +169,7 @@ export const V2toV3 = (
     });
 
     if (data.customData) {
-        template.customData = {
-            t: data.customData?._time,
-            bm: data.customData?._bookmarks?.map((bm) => {
-                return { b: bm._time, n: bm._name, c: bm._color };
-            }),
-        };
+        template.customData = data.customData;
     }
 
     return template;
@@ -209,18 +207,20 @@ export const V3toV2 = (
                 _lineLayer: n.posY,
                 _type: n.color,
                 _cutDirection: n.direction,
+                _customData: n.customData,
             })
         )
     );
 
-    data.bombNotes.forEach((n) =>
+    data.bombNotes.forEach((b) =>
         template.notes.push(
             v2.Note.create({
-                _time: n.time,
-                _lineIndex: n.posX,
-                _lineLayer: n.posY,
+                _time: b.time,
+                _lineIndex: b.posX,
+                _lineLayer: b.posY,
                 _type: 3,
                 _cutDirection: 0,
+                _customData: b.customData,
             })
         )
     );
@@ -236,6 +236,7 @@ export const V3toV2 = (
                     _duration: o.duration,
                     _width: o.width,
                     _height: o.height,
+                    _customData: o.customData,
                 })
             );
         } else if (o.posY === 2 && o.height === 3) {
@@ -248,6 +249,7 @@ export const V3toV2 = (
                     _duration: o.duration,
                     _width: o.width,
                     _height: o.height,
+                    _customData: o.customData,
                 })
             );
         } else {
@@ -260,6 +262,7 @@ export const V3toV2 = (
                     _duration: o.duration,
                     _width: o.width,
                     _height: o.height,
+                    _customData: o.customData,
                 })
             );
         }
@@ -272,6 +275,7 @@ export const V3toV2 = (
                 _type: be.type as 8, // hackish way to just accept any other event
                 _value: be.value,
                 _floatValue: be.floatValue,
+                _customData: be.customData,
             })
         );
     });
@@ -351,6 +355,10 @@ export const V3toV2 = (
                 return { _keyword: d.keyword, _specialEvents: d.events };
             }) ?? [],
     });
+
+    if (data.customData) {
+        template.customData = data.customData;
+    }
 
     return template;
 };

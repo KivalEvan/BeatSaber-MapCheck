@@ -22,7 +22,7 @@ export default new (class Analysis {
         }
 
         const analysisExist = SavedData.analysis?.general;
-        const spsSet = SavedData.analysis?.sps;
+        const spsSet = SavedData.analysis?.map.map((m) => m.sps);
 
         const bpm = beatmap.BeatPerMinute.create(mapInfo._beatsPerMinute);
         const njs = beatmap.NoteJumpSpeed.create(bpm);

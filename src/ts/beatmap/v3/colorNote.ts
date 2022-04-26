@@ -17,7 +17,7 @@ export class ColorNote
         y: 0,
         d: 0,
         a: 0,
-        cd: () => {
+        customData: () => {
             return {};
         },
     };
@@ -40,7 +40,7 @@ export class ColorNote
                     c: n.c ?? ColorNote.default.c,
                     d: n.d ?? ColorNote.default.d,
                     a: n.a ?? ColorNote.default.a,
-                    cd: n.cd ?? ColorNote.default.cd(),
+                    customData: n.customData ?? ColorNote.default.customData(),
                 })
             )
         );
@@ -57,7 +57,7 @@ export class ColorNote
             c: ColorNote.default.c,
             d: ColorNote.default.d,
             a: ColorNote.default.a,
-            cd: ColorNote.default.cd(),
+            customData: ColorNote.default.customData(),
         });
     }
 
@@ -145,10 +145,10 @@ export class ColorNote
     }
 
     get customData() {
-        return this.data.cd;
+        return this.data.customData;
     }
-    set customData(value: typeof this.data.cd) {
-        this.data.cd = value;
+    set customData(value: typeof this.data.customData) {
+        this.data.customData = value;
     }
 
     setColor(value: IColorNote['c']) {
@@ -171,7 +171,7 @@ export class ColorNote
         this.angleOffset = value;
         return this;
     }
-    setCustomData(value: typeof this.data.cd) {
+    setCustomData(value: typeof this.data.customData) {
         this.customData = value;
         return this;
     }
@@ -398,19 +398,12 @@ export class ColorNote
      * if (note.isDouble(notes, index)) {}
      * ```
      */
-    isDouble(compareTo: ColorNote[], index: number, tolerance = 0.01) {
-        for (let i = index, len = compareTo.length; i < len; i++) {
-            if (
-                compareTo[i].time < this.time + tolerance &&
-                compareTo[i].color !== this.color
-            ) {
-                return true;
-            }
-            if (compareTo[i].time > this.time + tolerance) {
-                return false;
-            }
-        }
-        return false;
+    isDouble(compareTo: ColorNote, tolerance = 0.01) {
+        return (
+            compareTo.time > this.time - tolerance &&
+            compareTo.time < this.time + tolerance &&
+            this.color !== compareTo.color
+        );
     }
 
     /** Compare two notes and return if the notes is adjacent.

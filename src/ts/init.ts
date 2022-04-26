@@ -9,5 +9,7 @@ export default (() => {
     const id = url.searchParams.get('id');
     const hash = url.searchParams.get('hash');
 
-    main({ link, id, hash });
+    if (id || link || hash) {
+        main({ link, id, hash });
+    }
 })();

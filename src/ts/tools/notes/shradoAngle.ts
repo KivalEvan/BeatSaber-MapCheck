@@ -1,6 +1,7 @@
 import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
 import * as beatmap from '../../beatmap';
+import { NoteContainer } from '../../types/beatmap/v3/container';
 
 const defaultMaxTime = 0.15;
 const defaultDistance = 1;
@@ -135,7 +136,7 @@ function check(map: ToolArgs) {
     const lastNote: { [key: number]: beatmap.v3.ColorNote } = {};
     const lastNoteDirection: { [key: number]: number } = {};
     const startNoteDot: { [key: number]: beatmap.v3.ColorNote | null } = {};
-    const swingNoteArray: { [key: number]: beatmap.v3.ColorNote[] } = {
+    const swingNoteArray: { [key: number]: NoteContainer[] } = {
         0: [],
         1: [],
         3: [],
@@ -143,18 +144,23 @@ function check(map: ToolArgs) {
     const arr: beatmap.v3.ColorNote[] = [];
     for (let i = 0, len = colorNotes.length; i < len; i++) {
         const note = colorNotes[i];
-        if (note.isNote(note) && lastNote[note.color]) {
+        if (lastNote[note.color]) {
             if (
-                swing.next(note, lastNote[note.color], bpm, swingNoteArray[note.color])
+                beatmap.swing.next(
+                    note,
+                    lastNote[note.color],
+                    bpm,
+                    swingNoteArray[note.color]
+                )
             ) {
                 // FIXME: maybe fix rotation or something
                 if (startNoteDot[note.color]) {
                     startNoteDot[note.color] = null;
                     lastNoteDirection[note.color] =
-                        note.flipDirection[lastNoteDirection[note.color]] ?? 8;
+                        beatmap.NoteFlipDirection[lastNoteDirection[note.color]] ?? 8;
                 }
                 if (
-                    note.distance(note, lastNote[note.color]) >= distance &&
+                    note.getDistance(lastNote[note.color]) >= distance &&
                     checkShrAngle(
                         note.direction,
                         lastNoteDirection[note.color],
@@ -173,7 +179,7 @@ function check(map: ToolArgs) {
             } else {
                 if (
                     startNoteDot[note.color] &&
-                    note.distance(note, lastNote[note.color]) >= distance &&
+                    note.getDistance(lastNote[note.color]) >= distance &&
                     checkShrAngle(
                         note.direction,
                         lastNoteDirection[note.color],
@@ -192,7 +198,7 @@ function check(map: ToolArgs) {
             lastNoteDirection[note.color] = note.direction;
         }
         lastNote[note.color] = note;
-        swingNoteArray[note.color].push(note);
+        swingNoteArray[note.color].push({ type: 'note', data: note });
     }
     return arr
         .map((n) => n.time)

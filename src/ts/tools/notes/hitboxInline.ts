@@ -1,6 +1,7 @@
 import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
 import * as beatmap from '../../beatmap';
+import { NoteContainer } from '../../types/beatmap/v3/container';
 
 const htmlContainer = document.createElement('div');
 const htmlInputCheck = document.createElement('input');
@@ -46,7 +47,7 @@ function check(map: ToolArgs) {
     const { colorNotes } = map.difficulty.data;
 
     const lastNote: { [key: number]: beatmap.v3.ColorNote } = {};
-    const swingNoteArray: { [key: number]: beatmap.v3.ColorNote[] } = {
+    const swingNoteArray: { [key: number]: NoteContainer[] } = {
         0: [],
         1: [],
         3: [],
@@ -57,24 +58,33 @@ function check(map: ToolArgs) {
         const note = colorNotes[i];
         if (lastNote[note.color]) {
             if (
-                swing.next(note, lastNote[note.color], bpm, swingNoteArray[note.color])
+                beatmap.swing.next(
+                    note,
+                    lastNote[note.color],
+                    bpm,
+                    swingNoteArray[note.color]
+                )
             ) {
                 swingNoteArray[note.color] = [];
             }
         }
         for (const other of swingNoteArray[(note.color + 1) % 2]) {
             // magic number 1.425 from saber length + good/bad hitbox
+            if (other.type !== 'note') {
+                continue;
+            }
             if (
                 njs.value <
-                    1.425 / ((60 * (note.time - other.time)) / bpm.value + constant) &&
-                note.isInline(note, other)
+                    1.425 /
+                        ((60 * (note.time - other.data.time)) / bpm.value + constant) &&
+                note.isInline(other.data)
             ) {
                 arr.push(note);
                 break;
             }
         }
         lastNote[note.color] = note;
-        swingNoteArray[note.color].push(note);
+        swingNoteArray[note.color].push({ type: 'note', data: note });
     }
     return arr
         .map((n) => n.time)

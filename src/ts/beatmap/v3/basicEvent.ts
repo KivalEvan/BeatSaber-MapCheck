@@ -9,7 +9,7 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
         et: 0,
         i: 0,
         f: 1,
-        cd: () => {
+        customData: () => {
             return {};
         },
     };
@@ -30,7 +30,7 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
                     et: be.et ?? BasicEvent.default.et,
                     i: be.i ?? BasicEvent.default.i,
                     f: be.f ?? BasicEvent.default.f,
-                    cd: be.cd ?? BasicEvent.default.cd(),
+                    customData: be.customData ?? BasicEvent.default.customData(),
                 })
             )
         );
@@ -45,7 +45,7 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
             et: BasicEvent.default.et,
             i: BasicEvent.default.i,
             f: BasicEvent.default.f,
-            cd: BasicEvent.default.cd(),
+            customData: BasicEvent.default.customData(),
         });
     }
 
@@ -55,7 +55,7 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
             et: this.type,
             i: this.value,
             f: this.floatValue,
-            cd: {},
+            customData: {},
         };
     }
 
@@ -112,10 +112,10 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
     }
 
     get customData() {
-        return this.data.cd;
+        return this.data.customData;
     }
-    set customData(value: typeof this.data.cd) {
-        this.data.cd = value;
+    set customData(value: typeof this.data.customData) {
+        this.data.customData = value;
     }
 
     setType(value: IBasicEvent['et']) {

@@ -1,16 +1,20 @@
 import { IObstacle } from '../../types/beatmap/v3/obstacle';
 import { BaseObject } from './baseObject';
 import { LINE_COUNT } from '../shared/constants';
+import { ObjectToReturn } from '../../types';
 
 /** Obstacle beatmap object. */
 export class Obstacle extends BaseObject<IObstacle> {
-    static default: Required<IObstacle> = {
+    static default: ObjectToReturn<Required<IObstacle>> = {
         b: 0,
         x: 0,
         y: 0,
         d: 1,
         w: 1,
         h: 1,
+        customData: () => {
+            return {};
+        },
     };
 
     private constructor(obstacle: Required<IObstacle>) {
@@ -31,6 +35,7 @@ export class Obstacle extends BaseObject<IObstacle> {
                     d: o.d ?? Obstacle.default.d,
                     w: o.w ?? Obstacle.default.w,
                     h: o.h ?? Obstacle.default.h,
+                    customData: o.customData ?? Obstacle.default.customData(),
                 })
             )
         );
@@ -47,6 +52,7 @@ export class Obstacle extends BaseObject<IObstacle> {
             d: Obstacle.default.d,
             w: Obstacle.default.w,
             h: Obstacle.default.h,
+            customData: Obstacle.default.customData(),
         });
     }
 
@@ -129,6 +135,13 @@ export class Obstacle extends BaseObject<IObstacle> {
     }
     set height(value: IObstacle['h']) {
         this.data.h = value;
+    }
+
+    get customData() {
+        return this.data.customData;
+    }
+    set customData(value: typeof this.data.customData) {
+        this.data.customData = value;
     }
 
     setPosX(value: IObstacle['x']) {

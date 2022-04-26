@@ -2,16 +2,20 @@ import { IBombNote } from '../../types/beatmap/v3/bombNote';
 import { BaseObject } from './baseObject';
 import { LINE_COUNT } from '../shared/constants';
 import { ICoordinateNote } from '../../types/beatmap/shared/coordinate';
+import { ObjectToReturn } from '../../types/utils';
 
 /** Bomb note beatmap object. */
 export class BombNote
     extends BaseObject<IBombNote>
     implements ICoordinateNote<BombNote>
 {
-    static default: Required<IBombNote> = {
+    static default: ObjectToReturn<Required<IBombNote>> = {
         b: 0,
         x: 0,
         y: 0,
+        customData: () => {
+            return {};
+        },
     };
 
     private constructor(bombNote: Required<IBombNote>) {
@@ -29,6 +33,7 @@ export class BombNote
                     b: bn.b ?? BombNote.default.b,
                     x: bn.x ?? BombNote.default.x,
                     y: bn.y ?? BombNote.default.y,
+                    customData: bn.customData ?? BombNote.default.customData(),
                 })
             )
         );
@@ -42,6 +47,7 @@ export class BombNote
             b: BombNote.default.b,
             x: BombNote.default.x,
             y: BombNote.default.y,
+            customData: BombNote.default.customData(),
         });
     }
 
@@ -84,6 +90,13 @@ export class BombNote
     }
     set posY(value: IBombNote['y']) {
         this.data.y = value;
+    }
+
+    get customData() {
+        return this.data.customData;
+    }
+    set customData(value: typeof this.data.customData) {
+        this.data.customData = value;
     }
 
     setPosX(value: IBombNote['x']) {
