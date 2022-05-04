@@ -126,6 +126,12 @@ export const SliderDataCheck: Readonly<Record<keyof ISlider, DataCheck>> = {
         type: 'number',
         version: '3.0.0',
     },
+    customData: {
+        type: 'object',
+        version: '3.0.0',
+        check: {},
+        optional: true,
+    },
 };
 
 export const BurstSliderDataCheck: Readonly<Record<keyof IBurstSlider, DataCheck>> = {
@@ -168,6 +174,12 @@ export const BurstSliderDataCheck: Readonly<Record<keyof IBurstSlider, DataCheck
     s: {
         type: 'number',
         version: '3.0.0',
+    },
+    customData: {
+        type: 'object',
+        version: '3.0.0',
+        check: {},
+        optional: true,
     },
 };
 
@@ -238,6 +250,12 @@ export const BPMChangeEventDataCheck: Readonly<Record<keyof IBPMEvent, DataCheck
         type: 'number',
         version: '3.0.0',
     },
+    customData: {
+        type: 'object',
+        version: '3.0.0',
+        check: {},
+        optional: true,
+    },
 };
 
 export const RotationEventDataCheck: Readonly<Record<keyof IRotationEvent, DataCheck>> =
@@ -254,6 +272,12 @@ export const RotationEventDataCheck: Readonly<Record<keyof IRotationEvent, DataC
             type: 'number',
             version: '3.0.0',
         },
+        customData: {
+            type: 'object',
+            version: '3.0.0',
+            check: {},
+            optional: true,
+        },
     };
 
 export const ColorBoostEventDataCheck: Readonly<
@@ -266,6 +290,12 @@ export const ColorBoostEventDataCheck: Readonly<
     o: {
         type: 'boolean',
         version: '3.0.0',
+    },
+    customData: {
+        type: 'object',
+        version: '3.0.0',
+        check: {},
+        optional: true,
     },
 };
 
@@ -364,6 +394,12 @@ export const LightColorEventBoxGroupDataCheck: Readonly<
         version: '3.0.0',
         check: LightColorEventBoxDataCheck,
     },
+    customData: {
+        type: 'object',
+        version: '3.0.0',
+        check: {},
+        optional: true,
+    },
 };
 
 export const LightRotationBaseDataCheck: Readonly<
@@ -454,6 +490,12 @@ export const LightRotationEventBoxGroupDataCheck: Readonly<
         version: '3.0.0',
         check: LightRotationEventBoxDataCheck,
     },
+    customData: {
+        type: 'object',
+        version: '3.0.0',
+        check: {},
+        optional: true,
+    },
 };
 
 export const BasicEventTypesForKeywordsDataCheck: Readonly<
@@ -496,6 +538,12 @@ export const WaypointDataCheck: Readonly<Record<keyof IWaypoint, DataCheck>> = {
     y: {
         type: 'number',
         version: '3.0.0',
+    },
+    customData: {
+        type: 'object',
+        version: '3.0.0',
+        check: {},
+        optional: true,
     },
 };
 

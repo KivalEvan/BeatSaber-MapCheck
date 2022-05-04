@@ -169,6 +169,12 @@ export const WaypointDataCheck: Readonly<Record<keyof IWaypoint, DataCheck>> = {
         type: 'number',
         version: '2.2.0',
     },
+    _customData: {
+        type: 'object',
+        version: '2.0.0',
+        check: {},
+        optional: true,
+    },
 };
 
 export const SpecialEventsKeywordFiltersKeywordsDataCheck: Readonly<

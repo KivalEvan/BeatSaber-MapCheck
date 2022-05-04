@@ -8,10 +8,13 @@ export class LightColorEventBoxGroup extends EventBoxGroupTemplate<
     ILightColorEventBox,
     LightColorEventBox
 > {
-    static default: ObjectToReturn<ILightColorEventBoxGroup> = {
+    static default: ObjectToReturn<Required<ILightColorEventBoxGroup>> = {
         b: 0,
         g: 0,
         e: () => [],
+        customData: () => {
+            return {};
+        },
     };
 
     private constructor(eventBoxGroup: Required<ILightColorEventBoxGroup>) {
@@ -40,6 +43,8 @@ export class LightColorEventBoxGroup extends EventBoxGroupTemplate<
                     e:
                         (ebg as Required<ILightColorEventBoxGroup>).e ??
                         LightColorEventBoxGroup.default.e(),
+                    customData:
+                        ebg.customData ?? LightColorEventBoxGroup.default.customData(),
                 })
             )
         );
@@ -53,6 +58,7 @@ export class LightColorEventBoxGroup extends EventBoxGroupTemplate<
             b: LightColorEventBoxGroup.default.b,
             g: LightColorEventBoxGroup.default.g,
             e: LightColorEventBoxGroup.default.e(),
+            customData: LightColorEventBoxGroup.default.customData(),
         });
     }
 }

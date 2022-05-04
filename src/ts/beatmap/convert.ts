@@ -1,5 +1,5 @@
-import * as v2 from './v2/index';
-import * as v3 from './v3/index';
+import * as v2 from './v2';
+import * as v3 from './v3';
 import logger from '../logger';
 import { DifficultyData as DifficultyDataV2 } from './v2/difficulty';
 import { DifficultyData as DifficultyDataV3 } from './v3/difficulty';
@@ -169,7 +169,16 @@ export const V2toV3 = (
     });
 
     if (data.customData) {
-        template.customData = data.customData;
+        for (const k in data.customData) {
+            if (k === '_customEvents') {
+                template.customData[k as string] =
+                    data.customData._customEvents?.map((ce) => {
+                        return { b: ce._time, t: ce._type, d: ce._data };
+                    }) ?? [];
+                continue;
+            }
+            template.customData[k] = data.customData[k];
+        }
     }
 
     return template;
@@ -357,7 +366,16 @@ export const V3toV2 = (
     });
 
     if (data.customData) {
-        template.customData = data.customData;
+        for (const k in data.customData) {
+            if (k === '_customEvents') {
+                template.customData[k as string] =
+                    data.customData._customEvents?.map((ce) => {
+                        return { _time: ce.b, _type: ce.t, _data: ce.d };
+                    }) ?? [];
+                continue;
+            }
+            template.customData[k] = data.customData[k];
+        }
     }
 
     return template;

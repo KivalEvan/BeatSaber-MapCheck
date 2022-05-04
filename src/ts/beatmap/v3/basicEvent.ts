@@ -1,5 +1,6 @@
 import { IBasicEvent } from '../../types/beatmap/v3/basicEvent';
 import { ObjectToReturn } from '../../types';
+import { deepCopy } from '../../utils/misc';
 import { BaseObject } from './baseObject';
 
 /** Basic event beatmap object. */
@@ -55,7 +56,7 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
             et: this.type,
             i: this.value,
             f: this.floatValue,
-            customData: {},
+            customData: deepCopy(this.customData),
         };
     }
 
@@ -109,13 +110,6 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
     }
     set floatValue(value: IBasicEvent['f']) {
         this.data.f = value;
-    }
-
-    get customData() {
-        return this.data.customData;
-    }
-    set customData(value: typeof this.data.customData) {
-        this.data.customData = value;
     }
 
     setType(value: IBasicEvent['et']) {

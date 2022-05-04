@@ -1,4 +1,4 @@
-import { IInfoData, DifficultyRank } from '../../types';
+import { IInfoData, DifficultyRank } from '../../types/beatmap';
 import { CharacteristicOrder } from './characteristic';
 import logger from '../../logger';
 

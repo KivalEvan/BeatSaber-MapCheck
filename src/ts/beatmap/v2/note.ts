@@ -4,6 +4,7 @@ import { radToDeg, shortRotDistance } from '../../utils/math';
 import { BeatmapObject } from './object';
 import { ObjectToReturn } from '../../types/utils';
 import { NoteCutAngle } from '../shared/constants';
+import { deepCopy } from '../../utils/misc';
 
 export class Note extends BeatmapObject<INote> {
     static default: ObjectToReturn<Required<INote>> = {
@@ -61,7 +62,7 @@ export class Note extends BeatmapObject<INote> {
             _lineIndex: this.lineIndex,
             _lineLayer: this.lineLayer,
             _cutDirection: this.cutDirection,
-            _customData: this.customData,
+            _customData: deepCopy(this.customData),
         };
     }
 
@@ -130,13 +131,6 @@ export class Note extends BeatmapObject<INote> {
         this.data._cutDirection = value;
     }
 
-    get customData() {
-        return this.data._customData;
-    }
-    set customData(value: typeof this.data._customData) {
-        this.data._customData = value;
-    }
-
     setLineIndex(value: INote['_lineIndex']) {
         this.lineIndex = value;
         return this;
@@ -151,23 +145,6 @@ export class Note extends BeatmapObject<INote> {
     }
     setCutDirection(value: INote['_cutDirection']) {
         this.cutDirection = value;
-        return this;
-    }
-    setCustomData(value: typeof this.data._customData) {
-        this.customData = value;
-        return this;
-    }
-    deleteCustomData() {
-        this.customData = {};
-        return this;
-    }
-    removeCustomData(key: string) {
-        delete this.customData[key];
-        return this;
-    }
-    // FIXME: deal with customdata later
-    addCustomData(object: Record<string, unknown>) {
-        this.customData = { ...this.customData, object };
         return this;
     }
 
@@ -234,7 +211,7 @@ export class Note extends BeatmapObject<INote> {
      * const noteDistance = distance(note1, note2);
      * ```
      */
-    distance = (compareTo: Note): number => {
+    getDistance = (compareTo: Note): number => {
         const [nX1, nY1] = this.getPosition();
         const [nX2, nY2] = compareTo.getPosition();
         return Math.sqrt(Math.pow(nX2 - nX1, 2) + Math.pow(nY2 - nY1, 2));
@@ -283,7 +260,7 @@ export class Note extends BeatmapObject<INote> {
      * ```
      */
     isInline = (compareTo: Note, lapping = 0.5): boolean => {
-        return this.distance(compareTo) <= lapping;
+        return this.getDistance(compareTo) <= lapping;
     };
 
     /** Compare current note with the note ahead of it and return if the notes is a double.
@@ -309,7 +286,7 @@ export class Note extends BeatmapObject<INote> {
      * ```
      */
     isAdjacent = (compareTo: Note): boolean => {
-        const d = this.distance(compareTo);
+        const d = this.getDistance(compareTo);
         return d > 0.499 && d < 1.001;
     };
 
@@ -319,7 +296,7 @@ export class Note extends BeatmapObject<INote> {
      * ```
      */
     isWindow = (compareTo: Note): boolean => {
-        return this.distance(compareTo) > 1.8;
+        return this.getDistance(compareTo) > 1.8;
     };
 
     /** Compare two notes and return if the notes is a slanted window.

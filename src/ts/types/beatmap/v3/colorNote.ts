@@ -1,5 +1,5 @@
 import { IBaseObject } from './baseObject';
-import { CustomDataBase } from './customData';
+import { ICustomDataNote } from '../shared/customData';
 
 export interface IColorNote extends IBaseObject {
     /** Position x `<int>` of note.
@@ -44,5 +44,5 @@ export interface IColorNote extends IBaseObject {
     d: number;
     /** Angle offset in degree counter-clockwise `<int>` of note.*/
     a: number;
-    customData?: CustomDataBase;
+    customData?: ICustomDataNote;
 }

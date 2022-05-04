@@ -3,6 +3,7 @@ import { BaseObject } from './baseObject';
 import { LINE_COUNT } from '../shared/constants';
 import { ICoordinateNote } from '../../types/beatmap/shared/coordinate';
 import { ObjectToReturn } from '../../types/utils';
+import { deepCopy } from '../../utils/misc';
 
 /** Bomb note beatmap object. */
 export class BombNote
@@ -56,6 +57,7 @@ export class BombNote
             b: this.time,
             x: this.posX,
             y: this.posY,
+            customData: deepCopy(this.customData),
         };
     }
 
@@ -90,13 +92,6 @@ export class BombNote
     }
     set posY(value: IBombNote['y']) {
         this.data.y = value;
-    }
-
-    get customData() {
-        return this.data.customData;
-    }
-    set customData(value: typeof this.data.customData) {
-        this.data.customData = value;
     }
 
     setPosX(value: IBombNote['x']) {

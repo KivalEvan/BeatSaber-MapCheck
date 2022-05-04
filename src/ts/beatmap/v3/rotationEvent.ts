@@ -1,12 +1,17 @@
 import { IRotationEvent } from '../../types/beatmap/v3/rotationEvent';
+import { ObjectToReturn } from '../../types/utils';
+import { deepCopy } from '../../utils/misc';
 import { BaseObject } from './baseObject';
 
 /** Rotation event beatmap object. */
 export class RotationEvent extends BaseObject<IRotationEvent> {
-    static default: Required<IRotationEvent> = {
+    static default: ObjectToReturn<Required<IRotationEvent>> = {
         b: 0,
         e: 0,
         r: 0,
+        customData: () => {
+            return {};
+        },
     };
 
     private constructor(rotationEvent: Required<IRotationEvent>) {
@@ -26,6 +31,7 @@ export class RotationEvent extends BaseObject<IRotationEvent> {
                     b: re.b ?? RotationEvent.default.b,
                     e: re.e ?? RotationEvent.default.e,
                     r: re.r ?? RotationEvent.default.r,
+                    customData: re.customData ?? RotationEvent.default.customData(),
                 })
             )
         );
@@ -39,6 +45,7 @@ export class RotationEvent extends BaseObject<IRotationEvent> {
             b: RotationEvent.default.b,
             e: RotationEvent.default.e,
             r: RotationEvent.default.r,
+            customData: RotationEvent.default.customData(),
         });
     }
 
@@ -47,6 +54,7 @@ export class RotationEvent extends BaseObject<IRotationEvent> {
             b: this.time,
             e: this.executionTime,
             r: this.rotation,
+            customData: deepCopy(this.customData),
         };
     }
 

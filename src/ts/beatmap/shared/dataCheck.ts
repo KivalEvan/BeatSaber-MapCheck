@@ -1,6 +1,6 @@
 import { DataCheck, DataCheckObject } from '../../types/beatmap/shared/dataCheck';
 import logger from '../../logger';
-import { Version } from '../../types/beatmap';
+import { Version } from '../../types/beatmap/index';
 import { compareVersion } from './version';
 
 // deno-lint-ignore ban-types

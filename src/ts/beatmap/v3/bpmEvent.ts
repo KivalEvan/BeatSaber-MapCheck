@@ -1,11 +1,16 @@
 import { IBPMEvent } from '../../types/beatmap/v3/bpmEvent';
+import { ObjectToReturn } from '../../types/utils';
+import { deepCopy } from '../../utils/misc';
 import { BaseObject } from './baseObject';
 
 /** BPM change event beatmap object. */
 export class BPMEvent extends BaseObject<IBPMEvent> {
-    static default: Required<IBPMEvent> = {
+    static default: ObjectToReturn<Required<IBPMEvent>> = {
         b: 0,
         m: 0,
+        customData: () => {
+            return {};
+        },
     };
 
     private constructor(bpmEvent: Required<IBPMEvent>) {
@@ -22,6 +27,7 @@ export class BPMEvent extends BaseObject<IBPMEvent> {
                 new BPMEvent({
                     b: be.b ?? BPMEvent.default.b,
                     m: be.m ?? BPMEvent.default.m,
+                    customData: be.customData ?? BPMEvent.default.customData(),
                 })
             )
         );
@@ -34,6 +40,7 @@ export class BPMEvent extends BaseObject<IBPMEvent> {
         return new BPMEvent({
             b: BPMEvent.default.b,
             m: BPMEvent.default.m,
+            customData: BPMEvent.default.customData(),
         });
     }
 
@@ -41,6 +48,7 @@ export class BPMEvent extends BaseObject<IBPMEvent> {
         return {
             b: this.time,
             m: this.bpm,
+            customData: deepCopy(this.customData),
         };
     }
 

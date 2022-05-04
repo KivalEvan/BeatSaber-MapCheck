@@ -1,27 +1,23 @@
 import { IWaypoint } from '../../types/beatmap/v3/waypoint';
+import { ObjectToReturn } from '../../types/utils';
+import { deepCopy } from '../../utils/misc';
 import { LINE_COUNT } from '../shared/constants';
 import { BaseObject } from './baseObject';
 
 /** Waypoint beatmap object. */
 export class Waypoint extends BaseObject<IWaypoint> {
-    static default: Required<IWaypoint> = {
+    static default: ObjectToReturn<Required<IWaypoint>> = {
         b: 0,
         x: 0,
         y: 0,
         d: 1,
+        customData: () => {
+            return {};
+        },
     };
 
     private constructor(waypoint: Required<IWaypoint>) {
         super(waypoint);
-    }
-
-    toObject(): IWaypoint {
-        return {
-            b: this.time,
-            x: this.posX,
-            y: this.posY,
-            d: this.direction,
-        };
     }
 
     static create(): Waypoint;
@@ -36,6 +32,7 @@ export class Waypoint extends BaseObject<IWaypoint> {
                     x: w.x ?? Waypoint.default.x,
                     y: w.y ?? Waypoint.default.y,
                     d: w.d ?? Waypoint.default.d,
+                    customData: w.customData ?? Waypoint.default.customData(),
                 })
             )
         );
@@ -50,7 +47,18 @@ export class Waypoint extends BaseObject<IWaypoint> {
             x: Waypoint.default.x,
             y: Waypoint.default.y,
             d: Waypoint.default.d,
+            customData: Waypoint.default.customData(),
         });
+    }
+
+    toObject(): IWaypoint {
+        return {
+            b: this.time,
+            x: this.posX,
+            y: this.posY,
+            d: this.direction,
+            customData: deepCopy(this.customData),
+        };
     }
 
     /** Position x `<int>` of waypoint.

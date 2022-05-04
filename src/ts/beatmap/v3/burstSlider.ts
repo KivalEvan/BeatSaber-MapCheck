@@ -1,13 +1,15 @@
 import { BaseSlider } from './baseSlider';
 import { LINE_COUNT } from '../shared/constants';
 import { IBurstSlider } from '../../types/beatmap/v3/burstSlider';
+import { deepCopy } from '../../utils/misc';
+import { ObjectToReturn } from '../../types/utils';
 
 /** Burst slider beatmap object.
  *
  * Also known as chain.
  */
 export class BurstSlider extends BaseSlider<IBurstSlider> {
-    static default: Required<IBurstSlider> = {
+    static default: ObjectToReturn<Required<IBurstSlider>> = {
         b: 0,
         c: 0,
         x: 0,
@@ -18,6 +20,9 @@ export class BurstSlider extends BaseSlider<IBurstSlider> {
         ty: 0,
         sc: 1,
         s: 1,
+        customData: () => {
+            return {};
+        },
     };
 
     private constructor(burstSlider: Required<IBurstSlider>) {
@@ -44,6 +49,7 @@ export class BurstSlider extends BaseSlider<IBurstSlider> {
                     ty: bs.ty ?? BurstSlider.default.ty,
                     sc: bs.sc ?? BurstSlider.default.sc,
                     s: bs.s ?? BurstSlider.default.s,
+                    customData: bs.customData ?? BurstSlider.default.customData(),
                 })
             )
         );
@@ -64,6 +70,7 @@ export class BurstSlider extends BaseSlider<IBurstSlider> {
             ty: BurstSlider.default.ty,
             sc: BurstSlider.default.sc,
             s: BurstSlider.default.s,
+            customData: BurstSlider.default.customData(),
         });
     }
 
@@ -79,6 +86,7 @@ export class BurstSlider extends BaseSlider<IBurstSlider> {
             ty: this.tailPosY,
             sc: this.sliceCount,
             s: this.squish,
+            customData: deepCopy(this.customData),
         };
     }
 

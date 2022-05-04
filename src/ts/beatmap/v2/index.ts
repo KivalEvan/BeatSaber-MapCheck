@@ -1,4 +1,3 @@
-// export * as chroma from './chroma/mod';
 export * from './difficulty';
 export * from './event';
 export * from './note';

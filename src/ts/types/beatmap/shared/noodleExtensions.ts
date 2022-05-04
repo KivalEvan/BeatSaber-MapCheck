@@ -1,4 +1,4 @@
-import { ICustomData } from './customData';
+import { ICustomDataBase } from './customData';
 import {
     Array2DPoint,
     Array3DPoint,
@@ -84,7 +84,7 @@ export interface INEObstacle extends INEObject {
  * _rotation?: int
  * ```
  */
-export interface INEEvent extends ICustomData {
+export interface INEEvent extends ICustomDataBase {
     _rotation?: number;
 }
 
@@ -149,6 +149,11 @@ export interface INECustomEventAssignTrackParent {
     _type: 'AssignTrackParent';
     _data: INECustomEventDataAssignTrackParent;
 }
+export interface INECustomEventAssignTrackParentV3 {
+    b: number;
+    t: 'AssignTrackParent';
+    d: INECustomEventDataAssignTrackParent;
+}
 
 /** Noodle Extensions Custom Event interface for AssignPlayerToTrack.
  * ```ts
@@ -162,10 +167,18 @@ export interface INECustomEventAssignPlayerToTrack {
     _type: 'AssignPlayerToTrack';
     _data: INECustomEventDataAssignPlayerToTrack;
 }
+export interface INECustomEventAssignPlayerToTrackV3 {
+    b: number;
+    t: 'AssignPlayerToTrack';
+    d: INECustomEventDataAssignPlayerToTrack;
+}
 
-export type INECustomEvent =
+export type INECustomEventV2 =
     | INECustomEventAssignTrackParent
     | INECustomEventAssignPlayerToTrack;
+export type INECustomEventV3 =
+    | INECustomEventAssignTrackParentV3
+    | INECustomEventAssignPlayerToTrackV3;
 
 /** Noodle Extensions Custom Data interface for difficulty custom data.
  * ```ts
@@ -173,5 +186,5 @@ export type INECustomEvent =
  * ```
  */
 export interface INECustomData {
-    _customEvents?: INECustomEvent[];
+    _customEvents?: INECustomEventV2[];
 }

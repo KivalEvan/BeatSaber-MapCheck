@@ -15,6 +15,8 @@ import { Slider } from './slider';
 import { Waypoint } from './waypoint';
 import { BeatPerMinute } from '../shared/bpm';
 import { EventContainer, NoteContainer } from '../../types/beatmap/v3/container';
+import { DeepPartial } from '../../types/utils';
+import { deepCopy } from '../../utils/misc';
 
 export class DifficultyData extends Serializable<IDifficultyData> {
     version;
@@ -123,7 +125,7 @@ export class DifficultyData extends Serializable<IDifficultyData> {
             ),
             basicEventTypesWithKeywords: this.basicEventTypesWithKeywords.toObject(),
             useNormalEventsAsCompatibleEvents: this.useNormalEventsAsCompatibleEvents,
-            customData: this.customData ?? {},
+            customData: deepCopy(this.customData),
         };
     }
 
@@ -318,7 +320,7 @@ export class DifficultyData extends Serializable<IDifficultyData> {
         });
     };
     addLightColorEventBoxGroups = (
-        ...lightColorEBGs: Partial<
+        ...lightColorEBGs: DeepPartial<
             IDifficultyData['lightColorEventBoxGroups'][number]
         >[]
     ) => {
@@ -327,7 +329,7 @@ export class DifficultyData extends Serializable<IDifficultyData> {
         });
     };
     addLightRotationEventBoxGroups = (
-        ...lightRotationEBGs: Partial<
+        ...lightRotationEBGs: DeepPartial<
             IDifficultyData['lightRotationEventBoxGroups'][number]
         >[]
     ) => {

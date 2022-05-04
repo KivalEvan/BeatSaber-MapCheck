@@ -8,10 +8,13 @@ export class LightRotationEventBoxGroup extends EventBoxGroupTemplate<
     ILightRotationEventBox,
     LightRotationEventBox
 > {
-    static default: ObjectToReturn<ILightRotationEventBoxGroup> = {
+    static default: ObjectToReturn<Required<ILightRotationEventBoxGroup>> = {
         b: 0,
         g: 0,
         e: () => [],
+        customData: () => {
+            return {};
+        },
     };
 
     private constructor(eventBoxGroup: Required<ILightRotationEventBoxGroup>) {
@@ -40,6 +43,9 @@ export class LightRotationEventBoxGroup extends EventBoxGroupTemplate<
                     e:
                         (ebg as Required<ILightRotationEventBoxGroup>).e ??
                         LightRotationEventBoxGroup.default.e(),
+                    customData:
+                        ebg.customData ??
+                        LightRotationEventBoxGroup.default.customData(),
                 })
             )
         );
@@ -53,6 +59,7 @@ export class LightRotationEventBoxGroup extends EventBoxGroupTemplate<
             b: LightRotationEventBoxGroup.default.b,
             g: LightRotationEventBoxGroup.default.g,
             e: LightRotationEventBoxGroup.default.e(),
+            customData: LightRotationEventBoxGroup.default.customData(),
         });
     }
 }

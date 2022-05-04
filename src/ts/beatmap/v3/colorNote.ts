@@ -1,7 +1,7 @@
 import { IColorNote } from '../../types/beatmap/v3/colorNote';
 import { BaseObject } from './baseObject';
 import { LINE_COUNT, NoteCutAngle } from '../shared/constants';
-import { radToDeg, shortRotDistance } from '../../utils';
+import { deepCopy, radToDeg, shortRotDistance } from '../../utils';
 import { ObjectToReturn } from '../../types/utils';
 import { ICoordinateNote } from '../../types/beatmap/shared/coordinate';
 
@@ -69,6 +69,7 @@ export class ColorNote
             y: this.posY,
             d: this.direction,
             a: this.angleOffset,
+            customData: deepCopy(this.customData),
         };
     }
 
@@ -144,13 +145,6 @@ export class ColorNote
         this.data.a = value;
     }
 
-    get customData() {
-        return this.data.customData;
-    }
-    set customData(value: typeof this.data.customData) {
-        this.data.customData = value;
-    }
-
     setColor(value: IColorNote['c']) {
         this.color = value;
         return this;
@@ -169,23 +163,6 @@ export class ColorNote
     }
     setAngleOffset(value: IColorNote['a']) {
         this.angleOffset = value;
-        return this;
-    }
-    setCustomData(value: typeof this.data.customData) {
-        this.customData = value;
-        return this;
-    }
-    deleteCustomData() {
-        this.customData = {};
-        return this;
-    }
-    removeCustomData(key: string) {
-        delete this.customData[key];
-        return this;
-    }
-    // FIXME: deal with customdata later
-    addCustomData(object: Record<string, unknown>) {
-        this.customData = { ...this.customData, object };
         return this;
     }
 

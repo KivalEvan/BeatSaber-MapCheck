@@ -1,5 +1,10 @@
 import { IBaseObject } from './baseObject';
-import { CustomDataBase } from './customData';
+import {
+    IChromaEventLaser,
+    IChromaEventLight,
+    IChromaEventRing,
+} from '../shared/chroma';
+import { ICustomDataBase } from '../shared/customData';
 
 interface IBasicEventBase extends IBaseObject {
     /** Event type `<int>` of basic event.
@@ -36,7 +41,7 @@ interface IBasicEventBase extends IBaseObject {
     i: number;
     /** Float value `<float>` of basic event. */
     f: number;
-    customData?: CustomDataBase;
+    customData?: ICustomDataBase;
 }
 
 interface IBasicEventGeneric extends IBasicEventBase {
@@ -60,6 +65,7 @@ interface IBasicEventLight extends IBasicEventBase {
      * Range: `0-1` (0% to 100%), can be more than 1.
      */
     f: number;
+    customData?: IChromaEventLight;
 }
 
 /** **Deprecated:** use `colorBoostBeatmapEvents` to apply boost this. */
@@ -73,12 +79,14 @@ interface IBasicEventBoost extends IBasicEventBase {
 
 interface IBasicEventRing extends IBasicEventBase {
     et: 8 | 9;
+    customData?: IChromaEventRing;
 }
 
 interface IBasicEventLaserRotation extends IBasicEventBase {
     et: 12 | 13;
     /** Laser rotation speed in degree per second multiplied by 20. */
     i: number;
+    customData?: IChromaEventLaser;
 }
 
 /** **Deprecated:** use `rotationEvents` to apply lane rotation this. */

@@ -1,27 +1,23 @@
 import { IWaypoint } from '../../types/beatmap/v2/waypoint';
+import { ObjectToReturn } from '../../types/utils';
+import { deepCopy } from '../../utils/misc';
 import { LINE_COUNT } from '../shared/constants';
 import { BeatmapObject } from './object';
 
 /** Waypoint beatmap object. */
 export class Waypoint extends BeatmapObject<IWaypoint> {
-    static default: Required<IWaypoint> = {
+    static default: ObjectToReturn<Required<IWaypoint>> = {
         _time: 0,
         _lineIndex: 0,
         _lineLayer: 0,
         _offsetDirection: 1,
+        _customData: () => {
+            return {};
+        },
     };
 
     private constructor(waypoint: Required<IWaypoint>) {
         super(waypoint);
-    }
-
-    toObject(): IWaypoint {
-        return {
-            _time: this.time,
-            _lineIndex: this.lineIndex,
-            _lineLayer: this.lineLayer,
-            _offsetDirection: this.direction,
-        };
     }
 
     static create(): Waypoint;
@@ -37,6 +33,7 @@ export class Waypoint extends BeatmapObject<IWaypoint> {
                     _lineLayer: w._lineLayer ?? Waypoint.default._lineLayer,
                     _offsetDirection:
                         w._offsetDirection ?? Waypoint.default._offsetDirection,
+                    _customData: w._customData ?? Waypoint.default._customData(),
                 })
             )
         );
@@ -51,7 +48,18 @@ export class Waypoint extends BeatmapObject<IWaypoint> {
             _lineIndex: Waypoint.default._lineIndex,
             _lineLayer: Waypoint.default._lineLayer,
             _offsetDirection: Waypoint.default._offsetDirection,
+            _customData: Waypoint.default._customData(),
         });
+    }
+
+    toObject(): IWaypoint {
+        return {
+            _time: this.time,
+            _lineIndex: this.lineIndex,
+            _lineLayer: this.lineLayer,
+            _offsetDirection: this.direction,
+            _customData: deepCopy(this.customData),
+        };
     }
 
     /** Position x `<int>` of waypoint.

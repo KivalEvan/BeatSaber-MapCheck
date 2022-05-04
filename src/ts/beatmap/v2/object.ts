@@ -9,4 +9,30 @@ export abstract class BeatmapObject<T extends IBaseObject> extends Serializable<
     set time(value: number) {
         this.data._time = value;
     }
+
+    get customData() {
+        return this.data._customData;
+    }
+    set customData(value: typeof this.data._customData) {
+        this.data._customData = value;
+    }
+
+    setCustomData(value: typeof this.data._customData) {
+        this.customData = value;
+        return this;
+    }
+    deleteCustomData() {
+        this.customData = {};
+        return this;
+    }
+    removeCustomData(key: string) {
+        if (this.customData) {
+            delete this.customData[key];
+        }
+        return this;
+    }
+    addCustomData(object: Record<string, T['_customData']>) {
+        this.customData = { ...this.customData, object };
+        return this;
+    }
 }

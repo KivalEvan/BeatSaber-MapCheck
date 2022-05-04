@@ -14,7 +14,7 @@ export interface ILightColorEventBox extends IEventBox {
      * ```
      */
     t: 1 | 2;
-    /** Brigthness distribution should affect first event `<int>` of light color event box. */
+    /** Brightness distribution should affect first event `<int>` of light color event box. */
     b: 0 | 1;
     /** Light color base data list. */
     e: ILightColorBase[];

@@ -1,4 +1,4 @@
-import { ICustomDataDifficulty } from '../../types/beatmap/v2/customData';
+import { ICustomDataDifficultyV2 } from '../../types/beatmap/shared/customData';
 import { IDifficultyData } from '../../types/beatmap/v2/difficulty';
 import { Serializable } from '../shared/serializable';
 import { Note } from './note';
@@ -7,6 +7,7 @@ import { Obstacle } from './obstacle';
 import { Event } from './event';
 import { Waypoint } from './waypoint';
 import { SpecialEventsKeywordFilters } from './specialEventsKeywordFilters';
+import { deepCopy } from '../../utils/misc';
 
 export class DifficultyData extends Serializable<IDifficultyData> {
     version: `2.${0 | 2 | 4 | 5 | 6}.0`;
@@ -16,7 +17,7 @@ export class DifficultyData extends Serializable<IDifficultyData> {
     events: Event[];
     waypoints: Waypoint[];
     specialEventsKeywordFilters?: SpecialEventsKeywordFilters;
-    customData?: ICustomDataDifficulty;
+    customData: ICustomDataDifficultyV2;
     private constructor(data: Required<IDifficultyData>) {
         super(data);
         this.version = '2.6.0';
@@ -55,7 +56,7 @@ export class DifficultyData extends Serializable<IDifficultyData> {
             _events: this.events.map((obj) => obj.toObject()),
             _waypoints: this.waypoints.map((obj) => obj.toObject()),
             _specialEventsKeywordFilters: this.specialEventsKeywordFilters?.toObject(),
-            _customData: this.customData,
+            _customData: deepCopy(this.customData),
         };
     }
 
@@ -97,5 +98,31 @@ export class DifficultyData extends Serializable<IDifficultyData> {
             }
         }
         return obstacleEnd;
+    };
+
+    addNotes = (...notes: Partial<IDifficultyData['_notes'][number]>[]) => {
+        notes.forEach((n) => {
+            this.notes.push(Note.create(n));
+        });
+    };
+    addObstacles = (...obstacles: Partial<IDifficultyData['_obstacles'][number]>[]) => {
+        obstacles.forEach((o) => {
+            this.obstacles.push(Obstacle.create(o));
+        });
+    };
+    addEvents = (...events: Partial<IDifficultyData['_events'][number]>[]) => {
+        events.forEach((e) => {
+            this.events.push(Event.create(e));
+        });
+    };
+    addWaypoints = (...waypoints: Partial<IDifficultyData['_waypoints'][number]>[]) => {
+        waypoints.forEach((w) => {
+            this.waypoints.push(Waypoint.create(w));
+        });
+    };
+    addSliders = (...sliders: Partial<IDifficultyData['_sliders'][number]>[]) => {
+        sliders.forEach((s) => {
+            this.sliders.push(Slider.create(s));
+        });
     };
 }
