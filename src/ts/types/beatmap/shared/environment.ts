@@ -46,9 +46,10 @@ export type EnvironmentName =
     | 'SkrillexEnvironment'
     | 'BillieEnvironment'
     | 'HalloweenEnvironment'
-    | 'GagaEnvironment'
     | 'WeaveEnvironment'
-    | 'PyroEnvironment';
+    | 'PyroEnvironment'
+    | 'EDMEnvironment'
+    | 'GagaEnvironment';
 /** List of available 360 environment in base game. */
 export type Environment360Name = 'GlassDesertEnvironment';
 /** List of all available environment in base game. */
@@ -74,9 +75,10 @@ export type ColorSchemeList =
     | 'Billie Eilish'
     | 'Spooky'
     | 'Gaga'
-    | 'Glass Desert'
     | 'Weave'
-    | 'Pyro';
+    | 'Pyro'
+    | 'EDM'
+    | 'Glass Desert';
 
 export type IEnvironmentScheme = {
     [key in ColorSchemeList]: IColorScheme;

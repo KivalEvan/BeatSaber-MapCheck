@@ -3,7 +3,14 @@ export interface ILightRotationBase {
     b: number;
     /** Use previous event rotation value `<int>` in light rotation. */
     p: 0 | 1;
-    /** Ease type `<float>` of light rotation. */
+    /** Ease type `<int>` of light rotation.
+     * ```ts
+     * 0 -> Linear
+     * 1 -> EaseInQuad
+     * 2 -> EaseOutQuad
+     * 3 -> EaseInOutQuad
+     * ```
+     */
     e: number;
     /** Loop count `<int>` in light rotation. */
     l: number;

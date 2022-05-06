@@ -1,5 +1,5 @@
 import { IBasicEvent } from '../../types/beatmap/v3/basicEvent';
-import { ObjectToReturn } from '../../types';
+import { ObjectToReturn } from '../../types/utils';
 import { deepCopy } from '../../utils/misc';
 import { BaseObject } from './baseObject';
 
@@ -144,7 +144,7 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
      * This may check non-light event too.
      */
     isOn() {
-        return this.value === 1 || this.value === 5;
+        return this.value === 1 || this.value === 5 || this.value === 9;
     }
 
     /** Check if light event is a flash event.
@@ -155,7 +155,7 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
      * This may check non-light event too.
      */
     isFlash() {
-        return this.value === 2 || this.value === 6;
+        return this.value === 2 || this.value === 6 || this.value === 10;
     }
 
     /** Check if light event is a fade event.
@@ -166,7 +166,7 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
      * This may check non-light event too.
      */
     isFade() {
-        return this.value === 3 || this.value === 7;
+        return this.value === 3 || this.value === 7 || this.value === 11;
     }
 
     /** Check if light event is a transition event.
@@ -177,7 +177,7 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
      * This may check non-light event too.
      */
     isTransition() {
-        return this.value === 4 || this.value === 8;
+        return this.value === 4 || this.value === 8 || this.value === 12;
     }
 
     /** Check if event is a valid type.
@@ -319,7 +319,7 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
         return (
             this.isValidType() &&
             this.value >= 0 &&
-            !(!this.isLaserRotationEvent() && this.value > 8 && !this.hasOldChroma())
+            !(!this.isLaserRotationEvent() && this.value > 12 && !this.hasOldChroma())
         );
     }
 }

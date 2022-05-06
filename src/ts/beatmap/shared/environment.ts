@@ -31,9 +31,10 @@ export const EnvironmentRename: Readonly<Record<EnvironmentAllName, string>> = {
     BillieEnvironment: 'Billie',
     HalloweenEnvironment: 'Spooky',
     GagaEnvironment: 'Gaga',
-    GlassDesertEnvironment: 'Glass Desert',
     WeaveEnvironment: 'Weave',
     PyroEnvironment: 'Pyro',
+    EDMEnvironment: 'EDM',
+    GlassDesertEnvironment: 'Glass Desert',
 };
 
 /** Record of Environment Color to Color Scheme. */
@@ -64,9 +65,10 @@ export const EnvironmentSchemeName: Readonly<
     BillieEnvironment: 'Billie Eilish',
     HalloweenEnvironment: 'Spooky',
     GagaEnvironment: 'Gaga',
-    GlassDesertEnvironment: 'Glass Desert',
     WeaveEnvironment: 'Weave',
     PyroEnvironment: 'Pyro',
+    EDMEnvironment: 'EDM',
+    GlassDesertEnvironment: 'Glass Desert',
 };
 
 /** Color Scheme property rename to human readable. */
@@ -724,6 +726,43 @@ export const ColorScheme: Readonly<IEnvironmentScheme> = {
             b: 0.4285333,
         },
     },
+    EDM: {
+        _colorLeft: {
+            r: 0.6320754,
+            g: 0.6320754,
+            b: 0.6320754,
+        },
+        _colorRight: {
+            r: 0.1764706,
+            g: 0.6980392,
+            b: 0.8784314,
+        },
+        _envColorLeft: {
+            r: 0.08220173,
+            g: 0.7169812,
+            b: 0,
+        },
+        _envColorRight: {
+            r: 0,
+            g: 0.3671638,
+            b: 0.7169812,
+        },
+        _envColorLeftBoost: {
+            r: 0.735849,
+            g: 0,
+            b: 0.1758632,
+        },
+        _envColorRightBoost: {
+            r: 0.4284593,
+            g: 0,
+            b: 0.754717,
+        },
+        _obstacleColor: {
+            r: 0.1764706,
+            g: 0.6980392,
+            b: 0.8784314,
+        },
+    },
     'Glass Desert': {
         _colorLeft: {
             r: 0.6792453,
@@ -780,13 +819,14 @@ export const EventList: Readonly<Record<EnvironmentAllName, [number[], number[]]
     HalloweenEnvironment: [[0, 1, 2, 3, 4, 5, 8, 9, 12, 13], []],
     GagaEnvironment: [[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 16, 17], []],
     GlassDesertEnvironment: [[0, 1, 2, 3, 4, 5, 8, 9, 12, 13], []],
-    WeaveEnvironment: [
-        [0, 1, 2, 3, 4, 5, 8, 9, 12, 13],
-        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
-    ],
+    WeaveEnvironment: [[], [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]],
     PyroEnvironment: [
         [0, 1, 2, 3, 4, 6],
         [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+    ],
+    EDMEnvironment: [
+        [0, 1, 4],
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
     ],
 };
 
@@ -976,18 +1016,7 @@ export const LightIDList: Readonly<
         10: Array.from(Array(24), (_, i) => i + 1),
         11: Array.from(Array(24), (_, i) => i + 1),
     },
-    // FIXME: unknown
-    WeaveEnvironment: {
-        0: Array.from(Array(2), (_, i) => i + 1),
-        1: Array.from(Array(66), (_, i) => i + 1),
-        2: Array.from(Array(23), (_, i) => i + 1),
-        3: Array.from(Array(23), (_, i) => i + 1),
-        4: Array.from(Array(66), (_, i) => i + 1),
-        6: Array.from(Array(24), (_, i) => i + 1),
-        7: Array.from(Array(24), (_, i) => i + 1),
-        10: Array.from(Array(24), (_, i) => i + 1),
-        11: Array.from(Array(24), (_, i) => i + 1),
-    },
+    WeaveEnvironment: {},
     // FIXME: unknown
     PyroEnvironment: {
         0: Array.from(Array(2), (_, i) => i + 1),
@@ -996,6 +1025,12 @@ export const LightIDList: Readonly<
         3: Array.from(Array(23), (_, i) => i + 1),
         4: Array.from(Array(66), (_, i) => i + 1),
         6: Array.from(Array(24), (_, i) => i + 1),
+    },
+    // FIXME: unknown
+    EDMEnvironment: {
+        0: Array.from(Array(2), (_, i) => i + 1),
+        1: Array.from(Array(66), (_, i) => i + 1),
+        4: Array.from(Array(66), (_, i) => i + 1),
     },
     GlassDesertEnvironment: {
         0: Array.from(Array(6), (_, i) => i + 1),

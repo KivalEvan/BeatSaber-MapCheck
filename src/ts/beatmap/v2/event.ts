@@ -158,7 +158,7 @@ export class Event extends BeatmapObject<IEvent> {
      * This may check non-light event too.
      */
     isOn = (): boolean => {
-        return this.value === 1 || this.value === 5;
+        return this.value === 1 || this.value === 5 || this.value === 9;
     };
 
     /** Check if light  this is a flash event.
@@ -169,7 +169,7 @@ export class Event extends BeatmapObject<IEvent> {
      * This may check non-light event too.
      */
     isFlash = (): boolean => {
-        return this.value === 2 || this.value === 6;
+        return this.value === 2 || this.value === 6 || this.value === 10;
     };
 
     /** Check if light  this is a fade event.
@@ -180,7 +180,7 @@ export class Event extends BeatmapObject<IEvent> {
      * This may check non-light event too.
      */
     isFade = (): boolean => {
-        return this.value === 3 || this.value === 7;
+        return this.value === 3 || this.value === 7 || this.value === 11;
     };
 
     /** Check if light  this is a transition event.
@@ -190,7 +190,7 @@ export class Event extends BeatmapObject<IEvent> {
      * This may check non-light event too.
      */
     isTransition = (): boolean => {
-        return this.value === 4 || this.value === 8;
+        return this.value === 4 || this.value === 8 || this.value === 12;
     };
 
     /** Check if  this is a valid type.
@@ -412,7 +412,7 @@ export class Event extends BeatmapObject<IEvent> {
         return (
             this.isValidType() &&
             this.value >= 0 &&
-            !(!this.isLaserRotationEvent() && this.value > 8 && !this.hasOldChroma())
+            !(!this.isLaserRotationEvent() && this.value > 12 && !this.hasOldChroma())
         );
     };
 

@@ -13,9 +13,10 @@ export interface ILightColorBase {
      * ```ts
      * 0 -> Red
      * 1 -> Blue
+     * 2 -> White
      * ```
      */
-    c: 0 | 1;
+    c: 0 | 1 | 2;
     /** Brightness `<float>` of base light color.
      *
      * Range: `0-1` (0% to 100%), can be more than 1.

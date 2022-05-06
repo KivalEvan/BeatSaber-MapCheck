@@ -57,13 +57,13 @@ export interface IEventBase extends IBaseObject {
 
 export interface IEventLight extends IEventBase {
     _type: 0 | 1 | 2 | 3 | 4 | 6 | 7 | 10 | 11;
-    /** State of light event. ( Blue | Red )
+    /** State of light event. ( Blue | Red | White )
      * ```ts
      * 0 -> Off
-     * 1 | 5 -> On
-     * 2 | 6 -> Flash
-     * 3 | 7 -> Fade
-     * 4 | 8 -> Transition
+     * 1 | 5 | 9 -> On
+     * 2 | 6 | 10 -> Flash
+     * 3 | 7 | 11 -> Fade
+     * 4 | 8 | 12 -> Transition
      * ```
      */
     _value: number;
