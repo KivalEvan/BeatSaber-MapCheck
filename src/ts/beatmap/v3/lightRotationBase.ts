@@ -64,7 +64,7 @@ export class LightRotationBase extends Serializable<ILightRotationBase> {
         };
     }
 
-    /** Add beat time `<float>` to event box group. */
+    /** Relative beat time `<float>` to event box group. */
     get time() {
         return this.data.b;
     }
@@ -80,7 +80,15 @@ export class LightRotationBase extends Serializable<ILightRotationBase> {
         this.data.p = value;
     }
 
-    /** Ease type `<float>` of light rotation. */
+    /** Ease type `<int>` of light rotation.
+     * ```ts
+     * -1 -> Step
+     * 0 -> Linear
+     * 1 -> EaseInQuad
+     * 2 -> EaseOutQuad
+     * 3 -> EaseInOutQuad
+     * ```
+     */
     get ease() {
         return this.data.e;
     }

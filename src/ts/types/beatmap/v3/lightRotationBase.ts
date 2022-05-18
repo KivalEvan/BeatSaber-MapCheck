@@ -1,17 +1,18 @@
 export interface ILightRotationBase {
-    /** Add beat time `<float>` to event box group. */
+    /** Relative beat time `<float>` to event box group. */
     b: number;
     /** Use previous event rotation value `<int>` in light rotation. */
     p: 0 | 1;
     /** Ease type `<int>` of light rotation.
      * ```ts
+     * -1 -> Step
      * 0 -> Linear
      * 1 -> EaseInQuad
      * 2 -> EaseOutQuad
      * 3 -> EaseInOutQuad
      * ```
      */
-    e: number;
+    e: -1 | 0 | 1 | 2 | 3;
     /** Loop count `<int>` in light rotation. */
     l: number;
     /** Rotation value `<float>` of light rotation.

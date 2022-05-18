@@ -1,5 +1,5 @@
 import JSZip from 'jszip';
-import { BeatPerMinute, swing } from './beatmap';
+import { BeatPerMinute } from './beatmap';
 import { V2toV3 } from './beatmap/convert';
 import {
     difficulty as parseDifficultyV3,
@@ -52,7 +52,31 @@ export const loadDifficulty = async (info: IInfoData, zip: JSZip) => {
                     );
                 }
                 try {
-                    if (diffJSON._version) {
+                    // _notes in v2 and version in v3 is required, _version in v2 is patched via mod if does not exist
+                    if (diffJSON._notes && diffJSON.version) {
+                        console.error(
+                            `${mapSet[i]._beatmapCharacteristicName} ${diffInfo._difficulty} contains 2 version of the map in the same file, attempting to load v3 instead`
+                        );
+                    }
+                    if (diffJSON.version) {
+                        const data = parseDifficultyV3(diffJSON);
+                        const bpm = BeatPerMinute.create(
+                            info._beatsPerMinute,
+                            data.customData?.BPMChanges,
+                            diffInfo._customData?._editorOffset
+                        );
+                        beatmapItem.push({
+                            characteristic: mapSet[i]._beatmapCharacteristicName,
+                            difficulty: diffInfo._difficulty,
+                            bpm,
+                            data,
+                            noteContainer: data.getNoteContainer(),
+                            eventContainer: data.getEventContainer(),
+                            swingAnalysis: {},
+                            rawVersion: 3,
+                            rawData: diffJSON,
+                        });
+                    } else {
                         const data = V2toV3(parseDifficultyV2(diffJSON));
                         const bpm = BeatPerMinute.create(
                             info._beatsPerMinute,
@@ -69,24 +93,6 @@ export const loadDifficulty = async (info: IInfoData, zip: JSZip) => {
                             eventContainer: data.getEventContainer(),
                             swingAnalysis: {},
                             rawVersion: 2,
-                            rawData: diffJSON,
-                        });
-                    } else {
-                        const data = parseDifficultyV3(diffJSON);
-                        const bpm = BeatPerMinute.create(
-                            info._beatsPerMinute,
-                            data.customData?.BPMChanges,
-                            diffInfo._customData?._editorOffset
-                        );
-                        beatmapItem.push({
-                            characteristic: mapSet[i]._beatmapCharacteristicName,
-                            difficulty: diffInfo._difficulty,
-                            bpm,
-                            data,
-                            noteContainer: data.getNoteContainer(),
-                            eventContainer: data.getEventContainer(),
-                            swingAnalysis: {},
-                            rawVersion: 3,
                             rawData: diffJSON,
                         });
                     }

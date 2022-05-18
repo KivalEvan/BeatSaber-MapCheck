@@ -1,4 +1,4 @@
-import { IObstacle, ObstacleCount } from '../../types/beatmap/v2/obstacle';
+import { IObstacle } from '../../types/beatmap/v2/obstacle';
 import { ObjectToReturn } from '../../types/utils';
 import { deepCopy } from '../../utils/misc';
 import { BeatmapObject } from './object';
@@ -300,41 +300,5 @@ export class Obstacle extends BeatmapObject<IObstacle> {
      */
     isValid = (): boolean => {
         return !this.hasMappingExtensions() && this.width > 0 && this.width <= 4;
-    };
-
-    /** Count number of type of obstacles with their properties in given array and return a obstacle count object.
-     * ```ts
-     * const list = count(walls);
-     * console.log(list);
-     * ```
-     */
-    count = (obstacles: IObstacle[]): ObstacleCount => {
-        const obstacleCount: ObstacleCount = {
-            total: 0,
-            interactive: 0,
-            crouch: 0,
-            chroma: 0,
-            noodleExtensions: 0,
-            mappingExtensions: 0,
-        };
-        for (let i = obstacles.length - 1; i >= 0; i--) {
-            obstacleCount.total++;
-            if (this.isInteractive()) {
-                obstacleCount.interactive++;
-            }
-            if (this.isCrouch()) {
-                obstacleCount.crouch++;
-            }
-            if (this.hasChroma()) {
-                obstacleCount.chroma++;
-            }
-            if (this.hasNoodleExtensions()) {
-                obstacleCount.noodleExtensions++;
-            }
-            if (this.hasMappingExtensions()) {
-                obstacleCount.mappingExtensions++;
-            }
-        }
-        return obstacleCount;
     };
 }

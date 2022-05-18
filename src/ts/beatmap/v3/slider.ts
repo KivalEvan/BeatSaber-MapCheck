@@ -1,5 +1,5 @@
 import { BaseSlider } from './baseSlider';
-import { LINE_COUNT } from '../shared/constants';
+import { LINE_COUNT, NoteCutAngle } from '../shared/constants';
 import { ISlider } from '../../types/beatmap/v3/slider';
 import { deepCopy } from '../../utils/misc';
 import { ObjectToReturn } from '../../types/utils';
@@ -227,6 +227,23 @@ export class Slider extends BaseSlider<ISlider> {
         return this;
     }
 
+    /** Get and return standardised note angle.
+     * ```ts
+     * const noteAngle = note.getAngle(noteCompare);
+     * ```
+     */
+    getAngle() {
+        // if (this.customData?._cutDirection) {
+        //     return this.customData._cutDirection > 0
+        //         ? this.customData._cutDirection % 360
+        //         : 360 + (this.customData._cutDirection % 360);
+        // }
+        if (this.direction >= 1000) {
+            return Math.abs(((this.direction % 1000) % 360) - 360);
+        }
+        return NoteCutAngle[this.direction as keyof typeof NoteCutAngle] || 0;
+    }
+
     /** Check if slider has Mapping Extensions properties.
      * ```ts
      * if (slider.hasMappingExtensions()) {}
@@ -241,5 +258,14 @@ export class Slider extends BaseSlider<ISlider> {
             (this.direction >= 1000 && this.direction <= 1360) ||
             (this.tailDirection >= 1000 && this.tailDirection <= 1360)
         );
+    }
+
+    /** Check if slider is valid & vanilla.
+     * ```ts
+     * if (slider.isValid()) {}
+     * ```
+     */
+    isValid() {
+        return !this.hasMappingExtensions();
     }
 }

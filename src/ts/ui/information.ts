@@ -5,7 +5,6 @@ import SavedData from '../savedData';
 import { removeOptions, round, toMMSS, toHHMMSS, rgbaToHex } from '../utils';
 import { IColorScheme, EnvironmentName, IInfoData } from '../types';
 import { IContributorB64, IBeatmapItem } from '../types/mapcheck';
-import { IEditor, IEditorInfo } from '../types/beatmap/shared/editor';
 import {
     BeatPerMinute,
     ColorScheme,
@@ -13,9 +12,15 @@ import {
     EnvironmentRename,
     EnvironmentSchemeName,
 } from '../beatmap';
-import { ChromaDataEnvAbbr, IChromaEnvironment } from '../types/beatmap/v2/chroma';
-import { IHeckPointDefinition, ICustomEvent } from '../types/beatmap/v2';
-import { IBookmark } from '../types/beatmap/v3/bookmark';
+import {
+    IHeckPointDefinition,
+    ICustomEventV3,
+    IBookmark,
+    ChromaDataEnvAbbr,
+    IChromaEnvironment,
+    IEditor,
+    IEditorInfo,
+} from '../types/beatmap/shared';
 
 const logPrefix = 'UI Info: ';
 
@@ -416,14 +421,14 @@ export default new (class UIInformation {
             return;
         }
         const bookmarkText = arr.map((elem) => {
-            let time = elem.b;
+            let time = elem._time;
             let rt!: number;
             if (bpm) {
                 time = bpm.adjustTime(time);
                 rt = bpm.toRealTime(time);
             }
-            return `${round(elem.b, 3)}${rt ? ' | ' + toMMSS(rt) : ''} -- ${
-                elem.n !== '' ? elem.b : '**EMPTY NAME**'
+            return `${round(elem._time, 3)}${rt ? ' | ' + toMMSS(rt) : ''} -- ${
+                elem._name !== '' ? elem._time : '**EMPTY NAME**'
             }`;
         });
         this.displayTableRow(this.htmlTableBookmarks, bookmarkText);
@@ -479,32 +484,32 @@ export default new (class UIInformation {
         this.displayTableRow(this.htmlTablePointDefinitions, pointDef);
     };
 
-    setCustomEvents = (arr?: ICustomEvent[], bpm?: BeatPerMinute | null): void => {
+    setCustomEvents = (arr?: ICustomEventV3[], bpm?: BeatPerMinute | null): void => {
         if (arr == null || !arr.length) {
             this.hideTableRow(this.htmlTableCustomEvents);
             return;
         }
         const customEv = arr.map((elem) => {
-            let time = elem._time;
+            let time = elem.b;
             let rt!: number;
             if (bpm) {
                 time = bpm.adjustTime(time);
                 rt = bpm.toRealTime(time);
             }
             let keyArr = [];
-            for (const key in elem._data) {
+            for (const key in elem.d) {
                 if (key == '_duration' || key == '_easing' || key == '_track') {
                     continue;
                 }
                 //@ts-ignore shut up i dont care
-                if (elem._data[key] != null) {
+                if (elem.d[key] != null) {
                     keyArr.push(key);
                 }
             }
-            return `${round(elem._time, 3)}${rt ? ' | ' + toMMSS(rt) : ''} -- ${
-                elem._type
+            return `${round(elem.b, 3)}${rt ? ' | ' + toMMSS(rt) : ''} -- ${
+                elem.t
             } -> [${keyArr.join('')}]${
-                elem._type !== 'AssignTrackParent' ? `(${elem._data._track})` : ''
+                elem.t !== 'AssignTrackParent' ? `(${elem.d._track})` : ''
             }`;
         });
         this.displayTableRow(this.htmlTableCustomEvents, customEv);

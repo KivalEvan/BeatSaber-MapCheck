@@ -1,6 +1,7 @@
 import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
 import * as beatmap from '../../beatmap';
+import { isIntersect } from '../../analyzers/placement/placements';
 
 const htmlContainer = document.createElement('div');
 const htmlInputCheck = document.createElement('input');
@@ -64,19 +65,15 @@ function check(map: ToolArgs) {
             if (
                 ((colorNotes[i].isHorizontal(colorNotes[j]) ||
                     colorNotes[i].isVertical(colorNotes[j])) &&
-                    colorNotes[i]
-                        .isIntersect(colorNotes[j], [
-                            [45, 1],
-                            [15, 2],
-                        ])
-                        .some((b) => b)) ||
+                    isIntersect(colorNotes[i], colorNotes[j], [
+                        [45, 1],
+                        [15, 2],
+                    ]).some((b) => b)) ||
                 (colorNotes[i].isDiagonal(colorNotes[j]) &&
-                    colorNotes[i]
-                        .isIntersect(colorNotes[j], [
-                            [45, 1],
-                            [15, 1.5],
-                        ])
-                        .some((b) => b))
+                    isIntersect(colorNotes[i], colorNotes[j], [
+                        [45, 1],
+                        [15, 1.5],
+                    ]).some((b) => b))
             ) {
                 arr.push(colorNotes[i]);
                 lastTime = bpm.toRealTime(colorNotes[i].time);

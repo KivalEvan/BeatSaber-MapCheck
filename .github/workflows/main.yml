@@ -15,13 +15,13 @@ jobs:
               uses: actions/cache@v2
               with:
                   path: ~/node_modules
-                  key: cache-${{ hashFiles('**/package-lock.json') }}
+                  key: cache-${{ hashFiles('**/yarn.lock') }}
 
             # pass --base for application to work under GitHub pages
             - name: Install and build
               run: |
-                  npm install
-                  npm run build -- --base=/${{ github.event.repository.name }}/
+                  yarn
+                  yarn run build -- --base=/${{ github.event.repository.name }}/
             - name: Deploy to github pages
               uses: JamesIves/github-pages-deploy-action@4.1.0
               with:

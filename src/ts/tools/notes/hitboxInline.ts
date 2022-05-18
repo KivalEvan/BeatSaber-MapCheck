@@ -58,12 +58,7 @@ function check(map: ToolArgs) {
         const note = colorNotes[i];
         if (lastNote[note.color]) {
             if (
-                beatmap.swing.next(
-                    note,
-                    lastNote[note.color],
-                    bpm,
-                    swingNoteArray[note.color]
-                )
+                swing.next(note, lastNote[note.color], bpm, swingNoteArray[note.color])
             ) {
                 swingNoteArray[note.color] = [];
             }

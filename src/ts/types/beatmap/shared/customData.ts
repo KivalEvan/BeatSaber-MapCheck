@@ -1,82 +1,14 @@
 import { IContributor } from './contributor';
 import { IEditor } from './editor';
 import { IColorScheme } from './environment';
-import { IBookmark } from './bookmark';
-import { IBPMChange, IBPMChangeOld } from '../shared/bpm';
-import {
-    IHeckCustomData,
-    IHeckCustomEventV2,
-    IHeckCustomEventV3,
-    IHeckInfoCustomData,
-} from './heck';
-import {
-    IChromaCustomData,
-    IChromaCustomEventV2,
-    IChromaCustomEventV3,
-    IChromaNote,
-    IChromaObstacle,
-    IChromaEnvironmentOld,
-} from './chroma';
-import {
-    INECustomData,
-    INECustomEventV2,
-    INECustomEventV3,
-    INENote,
-    INEObstacle,
-} from './noodleExtensions';
+import { IHeckInfoCustomData } from './heck';
+import { IChromaInfoCustomData } from './chroma';
 
 /** Base custom data interface. */
 export interface ICustomDataBase {
     // deno-lint-ignore no-explicit-any
     [key: string]: any;
 }
-
-export type ICustomEventV2 =
-    | IHeckCustomEventV2
-    | IChromaCustomEventV2
-    | INECustomEventV2;
-export type ICustomEventV3 =
-    | IHeckCustomEventV3
-    | IChromaCustomEventV3
-    | INECustomEventV3;
-
-/** Custom Data interface for difficulty file.
- * ```ts
- * _time?: float,
- * _bpmChanges?: BPMChange[];
- * _BPMChanges?: BPMChange[];
- * _bookmarks?: Bookmark[];
- * ```
- * @extends CustomData
- * @extends CCustomData
- * @extends INECustomData
- */
-export interface ICustomDataDifficultyV2
-    extends ICustomDataBase,
-        Omit<IHeckCustomData, '_customEvents'>,
-        Omit<IChromaCustomData, '_customEvents'>,
-        Omit<INECustomData, '_customEvents'> {
-    _customEvents?: ICustomEventV2[];
-    _time?: number;
-    _bpmChanges?: IBPMChangeOld[];
-    _BPMChanges?: IBPMChange[];
-    _bookmarks?: IBookmark[];
-}
-
-export interface ICustomDataDifficultyV3
-    extends ICustomDataBase,
-        Omit<IHeckCustomData, '_customEvents'>,
-        Omit<IChromaCustomData, '_customEvents'>,
-        Omit<INECustomData, '_customEvents'> {
-    _customEvents?: ICustomEventV3[];
-    _time?: number;
-    _bpmChanges?: IBPMChangeOld[];
-    _BPMChanges?: IBPMChange[];
-    _bookmarks?: IBookmark[];
-}
-
-export type ICustomDataNote = ICustomDataBase & IChromaNote & INENote;
-export type ICustomDataObstacle = ICustomDataBase & IChromaObstacle & INEObstacle;
 
 /** Custom Data interface for info.
  * ```ts
@@ -107,13 +39,13 @@ export interface ICustomDataInfo extends ICustomDataBase {
  * @extends ICustomDataBase
  * @extends IColorScheme
  * @extends IHeckInfoCustomData
- * @extends IChromaEnvironmentOld
+ * @extends IChromaInfoCustomData
  */
 export interface ICustomDataInfoDifficulty
     extends ICustomDataBase,
         IColorScheme,
         IHeckInfoCustomData,
-        IChromaEnvironmentOld {
+        IChromaInfoCustomData {
     _difficultyLabel?: string;
     _editorOffset?: number;
     _editorOldOffset?: number;

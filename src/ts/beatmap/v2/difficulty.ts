@@ -1,4 +1,4 @@
-import { ICustomDataDifficultyV2 } from '../../types/beatmap/shared/customData';
+import { ICustomDataDifficulty } from '../../types/beatmap/v2/customData';
 import { IDifficultyData } from '../../types/beatmap/v2/difficulty';
 import { Serializable } from '../shared/serializable';
 import { Note } from './note';
@@ -17,7 +17,7 @@ export class DifficultyData extends Serializable<IDifficultyData> {
     events: Event[];
     waypoints: Waypoint[];
     specialEventsKeywordFilters?: SpecialEventsKeywordFilters;
-    customData: ICustomDataDifficultyV2;
+    customData: ICustomDataDifficulty;
     private constructor(data: Required<IDifficultyData>) {
         super(data);
         this.version = '2.6.0';

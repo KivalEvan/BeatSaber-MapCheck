@@ -1,5 +1,5 @@
 import { BaseSlider } from './baseSlider';
-import { LINE_COUNT } from '../shared/constants';
+import { LINE_COUNT, NoteCutAngle } from '../shared/constants';
 import { IBurstSlider } from '../../types/beatmap/v3/burstSlider';
 import { deepCopy } from '../../utils/misc';
 import { ObjectToReturn } from '../../types/utils';
@@ -154,6 +154,23 @@ export class BurstSlider extends BaseSlider<IBurstSlider> {
         return this;
     }
 
+    /** Get and return standardised note angle.
+     * ```ts
+     * const noteAngle = note.getAngle(noteCompare);
+     * ```
+     */
+    getAngle() {
+        // if (this.customData?._cutDirection) {
+        //     return this.customData._cutDirection > 0
+        //         ? this.customData._cutDirection % 360
+        //         : 360 + (this.customData._cutDirection % 360);
+        // }
+        if (this.direction >= 1000) {
+            return Math.abs(((this.direction % 1000) % 360) - 360);
+        }
+        return NoteCutAngle[this.direction as keyof typeof NoteCutAngle] || 0;
+    }
+
     /** Check if burst slider has Mapping Extensions properties.
      * ```ts
      * if (burstSlider.hasMappingExtensions()) {}
@@ -167,5 +184,14 @@ export class BurstSlider extends BaseSlider<IBurstSlider> {
             this.posX >= 1000 ||
             (this.direction >= 1000 && this.direction <= 1360)
         );
+    }
+
+    /** Check if burst slider is valid & vanilla.
+     * ```ts
+     * if (burstSlider.isValid()) {}
+     * ```
+     */
+    isValid() {
+        return !this.hasMappingExtensions();
     }
 }

@@ -1,23 +1,11 @@
 import { Tool, ToolArgs } from '../../types/mapcheck';
+import UICheckbox from '../../ui/checkbox';
 import { round } from '../../utils';
 
-const htmlContainer = document.createElement('div');
-const htmlInputCheck = document.createElement('input');
-const htmlLabelCheck = document.createElement('label');
-
-htmlLabelCheck.textContent = ' Invalid object';
-htmlLabelCheck.htmlFor = 'input__tools-invalid-object-check';
-htmlInputCheck.id = 'input__tools-invalid-object-check';
-htmlInputCheck.className = 'input-toggle';
-htmlInputCheck.type = 'checkbox';
-htmlInputCheck.checked = true;
-htmlInputCheck.addEventListener('change', inputCheckHandler);
-
-htmlContainer.appendChild(htmlInputCheck);
-htmlContainer.appendChild(htmlLabelCheck);
+const name = ' Invalid Object';
 
 const tool: Tool = {
-    name: 'Invalid Object',
+    name,
     description: 'Placeholder',
     type: 'other',
     order: {
@@ -25,9 +13,11 @@ const tool: Tool = {
         output: 20,
     },
     input: {
-        enabled: htmlInputCheck.checked,
+        enabled: true,
         params: {},
-        html: htmlContainer,
+        html: UICheckbox.create(name, name, true, function (this: HTMLInputElement) {
+            tool.input.enabled = this.checked;
+        }),
     },
     output: {
         html: null,
@@ -46,10 +36,20 @@ function check(map: ToolArgs) {
 
 function run(map: ToolArgs) {
     const { bpm } = map.settings;
-    const { colorNotes, obstacles, basicBeatmapEvents } = map.difficulty.data;
+    const {
+        colorNotes,
+        bombNotes,
+        obstacles,
+        basicBeatmapEvents,
+        sliders,
+        burstSliders,
+    } = map.difficulty.data;
 
     let noteResult: number[] = [];
     let obstacleResult: number[] = [];
+    let bombResult: number[] = [];
+    let sliderResult: number[] = [];
+    let burstSliderResult: number[] = [];
     if (
         !map.difficulty.info._customData?._requirements?.includes('Mapping Extensions')
     ) {
@@ -66,9 +66,26 @@ function run(map: ToolArgs) {
             obstacleResult = obstacles
                 .filter((o) => o.hasMappingExtensions())
                 .map((o) => o.time);
+            // FIXME: add hasNoodleExtensions() later
+            bombResult = bombNotes
+                .filter((n) => n.hasMappingExtensions())
+                .map((n) => n.time);
+            // FIXME: add hasNoodleExtensions() later
+            sliderResult = sliders
+                .filter((o) => o.hasMappingExtensions())
+                .map((o) => o.time);
+            // FIXME: add hasNoodleExtensions() later
+            burstSliderResult = burstSliders
+                .filter((o) => o.hasMappingExtensions())
+                .map((o) => o.time);
         } else {
             noteResult = colorNotes.filter((n) => !n.isValid()).map((n) => n.time);
+            bombResult = bombNotes.filter((b) => !b.isValid()).map((b) => b.time);
             obstacleResult = obstacles.filter((o) => !o.isValid()).map((o) => o.time);
+            sliderResult = sliders.filter((s) => !s.isValid()).map((s) => s.time);
+            burstSliderResult = burstSliders
+                .filter((bs) => !bs.isValid())
+                .map((bs) => bs.time);
         }
     }
     const eventResult = basicBeatmapEvents

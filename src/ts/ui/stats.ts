@@ -8,7 +8,7 @@ import { formatNumber, round } from '../utils';
 import { BeatPerMinute, NoteJumpSpeed, DifficultyRename } from '../beatmap';
 import { CharacteristicRename } from '../beatmap/shared/characteristic';
 import { IInfoData } from '../types';
-import { EventRename } from '../types/beatmap/v2';
+import { EventRename } from '../types/beatmap/v2/event';
 import { IBeatmapItem } from '../types/mapcheck';
 import { NoteContainer } from '../types/beatmap/v3/container';
 

@@ -1,7 +1,7 @@
 import { IColorNote } from '../../types/beatmap/v3/colorNote';
 import { BaseObject } from './baseObject';
 import { LINE_COUNT, NoteCutAngle } from '../shared/constants';
-import { deepCopy, radToDeg, shortRotDistance } from '../../utils';
+import { deepCopy } from '../../utils/misc';
 import { ObjectToReturn } from '../../types/utils';
 import { ICoordinateNote } from '../../types/beatmap/shared/coordinate';
 
@@ -416,199 +416,28 @@ export class ColorNote
         );
     }
 
-    /** Check if the note intersect on swing path by angle and distance.
+    /** Check if note has Noodle Extensions properties.
      * ```ts
-     * if (note.isIntersect(noteCompare, [[20, 1.5]])) {}
+     * if (hasNoodleExtensions(note)) {}
      * ```
      */
-    // a fkin abomination that's what this is
-    isIntersect(
-        compareTo: ColorNote,
-        angleDistances: [number, number, number?][],
-        ahead = false
-    ): [boolean, boolean] {
-        const [nX1, nY1] = this.getPosition();
-        const [nX2, nY2] = compareTo.getPosition();
-        const nA1 = this.getAngle();
-        const nA2 = compareTo.getAngle();
-        const angle = ahead ? 540 : 360;
-        let resultN1 = false;
-        if (this.direction !== 8) {
-            const a = (radToDeg(Math.atan2(nY1 - nY2, nX1 - nX2)) + 450) % 360;
-            for (const [angleRange, maxDistance, offsetT] of angleDistances) {
-                const offset = offsetT ?? 0;
-                const aS = (nA1 + angle - angleRange + offset) % 360;
-                const aE = (nA1 + angle + angleRange + offset) % 360;
-                resultN1 =
-                    (maxDistance >=
-                        Math.sqrt(Math.pow(nX1 - nX2, 2) + Math.pow(nY1 - nY2, 2)) &&
-                        ((aS < aE && aS <= a && a <= aE) ||
-                            (aS >= aE && (a <= aE || a >= aS)))) ||
-                    resultN1;
-                if (resultN1) {
-                    break;
-                }
-            }
-        }
-        let resultN2 = false;
-        if (compareTo.direction !== 8) {
-            const a = (radToDeg(Math.atan2(nY2 - nY1, nX2 - nX1)) + 450) % 360;
-            for (const [angleRange, maxDistance, offsetT] of angleDistances) {
-                const offset = offsetT ?? 0;
-                const aS = (nA2 + angle - angleRange + offset) % 360;
-                const aE = (nA2 + angle + angleRange + offset) % 360;
-                resultN2 =
-                    (maxDistance >=
-                        Math.sqrt(Math.pow(nX1 - nX2, 2) + Math.pow(nY1 - nY2, 2)) &&
-                        ((aS < aE && aS <= a && a <= aE) ||
-                            (aS >= aE && (a <= aE || a >= aS)))) ||
-                    resultN2;
-                if (resultN2) {
-                    break;
-                }
-            }
-        }
-        return [resultN1, resultN2];
-    }
-
-    // TODO: update with new position/rotation system
-    isEnd(prevNote: ColorNote, cd: number) {
-        // fuck u and ur dot note stack
-        if (this.direction === 8 && prevNote.direction === 8 && cd !== 8) {
-            // if end note on right side
-            if (this.posX > prevNote.posX) {
-                if (cd === 5 || cd === 3 || cd === 7) {
-                    return true;
-                }
-            }
-            // if end note on left side
-            if (this.posX < prevNote.posX) {
-                if (cd === 6 || cd === 2 || cd === 4) {
-                    return true;
-                }
-            }
-            // if end note is above
-            if (this.posY > prevNote.posY) {
-                if (cd === 4 || cd === 0 || cd === 5) {
-                    return true;
-                }
-            }
-            // if end note is below
-            if (this.posY < prevNote.posY) {
-                if (cd === 6 || cd === 1 || cd === 7) {
-                    return true;
-                }
-            }
-        }
-        // if end note on right side
-        if (this.posX > prevNote.posX) {
-            // check if end note is arrowed
-            if (this.direction === 5 || this.direction === 3 || this.direction === 7) {
-                return true;
-            }
-            // check if end note is dot and start arrow is pointing to it
-            if (
-                (prevNote.direction === 5 ||
-                    prevNote.direction === 3 ||
-                    prevNote.direction === 7) &&
-                this.direction === 8
-            ) {
-                return true;
-            }
-        }
-        // if end note on left side
-        if (this.posX < prevNote.posX) {
-            if (this.direction === 6 || this.direction === 2 || this.direction === 4) {
-                return true;
-            }
-            if (
-                (prevNote.direction === 6 ||
-                    prevNote.direction === 2 ||
-                    prevNote.direction === 4) &&
-                this.direction === 8
-            ) {
-                return true;
-            }
-        }
-        // if end note is above
-        if (this.posY > prevNote.posY) {
-            if (this.direction === 4 || this.direction === 0 || this.direction === 5) {
-                return true;
-            }
-            if (
-                (prevNote.direction === 4 ||
-                    prevNote.direction === 0 ||
-                    prevNote.direction === 5) &&
-                this.direction === 8
-            ) {
-                return true;
-            }
-        }
-        // if end note is below
-        if (this.posY < prevNote.posY) {
-            if (this.direction === 6 || this.direction === 1 || this.direction === 7) {
-                return true;
-            }
-            if (
-                (prevNote.direction === 6 ||
-                    prevNote.direction === 1 ||
-                    prevNote.direction === 7) &&
-                this.direction === 8
-            ) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    // TODO: update with new position/rotation system
-    predictDirection(comparePrev: ColorNote): number {
-        if (this.isEnd(comparePrev, 8)) {
-            return this.direction === 8 ? comparePrev.direction : this.direction;
-        }
-        if (this.direction !== 8) {
-            return this.direction;
-        }
-        if (this.time > comparePrev.time) {
-            // if end note on right side
-            if (this.posX > comparePrev.posX) {
-                if (this.isHorizontal(comparePrev)) {
-                    return 3;
-                }
-            }
-            // if end note on left side
-            if (this.posX < comparePrev.posX) {
-                if (this.isHorizontal(comparePrev)) {
-                    return 2;
-                }
-            }
-            // if end note is above
-            if (this.posY > comparePrev.posY) {
-                if (this.isVertical(comparePrev)) {
-                    return 0;
-                }
-                if (this.posX > comparePrev.posX) {
-                    return 5;
-                }
-                if (this.posX < comparePrev.posX) {
-                    return 4;
-                }
-            }
-            // if end note is below
-            if (this.posY < comparePrev.posY) {
-                if (this.isVertical(comparePrev)) {
-                    return 1;
-                }
-                if (this.posX > comparePrev.posX) {
-                    return 7;
-                }
-                if (this.posX < comparePrev.posX) {
-                    return 6;
-                }
-            }
-        }
-        return 8;
-    }
+    // god i hate these
+    hasNoodleExtensions = (): boolean => {
+        return (
+            Array.isArray(this.customData?.animation) ||
+            typeof this.customData?.disableNoteGravity === 'boolean' ||
+            typeof this.customData?.disableNoteLook === 'boolean' ||
+            Array.isArray(this.customData?.flip) ||
+            typeof this.customData?.uninteractable === 'boolean' ||
+            Array.isArray(this.customData?.localRotation) ||
+            typeof this.customData?.noteJumpMovementSpeed === 'number' ||
+            typeof this.customData?.noteJumpStartBeatOffset === 'number' ||
+            Array.isArray(this.customData?.coordinates) ||
+            Array.isArray(this.customData?.worldRotation) ||
+            typeof this.customData?.worldRotation === 'number' ||
+            typeof this.customData?.track === 'string'
+        );
+    };
 
     /** Check if note has Mapping Extensions properties.
      * ```ts
@@ -635,49 +464,12 @@ export class ColorNote
         return this.direction >= 0 && this.direction <= 8;
     }
 
-    /** Check if note is a valid, vanilla note.
+    /** Check if note is valid & vanilla.
      * ```ts
      * if (note.isValid()) {}
      * ```
      */
     isValid() {
         return !this.hasMappingExtensions() && this.isValidDirection();
-    }
-
-    /** Check the angle equality of the two notes.
-     * ```ts
-     * if (ColorNote.checkDirection(note1, note2, 45, true)) {}
-     * ```
-     * */
-    static checkDirection(
-        n1: ColorNote | number | null,
-        n2: ColorNote | number | null,
-        angleTol: number,
-        equal: boolean
-    ) {
-        let nA1!: number;
-        let nA2!: number;
-        if (n1 === null || n2 === null) {
-            return false;
-        }
-        if (typeof n1 === 'number') {
-            nA1 = n1;
-        } else {
-            if (n1.direction === 8) {
-                return false;
-            }
-            nA1 = n1.getAngle();
-        }
-        if (typeof n2 === 'number') {
-            nA2 = n2;
-        } else {
-            if (n2.direction === 8) {
-                return false;
-            }
-            nA2 = n2.getAngle();
-        }
-        return equal
-            ? shortRotDistance(nA1, nA2, 360) <= angleTol
-            : shortRotDistance(nA1, nA2, 360) >= angleTol;
     }
 }

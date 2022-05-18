@@ -2,6 +2,7 @@ import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
 import * as beatmap from '../../beatmap';
 import { NoteContainer } from '../../types/beatmap/v3/container';
+import { isEnd } from '../../analyzers/placement/placements';
 
 const htmlContainer = document.createElement('div');
 const htmlInputCheck = document.createElement('input');
@@ -68,12 +69,7 @@ function check(map: ToolArgs) {
         const note = noteData.data;
         if (lastNote[note.color]) {
             if (
-                beatmap.swing.next(
-                    note,
-                    lastNote[note.color],
-                    bpm,
-                    swingNoteArray[note.color]
-                )
+                swing.next(note, lastNote[note.color], bpm, swingNoteArray[note.color])
             ) {
                 lastSpeed[note.color] = note.time - lastNote[note.color].time;
                 if (note.direction !== 8) {
@@ -88,7 +84,7 @@ function check(map: ToolArgs) {
                 swingNoteArray[note.color] = [];
                 lastNoteDirection[note.color] = note.direction;
             } else if (
-                note.isEnd(lastNote[note.color], lastNoteDirection[note.color])
+                isEnd(note, lastNote[note.color], lastNoteDirection[note.color])
             ) {
                 if (note.direction !== 8) {
                     noteOccupy[note.color].posX =

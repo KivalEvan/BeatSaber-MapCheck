@@ -3,9 +3,9 @@ import {
     IChromaEventLight,
     IChromaEventRing,
     IChromaEventZoom,
-} from '../shared/chroma';
+} from './chroma';
 import { ICustomDataBase } from '../shared/customData';
-import { INEEvent } from '../shared/noodleExtensions';
+import { INEEvent } from './noodleExtensions';
 import { IBaseObject } from './object';
 
 /** Beatmap object interface for Event.
@@ -172,16 +172,4 @@ export enum EventRename {
     'Utility Event 3',
     'Utility Event 4',
     'BPM Change' = 100,
-}
-
-interface IEventCountStats {
-    total: number;
-    chroma: number;
-    chromaOld: number;
-    noodleExtensions: number;
-    mappingExtensions: number;
-}
-
-export interface IEventCount {
-    [key: number]: IEventCountStats;
 }

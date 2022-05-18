@@ -2,21 +2,9 @@ import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
 import * as beatmap from '../../beatmap';
 import { EnvironmentName } from '../../types/beatmap/shared/environment';
+import UICheckbox from '../../ui/checkbox';
 
-const htmlContainer = document.createElement('div');
-const htmlInputCheck = document.createElement('input');
-const htmlLabelCheck = document.createElement('label');
-
-htmlLabelCheck.textContent = ' Unlit bomb';
-htmlLabelCheck.htmlFor = 'input__tools-unlit-bomb';
-htmlInputCheck.id = 'input__tools-unlit-bomb';
-htmlInputCheck.className = 'input-toggle';
-htmlInputCheck.type = 'checkbox';
-htmlInputCheck.checked = true;
-htmlInputCheck.addEventListener('change', inputCheckHandler);
-
-htmlContainer.appendChild(htmlInputCheck);
-htmlContainer.appendChild(htmlLabelCheck);
+const name = ' Unlit Nomb';
 
 const tool: Tool = {
     name: 'Unlit Bomb',
@@ -27,19 +15,17 @@ const tool: Tool = {
         output: 203,
     },
     input: {
-        enabled: htmlInputCheck.checked,
+        enabled: true,
         params: {},
-        html: htmlContainer,
+        html: UICheckbox.create(name, name, true, function (this: HTMLInputElement) {
+            tool.input.enabled = this.checked;
+        }),
     },
     output: {
         html: null,
     },
     run,
 };
-
-function inputCheckHandler(this: HTMLInputElement) {
-    tool.input.enabled = this.checked;
-}
 
 // omega scuffed clusterfuck help me pls im cryin rn
 const unlitBomb = (

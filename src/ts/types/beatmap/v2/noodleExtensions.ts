@@ -1,14 +1,12 @@
-import { ICustomDataBase } from './customData';
+import { ICustomDataBase } from '../shared/customData';
 import {
-    Array2DPoint,
-    Array3DPoint,
-    Array3DPointDefinition,
-    ArrayColorPointDefinition,
-    ArrayPercentPointDefinition,
-    IHeckCustomEventDataBase,
-} from './heck';
-
-export const NEName = 'Noodle Extensions';
+    Vector2,
+    Vector3,
+    Vector3PointDefinition,
+    ColorPointDefinition,
+    PercentPointDefinition,
+} from '../shared/heck';
+import { IHeckCustomEventDataBase } from './heck';
 
 export enum NEDataAbbr {
     _childrenTracks = 'Ct',
@@ -42,9 +40,9 @@ export enum NEDataAbbr {
  * ```
  */
 interface INEObject {
-    _position?: Array2DPoint;
-    _rotation?: number | Array3DPoint;
-    _localRotation?: Array3DPoint;
+    _position?: Vector2;
+    _rotation?: number | Vector3;
+    _localRotation?: Vector3;
     _noteJumpMovementSpeed?: number;
     _noteJumpStartBeatOffset?: number;
     _fake?: boolean;
@@ -64,7 +62,7 @@ interface INEObject {
  */
 export interface INENote extends INEObject {
     _cutDirection?: number;
-    _flip?: Array2DPoint;
+    _flip?: Vector2;
     _disableNoteGravity?: boolean;
     _disableNoteLook?: boolean;
 }
@@ -76,7 +74,7 @@ export interface INENote extends INEObject {
  * @extends INEObject
  */
 export interface INEObstacle extends INEObject {
-    _scale?: Array3DPoint;
+    _scale?: Vector3;
 }
 
 /** Noodle Extensions Event interface for Beatmap Event.
@@ -125,16 +123,16 @@ export interface INECustomEventDataAssignPlayerToTrack
  * ```
  */
 export interface INEAnimation {
-    _position?: string | Array3DPointDefinition[];
-    _rotation?: string | Array3DPointDefinition[];
-    _localRotation?: string | Array3DPointDefinition[];
-    _scale?: string | Array3DPointDefinition[];
-    _dissolve?: string | ArrayPercentPointDefinition[];
-    _dissolveArrow?: string | ArrayPercentPointDefinition[];
-    _color?: string | ArrayColorPointDefinition[];
-    _interactable?: string | ArrayPercentPointDefinition[];
-    _definitePosition?: string | Array3DPointDefinition[];
-    _time?: string | ArrayPercentPointDefinition[];
+    _position?: string | Vector3PointDefinition[];
+    _rotation?: string | Vector3PointDefinition[];
+    _localRotation?: string | Vector3PointDefinition[];
+    _scale?: string | Vector3PointDefinition[];
+    _dissolve?: string | PercentPointDefinition[];
+    _dissolveArrow?: string | PercentPointDefinition[];
+    _color?: string | ColorPointDefinition[];
+    _interactable?: string | PercentPointDefinition[];
+    _definitePosition?: string | Vector3PointDefinition[];
+    _time?: string | PercentPointDefinition[];
 }
 
 /** Noodle Extensions Custom Event interface for AssignTrackParent.
@@ -149,11 +147,6 @@ export interface INECustomEventAssignTrackParent {
     _type: 'AssignTrackParent';
     _data: INECustomEventDataAssignTrackParent;
 }
-export interface INECustomEventAssignTrackParentV3 {
-    b: number;
-    t: 'AssignTrackParent';
-    d: INECustomEventDataAssignTrackParent;
-}
 
 /** Noodle Extensions Custom Event interface for AssignPlayerToTrack.
  * ```ts
@@ -167,18 +160,10 @@ export interface INECustomEventAssignPlayerToTrack {
     _type: 'AssignPlayerToTrack';
     _data: INECustomEventDataAssignPlayerToTrack;
 }
-export interface INECustomEventAssignPlayerToTrackV3 {
-    b: number;
-    t: 'AssignPlayerToTrack';
-    d: INECustomEventDataAssignPlayerToTrack;
-}
 
-export type INECustomEventV2 =
+export type INECustomEvent =
     | INECustomEventAssignTrackParent
     | INECustomEventAssignPlayerToTrack;
-export type INECustomEventV3 =
-    | INECustomEventAssignTrackParentV3
-    | INECustomEventAssignPlayerToTrackV3;
 
 /** Noodle Extensions Custom Data interface for difficulty custom data.
  * ```ts
@@ -186,5 +171,5 @@ export type INECustomEventV3 =
  * ```
  */
 export interface INECustomData {
-    _customEvents?: INECustomEventV2[];
+    _customEvents?: INECustomEvent[];
 }

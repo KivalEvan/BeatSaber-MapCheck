@@ -1,4 +1,4 @@
-import { ICustomDataNote } from '../shared/customData';
+import { ICustomDataNote } from './customData';
 import { IBaseObject } from './object';
 
 /** Beatmap object interface for Note.
@@ -46,17 +46,4 @@ export interface INote extends IBaseObject {
      */
     _cutDirection: number;
     _customData?: ICustomDataNote;
-}
-
-interface NoteCountStats {
-    total: number;
-    chroma: number;
-    noodleExtensions: number;
-    mappingExtensions: number;
-}
-
-export interface NoteCount {
-    red: NoteCountStats;
-    blue: NoteCountStats;
-    bomb: NoteCountStats;
 }

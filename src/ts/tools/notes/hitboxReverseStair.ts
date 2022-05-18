@@ -2,6 +2,7 @@ import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
 import * as beatmap from '../../beatmap';
 import { NoteContainer } from '../../types/beatmap/v3/container';
+import { isIntersect } from '../../analyzers/placement/placements';
 
 const htmlContainer = document.createElement('div');
 const htmlInputCheck = document.createElement('input');
@@ -58,12 +59,7 @@ function check(map: ToolArgs) {
         const note = colorNotes[i];
         if (lastNote[note.color]) {
             if (
-                beatmap.swing.next(
-                    note,
-                    lastNote[note.color],
-                    bpm,
-                    swingNoteArray[note.color]
-                )
+                swing.next(note, lastNote[note.color], bpm, swingNoteArray[note.color])
             ) {
                 swingNoteArray[note.color] = [];
             }
@@ -89,7 +85,7 @@ function check(map: ToolArgs) {
                         1.425 /
                             ((60 * (note.time - other.data.time)) / bpm.value +
                                 (isDiagonal ? constantDiagonal : constant)) &&
-                    note.isIntersect(other.data, [[15, 1.5]])[1]
+                    isIntersect(note, other.data, [[15, 1.5]])[1]
                 ) {
                     arr.push(other.data);
                     break;

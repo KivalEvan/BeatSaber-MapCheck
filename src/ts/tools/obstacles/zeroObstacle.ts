@@ -1,23 +1,11 @@
 import { Tool, ToolArgs } from '../../types/mapcheck';
+import UICheckbox from '../../ui/checkbox';
 import { round } from '../../utils';
 
-const htmlContainer = document.createElement('div');
-const htmlInputCheck = document.createElement('input');
-const htmlLabelCheck = document.createElement('label');
-
-htmlLabelCheck.textContent = ' Zero width/duration obstacle';
-htmlLabelCheck.htmlFor = 'input__tools-zero-obstacle-check';
-htmlInputCheck.id = 'input__tools-zero-obstacle-check';
-htmlInputCheck.className = 'input-toggle';
-htmlInputCheck.type = 'checkbox';
-htmlInputCheck.checked = true;
-htmlInputCheck.addEventListener('change', inputCheckHandler);
-
-htmlContainer.appendChild(htmlInputCheck);
-htmlContainer.appendChild(htmlLabelCheck);
+const name = ' Zero width/duration obstacle';
 
 const tool: Tool = {
-    name: 'Negative Obstacle',
+    name,
     description: 'Placeholder',
     type: 'obstacle',
     order: {
@@ -25,19 +13,17 @@ const tool: Tool = {
         output: 70,
     },
     input: {
-        enabled: htmlInputCheck.checked,
+        enabled: true,
         params: {},
-        html: htmlContainer,
+        html: UICheckbox.create(name, name, true, function (this: HTMLInputElement) {
+            tool.input.enabled = this.checked;
+        }),
     },
     output: {
         html: null,
     },
     run: run,
 };
-
-function inputCheckHandler(this: HTMLInputElement) {
-    tool.input.enabled = this.checked;
-}
 
 function check(map: ToolArgs) {
     const { obstacles } = map.difficulty.data;

@@ -103,6 +103,11 @@ export class BombNote
         return this;
     }
 
+    mirror() {
+        this.posX = LINE_COUNT - 1 - this.posX;
+        return this;
+    }
+
     /** Get bomb note and return the Beatwalls' position x and y value in tuple.
      * ```ts
      * const bombPos = bomb.getPosition();
@@ -225,8 +230,12 @@ export class BombNote
         return this.posX > 3 || this.posX < 0 || this.posY > 2 || this.posY < 0;
     }
 
-    mirror() {
-        this.posX = LINE_COUNT - 1 - this.posX;
-        return this;
+    /** Check if bomb is valid & vanilla.
+     * ```ts
+     * if (bomb.isValid()) {}
+     * ```
+     */
+    isValid() {
+        return !this.hasMappingExtensions();
     }
 }

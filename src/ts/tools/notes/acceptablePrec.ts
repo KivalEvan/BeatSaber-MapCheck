@@ -1,6 +1,5 @@
 import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
-import * as beatmap from '../../beatmap';
 
 const defaultPrec = [8, 6];
 

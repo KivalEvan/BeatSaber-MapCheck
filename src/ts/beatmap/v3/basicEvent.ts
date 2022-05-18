@@ -228,15 +228,6 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
         return this.type === 8;
     }
 
-    /** Check if event is a ring zoom event.
-     * ```ts
-     * if (basicEvent.isZoomEvent()) {}
-     * ```
-     */
-    isZoomEvent() {
-        return this.type === 9;
-    }
-
     /** Check if event is a laser rotation event.
      * ```ts
      * if (basicEvent.isLaserRotationEvent()) {}
@@ -295,7 +286,6 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
         return (
             this.isLightEvent() ||
             this.isRingEvent() ||
-            this.isZoomEvent() ||
             this.isLaserRotationEvent() ||
             this.isExtraEvent()
         );
@@ -310,7 +300,51 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
         return this.value >= 2000000000;
     }
 
-    /** Check if event is a valid, vanilla event.
+    /** Check if event has Chroma properties.
+     * ```ts
+     * if (basicEvent.hasChroma()) {}
+     * ```
+     */
+    // holy shit i hate type guard
+    hasChroma = (): boolean => {
+        if (this.isLightEvent()) {
+            return (
+                Array.isArray(this.customData?._color) ||
+                typeof this.customData?._lightID === 'number' ||
+                Array.isArray(this.customData?._lightID) ||
+                typeof this.customData?._propID === 'number' ||
+                typeof this.customData?._lightGradient === 'object' ||
+                typeof this.customData?._easing === 'string' ||
+                typeof this.customData?._lerpType === 'string'
+            );
+        }
+        if (this.isRingEvent()) {
+            return (
+                typeof this.customData?._nameFilter === 'string' ||
+                typeof this.customData?._reset === 'boolean' ||
+                typeof this.customData?._rotation === 'number' ||
+                typeof this.customData?._step === 'number' ||
+                typeof this.customData?._prop === 'number' ||
+                typeof this.customData?._speed === 'number' ||
+                typeof this.customData?._direction === 'number' ||
+                typeof this.customData?._counterSpin === 'boolean' ||
+                typeof this.customData?._stepMult === 'number' ||
+                typeof this.customData?._propMult === 'number' ||
+                typeof this.customData?._speedMult === 'number'
+            );
+        }
+        if (this.isLaserRotationEvent()) {
+            return (
+                typeof this.customData?._lockPosition === 'boolean' ||
+                typeof this.customData?._speed === 'number' ||
+                typeof this.customData?._preciseSpeed === 'number' ||
+                typeof this.customData?._direction === 'number'
+            );
+        }
+        return false;
+    };
+
+    /** Check if event is a valid & vanilla.
      * ```ts
      * if (basicEvent.isValid()) {}
      * ```

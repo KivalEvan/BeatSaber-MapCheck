@@ -1,4 +1,4 @@
-import { NoteContainer } from '../v3/container';
+import { NoteContainer } from '../../beatmap/v3/container';
 
 export interface ISwingContainer {
     time: number;

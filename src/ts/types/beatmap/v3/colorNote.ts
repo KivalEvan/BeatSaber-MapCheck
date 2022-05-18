@@ -1,5 +1,5 @@
 import { IBaseObject } from './baseObject';
-import { ICustomDataNote } from '../shared/customData';
+import { ICustomDataNote } from './customData';
 
 export interface IColorNote extends IBaseObject {
     /** Position x `<int>` of note.

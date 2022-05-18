@@ -1,4 +1,4 @@
-import { ICustomDataObstacle } from '../shared/customData';
+import { ICustomDataObstacle } from './customData';
 import { IBaseObject } from './object';
 
 /** Beatmap object interface for Obstacle.
@@ -33,13 +33,4 @@ export interface IObstacle extends IBaseObject {
     _width: number;
     _height: number;
     _customData?: ICustomDataObstacle;
-}
-
-export interface ObstacleCount {
-    total: number;
-    interactive: number;
-    crouch: number;
-    chroma: number;
-    noodleExtensions: number;
-    mappingExtensions: number;
 }

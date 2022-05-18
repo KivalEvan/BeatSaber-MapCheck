@@ -16,8 +16,10 @@ export interface IColorScheme {
     _colorRight?: Omit<ColorObject, 'a'>;
     _envColorLeft?: Omit<ColorObject, 'a'>;
     _envColorRight?: Omit<ColorObject, 'a'>;
+    _envColorWhite?: Omit<ColorObject, 'a'>;
     _envColorLeftBoost?: Omit<ColorObject, 'a'>;
     _envColorRightBoost?: Omit<ColorObject, 'a'>;
+    _envColorWhiteBoost?: Omit<ColorObject, 'a'>;
     _obstacleColor?: Omit<ColorObject, 'a'>;
 }
 
@@ -46,10 +48,10 @@ export type EnvironmentName =
     | 'SkrillexEnvironment'
     | 'BillieEnvironment'
     | 'HalloweenEnvironment'
+    | 'GagaEnvironment'
     | 'WeaveEnvironment'
     | 'PyroEnvironment'
-    | 'EDMEnvironment'
-    | 'GagaEnvironment';
+    | 'EDMEnvironment';
 /** List of available 360 environment in base game. */
 export type Environment360Name = 'GlassDesertEnvironment';
 /** List of all available environment in base game. */

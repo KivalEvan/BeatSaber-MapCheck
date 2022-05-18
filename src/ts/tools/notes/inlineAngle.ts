@@ -2,6 +2,7 @@ import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
 import * as beatmap from '../../beatmap';
 import { NoteContainer } from '../../types/beatmap/v3/container';
+import { checkDirection } from '../../analyzers/placement/placements';
 
 const defaultMaxTime = 0.15;
 let localBPM!: beatmap.BeatPerMinute;
@@ -125,7 +126,7 @@ function check(map: ToolArgs) {
         const note = noteContainer[i];
         if (note.type === 'note' && lastNote[note.data.color]) {
             if (
-                beatmap.swing.next(
+                swing.next(
                     note.data,
                     lastNote[note.data.color],
                     bpm,
@@ -139,12 +140,7 @@ function check(map: ToolArgs) {
                 }
                 if (
                     checkInline(note.data, noteContainer, lastIndex, maxTime) &&
-                    beatmap.v3.ColorNote.checkDirection(
-                        note.data,
-                        lastNoteAngle[note.data.color],
-                        90,
-                        true
-                    )
+                    checkDirection(note.data, lastNoteAngle[note.data.color], 90, true)
                 ) {
                     arr.push(note.data);
                 }
@@ -158,12 +154,7 @@ function check(map: ToolArgs) {
                 if (
                     startNoteDot[note.data.color] &&
                     checkInline(note.data, noteContainer, lastIndex, maxTime) &&
-                    beatmap.v3.ColorNote.checkDirection(
-                        note.data,
-                        lastNoteAngle[note.data.color],
-                        90,
-                        true
-                    )
+                    checkDirection(note.data, lastNoteAngle[note.data.color], 90, true)
                 ) {
                     arr.push(startNoteDot[note.data.color] as beatmap.v3.ColorNote);
                     startNoteDot[note.data.color] = null;

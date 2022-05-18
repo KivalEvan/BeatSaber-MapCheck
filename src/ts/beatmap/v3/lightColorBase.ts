@@ -58,7 +58,7 @@ export class LightColorBase extends Serializable<ILightColorBase> {
         };
     }
 
-    /** Add beat time `<float>` to event box group. */
+    /** Relative beat time `<float>` to event box group. */
     get time() {
         return this.data.b;
     }
@@ -84,6 +84,7 @@ export class LightColorBase extends Serializable<ILightColorBase> {
      * ```ts
      * 0 -> Red
      * 1 -> Blue
+     * 2 -> White
      * ```
      */
     get color() {

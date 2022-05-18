@@ -1,23 +1,11 @@
 import { Tool, ToolArgs } from '../../types/mapcheck';
+import UICheckbox from '../../ui/checkbox';
 import { round, toMMSS } from '../../utils';
 
-const htmlContainer = document.createElement('div');
-const htmlInputCheck = document.createElement('input');
-const htmlLabelCheck = document.createElement('label');
-
-htmlLabelCheck.textContent = ' Outside playable object';
-htmlLabelCheck.htmlFor = 'input__tools-outside-object-check';
-htmlInputCheck.id = 'input__tools-outside-object-check';
-htmlInputCheck.className = 'input-toggle';
-htmlInputCheck.type = 'checkbox';
-htmlInputCheck.checked = true;
-htmlInputCheck.addEventListener('change', inputCheckHandler);
-
-htmlContainer.appendChild(htmlInputCheck);
-htmlContainer.appendChild(htmlLabelCheck);
+const name = 'Outside Playable Object';
 
 const tool: Tool = {
-    name: 'Difficulty Label',
+    name: name,
     description: 'Placeholder',
     type: 'other',
     order: {
@@ -25,19 +13,17 @@ const tool: Tool = {
         output: 10,
     },
     input: {
-        enabled: htmlInputCheck.checked,
+        enabled: true,
         params: {},
-        html: htmlContainer,
+        html: UICheckbox.create(name, name, true, function (this: HTMLInputElement) {
+            tool.input.enabled = this.checked;
+        }),
     },
     output: {
         html: null,
     },
     run,
 };
-
-function inputCheckHandler(this: HTMLInputElement) {
-    tool.input.enabled = this.checked;
-}
 
 function run(map: ToolArgs) {
     const { bpm, audioDuration: duration } = map.settings;

@@ -2,6 +2,7 @@ import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
 import * as beatmap from '../../beatmap';
 import { NoteContainer } from '../../types/beatmap/v3/container';
+import { checkDirection } from '../../analyzers/placement/placements';
 
 const htmlContainer = document.createElement('div');
 const htmlInputCheck = document.createElement('input');
@@ -57,7 +58,7 @@ function check(map: ToolArgs) {
         const note = noteContainer[i];
         if (note.type === 'note' && lastNote[note.data.color]) {
             if (
-                beatmap.swing.next(
+                swing.next(
                     note.data,
                     lastNote[note.data.color],
                     bpm,
@@ -70,12 +71,7 @@ function check(map: ToolArgs) {
                         (lastNoteAngle[note.data.color] + 180) % 360;
                 }
                 if (
-                    beatmap.v3.ColorNote.checkDirection(
-                        note.data,
-                        lastNoteAngle[note.data.color],
-                        45,
-                        true
-                    )
+                    checkDirection(note.data, lastNoteAngle[note.data.color], 45, true)
                 ) {
                     arr.push(note.data);
                 }
@@ -88,12 +84,7 @@ function check(map: ToolArgs) {
             } else {
                 if (
                     startNoteDot[note.data.color] &&
-                    beatmap.v3.ColorNote.checkDirection(
-                        note.data,
-                        lastNoteAngle[note.data.color],
-                        45,
-                        true
-                    )
+                    checkDirection(note.data, lastNoteAngle[note.data.color], 45, true)
                 ) {
                     arr.push(note.data);
                     startNoteDot[note.data.color] = null;

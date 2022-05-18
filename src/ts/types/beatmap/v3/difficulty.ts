@@ -11,7 +11,7 @@ import { IColorBoostEvent } from './colorBoostEvent';
 import { ILightColorEventBoxGroup } from './lightColorEventBoxGroup';
 import { ILightRotationEventBoxGroup } from './lightRotationEventBoxGroup';
 import { IBasicEventTypesWithKeywords } from './basicEventTypesWithKeywords';
-import { ICustomDataDifficultyV3 } from '../shared/customData';
+import { ICustomDataDifficulty } from './customData';
 
 export interface IDifficultyData {
     version: '3.0.0';
@@ -29,5 +29,5 @@ export interface IDifficultyData {
     lightRotationEventBoxGroups: ILightRotationEventBoxGroup[];
     basicEventTypesWithKeywords: IBasicEventTypesWithKeywords;
     useNormalEventsAsCompatibleEvents: boolean;
-    customData?: ICustomDataDifficultyV3;
+    customData?: ICustomDataDifficulty;
 }

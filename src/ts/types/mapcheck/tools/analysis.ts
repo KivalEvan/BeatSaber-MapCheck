@@ -1,5 +1,5 @@
 import { CharacteristicName, DifficultyName } from '../../beatmap';
-import { ISwingAnalysis } from '../../beatmap/analyser/swing';
+import { ISwingAnalysis } from '../analyzers/swing';
 
 interface IAnalysisBase {
     html: HTMLElement[] | null;

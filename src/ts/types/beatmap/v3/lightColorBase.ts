@@ -1,5 +1,5 @@
 export interface ILightColorBase {
-    /** Add beat time `<float>` to event box group. */
+    /** Relative beat time `<float>` to event box group. */
     b: number;
     /** Transition type `<int>` of base light color.
      * ```ts

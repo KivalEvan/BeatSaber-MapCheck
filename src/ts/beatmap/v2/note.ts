@@ -1,6 +1,4 @@
-import { INote, NoteCount } from '../../types/beatmap/v2/note';
-import { BeatPerMinute } from '../shared/bpm';
-import { radToDeg, shortRotDistance } from '../../utils/math';
+import { INote } from '../../types/beatmap/v2/note';
 import { BeatmapObject } from './object';
 import { ObjectToReturn } from '../../types/utils';
 import { NoteCutAngle } from '../shared/constants';
@@ -172,8 +170,8 @@ export class Note extends BeatmapObject<INote> {
      * ```
      */
     getPosition = (): [number, number] => {
-        if (this.customData?.position) {
-            return [this.customData.position[0], this.customData.position[1]];
+        if (this.customData?._position) {
+            return [this.customData._position[0], this.customData._position[1]];
         }
         return [
             (this.lineIndex <= -1000
@@ -195,10 +193,10 @@ export class Note extends BeatmapObject<INote> {
      * ```
      */
     getAngle = (): number => {
-        if (this.customData?.cutDirection) {
-            return this.customData.cutDirection > 0
-                ? this.customData.cutDirection % 360
-                : 360 + (this.customData.cutDirection % 360);
+        if (this.customData?._cutDirection) {
+            return this.customData._cutDirection > 0
+                ? this.customData._cutDirection % 360
+                : 360 + (this.customData._cutDirection % 360);
         }
         if (this.cutDirection >= 1000) {
             return Math.abs(((this.cutDirection % 1000) % 360) - 360);
@@ -313,216 +311,6 @@ export class Note extends BeatmapObject<INote> {
         );
     };
 
-    /** Check if the note intersect on swing path by angle and distance.
-     * ```ts
-     * if (isIntersect(note1, note2, [[20, 1.5]])) {}
-     * ```
-     */
-    // a fkin abomination that's what this is
-    isIntersect = (
-        compareTo: Note,
-        angleDistances: [number, number, number?][],
-        ahead = false
-    ): [boolean, boolean] => {
-        const [nX1, nY1] = this.getPosition();
-        const [nX2, nY2] = compareTo.getPosition();
-        const nA1 = this.getAngle();
-        const nA2 = compareTo.getAngle();
-        const angle = ahead ? 540 : 360;
-        let resultN1 = false;
-        if (this.cutDirection !== 8) {
-            const a = (radToDeg(Math.atan2(nY1 - nY2, nX1 - nX2)) + 450) % 360;
-            for (const [angleRange, maxDistance, offsetT] of angleDistances) {
-                const offset = offsetT ?? 0;
-                const aS = (nA1 + angle - angleRange + offset) % 360;
-                const aE = (nA1 + angle + angleRange + offset) % 360;
-                resultN1 =
-                    (maxDistance >=
-                        Math.sqrt(Math.pow(nX1 - nX2, 2) + Math.pow(nY1 - nY2, 2)) &&
-                        ((aS < aE && aS <= a && a <= aE) ||
-                            (aS >= aE && (a <= aE || a >= aS)))) ||
-                    resultN1;
-                if (resultN1) {
-                    break;
-                }
-            }
-        }
-        let resultN2 = false;
-        if (compareTo.cutDirection !== 8) {
-            const a = (radToDeg(Math.atan2(nY2 - nY1, nX2 - nX1)) + 450) % 360;
-            for (const [angleRange, maxDistance, offsetT] of angleDistances) {
-                const offset = offsetT ?? 0;
-                const aS = (nA2 + angle - angleRange + offset) % 360;
-                const aE = (nA2 + angle + angleRange + offset) % 360;
-                resultN2 =
-                    (maxDistance >=
-                        Math.sqrt(Math.pow(nX1 - nX2, 2) + Math.pow(nY1 - nY2, 2)) &&
-                        ((aS < aE && aS <= a && a <= aE) ||
-                            (aS >= aE && (a <= aE || a >= aS)))) ||
-                    resultN2;
-                if (resultN2) {
-                    break;
-                }
-            }
-        }
-        return [resultN1, resultN2];
-    };
-
-    // TODO: update with new position/rotation system
-    isEnd = (prevNote: Note, cd: number): boolean => {
-        // fuck u and ur dot note stack
-        if (this.cutDirection === 8 && prevNote.cutDirection === 8 && cd !== 8) {
-            // if end note on right side
-            if (this.lineIndex > prevNote.lineIndex) {
-                if (cd === 5 || cd === 3 || cd === 7) {
-                    return true;
-                }
-            }
-            // if end note on left side
-            if (this.lineIndex < prevNote.lineIndex) {
-                if (cd === 6 || cd === 2 || cd === 4) {
-                    return true;
-                }
-            }
-            // if end note is above
-            if (this.lineLayer > prevNote.lineLayer) {
-                if (cd === 4 || cd === 0 || cd === 5) {
-                    return true;
-                }
-            }
-            // if end note is below
-            if (this.lineLayer < prevNote.lineLayer) {
-                if (cd === 6 || cd === 1 || cd === 7) {
-                    return true;
-                }
-            }
-        }
-        // if end note on right side
-        if (this.lineIndex > prevNote.lineIndex) {
-            // check if end note is arrowed
-            if (
-                this.cutDirection === 5 ||
-                this.cutDirection === 3 ||
-                this.cutDirection === 7
-            ) {
-                return true;
-            }
-            // check if end note is dot and start arrow is pointing to it
-            if (
-                (prevNote.cutDirection === 5 ||
-                    prevNote.cutDirection === 3 ||
-                    prevNote.cutDirection === 7) &&
-                this.cutDirection === 8
-            ) {
-                return true;
-            }
-        }
-        // if end note on left side
-        if (this.lineIndex < prevNote.lineIndex) {
-            if (
-                this.cutDirection === 6 ||
-                this.cutDirection === 2 ||
-                this.cutDirection === 4
-            ) {
-                return true;
-            }
-            if (
-                (prevNote.cutDirection === 6 ||
-                    prevNote.cutDirection === 2 ||
-                    prevNote.cutDirection === 4) &&
-                this.cutDirection === 8
-            ) {
-                return true;
-            }
-        }
-        // if end note is above
-        if (this.lineLayer > prevNote.lineLayer) {
-            if (
-                this.cutDirection === 4 ||
-                this.cutDirection === 0 ||
-                this.cutDirection === 5
-            ) {
-                return true;
-            }
-            if (
-                (prevNote.cutDirection === 4 ||
-                    prevNote.cutDirection === 0 ||
-                    prevNote.cutDirection === 5) &&
-                this.cutDirection === 8
-            ) {
-                return true;
-            }
-        }
-        // if end note is below
-        if (this.lineLayer < prevNote.lineLayer) {
-            if (
-                this.cutDirection === 6 ||
-                this.cutDirection === 1 ||
-                this.cutDirection === 7
-            ) {
-                return true;
-            }
-            if (
-                (prevNote.cutDirection === 6 ||
-                    prevNote.cutDirection === 1 ||
-                    prevNote.cutDirection === 7) &&
-                this.cutDirection === 8
-            ) {
-                return true;
-            }
-        }
-        return false;
-    };
-
-    // TODO: update with new position/rotation system
-    predictDirection = (prevNote: Note): number => {
-        if (this.isEnd(prevNote, 8)) {
-            return this.cutDirection === 8 ? prevNote.cutDirection : this.cutDirection;
-        }
-        if (this.cutDirection !== 8) {
-            return this.cutDirection;
-        }
-        if (this.time > prevNote.time) {
-            // if end note on right side
-            if (this.lineIndex > prevNote.lineIndex) {
-                if (this.isHorizontal(prevNote)) {
-                    return 3;
-                }
-            }
-            // if end note on left side
-            if (this.lineIndex < prevNote.lineIndex) {
-                if (this.isHorizontal(prevNote)) {
-                    return 2;
-                }
-            }
-            // if end note is above
-            if (this.lineLayer > prevNote.lineLayer) {
-                if (this.isVertical(prevNote)) {
-                    return 0;
-                }
-                if (this.lineIndex > prevNote.lineIndex) {
-                    return 5;
-                }
-                if (this.lineIndex < prevNote.lineIndex) {
-                    return 4;
-                }
-            }
-            // if end note is below
-            if (this.lineLayer < prevNote.lineLayer) {
-                if (this.isVertical(prevNote)) {
-                    return 1;
-                }
-                if (this.lineIndex > prevNote.lineIndex) {
-                    return 7;
-                }
-                if (this.lineIndex < prevNote.lineIndex) {
-                    return 6;
-                }
-            }
-        }
-        return 8;
-    };
-
     /** Check if note has Chroma properties.
      * ```ts
      * if (hasChroma(note)) {}
@@ -530,8 +318,8 @@ export class Note extends BeatmapObject<INote> {
      */
     hasChroma = (): boolean => {
         return (
-            Array.isArray(this.customData?.color) ||
-            typeof this.customData?.disableSpawnEffect === 'boolean'
+            Array.isArray(this.customData?._color) ||
+            typeof this.customData?._disableSpawnEffect === 'boolean'
         );
     };
 
@@ -543,19 +331,19 @@ export class Note extends BeatmapObject<INote> {
     // god i hate these
     hasNoodleExtensions = (): boolean => {
         return (
-            Array.isArray(this.customData?.animation) ||
-            typeof this.customData?.cutDirection === 'number' ||
-            typeof this.customData?.disableNoteGravity === 'boolean' ||
-            typeof this.customData?.disableNoteLook === 'boolean' ||
-            typeof this.customData?.fake === 'boolean' ||
-            Array.isArray(this.customData?.flip) ||
-            typeof this.customData?.interactable === 'boolean' ||
-            Array.isArray(this.customData?.localRotation) ||
-            typeof this.customData?.noteJumpMovementSpeed === 'number' ||
-            typeof this.customData?.noteJumpStartBeatOffset === 'number' ||
-            Array.isArray(this.customData?.position) ||
-            Array.isArray(this.customData?.rotation) ||
-            typeof this.customData?.track === 'string'
+            Array.isArray(this.customData?._animation) ||
+            typeof this.customData?._cutDirection === 'number' ||
+            typeof this.customData?._disableNoteGravity === 'boolean' ||
+            typeof this.customData?._disableNoteLook === 'boolean' ||
+            typeof this.customData?._fake === 'boolean' ||
+            Array.isArray(this.customData?._flip) ||
+            typeof this.customData?._interactable === 'boolean' ||
+            Array.isArray(this.customData?._localRotation) ||
+            typeof this.customData?._noteJumpMovementSpeed === 'number' ||
+            typeof this.customData?._noteJumpStartBeatOffset === 'number' ||
+            Array.isArray(this.customData?._position) ||
+            Array.isArray(this.customData?._rotation) ||
+            typeof this.customData?._track === 'string'
         );
     };
 
@@ -590,179 +378,5 @@ export class Note extends BeatmapObject<INote> {
      */
     isValid = (): boolean => {
         return !this.hasMappingExtensions() && this.isValidDirection();
-    };
-
-    /** Count number of red, blue, and bomb notes with their properties in given array and return a note count object.
-     * ```ts
-     * const list = count(notes);
-     * console.log(list);
-     * ```
-     */
-    count = (notes: Note[]): NoteCount => {
-        const noteCount: NoteCount = {
-            red: {
-                total: 0,
-                chroma: 0,
-                noodleExtensions: 0,
-                mappingExtensions: 0,
-            },
-            blue: {
-                total: 0,
-                chroma: 0,
-                noodleExtensions: 0,
-                mappingExtensions: 0,
-            },
-            bomb: {
-                total: 0,
-                chroma: 0,
-                noodleExtensions: 0,
-                mappingExtensions: 0,
-            },
-        };
-        for (let i = notes.length - 1; i >= 0; i--) {
-            if (notes[i].type === 0) {
-                noteCount.red.total++;
-                if (
-                    notes[i].customData?.color ||
-                    notes[i].customData?.disableSpawnEffect
-                ) {
-                    noteCount.red.chroma++;
-                }
-            } else if (notes[i].type === 1) {
-                noteCount.blue.total++;
-                if (
-                    notes[i].customData?.color ||
-                    notes[i].customData?.disableSpawnEffect
-                ) {
-                    noteCount.blue.chroma++;
-                }
-            } else if (notes[i].type === 3) {
-                noteCount.bomb.total++;
-                if (
-                    notes[i].customData?.color ||
-                    notes[i].customData?.disableSpawnEffect
-                ) {
-                    noteCount.bomb.chroma++;
-                }
-            }
-        }
-        return noteCount;
-    };
-
-    /** Count number of specified line index in a given array and return a counted number of line index.
-     * ```ts
-     * const indexCount = countIndex(notes, 0);
-     * ```
-     */
-    countIndex = (notes: Note[], i: number): number => {
-        return notes.filter((n) => n.lineIndex === i).length;
-    };
-
-    /** Count number of specified line layer in a given array and return a counted number of line layer.
-     * ```ts
-     * const layerCount = countLayer(notes, 0);
-     * ```
-     */
-    countLayer = (notes: Note[], l: number): number => {
-        return notes.filter((n) => n.lineLayer === l).length;
-    };
-
-    /** Count number of specified line index and line layer in a given array and return a counted number of line index and line layer.
-     * ```ts
-     * const indexLayerCount = countIndexLayer(notes, 0, 0);
-     * ```
-     */
-    countIndexLayer = (notes: Note[], i: number, l: number): number => {
-        return notes.filter((n) => n.lineIndex === i && n.lineLayer === l).length;
-    };
-
-    /** Count number of specified `_cutDirection` in a given array and return a counted number of `_cutDirection`.
-     * ```ts
-     * const cdCount = countDirection(notes, 0);
-     * ```
-     */
-    countDirection = (notes: Note[], cd: number): number => {
-        return notes.filter((n) => n.cutDirection === cd).length;
-    };
-
-    /** Count number of specified angle in a given array and return a counted number of angle.
-     * ```ts
-     * const angleCount = countAngle(notes, 0);
-     * ```
-     */
-    countAngle = (notes: Note[], angle: number): number => {
-        return notes.filter((n) => n.getAngle() === angle).length;
-    };
-
-    /** Calculate note per second.
-     * ```ts
-     * const nps = nps(notes, 10);
-     * ```
-     */
-    nps = (notes: Note[], duration: number): number => {
-        return duration ? notes.filter((n) => n.isNote()).length / duration : 0;
-    };
-
-    /** Calculate the peak by rolling average.
-     * ```ts
-     * const peakNPS = peak(notes, 10, BPM ?? 128);
-     * ```
-     */
-    peak = (notes: Note[], beat: number, bpm: BeatPerMinute | number): number => {
-        const nArr = notes.filter(this.isNote);
-        let peakNPS = 0;
-        let currentSectionStart = 0;
-        const bpmV = typeof bpm === 'number' ? bpm : bpm.value;
-
-        for (let i = 0; i < nArr.length; i++) {
-            while (nArr[i].time - nArr[currentSectionStart].time > beat) {
-                currentSectionStart++;
-            }
-            peakNPS = Math.max(
-                peakNPS,
-                (i - currentSectionStart + 1) / ((beat / bpmV) * 60)
-            );
-        }
-
-        return peakNPS;
-    };
-
-    /** Check the angle equality of the two notes.
-     * @param {(Note|number|null)}  - First beatmap note, note `_cutDirection`, or null value
-     * @param {(Note|number|null)} n2 - Second beatmap note, note `_cutDirection`, or null value
-     * @param {number} angleTol - Angle tolerance
-     * @param {boolean} equal - If it should check inner or outer angle
-     * @returns {boolean} If condition is met
-     */
-    static checkDirection = (
-        n1: Note | number | null,
-        n2: Note | number | null,
-        angleTol: number,
-        equal: boolean
-    ): boolean => {
-        let nA1!: number;
-        let nA2!: number;
-        if (n1 === null || n2 === null) {
-            return false;
-        }
-        if (typeof n1 === 'number') {
-            nA1 = n1;
-        } else {
-            if (n1.cutDirection === 8) {
-                return false;
-            }
-            nA1 = n1.getAngle();
-        }
-        if (typeof n2 === 'number') {
-            nA2 = n2;
-        } else {
-            if (n2.cutDirection === 8) {
-                return false;
-            }
-            nA2 = n2.getAngle();
-        }
-        return equal
-            ? shortRotDistance(nA1, nA2, 360) <= angleTol
-            : shortRotDistance(nA1, nA2, 360) >= angleTol;
     };
 }
