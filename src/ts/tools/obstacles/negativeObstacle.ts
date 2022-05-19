@@ -2,7 +2,7 @@ import { Tool, ToolArgs } from '../../types/mapcheck';
 import UICheckbox from '../../ui/checkbox';
 import { round } from '../../utils';
 
-const name = ' Negative obstacle';
+const name = 'Negative obstacle';
 
 const tool: Tool = {
     name,

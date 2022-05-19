@@ -4,22 +4,16 @@ import {
 } from '../types/mapcheck/ui/accordion';
 
 const logPrefix = 'UI Accordion: ';
-export default new (class UIAccordion {
-    private prefix = 'accordion__';
-    private htmlAccordion: NodeListOf<HTMLInputElement>;
+const prefix = 'accordion__';
+const htmlAccordion: NodeListOf<HTMLInputElement> =
+    document.querySelectorAll<HTMLInputElement>('.accordion__button');
 
-    constructor() {
-        this.htmlAccordion =
-            document.querySelectorAll<HTMLInputElement>('.accordion__button');
+if (!htmlAccordion.length) {
+    console.error(logPrefix + 'empty accordion list, intentional or typo error?');
+}
 
-        if (!this.htmlAccordion.length) {
-            console.error(
-                logPrefix + 'empty accordion list, intentional or typo error?'
-            );
-        }
-    }
-
-    create = (
+export default {
+    create: (
         id: string,
         title: string,
         bg: UIBackgroundColorType,
@@ -29,12 +23,12 @@ export default new (class UIAccordion {
         accBase.className = 'accordion';
 
         const accButton = document.createElement('input');
-        accButton.className = this.prefix + 'button';
+        accButton.className = prefix + 'button';
         accButton.id = id;
         accButton.setAttribute('type', 'checkbox');
 
         const accLabel = document.createElement('label');
-        accLabel.className = this.prefix + 'label unselectable';
+        accLabel.className = prefix + 'label unselectable';
         accLabel.htmlFor = id;
         accLabel.textContent = title;
         if (bg) {
@@ -43,8 +37,8 @@ export default new (class UIAccordion {
 
         const accCollapsible = document.createElement('div');
         accCollapsible.className = isFlex
-            ? this.prefix + 'collapsible-flex'
-            : this.prefix + 'collapsible';
+            ? prefix + 'collapsible-flex'
+            : prefix + 'collapsible';
         accCollapsible.id = id + '-content';
 
         accBase.appendChild(accButton);
@@ -52,14 +46,14 @@ export default new (class UIAccordion {
         accBase.appendChild(accCollapsible);
 
         return accBase;
-    };
+    },
 
     // FIXME: htmlAccordion should be redefined as create exist, but that doesn't matter because there's no use case for it as of yet
-    show = (id: string, check: boolean): void => {
-        this.htmlAccordion.forEach((elem) => {
+    show: (id: string, check: boolean): void => {
+        htmlAccordion.forEach((elem) => {
             if (elem.id.endsWith(id)) {
                 elem.checked = check;
             }
         });
-    };
-})();
+    },
+};

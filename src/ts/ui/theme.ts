@@ -1,11 +1,11 @@
 import { UIThemeName } from '../types/mapcheck/ui';
 
-// theme should not contain space and will be converted to lowercase
-export default new (class UITheme {
-    private htmlBody = document.querySelector<HTMLBodyElement>('body');
-    list: ReadonlyArray<UIThemeName> = ['Dark', 'Light', 'Monochrome'];
+const htmlBody = document.querySelector<HTMLBodyElement>('body');
+const list: ReadonlyArray<UIThemeName> = ['Dark', 'Light', 'Monochrome'];
 
-    set = (str: UIThemeName): void => {
-        this.htmlBody!.className = 'theme-' + str.toLowerCase().replace(' ', '');
-    };
-})();
+export default {
+    list,
+    set: (str: UIThemeName): void => {
+        htmlBody!.className = 'theme-' + str.toLowerCase().replace(' ', '');
+    },
+};

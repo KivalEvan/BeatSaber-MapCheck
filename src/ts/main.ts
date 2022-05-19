@@ -4,7 +4,7 @@ import UIInfo from './ui/information';
 import UITools from './ui/tools';
 import UIStats from './ui/stats';
 import UIInput from './ui/input';
-import Analyser from './tools/analyser';
+import Analyser from './tools/analyzer';
 import Settings from './settings';
 import Flag from './flag';
 import SavedData from './savedData';
@@ -13,13 +13,12 @@ import { downloadFromHash, downloadFromID, downloadFromURL } from './download';
 import { sanitizeBeatSaverID, sanitizeURL } from './utils/web';
 import { isHex } from './utils';
 import { extractZip } from './extract';
+import logger from './logger';
+import { LoadType } from './types/mapcheck/main';
 
-interface LoadType {
-    link?: string | null;
-    id?: string | null;
-    hash?: string | null;
-    file?: File | null;
-}
+const tag = () => {
+    return `[main]`;
+};
 
 // TODO: break these to smaller functions, and probably slap in async while at it
 // TODO: possibly do more accurate & predictive loading bar based on the amount of file available (may be farfetched and likely not be implemented)
@@ -44,33 +43,33 @@ export default async (type: LoadType) => {
 
         UIInput.enable(false);
         UILoading.status('info', 'Parsing map info...', 0);
-        console.log('parsing map info');
+        logger.info(tag(), 'Parsing map info');
         const info = await loadInfo(mapZip);
         SavedData.beatmapInfo = info;
         UIInfo.setInfo(info);
 
         // load cover image
         UILoading.status('info', 'Loading image...', 10.4375);
-        console.log('loading cover image');
+        logger.info(tag(), 'Loading cover image');
         let imageFile = mapZip.file(info._coverImageFilename);
         if (Settings.load.imageCover && imageFile) {
             let imgBase64 = await imageFile.async('base64');
             UIHeader.setCoverImage('data:image;base64,' + imgBase64);
             Flag.loading.coverImage = true;
         } else {
-            console.error(`${info._coverImageFilename} does not exists.`);
+            logger.error(tag(), `${info._coverImageFilename} does not exists.`);
         }
 
         SavedData.contributors = [];
         if (info?._customData?._contributors) {
             for (const contr of info._customData._contributors) {
-                console.log('loading contributor image ' + contr._name);
+                logger.info(tag(), 'Loading contributor image ' + contr._name);
                 imageFile = mapZip.file(contr._iconPath);
                 let _base64 = null;
                 if (Settings.load.imageContributor && imageFile) {
                     _base64 = await imageFile.async('base64');
                 } else {
-                    console.error(`${contr._iconPath} does not exists.`);
+                    logger.error(tag(), `${contr._iconPath} does not exists.`);
                 }
                 SavedData.contributors.push({ ...contr, _base64 });
             }
@@ -78,7 +77,7 @@ export default async (type: LoadType) => {
 
         // load audio
         UILoading.status('info', 'Loading audio...', 20.875);
-        console.log('loading audio');
+        logger.info(tag(), 'Loading audio');
         let audioFile = mapZip.file(info._songFilename);
         if (Settings.load.audio && audioFile) {
             let loaded = false;
@@ -104,11 +103,11 @@ export default async (type: LoadType) => {
                 })
                 .catch(function (err) {
                     UIHeader.setSongDuration();
-                    console.error(err);
+                    logger.error(tag(), err);
                 });
         } else {
             UIHeader.setSongDuration();
-            console.error(`${info._songFilename} does not exist.`);
+            logger.error(tag(), `${info._songFilename} does not exist.`);
         }
 
         // load diff map
@@ -117,12 +116,12 @@ export default async (type: LoadType) => {
 
         UITools.adjustTime();
         UILoading.status('info', 'Adding map difficulty stats...', 80);
-        console.log('adding map stats');
+        logger.info(tag(), 'Adding map stats');
         UIStats.populate();
         UIInfo.populateContributors(SavedData.contributors);
 
         UILoading.status('info', 'Analysing map...', 85);
-        console.log('analysing map');
+        logger.info(tag(), 'Analysing map');
         Analyser.runGeneral();
         UITools.displayOutputGeneral();
 
@@ -135,7 +134,7 @@ export default async (type: LoadType) => {
         UILoading.status('info', 'Map successfully loaded!');
     } catch (err) {
         UILoading.status('error', err, 100);
-        console.error(err);
+        logger.error(tag(), err);
         SavedData.clear();
         UIInput.enable(true);
         UIHeader.switchHeader(true);

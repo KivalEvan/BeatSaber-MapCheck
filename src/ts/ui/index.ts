@@ -3,7 +3,7 @@ export { default as accordion } from './accordion';
 export { default as header } from './header';
 export { default as info } from './information';
 export { default as input } from './input';
-export { default as intro } from './intro';
+export * as intro from './intro';
 export { default as loading } from './loading';
 export { default as select } from './select';
 export { default as settings } from './settings';

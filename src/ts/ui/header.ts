@@ -2,137 +2,135 @@ import { round, toMMSSMS } from '../utils';
 
 const logPrefix = 'UI Header: ';
 
-export default new (class UIHeader {
-    private htmlIntro: HTMLElement;
-    private htmlMetadata: HTMLElement;
-    private htmlCoverLink: HTMLLinkElement;
-    private htmlCoverImage: HTMLImageElement;
-    private htmlMetadataSongName: HTMLElement;
-    private htmlMetadataSongSubname: HTMLElement;
-    private htmlMetadataSongAuthor: HTMLElement;
-    private htmlMetadataSongBPM: HTMLElement;
-    private htmlMetadataSongDuration: HTMLElement;
-    private htmlAudio: HTMLAudioElement;
-    private audioURL = '';
+const htmlIntro: HTMLElement = document.querySelector('.intro')!;
+const htmlMetadata: HTMLElement = document.querySelector('.metadata')!;
+const htmlCoverLink: HTMLLinkElement = document.querySelector('.cover__link')!;
+const htmlCoverImage: HTMLImageElement = document.querySelector('.cover__image')!;
+const htmlMetadataSongName: HTMLElement =
+    document.querySelector('.metadata__song-name')!;
+const htmlMetadataSongSubname: HTMLElement = document.querySelector(
+    '.metadata__song-subname'
+)!;
+const htmlMetadataSongAuthor: HTMLElement = document.querySelector(
+    '.metadata__song-author'
+)!;
+const htmlMetadataSongBPM: HTMLElement = document.querySelector('.metadata__song-bpm')!;
+const htmlMetadataSongDuration: HTMLElement = document.querySelector(
+    '.metadata__song-duration'
+)!;
+const htmlAudio: HTMLAudioElement = document.querySelector('.audio')!;
+const audioURL = '';
 
-    constructor() {
-        this.htmlIntro = document.querySelector('.intro')!;
-        this.htmlMetadata = document.querySelector('.metadata')!;
-        this.htmlCoverLink = document.querySelector('.cover__link')!;
-        this.htmlCoverImage = document.querySelector('.cover__image')!;
-        this.htmlMetadataSongName = document.querySelector('.metadata__song-name')!;
-        this.htmlMetadataSongSubname = document.querySelector(
-            '.metadata__song-subname'
-        )!;
-        this.htmlMetadataSongAuthor = document.querySelector('.metadata__song-author')!;
-        this.htmlMetadataSongBPM = document.querySelector('.metadata__song-bpm')!;
-        this.htmlMetadataSongDuration = document.querySelector(
-            '.metadata__song-duration'
-        )!;
-        this.htmlAudio = document.querySelector('.audio')!;
+if (!htmlIntro || !htmlMetadata) {
+    throw new Error(logPrefix + 'header component is missing one of the two section');
+}
+if (!htmlCoverLink || !htmlCoverImage) {
+    throw new Error(logPrefix + 'cover component is missing');
+}
+if (
+    !htmlMetadataSongName ||
+    !htmlMetadataSongSubname ||
+    !htmlMetadataSongAuthor ||
+    !htmlMetadataSongBPM ||
+    !htmlMetadataSongDuration
+) {
+    throw new Error(logPrefix + 'metadata component is missing one of the part');
+}
 
-        if (!this.htmlIntro || !this.htmlMetadata) {
-            throw new Error(
-                logPrefix + 'header component is missing one of the two section'
-            );
-        }
-        if (!this.htmlCoverLink || !this.htmlCoverImage) {
-            throw new Error(logPrefix + 'cover component is missing');
-        }
-        if (
-            !this.htmlMetadataSongName ||
-            !this.htmlMetadataSongSubname ||
-            !this.htmlMetadataSongAuthor ||
-            !this.htmlMetadataSongBPM ||
-            !this.htmlMetadataSongDuration
-        ) {
-            throw new Error(
-                logPrefix + 'metadata component is missing one of the part'
-            );
-        }
+const switchHeader = (isIntro: boolean): void => {
+    if (isIntro) {
+        htmlIntro.classList.remove('hidden');
+        htmlMetadata.classList.add('hidden');
+    } else {
+        htmlIntro.classList.add('hidden');
+        htmlMetadata.classList.remove('hidden');
     }
+};
 
-    switchHeader = (isIntro: boolean): void => {
-        if (isIntro) {
-            this.htmlIntro.classList.remove('hidden');
-            this.htmlMetadata.classList.add('hidden');
-        } else {
-            this.htmlIntro.classList.add('hidden');
-            this.htmlMetadata.classList.remove('hidden');
-        }
-    };
+const setCoverImage = (src: string | null): void => {
+    htmlCoverImage.src = src || './img/unknown.jpg';
+};
 
-    setCoverImage = (src: string | null): void => {
-        this.htmlCoverImage.src = src || './img/unknown.jpg';
-    };
+const getCoverImage = (): string | null => {
+    return htmlCoverImage.src;
+};
 
-    getCoverImage = (): string | null => {
-        return this.htmlCoverImage.src;
-    };
+const setCoverLink = (url?: string, id?: string): void => {
+    if (url == null && id == null) {
+        htmlCoverLink.textContent = '';
+        htmlCoverLink.href = '';
+        htmlCoverLink.classList.add('disabled');
+        return;
+    }
+    if (url != null) {
+        htmlCoverLink.textContent = id ?? 'Download Link';
+        htmlCoverLink.href = url;
+        htmlCoverLink.classList.remove('disabled');
+    }
+};
 
-    setCoverLink = (url?: string, id?: string): void => {
-        if (url == null && id == null) {
-            this.htmlCoverLink.textContent = '';
-            this.htmlCoverLink.href = '';
-            this.htmlCoverLink.classList.add('disabled');
-            return;
-        }
-        if (url != null) {
-            this.htmlCoverLink.textContent = id ?? 'Download Link';
-            this.htmlCoverLink.href = url;
-            this.htmlCoverLink.classList.remove('disabled');
-        }
-    };
+const setSongName = (str: string): void => {
+    htmlMetadataSongName.textContent = str;
+};
 
-    setSongName = (str: string): void => {
-        this.htmlMetadataSongName.textContent = str;
-    };
+const setSongSubname = (str: string): void => {
+    htmlMetadataSongSubname.textContent = str;
+};
 
-    setSongSubname = (str: string): void => {
-        this.htmlMetadataSongSubname.textContent = str;
-    };
+const setSongAuthor = (str: string): void => {
+    htmlMetadataSongAuthor.textContent = str;
+};
 
-    setSongAuthor = (str: string): void => {
-        this.htmlMetadataSongAuthor.textContent = str;
-    };
+// TODO: some way to save bpm change
+const setSongBPM = (num: number, minBPM?: number, maxBPM?: number): void => {
+    if ((minBPM === null || minBPM === undefined) && typeof maxBPM === 'number') {
+        minBPM = Math.min(num, maxBPM);
+    }
+    if ((maxBPM === null || maxBPM === undefined) && typeof minBPM === 'number') {
+        maxBPM = Math.max(num, minBPM);
+    }
+    let text = round(num, 2).toString() + 'BPM';
+    if (minBPM && maxBPM) {
+    }
+    htmlMetadataSongBPM.textContent = text;
+};
 
-    // TODO: some way to save bpm change
-    setSongBPM = (num: number, minBPM?: number, maxBPM?: number): void => {
-        if ((minBPM === null || minBPM === undefined) && typeof maxBPM === 'number') {
-            minBPM = Math.min(num, maxBPM);
-        }
-        if ((maxBPM === null || maxBPM === undefined) && typeof minBPM === 'number') {
-            maxBPM = Math.max(num, minBPM);
-        }
-        let text = round(num, 2).toString() + 'BPM';
-        if (minBPM && maxBPM) {
-        }
-        this.htmlMetadataSongBPM.textContent = text;
-    };
+const setSongDuration = (num?: number): void => {
+    if (num) {
+        htmlMetadataSongDuration.textContent = toMMSSMS(num);
+    } else {
+        htmlMetadataSongDuration.textContent = 'No audio';
+    }
+};
 
-    setSongDuration = (num?: number): void => {
-        if (num) {
-            this.htmlMetadataSongDuration.textContent = toMMSSMS(num);
-        } else {
-            this.htmlMetadataSongDuration.textContent = 'No audio';
-        }
-    };
+const setAudio = async (arrayBuffer: ArrayBuffer): Promise<void> => {
+    const blob = new Blob([arrayBuffer], { type: 'audio/ogg' });
+    htmlAudio.src = window.URL.createObjectURL(blob);
+};
 
-    setAudio = async (arrayBuffer: ArrayBuffer): Promise<void> => {
-        const blob = new Blob([arrayBuffer], { type: 'audio/ogg' });
-        this.htmlAudio.src = window.URL.createObjectURL(blob);
-    };
+const unloadAudio = (): void => {
+    htmlAudio.src = '';
+    window.URL.revokeObjectURL(audioURL);
+};
 
-    unloadAudio = (): void => {
-        this.htmlAudio.src = '';
-        window.URL.revokeObjectURL(this.audioURL);
-    };
-
-    reset = (): void => {
-        this.switchHeader(false);
-        this.setCoverImage(null);
-        this.setCoverLink();
-        this.setSongDuration(0);
-        this.unloadAudio();
-    };
-})();
+const reset = (): void => {
+    switchHeader(false);
+    setCoverImage(null);
+    setCoverLink();
+    setSongDuration(0);
+    unloadAudio();
+};
+export default {
+    switchHeader,
+    setCoverImage,
+    getCoverImage,
+    setCoverLink,
+    setSongName,
+    setSongSubname,
+    setSongAuthor,
+    setSongBPM,
+    setSongDuration,
+    setAudio,
+    unloadAudio,
+    reset,
+};

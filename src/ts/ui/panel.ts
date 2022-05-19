@@ -5,10 +5,8 @@ import {
     UIPanelOffset,
 } from '../types/mapcheck/ui/panel';
 
-export default class UIPanel {
-    private constructor() {}
-
-    static create = (
+export default {
+    create: (
         size: UIPanelSizeType,
         offset?: UIPanelOffsetType,
         flex?: boolean,
@@ -24,5 +22,5 @@ export default class UIPanel {
         }
 
         return htmlPanel;
-    };
-}
+    },
+};

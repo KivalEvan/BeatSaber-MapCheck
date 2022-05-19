@@ -53,30 +53,25 @@ function run(map: ToolArgs) {
                 'Noodle Extensions'
             )
         ) {
-            // FIXME: add hasNoodleExtensions() later
             noteResult = colorNotes
                 .filter((n) => n.hasMappingExtensions())
                 .map((n) => n.time);
-            // FIXME: add hasNoodleExtensions() later
             obstacleResult = obstacles
                 .filter((o) => o.hasMappingExtensions())
                 .map((o) => o.time);
-            // FIXME: add hasNoodleExtensions() later
             bombResult = bombNotes
                 .filter((n) => n.hasMappingExtensions())
                 .map((n) => n.time);
-            // FIXME: add hasNoodleExtensions() later
             sliderResult = sliders
                 .filter((o) => o.hasMappingExtensions())
                 .map((o) => o.time);
-            // FIXME: add hasNoodleExtensions() later
             burstSliderResult = burstSliders
                 .filter((o) => o.hasMappingExtensions())
                 .map((o) => o.time);
         } else {
             noteResult = colorNotes.filter((n) => !n.isValid()).map((n) => n.time);
-            bombResult = bombNotes.filter((b) => !b.isValid()).map((b) => b.time);
             obstacleResult = obstacles.filter((o) => !o.isValid()).map((o) => o.time);
+            bombResult = bombNotes.filter((b) => !b.isValid()).map((b) => b.time);
             sliderResult = sliders.filter((s) => !s.isValid()).map((s) => s.time);
             burstSliderResult = burstSliders
                 .filter((bs) => !bs.isValid())

@@ -3,7 +3,7 @@ import { round } from '../../utils';
 import * as beatmap from '../../beatmap';
 import UICheckbox from '../../ui/checkbox';
 
-const name = ' <15ms Obstacle';
+const name = '<15ms Obstacle';
 
 const tool: Tool = {
     name,

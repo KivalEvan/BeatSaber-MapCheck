@@ -1,5 +1,5 @@
-export default class UISelect {
-    static create = (
+export default {
+    create: (
         id: string,
         label: string,
         containerTag: string,
@@ -28,5 +28,5 @@ export default class UISelect {
         htmlContainer.append(htmlSelect);
 
         return htmlContainer;
-    };
-}
+    },
+};

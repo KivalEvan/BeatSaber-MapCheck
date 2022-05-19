@@ -5,23 +5,16 @@ import UIInfo from './information';
 import UITools from './tools';
 import UIStats from './stats';
 
-export default new (class UIReset {
-    private htmlResetButton: NodeListOf<HTMLInputElement>;
+const htmlResetButton: NodeListOf<HTMLInputElement> =
+    document.querySelectorAll<HTMLInputElement>('.input__reset-button');
 
-    constructor() {
-        this.htmlResetButton =
-            document.querySelectorAll<HTMLInputElement>('.input__reset-button');
-        this.htmlResetButton.forEach((elem) =>
-            elem.addEventListener('click', this.resetHandler)
-        );
-    }
+htmlResetButton.forEach((elem) => elem.addEventListener('click', resetHandler));
 
-    resetHandler = () => {
-        UILoading.reset();
-        UIHeader.reset();
-        UIInfo.reset();
-        UITools.reset();
-        UIStats.reset();
-        SavedData.clear();
-    };
-})();
+export default function resetHandler() {
+    UILoading.reset();
+    UIHeader.reset();
+    UIInfo.reset();
+    UITools.reset();
+    UIStats.reset();
+    SavedData.clear();
+}

@@ -33,7 +33,7 @@ export const loadDifficulty = async (info: IInfoData, zip: JSZip) => {
     for (let i = mapSet.length - 1; i >= 0; i--) {
         const mapDiff = mapSet[i]._difficultyBeatmaps;
         if (mapDiff.length === 0 || !mapDiff) {
-            console.error('Empty difficulty set, removing...');
+            logger.error(tag(loadDifficulty), 'Empty difficulty set, removing...');
             mapSet.splice(i, 1);
             continue;
         }
@@ -41,8 +41,9 @@ export const loadDifficulty = async (info: IInfoData, zip: JSZip) => {
             const diffInfo = mapDiff[j];
             const diffFile = zip.file(diffInfo._beatmapFilename);
             if (diffFile) {
-                console.log(
-                    `parsing ${mapSet[i]._beatmapCharacteristicName} ${diffInfo._difficulty}`
+                logger.info(
+                    tag(loadDifficulty),
+                    `Loading ${mapSet[i]._beatmapCharacteristicName} ${diffInfo._difficulty}`
                 );
                 let diffJSON: Either<IDifficultyDataV2, IDifficultyDataV3>;
                 try {
@@ -55,7 +56,8 @@ export const loadDifficulty = async (info: IInfoData, zip: JSZip) => {
                 try {
                     // _notes in v2 and version in v3 is required, _version in v2 is patched via mod if does not exist
                     if (diffJSON._notes && diffJSON.version) {
-                        console.error(
+                        logger.error(
+                            tag(loadDifficulty),
                             `${mapSet[i]._beatmapCharacteristicName} ${diffInfo._difficulty} contains 2 version of the map in the same file, attempting to load v3 instead`
                         );
                     }
@@ -115,13 +117,14 @@ export const loadDifficulty = async (info: IInfoData, zip: JSZip) => {
                     );
                 }
             } else {
-                console.error(
+                logger.error(
+                    tag(loadDifficulty),
                     `Missing ${diffInfo._beatmapFilename} file for ${mapSet[i]._beatmapCharacteristicName} ${diffInfo._difficulty}, ignoring.`
                 );
                 mapSet[i]._difficultyBeatmaps.splice(j, 1);
                 j--;
                 if (mapSet[i]._difficultyBeatmaps.length < 1) {
-                    console.error(
+                    logger.error(
                         `${mapSet[i]._beatmapCharacteristicName} difficulty set now empty, ignoring.`
                     );
                     mapSet.splice(i, 1);

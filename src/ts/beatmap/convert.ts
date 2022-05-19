@@ -48,9 +48,15 @@ export const V2toV3 = (
                 localRotation: n.customData._localRotation,
                 noteJumpMovementSpeed: n.customData._noteJumpMovementSpeed,
                 noteJumpStartBeatOffset: n.customData._noteJumpStartBeatOffset,
-                spawnEffect: !n.customData._disableSpawnEffect,
+                spawnEffect:
+                    typeof n.customData._disableSpawnEffect === 'boolean'
+                        ? !n.customData._disableSpawnEffect
+                        : undefined,
                 track: n.customData._track,
-                uninteractable: !n.customData._interactable,
+                uninteractable:
+                    typeof n.customData._interactable === 'boolean'
+                        ? !n.customData._interactable
+                        : undefined,
                 worldRotation: n.customData._rotation,
             };
             if (n.customData._animation) {
@@ -128,7 +134,10 @@ export const V2toV3 = (
                 noteJumpStartBeatOffset: o.customData._noteJumpStartBeatOffset,
                 size: o.customData._scale,
                 track: o.customData._track,
-                uninteractable: !o.customData._interactable,
+                uninteractable:
+                    typeof o.customData._interactable === 'boolean'
+                        ? !o.customData._interactable
+                        : undefined,
                 worldRotation: o.customData._rotation,
             };
             if (o.customData._animation) {

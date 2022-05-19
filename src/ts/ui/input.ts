@@ -1,9 +1,7 @@
 const logPrefix = 'UI Input: ';
 
-export default class UIInput {
-    private constructor() {}
-
-    static enable = (bool: boolean) => {
+export default {
+    enable: (bool: boolean) => {
         const htmlInputToggle =
             document.querySelectorAll<HTMLInputElement>('.input-toggle');
         if (!htmlInputToggle.length) {
@@ -13,5 +11,5 @@ export default class UIInput {
         htmlInputToggle.forEach((input) => {
             input.disabled = !bool;
         });
-    };
-}
+    },
+};
