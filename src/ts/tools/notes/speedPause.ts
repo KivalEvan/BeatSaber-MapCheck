@@ -1,6 +1,8 @@
-import * as beatmap from '../../beatmap';
+import { IBeatmapItem, IBeatmapSettings, Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
-import { BeatmapSettings, Tool } from '../template';
+import * as beatmap from '../../beatmap';
+import { NoteContainer, NoteContainerNote } from '../../types/beatmap/v3/container';
+import swing from '../../analyzers/swing/swing';
 
 const defaultMaxTime = 0.075;
 
@@ -12,7 +14,7 @@ const htmlLabelMinTime = document.createElement('label');
 const htmlInputMinPrec = document.createElement('input');
 const htmlLabelMinPrec = document.createElement('label');
 
-let localBPM!: beatmap.bpm.BeatPerMinute;
+let localBPM!: beatmap.BeatPerMinute;
 
 htmlLabelCheck.textContent = ' Speed pause (EXPERIMENTAL)';
 htmlLabelCheck.htmlFor = 'input__tools-speed-pause-check';
@@ -66,10 +68,10 @@ const tool: Tool = {
     output: {
         html: null,
     },
-    run: run,
+    run,
 };
 
-function adjustTimeHandler(bpm: beatmap.bpm.BeatPerMinute) {
+function adjustTimeHandler(bpm: beatmap.BeatPerMinute) {
     localBPM = bpm;
     htmlInputMinPrec.value = round(
         1 / localBPM.toBeatTime(tool.input.params.maxTime as number),
@@ -103,61 +105,68 @@ function inputPrecHandler(this: HTMLInputElement) {
     this.value = val.toString();
 }
 
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
-    const { _bpm: bpm } = mapSettings;
-    const { _notes: notes } = mapSet._data;
+function check(settings: IBeatmapSettings, difficulty: IBeatmapItem) {
+    const { bpm } = settings;
+    const { noteContainer } = difficulty;
     const { maxTime: temp } = <{ maxTime: number }>tool.input.params;
     const maxTime = bpm.toBeatTime(temp) + 0.001;
 
-    const lastNote: { [key: number]: beatmap.v2.types.Note } = {};
-    const lastNotePause: { [key: number]: beatmap.v2.types.Note } = {};
+    const lastNote: { [key: number]: NoteContainer } = {};
+    const lastNotePause: { [key: number]: NoteContainer } = {};
     const maybePause: { [key: number]: boolean } = {
         0: false,
         1: false,
         3: false,
     };
-    const swingNoteArray: { [key: number]: beatmap.v2.types.Note[] } = {
+    const swingNoteArray: { [key: number]: NoteContainer[] } = {
         0: [],
         1: [],
         3: [],
     };
 
-    const arr: beatmap.v2.types.Note[] = [];
-    for (let i = 0, len = notes.length; i < len; i++) {
-        const note = notes[i];
-        if (beatmap.v2.note.isNote(note) && lastNote[note._type]) {
+    const arr: NoteContainer[] = [];
+    for (let i = 0, len = noteContainer.length; i < len; i++) {
+        if (noteContainer[i].type !== 'note') {
+            continue;
+        }
+        const note = noteContainer[i] as NoteContainerNote;
+        if (lastNote[note.data.color]) {
             if (
-                beatmap.v2.swing.next(
+                swing.next(
                     note,
-                    lastNote[note._type],
+                    lastNote[note.data.color],
                     bpm,
-                    swingNoteArray[note._type]
+                    swingNoteArray[note.data.color]
                 )
             ) {
-                if (note._time - lastNote[note._type]._time <= maxTime * 2) {
+                if (
+                    note.data.time - lastNote[note.data.color].data.time <=
+                    maxTime * 2
+                ) {
                     if (
                         maybePause[0] &&
                         maybePause[1] &&
-                        lastNote[note._type]._time - lastNotePause[note._type]._time <=
+                        lastNote[note.data.color].data.time -
+                            lastNotePause[note.data.color].data.time <=
                             maxTime * 3
                     ) {
-                        arr.push(lastNote[note._type]);
+                        arr.push(lastNote[note.data.color]);
                     }
-                    maybePause[note._type] = false;
-                } else if (!maybePause[note._type]) {
-                    maybePause[note._type] = true;
-                    lastNotePause[note._type] = lastNote[note._type];
+                    maybePause[note.data.color] = false;
+                } else if (!maybePause[note.data.color]) {
+                    maybePause[note.data.color] = true;
+                    lastNotePause[note.data.color] = lastNote[note.data.color];
                 }
-                swingNoteArray[note._type] = [];
-                lastNote[note._type] = note;
+                swingNoteArray[note.data.color] = [];
+                lastNote[note.data.color] = note;
             }
         } else {
-            lastNote[note._type] = note;
+            lastNote[note.data.color] = note;
         }
-        swingNoteArray[note._type].push(note);
+        swingNoteArray[note.data.color].push(note);
     }
     return arr
-        .map((n) => n._time)
+        .map((n) => n.data.time)
         .filter(function (x, i, ary) {
             return !i || x !== ary[i - 1];
         });
@@ -180,19 +189,17 @@ function checkShrAngle(
     return false;
 }
 
-function run(
-    mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.BeatmapSetData
-): void {
-    if (!mapSet) {
-        throw new Error('something went wrong!');
+function run(map: ToolArgs) {
+    if (!map.difficulty) {
+        console.error('Something went wrong!');
+        return;
     }
-    const result = check(mapSettings, mapSet);
+    const result = check(map.settings, map.difficulty);
 
     if (result.length) {
         const htmlResult = document.createElement('div');
         htmlResult.innerHTML = `<b>Speed pause [${result.length}]:</b> ${result
-            .map((n) => round(mapSettings._bpm.adjustTime(n), 3))
+            .map((n) => round(map.settings.bpm.adjustTime(n), 3))
             .join(', ')}`;
         tool.output.html = htmlResult;
     } else {

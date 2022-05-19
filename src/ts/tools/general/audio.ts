@@ -1,7 +1,7 @@
+import { Tool, ToolArgs } from '../../types/mapcheck';
 import { toMMSS } from '../../utils';
-import { BeatmapSettings, Tool } from '../template';
-import flag from '../../flag';
 import settings from '../../settings';
+import flag from '../../flag';
 
 const tool: Tool = {
     name: 'Preview Time',
@@ -18,11 +18,11 @@ const tool: Tool = {
     output: {
         html: null,
     },
-    run: run,
+    run,
 };
 
-function run(mapSettings: BeatmapSettings): void {
-    const { _audioDuration: audioDuration } = mapSettings;
+function run(map: ToolArgs) {
+    const { audioDuration } = map.settings;
 
     const htmlResult = document.createElement('div');
     if (audioDuration && audioDuration < 20) {
@@ -30,7 +30,7 @@ function run(mapSettings: BeatmapSettings): void {
             audioDuration
         )}s)`;
         tool.output.html = htmlResult;
-    } else if (!flag.map.load.audio) {
+    } else if (!flag.loading.audio) {
         htmlResult.innerHTML = `<b>No audio:</b> ${
             settings.load.audio
                 ? 'could not be loaded or not found'

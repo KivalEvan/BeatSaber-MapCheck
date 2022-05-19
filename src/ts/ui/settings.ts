@@ -1,29 +1,33 @@
 // TODO: generate options instead of hardcoded in HTML
-import * as uiTheme from './theme';
-import settings from '../settings';
+import { UIThemeName } from '../types/mapcheck/ui';
+import UITheme from './theme';
+import Settings from '../settings';
 
 const logPrefix = 'UI Settings: ';
 
-const htmlSettingsTheme = document.querySelector<HTMLSelectElement>('.settings__theme');
-const htmlSettingsLoad = document.querySelectorAll<HTMLInputElement>('.settings__load');
-const htmlSettingsSort = document.querySelector<HTMLInputElement>('.settings__sort');
-const htmlSettingsShow = document.querySelectorAll<HTMLInputElement>('.settings__show');
-const htmlSettingsOnLoad =
-    document.querySelectorAll<HTMLInputElement>('.settings__onload');
-const htmlSettingsClear = document.querySelector<HTMLInputElement>(
+const htmlSettingsTheme: HTMLSelectElement =
+    document.querySelector('.settings__theme')!;
+const htmlSettingsLoad: NodeListOf<HTMLInputElement> =
+    document.querySelectorAll('.settings__load');
+const htmlSettingsSort: HTMLInputElement = document.querySelector('.settings__sort')!;
+const htmlSettingsShow: NodeListOf<HTMLInputElement> =
+    document.querySelectorAll('.settings__show');
+const htmlSettingsOnLoad: NodeListOf<HTMLInputElement> =
+    document.querySelectorAll('.settings__onload');
+const htmlSettingsClear: HTMLInputElement = document.querySelector(
     '.settings__clear-button'
-);
+)!;
 
 if (htmlSettingsTheme) {
     htmlSettingsTheme.addEventListener('change', themeChangeHandler);
-    uiTheme.list.forEach((th) => {
+    UITheme.list.forEach((th) => {
         const optTheme = document.createElement('option');
         optTheme.value = th;
         optTheme.textContent = th;
         htmlSettingsTheme.add(optTheme);
     });
 } else {
-    console.error(logPrefix + 'theme select is missing');
+    throw new Error(logPrefix + 'theme select is missing');
 }
 if (!htmlSettingsLoad.length) {
     console.error(logPrefix + 'empty load list, intentional or typo error?');
@@ -32,7 +36,7 @@ htmlSettingsLoad.forEach((elem) => elem.addEventListener('change', loadCheckHand
 if (htmlSettingsSort) {
     htmlSettingsSort.addEventListener('change', sortCheckHandler);
 } else {
-    console.error(logPrefix + 'sort check is missing');
+    throw new Error(logPrefix + 'sort check is missing');
 }
 if (!htmlSettingsOnLoad.length) {
     console.error(logPrefix + 'empty onload list, intentional or typo error?');
@@ -47,25 +51,24 @@ htmlSettingsShow.forEach((elem) => elem.addEventListener('change', showCheckHand
 if (htmlSettingsClear) {
     htmlSettingsClear.addEventListener('click', clear);
 } else {
-    console.error(logPrefix + 'clear button is missing');
+    throw new Error(logPrefix + 'clear button is missing');
 }
 
 function themeChangeHandler(ev: Event): void {
     const target = ev.target as HTMLSelectElement;
-    settings.theme = target.options[target.options.selectedIndex]
-        .value as uiTheme.Theme;
-    uiTheme.set(settings.theme);
-    settings.save();
+    Settings.theme = target.options[target.options.selectedIndex].value as UIThemeName;
+    UITheme.set(Settings.theme);
+    Settings.save();
 }
 
 function showCheckHandler(ev: Event): void {
     const target = ev.target as HTMLInputElement;
     const id = target.id.replace('settings__show-', '');
-    settings.show[id] = target.checked;
-    settings.save();
+    Settings.show[id] = target.checked;
+    Settings.save();
 }
 
-export const setShowCheck = (id: string, bool: boolean): void => {
+const setShowCheck = (id: string, bool: boolean): void => {
     htmlSettingsShow.forEach((elem) => {
         if (elem.id.endsWith(id)) {
             elem.checked = bool;
@@ -75,11 +78,11 @@ export const setShowCheck = (id: string, bool: boolean): void => {
 
 function sortCheckHandler(ev: Event): void {
     const target = ev.target as HTMLInputElement;
-    settings.sorting = target.checked;
-    settings.save();
+    Settings.sorting = target.checked;
+    Settings.save();
 }
 
-export const setSortCheck = (bool: boolean): void => {
+const setSortCheck = (bool: boolean): void => {
     if (htmlSettingsSort) {
         htmlSettingsSort.checked = bool;
     }
@@ -88,11 +91,11 @@ export const setSortCheck = (bool: boolean): void => {
 function loadCheckHandler(ev: Event): void {
     const target = ev.target as HTMLInputElement;
     const id = target.name;
-    settings.load[id] = target.checked;
-    settings.save();
+    Settings.load[id] = target.checked;
+    Settings.save();
 }
 
-export const setLoadCheck = (id: string, bool: boolean): void => {
+const setLoadCheck = (id: string, bool: boolean): void => {
     htmlSettingsLoad.forEach((elem) => {
         if (elem.name === id) {
             elem.checked = bool;
@@ -103,11 +106,11 @@ export const setLoadCheck = (id: string, bool: boolean): void => {
 function onLoadCheckHandler(ev: Event): void {
     const target = ev.target as HTMLInputElement;
     const id = target.name;
-    settings.onLoad[id] = target.checked;
-    settings.save();
+    Settings.onLoad[id] = target.checked;
+    Settings.save();
 }
 
-export const setOnLoadCheck = (id: string, bool: boolean): void => {
+const setOnLoadCheck = (id: string, bool: boolean): void => {
     htmlSettingsOnLoad.forEach((elem) => {
         if (elem.name === id) {
             elem.checked = bool;
@@ -115,22 +118,21 @@ export const setOnLoadCheck = (id: string, bool: boolean): void => {
     });
 };
 
-export const setTheme = (str: uiTheme.Theme): void => {
-    if (!htmlSettingsTheme) {
-        console.error(logPrefix + 'input element is missing');
-        return;
-    }
+const setTheme = (str: UIThemeName): void => {
     htmlSettingsTheme.value = str;
 };
 
-export function clear(): void {
-    settings.clear();
-    settings.reset();
+function clear(): void {
+    Settings.clear();
+    Settings.reset();
     location.reload();
 }
 
 export default {
-    setTheme,
     setShowCheck,
+    setSortCheck,
+    setLoadCheck,
+    setOnLoadCheck,
+    setTheme,
     clear,
 };

@@ -1,6 +1,7 @@
-import * as beatmap from '../../beatmap';
+import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
-import { BeatmapSettings, Tool } from '../template';
+import * as beatmap from '../../beatmap';
+import { NoteContainer } from '../../types/beatmap/v3/container';
 
 const defaultMinTime = 0.1;
 const defaultMaxTime = 0.5;
@@ -28,7 +29,7 @@ const vbDiff: { [key: string]: { min: number; max: number } } = {
     },
 };
 
-let localBPM!: beatmap.bpm.BeatPerMinute;
+let localBPM!: beatmap.BeatPerMinute;
 
 const htmlContainer = document.createElement('div');
 const htmlInputCheck = document.createElement('input');
@@ -148,10 +149,10 @@ const tool: Tool = {
     output: {
         html: null,
     },
-    run: run,
+    run,
 };
 
-function adjustTimeHandler(bpm: beatmap.bpm.BeatPerMinute) {
+function adjustTimeHandler(bpm: beatmap.BeatPerMinute) {
     localBPM = bpm;
     htmlInputMinBeat.value = round(
         localBPM.toBeatTime(tool.input.params.minTime as number),
@@ -237,9 +238,11 @@ function inputMaxBeatHandler(this: HTMLInputElement) {
     this.value = round(val, 2).toString();
 }
 
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
-    const { _bpm: bpm, _njs: njs } = mapSettings;
-    const { _notes: notes } = mapSet._data;
+function check(map: ToolArgs) {
+    const { bpm, njs } = map.settings;
+    const noteContainer = map
+        .difficulty!.data.getNoteContainer()
+        .filter((n) => n.type !== 'slider');
     const {
         minTime: temp1,
         maxTime: temp2,
@@ -248,70 +251,68 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetDat
     const minTime =
         vbSpecific === 'time'
             ? bpm.toBeatTime(temp1)
-            : bpm.toBeatTime(vbDiff[mapSet._difficulty].min);
+            : bpm.toBeatTime(vbDiff[map.difficulty!.difficulty].min);
     const maxTime =
         vbSpecific === 'time'
             ? bpm.toBeatTime(temp2)
-            : Math.min(njs.hjd, bpm.toBeatTime(vbDiff[mapSet._difficulty].max));
+            : Math.min(njs.hjd, bpm.toBeatTime(vbDiff[map.difficulty!.difficulty].max));
 
-    let lastMidL!: beatmap.v2.types.Note | null;
-    let lastMidR!: beatmap.v2.types.Note | null;
-    const arr: beatmap.v2.types.Note[] = [];
-    for (let i = 0, len = notes.length; i < len; i++) {
-        const note = notes[i];
+    let lastMidL: NoteContainer | null = null;
+    let lastMidR: NoteContainer | null = null;
+    const arr: NoteContainer[] = [];
+    for (let i = 0, len = noteContainer.length; i < len; i++) {
+        const note = noteContainer[i];
         if (lastMidL) {
             if (
-                note._time - lastMidL._time >= minTime &&
-                note._time - lastMidL._time <= maxTime
+                note.data.time - lastMidL.data.time >= minTime &&
+                note.data.time - lastMidL.data.time <= maxTime
             ) {
-                if (note._lineIndex < 2) {
+                if (note.data.posX < 2) {
                     arr.push(note);
                 }
             }
             // yeet the last note if nothing else found so we dont have to perform check every note
-            else if (note._time - lastMidL._time > maxTime) {
+            else if (note.data.time - lastMidL.data.time > maxTime) {
                 lastMidL = null;
             }
         }
         if (lastMidR) {
             if (
-                note._time - lastMidR._time >= minTime &&
-                note._time - lastMidR._time <= maxTime
+                note.data.time - lastMidR.data.time >= minTime &&
+                note.data.time - lastMidR.data.time <= maxTime
             ) {
-                if (note._lineIndex > 1) {
+                if (note.data.posX > 1) {
                     arr.push(note);
                 }
-            } else if (note._time - lastMidR._time > maxTime) {
+            } else if (note.data.time - lastMidR.data.time > maxTime) {
                 lastMidR = null;
             }
         }
-        if (note._lineLayer === 1 && note._lineIndex === 1) {
+        if (note.data.posY === 1 && note.data.posX === 1) {
             lastMidL = note;
         }
-        if (note._lineLayer === 1 && note._lineIndex === 2) {
+        if (note.data.posY === 1 && note.data.posX === 2) {
             lastMidR = note;
         }
     }
     return arr
-        .map((n) => n._time)
+        .map((n) => n.data.time)
         .filter(function (x, i, ary) {
             return !i || x !== ary[i - 1];
         });
 }
 
-function run(
-    mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.BeatmapSetData
-): void {
-    if (!mapSet) {
-        throw new Error('something went wrong!');
+function run(map: ToolArgs) {
+    if (!map.difficulty) {
+        console.error('Something went wrong!');
+        return;
     }
-    const result = check(mapSettings, mapSet);
+    const result = check(map);
 
     if (result.length) {
         const htmlResult = document.createElement('div');
         htmlResult.innerHTML = `<b>Vision block [${result.length}]:</b> ${result
-            .map((n) => round(mapSettings._bpm.adjustTime(n), 3))
+            .map((n) => round(map.settings.bpm.adjustTime(n), 3))
             .join(', ')}`;
         tool.output.html = htmlResult;
     } else {

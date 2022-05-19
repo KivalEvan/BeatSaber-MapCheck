@@ -1,24 +1,13 @@
-import * as beatmap from '../../beatmap';
+import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
-import { BeatmapSettings, Tool } from '../template';
+import * as beatmap from '../../beatmap';
+import { isIntersect } from '../../analyzers/placement/note';
+import UICheckbox from '../../ui/checkbox';
 
-const htmlContainer = document.createElement('div');
-const htmlInputCheck = document.createElement('input');
-const htmlLabelCheck = document.createElement('label');
-
-htmlLabelCheck.textContent = ' Hitbox path';
-htmlLabelCheck.htmlFor = 'input__tools-hitbox-path-check';
-htmlInputCheck.id = 'input__tools-hitbox-path-check';
-htmlInputCheck.className = 'input-toggle';
-htmlInputCheck.type = 'checkbox';
-htmlInputCheck.checked = true;
-htmlInputCheck.addEventListener('change', inputCheckHandler);
-
-htmlContainer.appendChild(htmlInputCheck);
-htmlContainer.appendChild(htmlLabelCheck);
+const name = 'Hitbox Path';
 
 const tool: Tool = {
-    name: 'Hitbox Path',
+    name,
     description: 'Placeholder',
     type: 'note',
     order: {
@@ -26,83 +15,75 @@ const tool: Tool = {
         output: 190,
     },
     input: {
-        enabled: htmlInputCheck.checked,
+        enabled: true,
         params: {},
-        html: htmlContainer,
+        html: UICheckbox.create(name, name, true, function (this: HTMLInputElement) {
+            tool.input.enabled = this.checked;
+        }),
     },
     output: {
         html: null,
     },
-    run: run,
+    run,
 };
 
-function inputCheckHandler(this: HTMLInputElement) {
-    tool.input.enabled = this.checked;
-}
+function check(map: ToolArgs) {
+    const { bpm } = map.settings;
+    const { colorNotes } = map.difficulty!.data;
 
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
-    const { _bpm: bpm, _njs: njs } = mapSettings;
-    const { _notes: notes } = mapSet._data;
-
-    const arr: beatmap.v2.types.Note[] = [];
+    const arr: beatmap.v3.ColorNote[] = [];
     // to avoid multiple of stack popping up, ignore anything within this time
     let lastTime: number = 0;
-    for (let i = 0, len = notes.length; i < len; i++) {
-        if (bpm.toRealTime(notes[i]._time) < lastTime + 0.01 || notes[i]._type === 3) {
+    for (let i = 0, len = colorNotes.length; i < len; i++) {
+        if (bpm.toRealTime(colorNotes[i].time) < lastTime + 0.01) {
             continue;
         }
         for (let j = i + 1; j < len; j++) {
             if (
-                bpm.toRealTime(notes[j]._time) >
-                bpm.toRealTime(notes[i]._time) + 0.01
+                bpm.toRealTime(colorNotes[j].time) >
+                bpm.toRealTime(colorNotes[i].time) + 0.01
             ) {
                 break;
             }
-            if (notes[i]._type === notes[j]._type || notes[j]._type === 3) {
+            if (colorNotes[i].color === colorNotes[j].color) {
                 continue;
             }
             if (
-                ((beatmap.v2.note.isHorizontal(notes[i], notes[j]) ||
-                    beatmap.v2.note.isVertical(notes[i], notes[j])) &&
-                    beatmap.v2.note
-                        .isIntersect(notes[i], notes[j], [
-                            [45, 1],
-                            [15, 2],
-                        ])
-                        .some((b) => b)) ||
-                (beatmap.v2.note.isDiagonal(notes[i], notes[j]) &&
-                    beatmap.v2.note
-                        .isIntersect(notes[i], notes[j], [
-                            [45, 1],
-                            [15, 1.5],
-                        ])
-                        .some((b) => b))
+                ((colorNotes[i].isHorizontal(colorNotes[j]) ||
+                    colorNotes[i].isVertical(colorNotes[j])) &&
+                    isIntersect(colorNotes[i], colorNotes[j], [
+                        [45, 1],
+                        [15, 2],
+                    ]).some((b) => b)) ||
+                (colorNotes[i].isDiagonal(colorNotes[j]) &&
+                    isIntersect(colorNotes[i], colorNotes[j], [
+                        [45, 1],
+                        [15, 1.5],
+                    ]).some((b) => b))
             ) {
-                arr.push(notes[i]);
-                lastTime = bpm.toRealTime(notes[i]._time);
+                arr.push(colorNotes[i]);
+                lastTime = bpm.toRealTime(colorNotes[i].time);
             }
         }
     }
     return arr
-        .map((n) => n._time)
+        .map((n) => n.time)
         .filter(function (x, i, ary) {
             return !i || x !== ary[i - 1];
         });
 }
 
-function run(
-    mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.BeatmapSetData
-): void {
-    if (!mapSet) {
-        throw new Error('something went wrong!');
+function run(map: ToolArgs) {
+    if (!map.difficulty) {
+        console.error('Something went wrong!');
+        return;
     }
-    const result = check(mapSettings, mapSet);
+    const result = check(map);
 
     if (result.length) {
         const htmlResult = document.createElement('div');
         htmlResult.innerHTML = `<b>Hitbox path [${result.length}]:</b> ${result
-            .map((n) => round(mapSettings._bpm.adjustTime(n), 3))
+            .map((n) => round(map.settings.bpm.adjustTime(n), 3))
             .join(', ')}`;
         tool.output.html = htmlResult;
     } else {

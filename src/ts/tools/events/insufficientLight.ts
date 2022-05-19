@@ -1,20 +1,8 @@
+import { Tool, ToolArgs } from '../../types/mapcheck';
 import * as beatmap from '../../beatmap';
-import { BeatmapSettings, Tool } from '../template';
+import UICheckbox from '../../ui/checkbox';
 
-const htmlContainer = document.createElement('div');
-const htmlInputCheck = document.createElement('input');
-const htmlLabelCheck = document.createElement('label');
-
-htmlLabelCheck.textContent = ' Insufficient lighting event';
-htmlLabelCheck.htmlFor = 'input__tools-insufficient-light-check';
-htmlInputCheck.id = 'input__tools-insufficient-light-check';
-htmlInputCheck.className = 'input-toggle';
-htmlInputCheck.type = 'checkbox';
-htmlInputCheck.checked = true;
-htmlInputCheck.addEventListener('change', inputCheckHandler);
-
-htmlContainer.appendChild(htmlInputCheck);
-htmlContainer.appendChild(htmlLabelCheck);
+const name = ' Insufficient Lighting Event';
 
 const tool: Tool = {
     name: 'Insufficient Light',
@@ -25,28 +13,22 @@ const tool: Tool = {
         output: 0,
     },
     input: {
-        enabled: htmlInputCheck.checked,
+        enabled: true,
         params: {},
-        html: htmlContainer,
+        html: UICheckbox.create(name, name, true, function (this: HTMLInputElement) {
+            tool.input.enabled = this.checked;
+        }),
     },
     output: {
         html: null,
     },
-    run: run,
+    run,
 };
 
-function inputCheckHandler(this: HTMLInputElement) {
-    tool.input.enabled = this.checked;
-}
-
-const sufficientLight = (events: beatmap.v2.types.Event[]): boolean => {
+const sufficientLight = (events: beatmap.v3.BasicEvent[]): boolean => {
     let count = 0;
     for (let i = events.length - 1; i >= 0; i--) {
-        if (
-            beatmap.v2.event.isLightEvent(events[i]) &&
-            events[i]._value !== 0 &&
-            events[i]._value !== 4
-        ) {
+        if (events[i].isLightEvent() && !events[i].isOff()) {
             count++;
             if (count > 10) {
                 return true;
@@ -56,14 +38,12 @@ const sufficientLight = (events: beatmap.v2.types.Event[]): boolean => {
     return false;
 };
 
-function run(
-    mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.BeatmapSetData
-): void {
-    if (!mapSet) {
-        throw new Error('something went wrong!');
+function run(map: ToolArgs) {
+    if (!map.difficulty) {
+        console.error('Something went wrong!');
+        return;
     }
-    const result = sufficientLight(mapSet._data._events);
+    const result = sufficientLight(map.difficulty.data.basicBeatmapEvents);
 
     if (!result) {
         const htmlResult = document.createElement('div');

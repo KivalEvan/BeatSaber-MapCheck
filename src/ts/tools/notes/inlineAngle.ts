@@ -1,9 +1,13 @@
-import * as beatmap from '../../beatmap';
+import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
-import { BeatmapSettings, Tool } from '../template';
+import * as beatmap from '../../beatmap';
+import { NoteContainer } from '../../types/beatmap/v3/container';
+import { checkDirection } from '../../analyzers/placement/note';
+import swing from '../../analyzers/swing/swing';
+import { ColorNote } from '../../beatmap/v3';
 
 const defaultMaxTime = 0.15;
-let localBPM!: beatmap.bpm.BeatPerMinute;
+let localBPM!: beatmap.BeatPerMinute;
 
 const htmlContainer = document.createElement('div');
 const htmlInputCheck = document.createElement('input');
@@ -66,10 +70,10 @@ const tool: Tool = {
     output: {
         html: null,
     },
-    run: run,
+    run,
 };
 
-function adjustTimeHandler(bpm: beatmap.bpm.BeatPerMinute) {
+function adjustTimeHandler(bpm: beatmap.BeatPerMinute) {
     localBPM = bpm;
     htmlInputMaxBeat.value = round(
         localBPM.toBeatTime(tool.input.params.maxTime as number),
@@ -103,148 +107,136 @@ function inputBeatHandler(this: HTMLInputElement) {
     this.value = val.toString();
 }
 
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
-    const { _bpm: bpm } = mapSettings;
-    const { _notes: notes } = mapSet._data;
+function check(map: ToolArgs) {
+    const { bpm } = map.settings;
+    const noteContainer = map.difficulty!.noteContainer;
     const { maxTime: temp } = <{ maxTime: number }>tool.input.params;
     const maxTime = bpm.toBeatTime(temp) + 0.001;
 
-    const lastNote: { [key: number]: beatmap.v2.types.Note } = {};
+    const lastNote: { [key: number]: NoteContainer } = {};
     const lastNoteAngle: { [key: number]: number } = {};
-    const startNoteDot: { [key: number]: beatmap.v2.types.Note | null } = {};
-    const swingNoteArray: { [key: number]: beatmap.v2.types.Note[] } = {
+    const startNoteDot: { [key: number]: ColorNote | null } = {};
+    const swingNoteArray: { [key: number]: NoteContainer[] } = {
         0: [],
         1: [],
         3: [],
     };
-    const arr: beatmap.v2.types.Note[] = [];
+    const arr: ColorNote[] = [];
     let lastTime = 0;
     let lastIndex = 0;
-    for (let i = 0, len = notes.length; i < len; i++) {
-        const note = notes[i];
-        if (beatmap.v2.note.isNote(note) && lastNote[note._type]) {
+    for (let i = 0, len = noteContainer.length; i < len; i++) {
+        const note = noteContainer[i];
+        if (note.type === 'note' && lastNote[note.data.color]) {
             if (
-                beatmap.v2.swing.next(
+                swing.next(
                     note,
-                    lastNote[note._type],
+                    lastNote[note.data.color],
                     bpm,
-                    swingNoteArray[note._type]
+                    swingNoteArray[note.data.color]
                 )
             ) {
-                if (startNoteDot[note._type]) {
-                    startNoteDot[note._type] = null;
-                    lastNoteAngle[note._type] = (lastNoteAngle[note._type] + 180) % 360;
+                if (startNoteDot[note.data.color]) {
+                    startNoteDot[note.data.color] = null;
+                    lastNoteAngle[note.data.color] =
+                        (lastNoteAngle[note.data.color] + 180) % 360;
                 }
                 if (
-                    checkInline(note, notes, lastIndex, maxTime) &&
-                    beatmap.v2.note.checkDirection(
-                        note,
-                        lastNoteAngle[note._type],
-                        90,
-                        true
-                    )
+                    checkInline(note.data, noteContainer, lastIndex, maxTime) &&
+                    checkDirection(note.data, lastNoteAngle[note.data.color], 90, true)
                 ) {
-                    arr.push(note);
+                    arr.push(note.data);
                 }
-                if (note._cutDirection === 8) {
-                    startNoteDot[note._type] = note;
+                if (note.data.direction === 8) {
+                    startNoteDot[note.data.color] = note.data;
                 } else {
-                    lastNoteAngle[note._type] = beatmap.v2.note.getAngle(note);
+                    lastNoteAngle[note.data.color] = note.data.getAngle();
                 }
-                swingNoteArray[note._type] = [];
+                swingNoteArray[note.data.color] = [];
             } else {
                 if (
-                    startNoteDot[note._type] &&
-                    checkInline(note, notes, lastIndex, maxTime) &&
-                    beatmap.v2.note.checkDirection(
-                        note,
-                        lastNoteAngle[note._type],
-                        90,
-                        true
-                    )
+                    startNoteDot[note.data.color] &&
+                    checkInline(note.data, noteContainer, lastIndex, maxTime) &&
+                    checkDirection(note.data, lastNoteAngle[note.data.color], 90, true)
                 ) {
-                    arr.push(startNoteDot[note._type] as beatmap.v2.types.Note);
-                    startNoteDot[note._type] = null;
+                    arr.push(startNoteDot[note.data.color] as ColorNote);
+                    startNoteDot[note.data.color] = null;
                 }
-                if (note._cutDirection !== 8) {
-                    lastNoteAngle[note._type] = beatmap.v2.note.getAngle(note);
+                if (note.data.direction !== 8) {
+                    lastNoteAngle[note.data.color] = note.data.getAngle();
                 }
             }
-        } else {
-            lastNoteAngle[note._type] = beatmap.v2.note.getAngle(note);
+        } else if (note.type === 'note') {
+            lastNoteAngle[note.data.color] = note.data.getAngle();
         }
-        if (lastTime < note._time - maxTime) {
-            lastTime = note._time - maxTime;
-            lastIndex = i;
+        if (note.type === 'note') {
+            lastNote[note.data.color] = note;
+            swingNoteArray[note.data.color].push(note);
         }
-        lastNote[note._type] = note;
-        swingNoteArray[note._type].push(note);
-        if (note._type === 3) {
+        if (note.type === 'bomb') {
             // on bottom row
-            if (note._lineLayer === 0) {
+            if (note.data.posY === 0) {
                 //on right center
-                if (note._lineIndex === 1) {
-                    lastNoteAngle[0] = beatmap.v2.note.cutAngle[0];
+                if (note.data.posX === 1) {
+                    lastNoteAngle[0] = beatmap.NoteCutAngle[0];
                     startNoteDot[0] = null;
                 }
                 //on left center
-                if (note._lineIndex === 2) {
-                    lastNoteAngle[1] = beatmap.v2.note.cutAngle[0];
+                if (note.data.posX === 2) {
+                    lastNoteAngle[1] = beatmap.NoteCutAngle[0];
                     startNoteDot[1] = null;
                 }
                 //on top row
             }
-            if (note._lineLayer === 2) {
+            if (note.data.posY === 2) {
                 //on right center
-                if (note._lineIndex === 1) {
-                    lastNoteAngle[0] = beatmap.v2.note.cutAngle[1];
+                if (note.data.posX === 1) {
+                    lastNoteAngle[0] = beatmap.NoteCutAngle[1];
                     startNoteDot[0] = null;
                 }
                 //on left center
-                if (note._lineIndex === 2) {
-                    lastNoteAngle[1] = beatmap.v2.note.cutAngle[1];
+                if (note.data.posX === 2) {
+                    lastNoteAngle[1] = beatmap.NoteCutAngle[1];
                     startNoteDot[1] = null;
                 }
             }
         }
     }
     return arr
-        .map((n) => n._time)
+        .map((n) => n.time)
         .filter(function (x, i, ary) {
             return !i || x !== ary[i - 1];
         });
 }
 
 function checkInline(
-    n: beatmap.v2.types.Note,
-    notes: beatmap.v2.types.Note[],
+    n: beatmap.v3.ColorNote,
+    notes: NoteContainer[],
     index: number,
     maxTime: number
 ) {
-    for (let i = index; notes[i]._time < n._time; i++) {
-        if (
-            beatmap.v2.note.isInline(n, notes[i]) &&
-            n._time - notes[i]._time <= maxTime
-        ) {
+    for (let i = index; notes[i].data.time < n.time; i++) {
+        const note = notes[i];
+        if (note.type !== 'note') {
+            continue;
+        }
+        if (n.isInline(note.data) && n.time - notes[i].data.time <= maxTime) {
             return true;
         }
     }
     return false;
 }
 
-function run(
-    mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.BeatmapSetData
-): void {
-    if (!mapSet) {
-        throw new Error('something went wrong!');
+function run(map: ToolArgs) {
+    if (!map.difficulty) {
+        console.error('Something went wrong!');
+        return;
     }
-    const result = check(mapSettings, mapSet);
+    const result = check(map);
 
     if (result.length) {
         const htmlResult = document.createElement('div');
         htmlResult.innerHTML = `<b>Inline sharp angle [${result.length}]:</b> ${result
-            .map((n) => round(mapSettings._bpm.adjustTime(n), 3))
+            .map((n) => round(map.settings.bpm.adjustTime(n), 3))
             .join(', ')}`;
         tool.output.html = htmlResult;
     } else {

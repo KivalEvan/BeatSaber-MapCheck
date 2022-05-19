@@ -1,5 +1,5 @@
-import { Tool } from '../template';
-import { getCoverImage } from '../../ui/header';
+import { Tool } from '../../types/mapcheck';
+import uiHeader from '../../ui/header';
 import flag from '../../flag';
 import settings from '../../settings';
 
@@ -18,21 +18,23 @@ const tool: Tool = {
     output: {
         html: null,
     },
-    run: run,
+    run,
 };
 
-function run(): void {
+function run() {
     const img = new Image();
-    const src = getCoverImage();
+    const src = uiHeader.getCoverImage();
 
     const htmlString: string[] = [];
-    if (flag.map.load.image && src !== null) {
+    if (flag.loading.coverImage && src !== null) {
         img.src = src;
         if (img.width !== img.height) {
             htmlString.push('<b>Cover image is not square:</b> resize to fit square');
         }
         if (img.width < 256 || img.height < 256) {
-            htmlString.push('<b>Cover image is too small:</b> require at least 256x256');
+            htmlString.push(
+                '<b>Cover image is too small:</b> require at least 256x256'
+            );
         }
     } else {
         htmlString.push(

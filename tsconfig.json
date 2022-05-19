@@ -6,7 +6,6 @@
         "moduleResolution": "node",
         "strict": true,
         "sourceMap": true,
-        "resolveJsonModule": true,
         "esModuleInterop": true,
         "noEmit": true,
         "noImplicitAny": true,
@@ -18,5 +17,6 @@
         "useUnknownInCatchVariables": false,
         "allowSyntheticDefaultImports": true
     },
-    "include": ["./src"]
+    "include": ["./src"],
+    "exclude": ["node_modules"]
 }

@@ -1,60 +1,18 @@
-// TODO: validate settings
-import { Theme } from './ui/theme';
+import { ISettings } from './types/mapcheck/settings';
+import { deepCopy } from './utils';
 
-type SettingsFlag = { [key: string]: boolean };
-
-type BeatNumbering = 'beattime' | 'jsontime' | 'realtime';
-
-interface SettingsProperty {
-    _load: SettingsPropertyLoad;
-    _sorting: boolean;
-    _beatNumbering: BeatNumbering;
-    _rounding: number;
-    _theme: Theme;
-    _onLoad: SettingsPropertyOnLoad;
-    _show: SettingsPropertyShow;
-}
-
-export enum SettingsLoadRename {
-    audio = 'Audio',
-    imageCover = 'Cover Image',
-    imageContributor = 'Contributor Image',
-}
-interface SettingsPropertyLoad extends SettingsFlag {
-    audio: boolean;
-    imageCover: boolean;
-    imageContributor: boolean;
-}
-
-export enum SettingsShowRename {
-    info = 'Information',
-    tools = 'Tools',
-    stats = 'Stats',
-    settings = 'Settings',
-}
-interface SettingsPropertyShow extends SettingsFlag {
-    info: boolean;
-    tools: boolean;
-    stats: boolean;
-    settings: boolean;
-}
-
-interface SettingsPropertyOnLoad extends SettingsFlag {
-    stats: boolean;
-}
-
-const settingsDefault: SettingsProperty = {
-    _load: {
+const settingsDefault: ISettings = {
+    load: {
         audio: true,
         imageCover: true,
         imageContributor: true,
     },
-    _sorting: true,
-    _beatNumbering: 'beattime',
-    _rounding: 3,
-    _theme: 'Dark',
-    _onLoad: { stats: false },
-    _show: {
+    sorting: true,
+    beatNumbering: 'beattime',
+    rounding: 3,
+    theme: 'Dark',
+    onLoad: { stats: false },
+    show: {
         info: false,
         tools: false,
         stats: false,
@@ -62,50 +20,51 @@ const settingsDefault: SettingsProperty = {
     },
 };
 
-class Settings {
-    private _property: SettingsProperty = JSON.parse(JSON.stringify(settingsDefault));
+// TODO: validate settings
+export default new (class Settings implements ISettings {
+    private property: ISettings = deepCopy(settingsDefault);
 
     constructor() {
         this.init();
     }
 
-    get load(): SettingsPropertyLoad {
-        return this._property._load;
+    get load(): ISettings['load'] {
+        return this.property.load;
     }
     get sorting(): boolean {
-        return this._property._sorting;
+        return this.property.sorting;
     }
     set sorting(val: boolean) {
-        this._property._sorting = val;
+        this.property.sorting = val;
     }
-    get beatNumbering(): BeatNumbering {
-        return this._property._beatNumbering;
+    get beatNumbering(): ISettings['beatNumbering'] {
+        return this.property.beatNumbering;
     }
-    set beatNumbering(val: BeatNumbering) {
-        this._property._beatNumbering = val;
+    set beatNumbering(val: ISettings['beatNumbering']) {
+        this.property.beatNumbering = val;
     }
     get rounding(): number {
-        return this._property._rounding;
+        return this.property.rounding;
     }
     set rounding(val: number) {
-        this._property._rounding = val;
+        this.property.rounding = val;
     }
-    get theme(): Theme {
-        return this._property._theme;
+    get theme(): ISettings['theme'] {
+        return this.property.theme;
     }
-    set theme(val: Theme) {
-        this._property._theme = val;
+    set theme(val: ISettings['theme']) {
+        this.property.theme = val;
     }
     get onLoad() {
-        return this._property._onLoad;
+        return this.property.onLoad;
     }
-    get show(): SettingsPropertyShow {
-        return this._property._show;
+    get show(): ISettings['show'] {
+        return this.property.show;
     }
 
     private stringify = (): string => {
         return JSON.stringify({
-            _property: this._property,
+            _property: this.property,
         });
     };
     private init = (): void => {
@@ -115,7 +74,7 @@ class Settings {
         const storage = localStorage.getItem('settings');
         if (storage) {
             const temp = JSON.parse(storage);
-            this._property = temp._property ?? this._property;
+            this.property = temp._property ?? this.property;
             this.save();
         }
     };
@@ -130,8 +89,6 @@ class Settings {
         }
     };
     public reset = (): void => {
-        this._property = JSON.parse(JSON.stringify(settingsDefault));
+        this.property = deepCopy(settingsDefault);
     };
-}
-
-export default new Settings();
+})();

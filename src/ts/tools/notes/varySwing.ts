@@ -1,24 +1,11 @@
-import * as beatmap from '../../beatmap';
+import { IBeatmapItem, Tool, ToolArgs } from '../../types/mapcheck';
+import UICheckbox from '../../ui/checkbox';
 import { round } from '../../utils';
-import { BeatmapSettings, Tool } from '../template';
 
-const htmlContainer = document.createElement('div');
-const htmlInputCheck = document.createElement('input');
-const htmlLabelCheck = document.createElement('label');
-
-htmlLabelCheck.textContent = ' Varying swing speed';
-htmlLabelCheck.htmlFor = 'input__tools-vary-swing-check';
-htmlInputCheck.id = 'input__tools-vary-swing-check';
-htmlInputCheck.className = 'input-toggle';
-htmlInputCheck.type = 'checkbox';
-htmlInputCheck.checked = true;
-htmlInputCheck.addEventListener('change', inputCheckHandler);
-
-htmlContainer.appendChild(htmlInputCheck);
-htmlContainer.appendChild(htmlLabelCheck);
+const name = 'Varying Swing Speed';
 
 const tool: Tool = {
-    name: 'Varying Swing Speed',
+    name,
     description: 'Placeholder',
     type: 'note',
     order: {
@@ -26,45 +13,39 @@ const tool: Tool = {
         output: 130,
     },
     input: {
-        enabled: htmlInputCheck.checked,
+        enabled: true,
         params: {},
-        html: htmlContainer,
+        html: UICheckbox.create(name, name, true, function (this: HTMLInputElement) {
+            tool.input.enabled = this.checked;
+        }),
     },
     output: {
         html: null,
     },
-    run: run,
+    run,
 };
 
-function inputCheckHandler(this: HTMLInputElement) {
-    tool.input.enabled = this.checked;
-}
-
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
-    const { _bpm: bpm } = mapSettings;
-    const { _notes: notes } = mapSet._data;
-    return beatmap.v2.swing
-        .getSliderNote(notes, bpm)
-        .filter((n) => Math.abs(n._minSpeed - n._maxSpeed) > 0.002)
-        .map((n) => n._time)
+function check(difficulty: IBeatmapItem) {
+    const { swingAnalysis } = difficulty;
+    return swingAnalysis.container
+        .filter((n) => Math.abs(n.minSpeed - n.maxSpeed) > 0.002)
+        .map((n) => n.time)
         .filter((x, i, ary) => {
             return !i || x !== ary[i - 1];
         });
 }
 
-function run(
-    mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.BeatmapSetData
-): void {
-    if (!mapSet) {
-        throw new Error('something went wrong!');
+function run(map: ToolArgs) {
+    if (!map.difficulty) {
+        console.error('Something went wrong!');
+        return;
     }
-    const result = check(mapSettings, mapSet);
+    const result = check(map.difficulty);
 
     if (result.length) {
         const htmlResult = document.createElement('div');
         htmlResult.innerHTML = `<b>Varying swing speed [${result.length}]:</b> ${result
-            .map((n) => round(mapSettings._bpm.adjustTime(n), 3))
+            .map((n) => round(map.settings.bpm.adjustTime(n), 3))
             .join(', ')}`;
         tool.output.html = htmlResult;
     } else {

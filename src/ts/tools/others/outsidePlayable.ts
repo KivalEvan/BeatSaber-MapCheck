@@ -1,24 +1,11 @@
-import * as beatmap from '../../beatmap';
+import { Tool, ToolArgs } from '../../types/mapcheck';
+import UICheckbox from '../../ui/checkbox';
 import { round, toMMSS } from '../../utils';
-import { BeatmapSettings, Tool } from '../template';
 
-const htmlContainer = document.createElement('div');
-const htmlInputCheck = document.createElement('input');
-const htmlLabelCheck = document.createElement('label');
-
-htmlLabelCheck.textContent = ' Outside playable object';
-htmlLabelCheck.htmlFor = 'input__tools-outside-object-check';
-htmlInputCheck.id = 'input__tools-outside-object-check';
-htmlInputCheck.className = 'input-toggle';
-htmlInputCheck.type = 'checkbox';
-htmlInputCheck.checked = true;
-htmlInputCheck.addEventListener('change', inputCheckHandler);
-
-htmlContainer.appendChild(htmlInputCheck);
-htmlContainer.appendChild(htmlLabelCheck);
+const name = 'Outside Playable Object';
 
 const tool: Tool = {
-    name: 'Difficulty Label',
+    name: name,
     description: 'Placeholder',
     type: 'other',
     order: {
@@ -26,79 +13,82 @@ const tool: Tool = {
         output: 10,
     },
     input: {
-        enabled: htmlInputCheck.checked,
+        enabled: true,
         params: {},
-        html: htmlContainer,
+        html: UICheckbox.create(name, name, true, function (this: HTMLInputElement) {
+            tool.input.enabled = this.checked;
+        }),
     },
     output: {
         html: null,
     },
-    run: run,
+    run,
 };
 
-function inputCheckHandler(this: HTMLInputElement) {
-    tool.input.enabled = this.checked;
-}
-
-function run(
-    mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.BeatmapSetData
-): void {
-    if (!mapSet) {
-        throw new Error('something went wrong!');
+function run(map: ToolArgs) {
+    if (!map.difficulty) {
+        console.error('Something went wrong!');
+        return;
     }
-    const { _bpm: bpm, _audioDuration: duration } = mapSettings;
-    const { _notes: notes, _obstacles: obstacles, _events: events } = mapSet._data;
+    const { bpm, audioDuration: duration } = map.settings;
+    const { colorNotes, obstacles, basicBeatmapEvents } = map.difficulty.data;
 
     const htmlString: string[] = [];
     if (duration) {
         let endBeat = bpm.toBeatTime(duration);
-        if (notes.length && notes[0]._time < 0) {
+        if (colorNotes.length && colorNotes[0].time < 0) {
             htmlString.push(
                 `<b>Note(s) before start time:</b> ${round(
-                    notes[0]._time,
+                    colorNotes[0].time,
                     3
-                )} (${toMMSS(bpm.toRealTime(notes[0]._time))})`
+                )} (${toMMSS(bpm.toRealTime(colorNotes[0].time))})`
             );
         }
-        if (obstacles.length && obstacles[0]._time < 0) {
+        if (obstacles.length && obstacles[0].time < 0) {
             htmlString.push(
                 `<b>Obstacle(s) before start time:</b> ${round(
-                    obstacles[0]._time,
+                    obstacles[0].time,
                     3
-                )} (${toMMSS(bpm.toRealTime(obstacles[0]._time))})`
+                )} (${toMMSS(bpm.toRealTime(obstacles[0].time))})`
             );
         }
-        if (events.length && events[0]._time < 0) {
+        if (basicBeatmapEvents.length && basicBeatmapEvents[0].time < 0) {
             htmlString.push(
                 `<b>Event(s) before start time:</b> ${round(
-                    events[0]._time,
+                    basicBeatmapEvents[0].time,
                     3
-                )} (${toMMSS(bpm.toRealTime(events[0]._time))})`
+                )} (${toMMSS(bpm.toRealTime(basicBeatmapEvents[0].time))})`
             );
         }
-        if (notes.length && notes[notes.length - 1]._time > endBeat) {
+        if (colorNotes.length && colorNotes[colorNotes.length - 1].time > endBeat) {
             htmlString.push(
                 `<b>Note(s) after end time:</b> ${round(
-                    notes[notes.length - 1]._time,
+                    colorNotes[colorNotes.length - 1].time,
                     3
-                )} (${toMMSS(bpm.toRealTime(notes[notes.length - 1]._time))})`
+                )} (${toMMSS(bpm.toRealTime(colorNotes[colorNotes.length - 1].time))})`
             );
         }
-        if (obstacles.length && obstacles[obstacles.length - 1]._time > endBeat) {
+        if (obstacles.length && obstacles[obstacles.length - 1].time > endBeat) {
             htmlString.push(
                 `<b>Obstacle(s) after end time:</b> ${round(
-                    obstacles[obstacles.length - 1]._time,
+                    obstacles[obstacles.length - 1].time,
                     3
-                )} (${toMMSS(bpm.toRealTime(obstacles[obstacles.length - 1]._time))})`
+                )} (${toMMSS(bpm.toRealTime(obstacles[obstacles.length - 1].time))})`
             );
         }
-        if (events.length && events[events.length - 1]._time > endBeat) {
+        if (
+            basicBeatmapEvents.length &&
+            basicBeatmapEvents[basicBeatmapEvents.length - 1].time > endBeat
+        ) {
             htmlString.push(
                 `<b>Event(s) after end time:</b> ${round(
-                    events[events.length - 1]._time,
+                    basicBeatmapEvents[basicBeatmapEvents.length - 1].time,
                     3
-                )} (${toMMSS(bpm.toRealTime(events[events.length - 1]._time))})`
+                )} (${toMMSS(
+                    bpm.toRealTime(
+                        basicBeatmapEvents[basicBeatmapEvents.length - 1].time
+                    )
+                )})`
             );
         }
     }

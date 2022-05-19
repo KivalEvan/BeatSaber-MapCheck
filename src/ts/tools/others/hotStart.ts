@@ -1,6 +1,5 @@
-import * as beatmap from '../../beatmap';
+import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
-import { BeatmapSettings, Tool } from '../template';
 
 const defaultTime = 1.5;
 
@@ -39,7 +38,7 @@ const tool: Tool = {
     output: {
         html: null,
     },
-    run: run,
+    run,
 };
 
 function inputTimeHandler(this: HTMLInputElement) {
@@ -47,16 +46,14 @@ function inputTimeHandler(this: HTMLInputElement) {
     this.value = tool.input.params.time.toString();
 }
 
-function run(
-    mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.BeatmapSetData
-): void {
-    if (!mapSet) {
-        throw new Error('something went wrong!');
+function run(map: ToolArgs) {
+    if (!map.difficulty) {
+        console.error('Something went wrong!');
+        return;
     }
     const { time } = <{ time: number }>tool.input.params;
-    const result = mapSettings._bpm.toRealTime(
-        beatmap.v2.difficulty.getFirstInteractiveTime(mapSet._data)
+    const result = map.settings.bpm.toRealTime(
+        map.difficulty.data.getFirstInteractiveTime()
     );
 
     if (result < time) {

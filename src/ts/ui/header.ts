@@ -2,31 +2,30 @@ import { round, toMMSSMS } from '../utils';
 
 const logPrefix = 'UI Header: ';
 
-const htmlIntro = document.querySelector<HTMLElement>('.intro');
-const htmlMetadata = document.querySelector<HTMLElement>('.metadata');
-
-const htmlCoverLink = document.querySelector<HTMLLinkElement>('.cover__link');
-const htmlCoverImage = document.querySelector<HTMLImageElement>('.cover__image');
-
-const htmlMetadataSongName =
-    document.querySelector<HTMLElement>('.metadata__song-name');
-const htmlMetadataSongSubname = document.querySelector<HTMLElement>(
+const htmlIntro: HTMLElement = document.querySelector('.intro')!;
+const htmlMetadata: HTMLElement = document.querySelector('.metadata')!;
+const htmlCoverLink: HTMLLinkElement = document.querySelector('.cover__link')!;
+const htmlCoverImage: HTMLImageElement = document.querySelector('.cover__image')!;
+const htmlMetadataSongName: HTMLElement =
+    document.querySelector('.metadata__song-name')!;
+const htmlMetadataSongSubname: HTMLElement = document.querySelector(
     '.metadata__song-subname'
-);
-const htmlMetadataSongAuthor = document.querySelector<HTMLElement>(
+)!;
+const htmlMetadataSongAuthor: HTMLElement = document.querySelector(
     '.metadata__song-author'
-);
-const htmlMetadataSongBPM = document.querySelector<HTMLElement>('.metadata__song-bpm');
-const htmlMetadataSongDuration = document.querySelector<HTMLElement>(
+)!;
+const htmlMetadataSongBPM: HTMLElement = document.querySelector('.metadata__song-bpm')!;
+const htmlMetadataSongDuration: HTMLElement = document.querySelector(
     '.metadata__song-duration'
-);
-const htmlAudio = document.querySelector<HTMLAudioElement>('.audio');
+)!;
+const htmlAudio: HTMLAudioElement = document.querySelector('.audio')!;
+const audioURL = '';
 
 if (!htmlIntro || !htmlMetadata) {
-    console.error(logPrefix + 'header component is missing one of the two section');
+    throw new Error(logPrefix + 'header component is missing one of the two section');
 }
 if (!htmlCoverLink || !htmlCoverImage) {
-    console.error(logPrefix + 'cover component is missing');
+    throw new Error(logPrefix + 'cover component is missing');
 }
 if (
     !htmlMetadataSongName ||
@@ -35,43 +34,28 @@ if (
     !htmlMetadataSongBPM ||
     !htmlMetadataSongDuration
 ) {
-    console.error(logPrefix + 'metadata component is missing one of the part');
+    throw new Error(logPrefix + 'metadata component is missing one of the part');
 }
 
-export const switchHeader = (bool: boolean): void => {
-    if (!htmlIntro || !htmlMetadata) {
-        console.error(
-            logPrefix + 'could not switch header, one of the section is missing'
-        );
-        return;
+const switchHeader = (isIntro: boolean): void => {
+    if (isIntro) {
+        htmlIntro.classList.remove('hidden');
+        htmlMetadata.classList.add('hidden');
+    } else {
+        htmlIntro.classList.add('hidden');
+        htmlMetadata.classList.remove('hidden');
     }
-    bool ? htmlIntro.classList.add('hidden') : htmlIntro.classList.remove('hidden');
-    !bool
-        ? htmlMetadata.classList.add('hidden')
-        : htmlMetadata.classList.remove('hidden');
 };
 
-export const setCoverImage = (src: string | null): void => {
-    if (!htmlCoverImage) {
-        console.error(logPrefix + 'missing HTML element for cover image');
-        return;
-    }
+const setCoverImage = (src: string | null): void => {
     htmlCoverImage.src = src || './img/unknown.jpg';
 };
 
-export const getCoverImage = (): string | null => {
-    if (!htmlCoverImage) {
-        console.error(logPrefix + 'missing HTML element for cover image');
-        return null;
-    }
+const getCoverImage = (): string | null => {
     return htmlCoverImage.src;
 };
 
-export const setCoverLink = (url?: string, id?: string): void => {
-    if (!htmlCoverLink) {
-        console.error(logPrefix + 'missing HTML element for cover link');
-        return;
-    }
+const setCoverLink = (url?: string, id?: string): void => {
     if (url == null && id == null) {
         htmlCoverLink.textContent = '';
         htmlCoverLink.href = '';
@@ -85,36 +69,20 @@ export const setCoverLink = (url?: string, id?: string): void => {
     }
 };
 
-export const setSongName = (str: string): void => {
-    if (!htmlMetadataSongName) {
-        console.error(logPrefix + 'missing HTML element for song name');
-        return;
-    }
+const setSongName = (str: string): void => {
     htmlMetadataSongName.textContent = str;
 };
 
-export const setSongSubname = (str: string): void => {
-    if (!htmlMetadataSongSubname) {
-        console.error(logPrefix + 'missing HTML element for song subname');
-        return;
-    }
+const setSongSubname = (str: string): void => {
     htmlMetadataSongSubname.textContent = str;
 };
 
-export const setSongAuthor = (str: string): void => {
-    if (!htmlMetadataSongAuthor) {
-        console.error(logPrefix + 'missing HTML element for song author');
-        return;
-    }
+const setSongAuthor = (str: string): void => {
     htmlMetadataSongAuthor.textContent = str;
 };
 
 // TODO: some way to save bpm change
-export const setSongBPM = (num: number, minBPM?: number, maxBPM?: number): void => {
-    if (!htmlMetadataSongBPM) {
-        console.error(logPrefix + 'missing HTML element for song bpm');
-        return;
-    }
+const setSongBPM = (num: number, minBPM?: number, maxBPM?: number): void => {
     if ((minBPM === null || minBPM === undefined) && typeof maxBPM === 'number') {
         minBPM = Math.min(num, maxBPM);
     }
@@ -127,11 +95,7 @@ export const setSongBPM = (num: number, minBPM?: number, maxBPM?: number): void 
     htmlMetadataSongBPM.textContent = text;
 };
 
-export const setSongDuration = (num?: number): void => {
-    if (!htmlMetadataSongDuration) {
-        console.error(logPrefix + 'missing HTML element for song duration');
-        return;
-    }
+const setSongDuration = (num?: number): void => {
     if (num) {
         htmlMetadataSongDuration.textContent = toMMSSMS(num);
     } else {
@@ -139,29 +103,34 @@ export const setSongDuration = (num?: number): void => {
     }
 };
 
-let audioURL: string;
-export const setAudio = async (arrayBuffer: ArrayBuffer): Promise<void> => {
-    if (!htmlAudio) {
-        console.error(logPrefix + 'missing HTML element for audio');
-        return;
-    }
+const setAudio = async (arrayBuffer: ArrayBuffer): Promise<void> => {
     const blob = new Blob([arrayBuffer], { type: 'audio/ogg' });
     htmlAudio.src = window.URL.createObjectURL(blob);
 };
 
-export const unloadAudio = (): void => {
-    if (!htmlAudio) {
-        console.error(logPrefix + 'missing HTML element for audio');
-        return;
-    }
+const unloadAudio = (): void => {
     htmlAudio.src = '';
     window.URL.revokeObjectURL(audioURL);
 };
 
-export const reset = (): void => {
+const reset = (): void => {
     switchHeader(false);
     setCoverImage(null);
     setCoverLink();
     setSongDuration(0);
     unloadAudio();
+};
+export default {
+    switchHeader,
+    setCoverImage,
+    getCoverImage,
+    setCoverLink,
+    setSongName,
+    setSongSubname,
+    setSongAuthor,
+    setSongBPM,
+    setSongDuration,
+    setAudio,
+    unloadAudio,
+    reset,
 };

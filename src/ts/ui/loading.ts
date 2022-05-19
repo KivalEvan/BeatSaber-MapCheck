@@ -1,25 +1,21 @@
-type LoadingStatusType = 'info' | 'download' | 'error';
+import { UILoadingStatusType } from '../types/mapcheck/ui/loading';
 
 const logPrefix = 'UI Loading: ';
 
-const htmlLoadingBar = document.querySelector<HTMLElement>('.loading__bar');
+const htmlLoadingBar: HTMLElement = document.querySelector('.loading__bar')!;
 const htmlLoadingBarError = 'loading__bar--error';
 const htmlLoadingBarDownload = 'loading__bar--download';
-const htmlLoadingText = document.querySelector<HTMLElement>('.loading__text');
+const htmlLoadingText: HTMLElement = document.querySelector('.loading__text')!;
 
 if (!htmlLoadingBar || !htmlLoadingText) {
-    console.error(logPrefix + 'loading component is missing part');
+    throw new Error(logPrefix + 'loading component is missing part');
 }
 
-export const status = (
-    statusType: LoadingStatusType,
+const status = (
+    statusType: UILoadingStatusType,
     statusString: string,
     percentage: number = 100
 ): void => {
-    if (!htmlLoadingBar || !htmlLoadingText) {
-        console.error(logPrefix + 'could not process, missing HTML element');
-        return;
-    }
     htmlLoadingText.textContent = statusString;
     htmlLoadingBar.style.width = `${percentage}%`;
     statusType === 'error'
@@ -30,6 +26,11 @@ export const status = (
         : htmlLoadingBar.classList.remove(htmlLoadingBarDownload);
 };
 
-export const reset = (): void => {
+const reset = (): void => {
     status('info', 'No map loaded', 0);
+};
+
+export default {
+    status,
+    reset,
 };

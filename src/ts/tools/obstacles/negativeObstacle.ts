@@ -1,24 +1,11 @@
-import * as beatmap from '../../beatmap';
-import { BeatmapSettings, Tool } from '../template';
+import { Tool, ToolArgs } from '../../types/mapcheck';
+import UICheckbox from '../../ui/checkbox';
 import { round } from '../../utils';
 
-const htmlContainer = document.createElement('div');
-const htmlInputCheck = document.createElement('input');
-const htmlLabelCheck = document.createElement('label');
-
-htmlLabelCheck.textContent = ' Negative obstacle';
-htmlLabelCheck.htmlFor = 'input__tools-negative-obstacle-check';
-htmlInputCheck.id = 'input__tools-negative-obstacle-check';
-htmlInputCheck.className = 'input-toggle';
-htmlInputCheck.type = 'checkbox';
-htmlInputCheck.checked = true;
-htmlInputCheck.addEventListener('change', inputCheckHandler);
-
-htmlContainer.appendChild(htmlInputCheck);
-htmlContainer.appendChild(htmlLabelCheck);
+const name = 'Negative obstacle';
 
 const tool: Tool = {
-    name: 'Negative Obstacle',
+    name,
     description: 'Placeholder',
     type: 'obstacle',
     order: {
@@ -26,44 +13,42 @@ const tool: Tool = {
         output: 80,
     },
     input: {
-        enabled: htmlInputCheck.checked,
+        enabled: true,
         params: {},
-        html: htmlContainer,
+        html: UICheckbox.create(name, name, true, function (this: HTMLInputElement) {
+            tool.input.enabled = this.checked;
+        }),
     },
     output: {
         html: null,
     },
-    run: run,
+    run,
 };
 
-function inputCheckHandler(this: HTMLInputElement) {
-    tool.input.enabled = this.checked;
-}
-
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
-    const { _obstacles: obstacles } = mapSet._data;
+function check(map: ToolArgs) {
+    const { obstacles } = map.difficulty!.data;
     if (
-        mapSet._info._customData?._requirements?.includes('Mapping Extensions') ||
-        mapSet._info._customData?._requirements?.includes('Noodle Extensions')
+        map.difficulty!.info._customData?._requirements?.includes(
+            'Mapping Extensions'
+        ) ||
+        map.difficulty!.info._customData?._requirements?.includes('Noodle Extensions')
     ) {
         return [];
     }
-    return obstacles.filter((o) => o._width < 0 || o._duration < 0).map((o) => o._time);
+    return obstacles.filter((o) => o.hasNegative()).map((o) => o.time);
 }
 
-function run(
-    mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.BeatmapSetData
-): void {
-    if (!mapSet) {
-        throw new Error('something went wrong!');
+function run(map: ToolArgs) {
+    if (!map.difficulty) {
+        console.error('Something went wrong!');
+        return;
     }
-    const result = check(mapSettings, mapSet);
+    const result = check(map);
 
     if (result.length) {
         const htmlResult = document.createElement('div');
         htmlResult.innerHTML = `<b>Negative obstacle [${result.length}]:</b> ${result
-            .map((n) => round(mapSettings._bpm.adjustTime(n), 3))
+            .map((n) => round(map.settings.bpm.adjustTime(n), 3))
             .join(', ')}`;
         tool.output.html = htmlResult;
     } else {

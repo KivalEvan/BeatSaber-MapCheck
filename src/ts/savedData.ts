@@ -1,25 +1,44 @@
-import { BeatmapSetData } from './beatmap/shared/types/set';
-import { Contributor } from './beatmap/v2/types/contributor';
-import { InfoData } from './beatmap/shared/types/info';
-import { BPMChange } from './beatmap/shared/types/bpm';
-import { Analysis } from './tools/analysis';
+import Flag from './flag';
+import { ISavedData } from './types/mapcheck/savedData';
 
-// TODO: structure bpm change for certain use
-interface SavedData {
-    _mapInfo?: InfoData;
-    _mapSet?: BeatmapSetData[];
-    _contributors?: Contributor[];
-    _analysis?: Analysis;
-    _duration?: number;
-    _bpmChanges?: BPMChange[];
-}
+export default new (class SavedData implements ISavedData {
+    beatmapInfo: ISavedData['beatmapInfo'] = null;
+    beatmapDifficulty: ISavedData['beatmapDifficulty'] = [];
+    contributors: ISavedData['contributors'] = [];
+    analysis: ISavedData['analysis'] = null;
+    duration: ISavedData['duration'] = null;
 
-const savedData: SavedData = {};
-
-export const clearData = (): void => {
-    for (const key in savedData) {
-        delete savedData[key as keyof typeof savedData];
+    retrieveSafe() {
+        if (!this.beatmapInfo) {
+            throw new Error('Beatmap info is not loaded.');
+        }
+        if (!this.analysis) {
+            throw new Error('Beatmap analysis is not loaded.');
+        }
+        if (this.duration === null) {
+            throw new Error('Audio is not loaded.');
+        }
+        if (Flag.loading.finished) {
+            return {
+                beatmapInfo: this.beatmapInfo as NonNullable<typeof this.beatmapInfo>,
+                beatmapDifficulty: this.beatmapDifficulty,
+                contributors: this.contributors,
+                analysis: this.analysis as NonNullable<typeof this.analysis>,
+                duration: this.duration as NonNullable<typeof this.duration>,
+            };
+        } else {
+            throw new Error(
+                'Could not retrieve saved data, loading process is not finished.'
+            );
+        }
     }
-};
 
-export default savedData;
+    clear() {
+        Flag.loading.finished = false;
+        this.beatmapInfo = null;
+        this.beatmapDifficulty = [];
+        this.contributors = [];
+        this.analysis = null;
+        this.duration = null;
+    }
+})();

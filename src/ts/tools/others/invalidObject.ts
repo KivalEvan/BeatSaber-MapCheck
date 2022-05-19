@@ -1,24 +1,11 @@
-import * as beatmap from '../../beatmap';
-import { BeatmapSettings, Tool } from '../template';
+import { Tool, ToolArgs } from '../../types/mapcheck';
+import UICheckbox from '../../ui/checkbox';
 import { round } from '../../utils';
 
-const htmlContainer = document.createElement('div');
-const htmlInputCheck = document.createElement('input');
-const htmlLabelCheck = document.createElement('label');
-
-htmlLabelCheck.textContent = ' Invalid object';
-htmlLabelCheck.htmlFor = 'input__tools-invalid-object-check';
-htmlInputCheck.id = 'input__tools-invalid-object-check';
-htmlInputCheck.className = 'input-toggle';
-htmlInputCheck.type = 'checkbox';
-htmlInputCheck.checked = true;
-htmlInputCheck.addEventListener('change', inputCheckHandler);
-
-htmlContainer.appendChild(htmlInputCheck);
-htmlContainer.appendChild(htmlLabelCheck);
+const name = ' Invalid Object';
 
 const tool: Tool = {
-    name: 'Invalid Object',
+    name,
     description: 'Placeholder',
     type: 'other',
     order: {
@@ -26,67 +13,74 @@ const tool: Tool = {
         output: 20,
     },
     input: {
-        enabled: htmlInputCheck.checked,
+        enabled: true,
         params: {},
-        html: htmlContainer,
+        html: UICheckbox.create(name, name, true, function (this: HTMLInputElement) {
+            tool.input.enabled = this.checked;
+        }),
     },
     output: {
         html: null,
     },
-    run: run,
+    run,
 };
 
-function inputCheckHandler(this: HTMLInputElement) {
-    tool.input.enabled = this.checked;
-}
-
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
-    const { _notes: notes } = mapSet._data;
-    return notes
-        .filter((n) => beatmap.v2.note.hasMappingExtensions(n))
-        .map((n) => n._time);
-}
-
-function run(
-    mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.BeatmapSetData
-): void {
-    if (!mapSet) {
-        throw new Error('something went wrong!');
+function run(map: ToolArgs) {
+    if (!map.difficulty) {
+        console.error('Something went wrong!');
+        return;
     }
-    const { _bpm: bpm } = mapSettings;
-    const { _notes: notes, _obstacles: obstacles, _events: events } = mapSet._data;
+    const { bpm } = map.settings;
+    const {
+        colorNotes,
+        bombNotes,
+        obstacles,
+        basicBeatmapEvents,
+        sliders,
+        burstSliders,
+    } = map.difficulty.data;
 
     let noteResult: number[] = [];
     let obstacleResult: number[] = [];
-    if (!mapSet._info._customData?._requirements?.includes('Mapping Extensions')) {
-        if (mapSet._info._customData?._requirements?.includes('Noodle Extensions')) {
-            noteResult = notes
-                .filter(
-                    (n) =>
-                        beatmap.v2.note.hasMappingExtensions(n) &&
-                        !beatmap.v2.note.hasNoodleExtensions(n)
-                )
-                .map((n) => n._time);
+    let bombResult: number[] = [];
+    let sliderResult: number[] = [];
+    let burstSliderResult: number[] = [];
+    if (
+        !map.difficulty.info._customData?._requirements?.includes('Mapping Extensions')
+    ) {
+        if (
+            map.difficulty.info._customData?._requirements?.includes(
+                'Noodle Extensions'
+            )
+        ) {
+            noteResult = colorNotes
+                .filter((n) => n.hasMappingExtensions())
+                .map((n) => n.time);
             obstacleResult = obstacles
-                .filter(
-                    (o) =>
-                        beatmap.v2.obstacle.hasMappingExtensions(o) &&
-                        !beatmap.v2.obstacle.hasNoodleExtensions(o)
-                )
-                .map((o) => o._time);
+                .filter((o) => o.hasMappingExtensions())
+                .map((o) => o.time);
+            bombResult = bombNotes
+                .filter((n) => n.hasMappingExtensions())
+                .map((n) => n.time);
+            sliderResult = sliders
+                .filter((o) => o.hasMappingExtensions())
+                .map((o) => o.time);
+            burstSliderResult = burstSliders
+                .filter((o) => o.hasMappingExtensions())
+                .map((o) => o.time);
         } else {
-            noteResult = notes
-                .filter((n) => !beatmap.v2.note.isValid(n))
-                .map((n) => n._time);
-            obstacleResult = obstacles
-                .filter((o) => !beatmap.v2.obstacle.isValid(o))
-                .map((o) => o._time);
+            noteResult = colorNotes.filter((n) => !n.isValid()).map((n) => n.time);
+            obstacleResult = obstacles.filter((o) => !o.isValid()).map((o) => o.time);
+            bombResult = bombNotes.filter((b) => !b.isValid()).map((b) => b.time);
+            sliderResult = sliders.filter((s) => !s.isValid()).map((s) => s.time);
+            burstSliderResult = burstSliders
+                .filter((bs) => !bs.isValid())
+                .map((bs) => bs.time);
         }
     }
-    const eventResult = events
-        .filter((e) => !beatmap.v2.event.isValid(e))
-        .map((e) => e._time);
+    const eventResult = basicBeatmapEvents
+        .filter((e) => !e.isValid())
+        .map((e) => e.time);
 
     const htmlString: string[] = [];
     if (noteResult.length) {
@@ -106,6 +100,22 @@ function run(
     if (eventResult.length) {
         htmlString.push(
             `<b>Invalid event [${eventResult.length}]:</b> ${eventResult
+                .map((n) => round(bpm.adjustTime(n), 3))
+                .join(', ')}`
+        );
+    }
+    if (sliderResult.length) {
+        htmlString.push(
+            `<b>Invalid slider [${sliderResult.length}]:</b> ${sliderResult
+                .map((n) => round(bpm.adjustTime(n), 3))
+                .join(', ')}`
+        );
+    }
+    if (burstSliderResult.length) {
+        htmlString.push(
+            `<b>Invalid burst slider [${
+                burstSliderResult.length
+            }]:</b> ${burstSliderResult
                 .map((n) => round(bpm.adjustTime(n), 3))
                 .join(', ')}`
         );

@@ -1,6 +1,5 @@
-import * as beatmap from '../../beatmap';
+import { IBeatmapItem, IBeatmapSettings, Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
-import { BeatmapSettings, Tool } from '../template';
 
 const defaultPrec = [8, 6];
 
@@ -37,7 +36,7 @@ const tool: Tool = {
     output: {
         html: null,
     },
-    run: run,
+    run,
 };
 
 function inputPrecHandler(this: HTMLInputElement) {
@@ -49,15 +48,14 @@ function inputPrecHandler(this: HTMLInputElement) {
     this.value = tool.input.params.prec.join(' ');
 }
 
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
-    const { _bpm: bpm } = mapSettings;
-    const { _notes: notes } = mapSet._data;
+function check(settings: IBeatmapSettings, difficulty: IBeatmapItem) {
+    const { bpm } = settings;
+    const swingContainer = difficulty.swingAnalysis.container;
     // god this hurt me, but typescript sees this as number instead of number[]
     const { prec } = <{ prec: number[] }>tool.input.params;
 
-    return beatmap.v2.swing
-        .getEffectiveBPMSwingNote(notes, bpm)
-        .map((n) => n._time)
+    return swingContainer
+        .map((n) => n.time)
         .filter((x, i, ary) => {
             return !i || x !== ary[i - 1];
         })
@@ -74,19 +72,17 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetDat
         });
 }
 
-function run(
-    mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.BeatmapSetData
-): void {
-    if (!mapSet) {
-        throw new Error('something went wrong!');
+function run(map: ToolArgs) {
+    if (!map.difficulty) {
+        console.error('Something went wrong!');
+        return;
     }
-    const result = check(mapSettings, mapSet);
+    const result = check(map.settings, map.difficulty);
 
     if (result.length) {
         const htmlResult = document.createElement('div');
         htmlResult.innerHTML = `<b>Off-beat precision [${result.length}]:</b> ${result
-            .map((n) => round(mapSettings._bpm.adjustTime(n), 3))
+            .map((n) => round(map.settings.bpm.adjustTime(n), 3))
             .join(', ')}`;
         tool.output.html = htmlResult;
     } else {

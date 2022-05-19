@@ -1,21 +1,9 @@
-import * as beatmap from '../../beatmap';
+import { IBeatmapItem, Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
-import { BeatmapSettings, Tool } from '../template';
+import * as beatmap from '../../beatmap';
+import UICheckbox from '../../ui/checkbox';
 
-const htmlContainer = document.createElement('div');
-const htmlInputCheck = document.createElement('input');
-const htmlLabelCheck = document.createElement('label');
-
-htmlLabelCheck.textContent = ' Old value 4 event';
-htmlLabelCheck.htmlFor = 'input__tools-light-4';
-htmlInputCheck.id = 'input__tools-light-4';
-htmlInputCheck.className = 'input-toggle';
-htmlInputCheck.type = 'checkbox';
-htmlInputCheck.checked = true;
-htmlInputCheck.addEventListener('change', inputCheckHandler);
-
-htmlContainer.appendChild(htmlInputCheck);
-htmlContainer.appendChild(htmlLabelCheck);
+const name = ' Old value 4 event';
 
 const tool: Tool = {
     name: 'Insufficient Light',
@@ -26,53 +14,56 @@ const tool: Tool = {
         output: 1,
     },
     input: {
-        enabled: htmlInputCheck.checked,
+        enabled: true,
         params: {},
-        html: htmlContainer,
+        html: UICheckbox.create(name, name, true, function (this: HTMLInputElement) {
+            tool.input.enabled = this.checked;
+        }),
     },
     output: {
         html: null,
     },
-    run: run,
+    run,
 };
 
-function inputCheckHandler(this: HTMLInputElement) {
-    tool.input.enabled = this.checked;
-}
+function check(difficulty: IBeatmapItem) {
+    const { basicBeatmapEvents } = difficulty.data;
 
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
-    const { _events: events } = mapSet._data;
-
-    const arr: beatmap.v2.types.Event[] = [];
-    if (beatmap.v2.version.compare(mapSet._data._version, 'difficulty') === 'old') {
-        for (let i = events.length - 1; i >= 0; i--) {
-            if (beatmap.v2.event.isLightEvent(events[i]) && events[i]._value === 4) {
-                arr.push(events[i]);
+    const arr: beatmap.v3.BasicEvent[] = [];
+    if (
+        difficulty.rawVersion === 2 &&
+        difficulty.rawData._version !== '2.5.0' &&
+        difficulty.rawData._version !== '2.6.0'
+    ) {
+        for (let i = basicBeatmapEvents.length - 1; i >= 0; i--) {
+            if (
+                basicBeatmapEvents[i].isLightEvent() &&
+                basicBeatmapEvents[i].value === 4
+            ) {
+                arr.push(basicBeatmapEvents[i]);
             }
         }
     } else {
         return [];
     }
     return arr
-        .map((n) => n._time)
+        .map((n) => n.time)
         .filter(function (x, i, ary) {
             return !i || x !== ary[i - 1];
         });
 }
 
-function run(
-    mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.BeatmapSetData
-): void {
-    if (!mapSet) {
-        throw new Error('something went wrong!');
+function run(map: ToolArgs) {
+    if (!map.difficulty) {
+        console.error('Something went wrong!');
+        return;
     }
-    const result = check(mapSettings, mapSet);
+    const result = check(map.difficulty);
 
     if (result.length) {
         const htmlResult = document.createElement('div');
         htmlResult.innerHTML = `<b>Event with value 4 [${result.length}]:</b> ${result
-            .map((n) => round(mapSettings._bpm.adjustTime(n), 3))
+            .map((n) => round(map.settings.bpm.adjustTime(n), 3))
             .join(', ')}`;
         tool.output.html = htmlResult;
     } else {

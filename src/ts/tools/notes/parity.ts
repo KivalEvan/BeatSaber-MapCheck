@@ -1,12 +1,14 @@
-import * as beatmap from '../../beatmap';
+import { Tool, ToolArgs } from '../../types/mapcheck';
+import UISelect from '../../ui/select';
 import { round } from '../../utils';
-import { BeatmapSettings, Tool } from '../template';
-import { create as selectCreate } from '../../ui/select';
+import Parity from '../../analyzers/parity/parity';
+import swing from '../../analyzers/swing/swing';
+import { NoteContainer } from '../../types/beatmap/v3/container';
 
 const htmlContainer = document.createElement('div');
 const htmlInputCheck = document.createElement('input');
 const htmlLabelCheck = document.createElement('label');
-const htmlSelectRotation = selectCreate(
+const htmlSelectRotation = UISelect.create(
     'input__tools-parity-rotation',
     'Wrist rotation type: ',
     'div',
@@ -15,7 +17,7 @@ const htmlSelectRotation = selectCreate(
     { text: 'Extended', value: '135' },
     { text: 'Squid', value: '180' }
 );
-const htmlSelectParityLeft = selectCreate(
+const htmlSelectParityLeft = UISelect.create(
     'input__tools-parity-left',
     'Left hand parity: ',
     'div',
@@ -24,7 +26,7 @@ const htmlSelectParityLeft = selectCreate(
     { text: 'Forehand', value: 'forehand' },
     { text: 'Backhand', value: 'backhand' }
 );
-const htmlSelectParityRight = selectCreate(
+const htmlSelectParityRight = UISelect.create(
     'input__tools-parity-right',
     'Right hand parity: ',
     'div',
@@ -66,7 +68,7 @@ const tool: Tool = {
     output: {
         html: null,
     },
-    run: run,
+    run,
 };
 
 function inputCheckHandler(this: HTMLInputElement) {
@@ -76,79 +78,87 @@ function inputCheckHandler(this: HTMLInputElement) {
 function inputSelectRotateHandler(this: HTMLInputElement) {}
 function inputSelectParityHandler(this: HTMLInputElement) {}
 
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
-    const { _bpm: bpm } = mapSettings;
-    const { _notes: notes } = mapSet._data;
+function check(map: ToolArgs) {
+    if (!map.difficulty) {
+        console.error('Something went wrong!');
+        return;
+    }
+    const { bpm } = map.settings;
+    const { noteContainer } = map.difficulty!;
     const { warningThres, errorThres, allowedRot } = <
         { warningThres: number; errorThres: number; allowedRot: number }
     >tool.input.params;
 
-    const lastNote: { [key: number]: beatmap.v2.types.Note } = {};
-    const swingNoteArray: { [key: number]: beatmap.v2.types.Note[] } = {
+    const lastNote: { [key: number]: NoteContainer } = {};
+    const swingNoteArray: { [key: number]: NoteContainer[] } = {
         0: [],
         1: [],
         3: [],
     };
-    const bombContext: { [key: number]: beatmap.v2.types.Note[] } = {
+    const bombContext: { [key: number]: NoteContainer[] } = {
         0: [],
         1: [],
     };
-    const lastBombContext: { [key: number]: beatmap.v2.types.Note[] } = {
+    const lastBombContext: { [key: number]: NoteContainer[] } = {
         0: [],
         1: [],
     };
 
-    const swingParity: { [key: number]: beatmap.v2.parity.Parity } = {
-        0: new beatmap.v2.parity.Parity(notes, 0, warningThres, errorThres, allowedRot),
-        1: new beatmap.v2.parity.Parity(notes, 1, warningThres, errorThres, allowedRot),
+    const swingParity: { [key: number]: Parity } = {
+        0: new Parity(noteContainer, 0, warningThres, errorThres, allowedRot),
+        1: new Parity(noteContainer, 1, warningThres, errorThres, allowedRot),
     };
     const parity: { warning: number[]; error: number[] } = {
         warning: [],
         error: [],
     };
 
-    const arr: beatmap.v2.types.Note[] = [];
-    for (let i = 0, len = notes.length; i < len; i++) {
-        const note = notes[i];
-        if (beatmap.v2.note.isNote(note) && lastNote[note._type]) {
+    const arr: NoteContainer[] = [];
+    for (let i = 0, len = noteContainer.length; i < len; i++) {
+        const note = noteContainer[i];
+        if (note.type === 'note' && lastNote[note.data.color]) {
             if (
-                beatmap.v2.swing.next(
+                swing.next(
                     note,
-                    lastNote[note._type],
+                    lastNote[note.data.color],
                     bpm,
-                    swingNoteArray[note._type]
+                    swingNoteArray[note.data.color]
                 )
             ) {
                 // check previous swing parity
-                const parityStatus = swingParity[note._type].check(
-                    swingNoteArray[note._type],
-                    lastBombContext[note._type]
+                const parityStatus = swingParity[note.data.color].check(
+                    swingNoteArray[note.data.color],
+                    lastBombContext[note.data.color]
                 );
                 switch (parityStatus) {
                     case 'warning': {
-                        parity.warning.push(swingNoteArray[note._type][0]._time);
+                        parity.warning.push(
+                            swingNoteArray[note.data.color][0].data.time
+                        );
                         break;
                     }
                     case 'error': {
-                        parity.error.push(swingNoteArray[note._type][0]._time);
+                        parity.error.push(swingNoteArray[note.data.color][0].data.time);
                         break;
                     }
                 }
-                swingParity[note._type].next(
-                    swingNoteArray[note._type],
-                    lastBombContext[note._type]
+                swingParity[note.data.color].next(
+                    swingNoteArray[note.data.color],
+                    lastBombContext[note.data.color]
                 );
-                lastBombContext[note._type] = bombContext[note._type];
-                bombContext[note._type] = [];
-                swingNoteArray[note._type] = [];
+                lastBombContext[note.data.color] = bombContext[note.data.color];
+                bombContext[note.data.color] = [];
+                swingNoteArray[note.data.color] = [];
             }
         }
-        if (note._type === 3) {
+        if (note.type === 'bomb') {
             bombContext[0].push(note);
             bombContext[1].push(note);
         }
-        lastNote[note._type] = note;
-        swingNoteArray[note._type].push(note);
+        if (note.type === 'note') {
+            lastNote[note.data.color] = note;
+            swingNoteArray[note.data.color].push(note);
+        }
     }
     // final
     for (let i = 0; i < 2; i++) {
@@ -159,11 +169,11 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetDat
             );
             switch (parityStatus) {
                 case 'warning': {
-                    parity.warning.push(swingNoteArray[i][0]._time);
+                    parity.warning.push(swingNoteArray[i][0].data.time);
                     break;
                 }
                 case 'error': {
-                    parity.error.push(swingNoteArray[i][0]._time);
+                    parity.error.push(swingNoteArray[i][0].data.time);
                     break;
                 }
             }
@@ -172,14 +182,12 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetDat
     return parity;
 }
 
-function run(
-    mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.BeatmapSetData
-): void {
-    if (!mapSet) {
-        throw new Error('something went wrong!');
+function run(map: ToolArgs) {
+    if (!map.difficulty) {
+        console.error('Something went wrong!');
+        return;
     }
-    const result = check(mapSettings, mapSet);
+    const result = check(map);
 
     const htmlString: string[] = [];
     if (result.warning.length) {
@@ -189,7 +197,7 @@ function run(
                     return !i || x !== ary[i - 1];
                 })
                 .sort((a, b) => a - b)
-                .map((n) => round(mapSettings._bpm.adjustTime(n), 3))
+                .map((n) => round(map.settings.bpm.adjustTime(n), 3))
                 .join(', ')}`
         );
     }
@@ -200,7 +208,7 @@ function run(
                     return !i || x !== ary[i - 1];
                 })
                 .sort((a, b) => a - b)
-                .map((n) => round(mapSettings._bpm.adjustTime(n), 3))
+                .map((n) => round(map.settings.bpm.adjustTime(n), 3))
                 .join(', ')}`
         );
     }

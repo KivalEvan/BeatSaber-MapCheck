@@ -1,9 +1,10 @@
+import { Tool, ToolArgs } from '../../types/mapcheck';
+import { ColorArray } from '../../types/beatmap/shared/colors';
+import { deltaE00, toRGBArray, round } from '../../utils';
 import * as beatmap from '../../beatmap';
-import { round } from '../../utils';
-import { deltaE00, toRGBArray } from '../../colors';
-import { BeatmapSettings, Tool } from '../template';
+import UICheckbox from '../../ui/checkbox';
 
-const arrowColor: beatmap.types.ColorArray = [1, 1, 1];
+const arrowColor: ColorArray = [1, 1, 1];
 
 const deltaELevel: { [key: number]: string } = {
     1: 'Indistinguishable',
@@ -21,23 +22,10 @@ const levelMsg = (level: { [key: number]: string }, perc: number): string => {
     return level[key];
 };
 
-const htmlContainer = document.createElement('div');
-const htmlInputCheck = document.createElement('input');
-const htmlLabelCheck = document.createElement('label');
-
-htmlLabelCheck.textContent = ' Color check (EXPERIMENTAL)';
-htmlLabelCheck.htmlFor = 'input__tools-note-color-check';
-htmlInputCheck.id = 'input__tools-note-color-check';
-htmlInputCheck.className = 'input-toggle';
-htmlInputCheck.type = 'checkbox';
-htmlInputCheck.checked = true;
-htmlInputCheck.addEventListener('change', inputCheckHandler);
-
-htmlContainer.appendChild(htmlInputCheck);
-htmlContainer.appendChild(htmlLabelCheck);
+const name = 'Color Check (EXPERIMENTAL)';
 
 const tool: Tool = {
-    name: 'Color Check',
+    name,
     description: 'Placeholder',
     type: 'note',
     order: {
@@ -45,33 +33,28 @@ const tool: Tool = {
         output: 45,
     },
     input: {
-        enabled: htmlInputCheck.checked,
+        enabled: true,
         params: {},
-        html: htmlContainer,
+        html: UICheckbox.create(name, name, true, function (this: HTMLInputElement) {
+            tool.input.enabled = this.checked;
+        }),
     },
     output: {
         html: null,
     },
-    run: run,
+    run,
 };
 
-function inputCheckHandler(this: HTMLInputElement) {
-    tool.input.enabled = this.checked;
-}
-
-function customColorSimilarity(
-    mapSettings: BeatmapSettings,
-    mapSet: beatmap.types.BeatmapSetData
-) {
+function customColorSimilarity(map: ToolArgs) {
     const checkColorLeft =
-        mapSet._info._customData?._colorLeft ??
-        beatmap.environment.colorScheme[
-            beatmap.types.environmentScheme[mapSet._environment]
+        map.difficulty?.info._customData?._colorLeft ??
+        beatmap.ColorScheme[
+            beatmap.EnvironmentSchemeName[map.info._environmentName] ?? 'The First'
         ]._colorLeft;
     const checkColorRight =
-        mapSet._info._customData?._colorRight ??
-        beatmap.environment.colorScheme[
-            beatmap.types.environmentScheme[mapSet._environment]
+        map.difficulty?.info._customData?._colorRight ??
+        beatmap.ColorScheme[
+            beatmap.EnvironmentSchemeName[map.info._environmentName] ?? 'The First'
         ]._colorRight;
     if (checkColorLeft && checkColorRight) {
         return deltaE00(toRGBArray(checkColorLeft), toRGBArray(checkColorRight));
@@ -79,21 +62,18 @@ function customColorSimilarity(
     return 100;
 }
 
-function customColorArrowSimilarity(
-    mapSettings: BeatmapSettings,
-    mapSet: beatmap.types.BeatmapSetData
-) {
+function customColorArrowSimilarity(map: ToolArgs) {
     let deltaELeft = 100,
         deltaERight = 100;
     const checkColorLeft =
-        mapSet._info._customData?._colorLeft ??
-        beatmap.environment.colorScheme[
-            beatmap.types.environmentScheme[mapSet._environment]
+        map.difficulty?.info._customData?._colorLeft ??
+        beatmap.ColorScheme[
+            beatmap.EnvironmentSchemeName[map.info._environmentName] ?? 'The First'
         ]._colorLeft;
     const checkColorRight =
-        mapSet._info._customData?._colorRight ??
-        beatmap.environment.colorScheme[
-            beatmap.types.environmentScheme[mapSet._environment]
+        map.difficulty?.info._customData?._colorRight ??
+        beatmap.ColorScheme[
+            beatmap.EnvironmentSchemeName[map.info._environmentName] ?? 'The First'
         ]._colorRight;
     if (checkColorLeft) {
         deltaELeft = deltaE00(arrowColor, toRGBArray(checkColorLeft));
@@ -104,23 +84,16 @@ function customColorArrowSimilarity(
     return Math.min(deltaELeft, deltaERight);
 }
 
-function run(
-    mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.BeatmapSetData
-): void {
-    if (!mapSet) {
-        throw new Error('something went wrong!');
-    }
-
+function run(map: ToolArgs) {
     if (
-        !mapSet._info._customData?._colorLeft &&
-        !mapSet._info._customData?._colorRight
+        !map.difficulty?.info._customData?._colorLeft &&
+        !map.difficulty?.info._customData?._colorRight
     ) {
         return;
     }
 
-    const ccSimilar = customColorSimilarity(mapSettings, mapSet);
-    const ccaSimilar = customColorArrowSimilarity(mapSettings, mapSet);
+    const ccSimilar = customColorSimilarity(map);
+    const ccaSimilar = customColorArrowSimilarity(map);
 
     const htmlString: string[] = [];
     if (ccSimilar <= 20) {

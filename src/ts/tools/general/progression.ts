@@ -1,6 +1,7 @@
-import * as beatmap from '../../beatmap';
-import { BeatmapSettings, Tool } from '../template';
+import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
+import SavedData from '../../savedData';
+import * as swing from '../../analyzers/swing';
 
 const tool: Tool = {
     name: 'Progression',
@@ -17,26 +18,19 @@ const tool: Tool = {
     output: {
         html: null,
     },
-    run: run,
+    run,
 };
 
-function run(
-    mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.BeatmapSetData,
-    mapInfo?: beatmap.types.InfoData,
-    sps?: beatmap.v2.swing.SwingAnalysis[]
-): void {
-    const { _audioDuration: audioDuration } = mapSettings;
+function run(map: ToolArgs) {
+    const { audioDuration: audioDuration } = map.settings;
     if (!audioDuration) {
         tool.output.html = null;
         return;
     }
-    if (!sps) {
-        throw new Error('no sps');
-    }
-    const filteredSPS = sps
-        .filter((a) => a.mode === 'Standard')
-        .sort((a, b) => a.sps.total.overall - b.sps.total.overall);
+    const filteredSPS = SavedData.beatmapDifficulty
+        .map((d) => d.swingAnalysis)
+        .filter((a) => a.characteristic === 'Standard')
+        .sort((a, b) => a.total.count - b.total.count);
     if (!filteredSPS.length) {
         tool.output.html = null;
         return;
@@ -46,18 +40,18 @@ function run(
     const htmlString: string[] = [];
     if (
         audioDuration < 240 &&
-        beatmap.v2.swing.getSPSLowest(filteredSPS) > minSPS &&
-        beatmap.v2.swing.calcSPSTotalPercDrop(filteredSPS) < 60
+        swing.getSPSLowest(filteredSPS) > minSPS &&
+        swing.calcSPSTotalPercDrop(filteredSPS) < 60
     ) {
         htmlString.push(
             `<b>Minimum SPS not met (<${minSPS}):</b> lowest is ${round(
-                beatmap.v2.swing.getSPSLowest(filteredSPS),
+                swing.getSPSLowest(filteredSPS),
                 2
             )}`
         );
     }
-    const progMax = beatmap.v2.swing.getProgressionMax(filteredSPS, minSPS);
-    const progMin = beatmap.v2.swing.getProgressionMin(filteredSPS, minSPS);
+    const progMax = swing.getProgressionMax(filteredSPS, minSPS);
+    const progMin = swing.getProgressionMin(filteredSPS, minSPS);
     if (progMax && audioDuration < 360) {
         htmlString.push(
             `<b>Violates progression:</b> ${progMax.difficulty} exceeded 40% SPS drop`

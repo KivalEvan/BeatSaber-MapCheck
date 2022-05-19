@@ -1,24 +1,14 @@
-import * as beatmap from '../../beatmap';
+import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
-import { BeatmapSettings, Tool } from '../template';
+import { NoteContainer, NoteContainerNote } from '../../types/beatmap/v3/container';
+import { isIntersect } from '../../analyzers/placement/note';
+import swing from '../../analyzers/swing/swing';
+import UICheckbox from '../../ui/checkbox';
 
-const htmlContainer = document.createElement('div');
-const htmlInputCheck = document.createElement('input');
-const htmlLabelCheck = document.createElement('label');
-
-htmlLabelCheck.textContent = ' Hitbox reverse staircase';
-htmlLabelCheck.htmlFor = 'input__tools-hitbox-rstair-check';
-htmlInputCheck.id = 'input__tools-hitbox-rstair-check';
-htmlInputCheck.className = 'input-toggle';
-htmlInputCheck.type = 'checkbox';
-htmlInputCheck.checked = true;
-htmlInputCheck.addEventListener('change', inputCheckHandler);
-
-htmlContainer.appendChild(htmlInputCheck);
-htmlContainer.appendChild(htmlLabelCheck);
+const name = 'Hitbox Reverse Staircase';
 
 const tool: Tool = {
-    name: 'Hitbox Reverse Staircase',
+    name,
     description: 'Placeholder',
     type: 'note',
     order: {
@@ -26,96 +16,99 @@ const tool: Tool = {
         output: 191,
     },
     input: {
-        enabled: htmlInputCheck.checked,
+        enabled: true,
         params: {},
-        html: htmlContainer,
+        html: UICheckbox.create(name, name, true, function (this: HTMLInputElement) {
+            tool.input.enabled = this.checked;
+        }),
     },
     output: {
         html: null,
     },
-    run: run,
+    run,
 };
-
-function inputCheckHandler(this: HTMLInputElement) {
-    tool.input.enabled = this.checked;
-}
 
 const constant = 0.03414823529;
 const constantDiagonal = 0.03414823529;
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
-    const { _bpm: bpm, _njs: njs } = mapSettings;
-    const { _notes: notes } = mapSet._data;
+function check(map: ToolArgs) {
+    const { bpm, njs } = map.settings;
+    const { noteContainer } = map.difficulty!;
 
-    const lastNote: { [key: number]: beatmap.v2.types.Note } = {};
-    const swingNoteArray: { [key: number]: beatmap.v2.types.Note[] } = {
+    const lastNote: { [key: number]: NoteContainer } = {};
+    const swingNoteArray: { [key: number]: NoteContainer[] } = {
         0: [],
         1: [],
-        3: [],
     };
 
-    const arr: beatmap.v2.types.Note[] = [];
-    for (let i = 0, len = notes.length; i < len; i++) {
-        const note = notes[i];
-        if (beatmap.v2.note.isNote(note) && lastNote[note._type]) {
+    const arr: NoteContainer[] = [];
+    for (let i = 0, len = noteContainer.length; i < len; i++) {
+        if (noteContainer[i].type !== 'note') {
+            continue;
+        }
+        const note = noteContainer[i] as NoteContainerNote;
+        if (lastNote[note.data.color]) {
             if (
-                beatmap.v2.swing.next(
+                swing.next(
                     note,
-                    lastNote[note._type],
+                    lastNote[note.data.color],
                     bpm,
-                    swingNoteArray[note._type]
+                    swingNoteArray[note.data.color]
                 )
             ) {
-                swingNoteArray[note._type] = [];
+                swingNoteArray[note.data.color] = [];
             }
         }
-        for (const other of swingNoteArray[(note._type + 1) % 2]) {
-            if (other._cutDirection !== 8) {
+        for (const other of swingNoteArray[(note.data.color + 1) % 2]) {
+            if (other.type !== 'note') {
+                continue;
+            }
+            if (other.data.direction !== 8) {
                 if (
-                    !(bpm.toRealTime(note._time) > bpm.toRealTime(other._time) + 0.01)
+                    !(
+                        bpm.toRealTime(note.data.time) >
+                        bpm.toRealTime(other.data.time) + 0.01
+                    )
                 ) {
                     continue;
                 }
                 const isDiagonal =
-                    beatmap.v2.note.getAngle(other) % 90 > 15 &&
-                    beatmap.v2.note.getAngle(other) % 90 < 75;
+                    other.data.getAngle() % 90 > 15 && other.data.getAngle() % 90 < 75;
                 // magic number 1.425 from saber length + good/bad hitbox
                 if (
                     njs.value <
                         1.425 /
-                            ((60 * (note._time - other._time)) / bpm.value +
+                            ((60 * (note.data.time - other.data.time)) / bpm.value +
                                 (isDiagonal ? constantDiagonal : constant)) &&
-                    beatmap.v2.note.isIntersect(note, other, [[15, 1.5]])[1]
+                    isIntersect(note.data, other.data, [[15, 1.5]])[1]
                 ) {
                     arr.push(other);
                     break;
                 }
             }
         }
-        lastNote[note._type] = note;
-        swingNoteArray[note._type].push(note);
+        lastNote[note.data.color] = note;
+        swingNoteArray[note.data.color].push(note);
     }
     return arr
-        .map((n) => n._time)
+        .map((n) => n.data.time)
         .filter(function (x, i, ary) {
             return !i || x !== ary[i - 1];
         });
 }
 
-function run(
-    mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.BeatmapSetData
-): void {
-    if (!mapSet) {
-        throw new Error('something went wrong!');
+function run(map: ToolArgs) {
+    if (!map.difficulty) {
+        console.error('Something went wrong!');
+        return;
     }
-    const result = check(mapSettings, mapSet);
+    const result = check(map);
 
     if (result.length) {
         const htmlResult = document.createElement('div');
         htmlResult.innerHTML = `<b>Hitbox reverse staircase [${
             result.length
         }]:</b> ${result
-            .map((n) => round(mapSettings._bpm.adjustTime(n), 3))
+            .map((n) => round(map.settings.bpm.adjustTime(n), 3))
             .join(', ')}`;
         tool.output.html = htmlResult;
     } else {

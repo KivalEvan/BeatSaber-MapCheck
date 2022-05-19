@@ -1,24 +1,14 @@
-import * as beatmap from '../../beatmap';
+import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
-import { BeatmapSettings, Tool } from '../template';
+import * as beatmap from '../../beatmap';
+import { NoteContainer, NoteContainerNote } from '../../types/beatmap/v3/container';
+import UICheckbox from '../../ui/checkbox';
+import swing from '../../analyzers/swing/swing';
 
-const htmlContainer = document.createElement('div');
-const htmlInputCheck = document.createElement('input');
-const htmlLabelCheck = document.createElement('label');
-
-htmlLabelCheck.textContent = ' Improper window snap';
-htmlLabelCheck.htmlFor = 'input__tools-window-snap-check';
-htmlInputCheck.id = 'input__tools-window-snap-check';
-htmlInputCheck.className = 'input-toggle';
-htmlInputCheck.type = 'checkbox';
-htmlInputCheck.checked = true;
-htmlInputCheck.addEventListener('change', inputCheckHandler);
-
-htmlContainer.appendChild(htmlInputCheck);
-htmlContainer.appendChild(htmlLabelCheck);
+const name = 'Improper Window Snap';
 
 const tool: Tool = {
-    name: 'Improper Window Snap',
+    name,
     description: 'Placeholder',
     type: 'note',
     order: {
@@ -26,78 +16,77 @@ const tool: Tool = {
         output: 185,
     },
     input: {
-        enabled: htmlInputCheck.checked,
+        enabled: true,
         params: {},
-        html: htmlContainer,
+        html: UICheckbox.create(name, name, true, function (this: HTMLInputElement) {
+            tool.input.enabled = this.checked;
+        }),
     },
     output: {
         html: null,
     },
-    run: run,
+    run,
 };
 
-function inputCheckHandler(this: HTMLInputElement) {
-    tool.input.enabled = this.checked;
-}
-
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
-    const { _bpm: bpm } = mapSettings;
-    const { _notes: notes } = mapSet._data;
-    const lastNote: { [key: number]: beatmap.v2.types.Note } = {};
-    const swingNoteArray: { [key: number]: beatmap.v2.types.Note[] } = {
+function check(map: ToolArgs) {
+    const { bpm } = map.settings;
+    const { noteContainer } = map.difficulty!;
+    const lastNote: { [key: number]: NoteContainerNote } = {};
+    const swingNoteArray: { [key: number]: NoteContainer[] } = {
         0: [],
         1: [],
         3: [],
     };
 
-    const arr: beatmap.v2.types.Note[] = [];
-    for (let i = 0, len = notes.length; i < len; i++) {
-        const note = notes[i];
-        if (beatmap.v2.note.isNote(note) && lastNote[note._type]) {
+    const arr: NoteContainer[] = [];
+    for (let i = 0, len = noteContainer.length; i < len; i++) {
+        if (noteContainer[i].type !== 'note') {
+            continue;
+        }
+        const note = noteContainer[i] as NoteContainerNote;
+        if (lastNote[note.data.color]) {
             if (
-                beatmap.v2.swing.next(
+                swing.next(
                     note,
-                    lastNote[note._type],
+                    lastNote[note.data.color],
                     bpm,
-                    swingNoteArray[note._type]
+                    swingNoteArray[note.data.color]
                 )
             ) {
-                lastNote[note._type] = note;
-                swingNoteArray[note._type] = [];
+                lastNote[note.data.color] = note;
+                swingNoteArray[note.data.color] = [];
             } else if (
-                beatmap.v2.note.isSlantedWindow(note, lastNote[note._type]) &&
-                note._time - lastNote[note._type]._time >= 0.001 &&
-                note._cutDirection === lastNote[note._type]._cutDirection &&
-                note._cutDirection !== 8 &&
-                lastNote[note._type]._cutDirection !== 8
+                note.data.isSlantedWindow(lastNote[note.data.color].data) &&
+                note.data.time - lastNote[note.data.color].data.time >= 0.001 &&
+                note.data.direction === lastNote[note.data.color].data.direction &&
+                note.data.direction !== 8 &&
+                lastNote[note.data.color].data.direction !== 8
             ) {
-                arr.push(lastNote[note._type]);
+                arr.push(lastNote[note.data.color]);
             }
         } else {
-            lastNote[note._type] = note;
+            lastNote[note.data.color] = note;
         }
-        swingNoteArray[note._type].push(note);
+        swingNoteArray[note.data.color].push(note);
     }
     return arr
-        .map((n) => n._time)
+        .map((n) => n.data.time)
         .filter(function (x, i, ary) {
             return !i || x !== ary[i - 1];
         });
 }
 
-function run(
-    mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.BeatmapSetData
-): void {
-    if (!mapSet) {
-        throw new Error('something went wrong!');
+function run(map: ToolArgs) {
+    if (!map.difficulty) {
+        console.error('Something went wrong!');
+        return;
     }
-    const result = check(mapSettings, mapSet);
+    const result = check(map);
 
     if (result.length) {
         const htmlResult = document.createElement('div');
         htmlResult.innerHTML = `<b>Improper window snap [${result.length}]:</b> ${result
-            .map((n) => round(mapSettings._bpm.adjustTime(n), 3))
+            .map((n) => round(map.settings.bpm.adjustTime(n), 3))
             .join(', ')}`;
         tool.output.html = htmlResult;
     } else {

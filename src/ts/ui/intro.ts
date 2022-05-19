@@ -1,77 +1,76 @@
-import * as uiLoading from './loading';
-import {
-    downloadFromID,
-    downloadFromURL,
-    downloadFromHash,
-    extractZip,
-} from '../loadMap';
+import main from '../main';
+import UILoading from './loading';
 
 const logPrefix = 'UI Intro: ';
 
-const htmlInputURL = document.querySelector<HTMLInputElement>('.input__intro-url');
-const htmlInputID = document.querySelector<HTMLInputElement>('.input__intro-id');
-const htmlInputHash = document.querySelector<HTMLInputElement>('.input__intro-hash');
-const htmlInputSearchButton = document.querySelector<HTMLInputElement>(
+const htmlInputURL: HTMLInputElement = document.querySelector('.input__intro-url')!;
+const htmlInputID: HTMLInputElement = document.querySelector('.input__intro-id')!;
+const htmlInputHash: HTMLInputElement = document.querySelector('.input__intro-hash')!;
+const htmlInputSearchButton: HTMLInputElement = document.querySelector(
     '.input__search-button'
-);
-const htmlInputFile = document.querySelector<HTMLInputElement>('.input__file');
-const htmlInputFileZone = document.querySelector<HTMLInputElement>('.input__file-zone');
+)!;
+const htmlInputFile: HTMLInputElement = document.querySelector('.input__file')!;
+const htmlInputFileZone: HTMLInputElement =
+    document.querySelector('.input__file-zone')!;
 
 if (htmlInputURL) {
     htmlInputURL.addEventListener('keydown', introInputTextHandler);
 } else {
-    console.error(logPrefix + 'URL input is missing');
+    throw new Error(logPrefix + 'URL input is missing');
 }
 if (htmlInputID) {
     htmlInputID.addEventListener('keydown', introInputTextHandler);
 } else {
-    console.error(logPrefix + 'ID input is missing');
+    throw new Error(logPrefix + 'ID input is missing');
 }
 if (htmlInputHash) {
     htmlInputHash.addEventListener('keydown', introInputTextHandler);
 } else {
-    console.error(logPrefix + 'Hash input is missing');
+    throw new Error(logPrefix + 'Hash input is missing');
 }
 if (htmlInputSearchButton) {
     htmlInputSearchButton.addEventListener('click', introButtonTextHandler);
 } else {
-    console.error(logPrefix + 'search button is missing');
+    throw new Error(logPrefix + 'search button is missing');
 }
 if (htmlInputFile) {
     htmlInputFile.addEventListener('change', inputFileHandler);
 } else {
-    console.error(logPrefix + 'file input is missing');
+    throw new Error(logPrefix + 'file input is missing');
 }
 if (htmlInputFileZone) {
     htmlInputFileZone.addEventListener('drop', inputFileDropHandler);
     htmlInputFileZone.addEventListener('dragover', dragOverHandler);
 } else {
-    console.error(logPrefix + 'file drop zone is missing');
+    throw new Error(logPrefix + 'file drop zone is missing');
 }
 
 function introInputTextHandler(ev: KeyboardEvent): void {
     const target = ev.target as HTMLInputElement;
     if (ev.key === 'Enter' && target.value !== '') {
         if (target.classList.contains('input__intro-url')) {
-            downloadFromURL(target.value);
+            main({ link: target.value });
         }
         if (target.classList.contains('input__intro-id')) {
-            downloadFromID(target.value);
+            main({ id: target.value });
+        }
+        if (target.classList.contains('input__intro-hash')) {
+            main({ hash: target.value });
         }
     }
 }
 
 function introButtonTextHandler(ev: Event): void {
     if (htmlInputURL && htmlInputURL.value !== '') {
-        downloadFromURL(htmlInputURL.value);
+        main({ link: htmlInputURL.value });
         return;
     }
     if (htmlInputID && htmlInputID.value !== '') {
-        downloadFromID(htmlInputID.value);
+        main({ id: htmlInputID.value });
         return;
     }
     if (htmlInputHash && htmlInputHash.value !== '') {
-        downloadFromHash(htmlInputHash.value);
+        main({ hash: htmlInputHash.value });
         return;
     }
 }
@@ -79,11 +78,11 @@ function introButtonTextHandler(ev: Event): void {
 // TODO: maybe break up into individual function
 function inputFileHandler(ev: Event): void {
     const target = ev.target as HTMLInputElement;
-    uiLoading.status('info', 'Reading file input', 0);
+    UILoading.status('info', 'Reading file input', 0);
     const file = target.files ? target.files[0] : null;
     try {
         if (file == null) {
-            uiLoading.status('info', 'No file input', 0);
+            UILoading.status('info', 'No file input', 0);
             throw new Error('No file input');
         }
         if (
@@ -93,13 +92,13 @@ function inputFileHandler(ev: Event): void {
             const fr = new FileReader();
             fr.readAsArrayBuffer(file);
             fr.addEventListener('load', () => {
-                extractZip(file);
+                main({ file });
             });
         } else {
             throw new Error('Unsupported file format, please enter zip file');
         }
     } catch (err) {
-        uiLoading.status('error', err, 0);
+        UILoading.status('error', err, 0);
         console.error(err);
     }
 }
@@ -121,7 +120,7 @@ function inputFileDropHandler(ev: DragEvent): void {
                     const fr = new FileReader();
                     fr.readAsArrayBuffer(file);
                     fr.addEventListener('load', () => {
-                        extractZip(file);
+                        main({ file });
                     });
                 } else {
                     throw new Error('Unsupported file format, please enter zip file');
@@ -129,7 +128,7 @@ function inputFileDropHandler(ev: DragEvent): void {
             }
         }
     } catch (err) {
-        uiLoading.status('error', err, 0);
+        UILoading.status('error', err, 0);
         console.error(err);
     }
 }

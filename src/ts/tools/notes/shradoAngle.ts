@@ -1,10 +1,13 @@
-import * as beatmap from '../../beatmap';
+import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
-import { BeatmapSettings, Tool } from '../template';
+import * as beatmap from '../../beatmap';
+import { NoteContainer, NoteContainerNote } from '../../types/beatmap/v3/container';
+import swing from '../../analyzers/swing/swing';
+import { ColorNote } from '../../beatmap/v3/colorNote';
 
 const defaultMaxTime = 0.15;
 const defaultDistance = 1;
-let localBPM!: beatmap.bpm.BeatPerMinute;
+let localBPM!: beatmap.BeatPerMinute;
 
 const htmlContainer = document.createElement('div');
 const htmlInputCheck = document.createElement('input');
@@ -82,10 +85,10 @@ const tool: Tool = {
     output: {
         html: null,
     },
-    run: run,
+    run,
 };
 
-function adjustTimeHandler(bpm: beatmap.bpm.BeatPerMinute) {
+function adjustTimeHandler(bpm: beatmap.BeatPerMinute) {
     localBPM = bpm;
     htmlInputMaxBeat.value = round(
         localBPM.toBeatTime(tool.input.params.maxTime as number),
@@ -124,84 +127,87 @@ function inputBeatHandler(this: HTMLInputElement) {
     this.value = val.toString();
 }
 
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
-    const { _bpm: bpm } = mapSettings;
-    const { _notes: notes } = mapSet._data;
+function check(map: ToolArgs) {
+    const { bpm } = map.settings;
+    const { noteContainer } = map.difficulty!;
     const { maxTime: temp, distance } = <{ maxTime: number; distance: number }>(
         tool.input.params
     );
     const maxTime = bpm.toBeatTime(temp) + 0.001;
 
-    const lastNote: { [key: number]: beatmap.v2.types.Note } = {};
+    const lastNote: { [key: number]: NoteContainer } = {};
     const lastNoteDirection: { [key: number]: number } = {};
-    const startNoteDot: { [key: number]: beatmap.v2.types.Note | null } = {};
-    const swingNoteArray: { [key: number]: beatmap.v2.types.Note[] } = {
+    const startNoteDot: { [key: number]: NoteContainer | null } = {};
+    const swingNoteArray: { [key: number]: NoteContainer[] } = {
         0: [],
         1: [],
         3: [],
     };
-    const arr: beatmap.v2.types.Note[] = [];
-    for (let i = 0, len = notes.length; i < len; i++) {
-        const note = notes[i];
-        if (beatmap.v2.note.isNote(note) && lastNote[note._type]) {
+    const arr: NoteContainer[] = [];
+    for (let i = 0, len = noteContainer.length; i < len; i++) {
+        if (noteContainer[i].type !== 'note') {
+            continue;
+        }
+        const note = noteContainer[i] as NoteContainerNote;
+        if (lastNote[note.data.color]) {
             if (
-                beatmap.v2.swing.next(
+                swing.next(
                     note,
-                    lastNote[note._type],
+                    lastNote[note.data.color],
                     bpm,
-                    swingNoteArray[note._type]
+                    swingNoteArray[note.data.color]
                 )
             ) {
                 // FIXME: maybe fix rotation or something
-                if (startNoteDot[note._type]) {
-                    startNoteDot[note._type] = null;
-                    lastNoteDirection[note._type] =
-                        beatmap.v2.note.flipDirection[lastNoteDirection[note._type]] ??
+                if (startNoteDot[note.data.color]) {
+                    startNoteDot[note.data.color] = null;
+                    lastNoteDirection[note.data.color] =
+                        beatmap.NoteFlipDirection[lastNoteDirection[note.data.color]] ??
                         8;
                 }
                 if (
-                    beatmap.v2.note.distance(note, lastNote[note._type]) >= distance &&
+                    note.data.getDistance(lastNote[note.data.color].data) >= distance &&
                     checkShrAngle(
-                        note._cutDirection,
-                        lastNoteDirection[note._type],
-                        note._type
+                        note.data.direction,
+                        lastNoteDirection[note.data.color],
+                        note.data.color
                     ) &&
-                    note._time - lastNote[note._type]._time <= maxTime
+                    note.data.time - lastNote[note.data.color].data.time <= maxTime
                 ) {
                     arr.push(note);
                 }
-                if (note._cutDirection === 8) {
-                    startNoteDot[note._type] = note;
+                if (note.data.direction === 8) {
+                    startNoteDot[note.data.color] = note;
                 } else {
-                    lastNoteDirection[note._type] = note._cutDirection;
+                    lastNoteDirection[note.data.color] = note.data.direction;
                 }
-                swingNoteArray[note._type] = [];
+                swingNoteArray[note.data.color] = [];
             } else {
                 if (
-                    startNoteDot[note._type] &&
-                    beatmap.v2.note.distance(note, lastNote[note._type]) >= distance &&
+                    startNoteDot[note.data.color] &&
+                    note.data.getDistance(lastNote[note.data.color].data) >= distance &&
                     checkShrAngle(
-                        note._cutDirection,
-                        lastNoteDirection[note._type],
-                        note._type
+                        note.data.direction,
+                        lastNoteDirection[note.data.color],
+                        note.data.color
                     ) &&
-                    note._time - lastNote[note._type]._time <= maxTime
+                    note.data.time - lastNote[note.data.color].data.time <= maxTime
                 ) {
-                    arr.push(startNoteDot[note._type] as beatmap.v2.types.Note);
-                    startNoteDot[note._type] = null;
+                    arr.push(startNoteDot[note.data.color]!);
+                    startNoteDot[note.data.color] = null;
                 }
-                if (note._cutDirection !== 8) {
-                    lastNoteDirection[note._type] = note._cutDirection;
+                if (note.data.direction !== 8) {
+                    lastNoteDirection[note.data.color] = note.data.direction;
                 }
             }
         } else {
-            lastNoteDirection[note._type] = note._cutDirection;
+            lastNoteDirection[note.data.color] = note.data.direction;
         }
-        lastNote[note._type] = note;
-        swingNoteArray[note._type].push(note);
+        lastNote[note.data.color] = note;
+        swingNoteArray[note.data.color].push(note);
     }
     return arr
-        .map((n) => n._time)
+        .map((n) => n.data.time)
         .filter(function (x, i, ary) {
             return !i || x !== ary[i - 1];
         });
@@ -224,19 +230,17 @@ function checkShrAngle(
     return false;
 }
 
-function run(
-    mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.BeatmapSetData
-): void {
-    if (!mapSet) {
-        throw new Error('something went wrong!');
+function run(map: ToolArgs) {
+    if (!map.difficulty) {
+        console.error('Something went wrong!');
+        return;
     }
-    const result = check(mapSettings, mapSet);
+    const result = check(map);
 
     if (result.length) {
         const htmlResult = document.createElement('div');
         htmlResult.innerHTML = `<b>shrado angle [${result.length}]:</b> ${result
-            .map((n) => round(mapSettings._bpm.adjustTime(n), 3))
+            .map((n) => round(map.settings.bpm.adjustTime(n), 3))
             .join(', ')}`;
         tool.output.html = htmlResult;
     } else {

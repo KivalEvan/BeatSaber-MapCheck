@@ -1,21 +1,8 @@
-import * as beatmap from '../../beatmap';
+import { Tool, ToolArgs } from '../../types/mapcheck';
+import UICheckbox from '../../ui/checkbox';
 import { round } from '../../utils';
-import { BeatmapSettings, Tool } from '../template';
 
-const htmlContainer = document.createElement('div');
-const htmlInputCheck = document.createElement('input');
-const htmlLabelCheck = document.createElement('label');
-
-htmlLabelCheck.textContent = ' Event peak (1 second) and per second';
-htmlLabelCheck.htmlFor = 'input__tools-light-stats';
-htmlInputCheck.id = 'input__tools-light-stats';
-htmlInputCheck.className = 'input-toggle';
-htmlInputCheck.type = 'checkbox';
-htmlInputCheck.checked = false;
-htmlInputCheck.addEventListener('change', inputCheckHandler);
-
-htmlContainer.appendChild(htmlInputCheck);
-htmlContainer.appendChild(htmlLabelCheck);
+const name = ' Event Peak (1 second) and Per Second';
 
 const tool: Tool = {
     name: 'Insufficient Light',
@@ -26,29 +13,31 @@ const tool: Tool = {
         output: 2,
     },
     input: {
-        enabled: htmlInputCheck.checked,
+        enabled: false,
         params: {},
-        html: htmlContainer,
+        html: UICheckbox.create(name, name, false, function (this: HTMLInputElement) {
+            tool.input.enabled = this.checked;
+        }),
     },
     output: {
         html: null,
     },
-    run: run,
+    run,
 };
 
-function inputCheckHandler(this: HTMLInputElement) {
-    tool.input.enabled = this.checked;
-}
-
-function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetData) {
-    const { _bpm: bpm, _audioDuration: duration } = mapSettings;
-    const { _events: events } = mapSet._data;
+function check(map: ToolArgs) {
+    if (!map.difficulty) {
+        console.error('Something went wrong!');
+        return;
+    }
+    const { bpm, audioDuration: duration } = map.settings;
+    const { basicBeatmapEvents: events } = map.difficulty.data;
 
     let second = bpm.toBeatTime(1);
     let peakEPS = 0;
     let currentSectionStart = 0;
     for (let i = 0; i < events.length; i++) {
-        while (events[i]._time - events[currentSectionStart]._time > second) {
+        while (events[i].time - events[currentSectionStart].time > second) {
             currentSectionStart++;
         }
         peakEPS = Math.max(
@@ -62,14 +51,8 @@ function check(mapSettings: BeatmapSettings, mapSet: beatmap.types.BeatmapSetDat
     };
 }
 
-function run(
-    mapSettings: BeatmapSettings,
-    mapSet?: beatmap.types.BeatmapSetData
-): void {
-    if (!mapSet) {
-        throw new Error('something went wrong!');
-    }
-    const result = check(mapSettings, mapSet);
+function run(map: ToolArgs) {
+    const result = check(map);
 
     if (result) {
         const htmlResult = document.createElement('div');
