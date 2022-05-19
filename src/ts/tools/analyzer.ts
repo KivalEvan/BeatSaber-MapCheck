@@ -11,8 +11,12 @@ const tag = (func: Function) => {
     return `[analyzer::${func.name}]`;
 };
 
-const toolList: ReadonlyArray<Tool> = AnalysisComponents.getAll().sort(
+const toolListInput: ReadonlyArray<Tool> = AnalysisComponents.getAll().sort(
     (a, b) => a.order.input - b.order.input
+);
+
+const toolListOutput: ReadonlyArray<Tool> = [...toolListInput].sort(
+    (a, b) => a.order.output - b.order.output
 );
 
 const init = (): void => {
@@ -49,7 +53,7 @@ const runGeneral = (): void => {
 
     logger.info(tag(runGeneral), `Analysing general`);
     const htmlArr: HTMLElement[] = [];
-    toolList
+    toolListOutput
         .filter((tool) => tool.type === 'general')
         .forEach((tool) => {
             if (tool.input.enabled) {
@@ -102,7 +106,8 @@ const runDifficulty = (
     const bpm = BeatPerMinute.create(
         mapInfo._beatsPerMinute,
         beatmapDifficulty.data.customData?._BPMChanges ||
-            beatmapDifficulty.data.customData?._bpmChanges,
+            beatmapDifficulty.data.customData?._bpmChanges ||
+            beatmapDifficulty.data.customData?.BPMChanges,
         beatmapDifficulty.info._customData?._editorOffset
     );
     const njs = NoteJumpSpeed.create(
@@ -120,7 +125,7 @@ const runDifficulty = (
 
     logger.info(tag(runDifficulty), `Analysing ${characteristic} ${difficulty}`);
     const htmlArr: HTMLElement[] = [];
-    toolList
+    toolListOutput
         .filter((tool) => tool.type !== 'general')
         .forEach((tool) => {
             if (tool.input.enabled) {
@@ -168,7 +173,7 @@ const applyAll = (): void => {
 };
 
 export default {
-    toolList,
+    toolListInput,
     runGeneral,
     runDifficulty,
     adjustTime,

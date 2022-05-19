@@ -38,26 +38,52 @@ export const eventTypeRename = (
     switch (type) {
         case 0:
             switch (environment) {
+                case 'BillieEnvironment':
+                    return 'Water 4';
+                case 'PyroEnvironment':
+                    return 'Video Alpha';
+                case 'EDMEnvironment':
+                    return 'Lane Lights Bottom';
                 default:
                     return 'Back Lasers';
             }
         case 1:
             switch (environment) {
+                case 'BillieEnvironment':
+                    return 'Water 1';
+                case 'PyroEnvironment':
+                    return 'Logo';
+                case 'EDMEnvironment':
+                    return 'Lane Lights Top';
                 default:
                     return 'Ring Lights';
             }
         case 2:
             switch (environment) {
+                case 'BillieEnvironment':
+                    return 'Left Sun Ray';
+                case 'PyroEnvironment':
+                    return 'Left Projectors';
                 default:
                     return 'Left Lasers';
             }
         case 3:
             switch (environment) {
+                case 'BillieEnvironment':
+                    return 'Right Sun Ray';
+                case 'PyroEnvironment':
+                    return 'Right Projectors';
                 default:
                     return 'Right Lasers';
             }
         case 4:
             switch (environment) {
+                case 'BillieEnvironment':
+                    return 'Sun';
+                case 'PyroEnvironment':
+                    return 'Platform';
+                case 'EDMEnvironment':
+                    return 'Player Space & Spectrogram';
                 default:
                     return 'Center Lights';
             }
@@ -65,21 +91,31 @@ export const eventTypeRename = (
             return 'Light Color Boost';
         case 6:
             switch (environment) {
+                case 'BillieEnvironment':
+                    return 'Water 2';
+                case 'PyroEnvironment':
+                    return 'Ambient';
                 default:
                     return 'Extra Left Lights';
             }
         case 7:
             switch (environment) {
+                case 'BillieEnvironment':
+                    return 'Water 3';
                 default:
                     return 'Extra Right Lights';
             }
         case 8:
             switch (environment) {
+                case 'BillieEnvironment':
+                    return 'Rain Toggle';
                 default:
                     return 'Ring Rotation';
             }
         case 9:
             switch (environment) {
+                case 'BillieEnvironment':
+                    return 'Laser Align Toggle';
                 default:
                     return 'Ring Zoom';
             }
@@ -95,11 +131,15 @@ export const eventTypeRename = (
             }
         case 12:
             switch (environment) {
+                case 'BillieEnvironment':
+                    return 'Left Sun Ray Rotation';
                 default:
                     return 'Left Laser Rotation';
             }
         case 13:
             switch (environment) {
+                case 'BillieEnvironment':
+                    return 'Right Sun Ray Rotation';
                 default:
                     return 'Right Laser Rotation';
             }
@@ -109,11 +149,15 @@ export const eventTypeRename = (
             return 'Late Lane Rotation';
         case 16:
             switch (environment) {
+                case 'BillieEnvironment':
+                    return 'Left Laser Rotation';
                 default:
                     return 'Utility Event 1';
             }
         case 17:
             switch (environment) {
+                case 'BillieEnvironment':
+                    return 'Right Laser Rotation';
                 default:
                     return 'Utility Event 2';
             }
@@ -129,6 +173,8 @@ export const eventTypeRename = (
             }
         case 40:
             switch (environment) {
+                case 'PyroEnvironment':
+                    return 'Video Projection';
                 default:
                     return 'BTS Event 1';
             }

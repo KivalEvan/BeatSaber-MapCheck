@@ -1,26 +1,13 @@
 import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
-import * as beatmap from '../../beatmap';
 import { NoteContainer, NoteContainerNote } from '../../types/beatmap/v3/container';
 import swing from '../../analyzers/swing/swing';
+import UICheckbox from '../../ui/checkbox';
 
-const htmlContainer = document.createElement('div');
-const htmlInputCheck = document.createElement('input');
-const htmlLabelCheck = document.createElement('label');
-
-htmlLabelCheck.textContent = ' Hitbox inline';
-htmlLabelCheck.htmlFor = 'input__tools-hitbox-inline-check';
-htmlInputCheck.id = 'input__tools-hitbox-inline-check';
-htmlInputCheck.className = 'input-toggle';
-htmlInputCheck.type = 'checkbox';
-htmlInputCheck.checked = true;
-htmlInputCheck.addEventListener('change', inputCheckHandler);
-
-htmlContainer.appendChild(htmlInputCheck);
-htmlContainer.appendChild(htmlLabelCheck);
+const name = 'Hitbox Inline';
 
 const tool: Tool = {
-    name: 'Hitbox Inline',
+    name,
     description: 'Placeholder',
     type: 'note',
     order: {
@@ -28,19 +15,17 @@ const tool: Tool = {
         output: 192,
     },
     input: {
-        enabled: htmlInputCheck.checked,
+        enabled: true,
         params: {},
-        html: htmlContainer,
+        html: UICheckbox.create(name, name, true, function (this: HTMLInputElement) {
+            tool.input.enabled = this.checked;
+        }),
     },
     output: {
         html: null,
     },
     run,
 };
-
-function inputCheckHandler(this: HTMLInputElement) {
-    tool.input.enabled = this.checked;
-}
 
 const constant = 0;
 function check(map: ToolArgs) {

@@ -5,24 +5,12 @@ import { NoteContainer, NoteContainerNote } from '../../types/beatmap/v3/contain
 import { isEnd } from '../../analyzers/placement/note';
 import swing from '../../analyzers/swing/swing';
 import { ColorNote } from '../../beatmap/v3';
+import UICheckbox from '../../ui/checkbox';
 
-const htmlContainer = document.createElement('div');
-const htmlInputCheck = document.createElement('input');
-const htmlLabelCheck = document.createElement('label');
-
-htmlLabelCheck.textContent = ' Hitbox staircase';
-htmlLabelCheck.htmlFor = 'input__tools-hitbox-stair-check';
-htmlInputCheck.id = 'input__tools-hitbox-stair-check';
-htmlInputCheck.className = 'input-toggle';
-htmlInputCheck.type = 'checkbox';
-htmlInputCheck.checked = true;
-htmlInputCheck.addEventListener('change', inputCheckHandler);
-
-htmlContainer.appendChild(htmlInputCheck);
-htmlContainer.appendChild(htmlLabelCheck);
+const name = 'Hitbox Staircase';
 
 const tool: Tool = {
-    name: 'Hitbox Staircase',
+    name,
     description: 'Placeholder',
     type: 'note',
     order: {
@@ -30,9 +18,11 @@ const tool: Tool = {
         output: 190,
     },
     input: {
-        enabled: htmlInputCheck.checked,
+        enabled: true,
         params: {},
-        html: htmlContainer,
+        html: UICheckbox.create(name, name, true, function (this: HTMLInputElement) {
+            tool.input.enabled = this.checked;
+        }),
     },
     output: {
         html: null,
@@ -40,13 +30,31 @@ const tool: Tool = {
     run,
 };
 
-function inputCheckHandler(this: HTMLInputElement) {
-    tool.input.enabled = this.checked;
-}
+const isDouble = (
+    note: NoteContainerNote,
+    nc: NoteContainer[],
+    index: number
+): boolean => {
+    for (let i = index, len = nc.length; i < len; i++) {
+        if (nc[i].type !== 'note') {
+            continue;
+        }
+        if (
+            nc[i].data.time < note.data.time + 0.01 &&
+            (nc[i] as NoteContainerNote).data.color !== note.data.color
+        ) {
+            return true;
+        }
+        if (nc[i].data.time > note.data.time + 0.01) {
+            return false;
+        }
+    }
+    return false;
+};
 
 function check(map: ToolArgs) {
     const { bpm } = map.settings;
-    const noteContainer = map.difficulty!.noteContainer;
+    const { noteContainer } = map.difficulty!;
     const hitboxTime = bpm.toBeatTime(0.15);
 
     const lastNote: { [key: number]: NoteContainerNote } = {};
@@ -55,9 +63,10 @@ function check(map: ToolArgs) {
     const swingNoteArray: { [key: number]: NoteContainer[] } = {
         0: [],
         1: [],
+        3: [],
     };
     const noteOccupy: { [key: number]: ColorNote } = {
-        0: ColorNote.create({ c: 0 }),
+        0: ColorNote.create(),
         1: ColorNote.create({ c: 1 }),
     };
 
@@ -128,20 +137,10 @@ function check(map: ToolArgs) {
             ) {
                 if (
                     note.data.posX === noteOccupy[(note.data.color + 1) % 2].posX &&
-                    note.data.posY === noteOccupy[(note.data.color + 1) % 2].posY
+                    note.data.posY === noteOccupy[(note.data.color + 1) % 2].posY &&
+                    !isDouble(note, noteContainer, i)
                 ) {
-                    for (let j = i + 1; j < len; j++) {
-                        const compare = noteContainer[j];
-                        if (compare.data.time > note.data.time + 0.01) {
-                            break;
-                        }
-                        if (
-                            compare.type === 'note' &&
-                            note.data.isDouble(compare.data, 0.01)
-                        ) {
-                            arr.push(note);
-                        }
-                    }
+                    arr.push(note);
                 }
             }
         } else {
@@ -159,7 +158,7 @@ function check(map: ToolArgs) {
             lastNoteDirection[note.data.color] = note.data.direction;
         }
         lastNote[note.data.color] = note;
-        swingNoteArray[note.data.color].push(noteContainer[i]);
+        swingNoteArray[note.data.color].push(note);
     }
     return arr
         .map((n) => n.data.time)

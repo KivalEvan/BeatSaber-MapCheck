@@ -385,7 +385,7 @@ const setBookmarks = (arr?: IBookmark[], bpm?: BeatPerMinute | null): void => {
             rt = bpm.toRealTime(time);
         }
         return `${round(elem._time, 3)}${rt ? ' | ' + toMMSS(rt) : ''} -- ${
-            elem._name !== '' ? elem._name : '**EMPTY NAME**'
+            elem._name != '' ? elem._name : '**EMPTY NAME**'
         }`;
     });
     displayTableRow(htmlTableBookmarks, bookmarkText);
@@ -501,15 +501,26 @@ const setDiffInfoTable = (mapData: IBeatmapItem): void => {
             ? BeatPerMinute.create(
                   SavedData.beatmapInfo._beatsPerMinute,
                   mapData.data.customData._bpmChanges ||
-                      mapData.data.customData._BPMChanges
+                      mapData.data.customData._BPMChanges ||
+                      mapData.data.customData.BPMChanges
               )
             : null;
-        setTimeSpend(mapData.data.customData._time);
-        setBookmarks(mapData.data.customData._bookmarks, bpm);
+        setTimeSpend(mapData.data.customData._time ?? mapData.data.customData.time);
+        setBookmarks(
+            mapData.data.customData._bookmarks ?? mapData.data.customData.bookmarks,
+            bpm
+        );
         setBPMChanges(bpm);
-        setEnvironmentEnhancement(mapData.data.customData._environment);
-        setPointDefinitions(mapData.data.customData._pointDefinitions);
-        setCustomEvents(mapData.data.customData._customEvents, bpm);
+        setEnvironmentEnhancement(mapData.data.customData.environment);
+        setPointDefinitions(
+            mapData.data.customData._pointDefinitions ??
+                mapData.data.customData.pointDefinitions
+        );
+        setCustomEvents(
+            mapData.data.customData._customEvents ??
+                mapData.data.customData.customEvents,
+            bpm
+        );
     }
 };
 

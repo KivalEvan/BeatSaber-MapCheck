@@ -17,7 +17,7 @@ export default class UICheckbox {
         const htmlInputCheck = document.createElement('input');
         const htmlLabelCheck = document.createElement('label');
 
-        htmlLabelCheck.textContent = title;
+        htmlLabelCheck.textContent = ' ' + title;
         htmlLabelCheck.htmlFor = 'input__tools-' + name;
         htmlInputCheck.id = 'input__tools-' + name;
         htmlInputCheck.className = 'input-toggle';

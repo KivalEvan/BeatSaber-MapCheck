@@ -2,7 +2,7 @@ import { Tool, ToolArgs } from '../../types/mapcheck';
 import { ColorArray } from '../../types/beatmap/shared/colors';
 import { deltaE00, toRGBArray, round } from '../../utils';
 import * as beatmap from '../../beatmap';
-import logger from '../../logger';
+import UICheckbox from '../../ui/checkbox';
 
 const arrowColor: ColorArray = [1, 1, 1];
 
@@ -22,23 +22,10 @@ const levelMsg = (level: { [key: number]: string }, perc: number): string => {
     return level[key];
 };
 
-const htmlContainer = document.createElement('div');
-const htmlInputCheck = document.createElement('input');
-const htmlLabelCheck = document.createElement('label');
-
-htmlLabelCheck.textContent = ' Color check (EXPERIMENTAL)';
-htmlLabelCheck.htmlFor = 'input__tools-note-color-check';
-htmlInputCheck.id = 'input__tools-note-color-check';
-htmlInputCheck.className = 'input-toggle';
-htmlInputCheck.type = 'checkbox';
-htmlInputCheck.checked = true;
-htmlInputCheck.addEventListener('change', inputCheckHandler);
-
-htmlContainer.appendChild(htmlInputCheck);
-htmlContainer.appendChild(htmlLabelCheck);
+const name = 'Color Check (EXPERIMENTAL)';
 
 const tool: Tool = {
-    name: 'Color Check',
+    name,
     description: 'Placeholder',
     type: 'note',
     order: {
@@ -46,19 +33,17 @@ const tool: Tool = {
         output: 45,
     },
     input: {
-        enabled: htmlInputCheck.checked,
+        enabled: true,
         params: {},
-        html: htmlContainer,
+        html: UICheckbox.create(name, name, true, function (this: HTMLInputElement) {
+            tool.input.enabled = this.checked;
+        }),
     },
     output: {
         html: null,
     },
     run,
 };
-
-function inputCheckHandler(this: HTMLInputElement) {
-    tool.input.enabled = this.checked;
-}
 
 function customColorSimilarity(map: ToolArgs) {
     const checkColorLeft =

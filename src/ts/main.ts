@@ -24,6 +24,7 @@ const tag = () => {
 // TODO: possibly do more accurate & predictive loading bar based on the amount of file available (may be farfetched and likely not be implemented)
 export default async (type: LoadType) => {
     try {
+        console.time('loading time');
         UIInput.enable(false);
         let file: ArrayBuffer | File;
         if (type.file) {
@@ -132,6 +133,7 @@ export default async (type: LoadType) => {
 
         UIInput.enable(true);
         UILoading.status('info', 'Map successfully loaded!');
+        console.timeEnd('loading time');
     } catch (err) {
         UILoading.status('error', err, 100);
         logger.error(tag(), err);

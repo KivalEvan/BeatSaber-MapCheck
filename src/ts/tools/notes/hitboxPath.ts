@@ -2,24 +2,12 @@ import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
 import * as beatmap from '../../beatmap';
 import { isIntersect } from '../../analyzers/placement/note';
+import UICheckbox from '../../ui/checkbox';
 
-const htmlContainer = document.createElement('div');
-const htmlInputCheck = document.createElement('input');
-const htmlLabelCheck = document.createElement('label');
-
-htmlLabelCheck.textContent = ' Hitbox path';
-htmlLabelCheck.htmlFor = 'input__tools-hitbox-path-check';
-htmlInputCheck.id = 'input__tools-hitbox-path-check';
-htmlInputCheck.className = 'input-toggle';
-htmlInputCheck.type = 'checkbox';
-htmlInputCheck.checked = true;
-htmlInputCheck.addEventListener('change', inputCheckHandler);
-
-htmlContainer.appendChild(htmlInputCheck);
-htmlContainer.appendChild(htmlLabelCheck);
+const name = 'Hitbox Path';
 
 const tool: Tool = {
-    name: 'Hitbox Path',
+    name,
     description: 'Placeholder',
     type: 'note',
     order: {
@@ -27,19 +15,17 @@ const tool: Tool = {
         output: 190,
     },
     input: {
-        enabled: htmlInputCheck.checked,
+        enabled: true,
         params: {},
-        html: htmlContainer,
+        html: UICheckbox.create(name, name, true, function (this: HTMLInputElement) {
+            tool.input.enabled = this.checked;
+        }),
     },
     output: {
         html: null,
     },
     run,
 };
-
-function inputCheckHandler(this: HTMLInputElement) {
-    tool.input.enabled = this.checked;
-}
 
 function check(map: ToolArgs) {
     const { bpm } = map.settings;

@@ -1,21 +1,9 @@
 import { IBeatmapItem, IBeatmapSettings, Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
 import * as beatmap from '../../beatmap';
+import UICheckbox from '../../ui/checkbox';
 
-const htmlContainer = document.createElement('div');
-const htmlInputCheck = document.createElement('input');
-const htmlLabelCheck = document.createElement('label');
-
-htmlLabelCheck.textContent = ' Stacked note';
-htmlLabelCheck.htmlFor = 'input__tools-stack-note-check';
-htmlInputCheck.id = 'input__tools-stack-note-check';
-htmlInputCheck.className = 'input-toggle';
-htmlInputCheck.type = 'checkbox';
-htmlInputCheck.checked = true;
-htmlInputCheck.addEventListener('change', inputCheckHandler);
-
-htmlContainer.appendChild(htmlInputCheck);
-htmlContainer.appendChild(htmlLabelCheck);
+const name = 'Stacked Note';
 
 const tool: Tool = {
     name: 'Stacked Note',
@@ -26,19 +14,17 @@ const tool: Tool = {
         output: 198,
     },
     input: {
-        enabled: htmlInputCheck.checked,
+        enabled: true,
         params: {},
-        html: htmlContainer,
+        html: UICheckbox.create(name, name, true, function (this: HTMLInputElement) {
+            tool.input.enabled = this.checked;
+        }),
     },
     output: {
         html: null,
     },
     run,
 };
-
-function inputCheckHandler(this: HTMLInputElement) {
-    tool.input.enabled = this.checked;
-}
 
 function checkNote(settings: IBeatmapSettings, map: IBeatmapItem) {
     const { bpm } = settings;

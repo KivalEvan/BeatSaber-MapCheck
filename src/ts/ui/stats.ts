@@ -609,8 +609,8 @@ const populate = (): void => {
             const htmlAccordion = UIAccordion.create(
                 `${prefix}${set._beatmapCharacteristicName}-${diff._difficulty}`,
                 DifficultyRename[diff._difficulty] +
-                    (diff._customData?.difficultyLabel
-                        ? ' -- ' + diff._customData?.difficultyLabel
+                    (diff._customData?._difficultyLabel
+                        ? ' -- ' + diff._customData?._difficultyLabel
                         : ''),
                 diff._difficulty,
                 true

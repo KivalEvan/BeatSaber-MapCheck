@@ -1,24 +1,11 @@
-import swing from '../../analyzers/swing/swing';
 import { IBeatmapItem, Tool, ToolArgs } from '../../types/mapcheck';
+import UICheckbox from '../../ui/checkbox';
 import { round } from '../../utils';
 
-const htmlContainer = document.createElement('div');
-const htmlInputCheck = document.createElement('input');
-const htmlLabelCheck = document.createElement('label');
-
-htmlLabelCheck.textContent = ' Varying swing speed';
-htmlLabelCheck.htmlFor = 'input__tools-vary-swing-check';
-htmlInputCheck.id = 'input__tools-vary-swing-check';
-htmlInputCheck.className = 'input-toggle';
-htmlInputCheck.type = 'checkbox';
-htmlInputCheck.checked = true;
-htmlInputCheck.addEventListener('change', inputCheckHandler);
-
-htmlContainer.appendChild(htmlInputCheck);
-htmlContainer.appendChild(htmlLabelCheck);
+const name = 'Varying Swing Speed';
 
 const tool: Tool = {
-    name: 'Varying Swing Speed',
+    name,
     description: 'Placeholder',
     type: 'note',
     order: {
@@ -26,19 +13,17 @@ const tool: Tool = {
         output: 130,
     },
     input: {
-        enabled: htmlInputCheck.checked,
+        enabled: true,
         params: {},
-        html: htmlContainer,
+        html: UICheckbox.create(name, name, true, function (this: HTMLInputElement) {
+            tool.input.enabled = this.checked;
+        }),
     },
     output: {
         html: null,
     },
     run,
 };
-
-function inputCheckHandler(this: HTMLInputElement) {
-    tool.input.enabled = this.checked;
-}
 
 function check(difficulty: IBeatmapItem) {
     const { swingAnalysis } = difficulty;

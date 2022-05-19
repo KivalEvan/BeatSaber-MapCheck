@@ -4,24 +4,12 @@ import * as beatmap from '../../beatmap';
 import { NoteContainer } from '../../types/beatmap/v3/container';
 import { checkDirection } from '../../analyzers/placement/note';
 import swing from '../../analyzers/swing/swing';
+import UICheckbox from '../../ui/checkbox';
 
-const htmlContainer = document.createElement('div');
-const htmlInputCheck = document.createElement('input');
-const htmlLabelCheck = document.createElement('label');
-
-htmlLabelCheck.textContent = ' Double-directional';
-htmlLabelCheck.htmlFor = 'input__tools-dd-check';
-htmlInputCheck.id = 'input__tools-dd-check';
-htmlInputCheck.className = 'input-toggle';
-htmlInputCheck.type = 'checkbox';
-htmlInputCheck.checked = true;
-htmlInputCheck.addEventListener('change', inputCheckHandler);
-
-htmlContainer.appendChild(htmlInputCheck);
-htmlContainer.appendChild(htmlLabelCheck);
+const name = 'Double-directional';
 
 const tool: Tool = {
-    name: 'Double-directional',
+    name,
     description: 'Placeholder',
     type: 'note',
     order: {
@@ -29,19 +17,17 @@ const tool: Tool = {
         output: 140,
     },
     input: {
-        enabled: htmlInputCheck.checked,
+        enabled: true,
         params: {},
-        html: htmlContainer,
+        html: UICheckbox.create(name, name, true, function (this: HTMLInputElement) {
+            tool.input.enabled = this.checked;
+        }),
     },
     output: {
         html: null,
     },
     run,
 };
-
-function inputCheckHandler(this: HTMLInputElement) {
-    tool.input.enabled = this.checked;
-}
 
 function check(settings: IBeatmapSettings, difficulty: IBeatmapItem) {
     const { bpm } = settings;

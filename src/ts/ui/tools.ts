@@ -180,7 +180,7 @@ const adjustTime = (): void => {
 };
 
 const populateTool = (): void => {
-    Analyser.toolList.forEach((tl) => {
+    Analyser.toolListInput.forEach((tl) => {
         if (tl.input.html) {
             switch (tl.type) {
                 case 'note': {

@@ -4,8 +4,12 @@
 
 ### Added
 
+-   Added v3 beatmap support
 -   v2 to v3 beatmap internal conversion
     -   This may be inaccurate for modded v2 map as it internally convert modded to v3
+-   Added Weave, Pyro and EDM environment
+-   Added basic slider and burst slider check
+-   Dynamic event name based on environment
 
 ### Changed
 
@@ -16,6 +20,11 @@
 ### Deprecated
 
 -   Beatmap v2.x.x is now unsupported
+    -   Beatmap v2 can still be used by map check, but will not gain any feature updated around it.
+
+### Removed
+
+-   Temporarily removed experimental parity check
 
 ## v2.4.0 [2022-03-02]
 

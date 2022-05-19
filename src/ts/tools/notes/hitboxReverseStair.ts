@@ -3,24 +3,12 @@ import { round } from '../../utils';
 import { NoteContainer, NoteContainerNote } from '../../types/beatmap/v3/container';
 import { isIntersect } from '../../analyzers/placement/note';
 import swing from '../../analyzers/swing/swing';
+import UICheckbox from '../../ui/checkbox';
 
-const htmlContainer = document.createElement('div');
-const htmlInputCheck = document.createElement('input');
-const htmlLabelCheck = document.createElement('label');
-
-htmlLabelCheck.textContent = ' Hitbox reverse staircase';
-htmlLabelCheck.htmlFor = 'input__tools-hitbox-rstair-check';
-htmlInputCheck.id = 'input__tools-hitbox-rstair-check';
-htmlInputCheck.className = 'input-toggle';
-htmlInputCheck.type = 'checkbox';
-htmlInputCheck.checked = true;
-htmlInputCheck.addEventListener('change', inputCheckHandler);
-
-htmlContainer.appendChild(htmlInputCheck);
-htmlContainer.appendChild(htmlLabelCheck);
+const name = 'Hitbox Reverse Staircase';
 
 const tool: Tool = {
-    name: 'Hitbox Reverse Staircase',
+    name,
     description: 'Placeholder',
     type: 'note',
     order: {
@@ -28,19 +16,17 @@ const tool: Tool = {
         output: 191,
     },
     input: {
-        enabled: htmlInputCheck.checked,
+        enabled: true,
         params: {},
-        html: htmlContainer,
+        html: UICheckbox.create(name, name, true, function (this: HTMLInputElement) {
+            tool.input.enabled = this.checked;
+        }),
     },
     output: {
         html: null,
     },
     run,
 };
-
-function inputCheckHandler(this: HTMLInputElement) {
-    tool.input.enabled = this.checked;
-}
 
 const constant = 0.03414823529;
 const constantDiagonal = 0.03414823529;
