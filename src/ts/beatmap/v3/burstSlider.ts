@@ -192,6 +192,6 @@ export class BurstSlider extends BaseSlider<IBurstSlider> {
      * ```
      */
     isValid() {
-        return !this.hasMappingExtensions();
+        return !(this.hasMappingExtensions() || this.isInverse());
     }
 }

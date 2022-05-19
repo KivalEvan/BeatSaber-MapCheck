@@ -1,7 +1,8 @@
 import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
 import * as beatmap from '../../beatmap';
-import { NoteContainer } from '../../types/beatmap/v3/container';
+import { NoteContainer, NoteContainerNote } from '../../types/beatmap/v3/container';
+import swing from '../../analyzers/swing/swing';
 
 const htmlContainer = document.createElement('div');
 const htmlInputCheck = document.createElement('input');
@@ -44,26 +45,34 @@ function inputCheckHandler(this: HTMLInputElement) {
 const constant = 0;
 function check(map: ToolArgs) {
     const { bpm, njs } = map.settings;
-    const { colorNotes } = map.difficulty.data;
+    const { noteContainer } = map.difficulty!;
 
-    const lastNote: { [key: number]: beatmap.v3.ColorNote } = {};
+    const lastNote: { [key: number]: NoteContainer } = {};
     const swingNoteArray: { [key: number]: NoteContainer[] } = {
         0: [],
         1: [],
         3: [],
     };
 
-    const arr: beatmap.v3.ColorNote[] = [];
-    for (let i = 0, len = colorNotes.length; i < len; i++) {
-        const note = colorNotes[i];
-        if (lastNote[note.color]) {
+    const arr: NoteContainer[] = [];
+    for (let i = 0, len = noteContainer.length; i < len; i++) {
+        if (noteContainer[i].type !== 'note') {
+            continue;
+        }
+        const note = noteContainer[i] as NoteContainerNote;
+        if (lastNote[note.data.color]) {
             if (
-                swing.next(note, lastNote[note.color], bpm, swingNoteArray[note.color])
+                swing.next(
+                    note,
+                    lastNote[note.data.color],
+                    bpm,
+                    swingNoteArray[note.data.color]
+                )
             ) {
-                swingNoteArray[note.color] = [];
+                swingNoteArray[note.data.color] = [];
             }
         }
-        for (const other of swingNoteArray[(note.color + 1) % 2]) {
+        for (const other of swingNoteArray[(note.data.color + 1) % 2]) {
             // magic number 1.425 from saber length + good/bad hitbox
             if (other.type !== 'note') {
                 continue;
@@ -71,18 +80,19 @@ function check(map: ToolArgs) {
             if (
                 njs.value <
                     1.425 /
-                        ((60 * (note.time - other.data.time)) / bpm.value + constant) &&
-                note.isInline(other.data)
+                        ((60 * (note.data.time - other.data.time)) / bpm.value +
+                            constant) &&
+                note.data.isInline(other.data)
             ) {
                 arr.push(note);
                 break;
             }
         }
-        lastNote[note.color] = note;
-        swingNoteArray[note.color].push({ type: 'note', data: note });
+        lastNote[note.data.color] = note;
+        swingNoteArray[note.data.color].push(note);
     }
     return arr
-        .map((n) => n.time)
+        .map((n) => n.data.time)
         .filter(function (x, i, ary) {
             return !i || x !== ary[i - 1];
         });

@@ -19,6 +19,10 @@ const tool: Tool = {
 };
 
 function run(map: ToolArgs) {
+    if (!map.difficulty) {
+        console.error('Something went wrong!');
+        return;
+    }
     const result = map.difficulty.info._customData?._difficultyLabel;
 
     if (result && result.length > 30) {

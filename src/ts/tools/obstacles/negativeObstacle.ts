@@ -26,7 +26,7 @@ const tool: Tool = {
 };
 
 function check(map: ToolArgs) {
-    const { obstacles } = map.difficulty.data;
+    const { obstacles } = map.difficulty!.data;
     if (
         map.info._customData?._requirements?.includes('Mapping Extensions') ||
         map.info._customData?._requirements?.includes('Noodle Extensions')
@@ -37,6 +37,10 @@ function check(map: ToolArgs) {
 }
 
 function run(map: ToolArgs) {
+    if (!map.difficulty) {
+        console.error('Something went wrong!');
+        return;
+    }
     const result = check(map);
 
     if (result.length) {

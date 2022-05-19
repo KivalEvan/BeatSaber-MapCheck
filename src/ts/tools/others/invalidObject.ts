@@ -25,16 +25,11 @@ const tool: Tool = {
     run,
 };
 
-function inputCheckHandler(this: HTMLInputElement) {
-    tool.input.enabled = this.checked;
-}
-
-function check(map: ToolArgs) {
-    const { colorNotes } = map.difficulty.data;
-    return colorNotes.filter((n) => n.hasMappingExtensions()).map((n) => n.time);
-}
-
 function run(map: ToolArgs) {
+    if (!map.difficulty) {
+        console.error('Something went wrong!');
+        return;
+    }
     const { bpm } = map.settings;
     const {
         colorNotes,
@@ -110,6 +105,22 @@ function run(map: ToolArgs) {
     if (eventResult.length) {
         htmlString.push(
             `<b>Invalid event [${eventResult.length}]:</b> ${eventResult
+                .map((n) => round(bpm.adjustTime(n), 3))
+                .join(', ')}`
+        );
+    }
+    if (sliderResult.length) {
+        htmlString.push(
+            `<b>Invalid slider [${sliderResult.length}]:</b> ${sliderResult
+                .map((n) => round(bpm.adjustTime(n), 3))
+                .join(', ')}`
+        );
+    }
+    if (burstSliderResult.length) {
+        htmlString.push(
+            `<b>Invalid burst slider [${
+                burstSliderResult.length
+            }]:</b> ${burstSliderResult
                 .map((n) => round(bpm.adjustTime(n), 3))
                 .join(', ')}`
         );

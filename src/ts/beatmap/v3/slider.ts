@@ -266,6 +266,6 @@ export class Slider extends BaseSlider<ISlider> {
      * ```
      */
     isValid() {
-        return !this.hasMappingExtensions();
+        return !(this.hasMappingExtensions() || this.isInverse());
     }
 }

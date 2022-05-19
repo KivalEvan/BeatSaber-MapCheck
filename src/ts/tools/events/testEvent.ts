@@ -25,11 +25,11 @@ const tool: Tool = {
     run,
 };
 
-function inputCheckHandler(this: HTMLInputElement) {
-    tool.input.enabled = this.checked;
-}
-
 function check(map: ToolArgs) {
+    if (!map.difficulty) {
+        console.error('Something went wrong!');
+        return;
+    }
     const { bpm, audioDuration: duration } = map.settings;
     const { basicBeatmapEvents: events } = map.difficulty.data;
 

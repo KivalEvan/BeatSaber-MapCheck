@@ -240,8 +240,8 @@ function inputMaxBeatHandler(this: HTMLInputElement) {
 
 function check(map: ToolArgs) {
     const { bpm, njs } = map.settings;
-    const noteContainer = map.difficulty.data
-        .getNoteContainer()
+    const noteContainer = map
+        .difficulty!.data.getNoteContainer()
         .filter((n) => n.type !== 'slider');
     const {
         minTime: temp1,
@@ -251,11 +251,11 @@ function check(map: ToolArgs) {
     const minTime =
         vbSpecific === 'time'
             ? bpm.toBeatTime(temp1)
-            : bpm.toBeatTime(vbDiff[map.difficulty.difficulty].min);
+            : bpm.toBeatTime(vbDiff[map.difficulty!.difficulty].min);
     const maxTime =
         vbSpecific === 'time'
             ? bpm.toBeatTime(temp2)
-            : Math.min(njs.hjd, bpm.toBeatTime(vbDiff[map.difficulty.difficulty].max));
+            : Math.min(njs.hjd, bpm.toBeatTime(vbDiff[map.difficulty!.difficulty].max));
 
     let lastMidL: NoteContainer | null = null;
     let lastMidR: NoteContainer | null = null;
@@ -303,6 +303,10 @@ function check(map: ToolArgs) {
 }
 
 function run(map: ToolArgs) {
+    if (!map.difficulty) {
+        console.error('Something went wrong!');
+        return;
+    }
     const result = check(map);
 
     if (result.length) {

@@ -1,4 +1,5 @@
 import JSZip from 'jszip';
+import * as swing from './analyzers/swing';
 import { BeatPerMinute } from './beatmap';
 import { V2toV3 } from './beatmap/convert';
 import {
@@ -66,18 +67,24 @@ export const loadDifficulty = async (info: IInfoData, zip: JSZip) => {
                             diffInfo._customData?._editorOffset
                         );
                         beatmapItem.push({
+                            info: diffInfo,
                             characteristic: mapSet[i]._beatmapCharacteristicName,
                             difficulty: diffInfo._difficulty,
                             bpm,
                             data,
                             noteContainer: data.getNoteContainer(),
                             eventContainer: data.getEventContainer(),
-                            swingAnalysis: {},
+                            swingAnalysis: swing.info(
+                                data,
+                                bpm,
+                                mapSet[i]._beatmapCharacteristicName,
+                                diffInfo._difficulty
+                            ),
                             rawVersion: 3,
                             rawData: diffJSON,
                         });
                     } else {
-                        const data = V2toV3(parseDifficultyV2(diffJSON));
+                        const data = V2toV3(parseDifficultyV2(diffJSON), true);
                         const bpm = BeatPerMinute.create(
                             info._beatsPerMinute,
                             diffJSON._customData?._BPMChanges ??
@@ -85,13 +92,19 @@ export const loadDifficulty = async (info: IInfoData, zip: JSZip) => {
                             diffInfo._customData?._editorOffset
                         );
                         beatmapItem.push({
+                            info: diffInfo,
                             characteristic: mapSet[i]._beatmapCharacteristicName,
                             difficulty: diffInfo._difficulty,
                             bpm,
                             data,
                             noteContainer: data.getNoteContainer(),
                             eventContainer: data.getEventContainer(),
-                            swingAnalysis: {},
+                            swingAnalysis: swing.info(
+                                data,
+                                bpm,
+                                mapSet[i]._beatmapCharacteristicName,
+                                diffInfo._difficulty
+                            ),
                             rawVersion: 2,
                             rawData: diffJSON,
                         });

@@ -1,7 +1,8 @@
-import { Tool, ToolArgs } from '../../types/mapcheck';
+import { IBeatmapItem, IBeatmapSettings, Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
 import * as beatmap from '../../beatmap';
-import { NoteContainer } from '../../types/beatmap/v3/container';
+import { NoteContainer, NoteContainerNote } from '../../types/beatmap/v3/container';
+import swing from '../../analyzers/swing/swing';
 
 const defaultMaxTime = 0.075;
 
@@ -104,14 +105,14 @@ function inputPrecHandler(this: HTMLInputElement) {
     this.value = val.toString();
 }
 
-function check(map: ToolArgs) {
-    const { bpm } = map.settings;
-    const { colorNotes } = map.difficulty.data;
+function check(settings: IBeatmapSettings, difficulty: IBeatmapItem) {
+    const { bpm } = settings;
+    const { noteContainer } = difficulty;
     const { maxTime: temp } = <{ maxTime: number }>tool.input.params;
     const maxTime = bpm.toBeatTime(temp) + 0.001;
 
-    const lastNote: { [key: number]: beatmap.v3.ColorNote } = {};
-    const lastNotePause: { [key: number]: beatmap.v3.ColorNote } = {};
+    const lastNote: { [key: number]: NoteContainer } = {};
+    const lastNotePause: { [key: number]: NoteContainer } = {};
     const maybePause: { [key: number]: boolean } = {
         0: false,
         1: false,
@@ -123,37 +124,49 @@ function check(map: ToolArgs) {
         3: [],
     };
 
-    const arr: beatmap.v3.ColorNote[] = [];
-    for (let i = 0, len = colorNotes.length; i < len; i++) {
-        const note = colorNotes[i];
-        if (lastNote[note.color]) {
+    const arr: NoteContainer[] = [];
+    for (let i = 0, len = noteContainer.length; i < len; i++) {
+        if (noteContainer[i].type !== 'note') {
+            continue;
+        }
+        const note = noteContainer[i] as NoteContainerNote;
+        if (lastNote[note.data.color]) {
             if (
-                swing.next(note, lastNote[note.color], bpm, swingNoteArray[note.color])
+                swing.next(
+                    note,
+                    lastNote[note.data.color],
+                    bpm,
+                    swingNoteArray[note.data.color]
+                )
             ) {
-                if (note.time - lastNote[note.color].time <= maxTime * 2) {
+                if (
+                    note.data.time - lastNote[note.data.color].data.time <=
+                    maxTime * 2
+                ) {
                     if (
                         maybePause[0] &&
                         maybePause[1] &&
-                        lastNote[note.color].time - lastNotePause[note.color].time <=
+                        lastNote[note.data.color].data.time -
+                            lastNotePause[note.data.color].data.time <=
                             maxTime * 3
                     ) {
-                        arr.push(lastNote[note.color]);
+                        arr.push(lastNote[note.data.color]);
                     }
-                    maybePause[note.color] = false;
-                } else if (!maybePause[note.color]) {
-                    maybePause[note.color] = true;
-                    lastNotePause[note.color] = lastNote[note.color];
+                    maybePause[note.data.color] = false;
+                } else if (!maybePause[note.data.color]) {
+                    maybePause[note.data.color] = true;
+                    lastNotePause[note.data.color] = lastNote[note.data.color];
                 }
-                swingNoteArray[note.color] = [];
-                lastNote[note.color] = note;
+                swingNoteArray[note.data.color] = [];
+                lastNote[note.data.color] = note;
             }
         } else {
-            lastNote[note.color] = note;
+            lastNote[note.data.color] = note;
         }
-        swingNoteArray[note.color].push({ type: 'note', data: note });
+        swingNoteArray[note.data.color].push(note);
     }
     return arr
-        .map((n) => n.time)
+        .map((n) => n.data.time)
         .filter(function (x, i, ary) {
             return !i || x !== ary[i - 1];
         });
@@ -177,7 +190,11 @@ function checkShrAngle(
 }
 
 function run(map: ToolArgs) {
-    const result = check(map);
+    if (!map.difficulty) {
+        console.error('Something went wrong!');
+        return;
+    }
+    const result = check(map.settings, map.difficulty);
 
     if (result.length) {
         const htmlResult = document.createElement('div');

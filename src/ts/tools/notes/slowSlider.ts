@@ -104,13 +104,11 @@ function inputPrecHandler(this: HTMLInputElement) {
 }
 
 function check(map: ToolArgs) {
-    const { bpm } = map.settings;
-    const { colorNotes } = map.difficulty.data;
+    const { swingAnalysis } = map.difficulty!;
     const { minSpeed } = <{ minSpeed: number }>tool.input.params;
 
-    return swing
-        .getSliderNote(notes, bpm)
-        .filter((n) => n._maxSpeed > minSpeed || n._minSpeed > minSpeed)
+    return swingAnalysis.container
+        .filter((s) => s.maxSpeed > minSpeed || s.minSpeed > minSpeed)
         .map((n) => n.time)
         .filter((x, i, ary) => {
             return !i || x !== ary[i - 1];
@@ -118,6 +116,10 @@ function check(map: ToolArgs) {
 }
 
 function run(map: ToolArgs) {
+    if (!map.difficulty) {
+        console.error('Something went wrong!');
+        return;
+    }
     const { minSpeed } = <{ minSpeed: number }>tool.input.params;
     const result = check(map);
 

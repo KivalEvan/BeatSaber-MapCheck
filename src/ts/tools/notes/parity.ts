@@ -1,7 +1,9 @@
 import { Tool, ToolArgs } from '../../types/mapcheck';
 import UISelect from '../../ui/select';
 import { round } from '../../utils';
-import * as beatmap from '../../beatmap';
+import Parity from '../../analyzers/parity/parity';
+import swing from '../../analyzers/swing/swing';
+import { NoteContainer } from '../../types/beatmap/v3/container';
 
 const htmlContainer = document.createElement('div');
 const htmlInputCheck = document.createElement('input');
@@ -77,73 +79,86 @@ function inputSelectRotateHandler(this: HTMLInputElement) {}
 function inputSelectParityHandler(this: HTMLInputElement) {}
 
 function check(map: ToolArgs) {
+    if (!map.difficulty) {
+        console.error('Something went wrong!');
+        return;
+    }
     const { bpm } = map.settings;
-    const { colorNotes } = map.difficulty.data;
+    const { noteContainer } = map.difficulty!;
     const { warningThres, errorThres, allowedRot } = <
         { warningThres: number; errorThres: number; allowedRot: number }
     >tool.input.params;
 
-    const lastNote: { [key: number]: beatmap.v3.ColorNote } = {};
-    const swingNoteArray: { [key: number]: beatmap.v3.ColorNote[] } = {
+    const lastNote: { [key: number]: NoteContainer } = {};
+    const swingNoteArray: { [key: number]: NoteContainer[] } = {
         0: [],
         1: [],
         3: [],
     };
-    const bombContext: { [key: number]: beatmap.v3.ColorNote[] } = {
+    const bombContext: { [key: number]: NoteContainer[] } = {
         0: [],
         1: [],
     };
-    const lastBombContext: { [key: number]: beatmap.v3.ColorNote[] } = {
+    const lastBombContext: { [key: number]: NoteContainer[] } = {
         0: [],
         1: [],
     };
 
-    const swingParity: { [key: number]: parity.Parity } = {
-        0: new parity.Parity(colorNotes, 0, warningThres, errorThres, allowedRot),
-        1: new parity.Parity(colorNotes, 1, warningThres, errorThres, allowedRot),
+    const swingParity: { [key: number]: Parity } = {
+        0: new Parity(noteContainer, 0, warningThres, errorThres, allowedRot),
+        1: new Parity(noteContainer, 1, warningThres, errorThres, allowedRot),
     };
     const parity: { warning: number[]; error: number[] } = {
         warning: [],
         error: [],
     };
 
-    const arr: beatmap.v3.ColorNote[] = [];
-    for (let i = 0, len = colorNotes.length; i < len; i++) {
-        const note = colorNotes[i];
-        if (note.isNote(note) && lastNote[note.color]) {
+    const arr: NoteContainer[] = [];
+    for (let i = 0, len = noteContainer.length; i < len; i++) {
+        const note = noteContainer[i];
+        if (note.type === 'note' && lastNote[note.data.color]) {
             if (
-                swing.next(note, lastNote[note.color], bpm, swingNoteArray[note.color])
+                swing.next(
+                    note,
+                    lastNote[note.data.color],
+                    bpm,
+                    swingNoteArray[note.data.color]
+                )
             ) {
                 // check previous swing parity
-                const parityStatus = swingParity[note.color].check(
-                    swingNoteArray[note.color],
-                    lastBombContext[note.color]
+                const parityStatus = swingParity[note.data.color].check(
+                    swingNoteArray[note.data.color],
+                    lastBombContext[note.data.color]
                 );
                 switch (parityStatus) {
                     case 'warning': {
-                        parity.warning.push(swingNoteArray[note.color][0].time);
+                        parity.warning.push(
+                            swingNoteArray[note.data.color][0].data.time
+                        );
                         break;
                     }
                     case 'error': {
-                        parity.error.push(swingNoteArray[note.color][0].time);
+                        parity.error.push(swingNoteArray[note.data.color][0].data.time);
                         break;
                     }
                 }
-                swingParity[note.color].next(
-                    swingNoteArray[note.color],
-                    lastBombContext[note.color]
+                swingParity[note.data.color].next(
+                    swingNoteArray[note.data.color],
+                    lastBombContext[note.data.color]
                 );
-                lastBombContext[note.color] = bombContext[note.color];
-                bombContext[note.color] = [];
-                swingNoteArray[note.color] = [];
+                lastBombContext[note.data.color] = bombContext[note.data.color];
+                bombContext[note.data.color] = [];
+                swingNoteArray[note.data.color] = [];
             }
         }
-        if (note.color === 3) {
+        if (note.type === 'bomb') {
             bombContext[0].push(note);
             bombContext[1].push(note);
         }
-        lastNote[note.color] = note;
-        swingNoteArray[note.color].push(note);
+        if (note.type === 'note') {
+            lastNote[note.data.color] = note;
+            swingNoteArray[note.data.color].push(note);
+        }
     }
     // final
     for (let i = 0; i < 2; i++) {
@@ -154,11 +169,11 @@ function check(map: ToolArgs) {
             );
             switch (parityStatus) {
                 case 'warning': {
-                    parity.warning.push(swingNoteArray[i][0].time);
+                    parity.warning.push(swingNoteArray[i][0].data.time);
                     break;
                 }
                 case 'error': {
-                    parity.error.push(swingNoteArray[i][0].time);
+                    parity.error.push(swingNoteArray[i][0].data.time);
                     break;
                 }
             }
@@ -168,6 +183,10 @@ function check(map: ToolArgs) {
 }
 
 function run(map: ToolArgs) {
+    if (!map.difficulty) {
+        console.error('Something went wrong!');
+        return;
+    }
     const result = check(map);
 
     const htmlString: string[] = [];

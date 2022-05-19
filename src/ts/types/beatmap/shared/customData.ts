@@ -1,6 +1,6 @@
 import { IContributor } from './contributor';
 import { IEditor } from './editor';
-import { IColorScheme } from './environment';
+import { IColorScheme } from './colorScheme';
 import { IHeckInfoCustomData } from './heck';
 import { IChromaInfoCustomData } from './chroma';
 

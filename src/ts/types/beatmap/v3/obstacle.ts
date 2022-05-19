@@ -1,5 +1,5 @@
 import { IBaseObject } from './baseObject';
-import { ICustomDataBase } from '../shared/customData';
+import { ICustomDataObstacle } from './customData';
 
 export interface IObstacle extends IBaseObject {
     /** Position x `<int>` of obstacle.
@@ -42,5 +42,5 @@ export interface IObstacle extends IBaseObject {
      * Range: `1-5`
      */
     h: number;
-    customData?: ICustomDataBase;
+    customData?: ICustomDataObstacle;
 }

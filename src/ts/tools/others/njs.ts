@@ -20,6 +20,10 @@ const tool: Tool = {
 };
 
 function run(map: ToolArgs) {
+    if (!map.difficulty) {
+        console.error('Something went wrong!');
+        return;
+    }
     const { njs, bpm } = map.settings;
     const htmlString: string[] = [];
 

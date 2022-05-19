@@ -1,4 +1,4 @@
-import { Tool, ToolArgs } from '../../types/mapcheck';
+import { IBeatmapItem, IBeatmapSettings, Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
 import * as beatmap from '../../beatmap';
 
@@ -40,9 +40,9 @@ function inputCheckHandler(this: HTMLInputElement) {
     tool.input.enabled = this.checked;
 }
 
-function checkNote(map: ToolArgs) {
-    const { bpm } = map.settings;
-    const { colorNotes } = map.difficulty.data;
+function checkNote(settings: IBeatmapSettings, map: IBeatmapItem) {
+    const { bpm } = settings;
+    const { colorNotes } = map.data;
 
     const arr: beatmap.v3.ColorNote[] = [];
     // to avoid multiple of stack popping up, ignore anything within this time
@@ -71,9 +71,9 @@ function checkNote(map: ToolArgs) {
         });
 }
 
-function checkBomb(map: ToolArgs) {
-    const { bpm, njs } = map.settings;
-    const { bombNotes } = map.difficulty.data;
+function checkBomb(settings: IBeatmapSettings, map: IBeatmapItem) {
+    const { bpm, njs } = settings;
+    const { bombNotes } = map.data;
 
     const arr: beatmap.v3.BombNote[] = [];
     for (let i = 0, len = bombNotes.length; i < len; i++) {
@@ -104,8 +104,12 @@ function checkBomb(map: ToolArgs) {
 }
 
 function run(map: ToolArgs) {
-    const resultNote = checkNote(map);
-    const resultBomb = checkBomb(map);
+    if (!map.difficulty) {
+        console.error('Something went wrong!');
+        return;
+    }
+    const resultNote = checkNote(map.settings, map.difficulty);
+    const resultBomb = checkBomb(map.settings, map.difficulty);
 
     const htmlString: string[] = [];
     if (resultNote.length) {

@@ -4,10 +4,10 @@ import * as beatmap from '../../beatmap';
 import { EnvironmentName } from '../../types/beatmap/shared/environment';
 import UICheckbox from '../../ui/checkbox';
 
-const name = ' Unlit Nomb';
+const name = 'Unlit Bomb';
 
 const tool: Tool = {
-    name: 'Unlit Bomb',
+    name,
     description: 'Placeholder',
     type: 'event',
     order: {
@@ -38,11 +38,11 @@ const unlitBomb = (
         return [];
     }
     const arr: beatmap.v3.BombNote[] = [];
+    const commonEvent =
+        beatmap.EventList[environment]?.[0] ??
+        beatmap.EventList['DefaultEnvironment'][0];
     const eventsLight = events
-        .filter(
-            (ev) =>
-                ev.isLightEvent() && beatmap.EventList[environment][0].includes(ev.type)
-        )
+        .filter((ev) => ev.isLightEvent() && commonEvent.includes(ev.type))
         .sort((a, b) => a.type - b.type) as beatmap.v3.BasicEvent[];
     const eventState: {
         [key: number]: {
@@ -64,7 +64,7 @@ const unlitBomb = (
     const eventLitTime: {
         [key: number]: [number, boolean][];
     } = {};
-    beatmap.EventList[environment][0].forEach((e) => (eventLitTime[e] = [[0, false]]));
+    commonEvent.forEach((e) => (eventLitTime[e] = [[0, false]]));
     const fadeTime = bpm.toBeatTime(1);
     const reactTime = bpm.toBeatTime(0.25);
     for (let i = 0, len = eventsLight.length; i < len; i++) {
@@ -153,6 +153,10 @@ const unlitBomb = (
 };
 
 function run(map: ToolArgs) {
+    if (!map.difficulty) {
+        console.error('Something went wrong!');
+        return;
+    }
     const result = unlitBomb(
         map.difficulty.data.bombNotes,
         map.difficulty.data.basicBeatmapEvents,

@@ -39,6 +39,10 @@ const sufficientLight = (events: beatmap.v3.BasicEvent[]): boolean => {
 };
 
 function run(map: ToolArgs) {
+    if (!map.difficulty) {
+        console.error('Something went wrong!');
+        return;
+    }
     const result = sufficientLight(map.difficulty.data.basicBeatmapEvents);
 
     if (!result) {

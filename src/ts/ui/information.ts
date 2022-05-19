@@ -12,15 +12,10 @@ import {
     EnvironmentRename,
     EnvironmentSchemeName,
 } from '../beatmap';
-import {
-    IHeckPointDefinition,
-    ICustomEventV3,
-    IBookmark,
-    ChromaDataEnvAbbr,
-    IChromaEnvironment,
-    IEditor,
-    IEditorInfo,
-} from '../types/beatmap/shared';
+import { IBookmark, IEditor, IEditorInfo } from '../types/beatmap/shared';
+import { ChromaDataEnvAbbr, IChromaEnvironment } from '../types/beatmap/v3/chroma';
+import { IHeckPointDefinition } from '../types/beatmap/v3/heck';
+import { ICustomEvent } from '../types/beatmap/v3/customEvent';
 
 const logPrefix = 'UI Info: ';
 
@@ -464,9 +459,9 @@ export default new (class UIInformation {
                     keyArr.push(k);
                 }
             }
-            return `${elem._lookupMethod} [${keyArr.join('')}]${
-                elem._track ? `(${elem._track})` : ''
-            } -> ${elem._id}`;
+            return `${elem.lookupMethod} [${keyArr.join('')}]${
+                elem.track ? `(${elem.track})` : ''
+            } -> ${elem.id}`;
         });
         this.displayTableRow(this.htmlTableEnvironmentEnhancement, envEnhance);
     };
@@ -477,14 +472,14 @@ export default new (class UIInformation {
             return;
         }
         const pointDef = arr.map((elem) => {
-            return `${elem._name} -- ${elem._points.length} point${
-                elem._points.length > 1 ? 's' : ''
+            return `${elem.name} -- ${elem.points.length} point${
+                elem.points.length > 1 ? 's' : ''
             }`;
         });
         this.displayTableRow(this.htmlTablePointDefinitions, pointDef);
     };
 
-    setCustomEvents = (arr?: ICustomEventV3[], bpm?: BeatPerMinute | null): void => {
+    setCustomEvents = (arr?: ICustomEvent[], bpm?: BeatPerMinute | null): void => {
         if (arr == null || !arr.length) {
             this.hideTableRow(this.htmlTableCustomEvents);
             return;
@@ -509,7 +504,7 @@ export default new (class UIInformation {
             return `${round(elem.b, 3)}${rt ? ' | ' + toMMSS(rt) : ''} -- ${
                 elem.t
             } -> [${keyArr.join('')}]${
-                elem.t !== 'AssignTrackParent' ? `(${elem.d._track})` : ''
+                elem.t !== 'AssignTrackParent' ? `(${elem.d.track})` : ''
             }`;
         });
         this.displayTableRow(this.htmlTableCustomEvents, customEv);

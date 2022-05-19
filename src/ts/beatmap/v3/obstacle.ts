@@ -198,7 +198,7 @@ export class Obstacle extends BaseObject<IObstacle> {
         return this.duration === 0 || this.width === 0 || this.height === 0;
     }
 
-    /** Check if obstacle is crouch.
+    /** Check if obstacle has negative crouch.
      * ```ts
      * if (wall.hasNegative()) {}
      * ```
@@ -240,6 +240,34 @@ export class Obstacle extends BaseObject<IObstacle> {
             this.time + this.duration > compareTo.time + compareTo.duration + prevOffset
         );
     }
+
+    /** Check if obstacle has Chroma properties.
+     * ```ts
+     * if (wall.hasChroma()) {}
+     * ```
+     */
+    hasChroma = (): boolean => {
+        return Array.isArray(this.customData?.color);
+    };
+
+    /** Check if obstacle has Noodle Extensions properties.
+     * ```ts
+     * if (wall.hasNoodleExtensions()) {}
+     * ```
+     */
+    hasNoodleExtensions = (): boolean => {
+        return (
+            Array.isArray(this.customData?.animation) ||
+            typeof this.customData?.uninteractable === 'boolean' ||
+            Array.isArray(this.customData?.localRotation) ||
+            typeof this.customData?.noteJumpMovementSpeed === 'number' ||
+            typeof this.customData?.noteJumpStartBeatOffset === 'number' ||
+            Array.isArray(this.customData?.coordinates) ||
+            Array.isArray(this.customData?.worldRotation) ||
+            Array.isArray(this.customData?.size) ||
+            typeof this.customData?.track === 'string'
+        );
+    };
 
     /** Check if obstacle has Mapping Extensions properties.
      * ```ts

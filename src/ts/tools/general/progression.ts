@@ -1,6 +1,7 @@
 import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
 import SavedData from '../../savedData';
+import * as swing from '../../analyzers/swing';
 
 const tool: Tool = {
     name: 'Progression',
@@ -27,9 +28,9 @@ function run(map: ToolArgs) {
         return;
     }
     const filteredSPS = SavedData.beatmapDifficulty
-        .map((d) => d.sps)
-        .filter((a) => a.mode === 'Standard')
-        .sort((a, b) => a.total.overall - b.sps.total.overall);
+        .map((d) => d.swingAnalysis)
+        .filter((a) => a.characteristic === 'Standard')
+        .sort((a, b) => a.total.count - b.total.count);
     if (!filteredSPS.length) {
         tool.output.html = null;
         return;

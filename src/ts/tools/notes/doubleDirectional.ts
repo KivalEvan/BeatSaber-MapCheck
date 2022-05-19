@@ -1,8 +1,9 @@
-import { Tool, ToolArgs } from '../../types/mapcheck';
+import { IBeatmapItem, IBeatmapSettings, Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
 import * as beatmap from '../../beatmap';
 import { NoteContainer } from '../../types/beatmap/v3/container';
-import { checkDirection } from '../../analyzers/placement/placements';
+import { checkDirection } from '../../analyzers/placement/note';
+import swing from '../../analyzers/swing/swing';
 
 const htmlContainer = document.createElement('div');
 const htmlInputCheck = document.createElement('input');
@@ -42,10 +43,10 @@ function inputCheckHandler(this: HTMLInputElement) {
     tool.input.enabled = this.checked;
 }
 
-function check(map: ToolArgs) {
-    const { bpm } = map.settings;
-    const noteContainer = map.difficulty.noteContainer;
-    const lastNote: { [key: number]: beatmap.v3.ColorNote } = {};
+function check(settings: IBeatmapSettings, difficulty: IBeatmapItem) {
+    const { bpm } = settings;
+    const noteContainer = difficulty.noteContainer;
+    const lastNote: { [key: number]: NoteContainer } = {};
     const lastNoteAngle: { [key: number]: number } = {};
     const startNoteDot: { [key: number]: beatmap.v3.ColorNote | null } = {};
     const swingNoteArray: { [key: number]: NoteContainer[] } = {
@@ -59,7 +60,7 @@ function check(map: ToolArgs) {
         if (note.type === 'note' && lastNote[note.data.color]) {
             if (
                 swing.next(
-                    note.data,
+                    note,
                     lastNote[note.data.color],
                     bpm,
                     swingNoteArray[note.data.color]
@@ -99,7 +100,7 @@ function check(map: ToolArgs) {
             lastNoteAngle[note.data.color] = note.data.getAngle();
         }
         if (note.type === 'note') {
-            lastNote[note.data.color] = note.data;
+            lastNote[note.data.color] = note;
             swingNoteArray[note.data.color].push(note);
         }
         if (note.type === 'bomb') {
@@ -139,7 +140,11 @@ function check(map: ToolArgs) {
 }
 
 function run(map: ToolArgs) {
-    const result = check(map);
+    if (!map.difficulty) {
+        console.error('Something went wrong!');
+        return;
+    }
+    const result = check(map.settings, map.difficulty);
 
     if (result.length) {
         const htmlResult = document.createElement('div');

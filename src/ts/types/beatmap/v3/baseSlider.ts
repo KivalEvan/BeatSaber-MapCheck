@@ -1,6 +1,6 @@
-import { IBaseObject } from './baseObject';
+import { IBaseNote } from './baseNote';
 
-export interface IBaseSlider extends IBaseObject {
+export interface IBaseSlider extends IBaseNote {
     /** Color type `<int>` of base slider.
      * ```ts
      * 0 -> Red
@@ -8,27 +8,6 @@ export interface IBaseSlider extends IBaseObject {
      * ```
      */
     c: 0 | 1;
-    /** Head position x `<int>` of base slider.
-     * ```ts
-     * 0 -> Outer Left
-     * 1 -> Middle Left
-     * 2 -> Middle Right
-     * 3 -> Outer Right
-     * ```
-     * ---
-     * Range: `0-3`
-     */
-    x: number;
-    /** Head position y `<int>` of base slider.
-     * ```ts
-     * 0 -> Bottom row
-     * 1 -> Middle row
-     * 2 -> Top row
-     * ```
-     * ---
-     * Range: `0-2`
-     */
-    y: number;
     /** Head cut direction `<int>` of base slider.
      * ```ts
      * 4 | 0 | 5

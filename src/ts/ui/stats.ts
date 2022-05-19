@@ -5,12 +5,27 @@ import UISelect from './select';
 import SavedData from '../savedData';
 import Settings from '../settings';
 import { formatNumber, round } from '../utils';
-import { BeatPerMinute, NoteJumpSpeed, DifficultyRename } from '../beatmap';
+import {
+    BeatPerMinute,
+    NoteJumpSpeed,
+    DifficultyRename,
+    eventTypeRename,
+} from '../beatmap';
 import { CharacteristicRename } from '../beatmap/shared/characteristic';
 import { IInfoData } from '../types';
-import { EventRename } from '../types/beatmap/v2/event';
 import { IBeatmapItem } from '../types/mapcheck';
 import { NoteContainer } from '../types/beatmap/v3/container';
+import {
+    countDirection,
+    countNote,
+    countX,
+    countXY,
+    countY,
+} from '../analyzers/stats/note';
+import * as swing from '../analyzers/swing';
+import { countObstacle } from '../analyzers/stats/obstacle';
+import { countEvent } from '../analyzers/stats';
+import * as score from '../analyzers/score';
 
 const logPrefix = 'UI Stats: ';
 const prefix = 'stats__';
@@ -97,8 +112,7 @@ export default new (class UIStats {
     };
 
     createSPSTable = (mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTableElement => {
-        const bpm = BeatPerMinute.create(mapInfo._beatsPerMinute);
-        const swingInfo = swing.info(mapData.data, bpm);
+        const swingInfo = mapData.swingAnalysis;
 
         const htmlTable = document.createElement('table');
         htmlTable.className = prefix + 'table';
@@ -110,10 +124,10 @@ export default new (class UIStats {
     <th class="${prefix}table-header">Blue</th>
     </tr>
     <tr>
-    <th class="${prefix}table-header">Overall</th>
-    <td class="${prefix}table-element">${round(swingInfo.total.overall, 2)}</td>
-    <td class="${prefix}table-element">${round(swingInfo.red.overall, 2)}</td>
-    <td class="${prefix}table-element">${round(swingInfo.blue.overall, 2)}</td>
+    <th class="${prefix}table-header">Count</th>
+    <td class="${prefix}table-element">${round(swingInfo.total.count, 2)}</td>
+    <td class="${prefix}table-element">${round(swingInfo.red.count, 2)}</td>
+    <td class="${prefix}table-element">${round(swingInfo.blue.count, 2)}</td>
     </tr>
     <tr>
     <th class="${prefix}table-header">Median</th>
@@ -141,7 +155,7 @@ export default new (class UIStats {
         mapInfo: IInfoData,
         mapData: IBeatmapItem
     ): HTMLTableElement => {
-        const noteCount = note.count(mapData.data._notes);
+        const noteCount = countNote(mapData.data.colorNotes);
 
         let htmlString = `<caption class="${prefix}table-caption">Notes: ${
             noteCount.red.total + noteCount.blue.total
@@ -256,33 +270,33 @@ export default new (class UIStats {
         for (let l = 2; l >= 0; l--) {
             htmlString += '<tr>';
             for (let i = 0; i <= 3; i++) {
-                htmlString += `<td class="${prefix}table-element">${note.countIndexLayer(
+                htmlString += `<td class="${prefix}table-element">${countXY(
                     nc,
                     i,
                     l
                 )}</td>`;
             }
             htmlString += `<td class="${prefix}table-element ${prefix}table--no-border">${round(
-                (note.countLayer(nc, l) / totalNote) * 100,
+                (countY(nc, l) / totalNote) * 100,
                 1
             )}%</td>
         </tr>`;
         }
         htmlString += `<tr>
     <td class="${prefix}table-element ${prefix}table--no-border">${round(
-            (note.countIndex(nc, 0) / totalNote) * 100,
+            (countX(nc, 0) / totalNote) * 100,
             1
         )}%</td>
     <td class="${prefix}table-element ${prefix}table--no-border">${round(
-            (note.countIndex(nc, 1) / totalNote) * 100,
+            (countX(nc, 1) / totalNote) * 100,
             1
         )}%</td>
     <td class="${prefix}table-element ${prefix}table--no-border">${round(
-            (note.countIndex(nc, 2) / totalNote) * 100,
+            (countX(nc, 2) / totalNote) * 100,
             1
         )}%</td>
     <td class="${prefix}table-element ${prefix}table--no-border">${round(
-            (note.countIndex(nc, 3) / totalNote) * 100,
+            (countX(nc, 3) / totalNote) * 100,
             1
         )}%</td>
     </tr>`;
@@ -371,7 +385,7 @@ export default new (class UIStats {
         for (let i = 0; i < 3; i++) {
             htmlString += '<tr>';
             for (let j = 0; j < 3; j++) {
-                let count = note.countDirection(notes, cutOrder[i * 3 + j]);
+                let count = countDirection(notes, cutOrder[i * 3 + j]);
                 htmlString += `<td class="${prefix}table-element">${count}<br>(${round(
                     (count / totalNote) * 100,
                     1
@@ -415,36 +429,36 @@ export default new (class UIStats {
 
     createInfoTable = (mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTableElement => {
         const bpm = BeatPerMinute.create(mapInfo._beatsPerMinute);
-        const noteCount = note.count(mapData.data._notes);
+        const noteCount = countNote(mapData.data.colorNotes);
 
         let htmlString = `<caption class="${prefix}table-caption">Note Information:</caption>
     <tr>
     <th class="${prefix}table-header" colspan="2">Max Score</th>
     <td class="${prefix}table-element">${formatNumber(
-            score.calculate(noteCount.red.total + noteCount.blue.total)
+            score.calculate(mapData.noteContainer)
         )}</td>
     </tr>
     <tr>
     <th class="${prefix}table-header" colspan="2">Effective BPM</th>
     <td class="${prefix}table-element">${round(
-            swing.getMaxEffectiveBPM(mapData.data._notes, bpm),
+            swing.getMaxEffectiveBPM(mapData.swingAnalysis.container),
             2
         )}</td>
     </tr>
     <tr>
     <th class="${prefix}table-header" colspan="2">Effective BPM (swing)</th>
     <td class="${prefix}table-element">${round(
-            swing.getMaxEffectiveBPMSwing(mapData.data._notes, bpm),
+            swing.getMaxEffectiveBPMSwing(mapData.swingAnalysis.container),
             2
         )}</td>
     </tr>`;
 
         let minSpeed = round(
-            swing.getMinSliderSpeed(mapData.data._notes, bpm) * 1000,
+            swing.getMinSliderSpeed(mapData.swingAnalysis.container) * 1000,
             1
         );
         let maxSpeed = round(
-            swing.getMaxSliderSpeed(mapData.data._notes, bpm) * 1000,
+            swing.getMaxSliderSpeed(mapData.swingAnalysis.container) * 1000,
             1
         );
         if (minSpeed && maxSpeed) {
@@ -470,7 +484,12 @@ export default new (class UIStats {
         mapInfo: IInfoData,
         mapData: IBeatmapItem
     ): HTMLTableElement => {
-        const eventCount = event.count(mapData.data._events, mapData.environment);
+        const environment =
+            mapData.characteristic === '360Degree' ||
+            mapData.characteristic === '90Degree'
+                ? mapInfo._allDirectionsEnvironmentName
+                : mapInfo._environmentName;
+        const eventCount = countEvent(mapData.data.basicBeatmapEvents, environment);
         let chroma = 0;
         let chromaOld = 0;
         let noodleExtensions = 0;
@@ -483,10 +502,11 @@ export default new (class UIStats {
         for (const key in eventCount) {
             chroma += eventCount[key].chroma;
             chromaOld += eventCount[key].chromaOld;
-            noodleExtensions += eventCount[key].noodleExtensions;
-            mappingExtensions += eventCount[key].mappingExtensions;
             htmlString += `<tr>
-        <th class="${prefix}table-header" colspan="2">${EventRename[key]}</th>
+        <th class="${prefix}table-header" colspan="2">${eventTypeRename(
+                parseInt(key),
+                environment
+            )}</th>
         <td class="${prefix}table-element">${eventCount[key].total}</td>
         </tr>`;
         }
@@ -526,19 +546,13 @@ export default new (class UIStats {
         mapInfo: IInfoData,
         mapData: IBeatmapItem
     ): HTMLTableElement => {
-        const obstacleCount = Obstacle.count(mapData.data.obstacles);
+        const obstacleCount = countObstacle(mapData.data.obstacles);
 
         let htmlString = `<caption class="${prefix}table-caption">Obstacles: ${obstacleCount.total}</caption>`;
         if (obstacleCount.interactive) {
             htmlString += `<tr>
         <th class="${prefix}table-header" colspan="2">Interactive</th>
         <td class="${prefix}table-element">${obstacleCount.interactive}</td>
-        </tr>`;
-        }
-        if (obstacleCount.crouch) {
-            htmlString += `<tr>
-        <th class="${prefix}table-header" colspan="2">Crouch</th>
-        <td class="${prefix}table-element">${obstacleCount.crouch}</td>
         </tr>`;
         }
         if (obstacleCount.chroma) {

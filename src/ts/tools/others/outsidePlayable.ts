@@ -26,6 +26,10 @@ const tool: Tool = {
 };
 
 function run(map: ToolArgs) {
+    if (!map.difficulty) {
+        console.error('Something went wrong!');
+        return;
+    }
     const { bpm, audioDuration: duration } = map.settings;
     const { colorNotes, obstacles, basicBeatmapEvents } = map.difficulty.data;
 

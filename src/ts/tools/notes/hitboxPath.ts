@@ -1,7 +1,7 @@
 import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
 import * as beatmap from '../../beatmap';
-import { isIntersect } from '../../analyzers/placement/placements';
+import { isIntersect } from '../../analyzers/placement/note';
 
 const htmlContainer = document.createElement('div');
 const htmlInputCheck = document.createElement('input');
@@ -42,8 +42,8 @@ function inputCheckHandler(this: HTMLInputElement) {
 }
 
 function check(map: ToolArgs) {
-    const { bpm, njs } = map.settings;
-    const { colorNotes } = map.difficulty.data;
+    const { bpm } = map.settings;
+    const { colorNotes } = map.difficulty!.data;
 
     const arr: beatmap.v3.ColorNote[] = [];
     // to avoid multiple of stack popping up, ignore anything within this time
@@ -88,6 +88,10 @@ function check(map: ToolArgs) {
 }
 
 function run(map: ToolArgs) {
+    if (!map.difficulty) {
+        console.error('Something went wrong!');
+        return;
+    }
     const result = check(map);
 
     if (result.length) {

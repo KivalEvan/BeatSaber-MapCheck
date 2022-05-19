@@ -1,10 +1,11 @@
 # Changelog
 
-## v2.5.0 [2022-04-##]
+## v2.5.0 [2022-05-##]
 
 ### Added
 
 -   v2 to v3 beatmap internal conversion
+    -   This may be inaccurate for modded v2 map as it internally convert modded to v3
 
 ### Changed
 

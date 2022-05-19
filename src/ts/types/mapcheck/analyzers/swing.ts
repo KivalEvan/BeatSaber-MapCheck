@@ -1,10 +1,11 @@
+import { CharacteristicName, DifficultyName } from '../../beatmap';
 import { NoteContainer } from '../../beatmap/v3/container';
 
 export interface ISwingContainer {
     time: number;
     duration: number;
-    minSwing: number;
-    maxSwing: number;
+    minSpeed: number;
+    maxSpeed: number;
     ebpm: number;
     ebpmSwing: number;
     data: NoteContainer[];
@@ -23,6 +24,8 @@ export interface ISwingPerSecond {
 }
 
 export interface ISwingAnalysis {
+    characteristic: CharacteristicName;
+    difficulty: DifficultyName;
     container: ISwingContainer[];
     red: ISwingPerSecond;
     blue: ISwingPerSecond;

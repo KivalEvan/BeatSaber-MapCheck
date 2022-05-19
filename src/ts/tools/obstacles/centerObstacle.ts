@@ -104,7 +104,7 @@ function inputBeatHandler(this: HTMLInputElement) {
 }
 
 function check(map: ToolArgs) {
-    const { obstacles } = map.difficulty.data;
+    const { obstacles } = map.difficulty!.data;
     const { bpm } = map.settings;
     const { recovery } = <{ recovery: number }>tool.input.params;
     const arr: beatmap.v3.Obstacle[] = [];
@@ -208,6 +208,10 @@ function check(map: ToolArgs) {
 }
 
 function run(map: ToolArgs) {
+    if (!map.difficulty) {
+        console.error('Something went wrong!');
+        return;
+    }
     const result = check(map);
     const { recovery } = <{ recovery: number }>tool.input.params;
 

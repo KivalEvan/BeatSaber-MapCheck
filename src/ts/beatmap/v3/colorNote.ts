@@ -1,15 +1,12 @@
 import { IColorNote } from '../../types/beatmap/v3/colorNote';
-import { BaseObject } from './baseObject';
-import { LINE_COUNT, NoteCutAngle } from '../shared/constants';
+import { NoteCutAngle } from '../shared/constants';
 import { deepCopy } from '../../utils/misc';
 import { ObjectToReturn } from '../../types/utils';
-import { ICoordinateNote } from '../../types/beatmap/shared/coordinate';
+import { BaseNote } from './baseNote';
+import { IBaseNote } from '../../types/beatmap/v3/baseNote';
 
 /** Color note beatmap object. */
-export class ColorNote
-    extends BaseObject<IColorNote>
-    implements ICoordinateNote<ColorNote>
-{
+export class ColorNote extends BaseNote<IColorNote> {
     static default: ObjectToReturn<Required<IColorNote>> = {
         b: 0,
         c: 0,
@@ -73,39 +70,6 @@ export class ColorNote
         };
     }
 
-    /** Position x `<int>` of note.
-     * ```ts
-     * 0 -> Outer Left
-     * 1 -> Middle Left
-     * 2 -> Middle Right
-     * 3 -> Outer Right
-     * ```
-     * ---
-     * Range: `0-3`
-     */
-    get posX() {
-        return this.data.x;
-    }
-    set posX(value: IColorNote['x']) {
-        this.data.x = value;
-    }
-
-    /** Position y `<int>` of note.
-     * ```ts
-     * 0 -> Bottom row
-     * 1 -> Middle row
-     * 2 -> Top row
-     * ```
-     * ---
-     * Range: `0-2`
-     */
-    get posY() {
-        return this.data.y;
-    }
-    set posY(value: IColorNote['y']) {
-        this.data.y = value;
-    }
-
     /** Color type `<int>` of note.
      * ```ts
      * 0 -> Red
@@ -149,69 +113,12 @@ export class ColorNote
         this.color = value;
         return this;
     }
-    setPosX(value: IColorNote['x']) {
-        this.posX = value;
-        return this;
-    }
-    setPosY(value: IColorNote['y']) {
-        this.posY = value;
-        return this;
-    }
     setDirection(value: IColorNote['d']) {
         this.direction = value;
         return this;
     }
     setAngleOffset(value: IColorNote['a']) {
         this.angleOffset = value;
-        return this;
-    }
-
-    /** Horizontally mirror note position and optional colour swap.
-     * ```ts
-     * note.mirror();
-     * ```
-     */
-    mirror(flipColor = true) {
-        this.posX = LINE_COUNT - 1 - this.posX;
-        if (flipColor) {
-            this.color = ((1 + this.color) % 2) as typeof this.color;
-        }
-        this.angleOffset = 0 - this.angleOffset;
-        switch (this.direction) {
-            case 2:
-                this.direction = 3;
-                break;
-            case 3:
-                this.direction = 2;
-                break;
-            case 6:
-                this.direction = 7;
-                break;
-            case 7:
-                this.direction = 6;
-                break;
-            case 4:
-                this.direction = 5;
-                break;
-            case 5:
-                this.direction = 4;
-                break;
-        }
-        return this;
-    }
-
-    /** Swap note position with another note.
-     * ```ts
-     * note.swapPosition(noteSwap);
-     * ```
-     */
-    swapPosition(toSwap: ColorNote) {
-        const tempX = toSwap.posX;
-        toSwap.posX = this.posX;
-        this.posX = tempX;
-        const tempY = toSwap.posY;
-        toSwap.posY = this.posY;
-        this.posY = tempY;
         return this;
     }
 
@@ -277,12 +184,7 @@ export class ColorNote
         );
     }
 
-    /** Get two notes and return the distance between two notes.
-     * ```ts
-     * const noteDistance = note.distance(noteCompare);
-     * ```
-     */
-    getDistance(compareTo: ColorNote) {
+    getDistance(compareTo: BaseNote<IBaseNote>) {
         const [nX1, nY1] = this.getPosition();
         const [nX2, nY2] = compareTo.getPosition();
         return Math.sqrt(Math.pow(nX2 - nX1, 2) + Math.pow(nY2 - nY1, 2));
@@ -306,12 +208,7 @@ export class ColorNote
         return this.color === 1;
     }
 
-    /** Compare two notes and return if the notes is in vertical alignment.
-     * ```ts
-     * if (note.isVertical(noteCompare)) {}
-     * ```
-     */
-    isVertical(compareTo?: ColorNote) {
+    isVertical(compareTo?: BaseNote<IBaseNote>) {
         if (compareTo) {
             const [nX1] = this.getPosition();
             const [nX2] = compareTo.getPosition();
@@ -324,12 +221,7 @@ export class ColorNote
         );
     }
 
-    /** Compare two notes and return if the notes is in horizontal alignment.
-     * ```ts
-     * if (note.isHorizontal(noteCompare)) {}
-     * ```
-     */
-    isHorizontal(compareTo?: ColorNote) {
+    isHorizontal(compareTo?: BaseNote<IBaseNote>) {
         if (compareTo) {
             const [_, nY1] = this.getPosition();
             const [_2, nY2] = compareTo.getPosition();
@@ -342,12 +234,7 @@ export class ColorNote
         );
     }
 
-    /** Compare two notes and return if the notes is in diagonal alignment.
-     * ```ts
-     * if (note.isDiagonal(noteCompare)) {}
-     * ```
-     */
-    isDiagonal(compareTo?: ColorNote) {
+    isDiagonal(compareTo?: BaseNote<IBaseNote>) {
         if (compareTo) {
             const [nX1, nY1] = this.getPosition();
             const [nX2, nY2] = compareTo.getPosition();
@@ -361,12 +248,7 @@ export class ColorNote
         );
     }
 
-    /** Compare two notes and return if the notes is an inline.
-     * ```ts
-     * if (note.isInline(noteCompare)) {}
-     * ```
-     */
-    isInline(compareTo: ColorNote, lapping = 0.5) {
+    isInline(compareTo: BaseNote<IBaseNote>, lapping = 0.5) {
         return this.getDistance(compareTo) <= lapping;
     }
 
@@ -383,31 +265,16 @@ export class ColorNote
         );
     }
 
-    /** Compare two notes and return if the notes is adjacent.
-     * ```ts
-     * if (note.isAdjacent(noteCompare)) {}
-     * ```
-     */
-    isAdjacent(compareTo: ColorNote) {
+    isAdjacent(compareTo: BaseNote<IBaseNote>) {
         const d = this.getDistance(compareTo);
         return d > 0.499 && d < 1.001;
     }
 
-    /** Compare two notes and return if the notes is a window.
-     * ```ts
-     * if (note.isWindow(noteCompare)) {}
-     * ```
-     */
-    isWindow(compareTo: ColorNote, distance = 1.8) {
+    isWindow(compareTo: BaseNote<IBaseNote>, distance = 1.8) {
         return this.getDistance(compareTo) > distance;
     }
 
-    /** Compare two notes and return if the notes is a slanted window.
-     * ```ts
-     * if (note.isSlantedWindow(noteCompare)) {}
-     * ```
-     */
-    isSlantedWindow(compareTo: ColorNote) {
+    isSlantedWindow(compareTo: BaseNote<IBaseNote>) {
         return (
             this.isWindow(compareTo) &&
             !this.isDiagonal(compareTo) &&

@@ -311,6 +311,27 @@ export const V2toV3 = (
                     }) as any) ?? [];
                 continue;
             }
+            if (k === '_environment') {
+                template.customData.environment =
+                    (data.customData._environment!.map((e) => {
+                        return {
+                            id: e._id,
+                            lookupMethod: e._lookupMethod,
+                            track: e._track,
+                            duplicate: e._duplicate,
+                            active: e._active,
+                            scale: e._scale,
+                            position: e._position?.map((n) => n * 0.6),
+                            rotation: e._rotation,
+                            localPosition: e._localPosition?.map((n) => n * 0.6),
+                            localRotation: e._localRotation,
+                            lightID: e._lightID,
+                        };
+                        // i dont care
+                        // deno-lint-ignore no-explicit-any
+                    }) as any) ?? [];
+                continue;
+            }
             template.customData[k] = data.customData[k];
         }
     }
@@ -504,11 +525,12 @@ export const V3toV2 = (
 
     if (data.customData) {
         for (const k in data.customData) {
-            if (k === '_customEvents') {
-                template.customData[k as string] =
-                    data.customData.customEvents?.map((ce) => {
+            if (k === 'customEvents') {
+                template.customData._customEvents =
+                    (data.customData.customEvents?.map((ce) => {
                         return { _time: ce.b, _type: ce.t, _data: ce.d };
-                    }) ?? [];
+                        // deno-lint-ignore no-explicit-any
+                    }) as any) ?? [];
                 continue;
             }
             template.customData[k] = data.customData[k];

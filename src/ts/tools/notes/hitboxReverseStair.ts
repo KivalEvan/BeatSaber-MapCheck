@@ -1,8 +1,8 @@
 import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
-import * as beatmap from '../../beatmap';
-import { NoteContainer } from '../../types/beatmap/v3/container';
-import { isIntersect } from '../../analyzers/placement/placements';
+import { NoteContainer, NoteContainerNote } from '../../types/beatmap/v3/container';
+import { isIntersect } from '../../analyzers/placement/note';
+import swing from '../../analyzers/swing/swing';
 
 const htmlContainer = document.createElement('div');
 const htmlInputCheck = document.createElement('input');
@@ -46,32 +46,40 @@ const constant = 0.03414823529;
 const constantDiagonal = 0.03414823529;
 function check(map: ToolArgs) {
     const { bpm, njs } = map.settings;
-    const { colorNotes } = map.difficulty.data;
+    const { noteContainer } = map.difficulty!;
 
-    const lastNote: { [key: number]: beatmap.v3.ColorNote } = {};
+    const lastNote: { [key: number]: NoteContainer } = {};
     const swingNoteArray: { [key: number]: NoteContainer[] } = {
         0: [],
         1: [],
     };
 
-    const arr: beatmap.v3.ColorNote[] = [];
-    for (let i = 0, len = colorNotes.length; i < len; i++) {
-        const note = colorNotes[i];
-        if (lastNote[note.color]) {
+    const arr: NoteContainer[] = [];
+    for (let i = 0, len = noteContainer.length; i < len; i++) {
+        if (noteContainer[i].type !== 'note') {
+            continue;
+        }
+        const note = noteContainer[i] as NoteContainerNote;
+        if (lastNote[note.data.color]) {
             if (
-                swing.next(note, lastNote[note.color], bpm, swingNoteArray[note.color])
+                swing.next(
+                    note,
+                    lastNote[note.data.color],
+                    bpm,
+                    swingNoteArray[note.data.color]
+                )
             ) {
-                swingNoteArray[note.color] = [];
+                swingNoteArray[note.data.color] = [];
             }
         }
-        for (const other of swingNoteArray[(note.color + 1) % 2]) {
+        for (const other of swingNoteArray[(note.data.color + 1) % 2]) {
             if (other.type !== 'note') {
                 continue;
             }
             if (other.data.direction !== 8) {
                 if (
                     !(
-                        bpm.toRealTime(note.time) >
+                        bpm.toRealTime(note.data.time) >
                         bpm.toRealTime(other.data.time) + 0.01
                     )
                 ) {
@@ -83,26 +91,30 @@ function check(map: ToolArgs) {
                 if (
                     njs.value <
                         1.425 /
-                            ((60 * (note.time - other.data.time)) / bpm.value +
+                            ((60 * (note.data.time - other.data.time)) / bpm.value +
                                 (isDiagonal ? constantDiagonal : constant)) &&
-                    isIntersect(note, other.data, [[15, 1.5]])[1]
+                    isIntersect(note.data, other.data, [[15, 1.5]])[1]
                 ) {
-                    arr.push(other.data);
+                    arr.push(other);
                     break;
                 }
             }
         }
-        lastNote[note.color] = note;
-        swingNoteArray[note.color].push({ type: 'note', data: note });
+        lastNote[note.data.color] = note;
+        swingNoteArray[note.data.color].push(note);
     }
     return arr
-        .map((n) => n.time)
+        .map((n) => n.data.time)
         .filter(function (x, i, ary) {
             return !i || x !== ary[i - 1];
         });
 }
 
 function run(map: ToolArgs) {
+    if (!map.difficulty) {
+        console.error('Something went wrong!');
+        return;
+    }
     const result = check(map);
 
     if (result.length) {

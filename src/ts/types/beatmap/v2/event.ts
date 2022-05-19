@@ -146,30 +146,3 @@ export type IEvent =
     | IEventExtra
     | IEventSpecial
     | IEventBPMChange;
-
-/** Enum for beatmap event type name.
- * @enum {number} Event type name
- */
-export enum EventRename {
-    'Back Lasers',
-    'Ring Lights',
-    'Left Lasers',
-    'Right Lasers',
-    'Center Lights',
-    'Light Boost',
-    'Extra Left Lights',
-    'Extra Right Lights',
-    'Ring Rotation',
-    'Ring Zoom',
-    'Extra Left Lasers',
-    'Extra Right Lasers',
-    'Left Laser Rotation',
-    'Right Laser Rotation',
-    'Early Lane Rotation',
-    'Late Lane Rotation',
-    'Utility Event 1',
-    'Utility Event 2',
-    'Utility Event 3',
-    'Utility Event 4',
-    'BPM Change' = 100,
-}

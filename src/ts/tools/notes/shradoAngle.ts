@@ -1,7 +1,9 @@
 import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
 import * as beatmap from '../../beatmap';
-import { NoteContainer } from '../../types/beatmap/v3/container';
+import { NoteContainer, NoteContainerNote } from '../../types/beatmap/v3/container';
+import swing from '../../analyzers/swing/swing';
+import { ColorNote } from '../../beatmap/v3/colorNote';
 
 const defaultMaxTime = 0.15;
 const defaultDistance = 1;
@@ -127,76 +129,85 @@ function inputBeatHandler(this: HTMLInputElement) {
 
 function check(map: ToolArgs) {
     const { bpm } = map.settings;
-    const { colorNotes } = map.difficulty.data;
+    const { noteContainer } = map.difficulty!;
     const { maxTime: temp, distance } = <{ maxTime: number; distance: number }>(
         tool.input.params
     );
     const maxTime = bpm.toBeatTime(temp) + 0.001;
 
-    const lastNote: { [key: number]: beatmap.v3.ColorNote } = {};
+    const lastNote: { [key: number]: NoteContainer } = {};
     const lastNoteDirection: { [key: number]: number } = {};
-    const startNoteDot: { [key: number]: beatmap.v3.ColorNote | null } = {};
+    const startNoteDot: { [key: number]: NoteContainer | null } = {};
     const swingNoteArray: { [key: number]: NoteContainer[] } = {
         0: [],
         1: [],
         3: [],
     };
-    const arr: beatmap.v3.ColorNote[] = [];
-    for (let i = 0, len = colorNotes.length; i < len; i++) {
-        const note = colorNotes[i];
-        if (lastNote[note.color]) {
+    const arr: NoteContainer[] = [];
+    for (let i = 0, len = noteContainer.length; i < len; i++) {
+        if (noteContainer[i].type !== 'note') {
+            continue;
+        }
+        const note = noteContainer[i] as NoteContainerNote;
+        if (lastNote[note.data.color]) {
             if (
-                swing.next(note, lastNote[note.color], bpm, swingNoteArray[note.color])
+                swing.next(
+                    note,
+                    lastNote[note.data.color],
+                    bpm,
+                    swingNoteArray[note.data.color]
+                )
             ) {
                 // FIXME: maybe fix rotation or something
-                if (startNoteDot[note.color]) {
-                    startNoteDot[note.color] = null;
-                    lastNoteDirection[note.color] =
-                        beatmap.NoteFlipDirection[lastNoteDirection[note.color]] ?? 8;
+                if (startNoteDot[note.data.color]) {
+                    startNoteDot[note.data.color] = null;
+                    lastNoteDirection[note.data.color] =
+                        beatmap.NoteFlipDirection[lastNoteDirection[note.data.color]] ??
+                        8;
                 }
                 if (
-                    note.getDistance(lastNote[note.color]) >= distance &&
+                    note.data.getDistance(lastNote[note.data.color].data) >= distance &&
                     checkShrAngle(
-                        note.direction,
-                        lastNoteDirection[note.color],
-                        note.color
+                        note.data.direction,
+                        lastNoteDirection[note.data.color],
+                        note.data.color
                     ) &&
-                    note.time - lastNote[note.color].time <= maxTime
+                    note.data.time - lastNote[note.data.color].data.time <= maxTime
                 ) {
                     arr.push(note);
                 }
-                if (note.direction === 8) {
-                    startNoteDot[note.color] = note;
+                if (note.data.direction === 8) {
+                    startNoteDot[note.data.color] = note;
                 } else {
-                    lastNoteDirection[note.color] = note.direction;
+                    lastNoteDirection[note.data.color] = note.data.direction;
                 }
-                swingNoteArray[note.color] = [];
+                swingNoteArray[note.data.color] = [];
             } else {
                 if (
-                    startNoteDot[note.color] &&
-                    note.getDistance(lastNote[note.color]) >= distance &&
+                    startNoteDot[note.data.color] &&
+                    note.data.getDistance(lastNote[note.data.color].data) >= distance &&
                     checkShrAngle(
-                        note.direction,
-                        lastNoteDirection[note.color],
-                        note.color
+                        note.data.direction,
+                        lastNoteDirection[note.data.color],
+                        note.data.color
                     ) &&
-                    note.time - lastNote[note.color].time <= maxTime
+                    note.data.time - lastNote[note.data.color].data.time <= maxTime
                 ) {
-                    arr.push(startNoteDot[note.color] as beatmap.v3.ColorNote);
-                    startNoteDot[note.color] = null;
+                    arr.push(startNoteDot[note.data.color]!);
+                    startNoteDot[note.data.color] = null;
                 }
-                if (note.direction !== 8) {
-                    lastNoteDirection[note.color] = note.direction;
+                if (note.data.direction !== 8) {
+                    lastNoteDirection[note.data.color] = note.data.direction;
                 }
             }
         } else {
-            lastNoteDirection[note.color] = note.direction;
+            lastNoteDirection[note.data.color] = note.data.direction;
         }
-        lastNote[note.color] = note;
-        swingNoteArray[note.color].push({ type: 'note', data: note });
+        lastNote[note.data.color] = note;
+        swingNoteArray[note.data.color].push(note);
     }
     return arr
-        .map((n) => n.time)
+        .map((n) => n.data.time)
         .filter(function (x, i, ary) {
             return !i || x !== ary[i - 1];
         });
@@ -220,6 +231,10 @@ function checkShrAngle(
 }
 
 function run(map: ToolArgs) {
+    if (!map.difficulty) {
+        console.error('Something went wrong!');
+        return;
+    }
     const result = check(map);
 
     if (result.length) {

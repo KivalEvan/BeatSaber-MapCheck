@@ -1,6 +1,6 @@
-import { Tool, ToolArgs } from '../../types/mapcheck';
+import swing from '../../analyzers/swing/swing';
+import { IBeatmapItem, Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
-import * as beatmap from '../../beatmap';
 
 const htmlContainer = document.createElement('div');
 const htmlInputCheck = document.createElement('input');
@@ -40,12 +40,10 @@ function inputCheckHandler(this: HTMLInputElement) {
     tool.input.enabled = this.checked;
 }
 
-function check(map: ToolArgs) {
-    const { bpm } = map.settings;
-    const noteContainer = map.difficulty.noteContainer;
-    return swing
-        .getSliderNote(notes, bpm)
-        .filter((n) => Math.abs(n._minSpeed - n._maxSpeed) > 0.002)
+function check(difficulty: IBeatmapItem) {
+    const { swingAnalysis } = difficulty;
+    return swingAnalysis.container
+        .filter((n) => Math.abs(n.minSpeed - n.maxSpeed) > 0.002)
         .map((n) => n.time)
         .filter((x, i, ary) => {
             return !i || x !== ary[i - 1];
@@ -53,7 +51,11 @@ function check(map: ToolArgs) {
 }
 
 function run(map: ToolArgs) {
-    const result = check(map);
+    if (!map.difficulty) {
+        console.error('Something went wrong!');
+        return;
+    }
+    const result = check(map.difficulty);
 
     if (result.length) {
         const htmlResult = document.createElement('div');

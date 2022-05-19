@@ -29,7 +29,7 @@ const tool: Tool = {
 };
 
 function check(map: ToolArgs) {
-    const { obstacles } = map.difficulty.data;
+    const { obstacles } = map.difficulty!.data;
     const { bpm } = map.settings;
     const { minDur: temp } = <{ minDur: number }>tool.input.params;
     const minDur = bpm.toBeatTime(temp);
@@ -167,6 +167,10 @@ function check(map: ToolArgs) {
 }
 
 function run(map: ToolArgs) {
+    if (!map.difficulty) {
+        console.error('Something went wrong!');
+        return;
+    }
     const result = check(map);
 
     if (result.length) {

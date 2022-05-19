@@ -35,9 +35,9 @@ export interface ToolOutput {
 
 export interface ToolArgs {
     settings: IBeatmapSettings;
-    difficulty: IBeatmapItem;
+    difficulty?: IBeatmapItem;
+    difficulties?: IBeatmapItem[];
     info: IInfoData;
-    sps: IAnalysis;
 }
 
 export type ToolRun = (args: ToolArgs) => void;

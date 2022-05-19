@@ -1,11 +1,15 @@
 import { BeatPerMinute } from '../../beatmap/shared/bpm';
 import { DifficultyData } from '../../beatmap/v3/difficulty';
+import { CharacteristicName, DifficultyName } from '../../types';
+import { NoteContainer } from '../../types/beatmap/v3/container';
 import { ISwingAnalysis, ISwingCount } from '../../types/mapcheck/analyzers/swing';
 import { median } from '../../utils/math';
+import Swing from './swing';
 
 // derived from Uninstaller's Swings Per Second tool
 // some variable or function may have been modified
 // translating from Python to JavaScript is hard
+// this is special function SPS used by ScoreSaber
 export const count = (
     noteContainer: NoteContainer[],
     duration: number,
@@ -15,31 +19,32 @@ export const count = (
         left: new Array(Math.floor(duration + 1)).fill(0),
         right: new Array(Math.floor(duration + 1)).fill(0),
     };
-    let lastRed!: ColorNote;
-    let lastBlue!: ColorNote;
+    let lastRed!: NoteContainer;
+    let lastBlue!: NoteContainer;
     for (const nc of noteContainer) {
-        if (nc.type === 'bomb') {
+        if (nc.type !== 'note') {
             continue;
         }
+        const realTime = bpm.toRealTime(nc.data.time);
         if (nc.data.color === 0) {
             if (lastRed) {
-                if (next(nc.data, lastRed, bpm)) {
+                if (Swing.next(nc, lastRed, bpm)) {
                     swingCount.left[Math.floor(realTime)]++;
                 }
             } else {
                 swingCount.left[Math.floor(realTime)]++;
             }
-            lastRed = nc.data;
+            lastRed = nc;
         }
         if (nc.data.color === 1) {
             if (lastBlue) {
-                if (next(nc.data, lastBlue, bpm)) {
+                if (Swing.next(nc, lastBlue, bpm)) {
                     swingCount.right[Math.floor(realTime)]++;
                 }
             } else {
                 swingCount.right[Math.floor(realTime)]++;
             }
-            lastBlue = nc.data;
+            lastBlue = nc;
         }
     }
     return swingCount;
@@ -63,14 +68,18 @@ const calcMaxRollingSPS = (swingArray: number[], x: number): number => {
 
 export const info = (
     difficulty: DifficultyData,
-    bpm: BeatPerMinute
+    bpm: BeatPerMinute,
+    charName: CharacteristicName,
+    diffName: DifficultyName
 ): ISwingAnalysis => {
     const interval = 10;
     const spsInfo: ISwingAnalysis = {
+        characteristic: charName,
+        difficulty: diffName,
         red: { count: 0, peak: 0, median: 0, total: 0 },
         blue: { count: 0, peak: 0, median: 0, total: 0 },
         total: { count: 0, peak: 0, median: 0, total: 0 },
-        container: [],
+        container: Swing.generate(difficulty.getNoteContainer(), bpm),
     };
     const duration = Math.max(
         bpm.toRealTime(

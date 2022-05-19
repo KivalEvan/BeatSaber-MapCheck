@@ -1,21 +1,30 @@
-interface NoteCountStats {
+interface INoteCountStats {
     total: number;
     chroma: number;
     noodleExtensions: number;
     mappingExtensions: number;
 }
 
-export interface NoteCount {
-    red: NoteCountStats;
-    blue: NoteCountStats;
-    bomb: NoteCountStats;
+export interface INoteCount {
+    red: INoteCountStats;
+    blue: INoteCountStats;
+    bomb: INoteCountStats;
 }
 
-export interface ObstacleCount {
+export interface IObstacleCount {
     total: number;
     interactive: number;
-    crouch: number;
     chroma: number;
     noodleExtensions: number;
     mappingExtensions: number;
+}
+
+interface IEventCountStats {
+    total: number;
+    chroma: number;
+    chromaOld: number;
+}
+
+export interface IEventCount {
+    [key: number]: IEventCountStats;
 }

@@ -39,7 +39,7 @@ export default async (type: LoadType) => {
             throw new Error('Could not search for file.');
         }
         UILoading.status('info', 'Extracting zip', 0);
-        UIHeader.switchHeader(true);
+        UIHeader.switchHeader(false);
         const mapZip = await extractZip(file);
 
         UIInput.enable(false);
@@ -123,7 +123,6 @@ export default async (type: LoadType) => {
 
         UILoading.status('info', 'Analysing map...', 85);
         console.log('analysing map');
-        Analyser.runSPS();
         Analyser.runGeneral();
         UITools.displayOutputGeneral();
 
@@ -139,6 +138,6 @@ export default async (type: LoadType) => {
         console.error(err);
         SavedData.clear();
         UIInput.enable(true);
-        UIHeader.switchHeader(false);
+        UIHeader.switchHeader(true);
     }
 };

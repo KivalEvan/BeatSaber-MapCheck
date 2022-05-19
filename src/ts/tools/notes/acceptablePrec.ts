@@ -1,4 +1,4 @@
-import { Tool, ToolArgs } from '../../types/mapcheck';
+import { IBeatmapItem, IBeatmapSettings, Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
 
 const defaultPrec = [8, 6];
@@ -48,9 +48,9 @@ function inputPrecHandler(this: HTMLInputElement) {
     this.value = tool.input.params.prec.join(' ');
 }
 
-function check(map: ToolArgs) {
-    const { bpm } = map.settings;
-    const swingContainer = map.difficulty.swingAnalysis.container;
+function check(settings: IBeatmapSettings, difficulty: IBeatmapItem) {
+    const { bpm } = settings;
+    const swingContainer = difficulty.swingAnalysis.container;
     // god this hurt me, but typescript sees this as number instead of number[]
     const { prec } = <{ prec: number[] }>tool.input.params;
 
@@ -73,7 +73,11 @@ function check(map: ToolArgs) {
 }
 
 function run(map: ToolArgs) {
-    const result = check(map);
+    if (!map.difficulty) {
+        console.error('Something went wrong!');
+        return;
+    }
+    const result = check(map.settings, map.difficulty);
 
     if (result.length) {
         const htmlResult = document.createElement('div');

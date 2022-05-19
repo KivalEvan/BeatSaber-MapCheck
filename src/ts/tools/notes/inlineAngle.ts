@@ -2,7 +2,9 @@ import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
 import * as beatmap from '../../beatmap';
 import { NoteContainer } from '../../types/beatmap/v3/container';
-import { checkDirection } from '../../analyzers/placement/placements';
+import { checkDirection } from '../../analyzers/placement/note';
+import swing from '../../analyzers/swing/swing';
+import { ColorNote } from '../../beatmap/v3';
 
 const defaultMaxTime = 0.15;
 let localBPM!: beatmap.BeatPerMinute;
@@ -107,19 +109,19 @@ function inputBeatHandler(this: HTMLInputElement) {
 
 function check(map: ToolArgs) {
     const { bpm } = map.settings;
-    const noteContainer = map.difficulty.noteContainer;
+    const noteContainer = map.difficulty!.noteContainer;
     const { maxTime: temp } = <{ maxTime: number }>tool.input.params;
     const maxTime = bpm.toBeatTime(temp) + 0.001;
 
-    const lastNote: { [key: number]: beatmap.v3.ColorNote } = {};
+    const lastNote: { [key: number]: NoteContainer } = {};
     const lastNoteAngle: { [key: number]: number } = {};
-    const startNoteDot: { [key: number]: beatmap.v3.ColorNote | null } = {};
+    const startNoteDot: { [key: number]: ColorNote | null } = {};
     const swingNoteArray: { [key: number]: NoteContainer[] } = {
         0: [],
         1: [],
         3: [],
     };
-    const arr: beatmap.v3.ColorNote[] = [];
+    const arr: ColorNote[] = [];
     let lastTime = 0;
     let lastIndex = 0;
     for (let i = 0, len = noteContainer.length; i < len; i++) {
@@ -127,7 +129,7 @@ function check(map: ToolArgs) {
         if (note.type === 'note' && lastNote[note.data.color]) {
             if (
                 swing.next(
-                    note.data,
+                    note,
                     lastNote[note.data.color],
                     bpm,
                     swingNoteArray[note.data.color]
@@ -156,7 +158,7 @@ function check(map: ToolArgs) {
                     checkInline(note.data, noteContainer, lastIndex, maxTime) &&
                     checkDirection(note.data, lastNoteAngle[note.data.color], 90, true)
                 ) {
-                    arr.push(startNoteDot[note.data.color] as beatmap.v3.ColorNote);
+                    arr.push(startNoteDot[note.data.color] as ColorNote);
                     startNoteDot[note.data.color] = null;
                 }
                 if (note.data.direction !== 8) {
@@ -167,7 +169,7 @@ function check(map: ToolArgs) {
             lastNoteAngle[note.data.color] = note.data.getAngle();
         }
         if (note.type === 'note') {
-            lastNote[note.data.color] = note.data;
+            lastNote[note.data.color] = note;
             swingNoteArray[note.data.color].push(note);
         }
         if (note.type === 'bomb') {
@@ -225,6 +227,10 @@ function checkInline(
 }
 
 function run(map: ToolArgs) {
+    if (!map.difficulty) {
+        console.error('Something went wrong!');
+        return;
+    }
     const result = check(map);
 
     if (result.length) {

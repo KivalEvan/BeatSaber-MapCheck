@@ -3,6 +3,7 @@ export * from './bpm';
 export * from './characteristic';
 export * from './chroma';
 export * from './colors';
+export * from './colorScheme';
 export * from './coordinate';
 export * from './customData';
 export * from './dataCheck';

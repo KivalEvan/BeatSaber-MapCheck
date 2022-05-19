@@ -26,11 +26,15 @@ const tool: Tool = {
 };
 
 function check(map: ToolArgs) {
-    const { obstacles } = map.difficulty.data;
+    const { obstacles } = map.difficulty!.data;
     return obstacles.filter((o) => o.hasZero()).map((o) => o.time);
 }
 
 function run(map: ToolArgs) {
+    if (!map.difficulty) {
+        console.error('Something went wrong!');
+        return;
+    }
     const result = check(map);
 
     if (result.length) {

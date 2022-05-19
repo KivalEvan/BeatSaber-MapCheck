@@ -1,4 +1,4 @@
-import { Tool, ToolArgs } from '../../types/mapcheck';
+import { IBeatmapItem, Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
 import * as beatmap from '../../beatmap';
 import UICheckbox from '../../ui/checkbox';
@@ -26,14 +26,14 @@ const tool: Tool = {
     run,
 };
 
-function check(map: ToolArgs) {
-    const { basicBeatmapEvents } = map.difficulty.data;
+function check(difficulty: IBeatmapItem) {
+    const { basicBeatmapEvents } = difficulty.data;
 
     const arr: beatmap.v3.BasicEvent[] = [];
     if (
-        map.difficulty.rawVersion === 2 &&
-        map.difficulty.rawData._version !== '2.5.0' &&
-        map.difficulty.rawData._version !== '2.6.0'
+        difficulty.rawVersion === 2 &&
+        difficulty.rawData._version !== '2.5.0' &&
+        difficulty.rawData._version !== '2.6.0'
     ) {
         for (let i = basicBeatmapEvents.length - 1; i >= 0; i--) {
             if (
@@ -54,7 +54,11 @@ function check(map: ToolArgs) {
 }
 
 function run(map: ToolArgs) {
-    const result = check(map);
+    if (!map.difficulty) {
+        console.error('Something went wrong!');
+        return;
+    }
+    const result = check(map.difficulty);
 
     if (result.length) {
         const htmlResult = document.createElement('div');

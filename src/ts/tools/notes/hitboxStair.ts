@@ -1,8 +1,10 @@
 import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
 import * as beatmap from '../../beatmap';
-import { NoteContainer } from '../../types/beatmap/v3/container';
-import { isEnd } from '../../analyzers/placement/placements';
+import { NoteContainer, NoteContainerNote } from '../../types/beatmap/v3/container';
+import { isEnd } from '../../analyzers/placement/note';
+import swing from '../../analyzers/swing/swing';
+import { ColorNote } from '../../beatmap/v3';
 
 const htmlContainer = document.createElement('div');
 const htmlInputCheck = document.createElement('input');
@@ -44,81 +46,98 @@ function inputCheckHandler(this: HTMLInputElement) {
 
 function check(map: ToolArgs) {
     const { bpm } = map.settings;
-    const noteContainer = map.difficulty.noteContainer;
+    const noteContainer = map.difficulty!.noteContainer;
     const hitboxTime = bpm.toBeatTime(0.15);
 
-    const lastNote: { [key: number]: beatmap.v3.ColorNote } = {};
+    const lastNote: { [key: number]: NoteContainerNote } = {};
     const lastNoteDirection: { [key: number]: number } = {};
     const lastSpeed: { [key: number]: number } = {};
     const swingNoteArray: { [key: number]: NoteContainer[] } = {
         0: [],
         1: [],
     };
-    const noteOccupy: { [key: number]: beatmap.v3.ColorNote } = {
-        0: beatmap.v3.ColorNote.create({ c: 0 }),
-        1: beatmap.v3.ColorNote.create({ c: 1 }),
+    const noteOccupy: { [key: number]: ColorNote } = {
+        0: ColorNote.create({ c: 0 }),
+        1: ColorNote.create({ c: 1 }),
     };
 
     // FIXME: use new system
-    const arr: beatmap.v3.ColorNote[] = [];
+    const arr: NoteContainer[] = [];
     for (let i = 0, len = noteContainer.length; i < len; i++) {
-        const noteData = noteContainer[i];
-        if (noteData.type !== 'note') {
+        if (noteContainer[i].type !== 'note') {
             continue;
         }
-        const note = noteData.data;
-        if (lastNote[note.color]) {
+        const note = noteContainer[i] as NoteContainerNote;
+        if (lastNote[note.data.color]) {
             if (
-                swing.next(note, lastNote[note.color], bpm, swingNoteArray[note.color])
+                swing.next(
+                    note,
+                    lastNote[note.data.color],
+                    bpm,
+                    swingNoteArray[note.data.color]
+                )
             ) {
-                lastSpeed[note.color] = note.time - lastNote[note.color].time;
-                if (note.direction !== 8) {
-                    noteOccupy[note.color].posX =
-                        note.posX + beatmap.NoteCutDirectionSpace[note.direction][0];
-                    noteOccupy[note.color].posY =
-                        note.posY + beatmap.NoteCutDirectionSpace[note.direction][1];
+                lastSpeed[note.data.color] =
+                    note.data.time - lastNote[note.data.color].data.time;
+                if (note.data.direction !== 8) {
+                    noteOccupy[note.data.color].posX =
+                        note.data.posX +
+                        beatmap.NoteCutDirectionSpace[note.data.direction][0];
+                    noteOccupy[note.data.color].posY =
+                        note.data.posY +
+                        beatmap.NoteCutDirectionSpace[note.data.direction][1];
                 } else {
-                    noteOccupy[note.color].posX = -1;
-                    noteOccupy[note.color].posY = -1;
+                    noteOccupy[note.data.color].posX = -1;
+                    noteOccupy[note.data.color].posY = -1;
                 }
-                swingNoteArray[note.color] = [];
-                lastNoteDirection[note.color] = note.direction;
+                swingNoteArray[note.data.color] = [];
+                lastNoteDirection[note.data.color] = note.data.direction;
             } else if (
-                isEnd(note, lastNote[note.color], lastNoteDirection[note.color])
+                isEnd(
+                    note.data,
+                    lastNote[note.data.color].data,
+                    lastNoteDirection[note.data.color]
+                )
             ) {
-                if (note.direction !== 8) {
-                    noteOccupy[note.color].posX =
-                        note.posX + beatmap.NoteCutDirectionSpace[note.direction][0];
-                    noteOccupy[note.color].posY =
-                        note.posY + beatmap.NoteCutDirectionSpace[note.direction][1];
-                    lastNoteDirection[note.color] = note.direction;
+                if (note.data.direction !== 8) {
+                    noteOccupy[note.data.color].posX =
+                        note.data.posX +
+                        beatmap.NoteCutDirectionSpace[note.data.direction][0];
+                    noteOccupy[note.data.color].posY =
+                        note.data.posY +
+                        beatmap.NoteCutDirectionSpace[note.data.direction][1];
+                    lastNoteDirection[note.data.color] = note.data.direction;
                 } else {
-                    noteOccupy[note.color].posX =
-                        note.posX +
-                        beatmap.NoteCutDirectionSpace[lastNoteDirection[note.color]][0];
-                    noteOccupy[note.color].posY =
-                        note.posY +
-                        beatmap.NoteCutDirectionSpace[lastNoteDirection[note.color]][1];
+                    noteOccupy[note.data.color].posX =
+                        note.data.posX +
+                        beatmap.NoteCutDirectionSpace[
+                            lastNoteDirection[note.data.color]
+                        ][0];
+                    noteOccupy[note.data.color].posY =
+                        note.data.posY +
+                        beatmap.NoteCutDirectionSpace[
+                            lastNoteDirection[note.data.color]
+                        ][1];
                 }
             }
             if (
-                lastNote[(note.color + 1) % 2] &&
-                note.time - lastNote[(note.color + 1) % 2].time !== 0 &&
-                note.time - lastNote[(note.color + 1) % 2].time <
-                    Math.min(hitboxTime, lastSpeed[(note.color + 1) % 2])
+                lastNote[(note.data.color + 1) % 2] &&
+                note.data.time - lastNote[(note.data.color + 1) % 2].data.time !== 0 &&
+                note.data.time - lastNote[(note.data.color + 1) % 2].data.time <
+                    Math.min(hitboxTime, lastSpeed[(note.data.color + 1) % 2])
             ) {
                 if (
-                    note.posX === noteOccupy[(note.color + 1) % 2].posX &&
-                    note.posY === noteOccupy[(note.color + 1) % 2].posY
+                    note.data.posX === noteOccupy[(note.data.color + 1) % 2].posX &&
+                    note.data.posY === noteOccupy[(note.data.color + 1) % 2].posY
                 ) {
                     for (let j = i + 1; j < len; j++) {
                         const compare = noteContainer[j];
-                        if (compare.data.time > note.time + 0.01) {
+                        if (compare.data.time > note.data.time + 0.01) {
                             break;
                         }
                         if (
                             compare.type === 'note' &&
-                            note.isDouble(compare.data, 0.01)
+                            note.data.isDouble(compare.data, 0.01)
                         ) {
                             arr.push(note);
                         }
@@ -126,28 +145,34 @@ function check(map: ToolArgs) {
                 }
             }
         } else {
-            if (note.direction !== 8) {
-                noteOccupy[note.color].posX =
-                    note.posX + beatmap.NoteCutDirectionSpace[note.direction][0];
-                noteOccupy[note.color].posY =
-                    note.posY + beatmap.NoteCutDirectionSpace[note.direction][1];
+            if (note.data.direction !== 8) {
+                noteOccupy[note.data.color].posX =
+                    note.data.posX +
+                    beatmap.NoteCutDirectionSpace[note.data.direction][0];
+                noteOccupy[note.data.color].posY =
+                    note.data.posY +
+                    beatmap.NoteCutDirectionSpace[note.data.direction][1];
             } else {
-                noteOccupy[note.color].posX = -1;
-                noteOccupy[note.color].posY = -1;
+                noteOccupy[note.data.color].posX = -1;
+                noteOccupy[note.data.color].posY = -1;
             }
-            lastNoteDirection[note.color] = note.direction;
+            lastNoteDirection[note.data.color] = note.data.direction;
         }
-        lastNote[note.color] = note;
-        swingNoteArray[note.color].push(noteContainer[i]);
+        lastNote[note.data.color] = note;
+        swingNoteArray[note.data.color].push(noteContainer[i]);
     }
     return arr
-        .map((n) => n.time)
+        .map((n) => n.data.time)
         .filter(function (x, i, ary) {
             return !i || x !== ary[i - 1];
         });
 }
 
 function run(map: ToolArgs) {
+    if (!map.difficulty) {
+        console.error('Something went wrong!');
+        return;
+    }
     const result = check(map);
 
     if (result.length) {

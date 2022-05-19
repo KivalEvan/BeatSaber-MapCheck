@@ -47,6 +47,10 @@ function inputTimeHandler(this: HTMLInputElement) {
 }
 
 function run(map: ToolArgs) {
+    if (!map.difficulty) {
+        console.error('Something went wrong!');
+        return;
+    }
     const { time } = <{ time: number }>tool.input.params;
     const result = map.settings.bpm.toRealTime(
         map.difficulty.data.getFirstInteractiveTime()

@@ -11,7 +11,7 @@ export default class UIInput {
             return;
         }
         htmlInputToggle.forEach((input) => {
-            input.disabled = bool;
+            input.disabled = !bool;
         });
     };
 }
