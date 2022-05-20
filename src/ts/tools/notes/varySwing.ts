@@ -1,5 +1,5 @@
 import { IBeatmapItem, Tool, ToolArgs } from '../../types/mapcheck';
-import UICheckbox from '../../ui/checkbox';
+import UICheckbox from '../../ui/helpers/checkbox';
 import { round } from '../../utils';
 
 const name = 'Varying Swing Speed';

@@ -1,7 +1,7 @@
 import {
     UIBackgroundColorType,
     UIBackgroundColor,
-} from '../types/mapcheck/ui/accordion';
+} from '../../types/mapcheck/ui/accordion';
 
 const logPrefix = 'UI Accordion: ';
 const prefix = 'accordion__';

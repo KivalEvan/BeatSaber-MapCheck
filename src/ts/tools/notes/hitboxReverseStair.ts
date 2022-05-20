@@ -3,7 +3,7 @@ import { round } from '../../utils';
 import { NoteContainer, NoteContainerNote } from '../../types/beatmap/v3/container';
 import { isIntersect } from '../../analyzers/placement/note';
 import swing from '../../analyzers/swing/swing';
-import UICheckbox from '../../ui/checkbox';
+import UICheckbox from '../../ui/helpers/checkbox';
 
 const name = 'Hitbox Reverse Staircase';
 

@@ -1,9 +1,9 @@
 import { Tool, ToolArgs } from '../../types/mapcheck';
-import UISelect from '../../ui/select';
+import UISelect from '../../ui/helpers/select';
 import { round } from '../../utils';
 import Parity from '../../analyzers/parity/parity';
 import swing from '../../analyzers/swing/swing';
-import { NoteContainer } from '../../types/beatmap/v3/container';
+import { NoteContainer, NoteContainerBomb } from '../../types/beatmap/v3/container';
 
 const htmlContainer = document.createElement('div');
 const htmlInputCheck = document.createElement('input');
@@ -79,10 +79,6 @@ function inputSelectRotateHandler(this: HTMLInputElement) {}
 function inputSelectParityHandler(this: HTMLInputElement) {}
 
 function check(map: ToolArgs) {
-    if (!map.difficulty) {
-        console.error('Something went wrong!');
-        return;
-    }
     const { bpm } = map.settings;
     const { noteContainer } = map.difficulty!;
     const { warningThres, errorThres, allowedRot } = <
@@ -93,13 +89,12 @@ function check(map: ToolArgs) {
     const swingNoteArray: { [key: number]: NoteContainer[] } = {
         0: [],
         1: [],
-        3: [],
     };
-    const bombContext: { [key: number]: NoteContainer[] } = {
+    const bombContext: { [key: number]: NoteContainerBomb[] } = {
         0: [],
         1: [],
     };
-    const lastBombContext: { [key: number]: NoteContainer[] } = {
+    const lastBombContext: { [key: number]: NoteContainerBomb[] } = {
         0: [],
         1: [],
     };
@@ -112,8 +107,6 @@ function check(map: ToolArgs) {
         warning: [],
         error: [],
     };
-
-    const arr: NoteContainer[] = [];
     for (let i = 0, len = noteContainer.length; i < len; i++) {
         const note = noteContainer[i];
         if (note.type === 'note' && lastNote[note.data.color]) {

@@ -2,7 +2,7 @@ import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
 import * as beatmap from '../../beatmap';
 import { EnvironmentName } from '../../types/beatmap/shared/environment';
-import UICheckbox from '../../ui/checkbox';
+import UICheckbox from '../../ui/helpers/checkbox';
 
 const name = 'Unlit Bomb';
 

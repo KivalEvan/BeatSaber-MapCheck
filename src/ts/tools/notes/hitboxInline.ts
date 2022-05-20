@@ -2,7 +2,7 @@ import { Tool, ToolArgs } from '../../types/mapcheck';
 import { round } from '../../utils';
 import { NoteContainer, NoteContainerNote } from '../../types/beatmap/v3/container';
 import swing from '../../analyzers/swing/swing';
-import UICheckbox from '../../ui/checkbox';
+import UICheckbox from '../../ui/helpers/checkbox';
 
 const name = 'Hitbox Inline';
 

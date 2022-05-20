@@ -5,7 +5,7 @@ import { NoteContainer, NoteContainerNote } from '../../types/beatmap/v3/contain
 import { isEnd } from '../../analyzers/placement/note';
 import swing from '../../analyzers/swing/swing';
 import { ColorNote } from '../../beatmap/v3';
-import UICheckbox from '../../ui/checkbox';
+import UICheckbox from '../../ui/helpers/checkbox';
 
 const name = 'Hitbox Staircase';
 

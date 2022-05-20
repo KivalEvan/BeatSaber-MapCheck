@@ -1,7 +1,7 @@
 // i hate implementing these so much
-import UIAccordion from './accordion';
-import UIPanel from './panel';
-import UISelect from './select';
+import UIAccordion from './helpers/accordion';
+import UIPanel from './helpers/panel';
+import UISelect from './helpers/select';
 import SavedData from '../savedData';
 import Settings from '../settings';
 import { formatNumber, round } from '../utils';

@@ -1,6 +1,6 @@
 // may god help you maintain these
 import UIHeader from './header';
-import UIPanel from './panel';
+import UIPanel from './helpers/panel';
 import SavedData from '../savedData';
 import { removeOptions, round, toMMSS, toHHMMSS, rgbaToHex } from '../utils';
 import { IColorScheme, EnvironmentName, IInfoData } from '../types';

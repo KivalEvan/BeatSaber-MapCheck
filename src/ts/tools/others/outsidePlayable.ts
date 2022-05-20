@@ -1,5 +1,5 @@
 import { Tool, ToolArgs } from '../../types/mapcheck';
-import UICheckbox from '../../ui/checkbox';
+import UICheckbox from '../../ui/helpers/checkbox';
 import { round, toMMSS } from '../../utils';
 
 const name = 'Outside Playable Object';

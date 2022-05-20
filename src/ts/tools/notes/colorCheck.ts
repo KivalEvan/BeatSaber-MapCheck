@@ -2,7 +2,7 @@ import { Tool, ToolArgs } from '../../types/mapcheck';
 import { ColorArray } from '../../types/beatmap/shared/colors';
 import { deltaE00, toRGBArray, round } from '../../utils';
 import * as beatmap from '../../beatmap';
-import UICheckbox from '../../ui/checkbox';
+import UICheckbox from '../../ui/helpers/checkbox';
 
 const arrowColor: ColorArray = [1, 1, 1];
 

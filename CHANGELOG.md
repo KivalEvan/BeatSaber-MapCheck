@@ -23,10 +23,6 @@
 -   Beatmap v2.x.x is now unsupported
     -   Beatmap v2 can still be used by map check, but will not gain any feature updated around it.
 
-### Removed
-
--   Temporarily removed experimental parity check
-
 ## v2.4.0 [2022-03-02]
 
 ### Changed

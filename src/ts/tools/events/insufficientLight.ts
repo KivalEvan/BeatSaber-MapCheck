@@ -1,6 +1,6 @@
 import { Tool, ToolArgs } from '../../types/mapcheck';
 import * as beatmap from '../../beatmap';
-import UICheckbox from '../../ui/checkbox';
+import UICheckbox from '../../ui/helpers/checkbox';
 
 const name = ' Insufficient Lighting Event';
 
