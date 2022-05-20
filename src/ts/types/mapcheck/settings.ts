@@ -33,6 +33,7 @@ interface ISettingsOnLoad extends SettingsFlag {
 }
 
 export interface ISettings {
+    version: number;
     load: ISettingsLoad;
     sorting: boolean;
     beatNumbering: BeatNumbering;

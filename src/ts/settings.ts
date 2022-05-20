@@ -2,6 +2,7 @@ import { ISettings } from './types/mapcheck/settings';
 import { deepCopy } from './utils';
 
 const settingsDefault: ISettings = {
+    version: 1,
     load: {
         audio: true,
         imageCover: true,
@@ -28,6 +29,9 @@ export default new (class Settings implements ISettings {
         this.init();
     }
 
+    get version(): ISettings['version'] {
+        return this.property.version;
+    }
     get load(): ISettings['load'] {
         return this.property.load;
     }
@@ -74,6 +78,10 @@ export default new (class Settings implements ISettings {
         const storage = localStorage.getItem('settings');
         if (storage) {
             const temp = JSON.parse(storage);
+            if (!temp.version) {
+                this.clear();
+                return;
+            }
             this.property = temp._property ?? this.property;
             this.save();
         }
