@@ -6,16 +6,16 @@ import { deepCheck } from '../shared/dataCheck';
 import logger from '../../logger';
 
 // deno-lint-ignore ban-types
-const tag = (func: Function) => {
-    return `[v3::parse::${func.name}]`;
+const tag = (name: string) => {
+    return `[v3::parse::${name}]`;
 };
 
 const sortObjectTime = (a: IBaseObject, b: IBaseObject) => a.b - b.b;
 
 export const difficulty = (data: IDifficultyData): DifficultyData => {
-    logger.info(tag(difficulty), 'Parsing beatmap difficulty v3.x.x');
+    logger.info(tag('difficulty'), 'Parsing beatmap difficulty v3.x.x');
     if (data.version !== '3.0.0') {
-        logger.warn(tag(difficulty), 'Unidentified beatmap version');
+        logger.warn(tag('difficulty'), 'Unidentified beatmap version');
         data.version = '3.0.0';
     }
     deepCheck(data, DifficultyDataCheck, 'difficulty', data.version);

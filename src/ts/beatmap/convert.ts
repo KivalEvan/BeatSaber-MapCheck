@@ -9,8 +9,8 @@ import { ICustomDataNote, ICustomDataObstacle } from '../types/beatmap/v3/custom
 import { IBasicEvent } from '../types/beatmap/v3/basicEvent';
 
 // deno-lint-ignore ban-types
-const tag = (func: Function) => {
-    return `[convert::${func.name}]`;
+const tag = (name: string) => {
+    return `[convert::${name}]`;
 };
 
 /** Convert beatmap v2 to beatmap v3, you are encouraged to convert to make full use of new beatmap features.
@@ -30,9 +30,12 @@ export const V2toV3 = (
         if (confirmation![0].toLowerCase() !== 'y') {
             throw Error('Conversion to beatmap v3 denied.');
         }
-        logger.info(tag(V2toV3), 'Converting beatmap v2 to v3');
+        logger.info(tag('V2toV3'), 'Converting beatmap v2 to v3');
     } else {
-        logger.warn(tag(V2toV3), 'Converting beatmap v2 to v3 may lose certain data!');
+        logger.warn(
+            tag('V2toV3'),
+            'Converting beatmap v2 to v3 may lose certain data!'
+        );
     }
     const template = v3.DifficultyData.create();
 
@@ -369,9 +372,12 @@ export const V3toV2 = (
         if (confirmation![0].toLowerCase() !== 'y') {
             throw Error('Conversion to beatmap v2 denied.');
         }
-        logger.info(tag(V3toV2), 'Converting beatmap v3 to v2');
+        logger.info(tag('V3toV2'), 'Converting beatmap v3 to v2');
     } else {
-        logger.warn(tag(V3toV2), 'Converting beatmap v3 to v2 may lose certain data!');
+        logger.warn(
+            tag('V3toV2'),
+            'Converting beatmap v3 to v2 may lose certain data!'
+        );
     }
     const template = DifficultyDataV2.create();
 

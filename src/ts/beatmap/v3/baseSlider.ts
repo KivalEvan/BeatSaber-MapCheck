@@ -177,5 +177,21 @@ export abstract class BaseSlider<T extends IBaseSlider> extends BaseNote<T> {
         return this.time > this.tailTime;
     }
 
-    abstract mirror(): this;
+    /** Check if slider has Chroma properties.
+     * ```ts
+     * if (slider.hasChroma()) {}
+     * ```
+     */
+    hasChroma = (): boolean => {
+        return false;
+    };
+
+    /** Check if slider has Noodle Extensions properties.
+     * ```ts
+     * if (slider.hasNoodleExtensions()) {}
+     * ```
+     */
+    hasNoodleExtensions = (): boolean => {
+        return false;
+    };
 }

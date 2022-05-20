@@ -10,12 +10,14 @@ import {
     NoteJumpSpeed,
     DifficultyRename,
     eventTypeRename,
+    eventGroupRename,
 } from '../beatmap';
 import { CharacteristicRename } from '../beatmap/shared/characteristic';
 import { IInfoData } from '../types';
 import { IBeatmapItem } from '../types/mapcheck';
 import { NoteContainer } from '../types/beatmap/v3/container';
 import {
+    countBomb,
     countDirection,
     countNote,
     countX,
@@ -24,7 +26,7 @@ import {
 } from '../analyzers/stats/note';
 import * as swing from '../analyzers/swing';
 import { countObstacle } from '../analyzers/stats/obstacle';
-import { countEvent } from '../analyzers/stats';
+import { countColorEBG, countEvent, countRotationEBG } from '../analyzers/stats';
 import * as score from '../analyzers/score';
 
 const logPrefix = 'UI Stats: ';
@@ -159,10 +161,18 @@ const createNoteCountTable = (
     mapData: IBeatmapItem
 ): HTMLTableElement => {
     const noteCount = countNote(mapData.data.colorNotes);
+    const arcCount = countNote(mapData.data.sliders);
+    const chainCount = countNote(mapData.data.burstSliders);
+    const bombCount = countBomb(mapData.data.colorNotes);
 
     let htmlString = `<caption class="${prefix}table-caption">Notes: ${
         noteCount.red.total + noteCount.blue.total
-    }<br>R/B Ratio: ${round(noteCount.red.total / noteCount.blue.total, 2)}</caption>
+    }<br>Arc: ${arcCount.red.total + arcCount.blue.total}<br>Chain: ${
+        chainCount.red.total + chainCount.blue.total
+    }<br>Bombs: ${noteCount.red.total + noteCount.blue.total}<br>R/B Ratio: ${round(
+        noteCount.red.total / noteCount.blue.total,
+        2
+    )}</caption>
     <tr>
     <th class="${prefix}table-header"></th>
     <th class="${prefix}table-header">Red</th>
@@ -170,41 +180,59 @@ const createNoteCountTable = (
     <th class="${prefix}table-header">Bomb</th>
     </tr>
     <tr>
-    <th class="${prefix}table-header">Total</th>
+    <th class="${prefix}table-header">Note</th>
     <td class="${prefix}table-element">${noteCount.red.total}</td>
     <td class="${prefix}table-element">${noteCount.blue.total}</td>
-    <td class="${prefix}table-element">${noteCount.bomb.total}</td>
+    <td class="${prefix}table-element">0</td>
+    </tr>
+    <tr>
+    <th class="${prefix}table-header">Arc</th>
+    <td class="${prefix}table-element">${arcCount.red.total}</td>
+    <td class="${prefix}table-element">${arcCount.blue.total}</td>
+    <td class="${prefix}table-element">0</td>
+    </tr>
+    <tr>
+    <th class="${prefix}table-header">Chain</th>
+    <td class="${prefix}table-element">${chainCount.red.total}</td>
+    <td class="${prefix}table-element">${chainCount.blue.total}</td>
+    <td class="${prefix}table-element">0</td>
+    </tr>
+    <tr>
+    <th class="${prefix}table-header">Bomb</th>
+    <td class="${prefix}table-element">0</td>
+    <td class="${prefix}table-element">0</td>
+    <td class="${prefix}table-element">${bombCount.total}</td>
     </tr>`;
-    if (noteCount.red.chroma || noteCount.blue.chroma || noteCount.bomb.chroma) {
+    if (noteCount.red.chroma || noteCount.blue.chroma || bombCount.chroma) {
         htmlString += `<tr>
         <th class="${prefix}table-header">Chroma</th>
         <td class="${prefix}table-element">${noteCount.red.chroma}</td>
         <td class="${prefix}table-element">${noteCount.blue.chroma}</td>
-        <td class="${prefix}table-element">${noteCount.bomb.chroma}</td>
+        <td class="${prefix}table-element">${bombCount.chroma}</td>
         </tr>`;
     }
     if (
         noteCount.red.noodleExtensions ||
         noteCount.blue.noodleExtensions ||
-        noteCount.bomb.noodleExtensions
+        bombCount.noodleExtensions
     ) {
         htmlString += `<tr>
         <th class="${prefix}table-header">NE</th>
         <td class="${prefix}table-element">${noteCount.red.noodleExtensions}</td>
         <td class="${prefix}table-element">${noteCount.blue.noodleExtensions}</td>
-        <td class="${prefix}table-element">${noteCount.bomb.noodleExtensions}</td>
+        <td class="${prefix}table-element">${bombCount.noodleExtensions}</td>
         </tr>`;
     }
     if (
         noteCount.red.mappingExtensions ||
         noteCount.blue.mappingExtensions ||
-        noteCount.bomb.mappingExtensions
+        bombCount.mappingExtensions
     ) {
         htmlString += `<tr>
         <th class="${prefix}table-header">ME</th>
         <td class="${prefix}table-element">${noteCount.red.mappingExtensions}</td>
         <td class="${prefix}table-element">${noteCount.blue.mappingExtensions}</td>
-        <td class="${prefix}table-element">${noteCount.bomb.mappingExtensions}</td>
+        <td class="${prefix}table-element">${bombCount.mappingExtensions}</td>
         </tr>`;
     }
 
@@ -428,9 +456,6 @@ const createInfoTable = (
     mapInfo: IInfoData,
     mapData: IBeatmapItem
 ): HTMLTableElement => {
-    const bpm = BeatPerMinute.create(mapInfo._beatsPerMinute);
-    const noteCount = countNote(mapData.data.colorNotes);
-
     let htmlString = `<caption class="${prefix}table-caption">Note Information:</caption>
     <tr>
     <th class="${prefix}table-header" colspan="2">Max Score</th>
@@ -502,7 +527,8 @@ const createEventCountTable = (
         chroma += eventCount[key].chroma;
         chromaOld += eventCount[key].chromaOld;
         htmlString += `<tr>
-        <th class="${prefix}table-header" colspan="2">${eventTypeRename(
+        <th class="${prefix}table-header">${key}</th>
+        <th class="${prefix}table-header" colspan="4">${eventTypeRename(
             parseInt(key),
             environment
         )}</th>
@@ -511,26 +537,72 @@ const createEventCountTable = (
     }
     if (chroma) {
         htmlString += `<tr>
-        <th class="${prefix}table-header" colspan="2">Chroma</th>
+        <th class="${prefix}table-header" colspan="5">Chroma</th>
         <td class="${prefix}table-element">${chroma}</td>
         </tr>`;
     }
     if (chromaOld) {
         htmlString += `<tr>
-        <th class="${prefix}table-header" colspan="2">OG Chroma</th>
+        <th class="${prefix}table-header" colspan="5">OG Chroma</th>
         <td class="${prefix}table-element">${chromaOld}</td>
         </tr>`;
     }
     if (noodleExtensions) {
         htmlString += `<tr>
-        <th class="${prefix}table-header" colspan="2">Noodle Extensions</th>
+        <th class="${prefix}table-header" colspan="5">Noodle Extensions</th>
         <td class="${prefix}table-element">${noodleExtensions}</td>
         </tr>`;
     }
     if (mappingExtensions) {
         htmlString += `<tr>
-        <th class="${prefix}table-header" colspan="2">Mapping Extensions</th>
+        <th class="${prefix}table-header" colspan="5">Mapping Extensions</th>
         <td class="${prefix}table-element">${mappingExtensions}</td>
+        </tr>`;
+    }
+
+    const htmlTable = document.createElement('table');
+    htmlTable.className = prefix + 'table';
+    htmlTable.innerHTML = htmlString;
+
+    return htmlTable;
+};
+
+const createEBGColorCountTable = (
+    mapInfo: IInfoData,
+    mapData: IBeatmapItem
+): HTMLTableElement => {
+    const environment =
+        mapData.characteristic === '360Degree' || mapData.characteristic === '90Degree'
+            ? mapInfo._allDirectionsEnvironmentName
+            : mapInfo._environmentName;
+    const ebgColorCount = countColorEBG(
+        mapData.data.lightColorEventBoxGroups,
+        environment
+    );
+    const ebgRotationCount = countRotationEBG(
+        mapData.data.lightRotationEventBoxGroups,
+        environment
+    );
+
+    let htmlString = `<caption class="${prefix}table-caption">Color Event Box Groups: ${Object.values(
+        ebgColorCount
+    ).reduce(
+        (t, { total }) => t + total,
+        0
+    )}<br>Rotation Event Box Groups: ${Object.values(ebgRotationCount).reduce(
+        (t, { total }) => t + total,
+        0
+    )}</caption>`;
+
+    for (const key in ebgColorCount) {
+        htmlString += `<tr>
+        <th class="${prefix}table-header">${key}</th>
+        <th class="${prefix}table-header" colspan="4">${eventGroupRename(
+            parseInt(key),
+            environment
+        )}</th>
+        <td class="${prefix}table-element">${ebgColorCount[key].total}</td>
+        <td class="${prefix}table-element">${ebgRotationCount[key].total}</td>
         </tr>`;
     }
 
@@ -645,6 +717,8 @@ const populate = (): void => {
             htmlPanelR.append(createNoteCountTable(mapInfo, mapData));
             htmlPanelR.append(document.createElement('br'));
             htmlPanelR.append(createEventCountTable(mapInfo, mapData));
+            htmlPanelR.append(document.createElement('br'));
+            htmlPanelR.append(createEBGColorCountTable(mapInfo, mapData));
             htmlPanelR.append(document.createElement('br'));
             htmlPanelR.append(createObstacleCountTable(mapInfo, mapData));
 

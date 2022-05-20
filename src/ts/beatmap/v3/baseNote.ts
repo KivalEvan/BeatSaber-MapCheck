@@ -1,5 +1,4 @@
 import { BaseObject } from './baseObject';
-import { LINE_COUNT } from '../shared/constants';
 import { IBaseNote } from '../../types/beatmap/v3/baseNote';
 
 /** Note beatmap object. */
@@ -43,11 +42,6 @@ export abstract class BaseNote<T extends IBaseNote> extends BaseObject<T> {
     }
     setPosY(value: IBaseNote['y']) {
         this.posY = value;
-        return this;
-    }
-
-    mirror() {
-        this.posX = LINE_COUNT - 1 - this.posX;
         return this;
     }
 
@@ -129,9 +123,9 @@ export abstract class BaseNote<T extends IBaseNote> extends BaseObject<T> {
      */
     abstract isSlantedWindow(compareTo: BaseNote<T>): boolean;
 
-    hasMappingExtensions() {
-        return this.posX > 3 || this.posX < 0 || this.posY > 2 || this.posY < 0;
-    }
-
+    abstract hasChroma(): boolean;
+    abstract hasNoodleExtensions(): boolean;
+    abstract hasMappingExtensions(): boolean;
+    abstract mirror(): this;
     abstract isValid(): boolean;
 }

@@ -4,8 +4,8 @@ import { Version } from '../../types/beatmap/index';
 import { compareVersion } from './version';
 
 // deno-lint-ignore ban-types
-const tag = (func: Function) => {
-    return `[shared::dataCheck::${func.name}]`;
+const tag = (name: string) => {
+    return `[shared::dataCheck::${name}]`;
 };
 
 export const deepCheck = (
@@ -15,7 +15,7 @@ export const deepCheck = (
     name: string,
     version: Version
 ) => {
-    logger.verbose(tag(deepCheck), `Looking up ${name}`);
+    logger.verbose(tag('deepCheck'), `Looking up ${name}`);
     if (Array.isArray(data)) {
         data.forEach((d, i) => deepCheck(d, check, name + i, version));
         return;
@@ -26,7 +26,7 @@ export const deepCheck = (
             break;
         }
         if (!dataCheckKey.includes(key)) {
-            logger.warn(tag(deepCheck), `Foreign property ${key} found in ${name}`);
+            logger.warn(tag('deepCheck'), `Foreign property ${key} found in ${name}`);
         }
     }
     for (const key in check) {

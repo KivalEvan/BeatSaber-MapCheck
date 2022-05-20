@@ -1,8 +1,8 @@
 import logger from '../logger';
 
 // deno-lint-ignore ban-types
-const tag = (func: Function) => {
-    return `[utils::math::${func.name}]`;
+const tag = (name: string) => {
+    return `[utils::math::${name}]`;
 };
 
 export const formatNumber = (num: number): string => {
@@ -53,13 +53,13 @@ export const clamp = (value: number, min: number, max: number): number => {
 export const normalize = (value: number, min: number, max: number): number => {
     if (min >= max) {
         logger.warn(
-            tag(normalize),
+            tag('normalize'),
             'Min value is equal or more than max value, returning 1'
         );
         return 1;
     }
     const result = (value - min) / (max - min);
-    logger.verbose(tag(normalize), `Obtained ${result}`);
+    logger.verbose(tag('normalize'), `Obtained ${result}`);
     return result;
 };
 
@@ -77,17 +77,17 @@ export const lerp = (
     }
     if (alpha > 1) {
         logger.warn(
-            tag(lerp),
+            tag('lerp'),
             'Alpha value is larger than 1, may have unintended result'
         );
     }
     if (alpha < 0) {
         logger.warn(
-            tag(lerp),
+            tag('lerp'),
             'Alpha value is smaller than 0, may have unintended result'
         );
     }
     const result = start + (end - start) * easing(alpha);
-    logger.verbose(tag(lerp), `Obtained ${result}`);
+    logger.verbose(tag('lerp'), `Obtained ${result}`);
     return result;
 };

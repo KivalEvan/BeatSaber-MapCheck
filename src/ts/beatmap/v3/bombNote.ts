@@ -2,6 +2,7 @@ import { IBaseNote } from '../../types/beatmap/v3/baseNote';
 import { IBombNote } from '../../types/beatmap/v3/bombNote';
 import { ObjectToReturn } from '../../types/utils';
 import { deepCopy } from '../../utils/misc';
+import { LINE_COUNT } from '../shared/constants';
 import { BaseNote } from './baseNote';
 
 /** Bomb note beatmap object. */
@@ -55,6 +56,11 @@ export class BombNote extends BaseNote<IBombNote> {
             y: this.posY,
             customData: deepCopy(this.customData),
         };
+    }
+
+    mirror() {
+        this.posX = LINE_COUNT - 1 - this.posX;
+        return this;
     }
 
     getPosition(): [number, number] {
@@ -124,6 +130,41 @@ export class BombNote extends BaseNote<IBombNote> {
             !this.isVertical(compareTo)
         );
     }
+
+    /** Check if note has Chroma properties.
+     * ```ts
+     * if (bomb.hasChroma()) {}
+     * ```
+     */
+    hasChroma = (): boolean => {
+        return (
+            Array.isArray(this.customData?.color) ||
+            typeof this.customData?.spawnEffect === 'boolean'
+        );
+    };
+
+    /** Check if note has Noodle Extensions properties.
+     * ```ts
+     * if (bomb.hasNoodleExtensions()) {}
+     * ```
+     */
+    // god i hate these
+    hasNoodleExtensions = (): boolean => {
+        return (
+            Array.isArray(this.customData?.animation) ||
+            typeof this.customData?.disableNoteGravity === 'boolean' ||
+            typeof this.customData?.disableNoteLook === 'boolean' ||
+            Array.isArray(this.customData?.flip) ||
+            typeof this.customData?.uninteractable === 'boolean' ||
+            Array.isArray(this.customData?.localRotation) ||
+            typeof this.customData?.noteJumpMovementSpeed === 'number' ||
+            typeof this.customData?.noteJumpStartBeatOffset === 'number' ||
+            Array.isArray(this.customData?.coordinates) ||
+            Array.isArray(this.customData?.worldRotation) ||
+            typeof this.customData?.worldRotation === 'number' ||
+            typeof this.customData?.track === 'string'
+        );
+    };
 
     /** Check if bomb has Mapping Extensions properties.
      * ```ts

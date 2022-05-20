@@ -7,8 +7,8 @@ import { IBeatmapSettings } from '../types/mapcheck/tools/tool';
 import { Tool } from '../types/mapcheck';
 import logger from '../logger';
 
-const tag = (func: Function) => {
-    return `[analyzer::${func.name}]`;
+const tag = (name: string) => {
+    return `[analyzer::${name}]`;
 };
 
 const toolListInput: ReadonlyArray<Tool> = AnalysisComponents.getAll().sort(
@@ -31,7 +31,7 @@ const init = (): void => {
 const runGeneral = (): void => {
     const mapInfo = SavedData.beatmapInfo;
     if (!mapInfo) {
-        logger.error(tag(runGeneral), 'Could not analyse, missing map info');
+        logger.error(tag('runGeneral'), 'Could not analyse, missing map info');
         return;
     }
 
@@ -51,7 +51,7 @@ const runGeneral = (): void => {
         mapDuration: 0,
     };
 
-    logger.info(tag(runGeneral), `Analysing general`);
+    logger.info(tag('runGeneral'), `Analysing general`);
     const htmlArr: HTMLElement[] = [];
     toolListOutput
         .filter((tool) => tool.type === 'general')
@@ -67,7 +67,7 @@ const runGeneral = (): void => {
                         htmlArr.push(tool.output.html);
                     }
                 } catch (err) {
-                    logger.error(tag(runGeneral), err);
+                    logger.error(tag('runGeneral'), err);
                 }
             }
         });
@@ -83,7 +83,7 @@ const runDifficulty = (
 ): void => {
     const mapInfo = SavedData.beatmapInfo;
     if (!mapInfo) {
-        logger.error(tag(runDifficulty), 'Could not analyse, missing map info');
+        logger.error(tag('runDifficulty'), 'Could not analyse, missing map info');
         return;
     }
 
@@ -95,7 +95,7 @@ const runDifficulty = (
         (set) => set.characteristic === characteristic && set.difficulty === difficulty
     );
     if (!beatmapDifficulty) {
-        logger.error(tag(runDifficulty), 'Could not analyse, missing map data');
+        logger.error(tag('runDifficulty'), 'Could not analyse, missing map data');
         return;
     }
 
@@ -123,7 +123,7 @@ const runDifficulty = (
         mapDuration: bpm.toRealTime(beatmapDifficulty.data.getLastInteractiveTime()),
     };
 
-    logger.info(tag(runDifficulty), `Analysing ${characteristic} ${difficulty}`);
+    logger.info(tag('runDifficulty'), `Analysing ${characteristic} ${difficulty}`);
     const htmlArr: HTMLElement[] = [];
     toolListOutput
         .filter((tool) => tool.type !== 'general')
@@ -139,7 +139,7 @@ const runDifficulty = (
                         htmlArr.push(tool.output.html);
                     }
                 } catch (err) {
-                    logger.error(tag(runDifficulty), err);
+                    logger.error(tag('runDifficulty'), err);
                 }
             }
         });

@@ -1,6 +1,9 @@
+import { BombNote } from '../../beatmap/v3';
+import { BaseSlider } from '../../beatmap/v3/baseSlider';
 import { ColorNote } from '../../beatmap/v3/colorNote';
+import { IBaseSlider } from '../../types/beatmap/v3';
 import { NoteContainer } from '../../types/beatmap/v3/container';
-import { INoteCount } from '../../types/mapcheck/analyzers/stats';
+import { ICountNote, ICountStatsNote } from '../../types/mapcheck/analyzers/stats';
 
 /** Count number of red, blue, and bomb notes with their properties in given array and return a note count object.
  * ```ts
@@ -8,8 +11,10 @@ import { INoteCount } from '../../types/mapcheck/analyzers/stats';
  * console.log(list);
  * ```
  */
-export const countNote = (notes: ColorNote[]): INoteCount => {
-    const noteCount: INoteCount = {
+export const countNote = (
+    notes: (ColorNote | BaseSlider<IBaseSlider>)[]
+): ICountNote => {
+    const noteCount: ICountNote = {
         red: {
             total: 0,
             chroma: 0,
@@ -22,27 +27,55 @@ export const countNote = (notes: ColorNote[]): INoteCount => {
             noodleExtensions: 0,
             mappingExtensions: 0,
         },
-        bomb: {
-            total: 0,
-            chroma: 0,
-            noodleExtensions: 0,
-            mappingExtensions: 0,
-        },
     };
     for (let i = notes.length - 1; i >= 0; i--) {
         if (notes[i].color === 0) {
             noteCount.red.total++;
-            if (notes[i].customData?.color || notes[i].customData?.disableSpawnEffect) {
+            if (notes[i].hasChroma()) {
                 noteCount.red.chroma++;
+            }
+            if (notes[i].hasNoodleExtensions()) {
+                noteCount.red.noodleExtensions++;
+            }
+            if (notes[i].hasMappingExtensions()) {
+                noteCount.red.mappingExtensions++;
             }
         } else if (notes[i].color === 1) {
             noteCount.blue.total++;
-            if (notes[i].customData?.color || notes[i].customData?.disableSpawnEffect) {
+            if (notes[i].hasChroma()) {
                 noteCount.blue.chroma++;
+            }
+            if (notes[i].hasNoodleExtensions()) {
+                noteCount.blue.noodleExtensions++;
+            }
+            if (notes[i].hasMappingExtensions()) {
+                noteCount.blue.mappingExtensions++;
             }
         }
     }
     return noteCount;
+};
+
+export const countBomb = (bombs: BombNote[]): ICountStatsNote => {
+    const bombCount: ICountStatsNote = {
+        total: 0,
+        chroma: 0,
+        noodleExtensions: 0,
+        mappingExtensions: 0,
+    };
+    for (let i = bombs.length - 1; i >= 0; i--) {
+        bombCount.total++;
+        if (bombs[i].hasChroma()) {
+            bombCount.chroma++;
+        }
+        if (bombs[i].hasNoodleExtensions()) {
+            bombCount.noodleExtensions++;
+        }
+        if (bombs[i].hasMappingExtensions()) {
+            bombCount.mappingExtensions++;
+        }
+    }
+    return bombCount;
 };
 
 /** Count number of specified line index in a given array and return a counted number of line index.

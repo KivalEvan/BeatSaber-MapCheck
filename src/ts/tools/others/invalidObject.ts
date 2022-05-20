@@ -90,6 +90,13 @@ function run(map: ToolArgs) {
                 .join(', ')}`
         );
     }
+    if (bombResult.length) {
+        htmlString.push(
+            `<b>Invalid note [${bombResult.length}]:</b> ${bombResult
+                .map((n) => round(bpm.adjustTime(n), 3))
+                .join(', ')}`
+        );
+    }
     if (obstacleResult.length) {
         htmlString.push(
             `<b>Invalid obstacle [${obstacleResult.length}]:</b> ${obstacleResult

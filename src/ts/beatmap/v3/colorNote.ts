@@ -1,5 +1,5 @@
 import { IColorNote } from '../../types/beatmap/v3/colorNote';
-import { NoteCutAngle } from '../shared/constants';
+import { LINE_COUNT, NoteCutAngle } from '../shared/constants';
 import { deepCopy } from '../../utils/misc';
 import { ObjectToReturn } from '../../types/utils';
 import { BaseNote } from './baseNote';
@@ -119,6 +119,11 @@ export class ColorNote extends BaseNote<IColorNote> {
     }
     setAngleOffset(value: IColorNote['a']) {
         this.angleOffset = value;
+        return this;
+    }
+
+    mirror() {
+        this.posX = LINE_COUNT - 1 - this.posX;
         return this;
     }
 
@@ -283,9 +288,21 @@ export class ColorNote extends BaseNote<IColorNote> {
         );
     }
 
+    /** Check if note has Chroma properties.
+     * ```ts
+     * if (note.hasChroma()) {}
+     * ```
+     */
+    hasChroma = (): boolean => {
+        return (
+            Array.isArray(this.customData?.color) ||
+            typeof this.customData?.spawnEffect === 'boolean'
+        );
+    };
+
     /** Check if note has Noodle Extensions properties.
      * ```ts
-     * if (hasNoodleExtensions(note)) {}
+     * if (note.hasNoodleExtensions()) {}
      * ```
      */
     // god i hate these

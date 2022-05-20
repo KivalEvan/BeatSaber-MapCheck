@@ -9,6 +9,7 @@
     -   This may be inaccurate for modded v2 map as it internally convert modded to v3
 -   Added Weave, Pyro and EDM environment
 -   Added basic slider and burst slider check
+-   More stats for v3 stuff
 -   Dynamic event name based on environment
 
 ### Changed

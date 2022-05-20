@@ -206,37 +206,37 @@ export const eventGroupRename = (
         case 'WeaveEnvironment': {
             switch (id) {
                 case 0:
-                    return 'Bottom Left Vertical Laser';
+                    return 'Outer Square Bottom Left Laser';
                 case 1:
-                    return 'Bottom Right Vertical Laser';
+                    return 'Outer Square Bottom Right Laser';
                 case 2:
-                    return 'Top Left Vertical Laser';
+                    return 'Outer Square Top Left Laser';
                 case 3:
-                    return 'Top Right Vertical Laser';
+                    return 'Outer Square Top Right Laser';
                 case 4:
-                    return 'Bottom Left Center Vertical Laser';
+                    return 'Inner Square Bottom Left Laser';
                 case 5:
-                    return 'Bottom Right Center Vertical Laser';
+                    return 'Inner Square Bottom Right Laser';
                 case 6:
-                    return 'Top Left Center Vertical Laser';
+                    return 'Inner Square Top Left Laser';
                 case 7:
-                    return 'Top Right Center Vertical Laser';
+                    return 'Inner Square Top Right Laser';
                 case 8:
-                    return 'Bottom Left Horizontal Laser';
+                    return 'Side Square Bottom Left Laser';
                 case 9:
-                    return 'Bottom Right Horizontal Laser';
+                    return 'Side Square Bottom Right Laser';
                 case 10:
-                    return 'Top Left Horizontal Laser';
+                    return 'Side Square Top Left Laser';
                 case 11:
-                    return 'Top Right Horizontal Laser';
+                    return 'Side Square Top Right Laser';
                 case 12:
-                    return 'Top Center Laser';
+                    return 'Distant Square Top Laser';
                 case 13:
-                    return 'Bottom Center Laser';
+                    return 'Distant Square Bottom Laser';
                 case 14:
-                    return 'Left Center Laser';
+                    return 'Distant Square Left Laser';
                 case 15:
-                    return 'Right Center Laser';
+                    return 'Distant Square Right Laser';
                 default:
                     return 'Unknown';
             }
@@ -264,9 +264,9 @@ export const eventGroupRename = (
                 case 9:
                     return 'Stage Right Laser';
                 case 10:
-                    return 'Stage far Left Laser';
+                    return 'Stage Far Left Laser';
                 case 11:
-                    return 'Stage far Right Laser';
+                    return 'Stage Far Right Laser';
                 case 12:
                     return 'Left Flame';
                 case 13:

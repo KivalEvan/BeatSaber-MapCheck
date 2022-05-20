@@ -1,5 +1,6 @@
 export * from './bookmark';
 export * from './bpm';
+export * from './bpmInfo';
 export * from './characteristic';
 export * from './chroma';
 export * from './colors';
