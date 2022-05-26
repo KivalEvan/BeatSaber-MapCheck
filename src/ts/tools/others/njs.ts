@@ -31,12 +31,7 @@ function run(map: ToolArgs) {
         htmlString.push(`<b>Unset NJS</b>: fallback NJS is used`);
     }
     if (njs.value > 23) {
-        htmlString.push(
-            `<b>NJS is too high (${round(
-                njs.value,
-                2
-            )}):</b> use lower whenever necessary`
-        );
+        htmlString.push(`<b>NJS is too high (${round(njs.value, 2)}):</b> use lower whenever necessary`);
     }
     if (njs.jd < 18) {
         htmlString.push(`<b>Very low jump distance:</b> ${round(njs.jd, 2)}`);
@@ -46,26 +41,21 @@ function run(map: ToolArgs) {
     }
     if (njs.jd > njs.calcJumpDistanceOptimalHigh()) {
         htmlString.push(
-            `<b>High jump distance warning (>${round(
-                njs.calcJumpDistanceOptimalHigh(),
-                2
-            )}):</b> ${round(njs.jd, 2)} at ${round(
-                njs.value,
-                2
-            )} NJS may be uncomfortable to play`
+            `<b>High jump distance warning (>${round(njs.calcJumpDistanceOptimalHigh(), 2)}):</b> ${round(
+                njs.jd,
+                2,
+            )} at ${round(njs.value, 2)} NJS may be uncomfortable to play`,
         );
     }
     if (bpm.toRealTime(njs.hjd) < 0.45) {
         htmlString.push(
             `<b>Very quick reaction time (${round(
-                bpm.toRealTime(njs.hjd) * 1000
-            )}ms):</b> may lead to suboptimal gameplay`
+                bpm.toRealTime(njs.hjd) * 1000,
+            )}ms):</b> may lead to suboptimal gameplay`,
         );
     }
     if (njs.calcHalfJumpDurationRaw() + njs.offset < njs.hjdMin) {
-        htmlString.push(
-            `<b>Unnecessary negative offset:</b> will not drop below ${njs.hjdMin}`
-        );
+        htmlString.push(`<b>Unnecessary negative offset:</b> will not drop below ${njs.hjdMin}`);
     }
 
     if (htmlString.length) {

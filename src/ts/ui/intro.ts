@@ -6,12 +6,9 @@ const logPrefix = 'UI Intro: ';
 const htmlInputURL: HTMLInputElement = document.querySelector('.input__intro-url')!;
 const htmlInputID: HTMLInputElement = document.querySelector('.input__intro-id')!;
 const htmlInputHash: HTMLInputElement = document.querySelector('.input__intro-hash')!;
-const htmlInputSearchButton: HTMLInputElement = document.querySelector(
-    '.input__search-button'
-)!;
+const htmlInputSearchButton: HTMLInputElement = document.querySelector('.input__search-button')!;
 const htmlInputFile: HTMLInputElement = document.querySelector('.input__file')!;
-const htmlInputFileZone: HTMLInputElement =
-    document.querySelector('.input__file-zone')!;
+const htmlInputFileZone: HTMLInputElement = document.querySelector('.input__file-zone')!;
 
 if (htmlInputURL) {
     htmlInputURL.addEventListener('keydown', introInputTextHandler);
@@ -85,10 +82,7 @@ function inputFileHandler(ev: Event): void {
             UILoading.status('info', 'No file input', 0);
             throw new Error('No file input');
         }
-        if (
-            file &&
-            (file.name.substr(-4) === '.zip' || file.name.substr(-4) === '.bsl')
-        ) {
+        if (file && (file.name.substr(-4) === '.zip' || file.name.substr(-4) === '.bsl')) {
             const fr = new FileReader();
             fr.readAsArrayBuffer(file);
             fr.addEventListener('load', () => {
@@ -113,10 +107,7 @@ function inputFileDropHandler(ev: DragEvent): void {
         if (ev.dataTransfer.items) {
             if (ev.dataTransfer.items[0].kind === 'file') {
                 let file = ev.dataTransfer.items[0].getAsFile() as File;
-                if (
-                    file &&
-                    (file.name.substr(-4) === '.zip' || file.name.substr(-4) === '.bsl')
-                ) {
+                if (file && (file.name.substr(-4) === '.zip' || file.name.substr(-4) === '.bsl')) {
                     const fr = new FileReader();
                     fr.readAsArrayBuffer(file);
                     fr.addEventListener('load', () => {

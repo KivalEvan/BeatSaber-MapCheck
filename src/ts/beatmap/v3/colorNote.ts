@@ -38,8 +38,8 @@ export class ColorNote extends BaseNote<IColorNote> {
                     d: n.d ?? ColorNote.default.d,
                     a: n.a ?? ColorNote.default.a,
                     customData: n.customData ?? ColorNote.default.customData(),
-                })
-            )
+                }),
+            ),
         );
         if (result.length === 1) {
             return result[0];
@@ -156,16 +156,8 @@ export class ColorNote extends BaseNote<IColorNote> {
         //     return [note._customData._position[0], note._customData._position[1]];
         // }
         return [
-            (this.posX <= -1000
-                ? this.posX / 1000
-                : this.posX >= 1000
-                ? this.posX / 1000
-                : this.posX) - 2,
-            this.posY <= -1000
-                ? this.posY / 1000
-                : this.posY >= 1000
-                ? this.posY / 1000
-                : this.posY,
+            (this.posX <= -1000 ? this.posX / 1000 : this.posX >= 1000 ? this.posX / 1000 : this.posX) - 2,
+            this.posY <= -1000 ? this.posY / 1000 : this.posY >= 1000 ? this.posY / 1000 : this.posY,
         ];
     }
 
@@ -183,10 +175,7 @@ export class ColorNote extends BaseNote<IColorNote> {
         if (this.direction >= 1000) {
             return Math.abs(((this.direction % 1000) % 360) - 360);
         }
-        return (
-            (NoteCutAngle[this.direction as keyof typeof NoteCutAngle] || 0) +
-            this.angleOffset
-        );
+        return (NoteCutAngle[this.direction as keyof typeof NoteCutAngle] || 0) + this.angleOffset;
     }
 
     getDistance(compareTo: BaseNote<IBaseNote>) {
@@ -220,10 +209,7 @@ export class ColorNote extends BaseNote<IColorNote> {
             const d = nX1 - nX2;
             return d > -0.001 && d < 0.001;
         }
-        return (
-            22.5 <= (Math.abs(this.getAngle()) % 180) + 90 &&
-            (Math.abs(this.getAngle()) % 180) + 90 <= 67.5
-        );
+        return 22.5 <= (Math.abs(this.getAngle()) % 180) + 90 && (Math.abs(this.getAngle()) % 180) + 90 <= 67.5;
     }
 
     isHorizontal(compareTo?: BaseNote<IBaseNote>) {
@@ -233,10 +219,7 @@ export class ColorNote extends BaseNote<IColorNote> {
             const d = nY1 - nY2;
             return d > -0.001 && d < 0.001;
         }
-        return (
-            22.5 <= (Math.abs(this.getAngle()) % 180) + 90 &&
-            (Math.abs(this.getAngle()) % 180) + 90 <= 67.5
-        );
+        return 22.5 <= (Math.abs(this.getAngle()) % 180) + 90 && (Math.abs(this.getAngle()) % 180) + 90 <= 67.5;
     }
 
     isDiagonal(compareTo?: BaseNote<IBaseNote>) {
@@ -247,10 +230,7 @@ export class ColorNote extends BaseNote<IColorNote> {
             const dY = Math.abs(nY1 - nY2);
             return dX === dY;
         }
-        return (
-            22.5 <= Math.abs(this.getAngle()) % 90 &&
-            Math.abs(this.getAngle()) % 90 <= 67.5
-        );
+        return 22.5 <= Math.abs(this.getAngle()) % 90 && Math.abs(this.getAngle()) % 90 <= 67.5;
     }
 
     isInline(compareTo: BaseNote<IBaseNote>, lapping = 0.5) {
@@ -294,10 +274,7 @@ export class ColorNote extends BaseNote<IColorNote> {
      * ```
      */
     hasChroma = (): boolean => {
-        return (
-            Array.isArray(this.customData?.color) ||
-            typeof this.customData?.spawnEffect === 'boolean'
-        );
+        return Array.isArray(this.customData?.color) || typeof this.customData?.spawnEffect === 'boolean';
     };
 
     /** Check if note has Noodle Extensions properties.

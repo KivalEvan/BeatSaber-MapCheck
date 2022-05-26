@@ -6,18 +6,11 @@ const htmlIntro: HTMLElement = document.querySelector('.intro')!;
 const htmlMetadata: HTMLElement = document.querySelector('.metadata')!;
 const htmlCoverLink: HTMLLinkElement = document.querySelector('.cover__link')!;
 const htmlCoverImage: HTMLImageElement = document.querySelector('.cover__image')!;
-const htmlMetadataSongName: HTMLElement =
-    document.querySelector('.metadata__song-name')!;
-const htmlMetadataSongSubname: HTMLElement = document.querySelector(
-    '.metadata__song-subname'
-)!;
-const htmlMetadataSongAuthor: HTMLElement = document.querySelector(
-    '.metadata__song-author'
-)!;
+const htmlMetadataSongName: HTMLElement = document.querySelector('.metadata__song-name')!;
+const htmlMetadataSongSubname: HTMLElement = document.querySelector('.metadata__song-subname')!;
+const htmlMetadataSongAuthor: HTMLElement = document.querySelector('.metadata__song-author')!;
 const htmlMetadataSongBPM: HTMLElement = document.querySelector('.metadata__song-bpm')!;
-const htmlMetadataSongDuration: HTMLElement = document.querySelector(
-    '.metadata__song-duration'
-)!;
+const htmlMetadataSongDuration: HTMLElement = document.querySelector('.metadata__song-duration')!;
 const htmlAudio: HTMLAudioElement = document.querySelector('.audio')!;
 const audioURL = '';
 

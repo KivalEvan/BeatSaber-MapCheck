@@ -45,14 +45,7 @@ function check(map: ToolArgs) {
         }
         const note = noteContainer[i] as NoteContainerNote;
         if (lastNote[note.data.color]) {
-            if (
-                swing.next(
-                    note,
-                    lastNote[note.data.color],
-                    bpm,
-                    swingNoteArray[note.data.color]
-                )
-            ) {
+            if (swing.next(note, lastNote[note.data.color], bpm, swingNoteArray[note.data.color])) {
                 lastNote[note.data.color] = note;
                 swingNoteArray[note.data.color] = [];
             } else if (

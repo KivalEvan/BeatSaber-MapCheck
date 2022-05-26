@@ -75,10 +75,7 @@ const tool: Tool = {
 
 function adjustTimeHandler(bpm: beatmap.BeatPerMinute) {
     localBPM = bpm;
-    htmlInputMaxBeat.value = round(
-        localBPM.toBeatTime(tool.input.params.maxTime as number),
-        2
-    ).toString();
+    htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.maxTime as number), 2).toString();
 }
 
 function inputCheckHandler(this: HTMLInputElement) {
@@ -89,10 +86,7 @@ function inputTimeHandler(this: HTMLInputElement) {
     tool.input.params.maxTime = Math.abs(parseFloat(this.value)) / 1000;
     this.value = round(tool.input.params.maxTime * 1000, 1).toString();
     if (localBPM) {
-        htmlInputMaxBeat.value = round(
-            localBPM.toBeatTime(tool.input.params.maxTime as number),
-            2
-        ).toString();
+        htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.maxTime as number), 2).toString();
     }
 }
 
@@ -127,18 +121,10 @@ function check(map: ToolArgs) {
     for (let i = 0, len = noteContainer.length; i < len; i++) {
         const note = noteContainer[i];
         if (note.type === 'note' && lastNote[note.data.color]) {
-            if (
-                swing.next(
-                    note,
-                    lastNote[note.data.color],
-                    bpm,
-                    swingNoteArray[note.data.color]
-                )
-            ) {
+            if (swing.next(note, lastNote[note.data.color], bpm, swingNoteArray[note.data.color])) {
                 if (startNoteDot[note.data.color]) {
                     startNoteDot[note.data.color] = null;
-                    lastNoteAngle[note.data.color] =
-                        (lastNoteAngle[note.data.color] + 180) % 360;
+                    lastNoteAngle[note.data.color] = (lastNoteAngle[note.data.color] + 180) % 360;
                 }
                 if (
                     checkInline(note.data, noteContainer, lastIndex, maxTime) &&
@@ -208,12 +194,7 @@ function check(map: ToolArgs) {
         });
 }
 
-function checkInline(
-    n: beatmap.v3.ColorNote,
-    notes: NoteContainer[],
-    index: number,
-    maxTime: number
-) {
+function checkInline(n: beatmap.v3.ColorNote, notes: NoteContainer[], index: number, maxTime: number) {
     for (let i = index; notes[i].data.time < n.time; i++) {
         const note = notes[i];
         if (note.type !== 'note') {

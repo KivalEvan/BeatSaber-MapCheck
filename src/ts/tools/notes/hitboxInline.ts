@@ -46,14 +46,7 @@ function check(map: ToolArgs) {
         }
         const note = noteContainer[i] as NoteContainerNote;
         if (lastNote[note.data.color]) {
-            if (
-                swing.next(
-                    note,
-                    lastNote[note.data.color],
-                    bpm,
-                    swingNoteArray[note.data.color]
-                )
-            ) {
+            if (swing.next(note, lastNote[note.data.color], bpm, swingNoteArray[note.data.color])) {
                 swingNoteArray[note.data.color] = [];
             }
         }
@@ -63,10 +56,7 @@ function check(map: ToolArgs) {
                 continue;
             }
             if (
-                njs.value <
-                    1.425 /
-                        ((60 * (note.data.time - other.data.time)) / bpm.value +
-                            constant) &&
+                njs.value < 1.425 / ((60 * (note.data.time - other.data.time)) / bpm.value + constant) &&
                 note.data.isInline(other.data)
             ) {
                 arr.push(note);

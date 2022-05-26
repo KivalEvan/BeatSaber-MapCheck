@@ -11,15 +11,13 @@ export class SpecialEventsKeywordFiltersKeywords extends Serializable<ISpecialEv
         _specialEvents: () => [],
     };
 
-    private constructor(
-        specialEventsForKeywords: Required<ISpecialEventsKeywordFiltersKeywords>
-    ) {
+    private constructor(specialEventsForKeywords: Required<ISpecialEventsKeywordFiltersKeywords>) {
         super(specialEventsForKeywords);
     }
 
     static create(): SpecialEventsKeywordFiltersKeywords;
     static create(
-        basicEventTypesForKeywords: Partial<ISpecialEventsKeywordFiltersKeywords>
+        basicEventTypesForKeywords: Partial<ISpecialEventsKeywordFiltersKeywords>,
     ): SpecialEventsKeywordFiltersKeywords;
     static create(
         ...basicEventTypesForKeywords: Partial<ISpecialEventsKeywordFiltersKeywords>[]
@@ -31,14 +29,11 @@ export class SpecialEventsKeywordFiltersKeywords extends Serializable<ISpecialEv
         basicEventTypesForKeywords?.forEach((betfk) =>
             result.push(
                 new SpecialEventsKeywordFiltersKeywords({
-                    _keyword:
-                        betfk._keyword ??
-                        SpecialEventsKeywordFiltersKeywords.default._keyword,
+                    _keyword: betfk._keyword ?? SpecialEventsKeywordFiltersKeywords.default._keyword,
                     _specialEvents:
-                        betfk._specialEvents ??
-                        SpecialEventsKeywordFiltersKeywords.default._specialEvents(),
-                })
-            )
+                        betfk._specialEvents ?? SpecialEventsKeywordFiltersKeywords.default._specialEvents(),
+                }),
+            ),
         );
         if (result.length === 1) {
             return result[0];
@@ -48,8 +43,7 @@ export class SpecialEventsKeywordFiltersKeywords extends Serializable<ISpecialEv
         }
         return new SpecialEventsKeywordFiltersKeywords({
             _keyword: SpecialEventsKeywordFiltersKeywords.default._keyword,
-            _specialEvents:
-                SpecialEventsKeywordFiltersKeywords.default._specialEvents(),
+            _specialEvents: SpecialEventsKeywordFiltersKeywords.default._specialEvents(),
         });
     }
 

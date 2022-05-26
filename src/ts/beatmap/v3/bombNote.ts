@@ -32,8 +32,8 @@ export class BombNote extends BaseNote<IBombNote> {
                     x: bn.x ?? BombNote.default.x,
                     y: bn.y ?? BombNote.default.y,
                     customData: bn.customData ?? BombNote.default.customData(),
-                })
-            )
+                }),
+            ),
         );
         if (result.length === 1) {
             return result[0];
@@ -68,16 +68,8 @@ export class BombNote extends BaseNote<IBombNote> {
         //     return [bomb._customData._position[0], bomb._customData._position[1]];
         // }
         return [
-            (this.posX <= -1000
-                ? this.posX / 1000
-                : this.posX >= 1000
-                ? this.posX / 1000
-                : this.posX) - 2,
-            this.posY <= -1000
-                ? this.posY / 1000
-                : this.posY >= 1000
-                ? this.posY / 1000
-                : this.posY,
+            (this.posX <= -1000 ? this.posX / 1000 : this.posX >= 1000 ? this.posX / 1000 : this.posX) - 2,
+            this.posY <= -1000 ? this.posY / 1000 : this.posY >= 1000 ? this.posY / 1000 : this.posY,
         ];
     }
 
@@ -137,10 +129,7 @@ export class BombNote extends BaseNote<IBombNote> {
      * ```
      */
     hasChroma = (): boolean => {
-        return (
-            Array.isArray(this.customData?.color) ||
-            typeof this.customData?.spawnEffect === 'boolean'
-        );
+        return Array.isArray(this.customData?.color) || typeof this.customData?.spawnEffect === 'boolean';
     };
 
     /** Check if note has Noodle Extensions properties.

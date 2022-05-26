@@ -47,14 +47,7 @@ function check(map: ToolArgs) {
         }
         const note = noteContainer[i] as NoteContainerNote;
         if (lastNote[note.data.color]) {
-            if (
-                swing.next(
-                    note,
-                    lastNote[note.data.color],
-                    bpm,
-                    swingNoteArray[note.data.color]
-                )
-            ) {
+            if (swing.next(note, lastNote[note.data.color], bpm, swingNoteArray[note.data.color])) {
                 swingNoteArray[note.data.color] = [];
             }
         }
@@ -63,16 +56,10 @@ function check(map: ToolArgs) {
                 continue;
             }
             if (other.data.direction !== 8) {
-                if (
-                    !(
-                        bpm.toRealTime(note.data.time) >
-                        bpm.toRealTime(other.data.time) + 0.01
-                    )
-                ) {
+                if (!(bpm.toRealTime(note.data.time) > bpm.toRealTime(other.data.time) + 0.01)) {
                     continue;
                 }
-                const isDiagonal =
-                    other.data.getAngle() % 90 > 15 && other.data.getAngle() % 90 < 75;
+                const isDiagonal = other.data.getAngle() % 90 > 15 && other.data.getAngle() % 90 < 75;
                 // magic number 1.425 from saber length + good/bad hitbox
                 if (
                     njs.value <
@@ -105,9 +92,7 @@ function run(map: ToolArgs) {
 
     if (result.length) {
         const htmlResult = document.createElement('div');
-        htmlResult.innerHTML = `<b>Hitbox reverse staircase [${
-            result.length
-        }]:</b> ${result
+        htmlResult.innerHTML = `<b>Hitbox reverse staircase [${result.length}]:</b> ${result
             .map((n) => round(map.settings.bpm.adjustTime(n), 3))
             .join(', ')}`;
         tool.output.html = htmlResult;

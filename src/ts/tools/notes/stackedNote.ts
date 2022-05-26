@@ -38,10 +38,7 @@ function checkNote(settings: IBeatmapSettings, map: IBeatmapItem) {
             continue;
         }
         for (let j = i + 1; j < len; j++) {
-            if (
-                bpm.toRealTime(colorNotes[j].time) >
-                bpm.toRealTime(colorNotes[i].time) + 0.01
-            ) {
+            if (bpm.toRealTime(colorNotes[j].time) > bpm.toRealTime(colorNotes[i].time) + 0.01) {
                 break;
             }
             if (colorNotes[j].isInline(colorNotes[i])) {
@@ -65,18 +62,13 @@ function checkBomb(settings: IBeatmapSettings, map: IBeatmapItem) {
     for (let i = 0, len = bombNotes.length; i < len; i++) {
         for (let j = i + 1; j < len; j++) {
             // arbitrary break after 1s to not loop too much often
-            if (
-                bpm.toRealTime(bombNotes[j].time) >
-                bpm.toRealTime(bombNotes[i].time) + 1
-            ) {
+            if (bpm.toRealTime(bombNotes[j].time) > bpm.toRealTime(bombNotes[i].time) + 1) {
                 break;
             }
             if (
                 bombNotes[i].isInline(bombNotes[j]) &&
-                (njs.value <
-                    bpm.value / (120 * (bombNotes[j].time - bombNotes[i].time)) ||
-                    bpm.toRealTime(bombNotes[j].time) <
-                        bpm.toRealTime(bombNotes[i].time) + 0.02)
+                (njs.value < bpm.value / (120 * (bombNotes[j].time - bombNotes[i].time)) ||
+                    bpm.toRealTime(bombNotes[j].time) < bpm.toRealTime(bombNotes[i].time) + 0.02)
             ) {
                 arr.push(bombNotes[i]);
             }
@@ -102,14 +94,14 @@ function run(map: ToolArgs) {
         htmlString.push(
             `<b>Stacked note [${resultNote.length}]:</b> ${resultNote
                 .map((n) => round(map.settings.bpm.adjustTime(n), 3))
-                .join(', ')}`
+                .join(', ')}`,
         );
     }
     if (resultBomb.length) {
         htmlString.push(
             `<b>Stacked bomb [${resultBomb.length}]:</b> ${resultBomb
                 .map((n) => round(map.settings.bpm.adjustTime(n), 3))
-                .join(', ')}`
+                .join(', ')}`,
         );
     }
 

@@ -48,14 +48,10 @@ const tool: Tool = {
 function customColorSimilarity(map: ToolArgs) {
     const checkColorLeft =
         map.difficulty?.info._customData?._colorLeft ??
-        beatmap.ColorScheme[
-            beatmap.EnvironmentSchemeName[map.info._environmentName] ?? 'The First'
-        ]._colorLeft;
+        beatmap.ColorScheme[beatmap.EnvironmentSchemeName[map.info._environmentName] ?? 'The First']._colorLeft;
     const checkColorRight =
         map.difficulty?.info._customData?._colorRight ??
-        beatmap.ColorScheme[
-            beatmap.EnvironmentSchemeName[map.info._environmentName] ?? 'The First'
-        ]._colorRight;
+        beatmap.ColorScheme[beatmap.EnvironmentSchemeName[map.info._environmentName] ?? 'The First']._colorRight;
     if (checkColorLeft && checkColorRight) {
         return deltaE00(toRGBArray(checkColorLeft), toRGBArray(checkColorRight));
     }
@@ -67,14 +63,10 @@ function customColorArrowSimilarity(map: ToolArgs) {
         deltaERight = 100;
     const checkColorLeft =
         map.difficulty?.info._customData?._colorLeft ??
-        beatmap.ColorScheme[
-            beatmap.EnvironmentSchemeName[map.info._environmentName] ?? 'The First'
-        ]._colorLeft;
+        beatmap.ColorScheme[beatmap.EnvironmentSchemeName[map.info._environmentName] ?? 'The First']._colorLeft;
     const checkColorRight =
         map.difficulty?.info._customData?._colorRight ??
-        beatmap.ColorScheme[
-            beatmap.EnvironmentSchemeName[map.info._environmentName] ?? 'The First'
-        ]._colorRight;
+        beatmap.ColorScheme[beatmap.EnvironmentSchemeName[map.info._environmentName] ?? 'The First']._colorRight;
     if (checkColorLeft) {
         deltaELeft = deltaE00(arrowColor, toRGBArray(checkColorLeft));
     }
@@ -85,10 +77,7 @@ function customColorArrowSimilarity(map: ToolArgs) {
 }
 
 function run(map: ToolArgs) {
-    if (
-        !map.difficulty?.info._customData?._colorLeft &&
-        !map.difficulty?.info._customData?._colorRight
-    ) {
+    if (!map.difficulty?.info._customData?._colorLeft && !map.difficulty?.info._customData?._colorRight) {
         return;
     }
 
@@ -100,16 +89,16 @@ function run(map: ToolArgs) {
         htmlString.push(
             `<b>${levelMsg(deltaELevel, ccSimilar)} note color (dE${round(
                 ccSimilar,
-                1
-            )}):</b> suggest change to better differentiate between 2 note colour`
+                1,
+            )}):</b> suggest change to better differentiate between 2 note colour`,
         );
     }
     if (ccaSimilar <= 20) {
         htmlString.push(
             `<b>${levelMsg(deltaELevel, ccaSimilar)} arrow note color (dE${round(
                 ccaSimilar,
-                1
-            )}):</b> may be difficult to see the arrow`
+                1,
+            )}):</b> may be difficult to see the arrow`,
         );
     }
 

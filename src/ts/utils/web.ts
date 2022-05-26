@@ -1,7 +1,6 @@
 export const sanitizeURL = (url: string): string => {
     // regex from stackoverflow from another source
-    const regexURL =
-        /^(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/;
+    const regexURL = /^(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/;
     url = url.trim();
     if (/^http:\/\//.test(url)) {
         url = url.replace('http://', 'https://');

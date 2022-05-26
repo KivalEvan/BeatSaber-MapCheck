@@ -18,9 +18,7 @@ export class LightColorBase extends Serializable<ILightColorBase> {
     static create(): LightColorBase;
     static create(lightColors: Partial<ILightColorBase>): LightColorBase;
     static create(...lightColors: Partial<ILightColorBase>[]): LightColorBase[];
-    static create(
-        ...lightColors: Partial<ILightColorBase>[]
-    ): LightColorBase | LightColorBase[] {
+    static create(...lightColors: Partial<ILightColorBase>[]): LightColorBase | LightColorBase[] {
         const result: LightColorBase[] = [];
         lightColors?.forEach((lc) =>
             result.push(
@@ -30,8 +28,8 @@ export class LightColorBase extends Serializable<ILightColorBase> {
                     c: lc.c ?? LightColorBase.default.c,
                     s: lc.s ?? LightColorBase.default.s,
                     f: lc.f ?? LightColorBase.default.f,
-                })
-            )
+                }),
+            ),
         );
         if (result.length === 1) {
             return result[0];

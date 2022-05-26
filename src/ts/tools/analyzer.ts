@@ -11,13 +11,9 @@ const tag = (name: string) => {
     return `[analyzer::${name}]`;
 };
 
-const toolListInput: ReadonlyArray<Tool> = AnalysisComponents.getAll().sort(
-    (a, b) => a.order.input - b.order.input
-);
+const toolListInput: ReadonlyArray<Tool> = AnalysisComponents.getAll().sort((a, b) => a.order.input - b.order.input);
 
-const toolListOutput: ReadonlyArray<Tool> = [...toolListInput].sort(
-    (a, b) => a.order.output - b.order.output
-);
+const toolListOutput: ReadonlyArray<Tool> = [...toolListInput].sort((a, b) => a.order.output - b.order.output);
 
 const init = (): void => {
     SavedData.analysis = {
@@ -77,10 +73,7 @@ const runGeneral = (): void => {
     }
 };
 
-const runDifficulty = (
-    characteristic: CharacteristicName,
-    difficulty: DifficultyName
-): void => {
+const runDifficulty = (characteristic: CharacteristicName, difficulty: DifficultyName): void => {
     const mapInfo = SavedData.beatmapInfo;
     if (!mapInfo) {
         logger.error(tag('runDifficulty'), 'Could not analyse, missing map info');
@@ -92,7 +85,7 @@ const runDifficulty = (
     }
 
     const beatmapDifficulty = SavedData.beatmapDifficulty?.find(
-        (set) => set.characteristic === characteristic && set.difficulty === difficulty
+        (set) => set.characteristic === characteristic && set.difficulty === difficulty,
     );
     if (!beatmapDifficulty) {
         logger.error(tag('runDifficulty'), 'Could not analyse, missing map data');
@@ -100,7 +93,7 @@ const runDifficulty = (
     }
 
     const analysisExist = SavedData.analysis?.map.find(
-        (set) => set.difficulty === difficulty && set.mode === characteristic
+        (set) => set.difficulty === difficulty && set.mode === characteristic,
     );
 
     const bpm = BeatPerMinute.create(
@@ -108,12 +101,12 @@ const runDifficulty = (
         beatmapDifficulty.data.customData?._BPMChanges ||
             beatmapDifficulty.data.customData?._bpmChanges ||
             beatmapDifficulty.data.customData?.BPMChanges,
-        beatmapDifficulty.info._customData?._editorOffset
+        beatmapDifficulty.info._customData?._editorOffset,
     );
     const njs = NoteJumpSpeed.create(
         bpm,
         beatmapDifficulty.info._noteJumpMovementSpeed,
-        beatmapDifficulty.info._noteJumpStartBeatOffset
+        beatmapDifficulty.info._noteJumpStartBeatOffset,
     );
 
     const mapSettings: IBeatmapSettings = {
@@ -156,9 +149,7 @@ const runDifficulty = (
 };
 
 const adjustTime = (bpm: BeatPerMinute): void => {
-    const toolList = AnalysisComponents.getDifficulty().sort(
-        (a, b) => a.order.output - b.order.output
-    );
+    const toolList = AnalysisComponents.getDifficulty().sort((a, b) => a.order.output - b.order.output);
     toolList.forEach((tool) => {
         if (tool.input.adjustTime) {
             tool.input.adjustTime(bpm);
@@ -167,9 +158,7 @@ const adjustTime = (bpm: BeatPerMinute): void => {
 };
 
 const applyAll = (): void => {
-    SavedData.beatmapDifficulty?.forEach((set) =>
-        runDifficulty(set.characteristic, set.difficulty)
-    );
+    SavedData.beatmapDifficulty?.forEach((set) => runDifficulty(set.characteristic, set.difficulty));
 };
 
 export default {

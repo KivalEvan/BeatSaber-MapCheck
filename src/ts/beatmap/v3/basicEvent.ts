@@ -32,8 +32,8 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
                     i: be.i ?? BasicEvent.default.i,
                     f: be.f ?? BasicEvent.default.f,
                     customData: be.customData ?? BasicEvent.default.customData(),
-                })
-            )
+                }),
+            ),
         );
         if (result.length === 1) {
             return result[0];
@@ -252,9 +252,7 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
      * ```
      */
     isExtraEvent(): boolean {
-        return (
-            this.type === 16 || this.type === 17 || this.type === 18 || this.type === 19
-        );
+        return this.type === 16 || this.type === 17 || this.type === 18 || this.type === 19;
     }
 
     /** Check if event is a special event.
@@ -263,9 +261,7 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
      * ```
      */
     isSpecialEvent(): boolean {
-        return (
-            this.type === 40 || this.type === 41 || this.type === 42 || this.type === 43
-        );
+        return this.type === 40 || this.type === 41 || this.type === 42 || this.type === 43;
     }
 
     /** Check if event is a BPM change event.
@@ -283,12 +279,7 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
      * ```
      */
     isLightingEvent() {
-        return (
-            this.isLightEvent() ||
-            this.isRingEvent() ||
-            this.isLaserRotationEvent() ||
-            this.isExtraEvent()
-        );
+        return this.isLightEvent() || this.isRingEvent() || this.isLaserRotationEvent() || this.isExtraEvent();
     }
 
     /** Check if event has old Chroma properties.

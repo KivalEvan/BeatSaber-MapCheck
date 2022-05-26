@@ -31,11 +31,10 @@ export class Waypoint extends BeatmapObject<IWaypoint> {
                     _time: w._time ?? Waypoint.default._time,
                     _lineIndex: w._lineIndex ?? Waypoint.default._lineIndex,
                     _lineLayer: w._lineLayer ?? Waypoint.default._lineLayer,
-                    _offsetDirection:
-                        w._offsetDirection ?? Waypoint.default._offsetDirection,
+                    _offsetDirection: w._offsetDirection ?? Waypoint.default._offsetDirection,
                     _customData: w._customData ?? Waypoint.default._customData(),
-                })
-            )
+                }),
+            ),
         );
         if (result.length === 1) {
             return result[0];

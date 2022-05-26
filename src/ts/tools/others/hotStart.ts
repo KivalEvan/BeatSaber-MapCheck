@@ -52,9 +52,7 @@ function run(map: ToolArgs) {
         return;
     }
     const { time } = <{ time: number }>tool.input.params;
-    const result = map.settings.bpm.toRealTime(
-        map.difficulty.data.getFirstInteractiveTime()
-    );
+    const result = map.settings.bpm.toRealTime(map.difficulty.data.getFirstInteractiveTime());
 
     if (result < time) {
         const htmlResult = document.createElement('div');

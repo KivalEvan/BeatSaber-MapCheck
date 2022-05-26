@@ -12,9 +12,7 @@ const tag = (name: string) => {
 export const info = (infoData: IInfoData): IInfoData => {
     logger.info(tag('info'), 'Parsing beatmap info v2.x.x');
     infoData._difficultyBeatmapSets.sort(
-        (a, b) =>
-            CharacteristicOrder[a._beatmapCharacteristicName] -
-            CharacteristicOrder[b._beatmapCharacteristicName]
+        (a, b) => CharacteristicOrder[a._beatmapCharacteristicName] - CharacteristicOrder[b._beatmapCharacteristicName],
     );
     infoData._difficultyBeatmapSets.forEach((set) => {
         let num = 0;

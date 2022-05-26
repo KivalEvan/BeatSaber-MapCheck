@@ -39,9 +39,7 @@ function run(map: ToolArgs) {
 
     if (result.length) {
         const htmlResult = document.createElement('div');
-        htmlResult.innerHTML = `<b>Zero width/duration obstacle [${
-            result.length
-        }]:</b> ${result
+        htmlResult.innerHTML = `<b>Zero width/duration obstacle [${result.length}]:</b> ${result
             .map((n) => round(map.settings.bpm.adjustTime(n), 3))
             .join(', ')}`;
         tool.output.html = htmlResult;

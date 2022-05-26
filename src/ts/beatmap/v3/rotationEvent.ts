@@ -21,9 +21,7 @@ export class RotationEvent extends BaseObject<IRotationEvent> {
     static create(): RotationEvent;
     static create(rotationEvents: Partial<IRotationEvent>): RotationEvent;
     static create(...rotationEvents: Partial<IRotationEvent>[]): RotationEvent[];
-    static create(
-        ...rotationEvents: Partial<IRotationEvent>[]
-    ): RotationEvent | RotationEvent[] {
+    static create(...rotationEvents: Partial<IRotationEvent>[]): RotationEvent | RotationEvent[] {
         const result: RotationEvent[] = [];
         rotationEvents?.forEach((re) =>
             result.push(
@@ -32,8 +30,8 @@ export class RotationEvent extends BaseObject<IRotationEvent> {
                     e: re.e ?? RotationEvent.default.e,
                     r: re.r ?? RotationEvent.default.r,
                     customData: re.customData ?? RotationEvent.default.customData(),
-                })
-            )
+                }),
+            ),
         );
         if (result.length === 1) {
             return result[0];

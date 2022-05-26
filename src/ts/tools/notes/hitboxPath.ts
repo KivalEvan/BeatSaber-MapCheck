@@ -39,18 +39,14 @@ function check(map: ToolArgs) {
             continue;
         }
         for (let j = i + 1; j < len; j++) {
-            if (
-                bpm.toRealTime(colorNotes[j].time) >
-                bpm.toRealTime(colorNotes[i].time) + 0.01
-            ) {
+            if (bpm.toRealTime(colorNotes[j].time) > bpm.toRealTime(colorNotes[i].time) + 0.01) {
                 break;
             }
             if (colorNotes[i].color === colorNotes[j].color) {
                 continue;
             }
             if (
-                ((colorNotes[i].isHorizontal(colorNotes[j]) ||
-                    colorNotes[i].isVertical(colorNotes[j])) &&
+                ((colorNotes[i].isHorizontal(colorNotes[j]) || colorNotes[i].isVertical(colorNotes[j])) &&
                     isIntersect(colorNotes[i], colorNotes[j], [
                         [45, 1],
                         [15, 2],

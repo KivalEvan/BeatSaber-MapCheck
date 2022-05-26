@@ -90,10 +90,7 @@ const tool: Tool = {
 
 function adjustTimeHandler(bpm: beatmap.BeatPerMinute) {
     localBPM = bpm;
-    htmlInputMaxBeat.value = round(
-        localBPM.toBeatTime(tool.input.params.maxTime as number),
-        2
-    ).toString();
+    htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.maxTime as number), 2).toString();
 }
 
 function inputCheckHandler(this: HTMLInputElement) {
@@ -109,10 +106,7 @@ function inputTimeHandler(this: HTMLInputElement) {
     tool.input.params.maxTime = Math.abs(parseFloat(this.value)) / 1000;
     this.value = round(tool.input.params.maxTime * 1000, 1).toString();
     if (localBPM) {
-        htmlInputMaxBeat.value = round(
-            localBPM.toBeatTime(tool.input.params.maxTime as number),
-            2
-        ).toString();
+        htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.maxTime as number), 2).toString();
     }
 }
 
@@ -130,9 +124,7 @@ function inputBeatHandler(this: HTMLInputElement) {
 function check(map: ToolArgs) {
     const { bpm } = map.settings;
     const { noteContainer } = map.difficulty!;
-    const { maxTime: temp, distance } = <{ maxTime: number; distance: number }>(
-        tool.input.params
-    );
+    const { maxTime: temp, distance } = <{ maxTime: number; distance: number }>tool.input.params;
     const maxTime = bpm.toBeatTime(temp) + 0.001;
 
     const lastNote: { [key: number]: NoteContainer } = {};
@@ -150,28 +142,16 @@ function check(map: ToolArgs) {
         }
         const note = noteContainer[i] as NoteContainerNote;
         if (lastNote[note.data.color]) {
-            if (
-                swing.next(
-                    note,
-                    lastNote[note.data.color],
-                    bpm,
-                    swingNoteArray[note.data.color]
-                )
-            ) {
+            if (swing.next(note, lastNote[note.data.color], bpm, swingNoteArray[note.data.color])) {
                 // FIXME: maybe fix rotation or something
                 if (startNoteDot[note.data.color]) {
                     startNoteDot[note.data.color] = null;
                     lastNoteDirection[note.data.color] =
-                        beatmap.NoteFlipDirection[lastNoteDirection[note.data.color]] ??
-                        8;
+                        beatmap.NoteFlipDirection[lastNoteDirection[note.data.color]] ?? 8;
                 }
                 if (
                     note.data.getDistance(lastNote[note.data.color].data) >= distance &&
-                    checkShrAngle(
-                        note.data.direction,
-                        lastNoteDirection[note.data.color],
-                        note.data.color
-                    ) &&
+                    checkShrAngle(note.data.direction, lastNoteDirection[note.data.color], note.data.color) &&
                     note.data.time - lastNote[note.data.color].data.time <= maxTime
                 ) {
                     arr.push(note);
@@ -186,11 +166,7 @@ function check(map: ToolArgs) {
                 if (
                     startNoteDot[note.data.color] &&
                     note.data.getDistance(lastNote[note.data.color].data) >= distance &&
-                    checkShrAngle(
-                        note.data.direction,
-                        lastNoteDirection[note.data.color],
-                        note.data.color
-                    ) &&
+                    checkShrAngle(note.data.direction, lastNoteDirection[note.data.color], note.data.color) &&
                     note.data.time - lastNote[note.data.color].data.time <= maxTime
                 ) {
                     arr.push(startNoteDot[note.data.color]!);
@@ -213,18 +189,11 @@ function check(map: ToolArgs) {
         });
 }
 
-function checkShrAngle(
-    currCutDirection: number,
-    prevCutDirection: number,
-    type: number
-) {
+function checkShrAngle(currCutDirection: number, prevCutDirection: number, type: number) {
     if (currCutDirection === 8 || prevCutDirection === 8) {
         return false;
     }
-    if (
-        (type === 0 ? prevCutDirection === 7 : prevCutDirection === 6) &&
-        currCutDirection === 0
-    ) {
+    if ((type === 0 ? prevCutDirection === 7 : prevCutDirection === 6) && currCutDirection === 0) {
         return true;
     }
     return false;

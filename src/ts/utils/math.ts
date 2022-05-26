@@ -52,10 +52,7 @@ export const clamp = (value: number, min: number, max: number): number => {
 /** Normalize value to 0-1 from given min and max value. */
 export const normalize = (value: number, min: number, max: number): number => {
     if (min >= max) {
-        logger.warn(
-            tag('normalize'),
-            'Min value is equal or more than max value, returning 1'
-        );
+        logger.warn(tag('normalize'), 'Min value is equal or more than max value, returning 1');
         return 1;
     }
     const result = (value - min) / (max - min);
@@ -66,26 +63,15 @@ export const normalize = (value: number, min: number, max: number): number => {
 /** Linear interpolate between start to end time given alpha value.
  * Alpha value must be around 0-1.
  */
-export const lerp = (
-    alpha: number,
-    start: number,
-    end: number,
-    easing?: (x: number) => number
-): number => {
+export const lerp = (alpha: number, start: number, end: number, easing?: (x: number) => number): number => {
     if (!easing) {
         easing = (x) => x;
     }
     if (alpha > 1) {
-        logger.warn(
-            tag('lerp'),
-            'Alpha value is larger than 1, may have unintended result'
-        );
+        logger.warn(tag('lerp'), 'Alpha value is larger than 1, may have unintended result');
     }
     if (alpha < 0) {
-        logger.warn(
-            tag('lerp'),
-            'Alpha value is smaller than 0, may have unintended result'
-        );
+        logger.warn(tag('lerp'), 'Alpha value is smaller than 0, may have unintended result');
     }
     const result = start + (end - start) * easing(alpha);
     logger.verbose(tag('lerp'), `Obtained ${result}`);

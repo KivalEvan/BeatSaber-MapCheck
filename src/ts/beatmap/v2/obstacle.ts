@@ -37,8 +37,8 @@ export class Obstacle extends BeatmapObject<IObstacle> {
                     _width: o._width ?? Obstacle.default._width,
                     _height: o._height ?? Obstacle.default._height,
                     _customData: o._customData ?? Obstacle.default._customData(),
-                })
-            )
+                }),
+            ),
         );
         if (result.length === 1) {
             return result[0];
@@ -196,11 +196,7 @@ export class Obstacle extends BeatmapObject<IObstacle> {
                 : this.lineIndex >= 1000
                 ? this.lineIndex / 1000
                 : this.lineIndex) - 2,
-            this.type <= -1000
-                ? this.type / 1000
-                : this.type >= 1000
-                ? this.type / 1000
-                : this.type,
+            this.type <= -1000 ? this.type / 1000 : this.type >= 1000 ? this.type / 1000 : this.type,
         ];
     };
 
@@ -219,10 +215,7 @@ export class Obstacle extends BeatmapObject<IObstacle> {
      * ```
      */
     isCrouch = (): boolean => {
-        return (
-            this.type === 1 &&
-            (this.width > 2 || (this.width === 2 && this.lineIndex === 1))
-        );
+        return this.type === 1 && (this.width > 2 || (this.width === 2 && this.lineIndex === 1));
     };
 
     /** Check if obstacle has zero value.
@@ -239,15 +232,8 @@ export class Obstacle extends BeatmapObject<IObstacle> {
      * if (isLonger(currWall, prevWall)) {}
      * ```
      */
-    isLonger = (
-        currObstacle: IObstacle,
-        prevObstacle: IObstacle,
-        offset = 0
-    ): boolean => {
-        return (
-            currObstacle._time + currObstacle._duration >
-            prevObstacle._time + prevObstacle._duration + offset
-        );
+    isLonger = (currObstacle: IObstacle, prevObstacle: IObstacle, offset = 0): boolean => {
+        return currObstacle._time + currObstacle._duration > prevObstacle._time + prevObstacle._duration + offset;
     };
 
     /** Check if obstacle has Chroma properties.
@@ -285,12 +271,7 @@ export class Obstacle extends BeatmapObject<IObstacle> {
      * ```
      */
     hasMappingExtensions = (): boolean => {
-        return (
-            this.width >= 1000 ||
-            this.type >= 1000 ||
-            this.lineIndex > 3 ||
-            this.lineIndex < 0
-        );
+        return this.width >= 1000 || this.type >= 1000 || this.lineIndex > 3 || this.lineIndex < 0;
     };
 
     /** Check if obstacle is a valid, vanilla obstacle.

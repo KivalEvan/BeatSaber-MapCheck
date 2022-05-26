@@ -15,7 +15,7 @@ const htmlSelectRotation = UISelect.create(
     '',
     { text: 'Normal', value: '90' },
     { text: 'Extended', value: '135' },
-    { text: 'Squid', value: '180' }
+    { text: 'Squid', value: '180' },
 );
 const htmlSelectParityLeft = UISelect.create(
     'input__tools-parity-left',
@@ -24,7 +24,7 @@ const htmlSelectParityLeft = UISelect.create(
     '',
     { text: 'Auto', value: 'auto' },
     { text: 'Forehand', value: 'forehand' },
-    { text: 'Backhand', value: 'backhand' }
+    { text: 'Backhand', value: 'backhand' },
 );
 const htmlSelectParityRight = UISelect.create(
     'input__tools-parity-right',
@@ -33,7 +33,7 @@ const htmlSelectParityRight = UISelect.create(
     '',
     { text: 'Auto', value: 'auto' },
     { text: 'Forehand', value: 'forehand' },
-    { text: 'Backhand', value: 'backhand' }
+    { text: 'Backhand', value: 'backhand' },
 );
 
 htmlLabelCheck.textContent = ' Parity (EXPERIMENTAL)';
@@ -81,9 +81,9 @@ function inputSelectParityHandler(this: HTMLInputElement) {}
 function check(map: ToolArgs) {
     const { bpm } = map.settings;
     const { noteContainer } = map.difficulty!;
-    const { warningThres, errorThres, allowedRot } = <
-        { warningThres: number; errorThres: number; allowedRot: number }
-    >tool.input.params;
+    const { warningThres, errorThres, allowedRot } = <{ warningThres: number; errorThres: number; allowedRot: number }>(
+        tool.input.params
+    );
 
     const lastNote: { [key: number]: NoteContainer } = {};
     const swingNoteArray: { [key: number]: NoteContainer[] } = {
@@ -110,24 +110,15 @@ function check(map: ToolArgs) {
     for (let i = 0, len = noteContainer.length; i < len; i++) {
         const note = noteContainer[i];
         if (note.type === 'note' && lastNote[note.data.color]) {
-            if (
-                swing.next(
-                    note,
-                    lastNote[note.data.color],
-                    bpm,
-                    swingNoteArray[note.data.color]
-                )
-            ) {
+            if (swing.next(note, lastNote[note.data.color], bpm, swingNoteArray[note.data.color])) {
                 // check previous swing parity
                 const parityStatus = swingParity[note.data.color].check(
                     swingNoteArray[note.data.color],
-                    lastBombContext[note.data.color]
+                    lastBombContext[note.data.color],
                 );
                 switch (parityStatus) {
                     case 'warning': {
-                        parity.warning.push(
-                            swingNoteArray[note.data.color][0].data.time
-                        );
+                        parity.warning.push(swingNoteArray[note.data.color][0].data.time);
                         break;
                     }
                     case 'error': {
@@ -135,10 +126,7 @@ function check(map: ToolArgs) {
                         break;
                     }
                 }
-                swingParity[note.data.color].next(
-                    swingNoteArray[note.data.color],
-                    lastBombContext[note.data.color]
-                );
+                swingParity[note.data.color].next(swingNoteArray[note.data.color], lastBombContext[note.data.color]);
                 lastBombContext[note.data.color] = bombContext[note.data.color];
                 bombContext[note.data.color] = [];
                 swingNoteArray[note.data.color] = [];
@@ -156,10 +144,7 @@ function check(map: ToolArgs) {
     // final
     for (let i = 0; i < 2; i++) {
         if (lastNote[i]) {
-            const parityStatus = swingParity[i].check(
-                swingNoteArray[i],
-                bombContext[i]
-            );
+            const parityStatus = swingParity[i].check(swingNoteArray[i], bombContext[i]);
             switch (parityStatus) {
                 case 'warning': {
                     parity.warning.push(swingNoteArray[i][0].data.time);
@@ -191,7 +176,7 @@ function run(map: ToolArgs) {
                 })
                 .sort((a, b) => a - b)
                 .map((n) => round(map.settings.bpm.adjustTime(n), 3))
-                .join(', ')}`
+                .join(', ')}`,
         );
     }
     if (result.error.length) {
@@ -202,7 +187,7 @@ function run(map: ToolArgs) {
                 })
                 .sort((a, b) => a - b)
                 .map((n) => round(map.settings.bpm.adjustTime(n), 3))
-                .join(', ')}`
+                .join(', ')}`,
         );
     }
 

@@ -11,17 +11,13 @@ export class BasicEventTypesWithKeywords extends Serializable<IBasicEventTypesWi
     };
 
     private d: BasicEventTypesForKeywords[];
-    private constructor(
-        basicEventTypesWithKeywords: Required<IBasicEventTypesWithKeywords>
-    ) {
+    private constructor(basicEventTypesWithKeywords: Required<IBasicEventTypesWithKeywords>) {
         super(basicEventTypesWithKeywords);
-        this.d = basicEventTypesWithKeywords.d.map((d) =>
-            BasicEventTypesForKeywords.create({ e: d.e, k: d.k })
-        );
+        this.d = basicEventTypesWithKeywords.d.map((d) => BasicEventTypesForKeywords.create({ e: d.e, k: d.k }));
     }
 
     static create(
-        basicEventTypesWithKeywords: Partial<IBasicEventTypesWithKeywords> = {}
+        basicEventTypesWithKeywords: Partial<IBasicEventTypesWithKeywords> = {},
     ): BasicEventTypesWithKeywords {
         return new BasicEventTypesWithKeywords({
             d: basicEventTypesWithKeywords.d ?? BasicEventTypesWithKeywords.default.d(),

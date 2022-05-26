@@ -32,9 +32,7 @@ export class BurstSlider extends BaseSlider<IBurstSlider> {
     static create(): BurstSlider;
     static create(burstSliders: Partial<IBurstSlider>): BurstSlider;
     static create(...burstSliders: Partial<IBurstSlider>[]): BurstSlider[];
-    static create(
-        ...burstSliders: Partial<IBurstSlider>[]
-    ): BurstSlider | BurstSlider[] {
+    static create(...burstSliders: Partial<IBurstSlider>[]): BurstSlider | BurstSlider[] {
         const result: BurstSlider[] = [];
         burstSliders?.forEach((bs) =>
             result.push(
@@ -50,8 +48,8 @@ export class BurstSlider extends BaseSlider<IBurstSlider> {
                     sc: bs.sc ?? BurstSlider.default.sc,
                     s: bs.s ?? BurstSlider.default.s,
                     customData: bs.customData ?? BurstSlider.default.customData(),
-                })
-            )
+                }),
+            ),
         );
         if (result.length === 1) {
             return result[0];

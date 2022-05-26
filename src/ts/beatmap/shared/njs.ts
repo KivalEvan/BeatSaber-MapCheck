@@ -134,9 +134,7 @@ export class NoteJumpSpeed {
      * const HJDSpecified = NJS.calcHalfJumpDurationFromRT(4.5);
      * ```
      */
-    public calcHalfJumpDurationFromRT(
-        rt: number = this.calcReactionTimeFromHJD()
-    ): number {
+    public calcHalfJumpDurationFromRT(rt: number = this.calcReactionTimeFromHJD()): number {
         return rt / (60 / this._bpm.value);
     }
 

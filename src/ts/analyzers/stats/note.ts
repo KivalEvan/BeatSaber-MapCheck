@@ -11,9 +11,7 @@ import { ICountNote, ICountStatsNote } from '../../types/mapcheck/analyzers/stat
  * console.log(list);
  * ```
  */
-export const countNote = (
-    notes: (ColorNote | BaseSlider<IBaseSlider>)[]
-): ICountNote => {
+export const countNote = (notes: (ColorNote | BaseSlider<IBaseSlider>)[]): ICountNote => {
     const noteCount: ICountNote = {
         red: {
             total: 0,
@@ -145,10 +143,7 @@ export const peak = (notes: ColorNote[], beat: number, bpm: number): number => {
         while (notes[i].time - notes[currentSectionStart].time > beat) {
             currentSectionStart++;
         }
-        peakNPS = Math.max(
-            peakNPS,
-            (i - currentSectionStart + 1) / ((beat / bpm) * 60)
-        );
+        peakNPS = Math.max(peakNPS, (i - currentSectionStart + 1) / ((beat / bpm) * 60));
     }
 
     return peakNPS;

@@ -52,8 +52,8 @@ export class Slider extends BaseSlider<ISlider> {
                     tmu: s.tmu ?? Slider.default.tmu,
                     m: s.m ?? Slider.default.m,
                     customData: s.customData ?? Slider.default.customData(),
-                })
-            )
+                }),
+            ),
         );
         if (result.length === 1) {
             return result[0];

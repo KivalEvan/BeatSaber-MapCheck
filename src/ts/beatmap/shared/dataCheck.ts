@@ -13,7 +13,7 @@ export const deepCheck = (
     data: { [key: string]: any },
     check: { [key: string]: DataCheck },
     name: string,
-    version: Version
+    version: Version,
 ) => {
     logger.verbose(tag('deepCheck'), `Looking up ${name}`);
     if (Array.isArray(data)) {
@@ -46,23 +46,13 @@ export const deepCheck = (
             if (!Array.isArray(data[key])) {
                 throw Error(`${key} is not an array in property ${name}!`);
             }
-            deepCheck(
-                data[key],
-                (check[key] as DataCheckObject).check,
-                `${name} ${key}`,
-                version
-            );
+            deepCheck(data[key], (check[key] as DataCheckObject).check, `${name} ${key}`, version);
         }
         if (check[key].type === 'object') {
             if (!Array.isArray(data[key]) && !(typeof data[key] === 'object')) {
                 throw Error(`${key} is not an object in property ${name}!`);
             } else {
-                deepCheck(
-                    data[key],
-                    (check[key] as DataCheckObject).check,
-                    `${name} ${key}`,
-                    version
-                );
+                deepCheck(data[key], (check[key] as DataCheckObject).check, `${name} ${key}`, version);
             }
         }
         if (check[key].type !== 'array' && typeof data[key] !== check[key].type) {

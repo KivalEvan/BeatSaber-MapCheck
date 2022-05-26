@@ -43,22 +43,20 @@ export const loadDifficulty = async (info: IInfoData, zip: JSZip) => {
             if (diffFile) {
                 logger.info(
                     tag('loadDifficulty'),
-                    `Loading ${mapSet[i]._beatmapCharacteristicName} ${diffInfo._difficulty}`
+                    `Loading ${mapSet[i]._beatmapCharacteristicName} ${diffInfo._difficulty}`,
                 );
                 let diffJSON: Either<IDifficultyDataV2, IDifficultyDataV3>;
                 try {
                     diffJSON = JSON.parse(await diffFile.async('string'));
                 } catch (err) {
-                    throw new Error(
-                        `${mapSet[i]._beatmapCharacteristicName} ${diffInfo._difficulty} ${err}`
-                    );
+                    throw new Error(`${mapSet[i]._beatmapCharacteristicName} ${diffInfo._difficulty} ${err}`);
                 }
                 try {
                     // _notes in v2 and version in v3 is required, _version in v2 is patched via mod if does not exist
                     if (diffJSON._notes && diffJSON.version) {
                         logger.error(
                             tag('loadDifficulty'),
-                            `${mapSet[i]._beatmapCharacteristicName} ${diffInfo._difficulty} contains 2 version of the map in the same file, attempting to load v3 instead`
+                            `${mapSet[i]._beatmapCharacteristicName} ${diffInfo._difficulty} contains 2 version of the map in the same file, attempting to load v3 instead`,
                         );
                     }
                     if (diffJSON.version) {
@@ -66,7 +64,7 @@ export const loadDifficulty = async (info: IInfoData, zip: JSZip) => {
                         const bpm = BeatPerMinute.create(
                             info._beatsPerMinute,
                             data.customData?.BPMChanges,
-                            diffInfo._customData?._editorOffset
+                            diffInfo._customData?._editorOffset,
                         );
                         beatmapItem.push({
                             info: diffInfo,
@@ -80,7 +78,7 @@ export const loadDifficulty = async (info: IInfoData, zip: JSZip) => {
                                 data,
                                 bpm,
                                 mapSet[i]._beatmapCharacteristicName,
-                                diffInfo._difficulty
+                                diffInfo._difficulty,
                             ),
                             rawVersion: 3,
                             rawData: diffJSON,
@@ -89,9 +87,8 @@ export const loadDifficulty = async (info: IInfoData, zip: JSZip) => {
                         const data = V2toV3(parseDifficultyV2(diffJSON), true);
                         const bpm = BeatPerMinute.create(
                             info._beatsPerMinute,
-                            diffJSON._customData?._BPMChanges ??
-                                diffJSON._customData?._bpmChanges,
-                            diffInfo._customData?._editorOffset
+                            diffJSON._customData?._BPMChanges ?? diffJSON._customData?._bpmChanges,
+                            diffInfo._customData?._editorOffset,
                         );
                         beatmapItem.push({
                             info: diffInfo,
@@ -105,28 +102,24 @@ export const loadDifficulty = async (info: IInfoData, zip: JSZip) => {
                                 data,
                                 bpm,
                                 mapSet[i]._beatmapCharacteristicName,
-                                diffInfo._difficulty
+                                diffInfo._difficulty,
                             ),
                             rawVersion: 2,
                             rawData: diffJSON,
                         });
                     }
                 } catch (err) {
-                    throw new Error(
-                        `${mapSet[i]._beatmapCharacteristicName} ${diffInfo._difficulty} ${err}`
-                    );
+                    throw new Error(`${mapSet[i]._beatmapCharacteristicName} ${diffInfo._difficulty} ${err}`);
                 }
             } else {
                 logger.error(
                     tag('loadDifficulty'),
-                    `Missing ${diffInfo._beatmapFilename} file for ${mapSet[i]._beatmapCharacteristicName} ${diffInfo._difficulty}, ignoring.`
+                    `Missing ${diffInfo._beatmapFilename} file for ${mapSet[i]._beatmapCharacteristicName} ${diffInfo._difficulty}, ignoring.`,
                 );
                 mapSet[i]._difficultyBeatmaps.splice(j, 1);
                 j--;
                 if (mapSet[i]._difficultyBeatmaps.length < 1) {
-                    logger.error(
-                        `${mapSet[i]._beatmapCharacteristicName} difficulty set now empty, ignoring.`
-                    );
+                    logger.error(`${mapSet[i]._beatmapCharacteristicName} difficulty set now empty, ignoring.`);
                     mapSet.splice(i, 1);
                     continue;
                 }

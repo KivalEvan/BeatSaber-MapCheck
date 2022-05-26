@@ -36,10 +36,7 @@ function check(difficulty: IBeatmapItem) {
         difficulty.rawData._version !== '2.6.0'
     ) {
         for (let i = basicBeatmapEvents.length - 1; i >= 0; i--) {
-            if (
-                basicBeatmapEvents[i].isLightEvent() &&
-                basicBeatmapEvents[i].value === 4
-            ) {
+            if (basicBeatmapEvents[i].isLightEvent() && basicBeatmapEvents[i].value === 4) {
                 arr.push(basicBeatmapEvents[i]);
             }
         }

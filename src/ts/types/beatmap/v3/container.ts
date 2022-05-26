@@ -29,11 +29,7 @@ export interface NoteContainerBomb extends ContainerBase {
     data: BombNote;
 }
 
-export type NoteContainer =
-    | NoteContainerNote
-    | NoteContainerSlider
-    | NoteContainerBurstSlider
-    | NoteContainerBomb;
+export type NoteContainer = NoteContainerNote | NoteContainerSlider | NoteContainerBurstSlider | NoteContainerBomb;
 
 interface EventContainerBasic {
     type: 'basicEvent';

@@ -26,15 +26,11 @@ function run(map: ToolArgs) {
 
     const htmlResult = document.createElement('div');
     if (audioDuration && audioDuration < 20) {
-        htmlResult.innerHTML = `<b>Unrankable audio length:</b> too short (${toMMSS(
-            audioDuration
-        )}s)`;
+        htmlResult.innerHTML = `<b>Unrankable audio length:</b> too short (${toMMSS(audioDuration)}s)`;
         tool.output.html = htmlResult;
     } else if (!flag.loading.audio) {
         htmlResult.innerHTML = `<b>No audio:</b> ${
-            settings.load.audio
-                ? 'could not be loaded or not found'
-                : 'no audio mode is enabled'
+            settings.load.audio ? 'could not be loaded or not found' : 'no audio mode is enabled'
         }`;
         tool.output.html = htmlResult;
     } else {

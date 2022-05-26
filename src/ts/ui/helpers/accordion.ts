@@ -1,24 +1,15 @@
-import {
-    UIBackgroundColorType,
-    UIBackgroundColor,
-} from '../../types/mapcheck/ui/accordion';
+import { UIBackgroundColorType, UIBackgroundColor } from '../../types/mapcheck/ui/accordion';
 
 const logPrefix = 'UI Accordion: ';
 const prefix = 'accordion__';
-const htmlAccordion: NodeListOf<HTMLInputElement> =
-    document.querySelectorAll<HTMLInputElement>('.accordion__button');
+const htmlAccordion: NodeListOf<HTMLInputElement> = document.querySelectorAll<HTMLInputElement>('.accordion__button');
 
 if (!htmlAccordion.length) {
     console.error(logPrefix + 'empty accordion list, intentional or typo error?');
 }
 
 export default {
-    create: (
-        id: string,
-        title: string,
-        bg: UIBackgroundColorType,
-        isFlex: boolean = false
-    ): HTMLElement => {
+    create: (id: string, title: string, bg: UIBackgroundColorType, isFlex: boolean = false): HTMLElement => {
         const accBase = document.createElement('div');
         accBase.className = 'accordion';
 
@@ -36,9 +27,7 @@ export default {
         }
 
         const accCollapsible = document.createElement('div');
-        accCollapsible.className = isFlex
-            ? prefix + 'collapsible-flex'
-            : prefix + 'collapsible';
+        accCollapsible.className = isFlex ? prefix + 'collapsible-flex' : prefix + 'collapsible';
         accCollapsible.id = id + '-content';
 
         accBase.appendChild(accButton);

@@ -32,16 +32,12 @@ function run() {
             htmlString.push('<b>Cover image is not square:</b> resize to fit square');
         }
         if (img.width < 256 || img.height < 256) {
-            htmlString.push(
-                '<b>Cover image is too small:</b> require at least 256x256'
-            );
+            htmlString.push('<b>Cover image is too small:</b> require at least 256x256');
         }
     } else {
         htmlString.push(
             '<b>No cover image:</b> ' +
-                (settings.load.imageCover
-                    ? 'could not be loaded or found'
-                    : 'no cover image option is enabled')
+                (settings.load.imageCover ? 'could not be loaded or found' : 'no cover image option is enabled'),
         );
     }
 

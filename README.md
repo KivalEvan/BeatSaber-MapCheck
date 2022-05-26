@@ -15,13 +15,13 @@ Visit the [github.io page](https://kivalevan.github.io/BeatSaber-MapCheck/), mor
 
 ### Installing
 
-Clone or fork the project and install dependencies with `npm install`.
+Clone or fork the project and install dependencies with `yarn`.
 
 ### Deploying
 
-Run the development server with `npm run dev`, the URL will be given in the CLI.
+Run the development server with `yarn run dev`, the URL will be given in the CLI.
 
-To run the app locally, `npm run build` for the first time setup, then `npm run serve` to run the server.
+To run the app locally, `yarn run build` for the first time setup, then `yarn run serve` to run the server.
 
 ## Planned
 

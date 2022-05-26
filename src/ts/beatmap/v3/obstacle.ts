@@ -37,8 +37,8 @@ export class Obstacle extends BaseObject<IObstacle> {
                     w: o.w ?? Obstacle.default.w,
                     h: o.h ?? Obstacle.default.h,
                     customData: o.customData ?? Obstacle.default.customData(),
-                })
-            )
+                }),
+            ),
         );
         if (result.length === 1) {
             return result[0];
@@ -182,11 +182,7 @@ export class Obstacle extends BaseObject<IObstacle> {
      */
     // FIXME: doesnt work properly
     isCrouch() {
-        return (
-            this.posY === 2 &&
-            this.isInteractive() &&
-            (this.width > 2 || (this.width === 2 && this.posX === 1))
-        );
+        return this.posY === 2 && this.isInteractive() && (this.width > 2 || (this.width === 2 && this.posX === 1));
     }
 
     /** Check if obstacle has zero value.
@@ -217,16 +213,8 @@ export class Obstacle extends BaseObject<IObstacle> {
         //     return [obstacle._customData._position[0], obstacle._customData._position[1]];
         // }
         return [
-            (this.posX <= -1000
-                ? this.posX / 1000
-                : this.posX >= 1000
-                ? this.posX / 1000
-                : this.posX) - 2,
-            (this.posY <= -1000
-                ? this.posY / 1000
-                : this.posY >= 1000
-                ? this.posY / 1000
-                : this.posY) - 0.5,
+            (this.posX <= -1000 ? this.posX / 1000 : this.posX >= 1000 ? this.posX / 1000 : this.posX) - 2,
+            (this.posY <= -1000 ? this.posY / 1000 : this.posY >= 1000 ? this.posY / 1000 : this.posY) - 0.5,
         ];
     }
 
@@ -236,9 +224,7 @@ export class Obstacle extends BaseObject<IObstacle> {
      * ```
      */
     isLonger(compareTo: Obstacle, prevOffset = 0): boolean {
-        return (
-            this.time + this.duration > compareTo.time + compareTo.duration + prevOffset
-        );
+        return this.time + this.duration > compareTo.time + compareTo.duration + prevOffset;
     }
 
     /** Check if obstacle has Chroma properties.

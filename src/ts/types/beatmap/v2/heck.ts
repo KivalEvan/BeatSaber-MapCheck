@@ -1,10 +1,5 @@
 import { Easings } from '../shared/easings';
-import {
-    Vector3PointDefinition,
-    ColorPointDefinition,
-    PercentPointDefinition,
-    PointDefinition,
-} from '../shared/heck';
+import { Vector3PointDefinition, ColorPointDefinition, PercentPointDefinition, PointDefinition } from '../shared/heck';
 
 /** Heck Base Custom Event interface.
  * ```ts
@@ -61,8 +56,7 @@ export interface IHeckCustomEventDataAnimateTrack extends IHeckCustomEventDataBa
  * ```
  * @extends IHeckCustomEventDataBase
  */
-export interface IHeckCustomEventDataAssignPathAnimation
-    extends IHeckCustomEventDataBase {
+export interface IHeckCustomEventDataAssignPathAnimation extends IHeckCustomEventDataBase {
     _duration: number;
     _easing?: Easings;
     _position?: string | Vector3PointDefinition[];
@@ -102,9 +96,7 @@ export interface IHeckCustomEventAssignPathAnimation {
     _data: IHeckCustomEventDataAssignPathAnimation;
 }
 
-export type IHeckCustomEvent =
-    | IHeckCustomEventAnimateTrack
-    | IHeckCustomEventAssignPathAnimation;
+export type IHeckCustomEvent = IHeckCustomEventAnimateTrack | IHeckCustomEventAssignPathAnimation;
 
 /** Heck Point Definition interface.
  * ```ts
@@ -145,14 +137,8 @@ export interface IHeckInfoCustomData {
         _noteJumpStartBeatOffset?: number;
         _hideNoteSpawnEffect?: boolean;
         _adaptiveSfx?: number;
-        _environmentEffectsFilterDefaultPreset?:
-            | 'AllEffects'
-            | 'Strobefilter'
-            | 'NoEffects';
-        _environmentEffectsFilterExpertPlusPreset?:
-            | 'AllEffects'
-            | 'Strobefilter'
-            | 'NoEffects';
+        _environmentEffectsFilterDefaultPreset?: 'AllEffects' | 'Strobefilter' | 'NoEffects';
+        _environmentEffectsFilterExpertPlusPreset?: 'AllEffects' | 'Strobefilter' | 'NoEffects';
     };
     _modifiers?: {
         _energyType?: 'Bar' | 'Battery';

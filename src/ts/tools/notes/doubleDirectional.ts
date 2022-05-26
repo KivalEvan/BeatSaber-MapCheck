@@ -44,22 +44,12 @@ function check(settings: IBeatmapSettings, difficulty: IBeatmapItem) {
     for (let i = 0, len = noteContainer.length; i < len; i++) {
         const note = noteContainer[i];
         if (note.type === 'note' && lastNote[note.data.color]) {
-            if (
-                swing.next(
-                    note,
-                    lastNote[note.data.color],
-                    bpm,
-                    swingNoteArray[note.data.color]
-                )
-            ) {
+            if (swing.next(note, lastNote[note.data.color], bpm, swingNoteArray[note.data.color])) {
                 if (startNoteDot[note.data.color]) {
                     startNoteDot[note.data.color] = null;
-                    lastNoteAngle[note.data.color] =
-                        (lastNoteAngle[note.data.color] + 180) % 360;
+                    lastNoteAngle[note.data.color] = (lastNoteAngle[note.data.color] + 180) % 360;
                 }
-                if (
-                    checkDirection(note.data, lastNoteAngle[note.data.color], 45, true)
-                ) {
+                if (checkDirection(note.data, lastNoteAngle[note.data.color], 45, true)) {
                     arr.push(note.data);
                 }
                 if (note.data.direction === 8) {

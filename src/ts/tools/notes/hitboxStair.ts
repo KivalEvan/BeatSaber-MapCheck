@@ -30,19 +30,12 @@ const tool: Tool = {
     run,
 };
 
-const isDouble = (
-    note: NoteContainerNote,
-    nc: NoteContainer[],
-    index: number
-): boolean => {
+const isDouble = (note: NoteContainerNote, nc: NoteContainer[], index: number): boolean => {
     for (let i = index, len = nc.length; i < len; i++) {
         if (nc[i].type !== 'note') {
             continue;
         }
-        if (
-            nc[i].data.time < note.data.time + 0.01 &&
-            (nc[i] as NoteContainerNote).data.color !== note.data.color
-        ) {
+        if (nc[i].data.time < note.data.time + 0.01 && (nc[i] as NoteContainerNote).data.color !== note.data.color) {
             return true;
         }
         if (nc[i].data.time > note.data.time + 0.01) {
@@ -78,55 +71,31 @@ function check(map: ToolArgs) {
         }
         const note = noteContainer[i] as NoteContainerNote;
         if (lastNote[note.data.color]) {
-            if (
-                swing.next(
-                    note,
-                    lastNote[note.data.color],
-                    bpm,
-                    swingNoteArray[note.data.color]
-                )
-            ) {
-                lastSpeed[note.data.color] =
-                    note.data.time - lastNote[note.data.color].data.time;
+            if (swing.next(note, lastNote[note.data.color], bpm, swingNoteArray[note.data.color])) {
+                lastSpeed[note.data.color] = note.data.time - lastNote[note.data.color].data.time;
                 if (note.data.direction !== 8) {
                     noteOccupy[note.data.color].posX =
-                        note.data.posX +
-                        beatmap.NoteCutDirectionSpace[note.data.direction][0];
+                        note.data.posX + beatmap.NoteCutDirectionSpace[note.data.direction][0];
                     noteOccupy[note.data.color].posY =
-                        note.data.posY +
-                        beatmap.NoteCutDirectionSpace[note.data.direction][1];
+                        note.data.posY + beatmap.NoteCutDirectionSpace[note.data.direction][1];
                 } else {
                     noteOccupy[note.data.color].posX = -1;
                     noteOccupy[note.data.color].posY = -1;
                 }
                 swingNoteArray[note.data.color] = [];
                 lastNoteDirection[note.data.color] = note.data.direction;
-            } else if (
-                isEnd(
-                    note.data,
-                    lastNote[note.data.color].data,
-                    lastNoteDirection[note.data.color]
-                )
-            ) {
+            } else if (isEnd(note.data, lastNote[note.data.color].data, lastNoteDirection[note.data.color])) {
                 if (note.data.direction !== 8) {
                     noteOccupy[note.data.color].posX =
-                        note.data.posX +
-                        beatmap.NoteCutDirectionSpace[note.data.direction][0];
+                        note.data.posX + beatmap.NoteCutDirectionSpace[note.data.direction][0];
                     noteOccupy[note.data.color].posY =
-                        note.data.posY +
-                        beatmap.NoteCutDirectionSpace[note.data.direction][1];
+                        note.data.posY + beatmap.NoteCutDirectionSpace[note.data.direction][1];
                     lastNoteDirection[note.data.color] = note.data.direction;
                 } else {
                     noteOccupy[note.data.color].posX =
-                        note.data.posX +
-                        beatmap.NoteCutDirectionSpace[
-                            lastNoteDirection[note.data.color]
-                        ][0];
+                        note.data.posX + beatmap.NoteCutDirectionSpace[lastNoteDirection[note.data.color]][0];
                     noteOccupy[note.data.color].posY =
-                        note.data.posY +
-                        beatmap.NoteCutDirectionSpace[
-                            lastNoteDirection[note.data.color]
-                        ][1];
+                        note.data.posY + beatmap.NoteCutDirectionSpace[lastNoteDirection[note.data.color]][1];
                 }
             }
             if (
@@ -146,11 +115,9 @@ function check(map: ToolArgs) {
         } else {
             if (note.data.direction !== 8) {
                 noteOccupy[note.data.color].posX =
-                    note.data.posX +
-                    beatmap.NoteCutDirectionSpace[note.data.direction][0];
+                    note.data.posX + beatmap.NoteCutDirectionSpace[note.data.direction][0];
                 noteOccupy[note.data.color].posY =
-                    note.data.posY +
-                    beatmap.NoteCutDirectionSpace[note.data.direction][1];
+                    note.data.posY + beatmap.NoteCutDirectionSpace[note.data.direction][1];
             } else {
                 noteOccupy[note.data.color].posX = -1;
                 noteOccupy[note.data.color].posY = -1;

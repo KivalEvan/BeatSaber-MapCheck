@@ -1,11 +1,5 @@
 import { ICustomDataBase } from '../shared/customData';
-import {
-    Vector2,
-    Vector3,
-    Vector3PointDefinition,
-    ColorPointDefinition,
-    PercentPointDefinition,
-} from '../shared/heck';
+import { Vector2, Vector3, Vector3PointDefinition, ColorPointDefinition, PercentPointDefinition } from '../shared/heck';
 import { IHeckCustomEventDataBase } from './heck';
 
 export enum NEDataAbbr {
@@ -103,8 +97,7 @@ export interface INECustomEventDataAssignTrackParent {
 /** AssignPlayerToTrack interface for Noodle Extensions Custom Event.
  * @extends INECustomEventDataBase
  */
-export interface INECustomEventDataAssignPlayerToTrack
-    extends IHeckCustomEventDataBase {
+export interface INECustomEventDataAssignPlayerToTrack extends IHeckCustomEventDataBase {
     _track: string;
 }
 
@@ -161,9 +154,7 @@ export interface INECustomEventAssignPlayerToTrack {
     _data: INECustomEventDataAssignPlayerToTrack;
 }
 
-export type INECustomEvent =
-    | INECustomEventAssignTrackParent
-    | INECustomEventAssignPlayerToTrack;
+export type INECustomEvent = INECustomEventAssignTrackParent | INECustomEventAssignPlayerToTrack;
 
 /** Noodle Extensions Custom Data interface for difficulty custom data.
  * ```ts

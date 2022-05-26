@@ -73,10 +73,7 @@ const tool: Tool = {
 
 function adjustTimeHandler(bpm: beatmap.BeatPerMinute) {
     localBPM = bpm;
-    htmlInputMinPrec.value = round(
-        1 / localBPM.toBeatTime(tool.input.params.maxTime as number),
-        2
-    ).toString();
+    htmlInputMinPrec.value = round(1 / localBPM.toBeatTime(tool.input.params.maxTime as number), 2).toString();
 }
 
 function inputCheckHandler(this: HTMLInputElement) {
@@ -87,10 +84,7 @@ function inputTimeHandler(this: HTMLInputElement) {
     tool.input.params.maxTime = Math.abs(parseFloat(this.value)) / 1000;
     this.value = round(tool.input.params.maxTime * 1000, 1).toString();
     if (localBPM) {
-        htmlInputMinPrec.value = round(
-            1 / localBPM.toBeatTime(tool.input.params.maxTime as number),
-            2
-        ).toString();
+        htmlInputMinPrec.value = round(1 / localBPM.toBeatTime(tool.input.params.maxTime as number), 2).toString();
     }
 }
 
@@ -131,24 +125,12 @@ function check(settings: IBeatmapSettings, difficulty: IBeatmapItem) {
         }
         const note = noteContainer[i] as NoteContainerNote;
         if (lastNote[note.data.color]) {
-            if (
-                swing.next(
-                    note,
-                    lastNote[note.data.color],
-                    bpm,
-                    swingNoteArray[note.data.color]
-                )
-            ) {
-                if (
-                    note.data.time - lastNote[note.data.color].data.time <=
-                    maxTime * 2
-                ) {
+            if (swing.next(note, lastNote[note.data.color], bpm, swingNoteArray[note.data.color])) {
+                if (note.data.time - lastNote[note.data.color].data.time <= maxTime * 2) {
                     if (
                         maybePause[0] &&
                         maybePause[1] &&
-                        lastNote[note.data.color].data.time -
-                            lastNotePause[note.data.color].data.time <=
-                            maxTime * 3
+                        lastNote[note.data.color].data.time - lastNotePause[note.data.color].data.time <= maxTime * 3
                     ) {
                         arr.push(lastNote[note.data.color]);
                     }
@@ -172,18 +154,11 @@ function check(settings: IBeatmapSettings, difficulty: IBeatmapItem) {
         });
 }
 
-function checkShrAngle(
-    currCutDirection: number,
-    prevCutDirection: number,
-    type: number
-) {
+function checkShrAngle(currCutDirection: number, prevCutDirection: number, type: number) {
     if (currCutDirection === 8 || prevCutDirection === 8) {
         return false;
     }
-    if (
-        (type === 0 ? prevCutDirection === 7 : prevCutDirection === 6) &&
-        currCutDirection === 0
-    ) {
+    if ((type === 0 ? prevCutDirection === 7 : prevCutDirection === 6) && currCutDirection === 0) {
         return true;
     }
     return false;

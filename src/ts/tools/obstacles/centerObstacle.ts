@@ -71,10 +71,7 @@ const tool: Tool = {
 
 function adjustTimeHandler(bpm: beatmap.BeatPerMinute) {
     localBPM = bpm;
-    htmlInputMaxBeat.value = round(
-        localBPM.toBeatTime(tool.input.params.recovery as number),
-        2
-    ).toString();
+    htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.recovery as number), 2).toString();
 }
 
 function inputCheckHandler(this: HTMLInputElement) {
@@ -85,10 +82,7 @@ function inputTimeHandler(this: HTMLInputElement) {
     tool.input.params.recovery = Math.abs(parseFloat(this.value)) / 1000;
     this.value = round(tool.input.params.recovery * 1000, 1).toString();
     if (localBPM) {
-        htmlInputMaxBeat.value = round(
-            localBPM.toBeatTime(tool.input.params.recovery as number),
-            2
-        ).toString();
+        htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.recovery as number), 2).toString();
     }
 }
 
@@ -125,13 +119,9 @@ function check(map: ToolArgs) {
                 if (o.posX === 0) {
                     if (o.isLonger(obstacleLeftFull)) {
                         if (
-                            bpm.toRealTime(o.time) >
-                                bpm.toRealTime(obstacleRightFull.time) - recovery &&
+                            bpm.toRealTime(o.time) > bpm.toRealTime(obstacleRightFull.time) - recovery &&
                             bpm.toRealTime(o.time) <
-                                bpm.toRealTime(
-                                    obstacleRightFull.time + obstacleRightFull.duration
-                                ) +
-                                    recovery
+                                bpm.toRealTime(obstacleRightFull.time + obstacleRightFull.duration) + recovery
                         ) {
                             arr.push(o);
                         }
@@ -150,13 +140,9 @@ function check(map: ToolArgs) {
                 if (o.posX === 2) {
                     if (o.isLonger(obstacleRightFull)) {
                         if (
-                            bpm.toRealTime(o.time) >
-                                bpm.toRealTime(obstacleLeftFull.time) - recovery &&
+                            bpm.toRealTime(o.time) > bpm.toRealTime(obstacleLeftFull.time) - recovery &&
                             bpm.toRealTime(o.time) <
-                                bpm.toRealTime(
-                                    obstacleLeftFull.time + obstacleLeftFull.duration
-                                ) +
-                                    recovery
+                                bpm.toRealTime(obstacleLeftFull.time + obstacleLeftFull.duration) + recovery
                         ) {
                             arr.push(o);
                         }
@@ -168,13 +154,9 @@ function check(map: ToolArgs) {
                 if (o.posX === 1) {
                     if (o.isLonger(obstacleLeftFull)) {
                         if (
-                            bpm.toRealTime(o.time) >
-                                bpm.toRealTime(obstacleRightFull.time) - recovery &&
+                            bpm.toRealTime(o.time) > bpm.toRealTime(obstacleRightFull.time) - recovery &&
                             bpm.toRealTime(o.time) <
-                                bpm.toRealTime(
-                                    obstacleRightFull.time + obstacleRightFull.duration
-                                ) +
-                                    recovery
+                                bpm.toRealTime(obstacleRightFull.time + obstacleRightFull.duration) + recovery
                         ) {
                             arr.push(o);
                         }
@@ -184,13 +166,9 @@ function check(map: ToolArgs) {
                 if (o.posX === 2) {
                     if (o.isLonger(obstacleRightFull)) {
                         if (
-                            bpm.toRealTime(o.time) >
-                                bpm.toRealTime(obstacleLeftFull.time) - recovery &&
+                            bpm.toRealTime(o.time) > bpm.toRealTime(obstacleLeftFull.time) - recovery &&
                             bpm.toRealTime(o.time) <
-                                bpm.toRealTime(
-                                    obstacleLeftFull.time + obstacleLeftFull.duration
-                                ) +
-                                    recovery
+                                bpm.toRealTime(obstacleLeftFull.time + obstacleLeftFull.duration) + recovery
                         ) {
                             arr.push(o);
                         }
@@ -217,11 +195,9 @@ function run(map: ToolArgs) {
 
     if (result.length) {
         const htmlResult = document.createElement('div');
-        htmlResult.innerHTML = `<b>2-wide center obstacle (<${round(
-            recovery * 1000
-        )}ms) [${result.length}]:</b> ${result
-            .map((n) => round(map.settings.bpm.adjustTime(n), 3))
-            .join(', ')}`;
+        htmlResult.innerHTML = `<b>2-wide center obstacle (<${round(recovery * 1000)}ms) [${
+            result.length
+        }]:</b> ${result.map((n) => round(map.settings.bpm.adjustTime(n), 3)).join(', ')}`;
         tool.output.html = htmlResult;
     } else {
         tool.output.html = null;

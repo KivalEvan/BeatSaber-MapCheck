@@ -16,10 +16,7 @@ import { ICustomDataBase } from '../shared/customData';
  * @extends CCustomData
  * @extends INECustomData
  */
-export interface ICustomDataDifficulty
-    extends ICustomDataBase,
-        IHeckCustomData,
-        IChromaCustomData {
+export interface ICustomDataDifficulty extends ICustomDataBase, IHeckCustomData, IChromaCustomData {
     customEvents?: ICustomEvent[];
     time?: number;
     BPMChanges?: IBPMChange[];

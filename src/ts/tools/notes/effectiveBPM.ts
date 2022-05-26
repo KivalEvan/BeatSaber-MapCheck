@@ -58,10 +58,7 @@ const tool: Tool = {
 };
 
 function adjustTimeHandler(bpm: beatmap.BeatPerMinute) {
-    tool.input.params.ebpmThres = round(
-        Math.min(defaultEBPM, bpm.value * 2 * 1.285714),
-        1
-    );
+    tool.input.params.ebpmThres = round(Math.min(defaultEBPM, bpm.value * 2 * 1.285714), 1);
     tool.input.params.ebpmsThres = round(Math.min(defaultEBPMS, bpm.value * 2), 1);
     htmlInputEBPM.value = tool.input.params.ebpmThres.toString();
     htmlInputEBPMS.value = tool.input.params.ebpmsThres.toString();
@@ -79,16 +76,10 @@ function inputEBPMSHandler(this: HTMLInputElement) {
 
 function check(map: ToolArgs) {
     const { swingAnalysis } = map.difficulty!;
-    const { ebpmThres, ebpmsThres } = <{ ebpmThres: number; ebpmsThres: number }>(
-        tool.input.params
-    );
+    const { ebpmThres, ebpmsThres } = <{ ebpmThres: number; ebpmsThres: number }>tool.input.params;
 
-    const noteEBPM = swingAnalysis.container
-        .filter((s) => s.ebpm > ebpmThres)
-        .map((s) => s.time);
-    const noteEBPMS = swingAnalysis.container
-        .filter((s) => s.ebpmSwing > ebpmsThres)
-        .map((s) => s.time);
+    const noteEBPM = swingAnalysis.container.filter((s) => s.ebpm > ebpmThres).map((s) => s.time);
+    const noteEBPMS = swingAnalysis.container.filter((s) => s.ebpmSwing > ebpmsThres).map((s) => s.time);
 
     return { base: noteEBPM, swing: noteEBPMS };
 }
@@ -99,25 +90,21 @@ function run(map: ToolArgs) {
         return;
     }
     const result = check(map);
-    const { ebpmThres, ebpmsThres } = <{ ebpmThres: number; ebpmsThres: number }>(
-        tool.input.params
-    );
+    const { ebpmThres, ebpmsThres } = <{ ebpmThres: number; ebpmsThres: number }>tool.input.params;
 
     const htmlString: string[] = [];
     if (result.base.length) {
         htmlString.push(
             `<b>>${ebpmThres}EBPM warning [${result.base.length}]:</b> ${result.base
                 .map((n) => round(map.settings.bpm.adjustTime(n), 3))
-                .join(', ')}`
+                .join(', ')}`,
         );
     }
     if (result.swing.length) {
         htmlString.push(
-            `<b>>${ebpmsThres}EBPM (swing) warning [${
-                result.swing.length
-            }]:</b> ${result.swing
+            `<b>>${ebpmsThres}EBPM (swing) warning [${result.swing.length}]:</b> ${result.swing
                 .map((n) => round(map.settings.bpm.adjustTime(n), 3))
-                .join(', ')}`
+                .join(', ')}`,
         );
     }
 

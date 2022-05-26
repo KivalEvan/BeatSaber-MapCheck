@@ -11,10 +11,9 @@ import { ICountEvent } from '../../types/mapcheck/analyzers/stats';
  */
 export const countEvent = (
     events: BasicEvent[],
-    environment: EnvironmentAllName = 'DefaultEnvironment'
+    environment: EnvironmentAllName = 'DefaultEnvironment',
 ): ICountEvent => {
-    const commonEvent =
-        EventList[environment]?.[0] ?? EventList['DefaultEnvironment'][0];
+    const commonEvent = EventList[environment]?.[0] ?? EventList['DefaultEnvironment'][0];
     const eventCount: ICountEvent = {};
     for (let i = commonEvent.length - 1; i >= 0; i--) {
         eventCount[commonEvent[i]] = {

@@ -31,100 +31,71 @@ function run(map: ToolArgs) {
         return;
     }
     const { bpm } = map.settings;
-    const {
-        colorNotes,
-        bombNotes,
-        obstacles,
-        basicBeatmapEvents,
-        sliders,
-        burstSliders,
-    } = map.difficulty.data;
+    const { colorNotes, bombNotes, obstacles, basicBeatmapEvents, sliders, burstSliders } = map.difficulty.data;
 
     let noteResult: number[] = [];
     let obstacleResult: number[] = [];
     let bombResult: number[] = [];
     let sliderResult: number[] = [];
     let burstSliderResult: number[] = [];
-    if (
-        !map.difficulty.info._customData?._requirements?.includes('Mapping Extensions')
-    ) {
-        if (
-            map.difficulty.info._customData?._requirements?.includes(
-                'Noodle Extensions'
-            )
-        ) {
-            noteResult = colorNotes
-                .filter((n) => n.hasMappingExtensions())
-                .map((n) => n.time);
-            obstacleResult = obstacles
-                .filter((o) => o.hasMappingExtensions())
-                .map((o) => o.time);
-            bombResult = bombNotes
-                .filter((n) => n.hasMappingExtensions())
-                .map((n) => n.time);
-            sliderResult = sliders
-                .filter((o) => o.hasMappingExtensions())
-                .map((o) => o.time);
-            burstSliderResult = burstSliders
-                .filter((o) => o.hasMappingExtensions())
-                .map((o) => o.time);
+    if (!map.difficulty.info._customData?._requirements?.includes('Mapping Extensions')) {
+        if (map.difficulty.info._customData?._requirements?.includes('Noodle Extensions')) {
+            noteResult = colorNotes.filter((n) => n.hasMappingExtensions()).map((n) => n.time);
+            obstacleResult = obstacles.filter((o) => o.hasMappingExtensions()).map((o) => o.time);
+            bombResult = bombNotes.filter((n) => n.hasMappingExtensions()).map((n) => n.time);
+            sliderResult = sliders.filter((o) => o.hasMappingExtensions()).map((o) => o.time);
+            burstSliderResult = burstSliders.filter((o) => o.hasMappingExtensions()).map((o) => o.time);
         } else {
             noteResult = colorNotes.filter((n) => !n.isValid()).map((n) => n.time);
             obstacleResult = obstacles.filter((o) => !o.isValid()).map((o) => o.time);
             bombResult = bombNotes.filter((b) => !b.isValid()).map((b) => b.time);
             sliderResult = sliders.filter((s) => !s.isValid()).map((s) => s.time);
-            burstSliderResult = burstSliders
-                .filter((bs) => !bs.isValid())
-                .map((bs) => bs.time);
+            burstSliderResult = burstSliders.filter((bs) => !bs.isValid()).map((bs) => bs.time);
         }
     }
-    const eventResult = basicBeatmapEvents
-        .filter((e) => !e.isValid())
-        .map((e) => e.time);
+    const eventResult = basicBeatmapEvents.filter((e) => !e.isValid()).map((e) => e.time);
 
     const htmlString: string[] = [];
     if (noteResult.length) {
         htmlString.push(
             `<b>Invalid note [${noteResult.length}]:</b> ${noteResult
                 .map((n) => round(bpm.adjustTime(n), 3))
-                .join(', ')}`
+                .join(', ')}`,
         );
     }
     if (bombResult.length) {
         htmlString.push(
             `<b>Invalid note [${bombResult.length}]:</b> ${bombResult
                 .map((n) => round(bpm.adjustTime(n), 3))
-                .join(', ')}`
+                .join(', ')}`,
         );
     }
     if (obstacleResult.length) {
         htmlString.push(
             `<b>Invalid obstacle [${obstacleResult.length}]:</b> ${obstacleResult
                 .map((n) => round(bpm.adjustTime(n), 3))
-                .join(', ')}`
+                .join(', ')}`,
         );
     }
     if (eventResult.length) {
         htmlString.push(
             `<b>Invalid event [${eventResult.length}]:</b> ${eventResult
                 .map((n) => round(bpm.adjustTime(n), 3))
-                .join(', ')}`
+                .join(', ')}`,
         );
     }
     if (sliderResult.length) {
         htmlString.push(
             `<b>Invalid slider [${sliderResult.length}]:</b> ${sliderResult
                 .map((n) => round(bpm.adjustTime(n), 3))
-                .join(', ')}`
+                .join(', ')}`,
         );
     }
     if (burstSliderResult.length) {
         htmlString.push(
-            `<b>Invalid burst slider [${
-                burstSliderResult.length
-            }]:</b> ${burstSliderResult
+            `<b>Invalid burst slider [${burstSliderResult.length}]:</b> ${burstSliderResult
                 .map((n) => round(bpm.adjustTime(n), 3))
-                .join(', ')}`
+                .join(', ')}`,
         );
     }
 

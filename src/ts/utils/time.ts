@@ -4,8 +4,7 @@ export const toMMSS = (seconds: number): string => {
     }
     const numr = Math.floor(seconds);
     const temp = numr / 60;
-    const min =
-        temp < 0 ? `-${Math.ceil(temp).toString()}` : Math.floor(temp).toString();
+    const min = temp < 0 ? `-${Math.ceil(temp).toString()}` : Math.floor(temp).toString();
     const sec = Math.abs(numr % 60)
         .toString()
         .padStart(2, '0');
@@ -26,7 +25,6 @@ export const toMMSSMS = (seconds: number): string => {
     if (!seconds) {
         return '0:00.000';
     }
-    const dec =
-        (seconds % 1).toString().split('.')[1]?.padEnd(3, '0').slice(0, 3) || '000';
+    const dec = (seconds % 1).toString().split('.')[1]?.padEnd(3, '0').slice(0, 3) || '000';
     return `${toMMSS(seconds)}.${dec}`;
 };

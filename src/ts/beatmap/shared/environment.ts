@@ -31,10 +31,7 @@ export const EnvironmentRename: Readonly<Record<EnvironmentAllName, string>> = {
     GlassDesertEnvironment: 'Glass Desert',
 };
 
-export const eventTypeRename = (
-    type: number,
-    environment?: EnvironmentAllName
-): string => {
+export const eventTypeRename = (type: number, environment?: EnvironmentAllName): string => {
     switch (type) {
         case 0:
             switch (environment) {
@@ -198,10 +195,7 @@ export const eventTypeRename = (
     }
 };
 
-export const eventGroupRename = (
-    id: number,
-    environment?: EnvironmentAllName
-): string => {
+export const eventGroupRename = (id: number, environment?: EnvironmentAllName): string => {
     switch (environment) {
         case 'WeaveEnvironment': {
             switch (id) {

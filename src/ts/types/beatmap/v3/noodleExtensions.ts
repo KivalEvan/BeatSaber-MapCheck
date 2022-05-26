@@ -1,9 +1,4 @@
-import {
-    Vector2,
-    Vector3,
-    Vector3PointDefinition,
-    PercentPointDefinition,
-} from '../shared/heck';
+import { Vector2, Vector3, Vector3PointDefinition, PercentPointDefinition } from '../shared/heck';
 import { IChromaAnimation } from './chroma';
 import { IHeckCustomEventDataBase } from './heck';
 
@@ -45,8 +40,7 @@ export interface INECustomEventDataAssignTrackParent {
 /** AssignPlayerToTrack interface for Noodle Extensions Custom Event.
  * @extends INECustomEventDataBase
  */
-export interface INECustomEventDataAssignPlayerToTrack
-    extends IHeckCustomEventDataBase {
+export interface INECustomEventDataAssignPlayerToTrack extends IHeckCustomEventDataBase {
     track: string;
 }
 
@@ -77,6 +71,4 @@ export interface INECustomEventAssignPlayerToTrack {
     d: INECustomEventDataAssignPlayerToTrack;
 }
 
-export type INECustomEvent =
-    | INECustomEventAssignTrackParent
-    | INECustomEventAssignPlayerToTrack;
+export type INECustomEvent = INECustomEventAssignTrackParent | INECustomEventAssignPlayerToTrack;

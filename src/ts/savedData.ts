@@ -27,9 +27,7 @@ export default new (class SavedData implements ISavedData {
                 duration: this.duration as NonNullable<typeof this.duration>,
             };
         } else {
-            throw new Error(
-                'Could not retrieve saved data, loading process is not finished.'
-            );
+            throw new Error('Could not retrieve saved data, loading process is not finished.');
         }
     }
 

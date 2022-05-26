@@ -3,16 +3,8 @@
 // TODO: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA there's still more work needed for parity check
 // TODO: cleanup the implementation
 import { ColorNote } from '../../beatmap/v3/colorNote';
-import {
-    NoteContainer,
-    NoteContainerBomb,
-    NoteContainerNote,
-} from '../../types/beatmap/v3/container';
-import {
-    ParityState,
-    ParityStatus,
-    ParitySwitch,
-} from '../../types/mapcheck/analyzers/parity';
+import { NoteContainer, NoteContainerBomb, NoteContainerNote } from '../../types/beatmap/v3/container';
+import { ParityState, ParityStatus, ParitySwitch } from '../../types/mapcheck/analyzers/parity';
 import { predictDirection } from '../placement/note';
 
 const noteInitParity: {
@@ -64,7 +56,7 @@ export default class Parity {
         warningThreshold: number,
         errorThreshold: number,
         allowedRotation: number,
-        parity?: ParityState
+        parity?: ParityState,
     ) {
         this.color = type;
         this.warningThreshold = warningThreshold;
@@ -80,10 +72,7 @@ export default class Parity {
         this.position = this.predictStartPosition(notes, type);
     }
 
-    public check(
-        noteContext: NoteContainer[],
-        bombContext: NoteContainerBomb[]
-    ): ParityStatus {
+    public check(noteContext: NoteContainer[], bombContext: NoteContainerBomb[]): ParityStatus {
         if (this.state === 'neutral') {
             return 'none';
         }
@@ -132,36 +121,29 @@ export default class Parity {
             return 'none';
         }
 
-        const parityRotation =
-            noteParityRotation[noteType][ParitySwitch[currentState]][expectedDirection];
+        const parityRotation = noteParityRotation[noteType][ParitySwitch[currentState]][expectedDirection];
 
         if (
-            (currentRotation > parityRotation
-                ? currentRotation - parityRotation
-                : parityRotation - currentRotation) > 180
+            (currentRotation > parityRotation ? currentRotation - parityRotation : parityRotation - currentRotation) >
+            180
         ) {
             return 'error';
         }
         if (
-            parityRotation <
-                Parity.CONSTRAINT_ROTATION[noteType][0] + this.errorThreshold ||
-            parityRotation >
-                Parity.CONSTRAINT_ROTATION[noteType][1] - this.errorThreshold
+            parityRotation < Parity.CONSTRAINT_ROTATION[noteType][0] + this.errorThreshold ||
+            parityRotation > Parity.CONSTRAINT_ROTATION[noteType][1] - this.errorThreshold
         ) {
             return 'error';
         }
         if (
-            parityRotation <
-                Parity.CONSTRAINT_ROTATION[noteType][0] + this.warningThreshold ||
-            parityRotation >
-                Parity.CONSTRAINT_ROTATION[noteType][1] - this.warningThreshold
+            parityRotation < Parity.CONSTRAINT_ROTATION[noteType][0] + this.warningThreshold ||
+            parityRotation > Parity.CONSTRAINT_ROTATION[noteType][1] - this.warningThreshold
         ) {
             return 'warning';
         }
         if (
-            (currentRotation > parityRotation
-                ? currentRotation - parityRotation
-                : parityRotation - currentRotation) > this.allowedRotation
+            (currentRotation > parityRotation ? currentRotation - parityRotation : parityRotation - currentRotation) >
+            this.allowedRotation
         ) {
             return 'warning';
         }
@@ -185,19 +167,11 @@ export default class Parity {
                             continue;
                         }
                         const note = noteContext[i] as NoteContainerNote;
-                        if (
-                            noteInitParity[note.data.color].forehand.includes(
-                                note.data.direction
-                            )
-                        ) {
+                        if (noteInitParity[note.data.color].forehand.includes(note.data.direction)) {
                             this.state = 'backhand';
                             break;
                         }
-                        if (
-                            noteInitParity[note.data.color].backhand.includes(
-                                note.data.direction
-                            )
-                        ) {
+                        if (noteInitParity[note.data.color].backhand.includes(note.data.direction)) {
                             this.state = 'forehand';
                             break;
                         }
@@ -254,8 +228,7 @@ export default class Parity {
             prevNote = note;
         }
         if (expectedDirection !== 8) {
-            this.rotation =
-                noteParityRotation[this.color][this.state][expectedDirection];
+            this.rotation = noteParityRotation[this.color][this.state][expectedDirection];
         }
     }
 
@@ -287,25 +260,14 @@ export default class Parity {
                 }
                 const startTime = note.data.time;
                 for (let j = i; j < nc.length; j++) {
-                    if (
-                        nc[j].data.time > note.data.time + 0.001 &&
-                        startTime < note.data.time + 0.001
-                    ) {
+                    if (nc[j].data.time > note.data.time + 0.001 && startTime < note.data.time + 0.001) {
                         break;
                     }
                     note = nc[j] as NoteContainerNote;
-                    if (
-                        noteInitParity[note.data.color].forehand.includes(
-                            note.data.direction
-                        )
-                    ) {
+                    if (noteInitParity[note.data.color].forehand.includes(note.data.direction)) {
                         return 'backhand';
                     }
-                    if (
-                        noteInitParity[note.data.color].backhand.includes(
-                            note.data.direction
-                        )
-                    ) {
+                    if (noteInitParity[note.data.color].backhand.includes(note.data.direction)) {
                         return 'forehand';
                     }
                     if (startParity === 'neutral' && note.data.direction === 8) {
@@ -335,10 +297,7 @@ export default class Parity {
             if (note.data.color === color) {
                 const startTime = note.data.time;
                 for (let j = i; j < nc.length; j++) {
-                    if (
-                        nc[j].data.time > note.data.time + 0.001 &&
-                        startTime < note.data.time + 0.001
-                    ) {
+                    if (nc[j].data.time > note.data.time + 0.001 && startTime < note.data.time + 0.001) {
                         break;
                     }
                     note = nc[j] as NoteContainerNote;
@@ -378,10 +337,7 @@ export default class Parity {
         return rotation;
     }
     // "predict" btw
-    private predictStartPosition(
-        notes: NoteContainer[],
-        type: number
-    ): [number, number] {
+    private predictStartPosition(notes: NoteContainer[], type: number): [number, number] {
         return type ? [-0.5, 1] : [0.5, 1];
     }
 }

@@ -28,9 +28,7 @@ const tool: Tool = {
 function check(map: ToolArgs) {
     const { obstacles } = map.difficulty!.data;
     if (
-        map.difficulty!.info._customData?._requirements?.includes(
-            'Mapping Extensions'
-        ) ||
+        map.difficulty!.info._customData?._requirements?.includes('Mapping Extensions') ||
         map.difficulty!.info._customData?._requirements?.includes('Noodle Extensions')
     ) {
         return [];

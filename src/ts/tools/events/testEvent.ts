@@ -40,10 +40,7 @@ function check(map: ToolArgs) {
         while (events[i].time - events[currentSectionStart].time > second) {
             currentSectionStart++;
         }
-        peakEPS = Math.max(
-            peakEPS,
-            (i - currentSectionStart + second) / ((1 / bpm.value) * 60)
-        );
+        peakEPS = Math.max(peakEPS, (i - currentSectionStart + second) / ((1 / bpm.value) * 60));
     }
     return {
         EPS: duration ? round(events.length / duration, 3) : 0,

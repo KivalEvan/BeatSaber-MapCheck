@@ -71,10 +71,7 @@ const tool: Tool = {
 
 function adjustTimeHandler(bpm: beatmap.BeatPerMinute) {
     localBPM = bpm;
-    htmlInputMinPrec.value = round(
-        1 / localBPM.toBeatTime(tool.input.params.minSpeed as number),
-        2
-    ).toString();
+    htmlInputMinPrec.value = round(1 / localBPM.toBeatTime(tool.input.params.minSpeed as number), 2).toString();
 }
 
 function inputCheckHandler(this: HTMLInputElement) {
@@ -85,10 +82,7 @@ function inputTimeHandler(this: HTMLInputElement) {
     tool.input.params.minSpeed = Math.abs(parseFloat(this.value)) / 1000;
     this.value = round(tool.input.params.minSpeed * 1000, 1).toString();
     if (localBPM) {
-        htmlInputMinPrec.value = round(
-            1 / localBPM.toBeatTime(tool.input.params.minSpeed as number),
-            2
-        ).toString();
+        htmlInputMinPrec.value = round(1 / localBPM.toBeatTime(tool.input.params.minSpeed as number), 2).toString();
     }
 }
 
@@ -125,9 +119,7 @@ function run(map: ToolArgs) {
 
     if (result.length) {
         const htmlResult = document.createElement('div');
-        htmlResult.innerHTML = `<b>Slow slider (>${round(minSpeed * 1000, 1)}ms) [${
-            result.length
-        }]:</b> ${result
+        htmlResult.innerHTML = `<b>Slow slider (>${round(minSpeed * 1000, 1)}ms) [${result.length}]:</b> ${result
             .map((n) => round(map.settings.bpm.adjustTime(n), 3))
             .join(', ')}`;
         tool.output.html = htmlResult;

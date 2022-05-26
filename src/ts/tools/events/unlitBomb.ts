@@ -32,15 +32,13 @@ const unlitBomb = (
     bombs: beatmap.v3.BombNote[],
     events: beatmap.v3.BasicEvent[],
     bpm: beatmap.BeatPerMinute,
-    environment: EnvironmentName
+    environment: EnvironmentName,
 ) => {
     if (!events.length) {
         return [];
     }
     const arr: beatmap.v3.BombNote[] = [];
-    const commonEvent =
-        beatmap.EventList[environment]?.[0] ??
-        beatmap.EventList['DefaultEnvironment'][0];
+    const commonEvent = beatmap.EventList[environment]?.[0] ?? beatmap.EventList['DefaultEnvironment'][0];
     const eventsLight = events
         .filter((ev) => ev.isLightEvent() && commonEvent.includes(ev.type))
         .sort((a, b) => a.type - b.type) as beatmap.v3.BasicEvent[];
@@ -102,22 +100,15 @@ const unlitBomb = (
             ((ev?.floatValue ?? 1) < 0.25 ||
                 ev.isOff() ||
                 (ev.customData?._color &&
-                    ((typeof ev.customData._color[3] === 'number' &&
-                        ev.customData._color[3] < 0.25) ||
-                        Math.max(
-                            ev.customData._color[0],
-                            ev.customData._color[1],
-                            ev.customData._color[2]
-                        ) < 0.25))) &&
+                    ((typeof ev.customData._color[3] === 'number' && ev.customData._color[3] < 0.25) ||
+                        Math.max(ev.customData._color[0], ev.customData._color[1], ev.customData._color[2]) < 0.25))) &&
             eventState[ev.type].state !== 'off'
         ) {
             eventState[ev.type] = {
                 state: 'off',
                 time: ev.time,
                 fadeTime:
-                    eventState[ev.type].state === 'on'
-                        ? reactTime
-                        : Math.min(reactTime, eventState[ev.type].fadeTime),
+                    eventState[ev.type].state === 'on' ? reactTime : Math.min(reactTime, eventState[ev.type].fadeTime),
             };
             eventLitTime[ev.type].push([
                 ev.time +
@@ -161,7 +152,7 @@ function run(map: ToolArgs) {
         map.difficulty.data.bombNotes,
         map.difficulty.data.basicBeatmapEvents,
         map.settings.bpm,
-        map.info._environmentName
+        map.info._environmentName,
     );
 
     if (result.length) {
