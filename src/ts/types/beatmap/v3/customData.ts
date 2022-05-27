@@ -7,11 +7,6 @@ import { ICustomEvent } from './customEvent';
 import { ICustomDataBase } from '../shared/customData';
 
 /** Custom Data interface for difficulty file.
- * ```ts
- * time?: float,
- * BPMChanges?: BPMChange[];
- * bookmarks?: Bookmark[];
- * ```
  * @extends CustomData
  * @extends CCustomData
  * @extends INECustomData

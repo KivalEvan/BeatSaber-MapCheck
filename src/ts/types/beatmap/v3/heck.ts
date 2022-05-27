@@ -1,5 +1,5 @@
 import { Easings } from '../shared/easings';
-import { Vector3PointDefinition, ColorPointDefinition, PercentPointDefinition, PointDefinition } from '../shared/heck';
+import { ColorPointDefinition, PercentPointDefinition, PointDefinition, Vector3PointDefinition } from '../shared/heck';
 
 /** Heck Base Custom Event interface. */
 export interface IHeckCustomEventDataBase {

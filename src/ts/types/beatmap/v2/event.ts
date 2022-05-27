@@ -3,15 +3,7 @@ import { ICustomDataBase } from '../shared/customData';
 import { INEEvent } from './noodleExtensions';
 import { IBaseObject } from './object';
 
-/** Beatmap object interface for Event.
- * ```ts
- * _time: float,
- * _type: int,
- * _value: int,
- * _floatValue: float,
- * _customData?: JSON
- * ```
- */
+/** Beatmap object interface for Event. */
 // it took me long enough to realise Event is a built in JS class/interface, but it has no effect here anyway
 export interface IEventBase extends IBaseObject {
     /** Type of event.

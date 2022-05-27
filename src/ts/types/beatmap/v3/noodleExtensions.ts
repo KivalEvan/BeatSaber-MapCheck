@@ -1,4 +1,4 @@
-import { Vector2, Vector3, Vector3PointDefinition, PercentPointDefinition } from '../shared/heck';
+import { PercentPointDefinition, Vector2, Vector3, Vector3PointDefinition } from '../shared/heck';
 import { IChromaAnimation } from './chroma';
 import { IHeckCustomEventDataBase } from './heck';
 

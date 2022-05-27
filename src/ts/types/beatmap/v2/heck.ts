@@ -1,29 +1,12 @@
 import { Easings } from '../shared/easings';
-import { Vector3PointDefinition, ColorPointDefinition, PercentPointDefinition, PointDefinition } from '../shared/heck';
+import { ColorPointDefinition, PercentPointDefinition, PointDefinition, Vector3PointDefinition } from '../shared/heck';
 
-/** Heck Base Custom Event interface.
- * ```ts
- * _track: string | string[]
- * ```
- */
+/** Heck Base Custom Event interface. */
 export interface IHeckCustomEventDataBase {
     _track: string | string[];
 }
 
 /** AnimateTrack interface for Heck Custom Event.
- * ```ts
- * _duration: float,
- * _easing?: Easings,
- * _position?: string | Array3DPointDefinition[],
- * _rotation?: string | Array3DPointDefinition[],
- * _localRotation?: string | Array3DPointDefinition[],
- * _scale?: string | Array3DPointDefinition[],
- * _dissolve?: string | ArrayPercentPointDefinition[],
- * _dissolveArrow?: string | ArrayPercentPointDefinition[],
- * _color?: string | ArrayColorPointDefinition[],
- * _interactable?: string | ArrayPercentPointDefinition[],
- * _time?: string | ArrayPercentPointDefinition[]
- * ```
  * @extends IHeckCustomEventDataBase
  */
 export interface IHeckCustomEventDataAnimateTrack extends IHeckCustomEventDataBase {
@@ -41,19 +24,6 @@ export interface IHeckCustomEventDataAnimateTrack extends IHeckCustomEventDataBa
 }
 
 /** AssignPathAnimation interface for Heck Custom Event.
- * ```ts
- * _duration: float,
- * _easing?: Easings,
- * _position?: string | Array3DPointDefinition[],
- * _rotation?: string | Array3DPointDefinition[],
- * _localRotation?: string | Array3DPointDefinition[],
- * _scale?: string | Array3DPointDefinition[],
- * _dissolve?: string | ArrayPercentPointDefinition[],
- * _dissolveArrow?: string | ArrayPercentPointDefinition[],
- * _color?: string | ArrayColorPointDefinition[],
- * _interactable?: string | ArrayPercentPointDefinition[],
- * _definitePosition?: string | Array3DPointDefinition[]
- * ```
  * @extends IHeckCustomEventDataBase
  */
 export interface IHeckCustomEventDataAssignPathAnimation extends IHeckCustomEventDataBase {

@@ -5,7 +5,7 @@ import UISelect from './helpers/select';
 import SavedData from '../savedData';
 import Settings from '../settings';
 import { formatNumber, round } from '../utils';
-import { BeatPerMinute, NoteJumpSpeed, DifficultyRename, eventTypeRename, eventGroupRename } from '../beatmap';
+import { BeatPerMinute, NoteJumpSpeed, DifficultyRename } from '../beatmap';
 import { CharacteristicRename } from '../beatmap/shared/characteristic';
 import { IInfoData } from '../types';
 import { IBeatmapItem } from '../types/mapcheck';
@@ -15,6 +15,7 @@ import * as swing from '../analyzers/swing';
 import { countObstacle } from '../analyzers/stats/obstacle';
 import { countColorEBG, countEvent, countRotationEBG } from '../analyzers/stats';
 import * as score from '../analyzers/score';
+import { eventGroupRename, eventTypeRename } from '../analyzers/environment/renamer';
 
 const logPrefix = 'UI Stats: ';
 const prefix = 'stats__';

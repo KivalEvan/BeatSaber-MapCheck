@@ -1,9 +1,11 @@
-/** Standard color object
+/** Standard color object.
  * ```ts
- * r: float,
- * g: float,
- * b: float,
- * a?: float
+ * const color = {
+ *      r: float,
+ *      g: float,
+ *      b: float,
+ *      a: float | undefined
+ * }
  * ```
  */
 export interface ColorObject {
@@ -13,7 +15,7 @@ export interface ColorObject {
     a?: number;
 }
 
-/** Standard color array
+/** Standard color array.
  * ```ts
  * const color = [red, green, blue] || [red, green, blue, alpha];
  * ```

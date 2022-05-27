@@ -2,7 +2,6 @@
 // TODO: proper rotation check based on position
 // TODO: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA there's still more work needed for parity check
 // TODO: cleanup the implementation
-import { ColorNote } from '../../beatmap/v3/colorNote';
 import { NoteContainer, NoteContainerBomb, NoteContainerNote } from '../../types/beatmap/v3/container';
 import { ParityState, ParityStatus, ParitySwitch } from '../../types/mapcheck/analyzers/parity';
 import { predictDirection } from '../placement/note';

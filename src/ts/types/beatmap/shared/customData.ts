@@ -11,12 +11,6 @@ export interface ICustomDataBase {
 }
 
 /** Custom Data interface for info.
- * ```ts
- * _editors?: Editor,
- * _contributors?: Contributor[],
- * _customEnvironment?: string,
- * _customEnvironmentHash?: string
- * ```
  * @extends ICustomDataBase
  */
 export interface ICustomDataInfo extends ICustomDataBase {
@@ -27,15 +21,6 @@ export interface ICustomDataInfo extends ICustomDataBase {
 }
 
 /** Custom Data interface for info difficulty.
- * ```ts
- * _difficultyLabel?: string,
- * _editorOffset?: int,
- * _editorOldOffset?: int,
- * _warnings?: string[],
- * _information?: string[],
- * _suggestions?: string[],
- * _requirements?: string[]
- * ```
  * @extends ICustomDataBase
  * @extends IColorScheme
  * @extends IHeckInfoCustomData

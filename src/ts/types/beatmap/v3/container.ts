@@ -31,12 +31,12 @@ export interface NoteContainerBomb extends ContainerBase {
 
 export type NoteContainer = NoteContainerNote | NoteContainerSlider | NoteContainerBurstSlider | NoteContainerBomb;
 
-interface EventContainerBasic {
+export interface EventContainerBasic {
     type: 'basicEvent';
     data: BasicEvent;
 }
 
-interface EventContainerBoost {
+export interface EventContainerBoost {
     type: 'boost';
     data: ColorBoostEvent;
 }
