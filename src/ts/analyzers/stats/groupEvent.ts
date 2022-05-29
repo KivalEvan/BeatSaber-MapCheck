@@ -15,6 +15,7 @@ export const countColorEBG = (
 ): ICountEventBoxGroup => {
     const commonEvent = EventList[environment]?.[1] ?? EventList['DefaultEnvironment'][1];
     const ebgCount: ICountEventBoxGroup = {};
+    console.log(ebg.length);
     for (let i = commonEvent.length - 1; i >= 0; i--) {
         ebgCount[commonEvent[i]] = {
             total: 0,
@@ -30,10 +31,10 @@ export const countColorEBG = (
                 eventBox: 0,
                 base: 0,
             };
-            ebgCount[ebg[i].groupID].total++;
-            ebgCount[ebg[i].groupID].eventBox += ebg[i].events.length;
-            ebgCount[ebg[i].groupID].base += ebg[i].events.reduce((t, e) => t + e.events.length, 0);
         }
+        ebgCount[ebg[i].groupID].total++;
+        ebgCount[ebg[i].groupID].eventBox += ebg[i].events.length;
+        ebgCount[ebg[i].groupID].base += ebg[i].events.reduce((t, e) => t + e.events.length, 0);
     }
     return ebgCount;
 };
@@ -59,10 +60,10 @@ export const countRotationEBG = (
                 eventBox: 0,
                 base: 0,
             };
-            ebgCount[ebg[i].groupID].total++;
-            ebgCount[ebg[i].groupID].eventBox += ebg[i].events.length;
-            ebgCount[ebg[i].groupID].base += ebg[i].events.reduce((t, e) => t + e.events.length, 0);
         }
+        ebgCount[ebg[i].groupID].total++;
+        ebgCount[ebg[i].groupID].eventBox += ebg[i].events.length;
+        ebgCount[ebg[i].groupID].base += ebg[i].events.reduce((t, e) => t + e.events.length, 0);
     }
     return ebgCount;
 };

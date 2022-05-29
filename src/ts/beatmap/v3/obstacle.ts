@@ -172,17 +172,7 @@ export class Obstacle extends BaseObject<IObstacle> {
      */
     // FIXME: there are a lot more other variables
     isInteractive() {
-        return this.width - this.posX > 1 || this.posX === 1 || this.posX === 2;
-    }
-
-    /** Check if obstacle is crouch.
-     * ```ts
-     * if (wall.isCrouch()) {}
-     * ```
-     */
-    // FIXME: doesnt work properly
-    isCrouch() {
-        return this.posY === 2 && this.isInteractive() && (this.width > 2 || (this.width === 2 && this.posX === 1));
+        return (this.posX < 0 && this.width > 1 - this.posX) || this.width > 1 || this.posX === 1 || this.posX === 2;
     }
 
     /** Check if obstacle has zero value.

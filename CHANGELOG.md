@@ -1,6 +1,6 @@
 # Changelog
 
-## v2.5.0 [2022-05-##]
+## 2.5.0 [2022-06-##]
 
 ### Added
 
@@ -18,11 +18,11 @@
 
 -   Yet another major structure changes
 -   Better internal user interface work
--   Updated changelog date format
 
 ### Updated
 
 -   Package dependencies updated to latest
+-   Changelog date format
 
 ### Deprecated
 
@@ -34,7 +34,7 @@
 -   Old event value check
 -   Event peak and per second check
 
-## v2.4.0 [2022-03-02]
+## 2.4.0 [2022-03-02]
 
 ### Changed
 
@@ -48,7 +48,7 @@
 
 -   CORS proxy (I don't think this is even needed anymore)
 
-## v2.3.1 [2022-01-04]
+## 2.3.1 [2022-01-04]
 
 ### Added
 
@@ -69,7 +69,7 @@
 
 -   Hitbox inline and reverse staircase calculation fix
 
-## v2.3.0 [2021-12-01]
+## 2.3.0 [2021-12-01]
 
 ### Added
 
@@ -85,7 +85,7 @@
 -   Switched from Webpack to Vite
 -   Cleaned up and updated dependencies
 
-## v2.2.5 [2021-11-11]
+## 2.2.5 [2021-11-11]
 
 ### Added
 
@@ -96,7 +96,7 @@
 
 -   Light value 8 no longer considered as invalid
 
-## v2.2.4 [2021-10-26]
+## 2.2.4 [2021-10-26]
 
 ### Added
 
@@ -106,7 +106,7 @@
 
 -   Note color check tweaked arrow color
 
-## v2.2.3 [2021-10-21]
+## 2.2.3 [2021-10-21]
 
 ### Added
 
@@ -117,7 +117,7 @@
 
 -   Scary error for progression when audio is not loaded
 
-## v2.2.2 [2021-10-17]
+## 2.2.2 [2021-10-17]
 
 ### Added
 
@@ -131,7 +131,7 @@
 
 -   Potential fix for NJS HJD minimum
 
-## v2.2.1 [2021-10-10]
+## 2.2.1 [2021-10-10]
 
 ### Changed
 
@@ -142,7 +142,7 @@
 
 -   Hitbox path picking up bomb as note
 
-## v2.2.0 [2021-10-08]
+## 2.2.0 [2021-10-08]
 
 ### Added
 
@@ -166,13 +166,13 @@
 
 -   Map version older than v2.5.0 no longer gets support for event
 
-## v2.1.1 [2021-09-05]
+## 2.1.1 [2021-09-05]
 
 ### Changed
 
 -   Bomb stack now checks by both NJS and time (<20ms)
 
-## v2.1.0 [2021-09-04]
+## 2.1.0 [2021-09-04]
 
 ### Added
 
@@ -190,13 +190,13 @@
 -   Mistaken 2-wide center wall for negative wall
 -   BeatSaver link not having correct URL
 
-## v2.0.3 [2021-08-27]
+## 2.0.3 [2021-08-27]
 
 ### Fixed
 
 -   BeatSaver download not having correct request URL
 
-## v2.0.2 [2021-08-08]
+## 2.0.2 [2021-08-08]
 
 ### Changed
 
@@ -206,7 +206,7 @@
 
 -   Invalid obstacle picking up 4-wide crouch wall
 
-## v2.0.1 [2021-08-06]
+## 2.0.1 [2021-08-06]
 
 ### Added
 
@@ -221,7 +221,7 @@
 
 -   Invalid event picking up laser rotation of high value
 
-## v2.0.0 : TypeScript Rewrite [2021-08-05]
+## 2.0.0 : TypeScript Rewrite [2021-08-05]
 
 ### Added
 
