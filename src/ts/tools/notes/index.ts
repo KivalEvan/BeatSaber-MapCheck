@@ -10,7 +10,7 @@ export { default as hitboxReverseStair } from './hitboxReverseStair';
 export { default as hitboxInline } from './hitboxInline';
 export { default as hitboxPath } from './hitboxPath';
 export { default as improperWindow } from './improperWindow';
-// export { default as parity } from './parity';
+export { default as parity } from './parity';
 export { default as doubleDirectional } from './doubleDirectional';
 export { default as visionBlock } from './visionBlock';
 export { default as stackedNote } from './stackedNote';

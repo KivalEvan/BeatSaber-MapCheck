@@ -20,9 +20,7 @@ export class ColorBoostEvent extends BaseObject<IColorBoostEvent> {
     static create(): ColorBoostEvent;
     static create(colorBoostEvents: Partial<IColorBoostEvent>): ColorBoostEvent;
     static create(...colorBoostEvents: Partial<IColorBoostEvent>[]): ColorBoostEvent[];
-    static create(
-        ...colorBoostEvents: Partial<IColorBoostEvent>[]
-    ): ColorBoostEvent | ColorBoostEvent[] {
+    static create(...colorBoostEvents: Partial<IColorBoostEvent>[]): ColorBoostEvent | ColorBoostEvent[] {
         const result: ColorBoostEvent[] = [];
         colorBoostEvents?.forEach((be) =>
             result.push(
@@ -30,8 +28,8 @@ export class ColorBoostEvent extends BaseObject<IColorBoostEvent> {
                     b: be.b ?? ColorBoostEvent.default.b,
                     o: be.o ?? ColorBoostEvent.default.o,
                     customData: be.customData ?? ColorBoostEvent.default.customData(),
-                })
-            )
+                }),
+            ),
         );
         if (result.length === 1) {
             return result[0];

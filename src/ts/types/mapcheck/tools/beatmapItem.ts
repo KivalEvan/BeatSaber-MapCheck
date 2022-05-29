@@ -1,10 +1,6 @@
 import { BeatPerMinute } from '../../../beatmap';
 import { DifficultyData } from '../../../beatmap/v3';
-import {
-    CharacteristicName,
-    DifficultyName,
-    IInfoSetDifficultyData,
-} from '../../beatmap';
+import { CharacteristicName, DifficultyName, IInfoSetDifficultyData } from '../../beatmap';
 import { IDifficultyData as IDifficultyDataV2 } from '../../beatmap/v2';
 import { IDifficultyData as IDifficultyDataV3 } from '../../beatmap/v3';
 import { EventContainer, NoteContainer } from '../../beatmap/v3/container';

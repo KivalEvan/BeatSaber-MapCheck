@@ -1,31 +1,25 @@
-import { Tool, ToolArgs } from '../../types/mapcheck';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import { round } from '../../utils';
 import * as beatmap from '../../beatmap';
 import { NoteContainer, NoteContainerNote } from '../../types/beatmap/v3/container';
 import swing from '../../analyzers/swing/swing';
-import { ColorNote } from '../../beatmap/v3/colorNote';
+import { printResultTime } from '../helpers';
+import UICheckbox from '../../ui/helpers/checkbox';
 
+const name = 'shrado Angle';
+const description = 'Look for common negative curvature pattern.';
+const enabled = false;
 const defaultMaxTime = 0.15;
 const defaultDistance = 1;
 let localBPM!: beatmap.BeatPerMinute;
 
 const htmlContainer = document.createElement('div');
-const htmlInputCheck = document.createElement('input');
-const htmlLabelCheck = document.createElement('label');
 const htmlInputDistance = document.createElement('input');
 const htmlLabelDistance = document.createElement('label');
 const htmlInputMaxTime = document.createElement('input');
 const htmlLabelMaxTime = document.createElement('label');
 const htmlInputMaxBeat = document.createElement('input');
 const htmlLabelMaxBeat = document.createElement('label');
-
-htmlLabelCheck.textContent = ' shrado angle';
-htmlLabelCheck.htmlFor = 'input__tools-shrado-angle-check';
-htmlInputCheck.id = 'input__tools-shrado-angle-check';
-htmlInputCheck.className = 'input-toggle';
-htmlInputCheck.type = 'checkbox';
-htmlInputCheck.checked = false;
-htmlInputCheck.addEventListener('change', inputCheckHandler);
 
 htmlLabelDistance.textContent = 'min distance: ';
 htmlLabelDistance.htmlFor = 'input__tools-shrado-angle-distance';
@@ -54,9 +48,11 @@ htmlInputMaxBeat.min = '0';
 htmlInputMaxBeat.step = '0.1';
 htmlInputMaxBeat.addEventListener('change', inputBeatHandler);
 
-htmlContainer.appendChild(htmlInputCheck);
-htmlContainer.appendChild(htmlLabelCheck);
-htmlContainer.appendChild(document.createElement('br'));
+htmlContainer.appendChild(
+    UICheckbox.create(name, description, enabled, function (this: HTMLInputElement) {
+        tool.input.enabled = this.checked;
+    }),
+);
 htmlContainer.appendChild(htmlLabelDistance);
 htmlContainer.appendChild(htmlInputDistance);
 htmlContainer.appendChild(document.createElement('br'));
@@ -66,15 +62,15 @@ htmlContainer.appendChild(htmlLabelMaxBeat);
 htmlContainer.appendChild(htmlInputMaxBeat);
 
 const tool: Tool = {
-    name: 'shrado Angle',
-    description: 'Placeholder',
+    name,
+    description,
     type: 'note',
     order: {
-        input: 40,
-        output: 170,
+        input: ToolInputOrder.NOTES_SHRADO_ANGLE,
+        output: ToolOutputOrder.NOTES_SHRADO_ANGLE,
     },
     input: {
-        enabled: htmlInputCheck.checked,
+        enabled,
         params: {
             distance: defaultDistance,
             maxTime: defaultMaxTime,
@@ -90,14 +86,7 @@ const tool: Tool = {
 
 function adjustTimeHandler(bpm: beatmap.BeatPerMinute) {
     localBPM = bpm;
-    htmlInputMaxBeat.value = round(
-        localBPM.toBeatTime(tool.input.params.maxTime as number),
-        2
-    ).toString();
-}
-
-function inputCheckHandler(this: HTMLInputElement) {
-    tool.input.enabled = this.checked;
+    htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.maxTime as number), 2).toString();
 }
 
 function inputDistanceHandler(this: HTMLInputElement) {
@@ -109,10 +98,7 @@ function inputTimeHandler(this: HTMLInputElement) {
     tool.input.params.maxTime = Math.abs(parseFloat(this.value)) / 1000;
     this.value = round(tool.input.params.maxTime * 1000, 1).toString();
     if (localBPM) {
-        htmlInputMaxBeat.value = round(
-            localBPM.toBeatTime(tool.input.params.maxTime as number),
-            2
-        ).toString();
+        htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.maxTime as number), 2).toString();
     }
 }
 
@@ -130,9 +116,7 @@ function inputBeatHandler(this: HTMLInputElement) {
 function check(map: ToolArgs) {
     const { bpm } = map.settings;
     const { noteContainer } = map.difficulty!;
-    const { maxTime: temp, distance } = <{ maxTime: number; distance: number }>(
-        tool.input.params
-    );
+    const { maxTime: temp, distance } = <{ maxTime: number; distance: number }>tool.input.params;
     const maxTime = bpm.toBeatTime(temp) + 0.001;
 
     const lastNote: { [key: number]: NoteContainer } = {};
@@ -150,28 +134,16 @@ function check(map: ToolArgs) {
         }
         const note = noteContainer[i] as NoteContainerNote;
         if (lastNote[note.data.color]) {
-            if (
-                swing.next(
-                    note,
-                    lastNote[note.data.color],
-                    bpm,
-                    swingNoteArray[note.data.color]
-                )
-            ) {
+            if (swing.next(note, lastNote[note.data.color], bpm, swingNoteArray[note.data.color])) {
                 // FIXME: maybe fix rotation or something
                 if (startNoteDot[note.data.color]) {
                     startNoteDot[note.data.color] = null;
                     lastNoteDirection[note.data.color] =
-                        beatmap.NoteFlipDirection[lastNoteDirection[note.data.color]] ??
-                        8;
+                        beatmap.NoteFlipDirection[lastNoteDirection[note.data.color]] ?? 8;
                 }
                 if (
                     note.data.getDistance(lastNote[note.data.color].data) >= distance &&
-                    checkShrAngle(
-                        note.data.direction,
-                        lastNoteDirection[note.data.color],
-                        note.data.color
-                    ) &&
+                    checkShrAngle(note.data.direction, lastNoteDirection[note.data.color], note.data.color) &&
                     note.data.time - lastNote[note.data.color].data.time <= maxTime
                 ) {
                     arr.push(note);
@@ -186,11 +158,7 @@ function check(map: ToolArgs) {
                 if (
                     startNoteDot[note.data.color] &&
                     note.data.getDistance(lastNote[note.data.color].data) >= distance &&
-                    checkShrAngle(
-                        note.data.direction,
-                        lastNoteDirection[note.data.color],
-                        note.data.color
-                    ) &&
+                    checkShrAngle(note.data.direction, lastNoteDirection[note.data.color], note.data.color) &&
                     note.data.time - lastNote[note.data.color].data.time <= maxTime
                 ) {
                     arr.push(startNoteDot[note.data.color]!);
@@ -213,18 +181,11 @@ function check(map: ToolArgs) {
         });
 }
 
-function checkShrAngle(
-    currCutDirection: number,
-    prevCutDirection: number,
-    type: number
-) {
+function checkShrAngle(currCutDirection: number, prevCutDirection: number, type: number) {
     if (currCutDirection === 8 || prevCutDirection === 8) {
         return false;
     }
-    if (
-        (type === 0 ? prevCutDirection === 7 : prevCutDirection === 6) &&
-        currCutDirection === 0
-    ) {
+    if ((type === 0 ? prevCutDirection === 7 : prevCutDirection === 6) && currCutDirection === 0) {
         return true;
     }
     return false;
@@ -238,11 +199,7 @@ function run(map: ToolArgs) {
     const result = check(map);
 
     if (result.length) {
-        const htmlResult = document.createElement('div');
-        htmlResult.innerHTML = `<b>shrado angle [${result.length}]:</b> ${result
-            .map((n) => round(map.settings.bpm.adjustTime(n), 3))
-            .join(', ')}`;
-        tool.output.html = htmlResult;
+        tool.output.html = printResultTime('Shrado angle', result, map.settings.bpm);
     } else {
         tool.output.html = null;
     }

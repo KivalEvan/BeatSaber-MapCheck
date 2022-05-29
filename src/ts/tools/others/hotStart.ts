@@ -1,6 +1,10 @@
-import { Tool, ToolArgs } from '../../types/mapcheck';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import { round } from '../../utils';
+import { printResult } from '../helpers';
 
+const name = 'Hot Start';
+const description = 'Check for first interactive object starting at minimum 1.5s.';
+const enabled = true;
 const defaultTime = 1.5;
 
 const htmlContainer = document.createElement('div');
@@ -21,15 +25,15 @@ htmlContainer.appendChild(htmlLabelTime);
 htmlContainer.appendChild(htmlInputTime);
 
 const tool: Tool = {
-    name: 'Hot Start',
-    description: 'Placeholder',
+    name,
+    description,
     type: 'other',
     order: {
-        input: 0,
-        output: 0,
+        input: ToolInputOrder.OTHERS_HOT_START,
+        output: ToolOutputOrder.OTHERS_HOT_START,
     },
     input: {
-        enabled: true,
+        enabled,
         params: {
             time: defaultTime,
         },
@@ -52,14 +56,10 @@ function run(map: ToolArgs) {
         return;
     }
     const { time } = <{ time: number }>tool.input.params;
-    const result = map.settings.bpm.toRealTime(
-        map.difficulty.data.getFirstInteractiveTime()
-    );
+    const result = map.settings.bpm.toRealTime(map.difficulty.data.getFirstInteractiveTime());
 
     if (result < time) {
-        const htmlResult = document.createElement('div');
-        htmlResult.innerHTML = `<b>Hot start:</b> ${round(result, 2)}s`;
-        tool.output.html = htmlResult;
+        tool.output.html = printResult('Hot start', `${round(result, 2)}s`);
     } else {
         tool.output.html = null;
     }

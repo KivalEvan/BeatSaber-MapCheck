@@ -1,7 +1,7 @@
 /** Also known as lane count. */
 export const LINE_COUNT = 4;
 
-export enum NoteCutDirection {
+export const enum NoteCutDirection {
     UP,
     DOWN,
     LEFT,
@@ -26,29 +26,29 @@ export enum NoteCutDirection {
  * 8 -> 0
  * ```
  */
-export const NoteCutAngle: Readonly<Record<number, number>> = {
-    0: 180,
-    1: 0,
-    2: 270,
-    3: 90,
-    4: 225,
-    5: 135,
-    6: 315,
-    7: 45,
-    8: 0,
-};
+export const NoteCutAngle: { [key: number]: number } = {
+    [NoteCutDirection.UP]: 180,
+    [NoteCutDirection.DOWN]: 0,
+    [NoteCutDirection.LEFT]: 270,
+    [NoteCutDirection.RIGHT]: 90,
+    [NoteCutDirection.UP_LEFT]: 225,
+    [NoteCutDirection.UP_RIGHT]: 135,
+    [NoteCutDirection.DOWN_LEFT]: 315,
+    [NoteCutDirection.DOWN_RIGHT]: 45,
+    [NoteCutDirection.ANY]: 0,
+} as const;
 
-export const NoteFlipDirection: Readonly<Record<number, NoteCutDirection>> = {
-    0: 1,
-    1: 0,
-    2: 3,
-    3: 2,
-    4: 7,
-    5: 6,
-    6: 5,
-    7: 4,
-    8: 8,
-};
+export const NoteFlipDirection: { [key: number]: NoteCutDirection } = {
+    [NoteCutDirection.UP]: NoteCutDirection.DOWN,
+    [NoteCutDirection.DOWN]: NoteCutDirection.UP,
+    [NoteCutDirection.LEFT]: NoteCutDirection.RIGHT,
+    [NoteCutDirection.RIGHT]: NoteCutDirection.LEFT,
+    [NoteCutDirection.UP_LEFT]: NoteCutDirection.DOWN_RIGHT,
+    [NoteCutDirection.UP_RIGHT]: NoteCutDirection.DOWN_LEFT,
+    [NoteCutDirection.DOWN_LEFT]: NoteCutDirection.UP_RIGHT,
+    [NoteCutDirection.DOWN_RIGHT]: NoteCutDirection.UP_LEFT,
+    [NoteCutDirection.ANY]: NoteCutDirection.ANY,
+} as const;
 
 /** Array index mapped to tuple of `_lineIndex` and `_lineLayer` corresponding to the `_cutDirection`.
  * ```ts
@@ -63,19 +63,19 @@ export const NoteFlipDirection: Readonly<Record<number, NoteCutDirection>> = {
  * 8 -> [0, 0]
  * ```
  */
-export const NoteCutDirectionSpace: Readonly<Record<number, [number, number]>> = {
-    0: [0, 1],
-    1: [0, -1],
-    2: [-1, 0],
-    3: [1, 0],
-    4: [-1, 1],
-    5: [1, 1],
-    6: [-1, -1],
-    7: [1, -1],
-    8: [0, 0],
-};
+export const NoteCutDirectionSpace: { [key: number]: Readonly<[number, number]> } = {
+    [NoteCutDirection.UP]: [0, 1],
+    [NoteCutDirection.DOWN]: [0, -1],
+    [NoteCutDirection.LEFT]: [-1, 0],
+    [NoteCutDirection.RIGHT]: [1, 0],
+    [NoteCutDirection.UP_LEFT]: [-1, 1],
+    [NoteCutDirection.UP_RIGHT]: [1, 1],
+    [NoteCutDirection.DOWN_LEFT]: [-1, -1],
+    [NoteCutDirection.DOWN_RIGHT]: [1, -1],
+    [NoteCutDirection.ANY]: [0, 0],
+} as const;
 
-export enum BasicEventLightValue {
+export const enum BasicEventLightValue {
     OFF,
     BLUE_ON,
     BLUE_FLASH,
@@ -87,7 +87,7 @@ export enum BasicEventLightValue {
     RED_TRANSITION,
 }
 
-export enum BasicEventType {
+export const enum BasicEventType {
     BACK_LASERS,
     RING_LIGHTS,
     LEFT_LASERS,
@@ -115,7 +115,7 @@ export enum BasicEventType {
     BPM_CHANGE = 100,
 }
 
-export const EventLaneRotation: { [key: number]: number } = {
+export const EventLaneRotationValue: { [key: number]: number } = {
     0: -60,
     1: -45,
     2: -30,
@@ -124,9 +124,9 @@ export const EventLaneRotation: { [key: number]: number } = {
     5: 30,
     6: 45,
     7: 60,
-};
+} as const;
 
-export enum EaseType {
+export const enum EaseType {
     NONE = -1,
     LINEAR,
     IN_QUAD,
@@ -135,30 +135,30 @@ export enum EaseType {
 }
 
 /** Used for lane rotation event. */
-export enum ExecutionTime {
+export const enum ExecutionTime {
     EARLY,
     LATE,
 }
 
-export enum TransitionType {
+export const enum TransitionType {
     INSTANT,
     INTERPOLATE,
     EXTEND,
 }
 
 /** Used for light rotation event. */
-export enum Axis {
+export const enum Axis {
     X,
     Y,
 }
 
-export enum LightRotationDirection {
+export const enum LightRotationDirection {
     AUTOMATIC,
     CLOCKWISE,
     COUNTER_CLOCKWISE,
 }
 
-export enum SliderMidAnchorMode {
+export const enum SliderMidAnchorMode {
     STRAIGHT,
     CLOCKWISE,
     COUNTER_CLOCKWISE,

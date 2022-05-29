@@ -3,11 +3,7 @@ import { IEvent } from '../../types/beatmap/v2/event';
 import { ObjectToReturn } from '../../types/utils';
 import { BeatmapObject } from './object';
 import { deepCopy } from '../../utils/misc';
-import {
-    IChromaEventLaser,
-    IChromaEventLight,
-    IChromaEventRing,
-} from '../../types/beatmap/v2/chroma';
+import { IChromaEventLaser, IChromaEventLight, IChromaEventRing } from '../../types/beatmap/v2/chroma';
 import { INEEvent } from '../../types/beatmap/v2/noodleExtensions';
 
 /** Basic event beatmap object. */
@@ -39,8 +35,8 @@ export class Event extends BeatmapObject<IEvent> {
                     _value: ev._value ?? Event.default._value,
                     _floatValue: ev._floatValue ?? Event.default._floatValue,
                     _customData: ev._customData ?? Event.default._customData(),
-                })
-            )
+                }),
+            ),
         );
         if (result.length === 1) {
             return result[0];
@@ -258,9 +254,7 @@ export class Event extends BeatmapObject<IEvent> {
      * ```
      */
     isExtraEvent = (): boolean => {
-        return (
-            this.type === 16 || this.type === 17 || this.type === 18 || this.type === 19
-        );
+        return this.type === 16 || this.type === 17 || this.type === 18 || this.type === 19;
     };
 
     /** Check if  this is a special event.
@@ -269,9 +263,7 @@ export class Event extends BeatmapObject<IEvent> {
      * ```
      */
     isSpecialEvent = (): boolean => {
-        return (
-            this.type === 40 || this.type === 41 || this.type === 42 || this.type === 43
-        );
+        return this.type === 40 || this.type === 41 || this.type === 42 || this.type === 43;
     };
 
     /** Check if  this is a BPM change event.
@@ -289,12 +281,7 @@ export class Event extends BeatmapObject<IEvent> {
      * ```
      */
     isLightingEvent = (): boolean => {
-        return (
-            this.isLightEvent() ||
-            this.isRingEvent() ||
-            this.isLaserRotationEvent() ||
-            this.isExtraEvent()
-        );
+        return this.isLightEvent() || this.isRingEvent() || this.isLaserRotationEvent() || this.isExtraEvent();
     };
 
     /** Check if event has Chroma properties.
@@ -356,9 +343,7 @@ export class Event extends BeatmapObject<IEvent> {
      * ```
      */
     hasNoodleExtensions = (): boolean => {
-        return (
-            this.isLaneRotationEvent() && typeof this.customData?._rotation === 'number'
-        );
+        return this.isLaneRotationEvent() && typeof this.customData?._rotation === 'number';
     };
 
     /** Check if event has Mapping Extensions properties.

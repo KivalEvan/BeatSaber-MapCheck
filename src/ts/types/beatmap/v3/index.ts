@@ -25,7 +25,6 @@ export * from './lightRotationEventBox';
 export * from './lightRotationEventBoxGroup';
 export * from './noodleExtensions';
 export * from './obstacle';
-// export * from './pointDefinition';
 export * from './rotationEvent';
 export * from './slider';
 export * from './waypoint';

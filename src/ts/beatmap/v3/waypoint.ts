@@ -33,8 +33,8 @@ export class Waypoint extends BaseObject<IWaypoint> {
                     y: w.y ?? Waypoint.default.y,
                     d: w.d ?? Waypoint.default.d,
                     customData: w.customData ?? Waypoint.default.customData(),
-                })
-            )
+                }),
+            ),
         );
         if (result.length === 1) {
             return result[0];

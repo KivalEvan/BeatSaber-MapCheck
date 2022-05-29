@@ -1,7 +1,7 @@
 import { EventList } from '../../beatmap/shared/environment';
 import { BasicEvent } from '../../beatmap/v3/basicEvent';
 import { EnvironmentAllName } from '../../types/beatmap/shared/environment';
-import { IEventCount } from '../../types/mapcheck/analyzers/stats';
+import { ICountEvent } from '../../types/mapcheck/analyzers/stats';
 
 /** Count number of type of events with their properties in given array and return a event count object.
  * ```ts
@@ -11,11 +11,10 @@ import { IEventCount } from '../../types/mapcheck/analyzers/stats';
  */
 export const countEvent = (
     events: BasicEvent[],
-    environment: EnvironmentAllName = 'DefaultEnvironment'
-): IEventCount => {
-    const commonEvent =
-        EventList[environment]?.[0] ?? EventList['DefaultEnvironment'][0];
-    const eventCount: IEventCount = {};
+    environment: EnvironmentAllName = 'DefaultEnvironment',
+): ICountEvent => {
+    const commonEvent = EventList[environment]?.[0] ?? EventList['DefaultEnvironment'][0];
+    const eventCount: ICountEvent = {};
     for (let i = commonEvent.length - 1; i >= 0; i--) {
         eventCount[commonEvent[i]] = {
             total: 0,

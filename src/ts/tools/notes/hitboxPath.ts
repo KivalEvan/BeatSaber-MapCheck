@@ -1,23 +1,25 @@
-import { Tool, ToolArgs } from '../../types/mapcheck';
-import { round } from '../../utils';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import * as beatmap from '../../beatmap';
 import { isIntersect } from '../../analyzers/placement/note';
-import UICheckbox from '../../ui/checkbox';
+import UICheckbox from '../../ui/helpers/checkbox';
+import { printResultTime } from '../helpers';
 
 const name = 'Hitbox Path';
+const description = 'Check for overlapping pre-swing note hitbox at same time.';
+const enabled = true;
 
 const tool: Tool = {
     name,
-    description: 'Placeholder',
+    description,
     type: 'note',
     order: {
-        input: 74,
-        output: 190,
+        input: ToolInputOrder.NOTES_HITBOX_PATH,
+        output: ToolOutputOrder.NOTES_HITBOX_PATH,
     },
     input: {
-        enabled: true,
+        enabled,
         params: {},
-        html: UICheckbox.create(name, name, true, function (this: HTMLInputElement) {
+        html: UICheckbox.create(name, description, enabled, function (this: HTMLInputElement) {
             tool.input.enabled = this.checked;
         }),
     },
@@ -39,18 +41,14 @@ function check(map: ToolArgs) {
             continue;
         }
         for (let j = i + 1; j < len; j++) {
-            if (
-                bpm.toRealTime(colorNotes[j].time) >
-                bpm.toRealTime(colorNotes[i].time) + 0.01
-            ) {
+            if (bpm.toRealTime(colorNotes[j].time) > bpm.toRealTime(colorNotes[i].time) + 0.01) {
                 break;
             }
             if (colorNotes[i].color === colorNotes[j].color) {
                 continue;
             }
             if (
-                ((colorNotes[i].isHorizontal(colorNotes[j]) ||
-                    colorNotes[i].isVertical(colorNotes[j])) &&
+                ((colorNotes[i].isHorizontal(colorNotes[j]) || colorNotes[i].isVertical(colorNotes[j])) &&
                     isIntersect(colorNotes[i], colorNotes[j], [
                         [45, 1],
                         [15, 2],
@@ -81,11 +79,7 @@ function run(map: ToolArgs) {
     const result = check(map);
 
     if (result.length) {
-        const htmlResult = document.createElement('div');
-        htmlResult.innerHTML = `<b>Hitbox path [${result.length}]:</b> ${result
-            .map((n) => round(map.settings.bpm.adjustTime(n), 3))
-            .join(', ')}`;
-        tool.output.html = htmlResult;
+        tool.output.html = printResultTime('Hitbox path', result, map.settings.bpm);
     } else {
         tool.output.html = null;
     }

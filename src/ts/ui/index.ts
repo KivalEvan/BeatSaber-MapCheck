@@ -1,11 +1,11 @@
 // ui is massive fuckin w
-export { default as accordion } from './accordion';
+export { default as accordion } from './helpers/accordion';
 export { default as header } from './header';
 export { default as info } from './information';
 export { default as input } from './input';
 export * as intro from './intro';
 export { default as loading } from './loading';
-export { default as select } from './select';
+export { default as select } from './helpers/select';
 export { default as settings } from './settings';
 export { default as stats } from './stats';
 export { default as theme } from './theme';

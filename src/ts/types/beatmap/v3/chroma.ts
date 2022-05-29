@@ -1,4 +1,4 @@
-import { PercentPointDefinition, Vector3, ColorPointDefinition } from '../shared/heck';
+import { ColorPointDefinition, PercentPointDefinition, Vector3 } from '../shared/heck';
 import { Easings } from '../shared/easings';
 import { ColorArray } from '../shared/colors';
 import { ICustomDataBase } from '../shared/customData';

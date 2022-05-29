@@ -35,23 +35,18 @@ export class Slider extends Serializable<ISlider> {
                     _headTime: s._headTime ?? s._tailTime ?? Slider.default._headTime,
                     _headLineIndex: s._headLineIndex ?? Slider.default._headLineIndex,
                     _headLineLayer: s._headLineLayer ?? Slider.default._headLineLayer,
-                    _headCutDirection:
-                        s._headCutDirection ?? Slider.default._headCutDirection,
+                    _headCutDirection: s._headCutDirection ?? Slider.default._headCutDirection,
                     _headControlPointlengthMultiplier:
-                        s._headControlPointlengthMultiplier ??
-                        Slider.default._headControlPointlengthMultiplier,
+                        s._headControlPointlengthMultiplier ?? Slider.default._headControlPointlengthMultiplier,
                     _tailTime: s._tailTime ?? s._headTime ?? Slider.default._tailTime,
                     _tailLineIndex: s._tailLineIndex ?? Slider.default._tailLineIndex,
                     _tailLineLayer: s._tailLineLayer ?? Slider.default._tailLineLayer,
-                    _tailCutDirection:
-                        s._tailCutDirection ?? Slider.default._tailCutDirection,
+                    _tailCutDirection: s._tailCutDirection ?? Slider.default._tailCutDirection,
                     _tailControlPointLengthMultiplier:
-                        s._tailControlPointLengthMultiplier ??
-                        Slider.default._tailControlPointLengthMultiplier,
-                    _sliderMidAnchorMode:
-                        s._sliderMidAnchorMode ?? Slider.default._sliderMidAnchorMode,
-                })
-            )
+                        s._tailControlPointLengthMultiplier ?? Slider.default._tailControlPointLengthMultiplier,
+                    _sliderMidAnchorMode: s._sliderMidAnchorMode ?? Slider.default._sliderMidAnchorMode,
+                }),
+            ),
         );
         if (result.length === 1) {
             return result[0];
@@ -65,14 +60,12 @@ export class Slider extends Serializable<ISlider> {
             _headLineIndex: Slider.default._headLineIndex,
             _headLineLayer: Slider.default._headLineLayer,
             _headCutDirection: Slider.default._headCutDirection,
-            _headControlPointlengthMultiplier:
-                Slider.default._headControlPointlengthMultiplier,
+            _headControlPointlengthMultiplier: Slider.default._headControlPointlengthMultiplier,
             _tailTime: Slider.default._tailTime,
             _tailLineIndex: Slider.default._tailLineIndex,
             _tailLineLayer: Slider.default._tailLineLayer,
             _tailCutDirection: Slider.default._tailCutDirection,
-            _tailControlPointLengthMultiplier:
-                Slider.default._tailControlPointLengthMultiplier,
+            _tailControlPointLengthMultiplier: Slider.default._tailControlPointLengthMultiplier,
             _sliderMidAnchorMode: Slider.default._sliderMidAnchorMode,
         });
     }

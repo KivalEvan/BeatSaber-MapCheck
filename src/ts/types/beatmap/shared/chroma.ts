@@ -2,12 +2,7 @@ export type LookupMethod = 'Regex' | 'Exact' | 'Contains' | 'StartsWith' | 'Ends
 
 export const chromaName = 'Chroma';
 
-/** Chroma interface for Difficulty Info Custom Data.
- * ```ts
- * _chroma?: {}
- * _environmentalRemoval?: string[]
- * ```
- */
+/** Chroma interface for Difficulty Info Custom Data. */
 export interface IChromaInfoCustomData {
     _chroma?: {
         _disableChromaEvents?: boolean;

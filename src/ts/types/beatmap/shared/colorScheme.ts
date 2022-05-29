@@ -1,16 +1,6 @@
 import { ColorObject } from './colors';
 
-/** Color Scheme interface for difficulty info custom data.
- * ```ts
- * _colorLeft?: { r: float, g: float, b: float },
- * _colorRight?: { r: float, g: float, b: float },
- * _envColorLeft?: { r: float, g: float, b: float },
- * _envColorRight?: { r: float, g: float, b: float },
- * _envColorLeftBoost?: { r: float, g: float, b: float },
- * _envColorRightBoost?: { r: float, g: float, b: float },
- * _obstacleColor?: { r: float, g: float, b: float }
- * ```
- */
+/** Color Scheme interface for difficulty info custom data. */
 export interface IColorScheme {
     _colorLeft?: Omit<ColorObject, 'a'>;
     _colorRight?: Omit<ColorObject, 'a'>;

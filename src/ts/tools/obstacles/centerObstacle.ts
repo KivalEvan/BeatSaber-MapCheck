@@ -1,25 +1,20 @@
-import { Tool, ToolArgs } from '../../types/mapcheck';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import { round } from '../../utils';
 import * as beatmap from '../../beatmap';
+import { printResultTime } from '../helpers';
+import UICheckbox from '../../ui/helpers/checkbox';
 
+const name = '2-wide Center Obstacle';
+const description = 'Look for 2-wide center obstacle including obstacles that are relatively close to each other.';
+const enabled = true;
 const defaultMaxTime = 0.25;
 let localBPM!: beatmap.BeatPerMinute;
 
 const htmlContainer = document.createElement('div');
-const htmlInputCheck = document.createElement('input');
-const htmlLabelCheck = document.createElement('label');
 const htmlInputMaxTime = document.createElement('input');
 const htmlLabelMaxTime = document.createElement('label');
 const htmlInputMaxBeat = document.createElement('input');
 const htmlLabelMaxBeat = document.createElement('label');
-
-htmlLabelCheck.textContent = ' 2-wide center obstacle';
-htmlLabelCheck.htmlFor = 'input__tools-center-obstacle-check';
-htmlInputCheck.id = 'input__tools-center-obstacle-check';
-htmlInputCheck.className = 'input-toggle';
-htmlInputCheck.type = 'checkbox';
-htmlInputCheck.checked = true;
-htmlInputCheck.addEventListener('change', inputCheckHandler);
 
 htmlLabelMaxTime.textContent = 'recovery time (ms): ';
 htmlLabelMaxTime.htmlFor = 'input__tools-2wide-wall-time';
@@ -39,24 +34,26 @@ htmlInputMaxBeat.min = '0';
 htmlInputMaxBeat.step = '0.1';
 htmlInputMaxBeat.addEventListener('change', inputBeatHandler);
 
-htmlContainer.appendChild(htmlInputCheck);
-htmlContainer.appendChild(htmlLabelCheck);
-htmlContainer.appendChild(document.createElement('br'));
+htmlContainer.appendChild(
+    UICheckbox.create(name, description, enabled, function (this: HTMLInputElement) {
+        tool.input.enabled = this.checked;
+    }),
+);
 htmlContainer.appendChild(htmlLabelMaxTime);
 htmlContainer.appendChild(htmlInputMaxTime);
 htmlContainer.appendChild(htmlLabelMaxBeat);
 htmlContainer.appendChild(htmlInputMaxBeat);
 
 const tool: Tool = {
-    name: '2-wide Center Obstacle',
-    description: 'Placeholder',
+    name,
+    description,
     type: 'obstacle',
     order: {
-        input: 10,
-        output: 60,
+        input: ToolInputOrder.OBSTACLES_CENTER,
+        output: ToolOutputOrder.OBSTACLES_CENTER,
     },
     input: {
-        enabled: htmlInputCheck.checked,
+        enabled,
         params: {
             recovery: defaultMaxTime,
         },
@@ -71,24 +68,14 @@ const tool: Tool = {
 
 function adjustTimeHandler(bpm: beatmap.BeatPerMinute) {
     localBPM = bpm;
-    htmlInputMaxBeat.value = round(
-        localBPM.toBeatTime(tool.input.params.recovery as number),
-        2
-    ).toString();
-}
-
-function inputCheckHandler(this: HTMLInputElement) {
-    tool.input.enabled = this.checked;
+    htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.recovery as number), 2).toString();
 }
 
 function inputTimeHandler(this: HTMLInputElement) {
     tool.input.params.recovery = Math.abs(parseFloat(this.value)) / 1000;
     this.value = round(tool.input.params.recovery * 1000, 1).toString();
     if (localBPM) {
-        htmlInputMaxBeat.value = round(
-            localBPM.toBeatTime(tool.input.params.recovery as number),
-            2
-        ).toString();
+        htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.recovery as number), 2).toString();
     }
 }
 
@@ -125,13 +112,9 @@ function check(map: ToolArgs) {
                 if (o.posX === 0) {
                     if (o.isLonger(obstacleLeftFull)) {
                         if (
-                            bpm.toRealTime(o.time) >
-                                bpm.toRealTime(obstacleRightFull.time) - recovery &&
+                            bpm.toRealTime(o.time) > bpm.toRealTime(obstacleRightFull.time) - recovery &&
                             bpm.toRealTime(o.time) <
-                                bpm.toRealTime(
-                                    obstacleRightFull.time + obstacleRightFull.duration
-                                ) +
-                                    recovery
+                                bpm.toRealTime(obstacleRightFull.time + obstacleRightFull.duration) + recovery
                         ) {
                             arr.push(o);
                         }
@@ -150,13 +133,9 @@ function check(map: ToolArgs) {
                 if (o.posX === 2) {
                     if (o.isLonger(obstacleRightFull)) {
                         if (
-                            bpm.toRealTime(o.time) >
-                                bpm.toRealTime(obstacleLeftFull.time) - recovery &&
+                            bpm.toRealTime(o.time) > bpm.toRealTime(obstacleLeftFull.time) - recovery &&
                             bpm.toRealTime(o.time) <
-                                bpm.toRealTime(
-                                    obstacleLeftFull.time + obstacleLeftFull.duration
-                                ) +
-                                    recovery
+                                bpm.toRealTime(obstacleLeftFull.time + obstacleLeftFull.duration) + recovery
                         ) {
                             arr.push(o);
                         }
@@ -168,13 +147,9 @@ function check(map: ToolArgs) {
                 if (o.posX === 1) {
                     if (o.isLonger(obstacleLeftFull)) {
                         if (
-                            bpm.toRealTime(o.time) >
-                                bpm.toRealTime(obstacleRightFull.time) - recovery &&
+                            bpm.toRealTime(o.time) > bpm.toRealTime(obstacleRightFull.time) - recovery &&
                             bpm.toRealTime(o.time) <
-                                bpm.toRealTime(
-                                    obstacleRightFull.time + obstacleRightFull.duration
-                                ) +
-                                    recovery
+                                bpm.toRealTime(obstacleRightFull.time + obstacleRightFull.duration) + recovery
                         ) {
                             arr.push(o);
                         }
@@ -184,13 +159,9 @@ function check(map: ToolArgs) {
                 if (o.posX === 2) {
                     if (o.isLonger(obstacleRightFull)) {
                         if (
-                            bpm.toRealTime(o.time) >
-                                bpm.toRealTime(obstacleLeftFull.time) - recovery &&
+                            bpm.toRealTime(o.time) > bpm.toRealTime(obstacleLeftFull.time) - recovery &&
                             bpm.toRealTime(o.time) <
-                                bpm.toRealTime(
-                                    obstacleLeftFull.time + obstacleLeftFull.duration
-                                ) +
-                                    recovery
+                                bpm.toRealTime(obstacleLeftFull.time + obstacleLeftFull.duration) + recovery
                         ) {
                             arr.push(o);
                         }
@@ -216,13 +187,11 @@ function run(map: ToolArgs) {
     const { recovery } = <{ recovery: number }>tool.input.params;
 
     if (result.length) {
-        const htmlResult = document.createElement('div');
-        htmlResult.innerHTML = `<b>2-wide center obstacle (<${round(
-            recovery * 1000
-        )}ms) [${result.length}]:</b> ${result
-            .map((n) => round(map.settings.bpm.adjustTime(n), 3))
-            .join(', ')}`;
-        tool.output.html = htmlResult;
+        tool.output.html = printResultTime(
+            `2-wide center obstacle (<${round(recovery * 1000)}ms)`,
+            result,
+            map.settings.bpm,
+        );
     } else {
         tool.output.html = null;
     }

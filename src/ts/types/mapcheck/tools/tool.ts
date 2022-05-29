@@ -1,6 +1,5 @@
 import { BeatPerMinute, NoteJumpSpeed } from '../../../beatmap';
 import { IInfoData } from '../../beatmap';
-import { IAnalysis } from './analysis';
 import { IBeatmapItem } from './beatmapItem';
 import { ToolInputOrder, ToolOutputOrder } from './order';
 
@@ -12,11 +11,6 @@ export interface IBeatmapSettings {
 }
 
 export type ToolType = 'note' | 'event' | 'obstacle' | 'other' | 'general';
-export enum ToolLevelEmoji {
-    'info' = '❓',
-    'warn' = '❗',
-    'error' = '❌',
-}
 
 export interface ToolInputParams {
     [key: string]: boolean | string | number | number[];

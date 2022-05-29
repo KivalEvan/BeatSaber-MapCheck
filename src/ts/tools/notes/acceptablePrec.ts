@@ -1,11 +1,15 @@
-import { IBeatmapItem, IBeatmapSettings, Tool, ToolArgs } from '../../types/mapcheck';
-import { round } from '../../utils';
+import { IBeatmapItem, IBeatmapSettings, Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
+import { printResultTime } from '../helpers';
 
 const defaultPrec = [8, 6];
 
 const htmlContainer = document.createElement('div');
 const htmlInputPrec = document.createElement('input');
 const htmlLabelPrec = document.createElement('label');
+
+const name = 'Acceptable Beat Precision';
+const description = 'Validate note timing placement is within timing precision.';
+const enabled = true;
 
 htmlLabelPrec.textContent = 'Acceptable beat precision: ';
 htmlLabelPrec.htmlFor = 'input__tools-prec';
@@ -19,15 +23,15 @@ htmlContainer.appendChild(htmlLabelPrec);
 htmlContainer.appendChild(htmlInputPrec);
 
 const tool: Tool = {
-    name: 'Acceptable Beat Precision',
-    description: 'Placeholder',
+    name,
+    description,
     type: 'note',
     order: {
-        input: 10,
-        output: 110,
+        input: ToolInputOrder.NOTES_ACCEPTABLE_PRECISION,
+        output: ToolOutputOrder.NOTES_ACCEPTABLE_PRECISION,
     },
     input: {
-        enabled: true,
+        enabled,
         params: {
             prec: [...defaultPrec],
         },
@@ -80,11 +84,7 @@ function run(map: ToolArgs) {
     const result = check(map.settings, map.difficulty);
 
     if (result.length) {
-        const htmlResult = document.createElement('div');
-        htmlResult.innerHTML = `<b>Off-beat precision [${result.length}]:</b> ${result
-            .map((n) => round(map.settings.bpm.adjustTime(n), 3))
-            .join(', ')}`;
-        tool.output.html = htmlResult;
+        tool.output.html = printResultTime('Off-beat precision', result, map.settings.bpm);
     } else {
         tool.output.html = null;
     }

@@ -1,14 +1,8 @@
-import {
-    ColorSchemeList,
-    IColorScheme,
-    IEnvironmentScheme,
-} from '../../types/beatmap/shared/colorScheme';
+import { ColorSchemeList, IColorScheme, IEnvironmentScheme } from '../../types/beatmap/shared/colorScheme';
 import { EnvironmentAllName } from '../../types/beatmap/shared/environment';
 
 /** Record of Environment Color to Color Scheme. */
-export const EnvironmentSchemeName: Readonly<
-    Record<EnvironmentAllName, ColorSchemeList>
-> = {
+export const EnvironmentSchemeName: Readonly<Record<EnvironmentAllName, ColorSchemeList>> = {
     DefaultEnvironment: 'The First',
     OriginsEnvironment: 'Origins',
     TriangleEnvironment: 'The First',

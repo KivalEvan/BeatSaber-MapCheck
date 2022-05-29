@@ -3,16 +3,10 @@ import { deepCopy } from '../../utils/misc';
 import { Serializable } from '../shared/serializable';
 import { EventBoxGroup } from './eventBoxGroup';
 
-export abstract class EventBoxGroupTemplate<
-    T,
-    U extends Serializable<T>
-> extends EventBoxGroup {
+export abstract class EventBoxGroupTemplate<T, U extends Serializable<T>> extends EventBoxGroup {
     private e: U[];
 
-    protected constructor(
-        eventBoxGroup: Required<IEventBoxGroupTemplate<T>>,
-        objects: U[]
-    ) {
+    protected constructor(eventBoxGroup: Required<IEventBoxGroupTemplate<T>>, objects: U[]) {
         super(eventBoxGroup);
         this.e = objects;
     }

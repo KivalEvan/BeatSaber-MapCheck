@@ -1,16 +1,7 @@
 import { ICustomDataObstacle } from './customData';
 import { IBaseObject } from './object';
 
-/** Beatmap object interface for Obstacle.
- * ```ts
- * _time: float,
- * _lineIndex: int,
- * _type: int,
- * _duration: float,
- * _width: int,
- * _customData?: JSON
- * ```
- */
+/** Beatmap object interface for Obstacle. */
 export interface IObstacle extends IBaseObject {
     /** Obstacle placement on column.
      * ```ts

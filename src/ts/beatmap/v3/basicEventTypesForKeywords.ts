@@ -11,19 +11,13 @@ export class BasicEventTypesForKeywords extends Serializable<IBasicEventTypesFor
         e: () => [],
     };
 
-    private constructor(
-        basicEventTypesForKeywords: Required<IBasicEventTypesForKeywords>
-    ) {
+    private constructor(basicEventTypesForKeywords: Required<IBasicEventTypesForKeywords>) {
         super(basicEventTypesForKeywords);
     }
 
     static create(): BasicEventTypesForKeywords;
-    static create(
-        basicEventTypesForKeywords: Partial<IBasicEventTypesForKeywords>
-    ): BasicEventTypesForKeywords;
-    static create(
-        ...basicEventTypesForKeywords: Partial<IBasicEventTypesForKeywords>[]
-    ): BasicEventTypesForKeywords[];
+    static create(basicEventTypesForKeywords: Partial<IBasicEventTypesForKeywords>): BasicEventTypesForKeywords;
+    static create(...basicEventTypesForKeywords: Partial<IBasicEventTypesForKeywords>[]): BasicEventTypesForKeywords[];
     static create(
         ...basicEventTypesForKeywords: Partial<IBasicEventTypesForKeywords>[]
     ): BasicEventTypesForKeywords | BasicEventTypesForKeywords[] {
@@ -33,8 +27,8 @@ export class BasicEventTypesForKeywords extends Serializable<IBasicEventTypesFor
                 new BasicEventTypesForKeywords({
                     k: betfk.k ?? BasicEventTypesForKeywords.default.k,
                     e: betfk.e ?? BasicEventTypesForKeywords.default.e(),
-                })
-            )
+                }),
+            ),
         );
         if (result.length === 1) {
             return result[0];

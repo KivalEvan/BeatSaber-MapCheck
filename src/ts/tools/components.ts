@@ -13,9 +13,7 @@ export default class AnalysisComponent {
     };
 
     private static getObstacle = (): Tool[] => {
-        return Object.keys(obstacles).map(
-            (key) => obstacles[key as keyof typeof obstacles]
-        );
+        return Object.keys(obstacles).map((key) => obstacles[key as keyof typeof obstacles]);
     };
 
     private static getEvent = (): Tool[] => {
@@ -31,21 +29,10 @@ export default class AnalysisComponent {
     };
 
     static getDifficulty = (): Tool[] => {
-        return [
-            ...this.getNote(),
-            ...this.getObstacle(),
-            ...this.getEvent(),
-            ...this.getOther(),
-        ];
+        return [...this.getNote(), ...this.getObstacle(), ...this.getEvent(), ...this.getOther()];
     };
 
     static getAll = (): Tool[] => {
-        return [
-            ...this.getNote(),
-            ...this.getObstacle(),
-            ...this.getEvent(),
-            ...this.getOther(),
-            ...this.getGeneral(),
-        ];
+        return [...this.getNote(), ...this.getObstacle(), ...this.getEvent(), ...this.getOther(), ...this.getGeneral()];
     };
 }

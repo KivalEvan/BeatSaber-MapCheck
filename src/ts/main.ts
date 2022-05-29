@@ -83,12 +83,7 @@ export default async (type: LoadType) => {
         if (Settings.load.audio && audioFile) {
             let loaded = false;
             setTimeout(() => {
-                if (!loaded)
-                    UILoading.status(
-                        'info',
-                        'Loading audio... (this may take a while)',
-                        20.875
-                    );
+                if (!loaded) UILoading.status('info', 'Loading audio... (this may take a while)', 20.875);
             }, 10000);
             let arrayBuffer = await audioFile.async('arraybuffer');
             UIHeader.setAudio(arrayBuffer);

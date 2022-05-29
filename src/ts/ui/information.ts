@@ -1,17 +1,11 @@
 // may god help you maintain these
 import UIHeader from './header';
-import UIPanel from './panel';
+import UIPanel from './helpers/panel';
 import SavedData from '../savedData';
 import { removeOptions, round, toMMSS, toHHMMSS, rgbaToHex } from '../utils';
 import { IColorScheme, EnvironmentName, IInfoData } from '../types';
 import { IContributorB64, IBeatmapItem } from '../types/mapcheck';
-import {
-    BeatPerMinute,
-    ColorScheme,
-    ColorSchemeRename,
-    EnvironmentRename,
-    EnvironmentSchemeName,
-} from '../beatmap';
+import { BeatPerMinute, ColorScheme, ColorSchemeRename, EnvironmentRename, EnvironmentSchemeName } from '../beatmap';
 import { IBookmark, IEditor, IEditorInfo } from '../types/beatmap/shared';
 import { ChromaDataEnvAbbr, IChromaEnvironment } from '../types/beatmap/v3/chroma';
 import { IHeckPointDefinition } from '../types/beatmap/v3/heck';
@@ -22,40 +16,24 @@ const logPrefix = 'UI Info: ';
 const htmlInfoLevelAuthor: HTMLElement = document.querySelector('.info__level-author')!;
 const htmlInfoEnvironment: HTMLElement = document.querySelector('.info__environment')!;
 const htmlInfoEditors: HTMLElement = document.querySelector('.info__editors')!;
-const htmlInfoContributors: HTMLElement =
-    document.querySelector('.info__contributors')!;
-const htmlInfoContributorsSelect: HTMLSelectElement = document.querySelector(
-    '.info__contributors-select'
-)!;
-const htmlInfoContributorsImage: HTMLImageElement = document.querySelector(
-    '.info__contributors-image'
-)!;
-const htmlInfoContributorsName: HTMLElement = document.querySelector(
-    '.info__contributors-name'
-)!;
-const htmlInfoContributorsRole: HTMLElement = document.querySelector(
-    '.info__contributors-role'
-)!;
+const htmlInfoContributors: HTMLElement = document.querySelector('.info__contributors')!;
+const htmlInfoContributorsSelect: HTMLSelectElement = document.querySelector('.info__contributors-select')!;
+const htmlInfoContributorsImage: HTMLImageElement = document.querySelector('.info__contributors-image')!;
+const htmlInfoContributorsName: HTMLElement = document.querySelector('.info__contributors-name')!;
+const htmlInfoContributorsRole: HTMLElement = document.querySelector('.info__contributors-role')!;
 
 const htmlTableVersion: HTMLElement = document.querySelector('.info__version')!;
 const htmlTableTimeSpend: HTMLElement = document.querySelector('.info__time-spend')!;
-const htmlTableCustomColor: HTMLElement =
-    document.querySelector('.info__custom-color')!;
-const htmlTableRequirements: HTMLElement =
-    document.querySelector('.info__requirements')!;
+const htmlTableCustomColor: HTMLElement = document.querySelector('.info__custom-color')!;
+const htmlTableRequirements: HTMLElement = document.querySelector('.info__requirements')!;
 const htmlTableSuggestions: HTMLElement = document.querySelector('.info__suggestions')!;
 const htmlTableInformation: HTMLElement = document.querySelector('.info__information')!;
 const htmlTableWarnings: HTMLElement = document.querySelector('.info__warnings')!;
 const htmlTableBookmarks: HTMLElement = document.querySelector('.info__bookmarks')!;
 const htmlTableBPMChanges: HTMLElement = document.querySelector('.info__bpm-changes')!;
-const htmlTableEnvironmentEnhancement: HTMLElement = document.querySelector(
-    '.info__environment-enhancement'
-)!;
-const htmlTablePointDefinitions: HTMLElement = document.querySelector(
-    '.info__point-definitions'
-)!;
-const htmlTableCustomEvents: HTMLElement =
-    document.querySelector('.info__custom-events')!;
+const htmlTableEnvironmentEnhancement: HTMLElement = document.querySelector('.info__environment-enhancement')!;
+const htmlTablePointDefinitions: HTMLElement = document.querySelector('.info__point-definitions')!;
+const htmlTableCustomEvents: HTMLElement = document.querySelector('.info__custom-events')!;
 
 if (!htmlInfoLevelAuthor || !htmlInfoEnvironment || !htmlInfoEditors) {
     throw new Error(logPrefix + 'info component is missing part');
@@ -98,8 +76,7 @@ const setEnvironment = (str?: EnvironmentName): void => {
         htmlInfoEnvironment.textContent = '';
         return;
     }
-    htmlInfoEnvironment.textContent =
-        (EnvironmentRename[str] || 'Unknown') + ' Environment';
+    htmlInfoEnvironment.textContent = (EnvironmentRename[str] || 'Unknown') + ' Environment';
 };
 
 const setEditors = (obj?: IEditor): void => {
@@ -165,10 +142,7 @@ const hideTableRow = <T extends HTMLElement>(elem: T): void => {
     elem.classList.add('hidden');
 };
 
-const displayTableRow = <T extends HTMLElement>(
-    elem: T,
-    content: string | string[] | HTMLElement[]
-): void => {
+const displayTableRow = <T extends HTMLElement>(elem: T, content: string | string[] | HTMLElement[]): void => {
     const tableElem = elem.querySelector('.info__table-element');
     if (tableElem) {
         while (tableElem.firstChild) {
@@ -212,10 +186,7 @@ const setTimeSpend = (num?: number): void => {
     displayTableRow(htmlTableTimeSpend, toHHMMSS(num));
 };
 
-const setCustomColor = (
-    customColor?: IColorScheme,
-    environment?: EnvironmentName
-): void => {
+const setCustomColor = (customColor?: IColorScheme, environment?: EnvironmentName): void => {
     if (
         !customColor ||
         (!customColor._colorLeft &&
@@ -233,31 +204,13 @@ const setCustomColor = (
         environment = 'DefaultEnvironment';
     }
     let hexColor: { [key: string]: string | null } = {
-        _colorLeft:
-            rgbaToHex(ColorScheme[EnvironmentSchemeName[environment]]?._colorLeft) ||
-            null,
-        _colorRight:
-            rgbaToHex(ColorScheme[EnvironmentSchemeName[environment]]?._colorRight) ||
-            null,
-        _envColorLeft:
-            rgbaToHex(ColorScheme[EnvironmentSchemeName[environment]]?._envColorLeft) ||
-            null,
-        _envColorRight:
-            rgbaToHex(
-                ColorScheme[EnvironmentSchemeName[environment]]?._envColorRight
-            ) || null,
-        _envColorLeftBoost:
-            rgbaToHex(
-                ColorScheme[EnvironmentSchemeName[environment]]?._envColorLeftBoost
-            ) || null,
-        _envColorRightBoost:
-            rgbaToHex(
-                ColorScheme[EnvironmentSchemeName[environment]]?._envColorRightBoost
-            ) || null,
-        _obstacleColor:
-            rgbaToHex(
-                ColorScheme[EnvironmentSchemeName[environment]]?._obstacleColor
-            ) || null,
+        _colorLeft: rgbaToHex(ColorScheme[EnvironmentSchemeName[environment]]?._colorLeft) || null,
+        _colorRight: rgbaToHex(ColorScheme[EnvironmentSchemeName[environment]]?._colorRight) || null,
+        _envColorLeft: rgbaToHex(ColorScheme[EnvironmentSchemeName[environment]]?._envColorLeft) || null,
+        _envColorRight: rgbaToHex(ColorScheme[EnvironmentSchemeName[environment]]?._envColorRight) || null,
+        _envColorLeftBoost: rgbaToHex(ColorScheme[EnvironmentSchemeName[environment]]?._envColorLeftBoost) || null,
+        _envColorRightBoost: rgbaToHex(ColorScheme[EnvironmentSchemeName[environment]]?._envColorRightBoost) || null,
+        _obstacleColor: rgbaToHex(ColorScheme[EnvironmentSchemeName[environment]]?._obstacleColor) || null,
     };
     if (customColor._colorLeft) {
         hexColor._colorLeft = rgbaToHex(customColor._colorLeft);
@@ -286,18 +239,14 @@ const setCustomColor = (
         envBoost = true;
     } else {
         envBL =
-            rgbaToHex(
-                ColorScheme[EnvironmentSchemeName[environment]]?._envColorLeftBoost
-            ) || hexColor._envColorLeft;
+            rgbaToHex(ColorScheme[EnvironmentSchemeName[environment]]?._envColorLeftBoost) || hexColor._envColorLeft;
     }
     if (customColor._envColorRightBoost) {
         envBR = rgbaToHex(customColor._envColorRightBoost);
         envBoost = true;
     } else {
         envBR =
-            rgbaToHex(
-                ColorScheme[EnvironmentSchemeName[environment]]?._envColorRightBoost
-            ) || hexColor._envColorRight;
+            rgbaToHex(ColorScheme[EnvironmentSchemeName[environment]]?._envColorRightBoost) || hexColor._envColorRight;
     }
 
     if (envBoost) {
@@ -326,9 +275,7 @@ const setCustomColor = (
         textMonoContainer.textContent = `${hexColor[key]}`;
 
         textContainer.className = 'info__color-text';
-        textContainer.textContent = ` -- ${
-            ColorSchemeRename[key as keyof typeof ColorSchemeRename]
-        }`;
+        textContainer.textContent = ` -- ${ColorSchemeRename[key as keyof typeof ColorSchemeRename]}`;
 
         container.appendChild(colorContainer);
         container.appendChild(textMonoContainer);
@@ -421,9 +368,7 @@ const setEnvironmentEnhancement = (arr?: IChromaEnvironment[]): void => {
                 keyArr.push(k);
             }
         }
-        return `${elem.lookupMethod} [${keyArr.join('')}]${
-            elem.track ? `(${elem.track})` : ''
-        } -> ${elem.id}`;
+        return `${elem.lookupMethod} [${keyArr.join('')}]${elem.track ? `(${elem.track})` : ''} -> ${elem.id}`;
     });
     displayTableRow(htmlTableEnvironmentEnhancement, envEnhance);
 };
@@ -434,9 +379,7 @@ const setPointDefinitions = (arr?: IHeckPointDefinition[]): void => {
         return;
     }
     const pointDef = arr.map((elem) => {
-        return `${elem.name} -- ${elem.points.length} point${
-            elem.points.length > 1 ? 's' : ''
-        }`;
+        return `${elem.name} -- ${elem.points.length} point${elem.points.length > 1 ? 's' : ''}`;
     });
     displayTableRow(htmlTablePointDefinitions, pointDef);
 };
@@ -463,9 +406,7 @@ const setCustomEvents = (arr?: ICustomEvent[], bpm?: BeatPerMinute | null): void
                 keyArr.push(key);
             }
         }
-        return `${round(elem.b, 3)}${rt ? ' | ' + toMMSS(rt) : ''} -- ${
-            elem.t
-        } -> [${keyArr.join('')}]${
+        return `${round(elem.b, 3)}${rt ? ' | ' + toMMSS(rt) : ''} -- ${elem.t} -> [${keyArr.join('')}]${
             elem.t !== 'AssignTrackParent' ? `(${elem.d.track})` : ''
         }`;
     });
@@ -502,25 +443,15 @@ const setDiffInfoTable = (mapData: IBeatmapItem): void => {
                   SavedData.beatmapInfo._beatsPerMinute,
                   mapData.data.customData._bpmChanges ||
                       mapData.data.customData._BPMChanges ||
-                      mapData.data.customData.BPMChanges
+                      mapData.data.customData.BPMChanges,
               )
             : null;
         setTimeSpend(mapData.data.customData._time ?? mapData.data.customData.time);
-        setBookmarks(
-            mapData.data.customData._bookmarks ?? mapData.data.customData.bookmarks,
-            bpm
-        );
+        setBookmarks(mapData.data.customData._bookmarks ?? mapData.data.customData.bookmarks, bpm);
         setBPMChanges(bpm);
         setEnvironmentEnhancement(mapData.data.customData.environment);
-        setPointDefinitions(
-            mapData.data.customData._pointDefinitions ??
-                mapData.data.customData.pointDefinitions
-        );
-        setCustomEvents(
-            mapData.data.customData._customEvents ??
-                mapData.data.customData.customEvents,
-            bpm
-        );
+        setPointDefinitions(mapData.data.customData._pointDefinitions ?? mapData.data.customData.pointDefinitions);
+        setCustomEvents(mapData.data.customData._customEvents ?? mapData.data.customData.customEvents, bpm);
     }
 };
 

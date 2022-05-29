@@ -1,4 +1,5 @@
-$-max-width: 64em;
+$-max-width: 72em;
+$-mobile-breakpoint: 800px;
 $-sz-header-height: 12.5em;
 $-sz-panel-tiny: 25%;
 $-sz-panel-small: 33.33%;
@@ -71,14 +72,7 @@ footer {
     position: fixed;
     bottom: 1em;
     right: 1em;
-    background-image: linear-gradient(
-        to left,
-        #20202000,
-        #202020cc,
-        #202020cc,
-        #202020cc,
-        #20202000
-    );
+    background-image: linear-gradient(to left, #20202000, #202020cc, #202020cc, #202020cc, #20202000);
     color: white;
     transform: scale(2, 2);
     div {
@@ -86,7 +80,7 @@ footer {
     }
 }
 
-@media (max-width: 760px) {
+@media (max-width: $-mobile-breakpoint) {
     .panel {
         &--tiny {
             width: auto;

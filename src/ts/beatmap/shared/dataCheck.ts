@@ -4,8 +4,8 @@ import { Version } from '../../types/beatmap/index';
 import { compareVersion } from './version';
 
 // deno-lint-ignore ban-types
-const tag = (func: Function) => {
-    return `[shared::dataCheck::${func.name}]`;
+const tag = (name: string) => {
+    return `[shared::dataCheck::${name}]`;
 };
 
 export const deepCheck = (
@@ -13,11 +13,11 @@ export const deepCheck = (
     data: { [key: string]: any },
     check: { [key: string]: DataCheck },
     name: string,
-    version: Version
+    version: Version,
 ) => {
-    logger.verbose(tag(deepCheck), `Looking up ${name}`);
+    logger.verbose(tag('deepCheck'), `Looking up ${name}`);
     if (Array.isArray(data)) {
-        data.forEach((d, i) => deepCheck(d, check, name + i, version));
+        data.forEach((d, i) => deepCheck(d, check, `${name}[${i}]`, version));
         return;
     }
     const dataCheckKey = Object.keys(check);
@@ -26,7 +26,7 @@ export const deepCheck = (
             break;
         }
         if (!dataCheckKey.includes(key)) {
-            logger.warn(tag(deepCheck), `Foreign property ${key} found in ${name}`);
+            logger.warn(tag('deepCheck'), `Unused key ${key} found in ${name}`);
         }
     }
     for (const key in check) {
@@ -37,36 +37,26 @@ export const deepCheck = (
             if (compareVersion(version, check[key].version) === 'old') {
                 continue;
             }
-            throw Error(`Missing ${key} in property ${name}!`);
+            throw Error(`Missing ${key} in object ${name}!`);
         }
         if (data[key] == null) {
-            throw Error(`${key} contain null value in property ${name}!`);
+            throw Error(`${key} contain null value in object ${name}!`);
         }
         if (check[key].type === 'array') {
             if (!Array.isArray(data[key])) {
-                throw Error(`${key} is not an array in property ${name}!`);
+                throw Error(`${key} is not an array in object ${name}!`);
             }
-            deepCheck(
-                data[key],
-                (check[key] as DataCheckObject).check,
-                `${name} ${key}`,
-                version
-            );
+            deepCheck(data[key], (check[key] as DataCheckObject).check, `${name} ${key}`, version);
         }
         if (check[key].type === 'object') {
             if (!Array.isArray(data[key]) && !(typeof data[key] === 'object')) {
-                throw Error(`${key} is not an object in property ${name}!`);
+                throw Error(`${key} is not an object in object ${name}!`);
             } else {
-                deepCheck(
-                    data[key],
-                    (check[key] as DataCheckObject).check,
-                    `${name} ${key}`,
-                    version
-                );
+                deepCheck(data[key], (check[key] as DataCheckObject).check, `${name} ${key}`, version);
             }
         }
         if (check[key].type !== 'array' && typeof data[key] !== check[key].type) {
-            throw Error(`${key} is not ${check[key].type} in property ${name}!`);
+            throw Error(`${key} is not ${check[key].type} in object ${name}!`);
         }
     }
 };

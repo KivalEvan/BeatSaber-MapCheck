@@ -1,23 +1,25 @@
-import { Tool, ToolArgs } from '../../types/mapcheck';
-import { round } from '../../utils';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import * as beatmap from '../../beatmap';
 import { EnvironmentName } from '../../types/beatmap/shared/environment';
-import UICheckbox from '../../ui/checkbox';
+import UICheckbox from '../../ui/helpers/checkbox';
+import { printResultTime } from '../helpers';
 
 const name = 'Unlit Bomb';
+const description = 'Check for lighting around bomb.';
+const enabled = true;
 
 const tool: Tool = {
     name,
-    description: 'Placeholder',
+    description,
     type: 'event',
     order: {
-        input: 3,
-        output: 203,
+        input: ToolInputOrder.EVENTS_UNLIT_BOMB,
+        output: ToolOutputOrder.EVENTS_UNLIT_BOMB,
     },
     input: {
-        enabled: true,
+        enabled,
         params: {},
-        html: UICheckbox.create(name, name, true, function (this: HTMLInputElement) {
+        html: UICheckbox.create(name, description, enabled, function (this: HTMLInputElement) {
             tool.input.enabled = this.checked;
         }),
     },
@@ -32,15 +34,13 @@ const unlitBomb = (
     bombs: beatmap.v3.BombNote[],
     events: beatmap.v3.BasicEvent[],
     bpm: beatmap.BeatPerMinute,
-    environment: EnvironmentName
+    environment: EnvironmentName,
 ) => {
     if (!events.length) {
         return [];
     }
     const arr: beatmap.v3.BombNote[] = [];
-    const commonEvent =
-        beatmap.EventList[environment]?.[0] ??
-        beatmap.EventList['DefaultEnvironment'][0];
+    const commonEvent = beatmap.EventList[environment]?.[0] ?? beatmap.EventList['DefaultEnvironment'][0];
     const eventsLight = events
         .filter((ev) => ev.isLightEvent() && commonEvent.includes(ev.type))
         .sort((a, b) => a.type - b.type) as beatmap.v3.BasicEvent[];
@@ -102,22 +102,15 @@ const unlitBomb = (
             ((ev?.floatValue ?? 1) < 0.25 ||
                 ev.isOff() ||
                 (ev.customData?._color &&
-                    ((typeof ev.customData._color[3] === 'number' &&
-                        ev.customData._color[3] < 0.25) ||
-                        Math.max(
-                            ev.customData._color[0],
-                            ev.customData._color[1],
-                            ev.customData._color[2]
-                        ) < 0.25))) &&
+                    ((typeof ev.customData._color[3] === 'number' && ev.customData._color[3] < 0.25) ||
+                        Math.max(ev.customData._color[0], ev.customData._color[1], ev.customData._color[2]) < 0.25))) &&
             eventState[ev.type].state !== 'off'
         ) {
             eventState[ev.type] = {
                 state: 'off',
                 time: ev.time,
                 fadeTime:
-                    eventState[ev.type].state === 'on'
-                        ? reactTime
-                        : Math.min(reactTime, eventState[ev.type].fadeTime),
+                    eventState[ev.type].state === 'on' ? reactTime : Math.min(reactTime, eventState[ev.type].fadeTime),
             };
             eventLitTime[ev.type].push([
                 ev.time +
@@ -161,15 +154,11 @@ function run(map: ToolArgs) {
         map.difficulty.data.bombNotes,
         map.difficulty.data.basicBeatmapEvents,
         map.settings.bpm,
-        map.info._environmentName
+        map.info._environmentName,
     );
 
     if (result.length) {
-        const htmlResult = document.createElement('div');
-        htmlResult.innerHTML = `<b>Unlit bomb [${result.length}]:</b> ${result
-            .map((n) => round(map.settings.bpm.adjustTime(n), 3))
-            .join(', ')}`;
-        tool.output.html = htmlResult;
+        tool.output.html = printResultTime('Unlit bomb', result, map.settings.bpm);
     } else {
         tool.output.html = null;
     }

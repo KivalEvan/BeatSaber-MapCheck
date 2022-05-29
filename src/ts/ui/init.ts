@@ -4,7 +4,7 @@ import Settings from '../settings';
 import Version from '../version';
 import UIFooter from './footer';
 import UISettings from './settings';
-import UIAccordion from './accordion';
+import UIAccordion from './helpers/accordion';
 import UITheme from './theme';
 import UITools from './tools';
 import logger from '../logger';

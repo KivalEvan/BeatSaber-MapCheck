@@ -1,26 +1,28 @@
-import { Tool, ToolArgs } from '../../types/mapcheck';
-import { round } from '../../utils';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import * as beatmap from '../../beatmap';
 import { NoteContainer, NoteContainerNote } from '../../types/beatmap/v3/container';
 import { isEnd } from '../../analyzers/placement/note';
 import swing from '../../analyzers/swing/swing';
 import { ColorNote } from '../../beatmap/v3';
-import UICheckbox from '../../ui/checkbox';
+import UICheckbox from '../../ui/helpers/checkbox';
+import { printResultTime } from '../helpers';
 
 const name = 'Hitbox Staircase';
+const description = 'Check for overlapping post-swing hitbox with note hitbox during swinging.';
+const enabled = true;
 
 const tool: Tool = {
     name,
-    description: 'Placeholder',
+    description,
     type: 'note',
     order: {
-        input: 70,
-        output: 190,
+        input: ToolInputOrder.NOTES_HITBOX_STAIR,
+        output: ToolOutputOrder.NOTES_HITBOX_STAIR,
     },
     input: {
-        enabled: true,
+        enabled,
         params: {},
-        html: UICheckbox.create(name, name, true, function (this: HTMLInputElement) {
+        html: UICheckbox.create(name, description, enabled, function (this: HTMLInputElement) {
             tool.input.enabled = this.checked;
         }),
     },
@@ -30,19 +32,12 @@ const tool: Tool = {
     run,
 };
 
-const isDouble = (
-    note: NoteContainerNote,
-    nc: NoteContainer[],
-    index: number
-): boolean => {
+const isDouble = (note: NoteContainerNote, nc: NoteContainer[], index: number): boolean => {
     for (let i = index, len = nc.length; i < len; i++) {
         if (nc[i].type !== 'note') {
             continue;
         }
-        if (
-            nc[i].data.time < note.data.time + 0.01 &&
-            (nc[i] as NoteContainerNote).data.color !== note.data.color
-        ) {
+        if (nc[i].data.time < note.data.time + 0.01 && (nc[i] as NoteContainerNote).data.color !== note.data.color) {
             return true;
         }
         if (nc[i].data.time > note.data.time + 0.01) {
@@ -78,55 +73,31 @@ function check(map: ToolArgs) {
         }
         const note = noteContainer[i] as NoteContainerNote;
         if (lastNote[note.data.color]) {
-            if (
-                swing.next(
-                    note,
-                    lastNote[note.data.color],
-                    bpm,
-                    swingNoteArray[note.data.color]
-                )
-            ) {
-                lastSpeed[note.data.color] =
-                    note.data.time - lastNote[note.data.color].data.time;
+            if (swing.next(note, lastNote[note.data.color], bpm, swingNoteArray[note.data.color])) {
+                lastSpeed[note.data.color] = note.data.time - lastNote[note.data.color].data.time;
                 if (note.data.direction !== 8) {
                     noteOccupy[note.data.color].posX =
-                        note.data.posX +
-                        beatmap.NoteCutDirectionSpace[note.data.direction][0];
+                        note.data.posX + beatmap.NoteCutDirectionSpace[note.data.direction][0];
                     noteOccupy[note.data.color].posY =
-                        note.data.posY +
-                        beatmap.NoteCutDirectionSpace[note.data.direction][1];
+                        note.data.posY + beatmap.NoteCutDirectionSpace[note.data.direction][1];
                 } else {
                     noteOccupy[note.data.color].posX = -1;
                     noteOccupy[note.data.color].posY = -1;
                 }
                 swingNoteArray[note.data.color] = [];
                 lastNoteDirection[note.data.color] = note.data.direction;
-            } else if (
-                isEnd(
-                    note.data,
-                    lastNote[note.data.color].data,
-                    lastNoteDirection[note.data.color]
-                )
-            ) {
+            } else if (isEnd(note.data, lastNote[note.data.color].data, lastNoteDirection[note.data.color])) {
                 if (note.data.direction !== 8) {
                     noteOccupy[note.data.color].posX =
-                        note.data.posX +
-                        beatmap.NoteCutDirectionSpace[note.data.direction][0];
+                        note.data.posX + beatmap.NoteCutDirectionSpace[note.data.direction][0];
                     noteOccupy[note.data.color].posY =
-                        note.data.posY +
-                        beatmap.NoteCutDirectionSpace[note.data.direction][1];
+                        note.data.posY + beatmap.NoteCutDirectionSpace[note.data.direction][1];
                     lastNoteDirection[note.data.color] = note.data.direction;
                 } else {
                     noteOccupy[note.data.color].posX =
-                        note.data.posX +
-                        beatmap.NoteCutDirectionSpace[
-                            lastNoteDirection[note.data.color]
-                        ][0];
+                        note.data.posX + beatmap.NoteCutDirectionSpace[lastNoteDirection[note.data.color]][0];
                     noteOccupy[note.data.color].posY =
-                        note.data.posY +
-                        beatmap.NoteCutDirectionSpace[
-                            lastNoteDirection[note.data.color]
-                        ][1];
+                        note.data.posY + beatmap.NoteCutDirectionSpace[lastNoteDirection[note.data.color]][1];
                 }
             }
             if (
@@ -146,11 +117,9 @@ function check(map: ToolArgs) {
         } else {
             if (note.data.direction !== 8) {
                 noteOccupy[note.data.color].posX =
-                    note.data.posX +
-                    beatmap.NoteCutDirectionSpace[note.data.direction][0];
+                    note.data.posX + beatmap.NoteCutDirectionSpace[note.data.direction][0];
                 noteOccupy[note.data.color].posY =
-                    note.data.posY +
-                    beatmap.NoteCutDirectionSpace[note.data.direction][1];
+                    note.data.posY + beatmap.NoteCutDirectionSpace[note.data.direction][1];
             } else {
                 noteOccupy[note.data.color].posX = -1;
                 noteOccupy[note.data.color].posY = -1;
@@ -175,11 +144,7 @@ function run(map: ToolArgs) {
     const result = check(map);
 
     if (result.length) {
-        const htmlResult = document.createElement('div');
-        htmlResult.innerHTML = `<b>Hitbox staircase [${result.length}]:</b> ${result
-            .map((n) => round(map.settings.bpm.adjustTime(n), 3))
-            .join(', ')}`;
-        tool.output.html = htmlResult;
+        tool.output.html = printResultTime('Hitbox staircase', result, map.settings.bpm);
     } else {
         tool.output.html = null;
     }

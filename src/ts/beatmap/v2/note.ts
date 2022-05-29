@@ -34,8 +34,8 @@ export class Note extends BeatmapObject<INote> {
                     _type: n._type ?? Note.default._type,
                     _cutDirection: n._cutDirection ?? Note.default._cutDirection,
                     _customData: n._customData ?? Note.default._customData(),
-                })
-            )
+                }),
+            ),
         );
         if (result.length === 1) {
             return result[0];
@@ -317,10 +317,7 @@ export class Note extends BeatmapObject<INote> {
      * ```
      */
     hasChroma = (): boolean => {
-        return (
-            Array.isArray(this.customData?._color) ||
-            typeof this.customData?._disableSpawnEffect === 'boolean'
-        );
+        return Array.isArray(this.customData?._color) || typeof this.customData?._disableSpawnEffect === 'boolean';
     };
 
     /** Check if note has Noodle Extensions properties.

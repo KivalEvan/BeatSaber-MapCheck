@@ -15,11 +15,8 @@ export const downloadMap = async (url: string): Promise<ArrayBuffer> => {
             xhr.timeout += Date.now() - startTime;
             UILoading.status(
                 'download',
-                `Downloading map: ${round(e.loaded / 1024 / 1024, 1)}MB / ${round(
-                    e.total / 1024 / 1024,
-                    1
-                )}MB`,
-                (e.loaded / e.total) * 100
+                `Downloading map: ${round(e.loaded / 1024 / 1024, 1)}MB / ${round(e.total / 1024 / 1024, 1)}MB`,
+                (e.loaded / e.total) * 100,
             );
         };
 
@@ -68,11 +65,7 @@ export const downloadFromURL = async (input: string): Promise<ArrayBuffer> => {
 
     // check if URL is BeatSaver map URL
     if (url.match(/^(https?:\/\/)?(www\.)?beatsaver\.com\/maps\//)) {
-        return downloadFromID(
-            url
-                .replace(/^https?:\/\/(www\.)?beatsaver\.com\/maps\//, '')
-                .match(/[a-fA-F0-9]*/)![0]
-        );
+        return downloadFromID(url.replace(/^https?:\/\/(www\.)?beatsaver\.com\/maps\//, '').match(/[a-fA-F0-9]*/)![0]);
     }
 
     UILoading.status('info', 'Requesting download from link', 0);

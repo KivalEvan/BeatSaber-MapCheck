@@ -1,24 +1,25 @@
-import { Tool, ToolArgs } from '../../types/mapcheck';
-import { round } from '../../utils';
-import * as beatmap from '../../beatmap';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import { NoteContainer, NoteContainerNote } from '../../types/beatmap/v3/container';
-import UICheckbox from '../../ui/checkbox';
+import UICheckbox from '../../ui/helpers/checkbox';
 import swing from '../../analyzers/swing/swing';
+import { printResultTime } from '../helpers';
 
 const name = 'Improper Window Snap';
+const description = 'Check for slanted window snap timing.';
+const enabled = true;
 
 const tool: Tool = {
     name,
-    description: 'Placeholder',
+    description,
     type: 'note',
     order: {
-        input: 60,
-        output: 185,
+        input: ToolInputOrder.NOTES_IMPROPER_WINDOW,
+        output: ToolOutputOrder.NOTES_IMPROPER_WINDOW,
     },
     input: {
-        enabled: true,
+        enabled,
         params: {},
-        html: UICheckbox.create(name, name, true, function (this: HTMLInputElement) {
+        html: UICheckbox.create(name, description, enabled, function (this: HTMLInputElement) {
             tool.input.enabled = this.checked;
         }),
     },
@@ -45,14 +46,7 @@ function check(map: ToolArgs) {
         }
         const note = noteContainer[i] as NoteContainerNote;
         if (lastNote[note.data.color]) {
-            if (
-                swing.next(
-                    note,
-                    lastNote[note.data.color],
-                    bpm,
-                    swingNoteArray[note.data.color]
-                )
-            ) {
+            if (swing.next(note, lastNote[note.data.color], bpm, swingNoteArray[note.data.color])) {
                 lastNote[note.data.color] = note;
                 swingNoteArray[note.data.color] = [];
             } else if (
@@ -84,11 +78,7 @@ function run(map: ToolArgs) {
     const result = check(map);
 
     if (result.length) {
-        const htmlResult = document.createElement('div');
-        htmlResult.innerHTML = `<b>Improper window snap [${result.length}]:</b> ${result
-            .map((n) => round(map.settings.bpm.adjustTime(n), 3))
-            .join(', ')}`;
-        tool.output.html = htmlResult;
+        tool.output.html = printResultTime('Improper window snap', result, map.settings.bpm);
     } else {
         tool.output.html = null;
     }

@@ -18,12 +18,8 @@ export class LightRotationBase extends Serializable<ILightRotationBase> {
 
     static create(): LightRotationBase;
     static create(lightRotations: Partial<ILightRotationBase>): LightRotationBase;
-    static create(
-        ...lightRotations: Partial<ILightRotationBase>[]
-    ): LightRotationBase[];
-    static create(
-        ...lightRotations: Partial<ILightRotationBase>[]
-    ): LightRotationBase | LightRotationBase[] {
+    static create(...lightRotations: Partial<ILightRotationBase>[]): LightRotationBase[];
+    static create(...lightRotations: Partial<ILightRotationBase>[]): LightRotationBase | LightRotationBase[] {
         const result: LightRotationBase[] = [];
         lightRotations?.forEach((lr) =>
             result.push(
@@ -34,8 +30,8 @@ export class LightRotationBase extends Serializable<ILightRotationBase> {
                     l: lr.l ?? LightRotationBase.default.l,
                     r: lr.r ?? LightRotationBase.default.r,
                     o: lr.o ?? LightRotationBase.default.o,
-                })
-            )
+                }),
+            ),
         );
         if (result.length === 1) {
             return result[0];

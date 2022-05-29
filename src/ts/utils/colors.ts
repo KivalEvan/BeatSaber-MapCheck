@@ -30,12 +30,7 @@ export const RGBAtoHSVA = (r: number, g: number, b: number, a = 1): ColorArray =
     return [h, s, v, a];
 };
 
-export const HSVAtoRGBA = (
-    hue: number,
-    saturation: number,
-    value: number,
-    alpha = 1
-): ColorArray => {
+export const HSVAtoRGBA = (hue: number, saturation: number, value: number, alpha = 1): ColorArray => {
     hue = hue / 360;
     let r!: number, g!: number, b!: number;
     const i = Math.floor(hue * 6);
@@ -71,7 +66,7 @@ export const interpolateColor = (
     colorEnd: ColorArray,
     alpha: number,
     type: 'rgba' | 'hsva' | 'long hsva' | 'short hsva' = 'rgba',
-    easing?: (x: number) => number
+    easing?: (x: number) => number,
 ): ColorArray => {
     if (!easing) {
         easing = function (x: number) {
@@ -87,7 +82,7 @@ export const interpolateColor = (
                     }
                     const cE = colorEnd[i] ?? c;
                     return lerp(easing!(alpha), c, cE);
-                }) as ColorArray)
+                }) as ColorArray),
             );
         }
         case 'long hsva': {
@@ -98,7 +93,7 @@ export const interpolateColor = (
                     }
                     const cE = colorEnd[i] ?? c;
                     return lerp(easing!(alpha), c, cE);
-                }) as ColorArray)
+                }) as ColorArray),
             );
         }
         case 'short hsva': {
@@ -109,7 +104,7 @@ export const interpolateColor = (
                     }
                     const cE = colorEnd[i] ?? c;
                     return lerp(easing!(alpha), c, cE);
-                }) as ColorArray)
+                }) as ColorArray),
             );
         }
         default: {
@@ -149,9 +144,7 @@ export const rgbaToHex = (colorObj?: ColorObject | null): string | null => {
         }
         color[c as keyof ColorObject] = cDenorm(num);
     }
-    return `#${compToHex(color.r)}${compToHex(color.g)}${compToHex(color.b)}${
-        color.a ? compToHex(color.a) : ''
-    }`;
+    return `#${compToHex(color.r)}${compToHex(color.g)}${compToHex(color.b)}${color.a ? compToHex(color.a) : ''}`;
 };
 
 // https://www.easyrgb.com/ with Adobe RGB reference value

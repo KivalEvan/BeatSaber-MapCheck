@@ -68,7 +68,7 @@ export default new (class Settings implements ISettings {
 
     private stringify = (): string => {
         return JSON.stringify({
-            _property: this.property,
+            settings: this.property,
         });
     };
     private init = (): void => {
@@ -78,11 +78,11 @@ export default new (class Settings implements ISettings {
         const storage = localStorage.getItem('settings');
         if (storage) {
             const temp = JSON.parse(storage);
-            if (!temp.version) {
+            if (!temp.settings?.version) {
                 this.clear();
                 return;
             }
-            this.property = temp._property ?? this.property;
+            this.property = temp.settings ?? this.property;
             this.save();
         }
     };

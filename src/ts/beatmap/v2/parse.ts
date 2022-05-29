@@ -5,15 +5,15 @@ import { DifficultyDataCheck } from './dataCheck';
 import logger from '../../logger';
 
 // deno-lint-ignore ban-types
-const tag = (func: Function) => {
-    return `[v2::parse::${func.name}]`;
+const tag = (name: string) => {
+    return `[v2::parse::${name}]`;
 };
 
 // FIXME: this is a mess but i dont want to fix it anyway
 export const difficulty = (data: IDifficultyData): DifficultyData => {
-    logger.info(tag(difficulty), 'Parsing beatmap difficulty v2.x.x');
+    logger.info(tag('difficulty'), 'Parsing beatmap difficulty v2.x.x');
     if (!data._version?.startsWith('2')) {
-        logger.warn(tag(difficulty), 'Unidentified beatmap version');
+        logger.warn(tag('difficulty'), 'Unidentified beatmap version');
         data._version = '2.0.0';
     }
     deepCheck(data, DifficultyDataCheck, 'difficulty', data._version);

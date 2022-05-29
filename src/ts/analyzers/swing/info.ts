@@ -10,11 +10,7 @@ import Swing from './swing';
 // some variable or function may have been modified
 // translating from Python to JavaScript is hard
 // this is special function SPS used by ScoreSaber
-export const count = (
-    noteContainer: NoteContainer[],
-    duration: number,
-    bpm: BeatPerMinute
-): ISwingCount => {
+export const count = (noteContainer: NoteContainer[], duration: number, bpm: BeatPerMinute): ISwingCount => {
     const swingCount: ISwingCount = {
         left: new Array(Math.floor(duration + 1)).fill(0),
         right: new Array(Math.floor(duration + 1)).fill(0),
@@ -70,7 +66,7 @@ export const info = (
     difficulty: DifficultyData,
     bpm: BeatPerMinute,
     charName: CharacteristicName,
-    diffName: DifficultyName
+    diffName: DifficultyName,
 ): ISwingAnalysis => {
     const interval = 10;
     const spsInfo: ISwingAnalysis = {
@@ -82,15 +78,10 @@ export const info = (
         container: Swing.generate(difficulty.getNoteContainer(), bpm),
     };
     const duration = Math.max(
-        bpm.toRealTime(
-            difficulty.getLastInteractiveTime() - difficulty.getFirstInteractiveTime()
-        ),
-        0
+        bpm.toRealTime(difficulty.getLastInteractiveTime() - difficulty.getFirstInteractiveTime()),
+        0,
     );
-    const mapDuration = Math.max(
-        bpm.toRealTime(difficulty.getLastInteractiveTime()),
-        0
-    );
+    const mapDuration = Math.max(bpm.toRealTime(difficulty.getLastInteractiveTime()), 0);
     const swing = count(difficulty.getNoteContainer(), mapDuration, bpm);
     const swingTotal = swing.left.map((num, i) => num + swing.right[i]);
     if (swingTotal.reduce((a, b) => a + b) === 0) {
@@ -130,10 +121,7 @@ export const info = (
     return spsInfo;
 };
 
-export const getProgressionMax = (
-    spsArray: ISwingAnalysis[],
-    minSPS: number
-): ISwingAnalysis | null => {
+export const getProgressionMax = (spsArray: ISwingAnalysis[], minSPS: number): ISwingAnalysis | null => {
     let spsPerc = 0;
     let spsCurr = 0;
     for (const spsMap of spsArray) {
@@ -149,10 +137,7 @@ export const getProgressionMax = (
     return null;
 };
 
-export const getProgressionMin = (
-    spsArray: ISwingAnalysis[],
-    minSPS: number
-): ISwingAnalysis | null => {
+export const getProgressionMin = (spsArray: ISwingAnalysis[], minSPS: number): ISwingAnalysis | null => {
     let spsPerc = Number.MAX_SAFE_INTEGER;
     let spsCurr = 0;
     for (const spsMap of spsArray) {

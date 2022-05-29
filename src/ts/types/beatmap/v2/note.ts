@@ -1,16 +1,7 @@
 import { ICustomDataNote } from './customData';
 import { IBaseObject } from './object';
 
-/** Beatmap object interface for Note.
- * ```ts
- * _time: float,
- * _lineIndex: int,
- * _lineLayer: int,
- * _type: int,
- * _cutDirection: int,
- * _customData?: JSON
- * ```
- */
+/** Beatmap object interface for Note. */
 export interface INote extends IBaseObject {
     /** Note placement on column.
      * ```ts

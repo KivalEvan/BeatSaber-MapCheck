@@ -1,4 +1,4 @@
-import { Vector3, ColorPointDefinition, PercentPointDefinition } from '../shared/heck';
+import { ColorPointDefinition, PercentPointDefinition, Vector3 } from '../shared/heck';
 import { Easings } from '../shared/easings';
 import { ColorArray } from '../shared/colors';
 import { ICustomDataBase } from '../shared/customData';
@@ -19,21 +19,7 @@ export enum ChromaDataEnvAbbr {
     _track = 'T',
 }
 
-/** Chroma interface for Environment Enhancement.
- * ```ts
- * _id: string,
- * _lookupMethod: LookupMethod,
- * _track?: string,
- * _duplicate?: int,
- * _active?: boolean,
- * _scale?: [float, float, float],
- * _position?: [float, float, float],
- * _localPosition?: [float, float, float],
- * _rotation?: [float, float, float],
- * _localRotation?: [float, float, float],
- * _lightID?: int
- * ```
- */
+/** Chroma interface for Environment Enhancement. */
 export interface IChromaEnvironment {
     /** Look up environment object name.
      * This grabs every environment objects that match the string.
@@ -91,21 +77,7 @@ export interface IChromaObstacle {
     _color?: ColorArray;
 }
 
-/** Chroma interface for Beatmap Event Light Custom Data.
- * ```ts
- * _color?: [float, float, float, float?],
- * _lightID?: int | int[],
- * _propID?: int,
- * _lightGradient?: {
- *     _duration: float,
- *     _startColor?: [float, float, float, float?],
- *     _endColor?: [float, float, float, float?],
- *     _easing?: Easings
- * },
- * _lerpType?: 'HSV' | 'RGB',
- * _easing?: Easings
- * ```
- */
+/** Chroma interface for Beatmap Event Light Custom Data. */
 export interface IChromaEventLight extends ICustomDataBase {
     _color?: ColorArray;
     _lightID?: number | number[];
@@ -120,14 +92,7 @@ export interface IChromaEventLight extends ICustomDataBase {
     _easing?: Easings;
 }
 
-/** Chroma interface for Beatmap Event Laser Rotation Custom Data.
- * ```ts
- * _lockPosition?: boolean,
- * _speed?: float,
- * _preciseSpeed?: float,
- * _direction?: int
- * ```
- */
+/** Chroma interface for Beatmap Event Laser Rotation Custom Data. */
 export interface IChromaEventLaser extends ICustomDataBase {
     _lockPosition?: boolean;
     _speed?: number;
@@ -135,21 +100,7 @@ export interface IChromaEventLaser extends ICustomDataBase {
     _direction?: number;
 }
 
-/** Chroma interface for Beatmap Event Ring Spin Custom Data.
- * ```ts
- * _nameFilter?: string,
- * _reset?: boolean,
- * _rotation?: float,
- * _step?: float,
- * _prop?: float,
- * _speed?: float,
- * _direction?: int,
- * _counterSpin?: boolean,
- * _stepMult?: float,
- * _propMult?: float,
- * _speedMult?: float
- * ```
- */
+/** Chroma interface for Beatmap Event Ring Spin Custom Data. */
 export interface IChromaEventRing extends ICustomDataBase {
     _nameFilter?: string;
     _reset?: boolean;
@@ -164,25 +115,13 @@ export interface IChromaEventRing extends ICustomDataBase {
     _speedMult?: number;
 }
 
-/** Chroma interface for Beatmap Event Ring Zoom Custom Data.
- * ```ts
- * _step?: float,
- * _speed?: float
- * ```
- */
+/** Chroma interface for Beatmap Event Ring Zoom Custom Data. */
 export interface IChromaEventZoom extends ICustomDataBase {
     _step?: number;
     _speed?: number;
 }
 
-/** AssignFogTrack interface for Noodle Extensions Custom Event.
- * ```ts
- * _attenuation: float | ArrayPercentPointDefinition[];
- * _offset: float | ArrayPercentPointDefinition[];
- * _startY: float | ArrayPercentPointDefinition[];
- * _height: float | ArrayPercentPointDefinition[];
- * ```
- */
+/** AssignFogTrack interface for Noodle Extensions Custom Event. */
 export interface IChromaCustomEventDataAssignFogTrack extends IHeckCustomEventDataBase {
     _track: string;
     _attenuation?: number | PercentPointDefinition[];
@@ -191,13 +130,7 @@ export interface IChromaCustomEventDataAssignFogTrack extends IHeckCustomEventDa
     _height?: number | PercentPointDefinition[];
 }
 
-/** Chroma Custom Event interface for AssignFogTrack.
- * ```ts
- * _time: float,
- * _type: 'AssignFogTrack',
- * _data: NECustomEventDataAssignFogTrack
- * ```
- */
+/** Chroma Custom Event interface for AssignFogTrack. */
 export interface IChromaCustomEventAssignFogTrack {
     _time: number;
     _type: 'AssignFogTrack';
@@ -206,12 +139,7 @@ export interface IChromaCustomEventAssignFogTrack {
 
 export type IChromaCustomEvent = IChromaCustomEventAssignFogTrack;
 
-/** Chroma Custom Data interface for difficulty custom data.
- * ```ts
- * _customEvents?: ChromaCustomEvent[];
- * _environment?: ChromaEnvironment[];
- * ```
- */
+/** Chroma Custom Data interface for difficulty custom data. */
 export interface IChromaCustomData {
     _customEvents?: IChromaCustomEvent[];
     _environment?: IChromaEnvironment[];

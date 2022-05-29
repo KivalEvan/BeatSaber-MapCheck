@@ -1,29 +1,13 @@
 import { IBookmark } from '../shared/bookmark';
 import { IBPMChange, IBPMChangeOld } from '../shared/bpm';
 import { IHeckCustomData, IHeckCustomEvent } from './heck';
-import {
-    IChromaCustomData,
-    IChromaNote,
-    IChromaObstacle,
-    IChromaCustomEvent,
-} from './chroma';
-import {
-    INECustomData,
-    INECustomEvent,
-    INENote,
-    INEObstacle,
-} from './noodleExtensions';
+import { IChromaCustomData, IChromaCustomEvent, IChromaNote, IChromaObstacle } from './chroma';
+import { INECustomData, INECustomEvent, INENote, INEObstacle } from './noodleExtensions';
 import { ICustomDataBase } from '../shared/customData';
 
 export type ICustomEvent = IHeckCustomEvent | IChromaCustomEvent | INECustomEvent;
 
 /** Custom Data interface for difficulty file.
- * ```ts
- * _time?: float,
- * _bpmChanges?: BPMChange[];
- * _BPMChanges?: BPMChange[];
- * _bookmarks?: Bookmark[];
- * ```
  * @extends CustomData
  * @extends CCustomData
  * @extends INECustomData

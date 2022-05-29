@@ -1,21 +1,24 @@
-import { Tool, ToolArgs } from '../../types/mapcheck';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import * as beatmap from '../../beatmap';
-import UICheckbox from '../../ui/checkbox';
+import UICheckbox from '../../ui/helpers/checkbox';
+import { printResult } from '../helpers';
 
-const name = ' Insufficient Lighting Event';
+const name = 'Insufficient Lighting Event';
+const description = 'Check if there is enough light event.';
+const enabled = true;
 
 const tool: Tool = {
-    name: 'Insufficient Light',
-    description: 'Placeholder',
+    name,
+    description,
     type: 'event',
     order: {
-        input: 0,
-        output: 0,
+        input: ToolInputOrder.EVENTS_INSUFFICIENT_LIGHT,
+        output: ToolOutputOrder.EVENTS_INSUFFICIENT_LIGHT,
     },
     input: {
-        enabled: true,
+        enabled,
         params: {},
-        html: UICheckbox.create(name, name, true, function (this: HTMLInputElement) {
+        html: UICheckbox.create(name, description, enabled, function (this: HTMLInputElement) {
             tool.input.enabled = this.checked;
         }),
     },
@@ -46,9 +49,7 @@ function run(map: ToolArgs) {
     const result = sufficientLight(map.difficulty.data.basicBeatmapEvents);
 
     if (!result) {
-        const htmlResult = document.createElement('div');
-        htmlResult.innerHTML = `<b>Insufficient lighting event</b>`;
-        tool.output.html = htmlResult;
+        tool.output.html = printResult('Insufficient light event');
     } else {
         tool.output.html = null;
     }

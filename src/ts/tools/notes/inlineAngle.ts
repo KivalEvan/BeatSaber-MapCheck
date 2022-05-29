@@ -1,29 +1,24 @@
-import { Tool, ToolArgs } from '../../types/mapcheck';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import { round } from '../../utils';
 import * as beatmap from '../../beatmap';
 import { NoteContainer } from '../../types/beatmap/v3/container';
 import { checkDirection } from '../../analyzers/placement/note';
 import swing from '../../analyzers/swing/swing';
 import { ColorNote } from '../../beatmap/v3';
+import { printResultTime } from '../helpers';
+import UICheckbox from '../../ui/helpers/checkbox';
 
+const name = 'Inline Sharp Angle';
+const description = 'Check for angle changes within inline note.';
+const enabled = true;
 const defaultMaxTime = 0.15;
 let localBPM!: beatmap.BeatPerMinute;
 
 const htmlContainer = document.createElement('div');
-const htmlInputCheck = document.createElement('input');
-const htmlLabelCheck = document.createElement('label');
 const htmlInputMaxTime = document.createElement('input');
 const htmlLabelMaxTime = document.createElement('label');
 const htmlInputMaxBeat = document.createElement('input');
 const htmlLabelMaxBeat = document.createElement('label');
-
-htmlLabelCheck.textContent = ' Inline sharp angle';
-htmlLabelCheck.htmlFor = 'input__tools-inline-angle-check';
-htmlInputCheck.id = 'input__tools-inline-angle-check';
-htmlInputCheck.className = 'input-toggle';
-htmlInputCheck.type = 'checkbox';
-htmlInputCheck.checked = true;
-htmlInputCheck.addEventListener('change', inputCheckHandler);
 
 htmlLabelMaxTime.textContent = 'max time (ms): ';
 htmlLabelMaxTime.htmlFor = 'input__tools-inline-angle-time';
@@ -43,24 +38,26 @@ htmlInputMaxBeat.min = '0';
 htmlInputMaxBeat.step = '0.1';
 htmlInputMaxBeat.addEventListener('change', inputBeatHandler);
 
-htmlContainer.appendChild(htmlInputCheck);
-htmlContainer.appendChild(htmlLabelCheck);
-htmlContainer.appendChild(document.createElement('br'));
+htmlContainer.appendChild(
+    UICheckbox.create(name, description, enabled, function (this: HTMLInputElement) {
+        tool.input.enabled = this.checked;
+    }),
+);
 htmlContainer.appendChild(htmlLabelMaxTime);
 htmlContainer.appendChild(htmlInputMaxTime);
 htmlContainer.appendChild(htmlLabelMaxBeat);
 htmlContainer.appendChild(htmlInputMaxBeat);
 
 const tool: Tool = {
-    name: 'Inline Sharp Angle',
-    description: 'Placeholder',
+    name,
+    description,
     type: 'note',
     order: {
-        input: 30,
-        output: 160,
+        input: ToolInputOrder.NOTES_INLINE_ANGLE,
+        output: ToolOutputOrder.NOTES_INLINE_ANGLE,
     },
     input: {
-        enabled: htmlInputCheck.checked,
+        enabled,
         params: {
             maxTime: defaultMaxTime,
         },
@@ -75,24 +72,14 @@ const tool: Tool = {
 
 function adjustTimeHandler(bpm: beatmap.BeatPerMinute) {
     localBPM = bpm;
-    htmlInputMaxBeat.value = round(
-        localBPM.toBeatTime(tool.input.params.maxTime as number),
-        2
-    ).toString();
-}
-
-function inputCheckHandler(this: HTMLInputElement) {
-    tool.input.enabled = this.checked;
+    htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.maxTime as number), 2).toString();
 }
 
 function inputTimeHandler(this: HTMLInputElement) {
     tool.input.params.maxTime = Math.abs(parseFloat(this.value)) / 1000;
     this.value = round(tool.input.params.maxTime * 1000, 1).toString();
     if (localBPM) {
-        htmlInputMaxBeat.value = round(
-            localBPM.toBeatTime(tool.input.params.maxTime as number),
-            2
-        ).toString();
+        htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.maxTime as number), 2).toString();
     }
 }
 
@@ -127,18 +114,10 @@ function check(map: ToolArgs) {
     for (let i = 0, len = noteContainer.length; i < len; i++) {
         const note = noteContainer[i];
         if (note.type === 'note' && lastNote[note.data.color]) {
-            if (
-                swing.next(
-                    note,
-                    lastNote[note.data.color],
-                    bpm,
-                    swingNoteArray[note.data.color]
-                )
-            ) {
+            if (swing.next(note, lastNote[note.data.color], bpm, swingNoteArray[note.data.color])) {
                 if (startNoteDot[note.data.color]) {
                     startNoteDot[note.data.color] = null;
-                    lastNoteAngle[note.data.color] =
-                        (lastNoteAngle[note.data.color] + 180) % 360;
+                    lastNoteAngle[note.data.color] = (lastNoteAngle[note.data.color] + 180) % 360;
                 }
                 if (
                     checkInline(note.data, noteContainer, lastIndex, maxTime) &&
@@ -208,12 +187,7 @@ function check(map: ToolArgs) {
         });
 }
 
-function checkInline(
-    n: beatmap.v3.ColorNote,
-    notes: NoteContainer[],
-    index: number,
-    maxTime: number
-) {
+function checkInline(n: beatmap.v3.ColorNote, notes: NoteContainer[], index: number, maxTime: number) {
     for (let i = index; notes[i].data.time < n.time; i++) {
         const note = notes[i];
         if (note.type !== 'note') {
@@ -234,11 +208,7 @@ function run(map: ToolArgs) {
     const result = check(map);
 
     if (result.length) {
-        const htmlResult = document.createElement('div');
-        htmlResult.innerHTML = `<b>Inline sharp angle [${result.length}]:</b> ${result
-            .map((n) => round(map.settings.bpm.adjustTime(n), 3))
-            .join(', ')}`;
-        tool.output.html = htmlResult;
+        tool.output.html = printResultTime('Inline sharp angle', result, map.settings.bpm);
     } else {
         tool.output.html = null;
     }
