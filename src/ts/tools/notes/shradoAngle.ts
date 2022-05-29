@@ -8,7 +8,7 @@ import UICheckbox from '../../ui/helpers/checkbox';
 
 const name = 'shrado Angle';
 const description = 'Look for common negative curvature pattern.';
-const enabled = true;
+const enabled = false;
 const defaultMaxTime = 0.15;
 const defaultDistance = 1;
 let localBPM!: beatmap.BeatPerMinute;

@@ -23,7 +23,7 @@ const levelMsg = (level: { [key: number]: string }, perc: number): string => {
     return level[key];
 };
 
-const name = 'Color Check (EXPERIMENTAL)';
+const name = 'Color Check';
 const description = 'Compare note color with other colored note and the arrow on itself.';
 const enabled = true;
 
@@ -38,7 +38,7 @@ const tool: Tool = {
     input: {
         enabled,
         params: {},
-        html: UICheckbox.create(name, description, enabled, function (this: HTMLInputElement) {
+        html: UICheckbox.create(name + ' (EXPERIMENTAL)', description, enabled, function (this: HTMLInputElement) {
             tool.input.enabled = this.checked;
         }),
     },
