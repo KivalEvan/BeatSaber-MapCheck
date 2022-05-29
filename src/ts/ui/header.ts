@@ -107,7 +107,7 @@ const unloadAudio = (): void => {
 };
 
 const reset = (): void => {
-    switchHeader(false);
+    switchHeader(true);
     setCoverImage(null);
     setCoverLink();
     setSongDuration(0);
