@@ -4,23 +4,12 @@ type SettingsFlag = { [key: string]: boolean };
 
 type BeatNumbering = 'beattime' | 'jsontime' | 'realtime';
 
-export enum ISettingsLoadRename {
-    audio = 'Audio',
-    imageCover = 'Cover Image',
-    imageContributor = 'Contributor Image',
-}
 interface ISettingsLoad extends SettingsFlag {
     audio: boolean;
     imageCover: boolean;
     imageContributor: boolean;
 }
 
-export enum SettingsShowRename {
-    info = 'Information',
-    tools = 'Tools',
-    stats = 'Stats',
-    settings = 'Settings',
-}
 interface ISettingsShow extends SettingsFlag {
     info: boolean;
     tools: boolean;

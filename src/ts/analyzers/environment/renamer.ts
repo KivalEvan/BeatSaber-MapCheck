@@ -54,7 +54,7 @@ export const eventTypeRename = (type: number, environment?: EnvironmentAllName):
                     return 'Center Lights';
             }
         case 5:
-            return 'Light Color Boost';
+            return 'Color Boost';
         case 6:
             switch (environment) {
                 case 'BillieEnvironment':
@@ -200,10 +200,9 @@ export const eventGroupRename = (id: number, environment?: EnvironmentAllName): 
                     return 'Distant Square Left Laser';
                 case 15:
                     return 'Distant Square Right Laser';
-                default:
-                    return 'Unknown';
             }
         }
+        /* fall through */
         case 'PyroEnvironment': {
             switch (id) {
                 case 0:
@@ -234,10 +233,9 @@ export const eventGroupRename = (id: number, environment?: EnvironmentAllName): 
                     return 'Left Flame';
                 case 13:
                     return 'Right Flame';
-                default:
-                    return 'Unknown';
             }
         }
+        /* fall through */
         case 'EDMEnvironment': {
             switch (id) {
                 case 0:
@@ -276,10 +274,9 @@ export const eventGroupRename = (id: number, environment?: EnvironmentAllName): 
                     return 'Unidentifed';
                 case 17:
                     return 'Unidentifed';
-                default:
-                    return 'Unknown';
             }
         }
+        /* fall through */
         default:
             return 'Unknown';
     }

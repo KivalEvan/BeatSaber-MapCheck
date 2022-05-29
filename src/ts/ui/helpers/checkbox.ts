@@ -3,18 +3,19 @@ export default class UICheckbox {
     private constructor() {}
 
     static create = (name: string, title: string, bool: boolean, callback: EventListener): HTMLDivElement => {
-        name = name.trim().toLowerCase().replace(' ', '-');
-        if (UICheckbox.list.includes(name)) {
-            throw new Error(name + ' is already being used.');
+        const internalName = name.trim().toLowerCase().replace(' ', '-');
+        if (UICheckbox.list.includes(internalName)) {
+            throw new Error(internalName + ' is already being used.');
         }
-        UICheckbox.list.push(name);
+        UICheckbox.list.push(internalName);
         const htmlContainer = document.createElement('div');
         const htmlInputCheck = document.createElement('input');
         const htmlLabelCheck = document.createElement('label');
 
-        htmlLabelCheck.textContent = ' ' + title;
-        htmlLabelCheck.htmlFor = 'input__tools-' + name;
-        htmlInputCheck.id = 'input__tools-' + name;
+        htmlLabelCheck.textContent = ' ' + name;
+        htmlLabelCheck.title = title;
+        htmlLabelCheck.htmlFor = 'input__tools-' + internalName;
+        htmlInputCheck.id = 'input__tools-' + internalName;
         htmlInputCheck.className = 'input-toggle';
         htmlInputCheck.type = 'checkbox';
         htmlInputCheck.checked = bool;

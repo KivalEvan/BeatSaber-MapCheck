@@ -1,6 +1,7 @@
 import { DifficultyName } from '../../beatmap';
 
 export type UIBackgroundColorType = DifficultyName | 'none';
+
 export enum UIBackgroundColor {
     'none' = '',
     'ExpertPlus' = 'accordion__label--bg-expertplus',

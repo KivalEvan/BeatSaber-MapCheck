@@ -11,6 +11,7 @@
 -   Added basic slider and burst slider check
 -   More stats for v3 stuff
 -   Dynamic event name based on environment
+-   Standard style format (development)
 
 ### Changed
 
@@ -18,10 +19,19 @@
 -   Better internal user interface work
 -   Updated changelog date format
 
+### Updated
+
+-   Package dependencies updated to latest
+
 ### Deprecated
 
 -   Beatmap v2.x.x is now unsupported
     -   Beatmap v2 can still be used by map check, but will not gain any feature updated around it.
+
+### Removed
+
+-   Old event value check
+-   Event peak and per second check
 
 ## v2.4.0 [2022-03-02]
 

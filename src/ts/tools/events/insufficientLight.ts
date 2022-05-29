@@ -1,21 +1,22 @@
-import { Tool, ToolArgs } from '../../types/mapcheck';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import * as beatmap from '../../beatmap';
 import UICheckbox from '../../ui/helpers/checkbox';
 
-const name = ' Insufficient Lighting Event';
+const name = 'Insufficient Lighting Event';
+const description = 'Check for event';
 
 const tool: Tool = {
-    name: 'Insufficient Light',
-    description: 'Placeholder',
+    name,
+    description,
     type: 'event',
     order: {
-        input: 0,
-        output: 0,
+        input: ToolInputOrder.EVENTS_INSUFFICIENT_LIGHT,
+        output: ToolOutputOrder.EVENTS_INSUFFICIENT_LIGHT,
     },
     input: {
         enabled: true,
         params: {},
-        html: UICheckbox.create(name, name, true, function (this: HTMLInputElement) {
+        html: UICheckbox.create(name, description, true, function (this: HTMLInputElement) {
             tool.input.enabled = this.checked;
         }),
     },

@@ -1,4 +1,5 @@
 export type UIPanelSizeType = 'tiny' | 'small' | 'medium' | 'large' | 'max';
+
 export enum UIPanelSize {
     'tiny' = 'panel--tiny',
     'small' = 'panel--small',
@@ -8,6 +9,7 @@ export enum UIPanelSize {
 }
 
 export type UIPanelOffsetType = 'normal' | 'half' | 'none';
+
 export enum UIPanelOffset {
     'normal' = 'panel--offset',
     'half' = 'panel--offset-half',

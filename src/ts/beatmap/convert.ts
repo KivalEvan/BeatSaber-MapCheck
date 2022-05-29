@@ -4,7 +4,7 @@ import logger from '../logger';
 import { DifficultyData as DifficultyDataV2 } from './v2/difficulty';
 import { DifficultyData as DifficultyDataV3 } from './v3/difficulty';
 import { clamp } from '../utils/math';
-import { EventLaneRotation } from './shared/constants';
+import { EventLaneRotationValue } from './shared/constants';
 import { ICustomDataNote, ICustomDataObstacle } from '../types/beatmap/v3/customData';
 import { IBasicEvent } from '../types/beatmap/v3/basicEvent';
 
@@ -22,7 +22,7 @@ const tag = (name: string) => {
  */
 export const V2toV3 = (data: DifficultyDataV2, skipPrompt?: boolean): DifficultyDataV3 => {
     if (!skipPrompt) {
-        console.warn('Converting beatmap v2 to v3 may lose certain data!');
+        logger.warn(tag('V2toV3'), 'Converting beatmap v2 to v3 may lose certain data!');
         const confirmation = prompt('Proceed with conversion? (Y/N):', 'n');
         if (confirmation![0].toLowerCase() !== 'y') {
             throw Error('Conversion to beatmap v3 denied.');
@@ -179,7 +179,7 @@ export const V2toV3 = (data: DifficultyDataV2, skipPrompt?: boolean): Difficulty
                             ? e.customData._rotation
                             : e.value >= 1000
                             ? (e.value - 1360) % 360
-                            : EventLaneRotation[e.value] ?? 0,
+                            : EventLaneRotationValue[e.value] ?? 0,
                 }),
             );
         } else if (e.isBPMChangeEvent()) {
@@ -335,7 +335,7 @@ export const V2toV3 = (data: DifficultyDataV2, skipPrompt?: boolean): Difficulty
  */
 export const V3toV2 = (data: DifficultyDataV3, skipPrompt?: boolean): DifficultyDataV2 => {
     if (!skipPrompt) {
-        console.warn('Converting beatmap v3 to v2 may lose certain data!');
+        logger.warn(tag('V3toV2'), 'Converting beatmap v3 to v2 may lose certain data!');
         const confirmation = prompt('Proceed with conversion? (Y/N):', 'n');
         if (confirmation![0].toLowerCase() !== 'y') {
             throw Error('Conversion to beatmap v2 denied.');

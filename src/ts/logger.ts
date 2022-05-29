@@ -20,8 +20,6 @@ const logPrefixes = new Map<LogLevels, string>([
 export default new (class Logger {
     logLevel = LogLevels.INFO;
 
-    readonly logLevels = LogLevels;
-
     // deno-lint-ignore no-explicit-any
     private log(level: LogLevels, ...args: any[]) {
         if (level < this.logLevel) return;
