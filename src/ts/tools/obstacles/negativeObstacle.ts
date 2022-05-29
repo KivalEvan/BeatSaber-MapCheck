@@ -1,21 +1,23 @@
-import { Tool, ToolArgs } from '../../types/mapcheck';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import UICheckbox from '../../ui/helpers/checkbox';
-import { round } from '../../utils';
+import { printResultTime } from '../helpers';
 
 const name = 'Negative obstacle';
+const description = 'Look for obstacle with negative value.';
+const enabled = true;
 
 const tool: Tool = {
     name,
-    description: 'Placeholder',
+    description,
     type: 'obstacle',
     order: {
-        input: 30,
-        output: 80,
+        input: ToolInputOrder.OBSTACLES_NEGATIVE,
+        output: ToolOutputOrder.OBSTACLES_NEGATIVE,
     },
     input: {
-        enabled: true,
+        enabled,
         params: {},
-        html: UICheckbox.create(name, name, true, function (this: HTMLInputElement) {
+        html: UICheckbox.create(name, description, enabled, function (this: HTMLInputElement) {
             tool.input.enabled = this.checked;
         }),
     },
@@ -44,11 +46,7 @@ function run(map: ToolArgs) {
     const result = check(map);
 
     if (result.length) {
-        const htmlResult = document.createElement('div');
-        htmlResult.innerHTML = `<b>Negative obstacle [${result.length}]:</b> ${result
-            .map((n) => round(map.settings.bpm.adjustTime(n), 3))
-            .join(', ')}`;
-        tool.output.html = htmlResult;
+        tool.output.html = printResultTime('Negative obstacle', result, map.settings.bpm);
     } else {
         tool.output.html = null;
     }

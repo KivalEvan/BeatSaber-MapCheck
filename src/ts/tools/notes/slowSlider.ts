@@ -1,26 +1,21 @@
-import { Tool, ToolArgs } from '../../types/mapcheck';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import { round } from '../../utils';
 import * as beatmap from '../../beatmap';
+import { printResultTime } from '../helpers';
+import UICheckbox from '../../ui/helpers/checkbox';
 
+const name = 'Slow Slider';
+const description = 'Look for slider that require slow swing.';
+const enabled = true;
 const defaultSpeed = 0.025;
 
 const htmlContainer = document.createElement('div');
-const htmlInputCheck = document.createElement('input');
-const htmlLabelCheck = document.createElement('label');
 const htmlInputMinTime = document.createElement('input');
 const htmlLabelMinTime = document.createElement('label');
 const htmlInputMinPrec = document.createElement('input');
 const htmlLabelMinPrec = document.createElement('label');
 
 let localBPM!: beatmap.BeatPerMinute;
-
-htmlLabelCheck.textContent = ' Slow slider';
-htmlLabelCheck.htmlFor = 'input__tools-slow-slider-check';
-htmlInputCheck.id = 'input__tools-slow-slider-check';
-htmlInputCheck.className = 'input-toggle';
-htmlInputCheck.type = 'checkbox';
-htmlInputCheck.checked = true;
-htmlInputCheck.addEventListener('change', inputCheckHandler);
 
 htmlLabelMinTime.textContent = 'min speed (ms): ';
 htmlLabelMinTime.htmlFor = 'input__tools-slow-slider-time';
@@ -39,24 +34,26 @@ htmlInputMinPrec.type = 'number';
 htmlInputMinPrec.min = '0';
 htmlInputMinPrec.addEventListener('change', inputPrecHandler);
 
-htmlContainer.appendChild(htmlInputCheck);
-htmlContainer.appendChild(htmlLabelCheck);
-htmlContainer.appendChild(document.createElement('br'));
+htmlContainer.appendChild(
+    UICheckbox.create(name, description, enabled, function (this: HTMLInputElement) {
+        tool.input.enabled = this.checked;
+    }),
+);
 htmlContainer.appendChild(htmlLabelMinTime);
 htmlContainer.appendChild(htmlInputMinTime);
 htmlContainer.appendChild(htmlLabelMinPrec);
 htmlContainer.appendChild(htmlInputMinPrec);
 
 const tool: Tool = {
-    name: 'Slow Slider',
-    description: 'Placeholder',
+    name,
+    description,
     type: 'note',
     order: {
-        input: 21,
-        output: 120,
+        input: ToolInputOrder.NOTES_SLOW_SLIDER,
+        output: ToolOutputOrder.NOTES_SLOW_SLIDER,
     },
     input: {
-        enabled: htmlInputCheck.checked,
+        enabled,
         params: {
             minSpeed: defaultSpeed,
         },
@@ -72,10 +69,6 @@ const tool: Tool = {
 function adjustTimeHandler(bpm: beatmap.BeatPerMinute) {
     localBPM = bpm;
     htmlInputMinPrec.value = round(1 / localBPM.toBeatTime(tool.input.params.minSpeed as number), 2).toString();
-}
-
-function inputCheckHandler(this: HTMLInputElement) {
-    tool.input.enabled = this.checked;
 }
 
 function inputTimeHandler(this: HTMLInputElement) {
@@ -118,11 +111,7 @@ function run(map: ToolArgs) {
     const result = check(map);
 
     if (result.length) {
-        const htmlResult = document.createElement('div');
-        htmlResult.innerHTML = `<b>Slow slider (>${round(minSpeed * 1000, 1)}ms) [${result.length}]:</b> ${result
-            .map((n) => round(map.settings.bpm.adjustTime(n), 3))
-            .join(', ')}`;
-        tool.output.html = htmlResult;
+        tool.output.html = printResultTime(`Slow slider (>${round(minSpeed * 1000, 1)}ms)`, result, map.settings.bpm);
     } else {
         tool.output.html = null;
     }

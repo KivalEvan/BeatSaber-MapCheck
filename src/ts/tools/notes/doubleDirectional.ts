@@ -1,25 +1,27 @@
-import { IBeatmapItem, IBeatmapSettings, Tool, ToolArgs } from '../../types/mapcheck';
-import { round } from '../../utils';
+import { IBeatmapItem, IBeatmapSettings, Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import * as beatmap from '../../beatmap';
 import { NoteContainer } from '../../types/beatmap/v3/container';
 import { checkDirection } from '../../analyzers/placement/note';
 import swing from '../../analyzers/swing/swing';
 import UICheckbox from '../../ui/helpers/checkbox';
+import { printResultTime } from '../helpers';
 
 const name = 'Double-directional';
+const description = 'Check double-directional note swing (this may not mean parity break).';
+const enabled = true;
 
 const tool: Tool = {
     name,
-    description: 'Placeholder',
+    description,
     type: 'note',
     order: {
-        input: 99,
-        output: 140,
+        input: ToolInputOrder.NOTES_DOUBLE_DIRECTIONAL,
+        output: ToolOutputOrder.NOTES_DOUBLE_DIRECTIONAL,
     },
     input: {
-        enabled: true,
+        enabled,
         params: {},
-        html: UICheckbox.create(name, name, true, function (this: HTMLInputElement) {
+        html: UICheckbox.create(name, description, enabled, function (this: HTMLInputElement) {
             tool.input.enabled = this.checked;
         }),
     },
@@ -123,11 +125,7 @@ function run(map: ToolArgs) {
     const result = check(map.settings, map.difficulty);
 
     if (result.length) {
-        const htmlResult = document.createElement('div');
-        htmlResult.innerHTML = `<b>Double-directional [${result.length}]:</b> ${result
-            .map((n) => round(map.settings.bpm.adjustTime(n), 3))
-            .join(', ')}`;
-        tool.output.html = htmlResult;
+        tool.output.html = printResultTime('Double-directional', result, map.settings.bpm);
     } else {
         tool.output.html = null;
     }

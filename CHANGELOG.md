@@ -4,11 +4,12 @@
 
 ### Added
 
--   Added v3 beatmap support
+-   v3 beatmap support
 -   v2 to v3 beatmap internal conversion
     -   This may be inaccurate for modded v2 map as it internally convert modded to v3
--   Added Weave, Pyro and EDM environment
--   Added basic slider and burst slider check
+-   Weave, Pyro and EDM environment
+-   Basic slider and burst slider check
+-   Tool check hover tooltip
 -   More stats for v3 stuff
 -   Dynamic event name based on environment
 -   Standard style format (development)

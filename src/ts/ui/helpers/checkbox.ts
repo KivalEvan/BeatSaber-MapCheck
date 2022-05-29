@@ -2,8 +2,8 @@ export default class UICheckbox {
     private static list: string[] = [];
     private constructor() {}
 
-    static create = (name: string, title: string, bool: boolean, callback: EventListener): HTMLDivElement => {
-        const internalName = name.trim().toLowerCase().replace(' ', '-');
+    static create = (label: string, title: string, bool: boolean, callback: EventListener): HTMLDivElement => {
+        const internalName = label.trim().toLowerCase().replace(' ', '-');
         if (UICheckbox.list.includes(internalName)) {
             throw new Error(internalName + ' is already being used.');
         }
@@ -12,7 +12,7 @@ export default class UICheckbox {
         const htmlInputCheck = document.createElement('input');
         const htmlLabelCheck = document.createElement('label');
 
-        htmlLabelCheck.textContent = ' ' + name;
+        htmlLabelCheck.textContent = ' ' + label;
         htmlLabelCheck.title = title;
         htmlLabelCheck.htmlFor = 'input__tools-' + internalName;
         htmlInputCheck.id = 'input__tools-' + internalName;

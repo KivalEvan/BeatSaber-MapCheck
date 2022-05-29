@@ -1,22 +1,24 @@
-import { IBeatmapItem, IBeatmapSettings, Tool, ToolArgs } from '../../types/mapcheck';
-import { round } from '../../utils';
+import { IBeatmapItem, IBeatmapSettings, Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import * as beatmap from '../../beatmap';
 import UICheckbox from '../../ui/helpers/checkbox';
+import { printResultTime } from '../helpers';
 
 const name = 'Stacked Note';
+const description = 'Look for stacked note.';
+const enabled = true;
 
 const tool: Tool = {
-    name: 'Stacked Note',
-    description: 'Placeholder',
+    name,
+    description,
     type: 'note',
     order: {
-        input: 98,
-        output: 198,
+        input: ToolInputOrder.NOTES_STACKED_NOTE,
+        output: ToolOutputOrder.NOTES_STACKED_NOTE,
     },
     input: {
-        enabled: true,
+        enabled,
         params: {},
-        html: UICheckbox.create(name, name, true, function (this: HTMLInputElement) {
+        html: UICheckbox.create(name, description, enabled, function (this: HTMLInputElement) {
             tool.input.enabled = this.checked;
         }),
     },
@@ -89,26 +91,18 @@ function run(map: ToolArgs) {
     const resultNote = checkNote(map.settings, map.difficulty);
     const resultBomb = checkBomb(map.settings, map.difficulty);
 
-    const htmlString: string[] = [];
+    const htmlResult: HTMLElement[] = [];
     if (resultNote.length) {
-        htmlString.push(
-            `<b>Stacked note [${resultNote.length}]:</b> ${resultNote
-                .map((n) => round(map.settings.bpm.adjustTime(n), 3))
-                .join(', ')}`,
-        );
+        htmlResult.push(printResultTime('Stacked note', resultNote, map.settings.bpm));
     }
     if (resultBomb.length) {
-        htmlString.push(
-            `<b>Stacked bomb [${resultBomb.length}]:</b> ${resultBomb
-                .map((n) => round(map.settings.bpm.adjustTime(n), 3))
-                .join(', ')}`,
-        );
+        htmlResult.push(printResultTime('Stacked bomb', resultBomb, map.settings.bpm));
     }
 
-    if (htmlString.length) {
-        const htmlResult = document.createElement('div');
-        htmlResult.innerHTML = htmlString.join('<br>');
-        tool.output.html = htmlResult;
+    if (htmlResult.length) {
+        const htmlContainer = document.createElement('div');
+        htmlResult.forEach((h) => htmlContainer.append(h));
+        tool.output.html = htmlContainer;
     } else {
         tool.output.html = null;
     }

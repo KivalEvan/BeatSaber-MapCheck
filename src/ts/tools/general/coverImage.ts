@@ -1,18 +1,23 @@
-import { Tool } from '../../types/mapcheck';
+import { Tool, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import uiHeader from '../../ui/header';
 import flag from '../../flag';
 import settings from '../../settings';
+import { printResult } from '../helpers';
+
+const name = 'Validate Cover Image';
+const description = 'Validate cover image.';
+const enabled = true;
 
 const tool: Tool = {
-    name: 'Cover Image',
-    description: 'Placeholder',
+    name,
+    description,
     type: 'general',
     order: {
-        input: 0,
-        output: 0,
+        input: ToolInputOrder.GENERAL_COVER_IMAGE,
+        output: ToolOutputOrder.GENERAL_COVER_IMAGE,
     },
     input: {
-        enabled: true,
+        enabled,
         params: {},
     },
     output: {
@@ -25,26 +30,28 @@ function run() {
     const img = new Image();
     const src = uiHeader.getCoverImage();
 
-    const htmlString: string[] = [];
+    const htmlResult: HTMLElement[] = [];
     if (flag.loading.coverImage && src !== null) {
         img.src = src;
         if (img.width !== img.height) {
-            htmlString.push('<b>Cover image is not square:</b> resize to fit square');
+            htmlResult.push(printResult('Cover image is not square', 'resize to fit square'));
         }
         if (img.width < 256 || img.height < 256) {
-            htmlString.push('<b>Cover image is too small:</b> require at least 256x256');
+            htmlResult.push(printResult('Cover image is too small', 'require at least 256x256'));
         }
     } else {
-        htmlString.push(
-            '<b>No cover image:</b> ' +
-                (settings.load.imageCover ? 'could not be loaded or found' : 'no cover image option is enabled'),
+        htmlResult.push(
+            printResult(
+                'No cover image',
+                settings.load.imageCover ? 'could not be loaded or found' : 'no cover image option is enabled',
+            ),
         );
     }
 
-    if (htmlString.length) {
-        const htmlResult = document.createElement('div');
-        htmlResult.innerHTML = htmlString.join('<br>');
-        tool.output.html = htmlResult;
+    if (htmlResult.length) {
+        const htmlContainer = document.createElement('div');
+        htmlResult.forEach((h) => htmlContainer.append(h));
+        tool.output.html = htmlContainer;
     } else {
         tool.output.html = null;
     }

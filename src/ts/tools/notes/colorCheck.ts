@@ -1,8 +1,9 @@
-import { Tool, ToolArgs } from '../../types/mapcheck';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import { ColorArray } from '../../types/beatmap/shared/colors';
 import { deltaE00, toRGBArray, round } from '../../utils';
 import * as beatmap from '../../beatmap';
 import UICheckbox from '../../ui/helpers/checkbox';
+import { printResult } from '../helpers';
 
 const arrowColor: ColorArray = [1, 1, 1];
 
@@ -14,7 +15,7 @@ const deltaELevel: { [key: number]: string } = {
     40: 'Different',
     90: 'Discernible',
     100: 'Opposite',
-};
+} as const;
 
 const levelMsg = (level: { [key: number]: string }, perc: number): string => {
     let findKey = Object.keys(level).find((s) => parseFloat(s) >= perc) ?? '100';
@@ -23,19 +24,21 @@ const levelMsg = (level: { [key: number]: string }, perc: number): string => {
 };
 
 const name = 'Color Check (EXPERIMENTAL)';
+const description = 'Compare note color with other colored note and the arrow on itself.';
+const enabled = true;
 
 const tool: Tool = {
     name,
-    description: 'Placeholder',
+    description,
     type: 'note',
     order: {
-        input: 97,
-        output: 45,
+        input: ToolInputOrder.NOTES_COLOR_CHECK,
+        output: ToolOutputOrder.NOTES_COLOR_CHECK,
     },
     input: {
-        enabled: true,
+        enabled,
         params: {},
-        html: UICheckbox.create(name, name, true, function (this: HTMLInputElement) {
+        html: UICheckbox.create(name, description, enabled, function (this: HTMLInputElement) {
             tool.input.enabled = this.checked;
         }),
     },
@@ -84,28 +87,28 @@ function run(map: ToolArgs) {
     const ccSimilar = customColorSimilarity(map);
     const ccaSimilar = customColorArrowSimilarity(map);
 
-    const htmlString: string[] = [];
+    const htmlResult: HTMLElement[] = [];
     if (ccSimilar <= 20) {
-        htmlString.push(
-            `<b>${levelMsg(deltaELevel, ccSimilar)} note color (dE${round(
-                ccSimilar,
-                1,
-            )}):</b> suggest change to better differentiate between 2 note colour`,
+        htmlResult.push(
+            printResult(
+                `${levelMsg(deltaELevel, ccSimilar)} note color (dE${round(ccSimilar, 1)})`,
+                'suggest change to better differentiate between 2 note colour',
+            ),
         );
     }
     if (ccaSimilar <= 20) {
-        htmlString.push(
-            `<b>${levelMsg(deltaELevel, ccaSimilar)} arrow note color (dE${round(
-                ccaSimilar,
-                1,
-            )}):</b> may be difficult to see the arrow`,
+        htmlResult.push(
+            printResult(
+                `${levelMsg(deltaELevel, ccaSimilar)} arrow note color (dE${round(ccaSimilar, 1)})`,
+                'may be difficult to see the arrow',
+            ),
         );
     }
 
-    if (htmlString.length) {
-        const htmlResult = document.createElement('div');
-        htmlResult.innerHTML = htmlString.join('<br>');
-        tool.output.html = htmlResult;
+    if (htmlResult.length) {
+        const htmlContainer = document.createElement('div');
+        htmlResult.forEach((h) => htmlContainer.append(h));
+        tool.output.html = htmlContainer;
     } else {
         tool.output.html = null;
     }

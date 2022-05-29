@@ -1,28 +1,22 @@
-import { IBeatmapItem, IBeatmapSettings, Tool, ToolArgs } from '../../types/mapcheck';
+import { IBeatmapItem, IBeatmapSettings, Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import { round } from '../../utils';
 import * as beatmap from '../../beatmap';
 import { NoteContainer, NoteContainerNote } from '../../types/beatmap/v3/container';
 import swing from '../../analyzers/swing/swing';
+import { printResultTime } from '../helpers';
+import UICheckbox from '../../ui/helpers/checkbox';
 
+const name = 'Speed Pause';
+const description = 'Look for stream/burst containing timing gap causing sudden change of pace.';
+const enabled = false;
 const defaultMaxTime = 0.075;
+let localBPM!: beatmap.BeatPerMinute;
 
 const htmlContainer = document.createElement('div');
-const htmlInputCheck = document.createElement('input');
-const htmlLabelCheck = document.createElement('label');
 const htmlInputMinTime = document.createElement('input');
 const htmlLabelMinTime = document.createElement('label');
 const htmlInputMinPrec = document.createElement('input');
 const htmlLabelMinPrec = document.createElement('label');
-
-let localBPM!: beatmap.BeatPerMinute;
-
-htmlLabelCheck.textContent = ' Speed pause (EXPERIMENTAL)';
-htmlLabelCheck.htmlFor = 'input__tools-speed-pause-check';
-htmlInputCheck.id = 'input__tools-speed-pause-check';
-htmlInputCheck.className = 'input-toggle';
-htmlInputCheck.type = 'checkbox';
-htmlInputCheck.checked = false;
-htmlInputCheck.addEventListener('change', inputCheckHandler);
 
 htmlLabelMinTime.textContent = 'stream speed (ms): ';
 htmlLabelMinTime.htmlFor = 'input__tools-speed-pause-time';
@@ -41,24 +35,26 @@ htmlInputMinPrec.type = 'number';
 htmlInputMinPrec.min = '0';
 htmlInputMinPrec.addEventListener('change', inputPrecHandler);
 
-htmlContainer.appendChild(htmlInputCheck);
-htmlContainer.appendChild(htmlLabelCheck);
-htmlContainer.appendChild(document.createElement('br'));
+htmlContainer.appendChild(
+    UICheckbox.create(name, description, enabled, function (this: HTMLInputElement) {
+        tool.input.enabled = this.checked;
+    }),
+);
 htmlContainer.appendChild(htmlLabelMinTime);
 htmlContainer.appendChild(htmlInputMinTime);
 htmlContainer.appendChild(htmlLabelMinPrec);
 htmlContainer.appendChild(htmlInputMinPrec);
 
 const tool: Tool = {
-    name: 'Speed Pause',
-    description: 'Placeholder',
+    name,
+    description,
     type: 'note',
     order: {
-        input: 50,
-        output: 180,
+        input: ToolInputOrder.NOTES_SPEED_PAUSE,
+        output: ToolOutputOrder.NOTES_SPEED_PAUSE,
     },
     input: {
-        enabled: htmlInputCheck.checked,
+        enabled,
         params: {
             maxTime: defaultMaxTime,
         },
@@ -74,10 +70,6 @@ const tool: Tool = {
 function adjustTimeHandler(bpm: beatmap.BeatPerMinute) {
     localBPM = bpm;
     htmlInputMinPrec.value = round(1 / localBPM.toBeatTime(tool.input.params.maxTime as number), 2).toString();
-}
-
-function inputCheckHandler(this: HTMLInputElement) {
-    tool.input.enabled = this.checked;
 }
 
 function inputTimeHandler(this: HTMLInputElement) {
@@ -154,16 +146,6 @@ function check(settings: IBeatmapSettings, difficulty: IBeatmapItem) {
         });
 }
 
-function checkShrAngle(currCutDirection: number, prevCutDirection: number, type: number) {
-    if (currCutDirection === 8 || prevCutDirection === 8) {
-        return false;
-    }
-    if ((type === 0 ? prevCutDirection === 7 : prevCutDirection === 6) && currCutDirection === 0) {
-        return true;
-    }
-    return false;
-}
-
 function run(map: ToolArgs) {
     if (!map.difficulty) {
         console.error('Something went wrong!');
@@ -172,11 +154,7 @@ function run(map: ToolArgs) {
     const result = check(map.settings, map.difficulty);
 
     if (result.length) {
-        const htmlResult = document.createElement('div');
-        htmlResult.innerHTML = `<b>Speed pause [${result.length}]:</b> ${result
-            .map((n) => round(map.settings.bpm.adjustTime(n), 3))
-            .join(', ')}`;
-        tool.output.html = htmlResult;
+        tool.output.html = printResultTime('Speed pause', result, map.settings.bpm);
     } else {
         tool.output.html = null;
     }

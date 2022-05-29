@@ -1,15 +1,19 @@
-import { Tool, ToolArgs } from '../../types/mapcheck';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
+
+const name = 'Preview Time';
+const description = 'Warn default editor preview time.';
+const enabled = true;
 
 const tool: Tool = {
-    name: 'Preview Time',
-    description: 'Placeholder',
+    name,
+    description,
     type: 'general',
     order: {
-        input: 0,
-        output: 0,
+        input: ToolInputOrder.GENERAL_PREVIEW_TIME,
+        output: ToolOutputOrder.GENERAL_PREVIEW_TIME,
     },
     input: {
-        enabled: true,
+        enabled,
         params: {},
     },
     output: {

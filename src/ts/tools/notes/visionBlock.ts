@@ -1,10 +1,17 @@
-import { Tool, ToolArgs } from '../../types/mapcheck';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import { round } from '../../utils';
 import * as beatmap from '../../beatmap';
 import { NoteContainer } from '../../types/beatmap/v3/container';
+import { printResultTime } from '../helpers';
+import UICheckbox from '../../ui/helpers/checkbox';
 
+const name = 'Vision Block';
+const description = 'Check for vision block caused by center note.';
+const enabled = true;
 const defaultMinTime = 0.1;
 const defaultMaxTime = 0.5;
+
+let localBPM!: beatmap.BeatPerMinute;
 
 const vbDiff: { [key: string]: { min: number; max: number } } = {
     Easy: {
@@ -29,11 +36,7 @@ const vbDiff: { [key: string]: { min: number; max: number } } = {
     },
 };
 
-let localBPM!: beatmap.BeatPerMinute;
-
 const htmlContainer = document.createElement('div');
-const htmlInputCheck = document.createElement('input');
-const htmlLabelCheck = document.createElement('label');
 const htmlInputTimeCheck = document.createElement('input');
 const htmlLabelTimeCheck = document.createElement('label');
 const htmlInputDiffCheck = document.createElement('input');
@@ -46,14 +49,6 @@ const htmlInputMaxTime = document.createElement('input');
 const htmlLabelMaxTime = document.createElement('label');
 const htmlInputMaxBeat = document.createElement('input');
 const htmlLabelMaxBeat = document.createElement('label');
-
-htmlLabelCheck.textContent = ' Vision block';
-htmlLabelCheck.htmlFor = 'input__tools-vb-check';
-htmlInputCheck.id = 'input__tools-vb-check';
-htmlInputCheck.className = 'input-toggle';
-htmlInputCheck.type = 'checkbox';
-htmlInputCheck.checked = true;
-htmlInputCheck.addEventListener('change', inputCheckHandler);
 
 htmlLabelTimeCheck.textContent = ' VB time specific ';
 htmlLabelTimeCheck.htmlFor = 'input__tools-vb-time-check';
@@ -110,9 +105,11 @@ htmlInputMaxBeat.min = '0';
 htmlInputMaxBeat.step = '0.1';
 htmlInputMaxBeat.addEventListener('change', inputMaxBeatHandler);
 
-htmlContainer.appendChild(htmlInputCheck);
-htmlContainer.appendChild(htmlLabelCheck);
-htmlContainer.appendChild(document.createElement('br'));
+htmlContainer.appendChild(
+    UICheckbox.create(name, description, enabled, function (this: HTMLInputElement) {
+        tool.input.enabled = this.checked;
+    }),
+);
 htmlContainer.appendChild(htmlInputTimeCheck);
 htmlContainer.appendChild(htmlLabelTimeCheck);
 htmlContainer.appendChild(htmlInputDiffCheck);
@@ -129,15 +126,15 @@ htmlContainer.appendChild(htmlLabelMaxBeat);
 htmlContainer.appendChild(htmlInputMaxBeat);
 
 const tool: Tool = {
-    name: 'Slow Slider',
-    description: 'Placeholder',
+    name,
+    description,
     type: 'note',
     order: {
-        input: 100,
-        output: 120,
+        input: ToolInputOrder.NOTES_VISION_BLOCK,
+        output: ToolOutputOrder.NOTES_VISION_BLOCK,
     },
     input: {
-        enabled: htmlInputCheck.checked,
+        enabled,
         params: {
             specific: 'difficulty',
             minTime: defaultMinTime,
@@ -156,10 +153,6 @@ function adjustTimeHandler(bpm: beatmap.BeatPerMinute) {
     localBPM = bpm;
     htmlInputMinBeat.value = round(localBPM.toBeatTime(tool.input.params.minTime as number), 2).toString();
     htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.maxTime as number), 2).toString();
-}
-
-function inputCheckHandler(this: HTMLInputElement) {
-    tool.input.enabled = this.checked;
 }
 
 function inputSpecCheckHandler(this: HTMLInputElement) {
@@ -276,11 +269,7 @@ function run(map: ToolArgs) {
     const result = check(map);
 
     if (result.length) {
-        const htmlResult = document.createElement('div');
-        htmlResult.innerHTML = `<b>Vision block [${result.length}]:</b> ${result
-            .map((n) => round(map.settings.bpm.adjustTime(n), 3))
-            .join(', ')}`;
-        tool.output.html = htmlResult;
+        tool.output.html = printResultTime('Vision block', result, map.settings.bpm);
     } else {
         tool.output.html = null;
     }

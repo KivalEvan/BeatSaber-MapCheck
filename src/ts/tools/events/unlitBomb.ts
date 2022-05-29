@@ -1,23 +1,25 @@
-import { Tool, ToolArgs } from '../../types/mapcheck';
-import { round } from '../../utils';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import * as beatmap from '../../beatmap';
 import { EnvironmentName } from '../../types/beatmap/shared/environment';
 import UICheckbox from '../../ui/helpers/checkbox';
+import { printResultTime } from '../helpers';
 
 const name = 'Unlit Bomb';
+const description = 'Check for lighting around bomb.';
+const enabled = true;
 
 const tool: Tool = {
     name,
-    description: 'Placeholder',
+    description,
     type: 'event',
     order: {
-        input: 3,
-        output: 203,
+        input: ToolInputOrder.EVENTS_UNLIT_BOMB,
+        output: ToolOutputOrder.EVENTS_UNLIT_BOMB,
     },
     input: {
-        enabled: true,
+        enabled,
         params: {},
-        html: UICheckbox.create(name, name, true, function (this: HTMLInputElement) {
+        html: UICheckbox.create(name, description, enabled, function (this: HTMLInputElement) {
             tool.input.enabled = this.checked;
         }),
     },
@@ -156,11 +158,7 @@ function run(map: ToolArgs) {
     );
 
     if (result.length) {
-        const htmlResult = document.createElement('div');
-        htmlResult.innerHTML = `<b>Unlit bomb [${result.length}]:</b> ${result
-            .map((n) => round(map.settings.bpm.adjustTime(n), 3))
-            .join(', ')}`;
-        tool.output.html = htmlResult;
+        tool.output.html = printResultTime('Unlit bomb', result, map.settings.bpm);
     } else {
         tool.output.html = null;
     }

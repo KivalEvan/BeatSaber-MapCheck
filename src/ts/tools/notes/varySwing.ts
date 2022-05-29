@@ -1,21 +1,23 @@
-import { IBeatmapItem, Tool, ToolArgs } from '../../types/mapcheck';
+import { IBeatmapItem, Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import UICheckbox from '../../ui/helpers/checkbox';
-import { round } from '../../utils';
+import { printResultTime } from '../helpers';
 
 const name = 'Varying Swing Speed';
+const description = 'Check for varying swing speed due to changes in slider distance.';
+const enabled = true;
 
 const tool: Tool = {
     name,
-    description: 'Placeholder',
+    description,
     type: 'note',
     order: {
-        input: 20,
-        output: 130,
+        input: ToolInputOrder.NOTES_VARY_SWING,
+        output: ToolOutputOrder.NOTES_VARY_SWING,
     },
     input: {
-        enabled: true,
+        enabled,
         params: {},
-        html: UICheckbox.create(name, name, true, function (this: HTMLInputElement) {
+        html: UICheckbox.create(name, description, enabled, function (this: HTMLInputElement) {
             tool.input.enabled = this.checked;
         }),
     },
@@ -43,11 +45,7 @@ function run(map: ToolArgs) {
     const result = check(map.difficulty);
 
     if (result.length) {
-        const htmlResult = document.createElement('div');
-        htmlResult.innerHTML = `<b>Varying swing speed [${result.length}]:</b> ${result
-            .map((n) => round(map.settings.bpm.adjustTime(n), 3))
-            .join(', ')}`;
-        tool.output.html = htmlResult;
+        tool.output.html = printResultTime('Varying swing speed', result, map.settings.bpm);
     } else {
         tool.output.html = null;
     }

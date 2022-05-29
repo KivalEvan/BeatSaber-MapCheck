@@ -1,24 +1,27 @@
-import { Tool, ToolArgs } from '../../types/mapcheck';
-import { round } from '../../utils';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import * as beatmap from '../../beatmap';
 import UICheckbox from '../../ui/helpers/checkbox';
+import { printResultTime } from '../helpers';
 
 const name = '<15ms Obstacle';
+const description =
+    'Look for obstacle with inadequate duration.\nThis causes player to not take damage when in collision with obstacle.';
+const enabled = true;
 
 const tool: Tool = {
     name,
-    description: 'Placeholder',
+    description,
     type: 'obstacle',
     order: {
-        input: 0,
-        output: 50,
+        input: ToolInputOrder.OBSTACLES_SHORT,
+        output: ToolOutputOrder.OBSTACLES_SHORT,
     },
     input: {
-        enabled: true,
+        enabled,
         params: {
             minDur: 0.015,
         },
-        html: UICheckbox.create(name, name, true, function (this: HTMLInputElement) {
+        html: UICheckbox.create(name, description, enabled, function (this: HTMLInputElement) {
             tool.input.enabled = this.checked;
         }),
     },
@@ -166,11 +169,7 @@ function run(map: ToolArgs) {
     const result = check(map);
 
     if (result.length) {
-        const htmlResult = document.createElement('div');
-        htmlResult.innerHTML = `<b><15ms obstacle [${result.length}]:</b> ${result
-            .map((n) => round(map.settings.bpm.adjustTime(n), 3))
-            .join(', ')}`;
-        tool.output.html = htmlResult;
+        tool.output.html = printResultTime('<15ms obstacle', result, map.settings.bpm);
     } else {
         tool.output.html = null;
     }

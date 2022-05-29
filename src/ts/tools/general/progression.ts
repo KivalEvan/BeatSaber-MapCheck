@@ -1,18 +1,23 @@
-import { Tool, ToolArgs } from '../../types/mapcheck';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import { round } from '../../utils';
 import SavedData from '../../savedData';
 import * as swing from '../../analyzers/swing';
+import { printResult } from '../helpers';
+
+const name = 'Difficulty Progression';
+const description = 'For ranking purpose, check difficuly progression to fit rankability criteria.';
+const enabled = true;
 
 const tool: Tool = {
-    name: 'Progression',
-    description: 'Placeholder',
+    name,
+    description,
     type: 'general',
     order: {
-        input: 0,
-        output: 0,
+        input: ToolInputOrder.GENERAL_PROGRESSION,
+        output: ToolOutputOrder.GENERAL_PROGRESSION,
     },
     input: {
-        enabled: true,
+        enabled,
         params: {},
     },
     output: {
@@ -37,29 +42,29 @@ function run(map: ToolArgs) {
     }
     const minSPS = audioDuration < 120 ? 3.2 : audioDuration < 240 ? 4.2 : 5.2;
 
-    const htmlString: string[] = [];
+    const htmlResult: HTMLElement[] = [];
     if (
         audioDuration < 240 &&
         swing.getSPSLowest(filteredSPS) > minSPS &&
         swing.calcSPSTotalPercDrop(filteredSPS) < 60
     ) {
-        htmlString.push(
-            `<b>Minimum SPS not met (<${minSPS}):</b> lowest is ${round(swing.getSPSLowest(filteredSPS), 2)}`,
+        htmlResult.push(
+            printResult(`Minimum SPS not met (<${minSPS})`, `lowest is ${round(swing.getSPSLowest(filteredSPS), 2)}`),
         );
     }
     const progMax = swing.getProgressionMax(filteredSPS, minSPS);
     const progMin = swing.getProgressionMin(filteredSPS, minSPS);
     if (progMax && audioDuration < 360) {
-        htmlString.push(`<b>Violates progression:</b> ${progMax.difficulty} exceeded 40% SPS drop`);
+        htmlResult.push(printResult('Violates progression', `${progMax.difficulty} exceeded 40% SPS drop`));
     }
     if (progMin && audioDuration < 360) {
-        htmlString.push(`<b>Violates progression:</b> ${progMin.difficulty} has less than 10% SPS drop`);
+        htmlResult.push(printResult('Violates progression', `${progMin.difficulty} has less than 10% SPS drop`));
     }
 
-    if (htmlString.length) {
-        const htmlResult = document.createElement('div');
-        htmlResult.innerHTML = htmlString.join('<br>');
-        tool.output.html = htmlResult;
+    if (htmlResult.length) {
+        const htmlContainer = document.createElement('div');
+        htmlResult.forEach((h) => htmlContainer.append(h));
+        tool.output.html = htmlContainer;
     } else {
         tool.output.html = null;
     }

@@ -1,18 +1,23 @@
-import { Tool, ToolArgs } from '../../types/mapcheck';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import { toMMSS } from '../../utils';
 import settings from '../../settings';
 import flag from '../../flag';
+import { printResult } from '../helpers';
+
+const name = 'Audio Duration';
+const description = 'For ranking purpose, check for audio duration.';
+const enabled = true;
 
 const tool: Tool = {
-    name: 'Preview Time',
-    description: 'Placeholder',
+    name,
+    description,
     type: 'general',
     order: {
-        input: 0,
-        output: 0,
+        input: ToolInputOrder.GENERAL_AUDIO,
+        output: ToolOutputOrder.GENERAL_AUDIO,
     },
     input: {
-        enabled: true,
+        enabled,
         params: {},
     },
     output: {
@@ -24,15 +29,13 @@ const tool: Tool = {
 function run(map: ToolArgs) {
     const { audioDuration } = map.settings;
 
-    const htmlResult = document.createElement('div');
     if (audioDuration && audioDuration < 20) {
-        htmlResult.innerHTML = `<b>Unrankable audio length:</b> too short (${toMMSS(audioDuration)}s)`;
-        tool.output.html = htmlResult;
+        tool.output.html = printResult('Unrankable audio length', `too short (${toMMSS(audioDuration)}s)`);
     } else if (!flag.loading.audio) {
-        htmlResult.innerHTML = `<b>No audio:</b> ${
-            settings.load.audio ? 'could not be loaded or not found' : 'no audio mode is enabled'
-        }`;
-        tool.output.html = htmlResult;
+        tool.output.html = printResult(
+            'No audio',
+            settings.load.audio ? 'could not be loaded or not found' : 'no audio mode is enabled',
+        );
     } else {
         tool.output.html = null;
     }

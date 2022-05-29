@@ -1,24 +1,26 @@
-import { Tool, ToolArgs } from '../../types/mapcheck';
-import { round } from '../../utils';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import { NoteContainer, NoteContainerNote } from '../../types/beatmap/v3/container';
 import { isIntersect } from '../../analyzers/placement/note';
 import swing from '../../analyzers/swing/swing';
 import UICheckbox from '../../ui/helpers/checkbox';
+import { printResultTime } from '../helpers';
 
 const name = 'Hitbox Reverse Staircase';
+const description = 'Check for overlapping pre-swing hitbox with note hitbox during swinging.';
+const enabled = true;
 
 const tool: Tool = {
     name,
-    description: 'Placeholder',
+    description,
     type: 'note',
     order: {
-        input: 71,
-        output: 191,
+        input: ToolInputOrder.NOTES_HITBOX_REVERSE_STAIR,
+        output: ToolOutputOrder.NOTES_HITBOX_REVERSE_STAIR,
     },
     input: {
-        enabled: true,
+        enabled,
         params: {},
-        html: UICheckbox.create(name, name, true, function (this: HTMLInputElement) {
+        html: UICheckbox.create(name, description, enabled, function (this: HTMLInputElement) {
             tool.input.enabled = this.checked;
         }),
     },
@@ -91,11 +93,7 @@ function run(map: ToolArgs) {
     const result = check(map);
 
     if (result.length) {
-        const htmlResult = document.createElement('div');
-        htmlResult.innerHTML = `<b>Hitbox reverse staircase [${result.length}]:</b> ${result
-            .map((n) => round(map.settings.bpm.adjustTime(n), 3))
-            .join(', ')}`;
-        tool.output.html = htmlResult;
+        tool.output.html = printResultTime('Hitbox reverse Staircase', result, map.settings.bpm);
     } else {
         tool.output.html = null;
     }
