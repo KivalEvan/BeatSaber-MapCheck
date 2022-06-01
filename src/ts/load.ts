@@ -1,7 +1,7 @@
 import JSZip from 'jszip';
 import * as swing from './analyzers/swing';
 import { BeatPerMinute } from './beatmap';
-import { V2toV3 } from './beatmap/convert';
+import { V2toV3 } from './converter';
 import {
     difficulty as parseDifficultyV3,
     difficultyLegacy as parseDifficultyV2,

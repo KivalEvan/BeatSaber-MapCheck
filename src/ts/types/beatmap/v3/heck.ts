@@ -29,15 +29,15 @@ export interface IHeckCustomEventDataAnimateTrack extends IHeckCustomEventDataBa
 export interface IHeckCustomEventDataAssignPathAnimation extends IHeckCustomEventDataBase {
     duration: number;
     easing?: Easings;
-    _position?: string | Vector3PointDefinition[];
-    _rotation?: string | Vector3PointDefinition[];
-    _localRotation?: string | Vector3PointDefinition[];
-    _scale?: string | Vector3PointDefinition[];
-    _dissolve?: string | PercentPointDefinition[];
-    _dissolveArrow?: string | PercentPointDefinition[];
-    _color?: string | ColorPointDefinition[];
-    _interactable?: string | PercentPointDefinition[];
-    _definitePosition?: string | Vector3PointDefinition[];
+    position?: string | Vector3PointDefinition[];
+    rotation?: string | Vector3PointDefinition[];
+    localRotation?: string | Vector3PointDefinition[];
+    scale?: string | Vector3PointDefinition[];
+    dissolve?: string | PercentPointDefinition[];
+    dissolveArrow?: string | PercentPointDefinition[];
+    color?: string | ColorPointDefinition[];
+    interactable?: string | PercentPointDefinition[];
+    definitePosition?: string | Vector3PointDefinition[];
 }
 
 /** Heck Custom Event interface for AnimateTrack. */

@@ -266,6 +266,13 @@ export class Slider extends BaseSlider<ISlider> {
      * ```
      */
     isValid() {
-        return !(this.hasMappingExtensions() || this.isInverse());
+        return !(
+            this.hasMappingExtensions() ||
+            this.isInverse() ||
+            this.posX < 0 ||
+            this.posX > 3 ||
+            this.tailPosX < 0 ||
+            this.tailPosX > 3
+        );
     }
 }

@@ -1,9 +1,8 @@
 import { DataCheck, DataCheckObject } from '../../types/beatmap/shared/dataCheck';
 import logger from '../../logger';
-import { Version } from '../../types/beatmap/index';
+import { Version } from '../../types/beatmap/shared/version';
 import { compareVersion } from './version';
 
-// deno-lint-ignore ban-types
 const tag = (name: string) => {
     return `[shared::dataCheck::${name}]`;
 };

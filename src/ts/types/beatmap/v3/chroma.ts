@@ -74,7 +74,7 @@ export interface IChromaEventLight extends ICustomDataBase {
 
 /** Chroma interface for Beatmap Event Laser Rotation Custom Data. */
 export interface IChromaEventLaser extends ICustomDataBase {
-    lockPosition?: boolean;
+    lockRotation?: boolean;
     speed?: number;
     direction?: number;
 }
