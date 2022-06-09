@@ -15,7 +15,6 @@ export const countColorEBG = (
 ): ICountEventBoxGroup => {
     const commonEvent = EventList[environment]?.[1] ?? EventList['DefaultEnvironment'][1];
     const ebgCount: ICountEventBoxGroup = {};
-    console.log(ebg.length);
     for (let i = commonEvent.length - 1; i >= 0; i--) {
         ebgCount[commonEvent[i]] = {
             total: 0,

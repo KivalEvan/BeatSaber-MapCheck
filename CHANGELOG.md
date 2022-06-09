@@ -4,246 +4,254 @@
 
 ### Added
 
--   v3 beatmap support
--   v2 to v3 beatmap internal conversion
-    -   This may be inaccurate for modded v2 map as it internally convert modded to v3
--   Weave, Pyro and EDM environment
--   Basic slider and burst slider check
--   Tool check hover tooltip
--   More stats for v3 stuff
--   Dynamic event name based on environment
--   Standard style format (development)
+- v3 beatmap support
+- v2 to v3 beatmap internal conversion
+  - This may be inaccurate for modded v2 map as it internally convert modded to
+    v3
+- Weave, Pyro and EDM environment
+- Basic slider and burst slider check
+- Tool check hover tooltip
+- More stats for v3 stuff
+- Dynamic event name based on environment
+- Standard style format (development)
 
 ### Changed
 
--   Yet another major structure changes
--   Better internal user interface work
+- Yet another major structure changes
+- Better internal user interface work
 
 ### Updated
 
--   Package dependencies updated to latest
--   Changelog date format
+- Package dependencies updated to latest
+- Changelog date format
 
 ### Deprecated
 
--   Beatmap v2.x.x is now unsupported
-    -   Beatmap v2 can still be used by map check, but will not gain any feature updated around it.
+- Beatmap v2.x.x is now unsupported
+  - Beatmap v2 can still be used by map check, but will not gain any feature
+    updated around it.
 
 ### Removed
 
--   Old event value check
--   Event peak and per second check
+- Old event value check
+- Event peak and per second check
 
 ## 2.4.0 [2022-03-02]
 
 ### Changed
 
--   Major structure change (for better development)
--   Download from URL changes to download from ID if it detects valid BeatSaver map link
--   Time spent now shows HH:MM:SS instead of HH:MM
--   Actually added Gaga color scheme
--   Restructured custom mod stuff
+- Major structure change (for better development)
+- Download from URL changes to download from ID if it detects valid BeatSaver
+  map link
+- Time spent now shows HH:MM:SS instead of HH:MM
+- Actually added Gaga color scheme
+- Restructured custom mod stuff
 
 ### Removed
 
--   CORS proxy (I don't think this is even needed anymore)
+- CORS proxy (I don't think this is even needed anymore)
 
 ## 2.3.1 [2022-01-04]
 
 ### Added
 
--   Event type list per environment
--   Basic Chroma check for unlit bomb check
--   Gaga environment support
--   JSDoc for development purpose
+- Event type list per environment
+- Basic Chroma check for unlit bomb check
+- Gaga environment support
+- JSDoc for development purpose
 
 ### Changed
 
--   Updated parsing
-    -   Checks for type
-    -   Handle missing properties
--   Updated Chroma properties
--   Updated hitbox check now uses new position/rotation system (except staircase)
+- Updated parsing
+  - Checks for type
+  - Handle missing properties
+- Updated Chroma properties
+- Updated hitbox check now uses new position/rotation system (except staircase)
 
 ### Fixed
 
--   Hitbox inline and reverse staircase calculation fix
+- Hitbox inline and reverse staircase calculation fix
 
 ## 2.3.0 [2021-12-01]
 
 ### Added
 
--   Standardised note and obstacle position and rotation with [BeatWalls system](https://camo.githubusercontent.com/295a4c05e569c99c6bf07cfabda8d80afdec1b7d/68747470733a2f2f692e696d6775722e636f6d2f557a37614944672e706e673d31303078313030) to allow modded content support
-    -   This allows NE/ME map to use the error check functionality
-    -   This also allows for more advanced checking in the future
-    -   Updated check and threshold to better fit with the system
-    -   Because of the change, some functionality may not work as intended (please report if you find them)
--   Unlit bomb check
+- Standardised note and obstacle position and rotation with
+  [BeatWalls system](https://camo.githubusercontent.com/295a4c05e569c99c6bf07cfabda8d80afdec1b7d/68747470733a2f2f692e696d6775722e636f6d2f557a37614944672e706e673d31303078313030)
+  to allow modded content support
+  - This allows NE/ME map to use the error check functionality
+  - This also allows for more advanced checking in the future
+  - Updated check and threshold to better fit with the system
+  - Because of the change, some functionality may not work as intended (please
+    report if you find them)
+- Unlit bomb check
 
 ### Changed
 
--   Switched from Webpack to Vite
--   Cleaned up and updated dependencies
+- Switched from Webpack to Vite
+- Cleaned up and updated dependencies
 
 ## 2.2.5 [2021-11-11]
 
 ### Added
 
--   Download by hash from BeatSaver
--   LightID to Chroma Environment Enhancement info
+- Download by hash from BeatSaver
+- LightID to Chroma Environment Enhancement info
 
 ### Fixed
 
--   Light value 8 no longer considered as invalid
+- Light value 8 no longer considered as invalid
 
 ## 2.2.4 [2021-10-26]
 
 ### Added
 
--   Spooky Environment support
+- Spooky Environment support
 
 ### Changed
 
--   Note color check tweaked arrow color
+- Note color check tweaked arrow color
 
 ## 2.2.3 [2021-10-21]
 
 ### Added
 
--   Note color check (EXPERIMENTAL)
-    -   Similarity (including arrow)
+- Note color check (EXPERIMENTAL)
+  - Similarity (including arrow)
 
 ### Fixed
 
--   Scary error for progression when audio is not loaded
+- Scary error for progression when audio is not loaded
 
 ## 2.2.2 [2021-10-17]
 
 ### Added
 
--   Distance input for shrado angle
+- Distance input for shrado angle
 
 ### Changed
 
--   shrado angle now checks by distance between note
+- shrado angle now checks by distance between note
 
 ### Fixed
 
--   Potential fix for NJS HJD minimum
+- Potential fix for NJS HJD minimum
 
 ## 2.2.1 [2021-10-10]
 
 ### Changed
 
--   Hitbox path now checks for diagonal
--   Updated SPS requirement for 7:00 to 6:00
+- Hitbox path now checks for diagonal
+- Updated SPS requirement for 7:00 to 6:00
 
 ### Fixed
 
--   Hitbox path picking up bomb as note
+- Hitbox path picking up bomb as note
 
 ## 2.2.0 [2021-10-08]
 
 ### Added
 
--   Skrillex & Billie Eilish environment support
--   Difficulty version for Information
--   Old value 4 event check for old map
--   Warning for long audio loading
--   Hitbox path check
+- Skrillex & Billie Eilish environment support
+- Difficulty version for Information
+- Old value 4 event check for old map
+- Warning for long audio loading
+- Hitbox path check
 
 ### Changed
 
--   NJS HJD minimum limit reduced to 0.25 to accomodate v1.18.1 update
--   Mapping Extensions and Noodle Extensions now have basic check for valid (and negative) notes and obstacles
--   Plenty of code clean-up
+- NJS HJD minimum limit reduced to 0.25 to accomodate v1.18.1 update
+- Mapping Extensions and Noodle Extensions now have basic check for valid (and
+  negative) notes and obstacles
+- Plenty of code clean-up
 
 ### Fixed
 
--   NJS dependent check corrected formula (this affects inline, reverse stair, and stacked bomb)
+- NJS dependent check corrected formula (this affects inline, reverse stair, and
+  stacked bomb)
 
 ### Deprecated
 
--   Map version older than v2.5.0 no longer gets support for event
+- Map version older than v2.5.0 no longer gets support for event
 
 ## 2.1.1 [2021-09-05]
 
 ### Changed
 
--   Bomb stack now checks by both NJS and time (<20ms)
+- Bomb stack now checks by both NJS and time (<20ms)
 
 ## 2.1.0 [2021-09-04]
 
 ### Added
 
--   Parity check (EXPERIMENTAL: please send feedback)
--   2-wide center wall recovery input
+- Parity check (EXPERIMENTAL: please send feedback)
+- 2-wide center wall recovery input
 
 ### Changed
 
--   Bomb stack now checks by NJS instead of time
--   Minor code clean up
+- Bomb stack now checks by NJS instead of time
+- Minor code clean up
 
 ### Fixed
 
--   Varying speed slider not picking up stack + slider
--   Mistaken 2-wide center wall for negative wall
--   BeatSaver link not having correct URL
+- Varying speed slider not picking up stack + slider
+- Mistaken 2-wide center wall for negative wall
+- BeatSaver link not having correct URL
 
 ## 2.0.3 [2021-08-27]
 
 ### Fixed
 
--   BeatSaver download not having correct request URL
+- BeatSaver download not having correct request URL
 
 ## 2.0.2 [2021-08-08]
 
 ### Changed
 
--   Accordion button resized for mobile device
+- Accordion button resized for mobile device
 
 ### Fixed
 
--   Invalid obstacle picking up 4-wide crouch wall
+- Invalid obstacle picking up 4-wide crouch wall
 
 ## 2.0.1 [2021-08-06]
 
 ### Added
 
--   Mobile friendly support
+- Mobile friendly support
 
 ### Changed
 
--   Re-enabled BeatSaver Download
--   QoL update for VB tool
+- Re-enabled BeatSaver Download
+- QoL update for VB tool
 
 ### Fixed
 
--   Invalid event picking up laser rotation of high value
+- Invalid event picking up laser rotation of high value
 
 ## 2.0.0 : TypeScript Rewrite [2021-08-05]
 
 ### Added
 
--   Information Tab
-    -   SongCore, Chroma & Noodle Extensions related stuff
--   Stats Tab
--   Settings Tab
-    -   Saves to local storage
--   Theme
--   Audio player
--   Mode and difficulty ordering
--   Note Angle stats
--   Improved Note Placement stats
--   Partial Mapping Extensions and Noodle Extensions support
+- Information Tab
+  - SongCore, Chroma & Noodle Extensions related stuff
+- Stats Tab
+- Settings Tab
+  - Saves to local storage
+- Theme
+- Audio player
+- Mode and difficulty ordering
+- Note Angle stats
+- Improved Note Placement stats
+- Partial Mapping Extensions and Noodle Extensions support
 
 ### Changed
 
--   Codebase rewritten
--   Improved tools
--   Updated SPS requirement
--   BeatSaver ID download temporarily disabled
+- Codebase rewritten
+- Improved tools
+- Updated SPS requirement
+- BeatSaver ID download temporarily disabled
 
 ### Fixed
 
--   Potential miscalculation on Chroma count
+- Potential miscalculation on Chroma count

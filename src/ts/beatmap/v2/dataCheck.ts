@@ -1,16 +1,16 @@
 import { DataCheck } from '../../types/beatmap/shared/dataCheck';
 import {
     IDifficultyData,
-    INote,
-    ISlider,
-    IObstacle,
     IEvent,
-    IWaypoint,
+    INote,
+    IObstacle,
+    ISlider,
     ISpecialEventsKeywordFilters,
     ISpecialEventsKeywordFiltersKeywords,
-} from '../../types/beatmap/v2/index';
+    IWaypoint,
+} from '../../types/beatmap/v2';
 
-export const NoteDataCheck: Readonly<Record<keyof INote, DataCheck>> = {
+export const NoteDataCheck: Record<keyof INote, DataCheck> = {
     _time: {
         type: 'number',
         version: '2.0.0',
@@ -37,9 +37,9 @@ export const NoteDataCheck: Readonly<Record<keyof INote, DataCheck>> = {
         check: {},
         optional: true,
     },
-};
+} as const;
 
-export const SliderDataCheck: Readonly<Record<keyof ISlider, DataCheck>> = {
+export const SliderDataCheck: Record<keyof ISlider, DataCheck> = {
     _colorType: {
         type: 'number',
         version: '2.0.0',
@@ -88,9 +88,9 @@ export const SliderDataCheck: Readonly<Record<keyof ISlider, DataCheck>> = {
         type: 'number',
         version: '2.0.0',
     },
-};
+} as const;
 
-export const ObstacleDataCheck: Readonly<Record<keyof IObstacle, DataCheck>> = {
+export const ObstacleDataCheck: Record<keyof IObstacle, DataCheck> = {
     _time: {
         type: 'number',
         version: '2.0.0',
@@ -125,9 +125,9 @@ export const ObstacleDataCheck: Readonly<Record<keyof IObstacle, DataCheck>> = {
         check: {},
         optional: true,
     },
-};
+} as const;
 
-export const EventDataCheck: Readonly<Record<keyof IEvent, DataCheck>> = {
+export const EventDataCheck: Record<keyof IEvent, DataCheck> = {
     _time: {
         type: 'number',
         version: '2.0.0',
@@ -150,9 +150,9 @@ export const EventDataCheck: Readonly<Record<keyof IEvent, DataCheck>> = {
         check: {},
         optional: true,
     },
-};
+} as const;
 
-export const WaypointDataCheck: Readonly<Record<keyof IWaypoint, DataCheck>> = {
+export const WaypointDataCheck: Record<keyof IWaypoint, DataCheck> = {
     _time: {
         type: 'number',
         version: '2.2.0',
@@ -175,10 +175,11 @@ export const WaypointDataCheck: Readonly<Record<keyof IWaypoint, DataCheck>> = {
         check: {},
         optional: true,
     },
-};
+} as const;
 
-export const SpecialEventsKeywordFiltersKeywordsDataCheck: Readonly<
-    Record<keyof ISpecialEventsKeywordFiltersKeywords, DataCheck>
+export const SpecialEventsKeywordFiltersKeywordsDataCheck: Record<
+    keyof ISpecialEventsKeywordFiltersKeywords,
+    DataCheck
 > = {
     _keyword: {
         type: 'string',
@@ -188,17 +189,17 @@ export const SpecialEventsKeywordFiltersKeywordsDataCheck: Readonly<
         type: 'number',
         version: '2.4.0',
     },
-};
+} as const;
 
-export const SpecialEventsKeywordFiltersDataCheck: Readonly<Record<keyof ISpecialEventsKeywordFilters, DataCheck>> = {
+export const SpecialEventsKeywordFiltersDataCheck: Record<keyof ISpecialEventsKeywordFilters, DataCheck> = {
     _keywords: {
         type: 'array',
         version: '2.4.0',
         check: SpecialEventsKeywordFiltersKeywordsDataCheck,
     },
-};
+} as const;
 
-export const DifficultyDataCheck: Readonly<Record<keyof IDifficultyData, DataCheck>> = {
+export const DifficultyDataCheck: Record<keyof IDifficultyData, DataCheck> = {
     _version: {
         type: 'string',
         version: '2.0.0',
@@ -240,4 +241,4 @@ export const DifficultyDataCheck: Readonly<Record<keyof IDifficultyData, DataChe
         check: {},
         optional: true,
     },
-};
+} as const;

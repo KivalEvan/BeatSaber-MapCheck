@@ -1,7 +1,7 @@
 import { EnvironmentAllName } from '../../types/beatmap/shared/environment';
 
 /** Environment rename to human readable. */
-export const EnvironmentRename: Readonly<Record<EnvironmentAllName, string>> = {
+export const EnvironmentRename: { [key in EnvironmentAllName]: string } = {
     DefaultEnvironment: 'The First',
     OriginsEnvironment: 'Origins',
     TriangleEnvironment: 'Triangle',
@@ -29,10 +29,10 @@ export const EnvironmentRename: Readonly<Record<EnvironmentAllName, string>> = {
     PyroEnvironment: 'Pyro',
     EDMEnvironment: 'EDM',
     GlassDesertEnvironment: 'Glass Desert',
-};
+} as const;
 
 /** List of available event type in environment. */
-export const EventList: Readonly<Record<EnvironmentAllName, [number[], number[]]>> = {
+export const EventList: { [key in EnvironmentAllName]: Readonly<[ReadonlyArray<number>, ReadonlyArray<number>]> } = {
     DefaultEnvironment: [[0, 1, 2, 3, 4, 5, 8, 9, 12, 13], []],
     OriginsEnvironment: [[0, 1, 2, 3, 4, 5, 8, 9, 12, 13], []],
     TriangleEnvironment: [[0, 1, 2, 3, 4, 5, 8, 9, 12, 13], []],
@@ -48,7 +48,7 @@ export const EventList: Readonly<Record<EnvironmentAllName, [number[], number[]]
     GreenDayGrenadeEnvironment: [[0, 1, 2, 3, 4, 5, 8, 9, 12, 13], []],
     TimbalandEnvironment: [[0, 1, 2, 3, 4, 5, 8, 9, 12, 13], []],
     FitBeatEnvironment: [[0, 1, 2, 3, 4, 5, 8, 9, 12, 13], []],
-    LinkinParkEnvironment: [[0, 1, 2, 3, 4, 5, 8, 12, 13], []],
+    LinkinParkEnvironment: [[0, 1, 2, 3, 4, 5, 8, 9, 12, 13], []],
     BTSEnvironment: [[0, 1, 2, 3, 4, 5, 8, 9, 12, 13], []],
     KaleidoscopeEnvironment: [[0, 1, 2, 3, 4, 5, 8, 9, 12, 13], []],
     InterscopeEnvironment: [[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13, 16, 17], []],
@@ -66,4 +66,4 @@ export const EventList: Readonly<Record<EnvironmentAllName, [number[], number[]]
         [0, 1, 4],
         [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
     ],
-};
+} as const;

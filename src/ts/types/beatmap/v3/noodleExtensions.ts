@@ -78,16 +78,16 @@ export interface INEAnimation {
 
 /** Noodle Extensions Custom Event interface for AssignTrackParent. */
 export interface INECustomEventAssignTrackParent {
-    b: number;
-    t: 'AssignTrackParent';
-    d: INECustomEventDataAssignTrackParent;
+    beat: number;
+    time: 'AssignTrackParent';
+    data: INECustomEventDataAssignTrackParent;
 }
 
 /** Noodle Extensions Custom Event interface for AssignPlayerToTrack. */
 export interface INECustomEventAssignPlayerToTrack {
-    b: number;
-    t: 'AssignPlayerToTrack';
-    d: INECustomEventDataAssignPlayerToTrack;
+    beat: number;
+    time: 'AssignPlayerToTrack';
+    data: INECustomEventDataAssignPlayerToTrack;
 }
 
 export type INECustomEvent = INECustomEventAssignTrackParent | INECustomEventAssignPlayerToTrack;

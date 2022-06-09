@@ -390,24 +390,24 @@ const setCustomEvents = (arr?: ICustomEvent[], bpm?: BeatPerMinute | null): void
         return;
     }
     const customEv = arr.map((elem) => {
-        let time = elem.b;
+        let time = elem.beat;
         let rt!: number;
         if (bpm) {
             time = bpm.adjustTime(time);
             rt = bpm.toRealTime(time);
         }
         let keyArr = [];
-        for (const key in elem.d) {
+        for (const key in elem.data) {
             if (key == '_duration' || key == '_easing' || key == '_track') {
                 continue;
             }
             //@ts-ignore shut up i dont care
-            if (elem.d[key] != null) {
+            if (elem.data[key] != null) {
                 keyArr.push(key);
             }
         }
-        return `${round(elem.b, 3)}${rt ? ' | ' + toMMSS(rt) : ''} -- ${elem.t} -> [${keyArr.join('')}]${
-            elem.t !== 'AssignTrackParent' ? `(${elem.d.track})` : ''
+        return `${round(elem.beat, 3)}${rt ? ' | ' + toMMSS(rt) : ''} -- ${elem.time} -> [${keyArr.join('')}]${
+            elem.time !== 'AssignTrackParent' ? `(${elem.data.track})` : ''
         }`;
     });
     displayTableRow(htmlTableCustomEvents, customEv);
