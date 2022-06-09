@@ -3,6 +3,7 @@ import { toMMSS } from '../../utils';
 import settings from '../../settings';
 import flag from '../../flag';
 import { printResult } from '../helpers';
+import UICheckbox from '../../ui/helpers/checkbox';
 
 const name = 'Audio Duration';
 const description = 'For ranking purpose, check for audio duration.';
@@ -19,6 +20,9 @@ const tool: Tool = {
     input: {
         enabled,
         params: {},
+        html: UICheckbox.create(name, description, enabled, function (this: HTMLInputElement) {
+            tool.input.enabled = this.checked;
+        }),
     },
     output: {
         html: null,

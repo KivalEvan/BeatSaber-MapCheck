@@ -1,4 +1,5 @@
 import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
+import UICheckbox from '../../ui/helpers/checkbox';
 
 const name = 'Preview Time';
 const description = 'Warn default editor preview time.';
@@ -15,6 +16,9 @@ const tool: Tool = {
     input: {
         enabled,
         params: {},
+        html: UICheckbox.create(name, description, enabled, function (this: HTMLInputElement) {
+            tool.input.enabled = this.checked;
+        }),
     },
     output: {
         html: null,

@@ -10,6 +10,7 @@ import { IBookmark, IEditor, IEditorInfo } from '../types/beatmap/shared';
 import { ChromaDataEnvAbbr, IChromaEnvironment } from '../types/beatmap/v3/chroma';
 import { IHeckPointDefinition } from '../types/beatmap/v3/heck';
 import { ICustomEvent } from '../types/beatmap/v3/customEvent';
+import { NEDataAbbr } from '../types/beatmap/v3';
 
 const logPrefix = 'UI Info: ';
 
@@ -360,7 +361,7 @@ const setEnvironmentEnhancement = (arr?: IChromaEnvironment[]): void => {
     const envEnhance = arr.map((elem) => {
         let keyArr = [];
         for (const key in elem) {
-            if (key == '_lookupMethod' || key == '_id') {
+            if (key == '_lookupMethod' || key == '_id' || key == 'lookupMethod' || key == 'id') {
                 continue;
             }
             let k = ChromaDataEnvAbbr[key as keyof typeof ChromaDataEnvAbbr];
@@ -398,12 +399,19 @@ const setCustomEvents = (arr?: ICustomEvent[], bpm?: BeatPerMinute | null): void
         }
         let keyArr = [];
         for (const key in elem.data) {
-            if (key == '_duration' || key == '_easing' || key == '_track') {
+            if (
+                key == '_duration' ||
+                key == '_easing' ||
+                key == '_track' ||
+                key == 'duration' ||
+                key == 'easing' ||
+                key == 'track'
+            ) {
                 continue;
             }
-            //@ts-ignore shut up i dont care
-            if (elem.data[key] != null) {
-                keyArr.push(key);
+            let k = NEDataAbbr[key as keyof typeof NEDataAbbr];
+            if (elem.data[key as keyof ICustomEvent['data']] != null) {
+                keyArr.push(k);
             }
         }
         return `${round(elem.beat, 3)}${rt ? ' | ' + toMMSS(rt) : ''} -- ${elem.time} -> [${keyArr.join('')}]${

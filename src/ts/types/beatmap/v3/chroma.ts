@@ -6,8 +6,6 @@ import { LookupMethod } from '../shared/chroma';
 import { IHeckCustomEventDataBase } from './heck';
 
 export enum ChromaDataEnvAbbr {
-    id = 'Ct',
-    lookupMethod = 'Lm',
     duplicate = 'D',
     active = 'A',
     scale = 'S',

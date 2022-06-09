@@ -133,7 +133,7 @@ const createNoteCountTable = (mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTa
     const noteCount = countNote(mapData.data.colorNotes);
     const arcCount = countNote(mapData.data.sliders);
     const chainCount = countNote(mapData.data.burstSliders);
-    const bombCount = countBomb(mapData.data.colorNotes);
+    const bombCount = countBomb(mapData.data.bombNotes);
 
     let htmlString = `<caption class="${prefix}table-caption">Notes: ${
         noteCount.red.total + noteCount.blue.total

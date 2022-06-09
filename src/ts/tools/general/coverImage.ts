@@ -3,6 +3,7 @@ import uiHeader from '../../ui/header';
 import flag from '../../flag';
 import settings from '../../settings';
 import { printResult } from '../helpers';
+import UICheckbox from '../../ui/helpers/checkbox';
 
 const name = 'Validate Cover Image';
 const description = 'Validate cover image.';
@@ -19,6 +20,9 @@ const tool: Tool = {
     input: {
         enabled,
         params: {},
+        html: UICheckbox.create(name, description, enabled, function (this: HTMLInputElement) {
+            tool.input.enabled = this.checked;
+        }),
     },
     output: {
         html: null,

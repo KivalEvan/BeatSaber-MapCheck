@@ -5,6 +5,10 @@ import * as beatmap from '../../beatmap';
 import UICheckbox from '../../ui/helpers/checkbox';
 import { printResult } from '../helpers';
 
+const name = 'Color Check';
+const description = 'Compare note color with other colored note and the arrow on itself.';
+const enabled = true;
+
 const arrowColor: ColorArray = [1, 1, 1];
 
 const deltaELevel: { [key: number]: string } = {
@@ -22,10 +26,6 @@ const levelMsg = (level: { [key: number]: string }, perc: number): string => {
     let key = parseFloat(findKey);
     return level[key];
 };
-
-const name = 'Color Check';
-const description = 'Compare note color with other colored note and the arrow on itself.';
-const enabled = true;
 
 const tool: Tool = {
     name,
