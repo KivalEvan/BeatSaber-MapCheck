@@ -26,8 +26,8 @@ export default class Swing implements ISwingContainer {
 
     static generate(nc: NoteContainer[], bpm: BeatPerMinute): ISwingContainer[] {
         const sc: ISwingContainer[] = [];
-        let ebpm: number = 0;
-        let ebpmSwing: number = 0;
+        let ebpm = 0;
+        let ebpmSwing = 0;
         let minSpeed: number;
         let maxSpeed: number;
         const firstNote: { [key: number]: NoteContainer } = {};

@@ -19,7 +19,7 @@ export const enum NoteCutDirection {
     ANY,
 }
 
-/** Array index mapped to cut angle corresponding to the `_cutDirection`.
+/** Array index mapped to cut angle corresponding to the `cutDirection`.
  * ```ts
  * 0 -> 180,
  * 1 -> 0,
@@ -56,7 +56,7 @@ export const NoteFlipDirection: { [key: number]: NoteCutDirection } = {
     [NoteCutDirection.ANY]: NoteCutDirection.ANY,
 } as const;
 
-/** Array index mapped to tuple of `_lineIndex` and `_lineLayer` corresponding to the `_cutDirection`.
+/** Array index mapped to tuple of `posX` and `posY` corresponding to the `cutDirection`.
  * ```ts
  * 0 -> [0, 1],
  * 1 -> [0, -1],
@@ -121,6 +121,7 @@ export const enum EventType {
     BPM_CHANGE = 100,
 }
 
+/** Unused as of beatmap v3, useful for conversion reason. */
 export const EventLaneRotationValue: { [key: number]: number } = {
     0: -60,
     1: -45,

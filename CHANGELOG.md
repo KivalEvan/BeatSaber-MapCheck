@@ -37,6 +37,7 @@
 
 -   Old event value check
 -   Event peak and per second check
+-   Negative obstacle check (invalid check already points it)
 
 ## 2.4.0 [2022-03-02]
 

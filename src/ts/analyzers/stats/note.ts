@@ -1,7 +1,7 @@
-import { BombNote } from '../../beatmap/v3';
+import { BombNote } from '../../beatmap/v3/bombNote';
 import { BaseSlider } from '../../beatmap/v3/baseSlider';
 import { ColorNote } from '../../beatmap/v3/colorNote';
-import { IBaseSlider } from '../../types/beatmap/v3';
+import { IBaseSlider } from '../../types/beatmap/v3/baseSlider';
 import { NoteContainer } from '../../types/beatmap/v3/container';
 import { ICountNote, ICountStatsNote } from '../../types/mapcheck/analyzers/stats';
 
