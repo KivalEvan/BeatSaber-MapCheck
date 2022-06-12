@@ -63,7 +63,7 @@ export const loadDifficulty = async (info: IInfoData, zip: JSZip) => {
                         const data = parseDifficultyV3(diffJSON);
                         const bpm = BeatPerMinute.create(
                             info._beatsPerMinute,
-                            data.customData?.BPMChanges,
+                            data.customData.BPMChanges,
                             diffInfo._customData?._editorOffset,
                         );
                         beatmapItem.push({

@@ -458,8 +458,8 @@ const setDiffInfoTable = (mapData: IBeatmapItem): void => {
         setBookmarks(mapData.data.customData._bookmarks ?? mapData.data.customData.bookmarks, bpm);
         setBPMChanges(bpm);
         setEnvironmentEnhancement(mapData.data.customData.environment);
-        setPointDefinitions(mapData.data.customData._pointDefinitions ?? mapData.data.customData.pointDefinitions);
-        setCustomEvents(mapData.data.customData._customEvents ?? mapData.data.customData.customEvents, bpm);
+        setPointDefinitions(mapData.data.customData.pointDefinitions);
+        setCustomEvents(mapData.data.customData.customEvents, bpm);
     }
 };
 

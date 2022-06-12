@@ -199,9 +199,9 @@ export class Obstacle extends BaseObject<IObstacle> {
      * ```
      */
     getPosition(): [number, number] {
-        // if (obstacle._customData?._position) {
-        //     return [obstacle._customData._position[0], obstacle._customData._position[1]];
-        // }
+        if (this.customData.coordinates) {
+            return [this.customData.coordinates[0], this.customData.coordinates[1]];
+        }
         return [
             (this.posX <= -1000 ? this.posX / 1000 : this.posX >= 1000 ? this.posX / 1000 : this.posX) - 2,
             (this.posY <= -1000 ? this.posY / 1000 : this.posY >= 1000 ? this.posY / 1000 : this.posY) - 0.5,
@@ -223,7 +223,7 @@ export class Obstacle extends BaseObject<IObstacle> {
      * ```
      */
     hasChroma = (): boolean => {
-        return Array.isArray(this.customData?.color);
+        return Array.isArray(this.customData.color);
     };
 
     /** Check if obstacle has Noodle Extensions properties.
@@ -233,15 +233,15 @@ export class Obstacle extends BaseObject<IObstacle> {
      */
     hasNoodleExtensions = (): boolean => {
         return (
-            Array.isArray(this.customData?.animation) ||
-            typeof this.customData?.uninteractable === 'boolean' ||
-            Array.isArray(this.customData?.localRotation) ||
-            typeof this.customData?.noteJumpMovementSpeed === 'number' ||
-            typeof this.customData?.noteJumpStartBeatOffset === 'number' ||
-            Array.isArray(this.customData?.coordinates) ||
-            Array.isArray(this.customData?.worldRotation) ||
-            Array.isArray(this.customData?.size) ||
-            typeof this.customData?.track === 'string'
+            Array.isArray(this.customData.animation) ||
+            typeof this.customData.uninteractable === 'boolean' ||
+            Array.isArray(this.customData.localRotation) ||
+            typeof this.customData.noteJumpMovementSpeed === 'number' ||
+            typeof this.customData.noteJumpStartBeatOffset === 'number' ||
+            Array.isArray(this.customData.coordinates) ||
+            Array.isArray(this.customData.worldRotation) ||
+            Array.isArray(this.customData.size) ||
+            typeof this.customData.track === 'string'
         );
     };
 

@@ -152,9 +152,9 @@ export class ColorNote extends BaseNote<IColorNote> {
      * ```
      */
     getPosition(): [number, number] {
-        // if (note._customData?._position) {
-        //     return [note._customData._position[0], note._customData._position[1]];
-        // }
+        if (this.customData.coordinates) {
+            return [this.customData.coordinates[0], this.customData.coordinates[1]];
+        }
         return [
             (this.posX <= -1000 ? this.posX / 1000 : this.posX >= 1000 ? this.posX / 1000 : this.posX) - 2,
             this.posY <= -1000 ? this.posY / 1000 : this.posY >= 1000 ? this.posY / 1000 : this.posY,
@@ -167,11 +167,6 @@ export class ColorNote extends BaseNote<IColorNote> {
      * ```
      */
     getAngle() {
-        // if (this.customData?._cutDirection) {
-        //     return this.customData._cutDirection > 0
-        //         ? this.customData._cutDirection % 360
-        //         : 360 + (this.customData._cutDirection % 360);
-        // }
         if (this.direction >= 1000) {
             return Math.abs(((this.direction % 1000) % 360) - 360);
         }
@@ -274,7 +269,7 @@ export class ColorNote extends BaseNote<IColorNote> {
      * ```
      */
     hasChroma = (): boolean => {
-        return Array.isArray(this.customData?.color) || typeof this.customData?.spawnEffect === 'boolean';
+        return Array.isArray(this.customData.color) || typeof this.customData.spawnEffect === 'boolean';
     };
 
     /** Check if note has Noodle Extensions properties.
@@ -285,18 +280,18 @@ export class ColorNote extends BaseNote<IColorNote> {
     // god i hate these
     hasNoodleExtensions = (): boolean => {
         return (
-            Array.isArray(this.customData?.animation) ||
-            typeof this.customData?.disableNoteGravity === 'boolean' ||
-            typeof this.customData?.disableNoteLook === 'boolean' ||
-            Array.isArray(this.customData?.flip) ||
-            typeof this.customData?.uninteractable === 'boolean' ||
-            Array.isArray(this.customData?.localRotation) ||
-            typeof this.customData?.noteJumpMovementSpeed === 'number' ||
-            typeof this.customData?.noteJumpStartBeatOffset === 'number' ||
-            Array.isArray(this.customData?.coordinates) ||
-            Array.isArray(this.customData?.worldRotation) ||
-            typeof this.customData?.worldRotation === 'number' ||
-            typeof this.customData?.track === 'string'
+            Array.isArray(this.customData.animation) ||
+            typeof this.customData.disableNoteGravity === 'boolean' ||
+            typeof this.customData.disableNoteLook === 'boolean' ||
+            Array.isArray(this.customData.flip) ||
+            typeof this.customData.uninteractable === 'boolean' ||
+            Array.isArray(this.customData.localRotation) ||
+            typeof this.customData.noteJumpMovementSpeed === 'number' ||
+            typeof this.customData.noteJumpStartBeatOffset === 'number' ||
+            Array.isArray(this.customData.coordinates) ||
+            Array.isArray(this.customData.worldRotation) ||
+            typeof this.customData.worldRotation === 'number' ||
+            typeof this.customData.track === 'string'
         );
     };
 

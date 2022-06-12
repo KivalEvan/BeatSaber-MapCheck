@@ -6,7 +6,7 @@ import UICheckbox from '../../ui/helpers/checkbox';
 import { printResultTime } from '../helpers';
 
 const name = 'Hitbox Reverse Staircase';
-const description = 'Check for overlapping pre-swing hitbox with note hitbox during swinging.';
+const description = 'Check for overlapping pre-swing hitbox with note hitbox during swing.';
 const enabled = true;
 
 const tool: Tool = {

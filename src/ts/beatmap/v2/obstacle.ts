@@ -187,7 +187,7 @@ export class Obstacle extends BeatmapObject<IObstacle> {
      */
     // FIXME: do i bother with Mapping Extension for obstacle Y position?
     getPosition = (): [number, number] => {
-        if (this.customData?._position) {
+        if (this.customData._position) {
             return [this.customData._position[0], this.customData._position[1]];
         }
         return [
@@ -242,7 +242,7 @@ export class Obstacle extends BeatmapObject<IObstacle> {
      * ```
      */
     hasChroma = (): boolean => {
-        return Array.isArray(this.customData?._color);
+        return Array.isArray(this.customData._color);
     };
 
     /** Check if obstacle has Noodle Extensions properties.
@@ -252,16 +252,16 @@ export class Obstacle extends BeatmapObject<IObstacle> {
      */
     hasNoodleExtensions = (): boolean => {
         return (
-            Array.isArray(this.customData?._animation) ||
-            typeof this.customData?._fake === 'boolean' ||
-            typeof this.customData?._interactable === 'boolean' ||
-            Array.isArray(this.customData?._localRotation) ||
-            typeof this.customData?._noteJumpMovementSpeed === 'number' ||
-            typeof this.customData?._noteJumpStartBeatOffset === 'number' ||
-            Array.isArray(this.customData?._position) ||
-            Array.isArray(this.customData?._rotation) ||
-            Array.isArray(this.customData?._scale) ||
-            typeof this.customData?._track === 'string'
+            Array.isArray(this.customData._animation) ||
+            typeof this.customData._fake === 'boolean' ||
+            typeof this.customData._interactable === 'boolean' ||
+            Array.isArray(this.customData._localRotation) ||
+            typeof this.customData._noteJumpMovementSpeed === 'number' ||
+            typeof this.customData._noteJumpStartBeatOffset === 'number' ||
+            Array.isArray(this.customData._position) ||
+            Array.isArray(this.customData._rotation) ||
+            Array.isArray(this.customData._scale) ||
+            typeof this.customData._track === 'string'
         );
     };
 

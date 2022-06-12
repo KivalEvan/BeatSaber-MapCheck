@@ -170,7 +170,7 @@ export class Note extends BeatmapObject<INote> {
      * ```
      */
     getPosition = (): [number, number] => {
-        if (this.customData?._position) {
+        if (this.customData._position) {
             return [this.customData._position[0], this.customData._position[1]];
         }
         return [
@@ -193,7 +193,7 @@ export class Note extends BeatmapObject<INote> {
      * ```
      */
     getAngle = (): number => {
-        if (this.customData?._cutDirection) {
+        if (this.customData._cutDirection) {
             return this.customData._cutDirection > 0
                 ? this.customData._cutDirection % 360
                 : 360 + (this.customData._cutDirection % 360);
@@ -317,7 +317,7 @@ export class Note extends BeatmapObject<INote> {
      * ```
      */
     hasChroma = (): boolean => {
-        return Array.isArray(this.customData?._color) || typeof this.customData?._disableSpawnEffect === 'boolean';
+        return Array.isArray(this.customData._color) || typeof this.customData._disableSpawnEffect === 'boolean';
     };
 
     /** Check if note has Noodle Extensions properties.
@@ -328,19 +328,19 @@ export class Note extends BeatmapObject<INote> {
     // god i hate these
     hasNoodleExtensions = (): boolean => {
         return (
-            Array.isArray(this.customData?._animation) ||
-            typeof this.customData?._cutDirection === 'number' ||
-            typeof this.customData?._disableNoteGravity === 'boolean' ||
-            typeof this.customData?._disableNoteLook === 'boolean' ||
-            typeof this.customData?._fake === 'boolean' ||
-            Array.isArray(this.customData?._flip) ||
-            typeof this.customData?._interactable === 'boolean' ||
-            Array.isArray(this.customData?._localRotation) ||
-            typeof this.customData?._noteJumpMovementSpeed === 'number' ||
-            typeof this.customData?._noteJumpStartBeatOffset === 'number' ||
-            Array.isArray(this.customData?._position) ||
-            Array.isArray(this.customData?._rotation) ||
-            typeof this.customData?._track === 'string'
+            Array.isArray(this.customData._animation) ||
+            typeof this.customData._cutDirection === 'number' ||
+            typeof this.customData._disableNoteGravity === 'boolean' ||
+            typeof this.customData._disableNoteLook === 'boolean' ||
+            typeof this.customData._fake === 'boolean' ||
+            Array.isArray(this.customData._flip) ||
+            typeof this.customData._interactable === 'boolean' ||
+            Array.isArray(this.customData._localRotation) ||
+            typeof this.customData._noteJumpMovementSpeed === 'number' ||
+            typeof this.customData._noteJumpStartBeatOffset === 'number' ||
+            Array.isArray(this.customData._position) ||
+            Array.isArray(this.customData._rotation) ||
+            typeof this.customData._track === 'string'
         );
     };
 

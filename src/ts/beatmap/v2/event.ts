@@ -27,7 +27,7 @@ export class Event extends BeatmapObject<IEvent> {
     static create(...basicEvents: Partial<IEvent>[]): Event[];
     static create(...basicEvents: Partial<IEvent>[]): Event | Event[] {
         const result: Event[] = [];
-        basicEvents?.forEach((ev) =>
+        basicEvents.forEach((ev) =>
             result.push(
                 new Event({
                     _time: ev._time ?? Event.default._time,
@@ -293,36 +293,36 @@ export class Event extends BeatmapObject<IEvent> {
     hasChroma = (): boolean => {
         if (this.isLightEvent()) {
             return (
-                Array.isArray(this.customData?._color) ||
-                typeof this.customData?._lightID === 'number' ||
-                Array.isArray(this.customData?._lightID) ||
-                typeof this.customData?._propID === 'number' ||
-                typeof this.customData?._lightGradient === 'object' ||
-                typeof this.customData?._easing === 'string' ||
-                typeof this.customData?._lerpType === 'string'
+                Array.isArray(this.customData._color) ||
+                typeof this.customData._lightID === 'number' ||
+                Array.isArray(this.customData._lightID) ||
+                typeof this.customData._propID === 'number' ||
+                typeof this.customData._lightGradient === 'object' ||
+                typeof this.customData._easing === 'string' ||
+                typeof this.customData._lerpType === 'string'
             );
         }
         if (this.isRingEvent()) {
             return (
-                typeof this.customData?._nameFilter === 'string' ||
-                typeof this.customData?._reset === 'boolean' ||
-                typeof this.customData?._rotation === 'number' ||
-                typeof this.customData?._step === 'number' ||
-                typeof this.customData?._prop === 'number' ||
-                typeof this.customData?._speed === 'number' ||
-                typeof this.customData?._direction === 'number' ||
-                typeof this.customData?._counterSpin === 'boolean' ||
-                typeof this.customData?._stepMult === 'number' ||
-                typeof this.customData?._propMult === 'number' ||
-                typeof this.customData?._speedMult === 'number'
+                typeof this.customData._nameFilter === 'string' ||
+                typeof this.customData._reset === 'boolean' ||
+                typeof this.customData._rotation === 'number' ||
+                typeof this.customData._step === 'number' ||
+                typeof this.customData._prop === 'number' ||
+                typeof this.customData._speed === 'number' ||
+                typeof this.customData._direction === 'number' ||
+                typeof this.customData._counterSpin === 'boolean' ||
+                typeof this.customData._stepMult === 'number' ||
+                typeof this.customData._propMult === 'number' ||
+                typeof this.customData._speedMult === 'number'
             );
         }
         if (this.isLaserRotationEvent()) {
             return (
-                typeof this.customData?._lockPosition === 'boolean' ||
-                typeof this.customData?._speed === 'number' ||
-                typeof this.customData?._preciseSpeed === 'number' ||
-                typeof this.customData?._direction === 'number'
+                typeof this.customData._lockPosition === 'boolean' ||
+                typeof this.customData._speed === 'number' ||
+                typeof this.customData._preciseSpeed === 'number' ||
+                typeof this.customData._direction === 'number'
             );
         }
         return false;
@@ -343,7 +343,7 @@ export class Event extends BeatmapObject<IEvent> {
      * ```
      */
     hasNoodleExtensions = (): boolean => {
-        return this.isLaneRotationEvent() && typeof this.customData?._rotation === 'number';
+        return this.isLaneRotationEvent() && typeof this.customData._rotation === 'number';
     };
 
     /** Check if event has Mapping Extensions properties.

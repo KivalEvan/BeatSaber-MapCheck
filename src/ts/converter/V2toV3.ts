@@ -87,7 +87,7 @@ export const V2toV3 = (data: DifficultyDataV2, skipPrompt?: boolean): Difficulty
         }
         if (n.isNote()) {
             let a = 0;
-            if (typeof n.customData?._cutDirection === 'number') {
+            if (typeof n.customData._cutDirection === 'number') {
                 a =
                     n.customData._cutDirection > 0
                         ? n.customData._cutDirection % 360
@@ -103,7 +103,7 @@ export const V2toV3 = (data: DifficultyDataV2, skipPrompt?: boolean): Difficulty
                     x: n.lineIndex,
                     y: n.lineLayer,
                     d:
-                        n.cutDirection >= 1000 || typeof n.customData?._cutDirection === 'number'
+                        n.cutDirection >= 1000 || typeof n.customData._cutDirection === 'number'
                             ? n.cutDirection === 8
                                 ? 8
                                 : 1
@@ -175,7 +175,7 @@ export const V2toV3 = (data: DifficultyDataV2, skipPrompt?: boolean): Difficulty
                     b: e.time,
                     e: e.type === 14 ? 0 : 1,
                     r:
-                        typeof e.customData?._rotation === 'number'
+                        typeof e.customData._rotation === 'number'
                             ? e.customData._rotation
                             : e.value >= 1000
                             ? (e.value - 1360) % 360
@@ -383,6 +383,16 @@ export const V2toV3 = (data: DifficultyDataV2, skipPrompt?: boolean): Difficulty
                             localPosition: e._localPosition?.map((n) => n * 0.6) as Vector3,
                             localRotation: e._localRotation,
                             lightID: e._lightID,
+                        };
+                    }) ?? [];
+                continue;
+            }
+            if (k === '_pointDefinitions') {
+                template.customData.pointDefinitions =
+                    data.customData._pointDefinitions!.map((e) => {
+                        return {
+                            name: e._name,
+                            points: e._points,
                         };
                     }) ?? [];
                 continue;

@@ -31,27 +31,21 @@ const createSettingsTable = (mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTab
 
     const htmlTable = document.createElement('table');
     htmlTable.className = prefix + 'table';
-    htmlTable.innerHTML = `<caption class="${prefix}table-caption">Map Settings:</caption>
-    <tr>
-    <th class="${prefix}table-header" colspan="2">Note Jump Speed</th>
-    <td class="${prefix}table-element">${round(njs.value, 3)}</td>
-    </tr>
-    <tr>
-    <th class="${prefix}table-header" colspan="2">Spawn Distance Modifier</th>
-    <td class="${prefix}table-element">${round(njs.offset, 3)}</td>
-    </tr>
-    <tr>
-    <th class="${prefix}table-header" colspan="2">Half Jump Duration</th>
-    <td class="${prefix}table-element">${round(njs.hjd, 3)}</td>
-    </tr>
-    <tr>
-    <th class="${prefix}table-header" colspan="2">Jump Distance</th>
-    <td class="${prefix}table-element">${round(njs.jd, 3)}</td>
-    </tr>
-    <tr>
-    <th class="${prefix}table-header" colspan="2">Reaction Time</th>
-    <td class="${prefix}table-element">${round(njs.reactTime * 1000)}ms</td>
-    </tr>`;
+    htmlTable.innerHTML = `<caption class="${prefix}table-caption">Map Settings:</caption><tr><th class="${prefix}table-header" colspan="2">Note Jump Speed</th><td class="${prefix}table-element">${round(
+        njs.value,
+        3,
+    )}</td></tr><tr><th class="${prefix}table-header" colspan="2">Spawn Distance Modifier</th><td class="${prefix}table-element">${round(
+        njs.offset,
+        3,
+    )}</td></tr><tr><th class="${prefix}table-header" colspan="2">Half Jump Duration</th><td class="${prefix}table-element">${round(
+        njs.hjd,
+        3,
+    )}</td></tr><tr><th class="${prefix}table-header" colspan="2">Jump Distance</th><td class="${prefix}table-element">${round(
+        njs.jd,
+        3,
+    )}</td></tr><tr><th class="${prefix}table-header" colspan="2">Reaction Time</th><td class="${prefix}table-element">${round(
+        njs.reactTime * 1000,
+    )}ms</td></tr>`;
 
     return htmlTable;
 };
@@ -63,28 +57,22 @@ const createNPSTable = (mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTableEle
 
     const htmlTable = document.createElement('table');
     htmlTable.className = prefix + 'table';
-    htmlTable.innerHTML = `<caption class="${prefix}table-caption">Note Per Seconds (NPS):</caption>
-    <tr>
-    <th class="${prefix}table-header" colspan="2">Overall</th>
-    <td class="${prefix}table-element">${round(mapData.data.nps(duration), 2)}</td>
-    </tr>
-    <tr>
-    <th class="${prefix}table-header" colspan="2">Mapped</th>
-    <td class="${prefix}table-element">${round(mapData.data.nps(mapDuration), 2)}</td>
-    </tr>
-    <tr>
-    <th class="${prefix}table-header" rowspan="3">Peak</th>
-    <th class="${prefix}table-header">16-beat</th>
-    <td class="${prefix}table-element">${round(mapData.data.peak(16, bpm.value), 2)}</td>
-    </tr>
-    <tr>
-    <th class="${prefix}table-header">8-beat</th>
-    <td class="${prefix}table-element">${round(mapData.data.peak(8, bpm.value), 2)}</td>
-    </tr>
-    <tr>
-    <th class="${prefix}table-header">4-beat</th>
-    <td class="${prefix}table-element">${round(mapData.data.peak(4, bpm.value), 2)}</td>
-    </tr>`;
+    htmlTable.innerHTML = `<caption class="${prefix}table-caption">Note Per Seconds (NPS):</caption><tr><th class="${prefix}table-header" colspan="2">Overall</th><td class="${prefix}table-element">${round(
+        mapData.data.nps(duration),
+        2,
+    )}</td></tr><tr><th class="${prefix}table-header" colspan="2">Mapped</th><td class="${prefix}table-element">${round(
+        mapData.data.nps(mapDuration),
+        2,
+    )}</td></tr><tr><th class="${prefix}table-header" rowspan="3">Peak</th><th class="${prefix}table-header">16-beat</th><td class="${prefix}table-element">${round(
+        mapData.data.peak(16, bpm.value),
+        2,
+    )}</td></tr><tr><th class="${prefix}table-header">8-beat</th><td class="${prefix}table-element">${round(
+        mapData.data.peak(8, bpm.value),
+        2,
+    )}</td></tr><tr><th class="${prefix}table-header">4-beat</th><td class="${prefix}table-element">${round(
+        mapData.data.peak(4, bpm.value),
+        2,
+    )}</td></tr>`;
 
     return htmlTable;
 };
@@ -94,37 +82,38 @@ const createSPSTable = (mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTableEle
 
     const htmlTable = document.createElement('table');
     htmlTable.className = prefix + 'table';
-    htmlTable.innerHTML = `<caption class="${prefix}table-caption">Swing Per Seconds (SPS):</caption>
-    <tr>
-    <th class="${prefix}table-header"></th>
-    <th class="${prefix}table-header">Total</th>
-    <th class="${prefix}table-header">Red</th>
-    <th class="${prefix}table-header">Blue</th>
-    </tr>
-    <tr>
-    <th class="${prefix}table-header">Count</th>
-    <td class="${prefix}table-element">${round(swingInfo.total.count, 2)}</td>
-    <td class="${prefix}table-element">${round(swingInfo.red.count, 2)}</td>
-    <td class="${prefix}table-element">${round(swingInfo.blue.count, 2)}</td>
-    </tr>
-    <tr>
-    <th class="${prefix}table-header">Median</th>
-    <td class="${prefix}table-element">${round(swingInfo.total.median, 2)}</td>
-    <td class="${prefix}table-element">${round(swingInfo.red.median, 2)}</td>
-    <td class="${prefix}table-element">${round(swingInfo.blue.median, 2)}</td>
-    </tr>
-    <tr>
-    <th class="${prefix}table-header">Peak</th>
-    <td class="${prefix}table-element">${round(swingInfo.total.peak, 2)}</td>
-    <td class="${prefix}table-element">${round(swingInfo.red.peak, 2)}</td>
-    <td class="${prefix}table-element">${round(swingInfo.blue.peak, 2)}</td>
-    </tr>
-    <tr>
-    <th class="${prefix}table-header">Total</th>
-    <td class="${prefix}table-element">${swingInfo.total.total}</td>
-    <td class="${prefix}table-element">${swingInfo.red.total}</td>
-    <td class="${prefix}table-element">${swingInfo.blue.total}</td>
-    </tr>`;
+    htmlTable.innerHTML = `<caption class="${prefix}table-caption">Swing Per Seconds (SPS):</caption><tr><th class="${prefix}table-header"></th><th class="${prefix}table-header">Total</th><th class="${prefix}table-header">Red</th><th class="${prefix}table-header">Blue</th></tr><tr><th class="${prefix}table-header">Count</th><td class="${prefix}table-element">${round(
+        swingInfo.total.count,
+        2,
+    )}</td><td class="${prefix}table-element">${round(
+        swingInfo.red.count,
+        2,
+    )}</td><td class="${prefix}table-element">${round(
+        swingInfo.blue.count,
+        2,
+    )}</td></tr><tr><th class="${prefix}table-header">Median</th><td class="${prefix}table-element">${round(
+        swingInfo.total.median,
+        2,
+    )}</td><td class="${prefix}table-element">${round(
+        swingInfo.red.median,
+        2,
+    )}</td><td class="${prefix}table-element">${round(
+        swingInfo.blue.median,
+        2,
+    )}</td></tr><tr><th class="${prefix}table-header">Peak</th><td class="${prefix}table-element">${round(
+        swingInfo.total.peak,
+        2,
+    )}</td><td class="${prefix}table-element">${round(
+        swingInfo.red.peak,
+        2,
+    )}</td><td class="${prefix}table-element">${round(
+        swingInfo.blue.peak,
+        2,
+    )}</td></tr><tr><th class="${prefix}table-header">Total</th><td class="${prefix}table-element">${
+        swingInfo.total.total
+    }</td><td class="${prefix}table-element">${swingInfo.red.total}</td><td class="${prefix}table-element">${
+        swingInfo.blue.total
+    }</td></tr>`;
 
     return htmlTable;
 };
@@ -139,63 +128,32 @@ const createNoteCountTable = (mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTa
         noteCount.red.total + noteCount.blue.total
     }<br>Arc: ${arcCount.red.total + arcCount.blue.total}<br>Chain: ${
         chainCount.red.total + chainCount.blue.total
-    }<br>Bombs: ${noteCount.red.total + noteCount.blue.total}<br>R/B Ratio: ${round(
+    }<br>Bombs: ${bombCount.total}<br>R/B Ratio: ${round(
         noteCount.red.total / noteCount.blue.total,
         2,
-    )}</caption>
-    <tr>
-    <th class="${prefix}table-header"></th>
-    <th class="${prefix}table-header">Red</th>
-    <th class="${prefix}table-header">Blue</th>
-    <th class="${prefix}table-header">Bomb</th>
-    </tr>
-    <tr>
-    <th class="${prefix}table-header">Note</th>
-    <td class="${prefix}table-element">${noteCount.red.total}</td>
-    <td class="${prefix}table-element">${noteCount.blue.total}</td>
-    <td class="${prefix}table-element">0</td>
-    </tr>
-    <tr>
-    <th class="${prefix}table-header">Arc</th>
-    <td class="${prefix}table-element">${arcCount.red.total}</td>
-    <td class="${prefix}table-element">${arcCount.blue.total}</td>
-    <td class="${prefix}table-element">0</td>
-    </tr>
-    <tr>
-    <th class="${prefix}table-header">Chain</th>
-    <td class="${prefix}table-element">${chainCount.red.total}</td>
-    <td class="${prefix}table-element">${chainCount.blue.total}</td>
-    <td class="${prefix}table-element">0</td>
-    </tr>
-    <tr>
-    <th class="${prefix}table-header">Bomb</th>
-    <td class="${prefix}table-element">0</td>
-    <td class="${prefix}table-element">0</td>
-    <td class="${prefix}table-element">${bombCount.total}</td>
-    </tr>`;
+    )}</caption><tr><th class="${prefix}table-header"></th><th class="${prefix}table-header">Red</th><th class="${prefix}table-header">Blue</th><th class="${prefix}table-header">Bomb</th></tr><tr><th class="${prefix}table-header">Note</th><td class="${prefix}table-element">${
+        noteCount.red.total
+    }</td><td class="${prefix}table-element">${
+        noteCount.blue.total
+    }</td><td class="${prefix}table-element">0</td></tr><tr><th class="${prefix}table-header">Arc</th><td class="${prefix}table-element">${
+        arcCount.red.total
+    }</td><td class="${prefix}table-element">${
+        arcCount.blue.total
+    }</td><td class="${prefix}table-element">0</td></tr><tr><th class="${prefix}table-header">Chain</th><td class="${prefix}table-element">${
+        chainCount.red.total
+    }</td><td class="${prefix}table-element">${
+        chainCount.blue.total
+    }</td><td class="${prefix}table-element">0</td></tr><tr><th class="${prefix}table-header">Bomb</th><td class="${prefix}table-element">0</td><td class="${prefix}table-element">0</td><td class="${prefix}table-element">${
+        bombCount.total
+    }</td></tr>`;
     if (noteCount.red.chroma || noteCount.blue.chroma || bombCount.chroma) {
-        htmlString += `<tr>
-        <th class="${prefix}table-header">Chroma</th>
-        <td class="${prefix}table-element">${noteCount.red.chroma}</td>
-        <td class="${prefix}table-element">${noteCount.blue.chroma}</td>
-        <td class="${prefix}table-element">${bombCount.chroma}</td>
-        </tr>`;
+        htmlString += `<tr><th class="${prefix}table-header">Chroma</th><td class="${prefix}table-element">${noteCount.red.chroma}</td><td class="${prefix}table-element">${noteCount.blue.chroma}</td><td class="${prefix}table-element">${bombCount.chroma}</td></tr>`;
     }
     if (noteCount.red.noodleExtensions || noteCount.blue.noodleExtensions || bombCount.noodleExtensions) {
-        htmlString += `<tr>
-        <th class="${prefix}table-header">NE</th>
-        <td class="${prefix}table-element">${noteCount.red.noodleExtensions}</td>
-        <td class="${prefix}table-element">${noteCount.blue.noodleExtensions}</td>
-        <td class="${prefix}table-element">${bombCount.noodleExtensions}</td>
-        </tr>`;
+        htmlString += `<tr><th class="${prefix}table-header">NE</th><td class="${prefix}table-element">${noteCount.red.noodleExtensions}</td><td class="${prefix}table-element">${noteCount.blue.noodleExtensions}</td><td class="${prefix}table-element">${bombCount.noodleExtensions}</td></tr>`;
     }
     if (noteCount.red.mappingExtensions || noteCount.blue.mappingExtensions || bombCount.mappingExtensions) {
-        htmlString += `<tr>
-        <th class="${prefix}table-header">ME</th>
-        <td class="${prefix}table-element">${noteCount.red.mappingExtensions}</td>
-        <td class="${prefix}table-element">${noteCount.blue.mappingExtensions}</td>
-        <td class="${prefix}table-element">${bombCount.mappingExtensions}</td>
-        </tr>`;
+        htmlString += `<tr><th class="${prefix}table-header">ME</th><td class="${prefix}table-element">${noteCount.red.mappingExtensions}</td><td class="${prefix}table-element">${noteCount.blue.mappingExtensions}</td><td class="${prefix}table-element">${bombCount.mappingExtensions}</td></tr>`;
     }
 
     const htmlTable = document.createElement('table');
@@ -262,12 +220,19 @@ const notePlacementTableString = (nc: NoteContainer[]): string => {
         )}%</td>
         </tr>`;
     }
-    htmlString += `<tr>
-    <td class="${prefix}table-element ${prefix}table--no-border">${round((countX(nc, 0) / totalNote) * 100, 1)}%</td>
-    <td class="${prefix}table-element ${prefix}table--no-border">${round((countX(nc, 1) / totalNote) * 100, 1)}%</td>
-    <td class="${prefix}table-element ${prefix}table--no-border">${round((countX(nc, 2) / totalNote) * 100, 1)}%</td>
-    <td class="${prefix}table-element ${prefix}table--no-border">${round((countX(nc, 3) / totalNote) * 100, 1)}%</td>
-    </tr>`;
+    htmlString += `<tr><td class="${prefix}table-element ${prefix}table--no-border">${round(
+        (countX(nc, 0) / totalNote) * 100,
+        1,
+    )}%</td><td class="${prefix}table-element ${prefix}table--no-border">${round(
+        (countX(nc, 1) / totalNote) * 100,
+        1,
+    )}%</td><td class="${prefix}table-element ${prefix}table--no-border">${round(
+        (countX(nc, 2) / totalNote) * 100,
+        1,
+    )}%</td><td class="${prefix}table-element ${prefix}table--no-border">${round(
+        (countX(nc, 3) / totalNote) * 100,
+        1,
+    )}%</td></tr>`;
     return htmlString;
 };
 
@@ -377,32 +342,20 @@ const createNoteAngleTable = (mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTa
 };
 
 const createInfoTable = (mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTableElement => {
-    let htmlString = `<caption class="${prefix}table-caption">Note Information:</caption>
-    <tr>
-    <th class="${prefix}table-header" colspan="2">Max Score</th>
-    <td class="${prefix}table-element">${formatNumber(score.calculate(mapData.noteContainer))}</td>
-    </tr>
-    <tr>
-    <th class="${prefix}table-header" colspan="2">Effective BPM</th>
-    <td class="${prefix}table-element">${round(swing.getMaxEffectiveBPM(mapData.swingAnalysis.container), 2)}</td>
-    </tr>
-    <tr>
-    <th class="${prefix}table-header" colspan="2">Effective BPM (swing)</th>
-    <td class="${prefix}table-element">${round(swing.getMaxEffectiveBPMSwing(mapData.swingAnalysis.container), 2)}</td>
-    </tr>`;
+    let htmlString = `<caption class="${prefix}table-caption">Note Information:</caption><tr><th class="${prefix}table-header" colspan="2">Max Score</th><td class="${prefix}table-element">${formatNumber(
+        score.calculate(mapData.noteContainer),
+    )}</td></tr><tr><th class="${prefix}table-header" colspan="2">Effective BPM</th><td class="${prefix}table-element">${round(
+        swing.getMaxEffectiveBPM(mapData.swingAnalysis.container),
+        2,
+    )}</td></tr><tr><th class="${prefix}table-header" colspan="2">Effective BPM (swing)</th><td class="${prefix}table-element">${round(
+        swing.getMaxEffectiveBPMSwing(mapData.swingAnalysis.container),
+        2,
+    )}</td></tr>`;
 
     let minSpeed = round(swing.getMinSliderSpeed(mapData.swingAnalysis.container) * 1000, 1);
     let maxSpeed = round(swing.getMaxSliderSpeed(mapData.swingAnalysis.container) * 1000, 1);
     if (minSpeed && maxSpeed) {
-        htmlString += `
-        <tr>
-        <th class="${prefix}table-header" colspan="2">Min. Slider Speed</th>
-        <td class="${prefix}table-element">${minSpeed}ms</td>
-        </tr>
-        <tr>
-        <th class="${prefix}table-header" colspan="2">Max. Slider Speed</th>
-        <td class="${prefix}table-element">${maxSpeed}ms</td>
-        </tr>`;
+        htmlString += `<tr><th class="${prefix}table-header" colspan="2">Min. Slider Speed</th><td class="${prefix}table-element">${minSpeed}ms</td></tr><tr><th class="${prefix}table-header" colspan="2">Max. Slider Speed</th><td class="${prefix}table-element">${maxSpeed}ms</td></tr>`;
     }
 
     const htmlTable = document.createElement('table');
@@ -431,35 +384,22 @@ const createEventCountTable = (mapInfo: IInfoData, mapData: IBeatmapItem): HTMLT
     for (const key in eventCount) {
         chroma += eventCount[key].chroma;
         chromaOld += eventCount[key].chromaOld;
-        htmlString += `<tr>
-        <th class="${prefix}table-header">${key}</th>
-        <th class="${prefix}table-header" colspan="4">${eventTypeRename(parseInt(key), environment)}</th>
-        <td class="${prefix}table-element">${eventCount[key].total}</td>
-        </tr>`;
+        htmlString += `<tr><th class="${prefix}table-header">${key}</th><th class="${prefix}table-header" colspan="4">${eventTypeRename(
+            parseInt(key),
+            environment,
+        )}</th><td class="${prefix}table-element">${eventCount[key].total}</td></tr>`;
     }
     if (chroma) {
-        htmlString += `<tr>
-        <th class="${prefix}table-header" colspan="5">Chroma</th>
-        <td class="${prefix}table-element">${chroma}</td>
-        </tr>`;
+        htmlString += `<tr><th class="${prefix}table-header" colspan="5">Chroma</th><td class="${prefix}table-element">${chroma}</td></tr>`;
     }
     if (chromaOld) {
-        htmlString += `<tr>
-        <th class="${prefix}table-header" colspan="5">OG Chroma</th>
-        <td class="${prefix}table-element">${chromaOld}</td>
-        </tr>`;
+        htmlString += `<tr><th class="${prefix}table-header" colspan="5">OG Chroma</th><td class="${prefix}table-element">${chromaOld}</td></tr>`;
     }
     if (noodleExtensions) {
-        htmlString += `<tr>
-        <th class="${prefix}table-header" colspan="5">Noodle Extensions</th>
-        <td class="${prefix}table-element">${noodleExtensions}</td>
-        </tr>`;
+        htmlString += `<tr><th class="${prefix}table-header" colspan="5">Noodle Extensions</th><td class="${prefix}table-element">${noodleExtensions}</td></tr>`;
     }
     if (mappingExtensions) {
-        htmlString += `<tr>
-        <th class="${prefix}table-header" colspan="5">Mapping Extensions</th>
-        <td class="${prefix}table-element">${mappingExtensions}</td>
-        </tr>`;
+        htmlString += `<tr><th class="${prefix}table-header" colspan="5">Mapping Extensions</th><td class="${prefix}table-element">${mappingExtensions}</td></tr>`;
     }
 
     const htmlTable = document.createElement('table');
@@ -485,12 +425,12 @@ const createEBGColorCountTable = (mapInfo: IInfoData, mapData: IBeatmapItem): HT
     )}</caption>`;
 
     for (const key in ebgColorCount) {
-        htmlString += `<tr>
-        <th class="${prefix}table-header">${key}</th>
-        <th class="${prefix}table-header" colspan="4">${eventGroupRename(parseInt(key), environment)}</th>
-        <td class="${prefix}table-element">${ebgColorCount[key].total}</td>
-        <td class="${prefix}table-element">${ebgRotationCount[key].total}</td>
-        </tr>`;
+        htmlString += `<tr><th class="${prefix}table-header">${key}</th><th class="${prefix}table-header" colspan="4">${eventGroupRename(
+            parseInt(key),
+            environment,
+        )}</th><td class="${prefix}table-element">${ebgColorCount[key].total}</td><td class="${prefix}table-element">${
+            ebgRotationCount[key].total
+        }</td></tr>`;
     }
 
     const htmlTable = document.createElement('table');
@@ -505,28 +445,16 @@ const createObstacleCountTable = (mapInfo: IInfoData, mapData: IBeatmapItem): HT
 
     let htmlString = `<caption class="${prefix}table-caption">Obstacles: ${obstacleCount.total}</caption>`;
     if (obstacleCount.interactive) {
-        htmlString += `<tr>
-        <th class="${prefix}table-header" colspan="2">Interactive</th>
-        <td class="${prefix}table-element">${obstacleCount.interactive}</td>
-        </tr>`;
+        htmlString += `<tr><th class="${prefix}table-header" colspan="2">Interactive</th><td class="${prefix}table-element">${obstacleCount.interactive}</td></tr>`;
     }
     if (obstacleCount.chroma) {
-        htmlString += `<tr>
-        <th class="${prefix}table-header" colspan="2">Chroma</th>
-        <td class="${prefix}table-element">${obstacleCount.chroma}</td>
-        </tr>`;
+        htmlString += `<tr><th class="${prefix}table-header" colspan="2">Chroma</th><td class="${prefix}table-element">${obstacleCount.chroma}</td></tr>`;
     }
     if (obstacleCount.noodleExtensions) {
-        htmlString += `<tr>
-        <th class="${prefix}table-header" colspan="2">Noodle Extensions</th>
-        <td class="${prefix}table-element">${obstacleCount.noodleExtensions}</td>
-        </tr>`;
+        htmlString += `<tr><th class="${prefix}table-header" colspan="2">Noodle Extensions</th><td class="${prefix}table-element">${obstacleCount.noodleExtensions}</td></tr>`;
     }
     if (obstacleCount.mappingExtensions) {
-        htmlString += `<tr>
-        <th class="${prefix}table-header" colspan="2">Mapping Extensions</th>
-        <td class="${prefix}table-element">${obstacleCount.mappingExtensions}</td>
-        </tr>`;
+        htmlString += `<tr><th class="${prefix}table-header" colspan="2">Mapping Extensions</th><td class="${prefix}table-element">${obstacleCount.mappingExtensions}</td></tr>`;
     }
 
     const htmlTable = document.createElement('table');

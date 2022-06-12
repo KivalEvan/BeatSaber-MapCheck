@@ -1,5 +1,11 @@
+// enum const is used regardless as this will never be compiled and reused by JS.
 /** Also known as lane count. */
 export const LINE_COUNT = 4;
+
+export const enum NoteColor {
+    RED,
+    BLUE,
+}
 
 export const enum NoteCutDirection {
     UP,
@@ -75,7 +81,7 @@ export const NoteCutDirectionSpace: { [key: number]: Readonly<[number, number]> 
     [NoteCutDirection.ANY]: [0, 0],
 } as const;
 
-export const enum BasicEventLightValue {
+export const enum EventLightValue {
     OFF,
     BLUE_ON,
     BLUE_FLASH,
@@ -87,7 +93,7 @@ export const enum BasicEventLightValue {
     RED_TRANSITION,
 }
 
-export const enum BasicEventType {
+export const enum EventType {
     BACK_LASERS,
     RING_LIGHTS,
     LEFT_LASERS,

@@ -233,7 +233,7 @@ export class Slider extends BaseSlider<ISlider> {
      * ```
      */
     getAngle() {
-        // if (this.customData?._cutDirection) {
+        // if (this.customData._cutDirection) {
         //     return this.customData._cutDirection > 0
         //         ? this.customData._cutDirection % 360
         //         : 360 + (this.customData._cutDirection % 360);
