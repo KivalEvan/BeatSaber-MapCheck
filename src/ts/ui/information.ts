@@ -391,6 +391,7 @@ const setCustomEvents = (arr?: ICustomEvent[], bpm?: BeatPerMinute | null): void
         hideTableRow(htmlTableCustomEvents);
         return;
     }
+    console.log(arr);
     const customEv = arr.map((elem) => {
         let time = elem.beat;
         let rt!: number;
@@ -417,7 +418,7 @@ const setCustomEvents = (arr?: ICustomEvent[], bpm?: BeatPerMinute | null): void
         }
         return `${round(elem.beat, Settings.rounding)}${rt ? ' | ' + toMMSS(rt) : ''} -- ${elem.time} -> [${keyArr.join(
             '',
-        )}]${elem.time !== 'AssignTrackParent' ? `(${elem.data.track})` : ''}`;
+        )}]${elem.time !== 'AssignTrackParent' ? `(${elem.data?.track})` : ''}`;
     });
     displayTableRow(htmlTableCustomEvents, customEv);
 };

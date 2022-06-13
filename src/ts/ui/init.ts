@@ -20,7 +20,6 @@ export default (function () {
             UISettings.setTheme(Settings.theme);
             UISettings.setBeatNumbering(Settings.beatNumbering);
             UISettings.setRounding(Settings.rounding);
-            console.log(Settings.theme, Settings.beatNumbering, Settings.rounding);
             for (const id in Settings.load) {
                 UISettings.setLoadCheck(id, Settings.load[id]);
             }
