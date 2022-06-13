@@ -2,6 +2,11 @@ import { round, isHex, sanitizeBeatSaverID, sanitizeURL } from './utils';
 import { getZipIdURL, getZipHashURL } from './beatsaver';
 import UILoading from './ui/loading';
 import UIHeader from './ui/header';
+import logger from './logger';
+
+const tag = (name: string) => {
+    return `[download::${name}]`;
+};
 
 export const downloadMap = async (url: string): Promise<ArrayBuffer> => {
     return new Promise(function (resolve, reject) {
@@ -49,10 +54,10 @@ export const downloadFromID = async (input: string): Promise<ArrayBuffer> => {
     // sanitize & validate id
     const id = sanitizeBeatSaverID(input);
 
-    console.log(`fetching download URL from BeatSaver for map ID ${id}`);
+    logger.info(tag('downloadFromID'), `fetching download URL from BeatSaver for map ID ${id}`);
     UILoading.status('info', 'Fetching download URL from BeatSaver', 0);
     const url = await getZipIdURL(id);
-    console.log(`downloading from BeatSaver for map ID ${id}`);
+    logger.info(tag('downloadFromID'), `downloading from BeatSaver for map ID ${id}`);
     UILoading.status('info', 'Requesting download from BeatSaver', 0);
     const res = await downloadMap(url);
     UIHeader.setCoverLink('https://beatsaver.com/maps/' + id, id);
@@ -69,7 +74,7 @@ export const downloadFromURL = async (input: string): Promise<ArrayBuffer> => {
     }
 
     UILoading.status('info', 'Requesting download from link', 0);
-    console.log(`downloading from ${url}`);
+    logger.info(tag('downloadFromURL'), `downloading from ${url}`);
     // apparently i need cors proxy
     let res = await downloadMap(url);
     UIHeader.setCoverLink(url);
@@ -85,10 +90,10 @@ export const downloadFromHash = async (input: string): Promise<ArrayBuffer> => {
         throw new Error('invalid hash');
     }
 
-    console.log(`fetching download URL from BeatSaver for map hash ${hash}`);
+    logger.info(tag('downloadFromHash'), `fetching download URL from BeatSaver for map hash ${hash}`);
     UILoading.status('info', 'Fetching download URL from BeatSaver', 0);
     const url = await getZipHashURL(hash);
-    console.log(`downloading from BeatSaver for map hash ${hash}`);
+    logger.info(tag('downloadFromHash'), `downloading from BeatSaver for map hash ${hash}`);
     UILoading.status('info', 'Requesting download from BeatSaver', 0);
     const res = await downloadMap(url);
     return res;

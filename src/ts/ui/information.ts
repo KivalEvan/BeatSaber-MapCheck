@@ -25,7 +25,7 @@ const htmlInfoContributorsName: HTMLElement = document.querySelector('.info__con
 const htmlInfoContributorsRole: HTMLElement = document.querySelector('.info__contributors-role')!;
 
 const htmlTableVersion: HTMLElement = document.querySelector('.info__version')!;
-const htmlTableTimeSpend: HTMLElement = document.querySelector('.info__time-spend')!;
+const htmlTabconstimeSpend: HTMLElement = document.querySelector('.info__time-spend')!;
 const htmlTableCustomColor: HTMLElement = document.querySelector('.info__custom-color')!;
 const htmlTableRequirements: HTMLElement = document.querySelector('.info__requirements')!;
 const htmlTableSuggestions: HTMLElement = document.querySelector('.info__suggestions')!;
@@ -50,7 +50,7 @@ if (htmlInfoContributorsSelect) {
 }
 if (
     !htmlTableVersion ||
-    !htmlTableTimeSpend ||
+    !htmlTabconstimeSpend ||
     !htmlTableCustomColor ||
     !htmlTableRequirements ||
     !htmlTableSuggestions ||
@@ -155,7 +155,7 @@ const displayTableRow = <T extends HTMLElement>(elem: T, content: string | strin
         } else {
             content.forEach((c: string | HTMLElement) => {
                 if (typeof c === 'string') {
-                    let temp = document.createElement('span');
+                    const temp = document.createElement('span');
                     temp.textContent = c;
                     tableElem.appendChild(temp);
                     tableElem.appendChild(document.createElement('br'));
@@ -182,10 +182,10 @@ const setVersion = (ver?: string): void => {
 
 const setTimeSpend = (num?: number): void => {
     if (num == null) {
-        hideTableRow(htmlTableTimeSpend);
+        hideTableRow(htmlTabconstimeSpend);
         return;
     }
-    displayTableRow(htmlTableTimeSpend, toHHMMSS(num));
+    displayTableRow(htmlTabconstimeSpend, toHHMMSS(num));
 };
 
 const setCustomColor = (customColor?: IColorScheme, environment?: EnvironmentName): void => {
@@ -205,7 +205,7 @@ const setCustomColor = (customColor?: IColorScheme, environment?: EnvironmentNam
     if (!environment) {
         environment = 'DefaultEnvironment';
     }
-    let hexColor: { [key: string]: string | null } = {
+    const hexColor: { [key: string]: string | null } = {
         _colorLeft: rgbaToHex(ColorScheme[EnvironmentSchemeName[environment]]?._colorLeft) || null,
         _colorRight: rgbaToHex(ColorScheme[EnvironmentSchemeName[environment]]?._colorRight) || null,
         _envColorLeft: rgbaToHex(ColorScheme[EnvironmentSchemeName[environment]]?._envColorLeft) || null,
@@ -326,9 +326,12 @@ const setBookmarks = (arr?: IBookmark[], bpm?: BeatPerMinute | null): void => {
         hideTableRow(htmlTableBookmarks);
         return;
     }
-    const bookmarkText = arr.map((elem) => {
+    const bookmarkText = arr.map((elem, i) => {
         let time = elem._time;
         let rt!: number;
+        if (!elem._name) {
+            return `Error parsing bookmarks[${i}]`;
+        }
         if (bpm) {
             time = bpm.adjustTime(time);
             rt = bpm.toRealTime(time);
@@ -346,8 +349,8 @@ const setBPMChanges = (bpm?: BeatPerMinute | null): void => {
         return;
     }
     const bpmcText = bpm.change.map((bpmc) => {
-        let time = round(bpmc._newTime, Settings.rounding);
-        let rt = bpm.toRealTime(bpmc._time);
+        const time = round(bpmc._newTime, Settings.rounding);
+        const rt = bpm.toRealTime(bpmc._time);
         return `${time} | ${toMMSS(rt)} -- ${bpmc._BPM}`;
     });
     displayTableRow(htmlTableBPMChanges, bpmcText);
@@ -359,13 +362,16 @@ const setEnvironmentEnhancement = (arr?: IChromaEnvironment[]): void => {
         hideTableRow(htmlTableEnvironmentEnhancement);
         return;
     }
-    const envEnhance = arr.map((elem) => {
-        let keyArr = [];
+    const envEnhance = arr.map((elem, i) => {
+        const keyArr = [];
+        if (!elem.id) {
+            return `Error parsing environment[${i}]`;
+        }
         for (const key in elem) {
             if (key == '_lookupMethod' || key == '_id' || key == 'lookupMethod' || key == 'id') {
                 continue;
             }
-            let k = ChromaDataEnvAbbr[key as keyof typeof ChromaDataEnvAbbr];
+            const k = ChromaDataEnvAbbr[key as keyof typeof ChromaDataEnvAbbr];
             if (elem[key as keyof IChromaEnvironment] != null) {
                 keyArr.push(k);
             }
@@ -380,7 +386,10 @@ const setPointDefinitions = (arr?: IHeckPointDefinition[]): void => {
         hideTableRow(htmlTablePointDefinitions);
         return;
     }
-    const pointDef = arr.map((elem) => {
+    const pointDef = arr.map((elem, i) => {
+        if (!elem.points) {
+            return `Error parsing pointDefinitions[${i}]`;
+        }
         return `${elem.name} -- ${elem.points.length} point${elem.points.length > 1 ? 's' : ''}`;
     });
     displayTableRow(htmlTablePointDefinitions, pointDef);
@@ -391,15 +400,17 @@ const setCustomEvents = (arr?: ICustomEvent[], bpm?: BeatPerMinute | null): void
         hideTableRow(htmlTableCustomEvents);
         return;
     }
-    console.log(arr);
-    const customEv = arr.map((elem) => {
+    const customEv = arr.map((elem, i) => {
         let time = elem.beat;
         let rt!: number;
         if (bpm) {
             time = bpm.adjustTime(time);
             rt = bpm.toRealTime(time);
         }
-        let keyArr = [];
+        const keyArr = [];
+        if (!elem.data) {
+            return `Error parsing customEvents[${i}]`;
+        }
         for (const key in elem.data) {
             if (
                 key == '_duration' ||
@@ -411,14 +422,14 @@ const setCustomEvents = (arr?: ICustomEvent[], bpm?: BeatPerMinute | null): void
             ) {
                 continue;
             }
-            let k = NEDataAbbr[key as keyof typeof NEDataAbbr];
+            const k = NEDataAbbr[key as keyof typeof NEDataAbbr];
             if (elem.data[key as keyof ICustomEvent['data']] != null) {
                 keyArr.push(k);
             }
         }
         return `${round(elem.beat, Settings.rounding)}${rt ? ' | ' + toMMSS(rt) : ''} -- ${elem.time} -> [${keyArr.join(
             '',
-        )}]${elem.time !== 'AssignTrackParent' ? `(${elem.data?.track})` : ''}`;
+        )}]${elem.time !== 'AssignTrackParent' ? `(${elem.data.track})` : ''}`;
     });
     displayTableRow(htmlTableCustomEvents, customEv);
 };

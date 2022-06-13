@@ -34,7 +34,6 @@ function check(map: ToolArgs) {
         .sort((a, b) => (a.type !== 'slider' ? 1 : b.type !== 'slider' ? -1 : 0))
         .sort((a, b) => a.data.time - b.data.time);
 
-    console.log(noteContainer);
     const arr: NoteContainer[] = [];
     for (let i = 0, potential = true, len = noteContainer.length; i < len; i++) {
         const arc = noteContainer[i];
@@ -52,6 +51,16 @@ function check(map: ToolArgs) {
                     ) {
                         for (let k = j; k < len; k++) {
                             const tailNote = noteContainer[j];
+                            if (tailNote.type === 'bomb') {
+                                if (
+                                    arc.data.posX === tailNote.data.posX &&
+                                    arc.data.posY === tailNote.data.posY &&
+                                    tailNote.data.time <= arc.data.time + 0.001
+                                ) {
+                                    sike = true;
+                                    break;
+                                }
+                            }
                             if (tailNote.type !== 'note' || tailNote.data.time < arc.data.tailTime) {
                                 continue;
                             }
