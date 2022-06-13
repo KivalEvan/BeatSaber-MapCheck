@@ -6,8 +6,6 @@ import { LookupMethod } from '../shared/chroma';
 import { IHeckCustomEventDataBase } from './heck';
 
 export enum ChromaDataEnvAbbr {
-    id = 'Ct',
-    lookupMethod = 'Lm',
     duplicate = 'D',
     active = 'A',
     scale = 'S',
@@ -74,7 +72,7 @@ export interface IChromaEventLight extends ICustomDataBase {
 
 /** Chroma interface for Beatmap Event Laser Rotation Custom Data. */
 export interface IChromaEventLaser extends ICustomDataBase {
-    lockPosition?: boolean;
+    lockRotation?: boolean;
     speed?: number;
     direction?: number;
 }
@@ -110,9 +108,9 @@ export interface IChromaAnimation {
 
 /** Chroma Custom Event interface for AssignFogTrack. */
 export interface IChromaCustomEventAssignFogTrack {
-    b: number;
-    t: 'AssignFogTrack';
-    d: IChromaCustomEventDataAssignFogTrack;
+    beat: number;
+    time: 'AssignFogTrack';
+    data: IChromaCustomEventDataAssignFogTrack;
 }
 
 export type IChromaCustomEvent = IChromaCustomEventAssignFogTrack;

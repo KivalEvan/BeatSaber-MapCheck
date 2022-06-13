@@ -2,7 +2,7 @@ import { ColorSchemeList, IColorScheme, IEnvironmentScheme } from '../../types/b
 import { EnvironmentAllName } from '../../types/beatmap/shared/environment';
 
 /** Record of Environment Color to Color Scheme. */
-export const EnvironmentSchemeName: Readonly<Record<EnvironmentAllName, ColorSchemeList>> = {
+export const EnvironmentSchemeName: Record<EnvironmentAllName, ColorSchemeList> = {
     DefaultEnvironment: 'The First',
     OriginsEnvironment: 'Origins',
     TriangleEnvironment: 'The First',
@@ -30,12 +30,12 @@ export const EnvironmentSchemeName: Readonly<Record<EnvironmentAllName, ColorSch
     PyroEnvironment: 'Pyro',
     EDMEnvironment: 'EDM',
     GlassDesertEnvironment: 'Glass Desert',
-};
+} as const;
 
 /** Color Scheme property rename to human readable. */
-export const ColorSchemeRename: Readonly<{
+export const ColorSchemeRename: {
     [k in keyof Required<IColorScheme>]: string;
-}> = {
+} = {
     _colorLeft: 'Left Note Color',
     _colorRight: 'Right Note Color',
     _envColorLeft: 'Left Environment Color',
@@ -45,7 +45,7 @@ export const ColorSchemeRename: Readonly<{
     _envColorRightBoost: 'Right Environment Boost Color',
     _envColorWhiteBoost: 'White Environment Boost Color',
     _obstacleColor: 'Obstacle Color',
-};
+} as const;
 
 /** Color scheme definition. */
 export const ColorScheme: IEnvironmentScheme = {

@@ -98,9 +98,9 @@ const runDifficulty = (characteristic: CharacteristicName, difficulty: Difficult
 
     const bpm = BeatPerMinute.create(
         mapInfo._beatsPerMinute,
-        beatmapDifficulty.data.customData?._BPMChanges ||
-            beatmapDifficulty.data.customData?._bpmChanges ||
-            beatmapDifficulty.data.customData?.BPMChanges,
+        beatmapDifficulty.data.customData._BPMChanges ||
+            beatmapDifficulty.data.customData._bpmChanges ||
+            beatmapDifficulty.data.customData.BPMChanges,
         beatmapDifficulty.info._customData?._editorOffset,
     );
     const njs = NoteJumpSpeed.create(

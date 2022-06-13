@@ -2,6 +2,25 @@ import { PercentPointDefinition, Vector2, Vector3, Vector3PointDefinition } from
 import { IChromaAnimation } from './chroma';
 import { IHeckCustomEventDataBase } from './heck';
 
+export enum NEDataAbbr {
+    childrenTracks = 'Ct',
+    color = 'C',
+    definitePosition = 'Dp',
+    dissolve = 'D',
+    dissolveArrow = 'Da',
+    duration = 'Dur',
+    easing = 'E',
+    interactable = 'I',
+    localRotation = 'Lr',
+    parentTrack = 'Pt',
+    position = 'P',
+    rotation = 'R',
+    scale = 'S',
+    time = 'T',
+    track = 'Tr',
+    worldPositionStays = 'Wps',
+}
+
 /** Noodle Extensions Object interface for Beatmap Object. */
 interface INEObject {
     coordinates?: Vector2;
@@ -59,16 +78,16 @@ export interface INEAnimation {
 
 /** Noodle Extensions Custom Event interface for AssignTrackParent. */
 export interface INECustomEventAssignTrackParent {
-    b: number;
-    t: 'AssignTrackParent';
-    d: INECustomEventDataAssignTrackParent;
+    beat: number;
+    time: 'AssignTrackParent';
+    data: INECustomEventDataAssignTrackParent;
 }
 
 /** Noodle Extensions Custom Event interface for AssignPlayerToTrack. */
 export interface INECustomEventAssignPlayerToTrack {
-    b: number;
-    t: 'AssignPlayerToTrack';
-    d: INECustomEventDataAssignPlayerToTrack;
+    beat: number;
+    time: 'AssignPlayerToTrack';
+    data: INECustomEventDataAssignPlayerToTrack;
 }
 
 export type INECustomEvent = INECustomEventAssignTrackParent | INECustomEventAssignPlayerToTrack;

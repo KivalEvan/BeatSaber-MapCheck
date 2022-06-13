@@ -2,6 +2,7 @@
 import UIHeader from './header';
 import UIPanel from './helpers/panel';
 import SavedData from '../savedData';
+import Settings from '../settings';
 import { removeOptions, round, toMMSS, toHHMMSS, rgbaToHex } from '../utils';
 import { IColorScheme, EnvironmentName, IInfoData } from '../types';
 import { IContributorB64, IBeatmapItem } from '../types/mapcheck';
@@ -10,6 +11,7 @@ import { IBookmark, IEditor, IEditorInfo } from '../types/beatmap/shared';
 import { ChromaDataEnvAbbr, IChromaEnvironment } from '../types/beatmap/v3/chroma';
 import { IHeckPointDefinition } from '../types/beatmap/v3/heck';
 import { ICustomEvent } from '../types/beatmap/v3/customEvent';
+import { NEDataAbbr } from '../types/beatmap/v3';
 
 const logPrefix = 'UI Info: ';
 
@@ -331,7 +333,7 @@ const setBookmarks = (arr?: IBookmark[], bpm?: BeatPerMinute | null): void => {
             time = bpm.adjustTime(time);
             rt = bpm.toRealTime(time);
         }
-        return `${round(elem._time, 3)}${rt ? ' | ' + toMMSS(rt) : ''} -- ${
+        return `${round(elem._time, Settings.rounding)}${rt ? ' | ' + toMMSS(rt) : ''} -- ${
             elem._name != '' ? elem._name : '**EMPTY NAME**'
         }`;
     });
@@ -344,7 +346,7 @@ const setBPMChanges = (bpm?: BeatPerMinute | null): void => {
         return;
     }
     const bpmcText = bpm.change.map((bpmc) => {
-        let time = round(bpmc._newTime, 3);
+        let time = round(bpmc._newTime, Settings.rounding);
         let rt = bpm.toRealTime(bpmc._time);
         return `${time} | ${toMMSS(rt)} -- ${bpmc._BPM}`;
     });
@@ -360,7 +362,7 @@ const setEnvironmentEnhancement = (arr?: IChromaEnvironment[]): void => {
     const envEnhance = arr.map((elem) => {
         let keyArr = [];
         for (const key in elem) {
-            if (key == '_lookupMethod' || key == '_id') {
+            if (key == '_lookupMethod' || key == '_id' || key == 'lookupMethod' || key == 'id') {
                 continue;
             }
             let k = ChromaDataEnvAbbr[key as keyof typeof ChromaDataEnvAbbr];
@@ -390,25 +392,32 @@ const setCustomEvents = (arr?: ICustomEvent[], bpm?: BeatPerMinute | null): void
         return;
     }
     const customEv = arr.map((elem) => {
-        let time = elem.b;
+        let time = elem.beat;
         let rt!: number;
         if (bpm) {
             time = bpm.adjustTime(time);
             rt = bpm.toRealTime(time);
         }
         let keyArr = [];
-        for (const key in elem.d) {
-            if (key == '_duration' || key == '_easing' || key == '_track') {
+        for (const key in elem.data) {
+            if (
+                key == '_duration' ||
+                key == '_easing' ||
+                key == '_track' ||
+                key == 'duration' ||
+                key == 'easing' ||
+                key == 'track'
+            ) {
                 continue;
             }
-            //@ts-ignore shut up i dont care
-            if (elem.d[key] != null) {
-                keyArr.push(key);
+            let k = NEDataAbbr[key as keyof typeof NEDataAbbr];
+            if (elem.data[key as keyof ICustomEvent['data']] != null) {
+                keyArr.push(k);
             }
         }
-        return `${round(elem.b, 3)}${rt ? ' | ' + toMMSS(rt) : ''} -- ${elem.t} -> [${keyArr.join('')}]${
-            elem.t !== 'AssignTrackParent' ? `(${elem.d.track})` : ''
-        }`;
+        return `${round(elem.beat, Settings.rounding)}${rt ? ' | ' + toMMSS(rt) : ''} -- ${elem.time} -> [${keyArr.join(
+            '',
+        )}]${elem.time !== 'AssignTrackParent' ? `(${elem.data.track})` : ''}`;
     });
     displayTableRow(htmlTableCustomEvents, customEv);
 };
@@ -450,8 +459,8 @@ const setDiffInfoTable = (mapData: IBeatmapItem): void => {
         setBookmarks(mapData.data.customData._bookmarks ?? mapData.data.customData.bookmarks, bpm);
         setBPMChanges(bpm);
         setEnvironmentEnhancement(mapData.data.customData.environment);
-        setPointDefinitions(mapData.data.customData._pointDefinitions ?? mapData.data.customData.pointDefinitions);
-        setCustomEvents(mapData.data.customData._customEvents ?? mapData.data.customData.customEvents, bpm);
+        setPointDefinitions(mapData.data.customData.pointDefinitions);
+        setCustomEvents(mapData.data.customData.customEvents, bpm);
     }
 };
 

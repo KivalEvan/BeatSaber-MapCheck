@@ -1,7 +1,7 @@
 import JSZip from 'jszip';
 import * as swing from './analyzers/swing';
 import { BeatPerMinute } from './beatmap';
-import { V2toV3 } from './beatmap/convert';
+import { V2toV3 } from './converter';
 import {
     difficulty as parseDifficultyV3,
     difficultyLegacy as parseDifficultyV2,
@@ -63,7 +63,7 @@ export const loadDifficulty = async (info: IInfoData, zip: JSZip) => {
                         const data = parseDifficultyV3(diffJSON);
                         const bpm = BeatPerMinute.create(
                             info._beatsPerMinute,
-                            data.customData?.BPMChanges,
+                            data.customData.BPMChanges,
                             diffInfo._customData?._editorOffset,
                         );
                         beatmapItem.push({

@@ -3,6 +3,7 @@ import { round } from '../../utils';
 import SavedData from '../../savedData';
 import * as swing from '../../analyzers/swing';
 import { printResult } from '../helpers';
+import UICheckbox from '../../ui/helpers/checkbox';
 
 const name = 'Difficulty Progression';
 const description = 'For ranking purpose, check difficuly progression to fit rankability criteria.';
@@ -19,6 +20,9 @@ const tool: Tool = {
     input: {
         enabled,
         params: {},
+        html: UICheckbox.create(name, description, enabled, function (this: HTMLInputElement) {
+            tool.input.enabled = this.checked;
+        }),
     },
     output: {
         html: null,

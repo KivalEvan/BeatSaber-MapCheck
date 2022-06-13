@@ -208,7 +208,7 @@ export class DifficultyData extends Serializable<IDifficultyData> {
         return obstacleEnd;
     };
 
-    /** Get container of color notes, sliders, burst sliders, and bombs.
+    /** Get container of color notes, sliders, burst sliders, and bombs (in order).
      * ```ts
      * const noteCountainer = getNoteContainer(difficultyData);
      * ```

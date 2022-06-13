@@ -20,7 +20,8 @@
             &[id='tools__note'] ~ .tools__nav .tools__label-note,
             &[id='tools__obstacle'] ~ .tools__nav .tools__label-obstacle,
             &[id='tools__event'] ~ .tools__nav .tools__label-event,
-            &[id='tools__other'] ~ .tools__nav .tools__label-other {
+            &[id='tools__other'] ~ .tools__nav .tools__label-other,
+            &[id='tools__general'] ~ .tools__nav .tools__label-general {
                 padding: 0 1em;
                 margin: 0;
                 border-bottom: 1px solid var(--bg-tools-tab-select);
@@ -29,7 +30,8 @@
             &[id='tools__note'] ~ .tools__note-content,
             &[id='tools__obstacle'] ~ .tools__obstacle-content,
             &[id='tools__event'] ~ .tools__event-content,
-            &[id='tools__other'] ~ .tools__other-content {
+            &[id='tools__other'] ~ .tools__other-content,
+            &[id='tools__general'] ~ .tools__general-content {
                 display: block;
             }
         }
@@ -61,7 +63,7 @@
         display: none;
         box-sizing: border-box;
         margin: 0.25em;
-        max-height: 16em;
+        max-height: 20em;
         overflow: auto;
     }
     &__apply {
@@ -81,7 +83,7 @@
             border-radius: 4px;
             margin: 0.25em;
             padding: 0.25em;
-            max-height: 12em;
+            max-height: 16em;
             overflow: auto;
         }
     }

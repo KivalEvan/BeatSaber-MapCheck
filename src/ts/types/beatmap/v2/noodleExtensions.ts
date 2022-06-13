@@ -20,6 +20,7 @@ export enum NEDataAbbr {
     _track = 'Tr',
     _worldPositionStays = 'Wps',
 }
+
 /** Noodle Extensions Object interface for Beatmap Object. */
 interface INEObject {
     _position?: Vector2;

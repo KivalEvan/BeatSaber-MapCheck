@@ -1,25 +1,24 @@
 import { IBeatmapItem, IBeatmapSettings, Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
+import UICheckbox from '../../ui/helpers/checkbox';
 import { printResultTime } from '../helpers';
+
+const name = 'Acceptable Beat Precision';
+const description = 'Validate note timing placement is within timing precision.\ni.e: 1/8 1/6 1/x';
+const enabled = true;
 
 const defaultPrec = [8, 6];
 
-const htmlContainer = document.createElement('div');
+const htmlContainer = UICheckbox.create(name + ': ', description, enabled, function (this: HTMLInputElement) {
+    tool.input.enabled = this.checked;
+});
 const htmlInputPrec = document.createElement('input');
-const htmlLabelPrec = document.createElement('label');
 
-const name = 'Acceptable Beat Precision';
-const description = 'Validate note timing placement is within timing precision.';
-const enabled = true;
-
-htmlLabelPrec.textContent = 'Acceptable beat precision: ';
-htmlLabelPrec.htmlFor = 'input__tools-prec';
 htmlInputPrec.id = 'input__tools-prec';
 htmlInputPrec.className = 'input-toggle input--small';
 htmlInputPrec.type = 'text';
 htmlInputPrec.value = defaultPrec.join(' ');
 htmlInputPrec.addEventListener('change', inputPrecHandler);
 
-htmlContainer.appendChild(htmlLabelPrec);
 htmlContainer.appendChild(htmlInputPrec);
 
 const tool: Tool = {

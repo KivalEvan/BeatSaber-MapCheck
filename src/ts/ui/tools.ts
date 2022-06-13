@@ -16,12 +16,13 @@ const htmlToolsNote: HTMLElement = document.querySelector('.tools__note-content'
 const htmlToolsObstacle: HTMLElement = document.querySelector('.tools__obstacle-content')!;
 const htmlToolsEvent: HTMLElement = document.querySelector('.tools__event-content')!;
 const htmlToolsOther: HTMLElement = document.querySelector('.tools__other-content')!;
+const htmlToolsGeneral: HTMLElement = document.querySelector('.tools__general-content')!;
 const htmlToolsOutputDifficulty: HTMLElement = document.querySelector('.tools__output-diff')!;
 const htmlToolsOutputGeneral: HTMLElement = document.querySelector('.tools__output-general')!;
 const htmlToolsApplyThis: HTMLInputElement = document.querySelector('.tools__apply-this')!;
 const htmlToolsApplyAll: HTMLInputElement = document.querySelector('.tools__apply-all')!;
 
-if (!htmlToolsNote || !htmlToolsObstacle || !htmlToolsEvent || !htmlToolsOther) {
+if (!htmlToolsNote || !htmlToolsObstacle || !htmlToolsEvent || !htmlToolsOther || !htmlToolsGeneral) {
     throw new Error(logPrefix + 'missing content element');
 }
 if (!htmlToolsOutputDifficulty || !htmlToolsOutputGeneral) {
@@ -169,7 +170,7 @@ const populateTool = (): void => {
                     break;
                 }
                 case 'general': {
-                    console.log(logPrefix + 'ignoring general tool for ' + tl.name);
+                    htmlToolsGeneral.appendChild(tl.input.html);
                     break;
                 }
                 default: {

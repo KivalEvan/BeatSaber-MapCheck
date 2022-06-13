@@ -11,10 +11,14 @@ export abstract class BaseObject<T extends IBaseObject> extends Serializable<T> 
         this.data.b = value;
     }
 
-    get customData() {
-        return this.data.customData;
+    /** Custom data `<object>` of beatmap object.
+     *
+     * This has no type-safety for unsupported data.
+     */
+    get customData(): NonNullable<T['customData']> {
+        return this.data.customData as NonNullable<T['customData']>;
     }
-    set customData(value: typeof this.data.customData) {
+    set customData(value: NonNullable<T['customData']>) {
         this.data.customData = value;
     }
 
@@ -23,12 +27,12 @@ export abstract class BaseObject<T extends IBaseObject> extends Serializable<T> 
         return this;
     }
 
-    setCustomData(value: typeof this.data.customData) {
+    setCustomData(value: NonNullable<T['customData']>) {
         this.customData = value;
         return this;
     }
-    deleteCustomData() {
-        this.customData = {};
+    resetCustomData() {
+        this.customData = {} as NonNullable<T['customData']>;
         return this;
     }
     removeCustomData(key: string) {
@@ -41,6 +45,4 @@ export abstract class BaseObject<T extends IBaseObject> extends Serializable<T> 
         this.customData = { ...this.customData, object };
         return this;
     }
-
-    // abstract isValid(): boolean;
 }

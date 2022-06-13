@@ -14,10 +14,13 @@ export default (function () {
     return function () {
         if (!executed) {
             executed = true;
-            UISettings.setTheme(Settings.theme);
             UIFooter.setWatermark(Version.watermark);
             UIFooter.setVersion(Version.value);
             UITools.populateTool();
+            UISettings.setTheme(Settings.theme);
+            UISettings.setBeatNumbering(Settings.beatNumbering);
+            UISettings.setRounding(Settings.rounding);
+            console.log(Settings.theme, Settings.beatNumbering, Settings.rounding);
             for (const id in Settings.load) {
                 UISettings.setLoadCheck(id, Settings.load[id]);
             }

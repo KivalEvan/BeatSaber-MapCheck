@@ -158,7 +158,7 @@ export class BurstSlider extends BaseSlider<IBurstSlider> {
      * ```
      */
     getAngle() {
-        // if (this.customData?._cutDirection) {
+        // if (this.customData._cutDirection) {
         //     return this.customData._cutDirection > 0
         //         ? this.customData._cutDirection % 360
         //         : 360 + (this.customData._cutDirection % 360);
@@ -190,6 +190,15 @@ export class BurstSlider extends BaseSlider<IBurstSlider> {
      * ```
      */
     isValid() {
-        return !(this.hasMappingExtensions() || this.isInverse());
+        return (
+            !(
+                this.hasMappingExtensions() ||
+                this.isInverse() ||
+                this.posX < 0 ||
+                this.posX > 3 ||
+                this.tailPosX < 0 ||
+                this.tailPosX > 3
+            ) && !(this.posX === this.tailPosX && this.posY === this.tailPosY)
+        );
     }
 }

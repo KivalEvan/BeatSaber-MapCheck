@@ -1,18 +1,15 @@
 import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
+import UICheckbox from '../../ui/helpers/checkbox';
 import { round } from '../../utils';
 import { printResult } from '../helpers';
 
 const name = 'Hot Start';
-const description = 'Check for first interactive object starting at minimum 1.5s.';
+const description = 'Check for first interactive object starting from start time.';
 const enabled = true;
 const defaultTime = 1.5;
 
-const htmlContainer = document.createElement('div');
 const htmlInputTime = document.createElement('input');
-const htmlLabelTime = document.createElement('label');
 
-htmlLabelTime.textContent = 'Hot start (s): ';
-htmlLabelTime.htmlFor = 'input__tools-hot-start';
 htmlInputTime.id = 'input__tools-hot-start';
 htmlInputTime.className = 'input-toggle input--small';
 htmlInputTime.type = 'number';
@@ -21,7 +18,9 @@ htmlInputTime.step = '0.1';
 htmlInputTime.value = defaultTime.toString();
 htmlInputTime.addEventListener('change', inputTimeHandler);
 
-htmlContainer.appendChild(htmlLabelTime);
+const htmlContainer = UICheckbox.create(name + ' (s): ', description, enabled, function (this: HTMLInputElement) {
+    tool.input.enabled = this.checked;
+});
 htmlContainer.appendChild(htmlInputTime);
 
 const tool: Tool = {

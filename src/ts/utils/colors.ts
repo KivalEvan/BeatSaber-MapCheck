@@ -1,6 +1,6 @@
 // deno-lint-ignore-file prefer-const
-import { ColorObject, ColorArray } from '../types/beatmap/shared/colors';
-import { round, radToDeg, degToRad, lerp } from './math';
+import { ColorArray, ColorObject } from '../types/beatmap/shared/colors';
+import { degToRad, lerp, radToDeg, round } from './math';
 
 export const RGBAtoHSVA = (r: number, g: number, b: number, a = 1): ColorArray => {
     let h!: number;
@@ -77,43 +77,43 @@ export const interpolateColor = (
         case 'hsva': {
             return HSVAtoRGBA(
                 ...(colorStart.map((c, i) => {
-                    if (!c) {
+                    if (!(typeof c === 'number')) {
                         return 1;
                     }
                     const cE = colorEnd[i] ?? c;
-                    return lerp(easing!(alpha), c, cE);
+                    return lerp(easing!(alpha), c!, cE!);
                 }) as ColorArray),
             );
         }
         case 'long hsva': {
             return HSVAtoRGBA(
                 ...(colorStart.map((c, i) => {
-                    if (!c) {
+                    if (!(typeof c === 'number')) {
                         return 1;
                     }
                     const cE = colorEnd[i] ?? c;
-                    return lerp(easing!(alpha), c, cE);
+                    return lerp(easing!(alpha), c!, cE!);
                 }) as ColorArray),
             );
         }
         case 'short hsva': {
             return HSVAtoRGBA(
                 ...(colorStart.map((c, i) => {
-                    if (!c) {
+                    if (!(typeof c === 'number')) {
                         return 1;
                     }
                     const cE = colorEnd[i] ?? c;
-                    return lerp(easing!(alpha), c, cE);
+                    return lerp(easing!(alpha), c!, cE!);
                 }) as ColorArray),
             );
         }
         default: {
             return colorStart.map((c, i) => {
-                if (!c) {
+                if (!(typeof c === 'number')) {
                     return 1;
                 }
                 const cE = colorEnd[i] ?? c;
-                return lerp(easing!(alpha), c, cE);
+                return lerp(easing!(alpha), c!, cE!);
             }) as ColorArray;
         }
     }

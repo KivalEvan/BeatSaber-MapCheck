@@ -1,7 +1,7 @@
 import { IContributor } from './contributor';
 import { IEditor } from './editor';
 import { IColorScheme } from './colorScheme';
-import { IHeckInfoCustomData } from './heck';
+import { IHeckInfoCustomData, IInfoSettingsCustomData } from './heck';
 import { IChromaInfoCustomData } from './chroma';
 
 /** Base custom data interface. */
@@ -20,17 +20,14 @@ export interface ICustomDataInfo extends ICustomDataBase {
     _customEnvironmentHash?: string;
 }
 
+type IModSettingsIntersection = IInfoSettingsCustomData & IHeckInfoCustomData & IChromaInfoCustomData;
 /** Custom Data interface for info difficulty.
  * @extends ICustomDataBase
  * @extends IColorScheme
  * @extends IHeckInfoCustomData
  * @extends IChromaInfoCustomData
  */
-export interface ICustomDataInfoDifficulty
-    extends ICustomDataBase,
-        IColorScheme,
-        IHeckInfoCustomData,
-        IChromaInfoCustomData {
+export interface ICustomDataInfoDifficulty extends ICustomDataBase, IColorScheme, IModSettingsIntersection {
     _difficultyLabel?: string;
     _editorOffset?: number;
     _editorOldOffset?: number;

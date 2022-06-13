@@ -1,6 +1,6 @@
 import { BeatPerMinute } from '../../beatmap/shared/bpm';
 import { DifficultyData } from '../../beatmap/v3/difficulty';
-import { CharacteristicName, DifficultyName } from '../../types';
+import { CharacteristicName, DifficultyName } from '../../types/beatmap/shared';
 import { NoteContainer } from '../../types/beatmap/v3/container';
 import { ISwingAnalysis, ISwingCount } from '../../types/mapcheck/analyzers/swing';
 import { median } from '../../utils/math';

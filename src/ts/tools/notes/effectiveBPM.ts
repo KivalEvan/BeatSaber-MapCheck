@@ -2,6 +2,7 @@ import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/map
 import { round } from '../../utils';
 import * as beatmap from '../../beatmap';
 import { printResultTime } from '../helpers';
+import UICheckbox from '../../ui/helpers/checkbox';
 
 const name = 'Effective BPM';
 const description =
@@ -10,13 +11,15 @@ const enabled = true;
 const defaultEBPM = 450;
 const defaultEBPMS = 350;
 
-const htmlContainer = document.createElement('div');
+const htmlContainer = UICheckbox.create(name + ' threshold', description, enabled, function (this: HTMLInputElement) {
+    tool.input.enabled = this.checked;
+});
 const htmlInputEBPM = document.createElement('input');
 const htmlLabelEBPM = document.createElement('label');
 const htmlInputEBPMS = document.createElement('input');
 const htmlLabelEBPMS = document.createElement('label');
 
-htmlLabelEBPM.textContent = 'Effective BPM threshold: ';
+htmlLabelEBPM.textContent = ': ';
 htmlLabelEBPM.htmlFor = 'input__tools-ebpm';
 htmlInputEBPM.id = 'input__tools-ebpm';
 htmlInputEBPM.className = 'input-toggle input--small';

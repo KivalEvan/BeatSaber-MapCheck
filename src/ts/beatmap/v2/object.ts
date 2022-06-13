@@ -10,19 +10,28 @@ export abstract class BeatmapObject<T extends IBaseObject> extends Serializable<
         this.data._time = value;
     }
 
-    get customData() {
-        return this.data._customData;
+    /** Custom data `<object>` of beatmap object.
+     *
+     * This has no type-safety for unsupported data.
+     */
+    get customData(): NonNullable<T['_customData']> {
+        return this.data._customData as NonNullable<T['_customData']>;
     }
-    set customData(value: typeof this.data._customData) {
+    set customData(value: NonNullable<T['_customData']>) {
         this.data._customData = value;
     }
 
-    setCustomData(value: typeof this.data._customData) {
+    setTime(value: number) {
+        this.time = value;
+        return this;
+    }
+
+    setCustomData(value: NonNullable<T['_customData']>) {
         this.customData = value;
         return this;
     }
-    deleteCustomData() {
-        this.customData = {};
+    resetCustomData() {
+        this.customData = {} as NonNullable<T['_customData']>;
         return this;
     }
     removeCustomData(key: string) {

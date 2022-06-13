@@ -8,7 +8,7 @@ import UICheckbox from '../../ui/helpers/checkbox';
 import { printResultTime } from '../helpers';
 
 const name = 'Hitbox Staircase';
-const description = 'Check for overlapping post-swing hitbox with note hitbox during swinging.';
+const description = 'Check for overlapping post-swing hitbox with note hitbox during swing.';
 const enabled = true;
 
 const tool: Tool = {

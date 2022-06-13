@@ -1,5 +1,11 @@
+// enum const is used regardless as this will never be compiled and reused by JS.
 /** Also known as lane count. */
 export const LINE_COUNT = 4;
+
+export const enum NoteColor {
+    RED,
+    BLUE,
+}
 
 export const enum NoteCutDirection {
     UP,
@@ -13,7 +19,7 @@ export const enum NoteCutDirection {
     ANY,
 }
 
-/** Array index mapped to cut angle corresponding to the `_cutDirection`.
+/** Array index mapped to cut angle corresponding to the `cutDirection`.
  * ```ts
  * 0 -> 180,
  * 1 -> 0,
@@ -50,7 +56,7 @@ export const NoteFlipDirection: { [key: number]: NoteCutDirection } = {
     [NoteCutDirection.ANY]: NoteCutDirection.ANY,
 } as const;
 
-/** Array index mapped to tuple of `_lineIndex` and `_lineLayer` corresponding to the `_cutDirection`.
+/** Array index mapped to tuple of `posX` and `posY` corresponding to the `cutDirection`.
  * ```ts
  * 0 -> [0, 1],
  * 1 -> [0, -1],
@@ -75,7 +81,7 @@ export const NoteCutDirectionSpace: { [key: number]: Readonly<[number, number]> 
     [NoteCutDirection.ANY]: [0, 0],
 } as const;
 
-export const enum BasicEventLightValue {
+export const enum EventLightValue {
     OFF,
     BLUE_ON,
     BLUE_FLASH,
@@ -87,7 +93,7 @@ export const enum BasicEventLightValue {
     RED_TRANSITION,
 }
 
-export const enum BasicEventType {
+export const enum EventType {
     BACK_LASERS,
     RING_LIGHTS,
     LEFT_LASERS,
@@ -115,6 +121,7 @@ export const enum BasicEventType {
     BPM_CHANGE = 100,
 }
 
+/** Unused as of beatmap v3, useful for conversion reason. */
 export const EventLaneRotationValue: { [key: number]: number } = {
     0: -60,
     1: -45,

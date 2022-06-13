@@ -64,9 +64,9 @@ export class BombNote extends BaseNote<IBombNote> {
     }
 
     getPosition(): [number, number] {
-        // if (bomb._customData?._position) {
-        //     return [bomb._customData._position[0], bomb._customData._position[1]];
-        // }
+        if (this.customData.coordinates) {
+            return [this.customData.coordinates[0], this.customData.coordinates[1]];
+        }
         return [
             (this.posX <= -1000 ? this.posX / 1000 : this.posX >= 1000 ? this.posX / 1000 : this.posX) - 2,
             this.posY <= -1000 ? this.posY / 1000 : this.posY >= 1000 ? this.posY / 1000 : this.posY,
@@ -129,7 +129,7 @@ export class BombNote extends BaseNote<IBombNote> {
      * ```
      */
     hasChroma = (): boolean => {
-        return Array.isArray(this.customData?.color) || typeof this.customData?.spawnEffect === 'boolean';
+        return Array.isArray(this.customData.color) || typeof this.customData.spawnEffect === 'boolean';
     };
 
     /** Check if note has Noodle Extensions properties.
@@ -140,18 +140,18 @@ export class BombNote extends BaseNote<IBombNote> {
     // god i hate these
     hasNoodleExtensions = (): boolean => {
         return (
-            Array.isArray(this.customData?.animation) ||
-            typeof this.customData?.disableNoteGravity === 'boolean' ||
-            typeof this.customData?.disableNoteLook === 'boolean' ||
-            Array.isArray(this.customData?.flip) ||
-            typeof this.customData?.uninteractable === 'boolean' ||
-            Array.isArray(this.customData?.localRotation) ||
-            typeof this.customData?.noteJumpMovementSpeed === 'number' ||
-            typeof this.customData?.noteJumpStartBeatOffset === 'number' ||
-            Array.isArray(this.customData?.coordinates) ||
-            Array.isArray(this.customData?.worldRotation) ||
-            typeof this.customData?.worldRotation === 'number' ||
-            typeof this.customData?.track === 'string'
+            Array.isArray(this.customData.animation) ||
+            typeof this.customData.disableNoteGravity === 'boolean' ||
+            typeof this.customData.disableNoteLook === 'boolean' ||
+            Array.isArray(this.customData.flip) ||
+            typeof this.customData.uninteractable === 'boolean' ||
+            Array.isArray(this.customData.localRotation) ||
+            typeof this.customData.noteJumpMovementSpeed === 'number' ||
+            typeof this.customData.noteJumpStartBeatOffset === 'number' ||
+            Array.isArray(this.customData.coordinates) ||
+            Array.isArray(this.customData.worldRotation) ||
+            typeof this.customData.worldRotation === 'number' ||
+            typeof this.customData.track === 'string'
         );
     };
 
