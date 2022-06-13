@@ -2,10 +2,13 @@
 import { UIThemeName } from '../types/mapcheck/ui';
 import UITheme from './theme';
 import Settings from '../settings';
+import { BeatNumbering } from '../types/mapcheck/settings';
 
 const logPrefix = 'UI Settings: ';
 
 const htmlSettingsTheme: HTMLSelectElement = document.querySelector('.settings__theme')!;
+const htmlSettingsBeatNumbering: HTMLSelectElement = document.querySelector('.settings__beat-numbering')!;
+const htmlSettingsRounding: HTMLInputElement = document.querySelector('.settings__rounding')!;
 const htmlSettingsLoad: NodeListOf<HTMLInputElement> = document.querySelectorAll('.settings__load');
 const htmlSettingsSort: HTMLInputElement = document.querySelector('.settings__sort')!;
 const htmlSettingsShow: NodeListOf<HTMLInputElement> = document.querySelectorAll('.settings__show');
@@ -22,6 +25,16 @@ if (htmlSettingsTheme) {
     });
 } else {
     throw new Error(logPrefix + 'theme select is missing');
+}
+if (htmlSettingsBeatNumbering) {
+    htmlSettingsBeatNumbering.addEventListener('change', beatNumberingChangeHandler);
+} else {
+    throw new Error(logPrefix + 'missing settings');
+}
+if (htmlSettingsRounding) {
+    htmlSettingsRounding.addEventListener('change', roundingChangeHandler);
+} else {
+    throw new Error(logPrefix + 'missing settings');
 }
 if (!htmlSettingsLoad.length) {
     console.error(logPrefix + 'empty load list, intentional or typo error?');
@@ -50,6 +63,18 @@ function themeChangeHandler(ev: Event): void {
     const target = ev.target as HTMLSelectElement;
     Settings.theme = target.options[target.options.selectedIndex].value as UIThemeName;
     UITheme.set(Settings.theme);
+    Settings.save();
+}
+
+function beatNumberingChangeHandler(ev: Event): void {
+    const target = ev.target as HTMLSelectElement;
+    Settings.beatNumbering = target.options[target.options.selectedIndex].value as BeatNumbering;
+    Settings.save();
+}
+
+function roundingChangeHandler(ev: Event): void {
+    const target = ev.target as HTMLInputElement;
+    Settings.rounding = parseInt(target.value);
     Settings.save();
 }
 
@@ -114,6 +139,14 @@ const setTheme = (str: UIThemeName): void => {
     htmlSettingsTheme.value = str;
 };
 
+const setBeatNumbering = (str: BeatNumbering): void => {
+    htmlSettingsBeatNumbering.value = str;
+};
+
+const setRounding = (num: number): void => {
+    htmlSettingsRounding.value = num.toString();
+};
+
 function clear(): void {
     Settings.clear();
     Settings.reset();
@@ -126,5 +159,7 @@ export default {
     setLoadCheck,
     setOnLoadCheck,
     setTheme,
+    setBeatNumbering,
+    setRounding,
     clear,
 };

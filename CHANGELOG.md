@@ -14,6 +14,7 @@
 -   Tool check hover tooltip
 -   More stats for v3 stuff
 -   Dynamic event name based on environment
+-   Beat numbering and rounding settings
 -   Standard style format (development)
 
 ### Changed

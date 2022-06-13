@@ -303,6 +303,20 @@
             <span>Theme:</span>
           </label>
           <select class="settings__theme" id="settings__theme"></select><br>
+          <label for="settings__beat-numbering">
+            <span>Beat Numbering:</span>
+          </label>
+          <select class="settings__beat-numbering input-toggle" id="settings__beat-numbering">
+            <option value="beattime">Beat Time</option>
+            <option value="jsontime">JSON Time</option>
+            <option value="realtime">RT (MMSS)</option>
+            <option value="realtimems">RT (MMSSms)</option>
+          </select><br>
+          <label for="settings__rounding">
+            <span>Rounding:</span>
+          </label>
+          <input type="number" class="settings__rounding input-toggle input--small" id="settings__rounding" step="1"
+            min="0"><br>
           <br>
           <input type="button" class="settings__clear-button input-toggle" id="settings__clear-button"
             value="Clear Settings">

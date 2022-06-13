@@ -2,6 +2,7 @@
 import UIHeader from './header';
 import UIPanel from './helpers/panel';
 import SavedData from '../savedData';
+import Settings from '../settings';
 import { removeOptions, round, toMMSS, toHHMMSS, rgbaToHex } from '../utils';
 import { IColorScheme, EnvironmentName, IInfoData } from '../types';
 import { IContributorB64, IBeatmapItem } from '../types/mapcheck';
@@ -332,7 +333,7 @@ const setBookmarks = (arr?: IBookmark[], bpm?: BeatPerMinute | null): void => {
             time = bpm.adjustTime(time);
             rt = bpm.toRealTime(time);
         }
-        return `${round(elem._time, 3)}${rt ? ' | ' + toMMSS(rt) : ''} -- ${
+        return `${round(elem._time, Settings.rounding)}${rt ? ' | ' + toMMSS(rt) : ''} -- ${
             elem._name != '' ? elem._name : '**EMPTY NAME**'
         }`;
     });
@@ -345,7 +346,7 @@ const setBPMChanges = (bpm?: BeatPerMinute | null): void => {
         return;
     }
     const bpmcText = bpm.change.map((bpmc) => {
-        let time = round(bpmc._newTime, 3);
+        let time = round(bpmc._newTime, Settings.rounding);
         let rt = bpm.toRealTime(bpmc._time);
         return `${time} | ${toMMSS(rt)} -- ${bpmc._BPM}`;
     });
@@ -414,9 +415,9 @@ const setCustomEvents = (arr?: ICustomEvent[], bpm?: BeatPerMinute | null): void
                 keyArr.push(k);
             }
         }
-        return `${round(elem.beat, 3)}${rt ? ' | ' + toMMSS(rt) : ''} -- ${elem.time} -> [${keyArr.join('')}]${
-            elem.time !== 'AssignTrackParent' ? `(${elem.data.track})` : ''
-        }`;
+        return `${round(elem.beat, Settings.rounding)}${rt ? ' | ' + toMMSS(rt) : ''} -- ${elem.time} -> [${keyArr.join(
+            '',
+        )}]${elem.time !== 'AssignTrackParent' ? `(${elem.data.track})` : ''}`;
     });
     displayTableRow(htmlTableCustomEvents, customEv);
 };

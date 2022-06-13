@@ -2,7 +2,7 @@ import { UIThemeName } from './ui';
 
 type SettingsFlag = { [key: string]: boolean };
 
-type BeatNumbering = 'beattime' | 'jsontime' | 'realtime' | 'realtimems';
+export type BeatNumbering = 'beattime' | 'jsontime' | 'realtime' | 'realtimems';
 
 interface ISettingsLoad extends SettingsFlag {
     audio: boolean;
