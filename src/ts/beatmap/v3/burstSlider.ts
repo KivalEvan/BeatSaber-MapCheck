@@ -190,13 +190,15 @@ export class BurstSlider extends BaseSlider<IBurstSlider> {
      * ```
      */
     isValid() {
-        return !(
-            this.hasMappingExtensions() ||
-            this.isInverse() ||
-            this.posX < 0 ||
-            this.posX > 3 ||
-            this.tailPosX < 0 ||
-            this.tailPosX > 3
+        return (
+            !(
+                this.hasMappingExtensions() ||
+                this.isInverse() ||
+                this.posX < 0 ||
+                this.posX > 3 ||
+                this.tailPosX < 0 ||
+                this.tailPosX > 3
+            ) && !(this.posX === this.tailPosX && this.posY === this.tailPosY)
         );
     }
 }
