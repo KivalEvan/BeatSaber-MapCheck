@@ -1,4 +1,4 @@
-// really simple logger
+// really simple Logger
 enum LogLevels {
     VERBOSE,
     DEBUG,
@@ -53,7 +53,7 @@ export default new (class Logger {
     public setLevel(level: LogLevels) {
         level = Math.min(level, 5);
         this.logLevel = level;
-        this.info('[logger::setLevel]', `Log level set to ${logPrefixes.get(level)}`);
+        this.info('[Logger::setLevel]', `Log level set to ${logPrefixes.get(level)}`);
     }
 
     // deno-lint-ignore no-explicit-any

@@ -1,6 +1,6 @@
 import { EnvironmentAllName } from '../../types/beatmap/shared/environment';
 
-export const eventTypeRename = (type: number, environment?: EnvironmentAllName): string => {
+export function eventTypeRename(type: number, environment?: EnvironmentAllName): string {
     switch (type) {
         case 0:
             switch (environment) {
@@ -13,6 +13,7 @@ export const eventTypeRename = (type: number, environment?: EnvironmentAllName):
                 case 'InterscopeEnvironment':
                     return 'Gate 1';
                 case 'SkrillexEnvironment':
+                case 'TheSecondEnvironment':
                     return 'Logo';
                 case 'BillieEnvironment':
                     return 'Water 4';
@@ -27,6 +28,7 @@ export const eventTypeRename = (type: number, environment?: EnvironmentAllName):
                 default:
                     return 'Back Lasers';
             }
+        /* fall through */
         case 1:
             switch (environment) {
                 case 'LinkinParkEnvironment':
@@ -49,6 +51,8 @@ export const eventTypeRename = (type: number, environment?: EnvironmentAllName):
                     return 'Logo';
                 case 'EDMEnvironment':
                     return 'Lane Lights Top';
+                case 'TheSecondEnvironment':
+                    return 'Runway';
                 default:
                     return 'Ring Lights';
             }
@@ -66,6 +70,8 @@ export const eventTypeRename = (type: number, environment?: EnvironmentAllName):
                     return 'Tower 1';
                 case 'PyroEnvironment':
                     return 'Left Projectors';
+                case 'TheSecondEnvironment':
+                    return 'Left Flags';
                 default:
                     return 'Left Lasers';
             }
@@ -81,6 +87,8 @@ export const eventTypeRename = (type: number, environment?: EnvironmentAllName):
                     return 'Tower 2';
                 case 'PyroEnvironment':
                     return 'Right Projectors';
+                case 'TheSecondEnvironment':
+                    return 'Right Flags';
                 default:
                     return 'Right Lasers';
             }
@@ -102,6 +110,8 @@ export const eventTypeRename = (type: number, environment?: EnvironmentAllName):
                     return 'Platform';
                 case 'EDMEnvironment':
                     return 'Player Space & Spectrogram';
+                case 'TheSecondEnvironment':
+                    return 'Buildings';
                 default:
                     return 'Center Lights';
             }
@@ -252,9 +262,9 @@ export const eventTypeRename = (type: number, environment?: EnvironmentAllName):
         default:
             return 'Unknown';
     }
-};
+}
 
-export const eventGroupRename = (id: number, environment?: EnvironmentAllName): string => {
+export function eventGroupRename(id: number, environment?: EnvironmentAllName): string {
     switch (environment) {
         case 'WeaveEnvironment': {
             switch (id) {
@@ -329,45 +339,78 @@ export const eventGroupRename = (id: number, environment?: EnvironmentAllName): 
         case 'EDMEnvironment': {
             switch (id) {
                 case 0:
-                    return 'Large Circle Light';
+                    return 'Top Circle';
                 case 1:
-                    return 'Large Circle Light 2';
+                    return 'Close Circle';
                 case 2:
-                    return 'Laser Circle Light';
+                    return 'Distant Circle';
                 case 3:
-                    return 'Laser Circle Light 2';
+                    return 'Distant Circle 2';
                 case 4:
-                    return 'Left Vertical Laser';
+                    return 'Left Single Source Circle';
                 case 5:
-                    return 'Right Vertical Laser 2';
+                    return 'Right Single Source Circle';
                 case 6:
-                    return 'Left Horizontal Laser';
+                    return 'Left Laser (Up)';
                 case 7:
-                    return 'Left Horizontal Laser 2';
+                    return 'Left Laser (Out)';
                 case 8:
-                    return 'Right Horizontal Laser';
+                    return 'Right Laser (Up)';
                 case 9:
-                    return 'Right Horizontal Laser 2';
+                    return 'Right Laser (Out)';
                 case 10:
-                    return 'Left Horizontal Laser 3';
+                    return 'Left Laser (Down)';
                 case 11:
-                    return 'Right Horizontal Laser 3';
+                    return 'Right Laser (Down)';
                 case 12:
-                    return 'Unidentifed';
+                    return 'Left Laser (Down) / Top Circle Rotation';
                 case 13:
-                    return 'Unidentifed';
+                    return 'Right Laser (Up) / Close Circle Rotation';
                 case 14:
-                    return 'Unidentifed';
+                    return 'Distant Circle Rotation';
                 case 15:
-                    return 'Unidentifed';
+                    return 'Distant Circle 2 Rotation';
                 case 16:
-                    return 'Unidentifed';
+                    return 'Left Single Source Circle Rotation';
                 case 17:
-                    return 'Unidentifed';
+                    return 'Right Single Source Circle Rotation';
+            }
+        }
+        /* fall through */
+        case 'TheSecondEnvironment': {
+            switch (id) {
+                case 0:
+                    return 'Bing Rings';
+                case 1:
+                    return 'Small Rings';
+                case 2:
+                    return 'Runway Left';
+                case 3:
+                    return 'Runway Right';
+                case 4:
+                    return 'Spotlight Left';
+                case 5:
+                    return 'Spotlight Right';
+                case 6:
+                    return 'Top Lasers Left Bottom';
+                case 7:
+                    return 'Top Lasers Right Bottom';
+                case 8:
+                    return 'Top Lasers Left Top';
+                case 9:
+                    return 'Top Lasers Right Top';
+                case 10:
+                    return 'Bottom Lasers Left Bottom';
+                case 11:
+                    return 'Bottom Lasers Right Bottom';
+                case 12:
+                    return 'Bottom Lasers Left Top';
+                case 13:
+                    return 'Bottom Lasers Right Top';
             }
         }
         /* fall through */
         default:
             return 'Unknown';
     }
-};
+}

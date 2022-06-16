@@ -1,7 +1,7 @@
 import { DifficultyName } from '../../types/beatmap/shared/difficulty';
 import { BeatPerMinute } from './bpm';
 
-/** Class to store NJS value, BPM, and other properties affecting NJS. */
+/** NJS class for various utility around jump distance, reaction time, etc. */
 export class NoteJumpSpeed {
     private _bpm: BeatPerMinute;
     private _njs: number;
@@ -83,10 +83,10 @@ export class NoteJumpSpeed {
     }
 
     private update(): void {
-        this._hjd = this.calcHalfJumpDuration();
-        this._jd = this.calcJumpDistance();
-        this._jdMin = this.calcJumpDistance(NoteJumpSpeed.HJD_MIN);
-        this._reactionTime = this.calcReactionTimeFromHJD();
+        this._hjd = this.calcHJD();
+        this._jd = this.calcJD();
+        this._jdMin = this.calcJD(NoteJumpSpeed.HJD_MIN);
+        this._reactionTime = this.calcRTFromHJD();
     }
 
     /** Calculate raw half jump duration
@@ -94,7 +94,7 @@ export class NoteJumpSpeed {
      * const rawHJD = NJS.calcHalfJumpDurationRaw();
      * ```
      */
-    public calcHalfJumpDurationRaw(): number {
+    public calcHJDRaw(): number {
         const maxHalfJump = 17.999; // Beat Games, this is not how you fix float inconsistencies
         const noteJumpMovementSpeed = (this._njs * this._njs) / this._njs;
         const num = 60 / this._bpm.value;
@@ -114,8 +114,8 @@ export class NoteJumpSpeed {
      * const HJDOffset = NJS.calcHalfJumpDuration(0.5);
      * ```
      */
-    public calcHalfJumpDuration(offset: number = this.offset): number {
-        return Math.max(this.calcHalfJumpDurationRaw() + offset, NoteJumpSpeed.HJD_MIN);
+    public calcHJD(offset: number = this.offset): number {
+        return Math.max(this.calcHJDRaw() + offset, NoteJumpSpeed.HJD_MIN);
     }
 
     /** Calculate half jump duration given jump distance.
@@ -124,7 +124,7 @@ export class NoteJumpSpeed {
      * const HJDSpecified = NJS.calcHalfJumpDurationFromJD(21);
      * ```
      */
-    public calcHalfJumpDurationFromJD(jd: number = this.calcJumpDistance()): number {
+    public calcHJDFromJD(jd: number = this.calcJD()): number {
         return jd / ((60 / this._bpm.value) * this._njs * 2);
     }
 
@@ -134,7 +134,7 @@ export class NoteJumpSpeed {
      * const HJDSpecified = NJS.calcHalfJumpDurationFromRT(4.5);
      * ```
      */
-    public calcHalfJumpDurationFromRT(rt: number = this.calcReactionTimeFromHJD()): number {
+    public calcHJDFromRT(rt: number = this.calcRTFromHJD()): number {
         return rt / (60 / this._bpm.value);
     }
 
@@ -144,7 +144,7 @@ export class NoteJumpSpeed {
      * const JDSpecified = NJS.calcJumpDistance(1.5);
      * ```
      */
-    public calcJumpDistance(hjd: number = this.calcHalfJumpDuration()): number {
+    public calcJD(hjd: number = this.calcHJD()): number {
         return this._njs * (60 / this._bpm.value) * hjd * 2;
     }
 
@@ -153,7 +153,7 @@ export class NoteJumpSpeed {
      * const optimalHighJD = NJS.calcJumpDistanceOptimalHigh();
      * ```
      */
-    public calcJumpDistanceOptimalHigh(): number {
+    public calcJDOptimalHigh(): number {
         return 18 * (1 / 1.07) ** this._njs + 18;
     }
 
@@ -162,7 +162,7 @@ export class NoteJumpSpeed {
      * const optimalLowJD = NJS.calcJumpDistanceOptimalLow();
      * ```
      */
-    public calcJumpDistanceOptimalLow(): number {
+    public calcJDOptimalLow(): number {
         return -(18 / (this._njs + 1)) + 18;
     }
 
@@ -172,7 +172,7 @@ export class NoteJumpSpeed {
      * const JDSpecified = NJS.calcReactionTimeFromJD(21);
      * ```
      */
-    public calcReactionTimeFromJD(jd: number = this.calcJumpDistance()): number {
+    public calcRTFromJD(jd: number = this.calcJD()): number {
         return jd / (2 * this._njs);
     }
 
@@ -182,7 +182,7 @@ export class NoteJumpSpeed {
      * const JDSpecified = NJS.calcReactionTimeFromHJD(1.5);
      * ```
      */
-    public calcReactionTimeFromHJD(hjd: number = this.calcHalfJumpDuration()): number {
+    public calcRTFromHJD(hjd: number = this.calcHJD()): number {
         return (60 / this._bpm.value) * hjd;
     }
 

@@ -1,6 +1,6 @@
 import { ColorPointDefinition, PercentPointDefinition, Vector3 } from '../shared/heck';
 import { Easings } from '../shared/easings';
-import { ColorArray } from '../shared/colors';
+import { ColorArray } from '../../colors';
 import { ICustomDataBase } from '../shared/customData';
 import { LookupMethod } from '../shared/chroma';
 import { IHeckCustomEventDataBase } from './heck';
@@ -48,31 +48,26 @@ export interface IChromaEnvironment {
     _lightID?: number;
 }
 
-/** Chroma interface for Beatmap Note Custom Data.
- * ```ts
-    _color?: string | ArrayColorPointDefinition[]
- * ```
- */
+export interface IChromaGeometry {
+    _geometryType: 'SPHERE' | 'CAPSULE' | 'CYLINDER' | 'CUBE' | 'PLANE' | 'QUAD';
+    _spawnCount: number;
+    _track?: string;
+    _shaderPreset?: 'LIGHT_BOX' | 'STANDARD' | 'NO_SHADE';
+    _collision?: boolean;
+}
+
+/** Chroma interface for Beatmap Note Custom Data. */
 export interface IChromaAnimation {
     _color?: string | ColorPointDefinition[];
 }
 
-/** Chroma interface for Beatmap Note Custom Data.
- * ```ts
- * _color?: [float, float, float, float?],
- * _disableSpawnEffect?: boolean
- * ```
- */
+/** Chroma interface for Beatmap Note Custom Data. */
 export interface IChromaNote {
     _color?: ColorArray;
     _disableSpawnEffect?: boolean;
 }
 
-/** Chroma interface for Beatmap Obstacle Custom Data.
- * ```ts
- * _color?: [float, float, float, float?]
- * ```
- */
+/** Chroma interface for Beatmap Obstacle Custom Data. */
 export interface IChromaObstacle {
     _color?: ColorArray;
 }
@@ -143,4 +138,5 @@ export type IChromaCustomEvent = IChromaCustomEventAssignFogTrack;
 export interface IChromaCustomData {
     _customEvents?: IChromaCustomEvent[];
     _environment?: IChromaEnvironment[];
+    _geometry?: IChromaGeometry[];
 }

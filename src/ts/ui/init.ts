@@ -7,7 +7,7 @@ import UISettings from './settings';
 import UIAccordion from './helpers/accordion';
 import UITheme from './theme';
 import UITools from './tools';
-import logger from '../logger';
+import Logger from '../logger';
 
 export default (function () {
     let executed = false;
@@ -32,7 +32,7 @@ export default (function () {
                 UISettings.setOnLoadCheck(id, Settings.onLoad[id]);
             }
             UITheme.set(Settings.theme);
-            logger.info('User interface initialised');
+            Logger.info('User interface initialised');
         }
     };
 })();

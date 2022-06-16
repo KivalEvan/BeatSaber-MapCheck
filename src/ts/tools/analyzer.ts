@@ -5,7 +5,7 @@ import { BeatPerMinute, NoteJumpSpeed } from '../beatmap';
 import { CharacteristicName, DifficultyName } from '../types';
 import { IBeatmapSettings } from '../types/mapcheck/tools/tool';
 import { Tool } from '../types/mapcheck';
-import logger from '../logger';
+import Logger from '../logger';
 
 const tag = (name: string) => {
     return `[analyzer::${name}]`;
@@ -15,19 +15,19 @@ const toolListInput: ReadonlyArray<Tool> = AnalysisComponents.getAll().sort((a, 
 
 const toolListOutput: ReadonlyArray<Tool> = [...toolListInput].sort((a, b) => a.order.output - b.order.output);
 
-const init = (): void => {
+function init(): void {
     SavedData.analysis = {
         general: {
             html: null,
         },
         map: [],
     };
-};
+}
 
-const runGeneral = (): void => {
+function runGeneral(): void {
     const mapInfo = SavedData.beatmapInfo;
     if (!mapInfo) {
-        logger.error(tag('runGeneral'), 'Could not analyse, missing map info');
+        Logger.error(tag('runGeneral'), 'Could not analyse, missing map info');
         return;
     }
 
@@ -47,7 +47,7 @@ const runGeneral = (): void => {
         mapDuration: 0,
     };
 
-    logger.info(tag('runGeneral'), `Analysing general`);
+    Logger.info(tag('runGeneral'), `Analysing general`);
     const htmlArr: HTMLElement[] = [];
     toolListOutput
         .filter((tool) => tool.type === 'general')
@@ -63,7 +63,7 @@ const runGeneral = (): void => {
                         htmlArr.push(tool.output.html);
                     }
                 } catch (err) {
-                    logger.error(tag('runGeneral'), err);
+                    Logger.error(tag('runGeneral'), err);
                 }
             }
         });
@@ -71,12 +71,12 @@ const runGeneral = (): void => {
     if (analysisExist) {
         analysisExist.html = htmlArr;
     }
-};
+}
 
-const runDifficulty = (characteristic: CharacteristicName, difficulty: DifficultyName): void => {
+function runDifficulty(characteristic: CharacteristicName, difficulty: DifficultyName): void {
     const mapInfo = SavedData.beatmapInfo;
     if (!mapInfo) {
-        logger.error(tag('runDifficulty'), 'Could not analyse, missing map info');
+        Logger.error(tag('runDifficulty'), 'Could not analyse, missing map info');
         return;
     }
 
@@ -88,7 +88,7 @@ const runDifficulty = (characteristic: CharacteristicName, difficulty: Difficult
         (set) => set.characteristic === characteristic && set.difficulty === difficulty,
     );
     if (!beatmapDifficulty) {
-        logger.error(tag('runDifficulty'), 'Could not analyse, missing map data');
+        Logger.error(tag('runDifficulty'), 'Could not analyse, missing map data');
         return;
     }
 
@@ -116,7 +116,7 @@ const runDifficulty = (characteristic: CharacteristicName, difficulty: Difficult
         mapDuration: bpm.toRealTime(beatmapDifficulty.data.getLastInteractiveTime()),
     };
 
-    logger.info(tag('runDifficulty'), `Analysing ${characteristic} ${difficulty}`);
+    Logger.info(tag('runDifficulty'), `Analysing ${characteristic} ${difficulty}`);
     const htmlArr: HTMLElement[] = [];
     toolListOutput
         .filter((tool) => tool.type !== 'general')
@@ -132,7 +132,7 @@ const runDifficulty = (characteristic: CharacteristicName, difficulty: Difficult
                         htmlArr.push(tool.output.html);
                     }
                 } catch (err) {
-                    logger.error(tag('runDifficulty'), err);
+                    Logger.error(tag('runDifficulty'), err);
                 }
             }
         });
@@ -146,20 +146,20 @@ const runDifficulty = (characteristic: CharacteristicName, difficulty: Difficult
             html: htmlArr,
         });
     }
-};
+}
 
-const adjustTime = (bpm: BeatPerMinute): void => {
+function adjustTime(bpm: BeatPerMinute): void {
     const toolList = AnalysisComponents.getDifficulty().sort((a, b) => a.order.output - b.order.output);
     toolList.forEach((tool) => {
         if (tool.input.adjustTime) {
             tool.input.adjustTime(bpm);
         }
     });
-};
+}
 
-const applyAll = (): void => {
+function applyAll(): void {
     SavedData.beatmapDifficulty?.forEach((set) => runDifficulty(set.characteristic, set.difficulty));
-};
+}
 
 export default {
     toolListInput,

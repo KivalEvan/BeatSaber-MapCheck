@@ -4,6 +4,7 @@ import { EventBox } from './eventBox';
 import { IndexFilter } from './indexFilter';
 import { LightColorBase } from './lightColorBase';
 
+/** Light color event box beatmap v3 class object. */
 export class LightColorEventBox extends EventBox<ILightColorEventBox> {
     static default: ObjectToReturn<Required<ILightColorEventBox>> = {
         f: () => {
@@ -39,7 +40,7 @@ export class LightColorEventBox extends EventBox<ILightColorEventBox> {
         const result: LightColorEventBox[] = [];
         eventBoxes?.forEach((eb) =>
             result.push(
-                new LightColorEventBox({
+                new this({
                     f: (eb as Required<ILightColorEventBox>).f ?? LightColorEventBox.default.f(),
                     w: eb.w ?? LightColorEventBox.default.w,
                     d: eb.d ?? LightColorEventBox.default.d,
@@ -56,7 +57,7 @@ export class LightColorEventBox extends EventBox<ILightColorEventBox> {
         if (result.length) {
             return result;
         }
-        return new LightColorEventBox({
+        return new this({
             f: LightColorEventBox.default.f(),
             w: LightColorEventBox.default.w,
             d: LightColorEventBox.default.d,

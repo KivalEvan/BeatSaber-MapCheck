@@ -1,8 +1,8 @@
 // deno-lint-ignore-file prefer-const
-import { ColorArray, ColorObject } from '../types/beatmap/shared/colors';
+import { ColorArray, ColorObject } from '../types/colors';
 import { degToRad, lerp, radToDeg, round } from './math';
 
-export const RGBAtoHSVA = (r: number, g: number, b: number, a = 1): ColorArray => {
+export function RGBAtoHSVA(r: number, g: number, b: number, a = 1): ColorArray {
     let h!: number;
     const max = Math.max(r, g, b);
     const min = Math.min(r, g, b);
@@ -28,9 +28,9 @@ export const RGBAtoHSVA = (r: number, g: number, b: number, a = 1): ColorArray =
             break;
     }
     return [h, s, v, a];
-};
+}
 
-export const HSVAtoRGBA = (hue: number, saturation: number, value: number, alpha = 1): ColorArray => {
+export function HSVAtoRGBA(hue: number, saturation: number, value: number, alpha = 1): ColorArray {
     hue = hue / 360;
     let r!: number, g!: number, b!: number;
     const i = Math.floor(hue * 6);
@@ -59,15 +59,15 @@ export const HSVAtoRGBA = (hue: number, saturation: number, value: number, alpha
             break;
     }
     return [r, g, b, alpha];
-};
+}
 
-export const interpolateColor = (
+export function interpolateColor(
     colorStart: ColorArray,
     colorEnd: ColorArray,
     alpha: number,
     type: 'rgba' | 'hsva' | 'long hsva' | 'short hsva' = 'rgba',
     easing?: (x: number) => number,
-): ColorArray => {
+): ColorArray {
     if (!easing) {
         easing = function (x: number) {
             return x;
@@ -117,22 +117,22 @@ export const interpolateColor = (
             }) as ColorArray;
         }
     }
-};
+}
 
-export const toRGBArray = (c: ColorObject): ColorArray => {
+export function toRGBArray(c: ColorObject): ColorArray {
     return [c.r, c.g, c.b];
-};
+}
 
-export const compToHex = (c: number): string => {
+export function compToHex(c: number): string {
     const hex = c.toString(16);
     return hex.length === 1 ? '0' + hex : hex;
-};
+}
 
-export const cDenorm = (c: number): number => {
+export function cDenorm(c: number): number {
     return c > 1 && !(c < 0) ? 255 : round(c * 255);
-};
+}
 
-export const rgbaToHex = (colorObj?: ColorObject | null): string | null => {
+export function rgbaToHex(colorObj?: ColorObject | null): string | null {
     if (!colorObj) {
         return null;
     }
@@ -145,10 +145,10 @@ export const rgbaToHex = (colorObj?: ColorObject | null): string | null => {
         color[c as keyof ColorObject] = cDenorm(num);
     }
     return `#${compToHex(color.r)}${compToHex(color.g)}${compToHex(color.b)}${color.a ? compToHex(color.a) : ''}`;
-};
+}
 
 // https://www.easyrgb.com/ with Adobe RGB reference value
-export const rgbToLab = (rgbaAry: ColorArray) => {
+export function rgbToLab(rgbaAry: ColorArray) {
     let r = rgbaAry[0],
         g = rgbaAry[1],
         b = rgbaAry[2],
@@ -169,9 +169,9 @@ export const rgbToLab = (rgbaAry: ColorArray) => {
     z = z > 0.008856 ? Math.pow(z, 1 / 3) : 7.787 * z + 16 / 116;
 
     return [116 * y - 16, 500 * (x - y), 200 * (y - z)];
-};
+}
 
-export const labToHue = (a: number, b: number): number => {
+export function labToHue(a: number, b: number): number {
     let bias = 0;
     if (a >= 0 && b === 0) return 0;
     if (a < 0 && b === 0) return 180;
@@ -181,9 +181,9 @@ export const labToHue = (a: number, b: number): number => {
     if (a < 0) bias = 180;
     if (a > 0 && b < 0) bias = 360;
     return radToDeg(Math.atan(b / a)) + bias;
-};
+}
 
-export const deltaE00 = (rgbaAry1: ColorArray, rgbaAry2: ColorArray): number => {
+export function deltaE00(rgbaAry1: ColorArray, rgbaAry2: ColorArray): number {
     const [l1, a1, b1] = rgbToLab(rgbaAry1);
     const [l2, a2, b2] = rgbToLab(rgbaAry2);
 
@@ -270,4 +270,4 @@ export const deltaE00 = (rgbaAry1: ColorArray, rgbaAry2: ColorArray): number => 
     dH = dH / (wH * sH);
 
     return Math.sqrt(dL * dL + dC * dC + dH * dH + rT * dC * dH);
-};
+}

@@ -4,6 +4,7 @@ export * from './basicEvent';
 export * from './basicEventTypesForKeywords';
 export * from './basicEventTypesWithKeywords';
 export * from './bombNote';
+export * from './bookmark';
 export * from './bpmEvent';
 export * from './burstSlider';
 export * from './chroma';

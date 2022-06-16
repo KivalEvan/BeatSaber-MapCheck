@@ -2,8 +2,9 @@ import { ISpecialEventsKeywordFiltersKeywords } from '../../types/beatmap/v2/spe
 import { ObjectToReturn } from '../../types/utils';
 import { Serializable } from '../shared/serializable';
 
-/** Basic event types for keywords.
- * Used in basic event types with keywords.
+/** Special event types for keywords beatmap v2 class object.
+ *
+ * Used in special event types with keywords.
  */
 export class SpecialEventsKeywordFiltersKeywords extends Serializable<ISpecialEventsKeywordFiltersKeywords> {
     static default: ObjectToReturn<Required<ISpecialEventsKeywordFiltersKeywords>> = {
@@ -28,7 +29,7 @@ export class SpecialEventsKeywordFiltersKeywords extends Serializable<ISpecialEv
         const result: SpecialEventsKeywordFiltersKeywords[] = [];
         basicEventTypesForKeywords?.forEach((betfk) =>
             result.push(
-                new SpecialEventsKeywordFiltersKeywords({
+                new this({
                     _keyword: betfk._keyword ?? SpecialEventsKeywordFiltersKeywords.default._keyword,
                     _specialEvents:
                         betfk._specialEvents ?? SpecialEventsKeywordFiltersKeywords.default._specialEvents(),
@@ -41,7 +42,7 @@ export class SpecialEventsKeywordFiltersKeywords extends Serializable<ISpecialEv
         if (result.length) {
             return result;
         }
-        return new SpecialEventsKeywordFiltersKeywords({
+        return new this({
             _keyword: SpecialEventsKeywordFiltersKeywords.default._keyword,
             _specialEvents: SpecialEventsKeywordFiltersKeywords.default._specialEvents(),
         });

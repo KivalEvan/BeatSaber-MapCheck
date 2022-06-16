@@ -1,7 +1,7 @@
 import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
-import { ColorArray } from '../../types/beatmap/shared/colors';
+import { ColorArray } from '../../types/colors';
 import { deltaE00, toRGBArray, round } from '../../utils';
-import * as beatmap from '../../beatmap';
+import * as beatmap from '../../beatmap/';
 import UICheckbox from '../../ui/helpers/checkbox';
 import { printResult } from '../helpers';
 

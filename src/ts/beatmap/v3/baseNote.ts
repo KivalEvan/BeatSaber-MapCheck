@@ -1,7 +1,7 @@
 import { BaseObject } from './baseObject';
 import { IBaseNote } from '../../types/beatmap/v3/baseNote';
 
-/** Note beatmap object. */
+/** Base note beatmap v3 class object. */
 export abstract class BaseNote<T extends IBaseNote> extends BaseObject<T> {
     /** Position x `<int>` of note.
      * ```ts

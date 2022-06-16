@@ -3,6 +3,7 @@ import { ObjectToReturn } from '../../types/utils';
 import { LINE_COUNT } from '../shared/constants';
 import { Serializable } from '../shared/serializable';
 
+/** Slider beatmap v2 class object. */
 export class Slider extends Serializable<ISlider> {
     static default: ObjectToReturn<Required<ISlider>> = {
         _colorType: 0,
@@ -10,12 +11,12 @@ export class Slider extends Serializable<ISlider> {
         _headLineIndex: 0,
         _headLineLayer: 0,
         _headCutDirection: 0,
-        _headControlPointlengthMultiplier: 0.5,
+        _headControlPointlengthMultiplier: 1,
         _tailTime: 0,
         _tailLineIndex: 0,
         _tailLineLayer: 0,
         _tailCutDirection: 0,
-        _tailControlPointLengthMultiplier: 0.5,
+        _tailControlPointLengthMultiplier: 1,
         _sliderMidAnchorMode: 0,
     };
 
@@ -30,7 +31,7 @@ export class Slider extends Serializable<ISlider> {
         const result: Slider[] = [];
         sliders?.forEach((s) =>
             result.push(
-                new Slider({
+                new this({
                     _colorType: s._colorType ?? Slider.default._colorType,
                     _headTime: s._headTime ?? s._tailTime ?? Slider.default._headTime,
                     _headLineIndex: s._headLineIndex ?? Slider.default._headLineIndex,
@@ -54,7 +55,7 @@ export class Slider extends Serializable<ISlider> {
         if (result.length) {
             return result;
         }
-        return new Slider({
+        return new this({
             _colorType: Slider.default._colorType,
             _headTime: Slider.default._headTime,
             _headLineIndex: Slider.default._headLineIndex,
@@ -70,17 +71,17 @@ export class Slider extends Serializable<ISlider> {
         });
     }
 
-    toObject(): ISlider {
+    toObject(): Required<ISlider> {
         return {
             _colorType: this.colorType,
             _headTime: this.headTime,
-            _headLineIndex: this.headLineIndex,
-            _headLineLayer: this.headLineLayer,
+            _headLineIndex: this.headPosX,
+            _headLineLayer: this.headPosY,
             _headCutDirection: this.headCutDirection,
             _headControlPointlengthMultiplier: this.headLengthMultiplier,
             _tailTime: this.tailTime,
-            _tailLineIndex: this.tailLineIndex,
-            _tailLineLayer: this.tailLineLayer,
+            _tailLineIndex: this.tailPosX,
+            _tailLineLayer: this.tailPosY,
             _tailCutDirection: this.tailCutDirection,
             _tailControlPointLengthMultiplier: this.tailLengthMultiplier,
             _sliderMidAnchorMode: this.midAnchor,
@@ -117,10 +118,10 @@ export class Slider extends Serializable<ISlider> {
      * ---
      * Range: `0-3`
      */
-    get headLineIndex() {
+    get headPosX() {
         return this.data._headLineIndex;
     }
-    set headLineIndex(value: ISlider['_headLineIndex']) {
+    set headPosX(value: ISlider['_headLineIndex']) {
         this.data._headLineIndex = value;
     }
 
@@ -133,10 +134,10 @@ export class Slider extends Serializable<ISlider> {
      * ---
      * Range: `0-2`
      */
-    get headLineLayer() {
+    get headPosY() {
         return this.data._headLineLayer;
     }
-    set headLineLayer(value: ISlider['_headLineLayer']) {
+    set headPosY(value: ISlider['_headLineLayer']) {
         this.data._headLineLayer = value;
     }
 
@@ -191,10 +192,10 @@ export class Slider extends Serializable<ISlider> {
      * ---
      * Range: `none`
      */
-    get tailLineIndex() {
+    get tailPosX() {
         return this.data._tailLineIndex;
     }
-    set tailLineIndex(value: ISlider['_tailLineIndex']) {
+    set tailPosX(value: ISlider['_tailLineIndex']) {
         this.data._tailLineIndex = value;
     }
 
@@ -207,10 +208,10 @@ export class Slider extends Serializable<ISlider> {
      * ---
      * Range: `0-2`
      */
-    get tailLineLayer() {
+    get tailPosY() {
         return this.data._tailLineLayer;
     }
-    set tailLineLayer(value: ISlider['_tailLineLayer']) {
+    set tailPosY(value: ISlider['_tailLineLayer']) {
         this.data._tailLineLayer = value;
     }
 
@@ -266,11 +267,11 @@ export class Slider extends Serializable<ISlider> {
         return this;
     }
     setPosX(value: ISlider['_headLineIndex']) {
-        this.headLineIndex = value;
+        this.headPosX = value;
         return this;
     }
     setPosY(value: ISlider['_headLineLayer']) {
-        this.headLineLayer = value;
+        this.headPosY = value;
         return this;
     }
     setDirection(value: ISlider['_headCutDirection']) {
@@ -286,11 +287,11 @@ export class Slider extends Serializable<ISlider> {
         return this;
     }
     setTailPosX(value: ISlider['_tailLineIndex']) {
-        this.tailLineIndex = value;
+        this.tailPosX = value;
         return this;
     }
     setTailPosY(value: ISlider['_tailLineLayer']) {
-        this.tailLineLayer = value;
+        this.tailPosY = value;
         return this;
     }
     setTailDirection(value: ISlider['_tailCutDirection']) {
@@ -307,8 +308,8 @@ export class Slider extends Serializable<ISlider> {
     }
 
     mirror(flipColor = true) {
-        this.headLineIndex = LINE_COUNT - 1 - this.headLineIndex;
-        this.tailLineIndex = LINE_COUNT - 1 - this.tailLineIndex;
+        this.headPosX = LINE_COUNT - 1 - this.headPosX;
+        this.tailPosX = LINE_COUNT - 1 - this.tailPosX;
         if (flipColor) {
             this.colorType = ((1 + this.colorType) % 2) as typeof this.colorType;
         }
@@ -365,10 +366,10 @@ export class Slider extends Serializable<ISlider> {
      */
     hasMappingExtensions() {
         return (
-            this.headLineLayer > 2 ||
-            this.headLineLayer < 0 ||
-            this.headLineIndex <= -1000 ||
-            this.headLineIndex >= 1000 ||
+            this.headPosY > 2 ||
+            this.headPosY < 0 ||
+            this.headPosX <= -1000 ||
+            this.headPosX >= 1000 ||
             (this.headCutDirection >= 1000 && this.headCutDirection <= 1360) ||
             (this.tailCutDirection >= 1000 && this.tailCutDirection <= 1360)
         );

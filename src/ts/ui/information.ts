@@ -4,14 +4,19 @@ import UIPanel from './helpers/panel';
 import SavedData from '../savedData';
 import Settings from '../settings';
 import { removeOptions, round, toMMSS, toHHMMSS, rgbaToHex } from '../utils';
-import { IColorScheme, EnvironmentName, IInfoData } from '../types';
+import { IColorScheme, EnvironmentName, IInfoData, IEditor, IEditorInfo } from '../types/beatmap/shared/';
 import { IContributorB64, IBeatmapItem } from '../types/mapcheck';
-import { BeatPerMinute, ColorScheme, ColorSchemeRename, EnvironmentRename, EnvironmentSchemeName } from '../beatmap';
-import { IBookmark, IEditor, IEditorInfo } from '../types/beatmap/shared';
+import {
+    BeatPerMinute,
+    ColorScheme,
+    ColorSchemeRename,
+    EnvironmentRename,
+    EnvironmentSchemeName,
+} from '../beatmap/shared/';
+import { IBookmark, NEDataAbbr } from '../types/beatmap/v3/';
 import { ChromaDataEnvAbbr, IChromaEnvironment } from '../types/beatmap/v3/chroma';
 import { IHeckPointDefinition } from '../types/beatmap/v3/heck';
 import { ICustomEvent } from '../types/beatmap/v3/customEvent';
-import { NEDataAbbr } from '../types/beatmap/v3';
 
 const logPrefix = 'UI Info: ';
 
@@ -327,17 +332,17 @@ const setBookmarks = (arr?: IBookmark[], bpm?: BeatPerMinute | null): void => {
         return;
     }
     const bookmarkText = arr.map((elem, i) => {
-        let time = elem._time;
+        let time = elem.beat;
         let rt!: number;
-        if (!elem._name) {
+        if (!elem.name) {
             return `Error parsing bookmarks[${i}]`;
         }
         if (bpm) {
             time = bpm.adjustTime(time);
             rt = bpm.toRealTime(time);
         }
-        return `${round(elem._time, Settings.rounding)}${rt ? ' | ' + toMMSS(rt) : ''} -- ${
-            elem._name != '' ? elem._name : '**EMPTY NAME**'
+        return `${round(elem.beat, Settings.rounding)}${rt ? ' | ' + toMMSS(rt) : ''} -- ${
+            elem.name != '' ? elem.name : '**EMPTY NAME**'
         }`;
     });
     displayTableRow(htmlTableBookmarks, bookmarkText);
@@ -427,9 +432,9 @@ const setCustomEvents = (arr?: ICustomEvent[], bpm?: BeatPerMinute | null): void
                 keyArr.push(k);
             }
         }
-        return `${round(elem.beat, Settings.rounding)}${rt ? ' | ' + toMMSS(rt) : ''} -- ${elem.time} -> [${keyArr.join(
+        return `${round(elem.beat, Settings.rounding)}${rt ? ' | ' + toMMSS(rt) : ''} -- ${elem.type} -> [${keyArr.join(
             '',
-        )}]${elem.time !== 'AssignTrackParent' ? `(${elem.data.track})` : ''}`;
+        )}]${elem.type !== 'AssignTrackParent' ? `(${elem.data.track})` : ''}`;
     });
     displayTableRow(htmlTableCustomEvents, customEv);
 };

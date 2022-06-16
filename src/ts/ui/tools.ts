@@ -1,11 +1,11 @@
-import * as beatmap from '../beatmap';
+import * as beatmap from '../beatmap/';
 import SavedData from '../savedData';
 import Analyser from '../tools/analyzer';
 import UILoading from './loading';
 import UIInformation from './information';
-import { removeOptions } from '../utils';
-import { DifficultyRename, CharacteristicRename } from '../beatmap/shared';
-import { CharacteristicName, DifficultyName, IInfoData, IInfoSetData } from '../types';
+import { removeOptions } from '../utils/web';
+import { DifficultyRename, CharacteristicRename } from '../beatmap/shared/';
+import { CharacteristicName, DifficultyName, IInfoData, IInfoSetData } from '../types/beatmap/';
 
 const logPrefix = 'UI Tools: ';
 

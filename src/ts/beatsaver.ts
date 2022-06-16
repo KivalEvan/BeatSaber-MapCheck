@@ -37,20 +37,20 @@ const fetchJSON = async (url: string): Promise<any> => {
     });
 };
 
-export const getZipIdURL = async (id: string): Promise<string> => {
+export async function getZipIdURL(id: string): Promise<string> {
     const url = `https://api.beatsaver.com/maps/id/${id}`;
     const json = (await fetchJSON(url)) as MapDetail;
     if (json?.versions.length) {
         return json.versions[json.versions.length - 1].downloadURL;
     }
     throw new Error('could not find map download link');
-};
+}
 
-export const getZipHashURL = async (hash: string): Promise<string> => {
+export async function getZipHashURL(hash: string): Promise<string> {
     const url = `https://api.beatsaver.com/maps/hash/${hash}`;
     const json = (await fetchJSON(url)) as MapDetail;
     if (json?.versions.length) {
         return json.versions[json.versions.length - 1].downloadURL;
     }
     throw new Error('could not find map download link');
-};
+}

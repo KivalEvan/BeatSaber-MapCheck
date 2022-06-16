@@ -3,7 +3,7 @@ import settings from '../settings';
 import { round } from '../utils/math';
 import { toMMSS, toMMSSMS } from '../utils/time';
 
-export const printResult = (label: string, text?: string) => {
+export function printResult(label: string, text?: string) {
     const htmlContainer = document.createElement('div');
 
     if (text) {
@@ -13,9 +13,9 @@ export const printResult = (label: string, text?: string) => {
     }
 
     return htmlContainer;
-};
+}
 
-export const printResultTime = (label: string, timeAry: number[], bpm: BeatPerMinute) => {
+export function printResultTime(label: string, timeAry: number[], bpm: BeatPerMinute) {
     const htmlContainer = document.createElement('div');
     htmlContainer.innerHTML = `<b>${label} [${timeAry.length}]:</b> ${timeAry
         .map((n) => {
@@ -34,4 +34,4 @@ export const printResultTime = (label: string, timeAry: number[], bpm: BeatPerMi
         .join(', ')}`;
 
     return htmlContainer;
-};
+}

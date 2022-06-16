@@ -10,7 +10,7 @@ import Swing from './swing';
 // some variable or function may have been modified
 // translating from Python to JavaScript is hard
 // this is special function SPS used by ScoreSaber
-export const count = (noteContainer: NoteContainer[], duration: number, bpm: BeatPerMinute): ISwingCount => {
+export function count(noteContainer: NoteContainer[], duration: number, bpm: BeatPerMinute): ISwingCount {
     const swingCount: ISwingCount = {
         left: new Array(Math.floor(duration + 1)).fill(0),
         right: new Array(Math.floor(duration + 1)).fill(0),
@@ -44,9 +44,9 @@ export const count = (noteContainer: NoteContainer[], duration: number, bpm: Bea
         }
     }
     return swingCount;
-};
+}
 
-const calcMaxRollingSPS = (swingArray: number[], x: number): number => {
+function calcMaxRollingSPS(swingArray: number[], x: number): number {
     if (!swingArray.length) {
         return 0;
     }
@@ -60,14 +60,14 @@ const calcMaxRollingSPS = (swingArray: number[], x: number): number => {
         maxSPS = Math.max(maxSPS, currentSPS);
     }
     return maxSPS / x;
-};
+}
 
-export const info = (
+export function info(
     difficulty: DifficultyData,
     bpm: BeatPerMinute,
     charName: CharacteristicName,
     diffName: DifficultyName,
-): ISwingAnalysis => {
+): ISwingAnalysis {
     const interval = 10;
     const spsInfo: ISwingAnalysis = {
         characteristic: charName,
@@ -119,9 +119,9 @@ export const info = (
     spsInfo.total.median = median(swingIntervalTotal);
 
     return spsInfo;
-};
+}
 
-export const getProgressionMax = (spsArray: ISwingAnalysis[], minSPS: number): ISwingAnalysis | null => {
+export function getProgressionMax(spsArray: ISwingAnalysis[], minSPS: number): ISwingAnalysis | null {
     let spsPerc = 0;
     let spsCurr = 0;
     for (const spsMap of spsArray) {
@@ -135,9 +135,9 @@ export const getProgressionMax = (spsArray: ISwingAnalysis[], minSPS: number): I
         }
     }
     return null;
-};
+}
 
-export const getProgressionMin = (spsArray: ISwingAnalysis[], minSPS: number): ISwingAnalysis | null => {
+export function getProgressionMin(spsArray: ISwingAnalysis[], minSPS: number): ISwingAnalysis | null {
     let spsPerc = Number.MAX_SAFE_INTEGER;
     let spsCurr = 0;
     for (const spsMap of spsArray) {
@@ -151,9 +151,9 @@ export const getProgressionMin = (spsArray: ISwingAnalysis[], minSPS: number): I
         }
     }
     return null;
-};
+}
 
-export const calcSPSTotalPercDrop = (spsArray: ISwingAnalysis[]): number => {
+export function calcSPSTotalPercDrop(spsArray: ISwingAnalysis[]): number {
     let highest = 0;
     let lowest = Number.MAX_SAFE_INTEGER;
     spsArray.forEach((spsMap) => {
@@ -164,9 +164,9 @@ export const calcSPSTotalPercDrop = (spsArray: ISwingAnalysis[]): number => {
         }
     });
     return highest || (highest && lowest) ? (1 - lowest / highest) * 100 : 0;
-};
+}
 
-export const getSPSLowest = (spsArray: ISwingAnalysis[]): number => {
+export function getSPSLowest(spsArray: ISwingAnalysis[]): number {
     let lowest = Number.MAX_SAFE_INTEGER;
     spsArray.forEach((spsMap) => {
         const overall = spsMap.total.count;
@@ -175,4 +175,4 @@ export const getSPSLowest = (spsArray: ISwingAnalysis[]): number => {
         }
     });
     return lowest;
-};
+}

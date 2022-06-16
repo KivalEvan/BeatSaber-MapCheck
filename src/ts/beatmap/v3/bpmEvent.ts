@@ -3,7 +3,7 @@ import { ObjectToReturn } from '../../types/utils';
 import { deepCopy } from '../../utils/misc';
 import { BaseObject } from './baseObject';
 
-/** BPM change event beatmap object. */
+/** BPM change event beatmap v3 class object. */
 export class BPMEvent extends BaseObject<IBPMEvent> {
     static default: ObjectToReturn<Required<IBPMEvent>> = {
         b: 0,
@@ -24,7 +24,7 @@ export class BPMEvent extends BaseObject<IBPMEvent> {
         const result: BPMEvent[] = [];
         bpmEvents?.forEach((be) =>
             result.push(
-                new BPMEvent({
+                new this({
                     b: be.b ?? BPMEvent.default.b,
                     m: be.m ?? BPMEvent.default.m,
                     customData: be.customData ?? BPMEvent.default.customData(),
@@ -37,14 +37,14 @@ export class BPMEvent extends BaseObject<IBPMEvent> {
         if (result.length) {
             return result;
         }
-        return new BPMEvent({
+        return new this({
             b: BPMEvent.default.b,
             m: BPMEvent.default.m,
             customData: BPMEvent.default.customData(),
         });
     }
 
-    toObject(): IBPMEvent {
+    toObject(): Required<IBPMEvent> {
         return {
             b: this.time,
             m: this.bpm,

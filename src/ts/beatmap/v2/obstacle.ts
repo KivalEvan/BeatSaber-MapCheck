@@ -3,6 +3,7 @@ import { ObjectToReturn } from '../../types/utils';
 import { deepCopy } from '../../utils/misc';
 import { BeatmapObject } from './object';
 
+/** Object beatmap v2 class object. */
 export class Obstacle extends BeatmapObject<IObstacle> {
     static default: ObjectToReturn<Required<IObstacle>> = {
         _time: 0,
@@ -28,7 +29,7 @@ export class Obstacle extends BeatmapObject<IObstacle> {
         const result: Obstacle[] = [];
         obstacles?.forEach((o) =>
             result.push(
-                new Obstacle({
+                new this({
                     _time: o._time ?? Obstacle.default._time,
                     _type: o._type ?? Obstacle.default._type,
                     _lineIndex: o._lineIndex ?? Obstacle.default._lineIndex,
@@ -46,7 +47,7 @@ export class Obstacle extends BeatmapObject<IObstacle> {
         if (result.length) {
             return result;
         }
-        return new Obstacle({
+        return new this({
             _time: Obstacle.default._time,
             _type: Obstacle.default._type,
             _lineIndex: Obstacle.default._lineIndex,
@@ -58,12 +59,12 @@ export class Obstacle extends BeatmapObject<IObstacle> {
         });
     }
 
-    toObject(): IObstacle {
+    toObject(): Required<IObstacle> {
         return {
             _time: this.time,
             _type: this.type,
-            _lineIndex: this.lineIndex,
-            _lineLayer: this.lineLayer,
+            _lineIndex: this.posX,
+            _lineLayer: this.posY,
             _duration: this.duration,
             _width: this.width,
             _height: this.height,
@@ -81,10 +82,10 @@ export class Obstacle extends BeatmapObject<IObstacle> {
      * ---
      * Range: `0-3`
      */
-    get lineIndex() {
+    get posX() {
         return this.data._lineIndex;
     }
-    set lineIndex(value: IObstacle['_lineIndex']) {
+    set posX(value: IObstacle['_lineIndex']) {
         this.data._lineIndex = value;
     }
 
@@ -97,10 +98,10 @@ export class Obstacle extends BeatmapObject<IObstacle> {
      * ---
      * Range: `0-2`
      */
-    get lineLayer() {
+    get posY() {
         return this.data._lineLayer;
     }
-    set lineLayer(value: IObstacle['_lineLayer']) {
+    set posY(value: IObstacle['_lineLayer']) {
         this.data._lineLayer = value;
     }
 
@@ -159,12 +160,12 @@ export class Obstacle extends BeatmapObject<IObstacle> {
         this.type = value;
         return this;
     }
-    setLineIndex(value: IObstacle['_lineIndex']) {
-        this.lineIndex = value;
+    setPosX(value: IObstacle['_lineIndex']) {
+        this.posX = value;
         return this;
     }
-    setLineLayer(value: IObstacle['_lineLayer']) {
-        this.lineLayer = value;
+    setPosY(value: IObstacle['_lineLayer']) {
+        this.posY = value;
         return this;
     }
     setDuration(value: IObstacle['_duration']) {
@@ -191,11 +192,7 @@ export class Obstacle extends BeatmapObject<IObstacle> {
             return [this.customData._position[0], this.customData._position[1]];
         }
         return [
-            (this.lineIndex <= -1000
-                ? this.lineIndex / 1000
-                : this.lineIndex >= 1000
-                ? this.lineIndex / 1000
-                : this.lineIndex) - 2,
+            (this.posX <= -1000 ? this.posX / 1000 : this.posX >= 1000 ? this.posX / 1000 : this.posX) - 2,
             this.type <= -1000 ? this.type / 1000 : this.type >= 1000 ? this.type / 1000 : this.type,
         ];
     };
@@ -206,7 +203,7 @@ export class Obstacle extends BeatmapObject<IObstacle> {
      * ```
      */
     isInteractive = (): boolean => {
-        return this.width >= 2 || this.lineIndex === 1 || this.lineIndex === 2;
+        return this.width >= 2 || this.posX === 1 || this.posX === 2;
     };
 
     /** Check if obstacle is crouch.
@@ -215,7 +212,7 @@ export class Obstacle extends BeatmapObject<IObstacle> {
      * ```
      */
     isCrouch = (): boolean => {
-        return this.type === 1 && (this.width > 2 || (this.width === 2 && this.lineIndex === 1));
+        return this.type === 1 && (this.width > 2 || (this.width === 2 && this.posX === 1));
     };
 
     /** Check if obstacle has zero value.
@@ -271,7 +268,7 @@ export class Obstacle extends BeatmapObject<IObstacle> {
      * ```
      */
     hasMappingExtensions = (): boolean => {
-        return this.width >= 1000 || this.type >= 1000 || this.lineIndex > 3 || this.lineIndex < 0;
+        return this.width >= 1000 || this.type >= 1000 || this.posX > 3 || this.posX < 0;
     };
 
     /** Check if obstacle is a valid, vanilla obstacle.

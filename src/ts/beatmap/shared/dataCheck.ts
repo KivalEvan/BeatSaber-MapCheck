@@ -1,5 +1,5 @@
 import { DataCheck, DataCheckObject } from '../../types/beatmap/shared/dataCheck';
-import logger from '../../logger';
+import Logger from '../../logger';
 import { Version } from '../../types/beatmap/shared/version';
 import { compareVersion } from './version';
 
@@ -7,14 +7,14 @@ const tag = (name: string) => {
     return `[shared::dataCheck::${name}]`;
 };
 
-export const deepCheck = (
+export function deepCheck(
     // deno-lint-ignore no-explicit-any
     data: { [key: string]: any },
     check: { [key: string]: DataCheck },
     name: string,
     version: Version,
-) => {
-    logger.verbose(tag('deepCheck'), `Looking up ${name}`);
+) {
+    Logger.verbose(tag('deepCheck'), `Looking up ${name}`);
     if (Array.isArray(data)) {
         data.forEach((d, i) => deepCheck(d, check, `${name}[${i}]`, version));
         return;
@@ -25,7 +25,7 @@ export const deepCheck = (
             break;
         }
         if (!dataCheckKey.includes(key)) {
-            logger.warn(tag('deepCheck'), `Unused key ${key} found in ${name}`);
+            Logger.warn(tag('deepCheck'), `Unused key ${key} found in ${name}`);
         }
     }
     for (const key in check) {
@@ -58,4 +58,4 @@ export const deepCheck = (
             throw Error(`${key} is not ${check[key].type} in object ${name}!`);
         }
     }
-};
+}

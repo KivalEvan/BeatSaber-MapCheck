@@ -3,7 +3,7 @@ import { ObjectToReturn } from '../../types/utils';
 import { deepCopy } from '../../utils/misc';
 import { BaseObject } from './baseObject';
 
-/** Basic event beatmap object. */
+/** Basic event beatmap v3 class object. */
 export class BasicEvent extends BaseObject<IBasicEvent> {
     static default: ObjectToReturn<Required<IBasicEvent>> = {
         b: 0,
@@ -26,7 +26,7 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
         const result: BasicEvent[] = [];
         basicEvents?.forEach((be) =>
             result.push(
-                new BasicEvent({
+                new this({
                     b: be.b ?? BasicEvent.default.b,
                     et: be.et ?? BasicEvent.default.et,
                     i: be.i ?? BasicEvent.default.i,
@@ -41,7 +41,7 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
         if (result.length) {
             return result;
         }
-        return new BasicEvent({
+        return new this({
             b: BasicEvent.default.b,
             et: BasicEvent.default.et,
             i: BasicEvent.default.i,
@@ -50,7 +50,7 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
         });
     }
 
-    toObject(): IBasicEvent {
+    toObject(): Required<IBasicEvent> {
         return {
             b: this.time,
             et: this.type,

@@ -4,7 +4,7 @@ import { Slider } from '../../beatmap/v3/slider';
 import { radToDeg, shortRotDistance } from '../../utils/math';
 
 // TODO: update with new position/rotation system
-export const isEnd = (currNote: ColorNote, prevNote: ColorNote, cd: number): boolean => {
+export function isEnd(currNote: ColorNote, prevNote: ColorNote, cd: number): boolean {
     // fuck u and ur dot note stack
     if (currNote.direction === 8 && prevNote.direction === 8 && cd !== 8) {
         // if end note on right side
@@ -83,7 +83,7 @@ export const isEnd = (currNote: ColorNote, prevNote: ColorNote, cd: number): boo
         }
     }
     return false;
-};
+}
 
 /** Check if the note intersect on swing path by angle and distance.
  * ```ts
@@ -91,12 +91,12 @@ export const isEnd = (currNote: ColorNote, prevNote: ColorNote, cd: number): boo
  * ```
  */
 // a fkin abomination that's what currNote is
-export const isIntersect = (
+export function isIntersect(
     currNote: ColorNote,
     compareTo: ColorNote,
     angleDistances: [number, number, number?][],
     ahead = false,
-): [boolean, boolean] => {
+): [boolean, boolean] {
     const [nX1, nY1] = currNote.getPosition();
     const [nX2, nY2] = compareTo.getPosition();
     const nA1 = currNote.getAngle();
@@ -135,10 +135,10 @@ export const isIntersect = (
         }
     }
     return [resultN1, resultN2];
-};
+}
 
 // TODO: update with new position/rotation system
-export const predictDirection = (currNote: ColorNote, prevNote: ColorNote): number => {
+export function predictDirection(currNote: ColorNote, prevNote: ColorNote): number {
     if (isEnd(currNote, prevNote, 8)) {
         return currNote.direction === 8 ? prevNote.direction : currNote.direction;
     }
@@ -184,7 +184,7 @@ export const predictDirection = (currNote: ColorNote, prevNote: ColorNote): numb
         }
     }
     return 8;
-};
+}
 
 /** Check the angle equality of the two notes.
  * @param {(Note|number|null)}  - First beatmap note, note `_direction`, or null value
@@ -193,12 +193,12 @@ export const predictDirection = (currNote: ColorNote, prevNote: ColorNote): numb
  * @param {boolean} equal - If it should check inner or outer angle
  * @returns {boolean} If condition is met
  */
-export const checkDirection = (
+export function checkDirection(
     n1: ColorNote | Slider | BurstSlider | number | null,
     n2: ColorNote | Slider | BurstSlider | number | null,
     angleTol: number,
     equal: boolean,
-): boolean => {
+): boolean {
     let nA1!: number;
     let nA2!: number;
     if (n1 === null || n2 === null) {
@@ -221,4 +221,4 @@ export const checkDirection = (
         nA2 = n2.getAngle();
     }
     return equal ? shortRotDistance(nA1, nA2, 360) <= angleTol : shortRotDistance(nA1, nA2, 360) >= angleTol;
-};
+}

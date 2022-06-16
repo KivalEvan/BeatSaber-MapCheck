@@ -11,7 +11,7 @@ import { ICountNote, ICountStatsNote } from '../../types/mapcheck/analyzers/stat
  * console.log(list);
  * ```
  */
-export const countNote = (notes: (ColorNote | BaseSlider<IBaseSlider>)[]): ICountNote => {
+export function countNote(notes: (ColorNote | BaseSlider<IBaseSlider>)[]): ICountNote {
     const noteCount: ICountNote = {
         red: {
             total: 0,
@@ -52,9 +52,9 @@ export const countNote = (notes: (ColorNote | BaseSlider<IBaseSlider>)[]): ICoun
         }
     }
     return noteCount;
-};
+}
 
-export const countBomb = (bombs: BombNote[]): ICountStatsNote => {
+export function countBomb(bombs: BombNote[]): ICountStatsNote {
     const bombCount: ICountStatsNote = {
         total: 0,
         chroma: 0,
@@ -74,68 +74,68 @@ export const countBomb = (bombs: BombNote[]): ICountStatsNote => {
         }
     }
     return bombCount;
-};
+}
 
 /** Count number of specified line index in a given array and return a counted number of line index.
  * ```ts
  * const xCount = countX(notes, 0);
  * ```
  */
-export const countX = (notes: NoteContainer[], x: number): number => {
+export function countX(notes: NoteContainer[], x: number): number {
     return notes.filter((n) => n.data.posX === x).length;
-};
+}
 
 /** Count number of specified line layer in a given array and return a counted number of line layer.
  * ```ts
  * const yCount = countY(notes, 0);
  * ```
  */
-export const countY = (notes: NoteContainer[], y: number): number => {
+export function countY(notes: NoteContainer[], y: number): number {
     return notes.filter((n) => n.data.posY === y).length;
-};
+}
 
 /** Count number of specified line index and line layer in a given array and return a counted number of line index and line layer.
  * ```ts
  * const xyCount = countXY(notes, 0, 0);
  * ```
  */
-export const countXY = (notes: NoteContainer[], x: number, y: number): number => {
+export function countXY(notes: NoteContainer[], x: number, y: number): number {
     return notes.filter((n) => n.data.posX === x && n.data.posY === y).length;
-};
+}
 
 /** Count number of specified `_cutDirection` in a given array and return a counted number of `_cutDirection`.
  * ```ts
  * const cdCount = countDirection(notes, 0);
  * ```
  */
-export const countDirection = (notes: NoteContainer[], cd: number): number => {
+export function countDirection(notes: NoteContainer[], cd: number): number {
     return notes.filter((n) => n.type !== 'bomb' && n.data.direction === cd).length;
-};
+}
 
 /** Count number of specified angle in a given array and return a counted number of angle.
  * ```ts
  * const angleCount = countAngle(notes, 0);
  * ```
  */
-export const countAngle = (notes: NoteContainer[], angle: number): number => {
+export function countAngle(notes: NoteContainer[], angle: number): number {
     return notes.filter((n) => n.type !== 'bomb' && n.data.getAngle() === angle).length;
-};
+}
 
 /** Calculate note per second.
  * ```ts
  * const nps = nps(notes, 10);
  * ```
  */
-export const nps = (notes: ColorNote[], duration: number): number => {
+export function nps(notes: ColorNote[], duration: number): number {
     return duration ? notes.length / duration : 0;
-};
+}
 
 /** Calculate the peak by rolling average.
  * ```ts
  * const peakNPS = peak(notes, 10, BPM ?? 128);
  * ```
  */
-export const peak = (notes: ColorNote[], beat: number, bpm: number): number => {
+export function peak(notes: ColorNote[], beat: number, bpm: number): number {
     let peakNPS = 0;
     let currentSectionStart = 0;
 
@@ -147,4 +147,4 @@ export const peak = (notes: ColorNote[], beat: number, bpm: number): number => {
     }
 
     return peakNPS;
-};
+}

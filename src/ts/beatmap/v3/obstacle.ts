@@ -4,7 +4,7 @@ import { LINE_COUNT } from '../shared/constants';
 import { ObjectToReturn } from '../../types/utils';
 import { deepCopy } from '../../utils/misc';
 
-/** Obstacle beatmap object. */
+/** Obstacle beatmap v3 class object. */
 export class Obstacle extends BaseObject<IObstacle> {
     static default: ObjectToReturn<Required<IObstacle>> = {
         b: 0,
@@ -29,7 +29,7 @@ export class Obstacle extends BaseObject<IObstacle> {
         const result: Obstacle[] = [];
         obstacles?.forEach((o) =>
             result.push(
-                new Obstacle({
+                new this({
                     b: o.b ?? Obstacle.default.b,
                     x: o.x ?? Obstacle.default.x,
                     y: o.y ?? Obstacle.default.y,
@@ -46,7 +46,7 @@ export class Obstacle extends BaseObject<IObstacle> {
         if (result.length) {
             return result;
         }
-        return new Obstacle({
+        return new this({
             b: Obstacle.default.b,
             x: Obstacle.default.x,
             y: Obstacle.default.y,
@@ -57,7 +57,7 @@ export class Obstacle extends BaseObject<IObstacle> {
         });
     }
 
-    toObject(): IObstacle {
+    toObject(): Required<IObstacle> {
         return {
             b: this.time,
             x: this.posX,

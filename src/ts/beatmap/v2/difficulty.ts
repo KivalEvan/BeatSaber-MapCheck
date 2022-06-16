@@ -9,14 +9,17 @@ import { Waypoint } from './waypoint';
 import { SpecialEventsKeywordFilters } from './specialEventsKeywordFilters';
 import { deepCopy } from '../../utils/misc';
 
+/** Difficulty beatmap v2 class object. */
 export class DifficultyData extends Serializable<IDifficultyData> {
+    private _fileName = 'UnnamedDifficulty.dat';
+
     version: `2.${0 | 2 | 4 | 5 | 6}.0`;
     notes: Note[];
     sliders: Slider[];
     obstacles: Obstacle[];
     events: Event[];
     waypoints: Waypoint[];
-    specialEventsKeywordFilters?: SpecialEventsKeywordFilters;
+    specialEventsKeywordFilters: SpecialEventsKeywordFilters;
     customData: ICustomDataDifficulty;
     private constructor(data: Required<IDifficultyData>) {
         super(data);
@@ -31,7 +34,7 @@ export class DifficultyData extends Serializable<IDifficultyData> {
     }
 
     static create(data: Partial<IDifficultyData> = {}): DifficultyData {
-        return new DifficultyData({
+        return new this({
             _version: '2.6.0',
             _notes: data._notes ?? [],
             _sliders: data._sliders ?? [],
@@ -45,7 +48,7 @@ export class DifficultyData extends Serializable<IDifficultyData> {
         });
     }
 
-    toObject(): IDifficultyData {
+    toObject(): Required<IDifficultyData> {
         return {
             _version: this.version || '2.6.0',
             _notes: this.notes.map((obj) => obj.toObject()),
@@ -53,9 +56,20 @@ export class DifficultyData extends Serializable<IDifficultyData> {
             _obstacles: this.obstacles.map((obj) => obj.toObject()),
             _events: this.events.map((obj) => obj.toObject()),
             _waypoints: this.waypoints.map((obj) => obj.toObject()),
-            _specialEventsKeywordFilters: this.specialEventsKeywordFilters?.toObject(),
+            _specialEventsKeywordFilters: this.specialEventsKeywordFilters.toObject(),
             _customData: deepCopy(this.customData),
         };
+    }
+
+    set fileName(name: string) {
+        this._fileName = name.trim();
+    }
+    get fileName() {
+        return this._fileName;
+    }
+    setFileName(fileName: string) {
+        this.fileName = fileName;
+        return this;
     }
 
     getFirstInteractiveTime = (): number => {

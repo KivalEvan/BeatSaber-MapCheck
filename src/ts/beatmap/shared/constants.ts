@@ -21,14 +21,14 @@ export const enum NoteCutDirection {
 
 /** Array index mapped to cut angle corresponding to the `cutDirection`.
  * ```ts
- * 0 -> 180,
- * 1 -> 0,
- * 2 -> 270,
- * 3 -> 90,
- * 4 -> 225,
- * 5 -> 135,
- * 6 -> 315,
- * 7 -> 45,
+ * 0 -> 180
+ * 1 -> 0
+ * 2 -> 270
+ * 3 -> 90
+ * 4 -> 225
+ * 5 -> 135
+ * 6 -> 315
+ * 7 -> 45
  * 8 -> 0
  * ```
  */
@@ -58,14 +58,14 @@ export const NoteFlipDirection: { [key: number]: NoteCutDirection } = {
 
 /** Array index mapped to tuple of `posX` and `posY` corresponding to the `cutDirection`.
  * ```ts
- * 0 -> [0, 1],
- * 1 -> [0, -1],
- * 2 -> [-1, 0],
- * 3 -> [1, 0],
- * 4 -> [-1, 1],
- * 5 -> [1, 1],
- * 6 -> [-1, -1],
- * 7 -> [1, -1],
+ * 0 -> [0, 1]
+ * 1 -> [0, -1]
+ * 2 -> [-1, 0]
+ * 3 -> [1, 0]
+ * 4 -> [-1, 1]
+ * 5 -> [1, 1]
+ * 6 -> [-1, -1]
+ * 7 -> [1, -1]
  * 8 -> [0, 0]
  * ```
  */

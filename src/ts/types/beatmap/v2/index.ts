@@ -1,3 +1,4 @@
+export * from './bookmark';
 export * from './chroma';
 export * from './customData';
 export * from './difficulty';

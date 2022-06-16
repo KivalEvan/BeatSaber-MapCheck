@@ -4,6 +4,7 @@ import { EventBox } from './eventBox';
 import { IndexFilter } from './indexFilter';
 import { LightRotationBase } from './lightRotationBase';
 
+/** Light rotation event box beatmap v3 class object. */
 export class LightRotationEventBox extends EventBox<ILightRotationEventBox> {
     static default: ObjectToReturn<ILightRotationEventBox> = {
         f: () => {
@@ -41,7 +42,7 @@ export class LightRotationEventBox extends EventBox<ILightRotationEventBox> {
         const result: LightRotationEventBox[] = [];
         eventBoxes?.forEach((eb) =>
             result.push(
-                new LightRotationEventBox({
+                new this({
                     f: eb.f ?? LightRotationEventBox.default.f(),
                     w: eb.w ?? LightRotationEventBox.default.w,
                     d: eb.d ?? LightRotationEventBox.default.d,
@@ -60,7 +61,7 @@ export class LightRotationEventBox extends EventBox<ILightRotationEventBox> {
         if (result.length) {
             return result;
         }
-        return new LightRotationEventBox({
+        return new this({
             f: LightRotationEventBox.default.f(),
             w: LightRotationEventBox.default.w,
             d: LightRotationEventBox.default.d,

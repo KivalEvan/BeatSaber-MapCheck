@@ -48,10 +48,10 @@ function run(map: ToolArgs) {
     if (njs.jd > 36) {
         htmlResult.push(printResult('Very high jump distance', `${round(njs.jd, 2)}`));
     }
-    if (njs.jd > njs.calcJumpDistanceOptimalHigh()) {
+    if (njs.jd > njs.calcJDOptimalHigh()) {
         htmlResult.push(
             printResult(
-                `High jump distance warning (>${round(njs.calcJumpDistanceOptimalHigh(), 2)})`,
+                `High jump distance warning (>${round(njs.calcJDOptimalHigh(), 2)})`,
                 'NJS may be uncomfortable to play',
             ),
         );
@@ -64,7 +64,7 @@ function run(map: ToolArgs) {
             ),
         );
     }
-    if (njs.calcHalfJumpDurationRaw() + njs.offset < njs.hjdMin) {
+    if (njs.calcHJDRaw() + njs.offset < njs.hjdMin) {
         htmlResult.push(printResult('Unnecessary negative offset', `will not drop below ${njs.hjdMin}`));
     }
 
