@@ -1,6 +1,6 @@
 import { IInfoData } from '../../types';
 import { CharacteristicOrder } from './characteristic';
-import Logger from '../../logger';
+import logger from '../../logger';
 import { DifficultyRanking } from './difficulty';
 
 const tag = (name: string) => {
@@ -10,7 +10,7 @@ const tag = (name: string) => {
 // TODO: more error check
 // TODO: contemplate whether to make pure function or keep as is
 export function info(infoData: IInfoData): IInfoData {
-    Logger.info(tag('info'), 'Parsing beatmap info v2.x.x');
+    logger.info(tag('info'), 'Parsing beatmap info v2.x.x');
     infoData._difficultyBeatmapSets.sort(
         (a, b) => CharacteristicOrder[a._beatmapCharacteristicName] - CharacteristicOrder[b._beatmapCharacteristicName],
     );
@@ -18,10 +18,10 @@ export function info(infoData: IInfoData): IInfoData {
         let num = 0;
         set._difficultyBeatmaps.forEach((a) => {
             if (a._difficultyRank - num <= 0) {
-                Logger.warn(tag('info'), a._difficulty + ' is unordered');
+                logger.warn(tag('info'), a._difficulty + ' is unordered');
             }
             if (DifficultyRanking[a._difficulty] !== a._difficultyRank) {
-                Logger.error(tag('info'), a._difficulty + ' has invalid rank');
+                logger.error(tag('info'), a._difficulty + ' has invalid rank');
             }
             num = a._difficultyRank;
         });

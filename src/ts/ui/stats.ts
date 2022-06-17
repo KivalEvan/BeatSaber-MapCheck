@@ -15,13 +15,13 @@ import * as swing from '../analyzers/swing';
 import { countObstacle } from '../analyzers/stats/obstacle';
 import { countColorEBG, countEvent, countRotationEBG } from '../analyzers/stats';
 import * as score from '../analyzers/score';
-import { eventGroupRename, eventTypeRename } from '../analyzers/environment/renamer';
+import { eventGroupRename, eventTypeRename } from '../analyzers/renamer';
 
 const logPrefix = 'UI Stats: ';
 const prefix = 'stats__';
 const htmlStats: HTMLElement = document.querySelector('#stats .accordion__collapsible')!;
 
-const createSettingsTable = (mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTableElement => {
+function createSettingsTable(mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTableElement {
     const bpm = BeatPerMinute.create(mapInfo._beatsPerMinute);
     const njs = NoteJumpSpeed.create(
         bpm,
@@ -48,9 +48,9 @@ const createSettingsTable = (mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTab
     )}ms</td></tr>`;
 
     return htmlTable;
-};
+}
 
-const createNPSTable = (mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTableElement => {
+function createNPSTable(mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTableElement {
     const bpm = BeatPerMinute.create(mapInfo._beatsPerMinute);
     const duration = SavedData.duration || 0;
     const mapDuration = bpm.toRealTime(mapData.data.getLastInteractiveTime());
@@ -75,9 +75,9 @@ const createNPSTable = (mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTableEle
     )}</td></tr>`;
 
     return htmlTable;
-};
+}
 
-const createSPSTable = (mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTableElement => {
+function createSPSTable(mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTableElement {
     const swingInfo = mapData.swingAnalysis;
 
     const htmlTable = document.createElement('table');
@@ -116,9 +116,9 @@ const createSPSTable = (mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTableEle
     }</td></tr>`;
 
     return htmlTable;
-};
+}
 
-const createNoteCountTable = (mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTableElement => {
+function createNoteCountTable(mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTableElement {
     const noteCount = countNote(mapData.data.colorNotes);
     const arcCount = countNote(mapData.data.sliders);
     const chainCount = countNote(mapData.data.burstSliders);
@@ -161,7 +161,7 @@ const createNoteCountTable = (mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTa
     htmlTable.innerHTML = htmlString;
 
     return htmlTable;
-};
+}
 
 function notePlacementSelectHandler(ev: Event) {
     const target = ev.target as HTMLSelectElement;
@@ -206,7 +206,7 @@ function notePlacementSelectHandler(ev: Event) {
     htmlTableBody.innerHTML = notePlacementTableString(filteredContainer);
 }
 
-const notePlacementTableString = (nc: NoteContainer[]): string => {
+function notePlacementTableString(nc: NoteContainer[]): string {
     const totalNote = nc.length || 1;
     let htmlString = '';
     for (let l = 2; l >= 0; l--) {
@@ -234,9 +234,9 @@ const notePlacementTableString = (nc: NoteContainer[]): string => {
         1,
     )}%</td></tr>`;
     return htmlString;
-};
+}
 
-const createNotePlacementTable = (mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTableElement => {
+function createNotePlacementTable(mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTableElement {
     const htmlSelect = UISelect.create(
         `${prefix}table-select-placement-${mapData.characteristic}-${mapData.difficulty}`,
         'Note Placement: ',
@@ -260,7 +260,7 @@ const createNotePlacementTable = (mapInfo: IInfoData, mapData: IBeatmapItem): HT
     htmlTable.prepend(htmlSelect);
 
     return htmlTable;
-};
+}
 
 function noteAngleSelectHandler(ev: Event) {
     const target = ev.target as HTMLSelectElement;
@@ -298,7 +298,7 @@ function noteAngleSelectHandler(ev: Event) {
 }
 
 // TODO: use angle instead of cut direction
-const noteAngleTableString = (notes: NoteContainer[]): string => {
+function noteAngleTableString(notes: NoteContainer[]): string {
     const totalNote = notes.length || 1;
     const cutOrder = [4, 0, 5, 2, 8, 3, 6, 1, 7];
     let htmlString = '';
@@ -314,9 +314,9 @@ const noteAngleTableString = (notes: NoteContainer[]): string => {
         htmlString += `</tr>`;
     }
     return htmlString;
-};
+}
 
-const createNoteAngleTable = (mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTableElement => {
+function createNoteAngleTable(mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTableElement {
     const htmlSelect = UISelect.create(
         `${prefix}table-select-angle-${mapData.characteristic}-${mapData.difficulty}`,
         'Note Angle: ',
@@ -339,9 +339,9 @@ const createNoteAngleTable = (mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTa
     htmlTable.prepend(htmlSelect);
 
     return htmlTable;
-};
+}
 
-const createInfoTable = (mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTableElement => {
+function createInfoTable(mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTableElement {
     let htmlString = `<caption class="${prefix}table-caption">Note Information:</caption><tr><th class="${prefix}table-header" colspan="2">Max Score</th><td class="${prefix}table-element">${formatNumber(
         score.calculate(mapData.noteContainer),
     )}</td></tr><tr><th class="${prefix}table-header" colspan="2">Effective BPM</th><td class="${prefix}table-element">${round(
@@ -363,9 +363,9 @@ const createInfoTable = (mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTableEl
     htmlTable.innerHTML = htmlString;
 
     return htmlTable;
-};
+}
 
-const createEventCountTable = (mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTableElement => {
+function createEventCountTable(mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTableElement {
     const environment =
         mapData.characteristic === '360Degree' || mapData.characteristic === '90Degree'
             ? mapInfo._allDirectionsEnvironmentName
@@ -407,9 +407,9 @@ const createEventCountTable = (mapInfo: IInfoData, mapData: IBeatmapItem): HTMLT
     htmlTable.innerHTML = htmlString;
 
     return htmlTable;
-};
+}
 
-const createEBGColorCountTable = (mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTableElement => {
+function createEBGColorCountTable(mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTableElement {
     const environment =
         mapData.characteristic === '360Degree' || mapData.characteristic === '90Degree'
             ? mapInfo._allDirectionsEnvironmentName
@@ -438,9 +438,9 @@ const createEBGColorCountTable = (mapInfo: IInfoData, mapData: IBeatmapItem): HT
     htmlTable.innerHTML = htmlString;
 
     return htmlTable;
-};
+}
 
-const createObstacleCountTable = (mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTableElement => {
+function createObstacleCountTable(mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTableElement {
     const obstacleCount = countObstacle(mapData.data.obstacles);
 
     let htmlString = `<caption class="${prefix}table-caption">Obstacles: ${obstacleCount.total}</caption>`;
@@ -462,9 +462,9 @@ const createObstacleCountTable = (mapInfo: IInfoData, mapData: IBeatmapItem): HT
     htmlTable.innerHTML = htmlString;
 
     return htmlTable;
-};
+}
 
-const populate = (): void => {
+function populate(): void {
     if (!SavedData.beatmapInfo) {
         throw new Error(logPrefix + 'map info could not be found in savedData');
     }
@@ -536,13 +536,13 @@ const populate = (): void => {
 
         htmlStats.appendChild(htmlContainer);
     });
-};
+}
 
-const reset = (): void => {
+function reset(): void {
     while (htmlStats.firstChild) {
         htmlStats.removeChild(htmlStats.firstChild);
     }
-};
+}
 
 export default {
     createSettingsTable,

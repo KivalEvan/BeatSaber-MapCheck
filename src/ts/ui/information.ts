@@ -4,7 +4,7 @@ import UIPanel from './helpers/panel';
 import SavedData from '../savedData';
 import Settings from '../settings';
 import { removeOptions, round, toMMSS, toHHMMSS, rgbaToHex } from '../utils';
-import { IColorScheme, EnvironmentName, IInfoData, IEditor, IEditorInfo } from '../types/beatmap/shared/';
+import { IColorScheme, EnvironmentName, IInfoData, IEditor, IEditorInfo } from '../types/beatmap/shared';
 import { IContributorB64, IBeatmapItem } from '../types/mapcheck';
 import {
     BeatPerMinute,
@@ -12,8 +12,8 @@ import {
     ColorSchemeRename,
     EnvironmentRename,
     EnvironmentSchemeName,
-} from '../beatmap/shared/';
-import { IBookmark, NEDataAbbr } from '../types/beatmap/v3/';
+} from '../beatmap/shared';
+import { IBookmark, NEDataAbbr } from '../types/beatmap/v3';
 import { ChromaDataEnvAbbr, IChromaEnvironment } from '../types/beatmap/v3/chroma';
 import { IHeckPointDefinition } from '../types/beatmap/v3/heck';
 import { ICustomEvent } from '../types/beatmap/v3/customEvent';
@@ -70,23 +70,23 @@ if (
     throw new Error(logPrefix + 'table info component is missing part');
 }
 
-const setLevelAuthor = (str?: string): void => {
+function setLevelAuthor(str?: string): void {
     if (!str) {
         htmlInfoLevelAuthor.textContent = '';
         return;
     }
     htmlInfoLevelAuthor.textContent = 'Mapped by ' + str;
-};
+}
 
-const setEnvironment = (str?: EnvironmentName): void => {
+function setEnvironment(str?: EnvironmentName): void {
     if (!str) {
         htmlInfoEnvironment.textContent = '';
         return;
     }
     htmlInfoEnvironment.textContent = (EnvironmentRename[str] || 'Unknown') + ' Environment';
-};
+}
 
-const setEditors = (obj?: IEditor): void => {
+function setEditors(obj?: IEditor): void {
     if (!obj || !obj._lastEditedBy) {
         htmlInfoEditors.classList.add('hidden');
         return;
@@ -99,27 +99,27 @@ const setEditors = (obj?: IEditor): void => {
         text += ' v' + mapper.version;
     }
     htmlInfoEditors.textContent = text;
-};
+}
 
-const setContributorsImage = (src: string | null): void => {
+function setContributorsImage(src: string | null): void {
     htmlInfoContributorsImage.src = src || './img/unknown.jpg';
-};
+}
 
-const setContributorsName = (str: string): void => {
+function setContributorsName(str: string): void {
     htmlInfoContributorsName.textContent = str;
-};
+}
 
-const setContributorsRole = (str: string): void => {
+function setContributorsRole(str: string): void {
     htmlInfoContributorsRole.textContent = str;
-};
+}
 
-const setContributors = (obj: IContributorB64): void => {
+function setContributors(obj: IContributorB64): void {
     setContributorsImage(obj._base64 ? 'data:image;base64,' + obj._base64 : null);
     setContributorsName(obj._name);
     setContributorsRole(obj._role);
-};
+}
 
-const populateContributors = (arr?: IContributorB64[]): void => {
+function populateContributors(arr?: IContributorB64[]): void {
     if (htmlInfoContributors && (!arr || !arr.length)) {
         htmlInfoContributors.classList.add('hidden');
         removeOptions(htmlInfoContributorsSelect);
@@ -139,7 +139,7 @@ const populateContributors = (arr?: IContributorB64[]): void => {
             htmlInfoContributorsSelect.add(optCont);
         });
     }
-};
+}
 
 const hideTableRow = <T extends HTMLElement>(elem: T): void => {
     const tableElem = elem.querySelector('.info__table-element');
@@ -177,23 +177,23 @@ const displayTableRow = <T extends HTMLElement>(elem: T, content: string | strin
     elem.classList.remove('hidden');
 };
 
-const setVersion = (ver?: string): void => {
+function setVersion(ver?: string): void {
     if (ver == null) {
         hideTableRow(htmlTableVersion);
         return;
     }
     displayTableRow(htmlTableVersion, ver);
-};
+}
 
-const setTimeSpend = (num?: number): void => {
+function setTimeSpend(num?: number): void {
     if (num == null) {
         hideTableRow(htmlTabconstimeSpend);
         return;
     }
     displayTableRow(htmlTabconstimeSpend, toHHMMSS(num));
-};
+}
 
-const setCustomColor = (customColor?: IColorScheme, environment?: EnvironmentName): void => {
+function setCustomColor(customColor?: IColorScheme, environment?: EnvironmentName): void {
     if (
         !customColor ||
         (!customColor._colorLeft &&
@@ -292,41 +292,41 @@ const setCustomColor = (customColor?: IColorScheme, environment?: EnvironmentNam
     }
     const content: HTMLElement[] = [panel];
     displayTableRow(htmlTableCustomColor, content);
-};
+}
 
-const setRequirements = (arr?: string[]): void => {
+function setRequirements(arr?: string[]): void {
     if (arr == null || !arr.length) {
         hideTableRow(htmlTableRequirements);
         return;
     }
     displayTableRow(htmlTableRequirements, arr.join(', '));
-};
+}
 
-const setSuggestions = (arr?: string[]): void => {
+function setSuggestions(arr?: string[]): void {
     if (arr == null || !arr.length) {
         hideTableRow(htmlTableSuggestions);
         return;
     }
     displayTableRow(htmlTableSuggestions, arr.join(', '));
-};
+}
 
-const setInformation = (arr?: string[]): void => {
+function setInformation(arr?: string[]): void {
     if (arr == null || !arr.length) {
         hideTableRow(htmlTableInformation);
         return;
     }
     displayTableRow(htmlTableInformation, arr);
-};
+}
 
-const setWarnings = (arr?: string[]): void => {
+function setWarnings(arr?: string[]): void {
     if (arr == null || !arr.length) {
         hideTableRow(htmlTableWarnings);
         return;
     }
     displayTableRow(htmlTableWarnings, arr);
-};
+}
 
-const setBookmarks = (arr?: IBookmark[], bpm?: BeatPerMinute | null): void => {
+function setBookmarks(arr?: IBookmark[], bpm?: BeatPerMinute | null): void {
     if (arr == null || !arr.length) {
         hideTableRow(htmlTableBookmarks);
         return;
@@ -346,9 +346,9 @@ const setBookmarks = (arr?: IBookmark[], bpm?: BeatPerMinute | null): void => {
         }`;
     });
     displayTableRow(htmlTableBookmarks, bookmarkText);
-};
+}
 
-const setBPMChanges = (bpm?: BeatPerMinute | null): void => {
+function setBPMChanges(bpm?: BeatPerMinute | null): void {
     if (!bpm || !bpm.change.length) {
         hideTableRow(htmlTableBPMChanges);
         return;
@@ -359,10 +359,10 @@ const setBPMChanges = (bpm?: BeatPerMinute | null): void => {
         return `${time} | ${toMMSS(rt)} -- ${bpmc._BPM}`;
     });
     displayTableRow(htmlTableBPMChanges, bpmcText);
-};
+}
 
 // this implementation looks hideous but whatever
-const setEnvironmentEnhancement = (arr?: IChromaEnvironment[]): void => {
+function setEnvironmentEnhancement(arr?: IChromaEnvironment[]): void {
     if (arr == null || !arr.length) {
         hideTableRow(htmlTableEnvironmentEnhancement);
         return;
@@ -384,9 +384,9 @@ const setEnvironmentEnhancement = (arr?: IChromaEnvironment[]): void => {
         return `${elem.lookupMethod} [${keyArr.join('')}]${elem.track ? `(${elem.track})` : ''} -> ${elem.id}`;
     });
     displayTableRow(htmlTableEnvironmentEnhancement, envEnhance);
-};
+}
 
-const setPointDefinitions = (arr?: IHeckPointDefinition[]): void => {
+function setPointDefinitions(arr?: IHeckPointDefinition[]): void {
     if (arr == null || !arr.length) {
         hideTableRow(htmlTablePointDefinitions);
         return;
@@ -398,9 +398,9 @@ const setPointDefinitions = (arr?: IHeckPointDefinition[]): void => {
         return `${elem.name} -- ${elem.points.length} point${elem.points.length > 1 ? 's' : ''}`;
     });
     displayTableRow(htmlTablePointDefinitions, pointDef);
-};
+}
 
-const setCustomEvents = (arr?: ICustomEvent[], bpm?: BeatPerMinute | null): void => {
+function setCustomEvents(arr?: ICustomEvent[], bpm?: BeatPerMinute | null): void {
     if (arr == null || !arr.length) {
         hideTableRow(htmlTableCustomEvents);
         return;
@@ -437,9 +437,9 @@ const setCustomEvents = (arr?: ICustomEvent[], bpm?: BeatPerMinute | null): void
         )}]${elem.type !== 'AssignTrackParent' ? `(${elem.data.track})` : ''}`;
     });
     displayTableRow(htmlTableCustomEvents, customEv);
-};
+}
 
-const setInfo = (mapInfo: IInfoData): void => {
+function setInfo(mapInfo: IInfoData): void {
     UIHeader.setSongName(mapInfo._songName);
     UIHeader.setSongSubname(mapInfo._songSubName);
     UIHeader.setSongAuthor(mapInfo._songAuthorName);
@@ -447,9 +447,9 @@ const setInfo = (mapInfo: IInfoData): void => {
     setLevelAuthor(mapInfo._levelAuthorName);
     setEnvironment(mapInfo._environmentName);
     setEditors(mapInfo._customData?._editors);
-};
+}
 
-const setDiffInfoTable = (mapData: IBeatmapItem): void => {
+function setDiffInfoTable(mapData: IBeatmapItem): void {
     if (mapData.rawVersion === 2) {
         setVersion(mapData.rawData._version);
     }
@@ -479,14 +479,14 @@ const setDiffInfoTable = (mapData: IBeatmapItem): void => {
         setPointDefinitions(mapData.data.customData.pointDefinitions);
         setCustomEvents(mapData.data.customData.customEvents, bpm);
     }
-};
+}
 
 function contributorsSelectHandler(ev: Event): void {
     const target = ev.target as HTMLSelectElement;
     setContributors(SavedData.contributors[parseInt(target.value)]);
 }
 
-const reset = (): void => {
+function reset(): void {
     setLevelAuthor();
     setEnvironment();
     setEditors();
@@ -503,7 +503,7 @@ const reset = (): void => {
     setEnvironmentEnhancement();
     setPointDefinitions();
     setCustomEvents();
-};
+}
 
 export default {
     setLevelAuthor,

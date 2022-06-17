@@ -5,7 +5,7 @@ import { BeatPerMinute, NoteJumpSpeed } from '../beatmap';
 import { CharacteristicName, DifficultyName } from '../types';
 import { IBeatmapSettings } from '../types/mapcheck/tools/tool';
 import { Tool } from '../types/mapcheck';
-import Logger from '../logger';
+import logger from '../logger';
 
 const tag = (name: string) => {
     return `[analyzer::${name}]`;
@@ -27,7 +27,7 @@ function init(): void {
 function runGeneral(): void {
     const mapInfo = SavedData.beatmapInfo;
     if (!mapInfo) {
-        Logger.error(tag('runGeneral'), 'Could not analyse, missing map info');
+        logger.error(tag('runGeneral'), 'Could not analyse, missing map info');
         return;
     }
 
@@ -47,7 +47,7 @@ function runGeneral(): void {
         mapDuration: 0,
     };
 
-    Logger.info(tag('runGeneral'), `Analysing general`);
+    logger.info(tag('runGeneral'), `Analysing general`);
     const htmlArr: HTMLElement[] = [];
     toolListOutput
         .filter((tool) => tool.type === 'general')
@@ -63,7 +63,7 @@ function runGeneral(): void {
                         htmlArr.push(tool.output.html);
                     }
                 } catch (err) {
-                    Logger.error(tag('runGeneral'), err);
+                    logger.error(tag('runGeneral'), err);
                 }
             }
         });
@@ -76,7 +76,7 @@ function runGeneral(): void {
 function runDifficulty(characteristic: CharacteristicName, difficulty: DifficultyName): void {
     const mapInfo = SavedData.beatmapInfo;
     if (!mapInfo) {
-        Logger.error(tag('runDifficulty'), 'Could not analyse, missing map info');
+        logger.error(tag('runDifficulty'), 'Could not analyse, missing map info');
         return;
     }
 
@@ -88,7 +88,7 @@ function runDifficulty(characteristic: CharacteristicName, difficulty: Difficult
         (set) => set.characteristic === characteristic && set.difficulty === difficulty,
     );
     if (!beatmapDifficulty) {
-        Logger.error(tag('runDifficulty'), 'Could not analyse, missing map data');
+        logger.error(tag('runDifficulty'), 'Could not analyse, missing map data');
         return;
     }
 
@@ -116,7 +116,7 @@ function runDifficulty(characteristic: CharacteristicName, difficulty: Difficult
         mapDuration: bpm.toRealTime(beatmapDifficulty.data.getLastInteractiveTime()),
     };
 
-    Logger.info(tag('runDifficulty'), `Analysing ${characteristic} ${difficulty}`);
+    logger.info(tag('runDifficulty'), `Analysing ${characteristic} ${difficulty}`);
     const htmlArr: HTMLElement[] = [];
     toolListOutput
         .filter((tool) => tool.type !== 'general')
@@ -132,7 +132,7 @@ function runDifficulty(characteristic: CharacteristicName, difficulty: Difficult
                         htmlArr.push(tool.output.html);
                     }
                 } catch (err) {
-                    Logger.error(tag('runDifficulty'), err);
+                    logger.error(tag('runDifficulty'), err);
                 }
             }
         });

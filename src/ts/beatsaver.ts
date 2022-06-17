@@ -1,6 +1,6 @@
 import { MapDetail } from './types/mapcheck/beatsaver';
 
-const fetchJSON = async (url: string): Promise<any> => {
+async function fetchJSON(url: string): Promise<any> {
     return new Promise(function (resolve, reject) {
         const xhr = new XMLHttpRequest();
         xhr.open('GET', url, true);
@@ -35,7 +35,7 @@ const fetchJSON = async (url: string): Promise<any> => {
 
         xhr.send();
     });
-};
+}
 
 export async function getZipIdURL(id: string): Promise<string> {
     const url = `https://api.beatsaver.com/maps/id/${id}`;

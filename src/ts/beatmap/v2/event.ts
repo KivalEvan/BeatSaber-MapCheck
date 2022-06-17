@@ -1,4 +1,3 @@
-// deno-lint-ignore-file no-unused-vars
 import { IEvent } from '../../types/beatmap/v2/event';
 import { ObjectToReturn } from '../../types/utils';
 import { BeatmapObject } from './object';

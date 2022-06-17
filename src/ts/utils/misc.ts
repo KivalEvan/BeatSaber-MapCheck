@@ -1,11 +1,10 @@
-import Logger from '../logger';
+import logger from '../logger';
 
 const tag = (name: string) => {
     return `[utils::misc::${name}]`;
 };
 
 /** Fisher–Yates shuffle algorithm. */
-// deno-lint-ignore no-explicit-any
 export function shuffle(array: any[]): void {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -25,7 +24,7 @@ export function interleave([x, ...xs]: number[], ys: number[] = []): number[] {
  */
 export function deepCopy<T>(object: T): T {
     if (typeof object !== 'object') {
-        Logger.error(tag('deepCopy'), 'Received non-object type');
+        logger.error(tag('deepCopy'), 'Received non-object type');
     }
     return JSON.parse(JSON.stringify(object));
 }

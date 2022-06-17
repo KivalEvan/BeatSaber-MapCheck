@@ -28,7 +28,7 @@ const tool: Tool = {
     run,
 };
 
-const sufficientLight = (events: beatmap.v3.BasicEvent[]): boolean => {
+function sufficientLight(events: beatmap.v3.BasicEvent[]): boolean {
     let count = 0;
     for (let i = events.length - 1; i >= 0; i--) {
         if (events[i].isLightEvent() && !events[i].isOff()) {
@@ -39,7 +39,7 @@ const sufficientLight = (events: beatmap.v3.BasicEvent[]): boolean => {
         }
     }
     return false;
-};
+}
 
 function run(map: ToolArgs) {
     if (!map.difficulty) {

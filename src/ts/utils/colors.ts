@@ -1,4 +1,3 @@
-// deno-lint-ignore-file prefer-const
 import { ColorArray, ColorObject } from '../types/colors';
 import { degToRad, lerp, radToDeg, round } from './math';
 

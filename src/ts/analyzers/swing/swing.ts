@@ -1,6 +1,6 @@
 import { BeatPerMinute } from '../../beatmap/shared/bpm';
 import { ISwingContainer } from '../../types/mapcheck/analyzers/swing';
-import { NoteContainer } from '../../types/beatmap/v3/container';
+import { NoteContainer, NoteContainerNote } from '../../types/beatmap/v3/container';
 import { checkDirection } from '../placement/note';
 import { IBaseObject } from '../../types/beatmap/v3/baseObject';
 import { BaseObject } from '../../beatmap/v3/baseObject';
@@ -30,8 +30,8 @@ export default class Swing implements ISwingContainer {
         let ebpmSwing = 0;
         let minSpeed: number;
         let maxSpeed: number;
-        const firstNote: { [key: number]: NoteContainer } = {};
-        const lastNote: { [key: number]: NoteContainer } = {};
+        const firstNote: { [key: number]: NoteContainerNote } = {};
+        const lastNote: { [key: number]: NoteContainerNote } = {};
         const swingNoteArray: { [key: number]: NoteContainer[] } = {
             0: [],
             1: [],

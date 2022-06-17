@@ -85,13 +85,13 @@ function showCheckHandler(ev: Event): void {
     Settings.save();
 }
 
-const setShowCheck = (id: string, bool: boolean): void => {
+function setShowCheck(id: string, bool: boolean): void {
     htmlSettingsShow.forEach((elem) => {
         if (elem.id.endsWith(id)) {
             elem.checked = bool;
         }
     });
-};
+}
 
 function sortCheckHandler(ev: Event): void {
     const target = ev.target as HTMLInputElement;
@@ -99,11 +99,11 @@ function sortCheckHandler(ev: Event): void {
     Settings.save();
 }
 
-const setSortCheck = (bool: boolean): void => {
+function setSortCheck(bool: boolean): void {
     if (htmlSettingsSort) {
         htmlSettingsSort.checked = bool;
     }
-};
+}
 
 function loadCheckHandler(ev: Event): void {
     const target = ev.target as HTMLInputElement;
@@ -112,13 +112,13 @@ function loadCheckHandler(ev: Event): void {
     Settings.save();
 }
 
-const setLoadCheck = (id: string, bool: boolean): void => {
+function setLoadCheck(id: string, bool: boolean): void {
     htmlSettingsLoad.forEach((elem) => {
         if (elem.name === id) {
             elem.checked = bool;
         }
     });
-};
+}
 
 function onLoadCheckHandler(ev: Event): void {
     const target = ev.target as HTMLInputElement;
@@ -127,25 +127,25 @@ function onLoadCheckHandler(ev: Event): void {
     Settings.save();
 }
 
-const setOnLoadCheck = (id: string, bool: boolean): void => {
+function setOnLoadCheck(id: string, bool: boolean): void {
     htmlSettingsOnLoad.forEach((elem) => {
         if (elem.name === id) {
             elem.checked = bool;
         }
     });
-};
+}
 
-const setTheme = (str: UIThemeName): void => {
+function setTheme(str: UIThemeName): void {
     htmlSettingsTheme.value = str;
-};
+}
 
-const setBeatNumbering = (str: BeatNumbering): void => {
+function setBeatNumbering(str: BeatNumbering): void {
     htmlSettingsBeatNumbering.value = str;
-};
+}
 
-const setRounding = (num: number): void => {
+function setRounding(num: number): void {
     htmlSettingsRounding.value = num.toString();
-};
+}
 
 function clear(): void {
     Settings.clear();

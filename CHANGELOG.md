@@ -22,6 +22,7 @@
 -   Yet another major structure changes
 -   Better internal user interface work
 -   All check can now be toggled
+-   v2 event floatValue and v2 obstacle lineLayer & height is now optional
 
 ### Updated
 

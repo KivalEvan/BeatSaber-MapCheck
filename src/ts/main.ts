@@ -13,7 +13,7 @@ import { downloadFromHash, downloadFromID, downloadFromURL } from './download';
 import { sanitizeBeatSaverID, sanitizeURL } from './utils/web';
 import { isHex } from './utils';
 import { extractZip } from './extract';
-import Logger from './logger';
+import logger from './logger';
 import { LoadType } from './types/mapcheck/main';
 
 const tag = () => {
@@ -44,33 +44,33 @@ export default async (type: LoadType) => {
 
         UIInput.enable(false);
         UILoading.status('info', 'Parsing map info...', 0);
-        Logger.info(tag(), 'Parsing map info');
+        logger.info(tag(), 'Parsing map info');
         const info = await loadInfo(mapZip);
         SavedData.beatmapInfo = info;
         UIInfo.setInfo(info);
 
         // load cover image
         UILoading.status('info', 'Loading image...', 10.4375);
-        Logger.info(tag(), 'Loading cover image');
+        logger.info(tag(), 'Loading cover image');
         let imageFile = mapZip.file(info._coverImageFilename);
         if (Settings.load.imageCover && imageFile) {
             let imgBase64 = await imageFile.async('base64');
             UIHeader.setCoverImage('data:image;base64,' + imgBase64);
             Flag.loading.coverImage = true;
         } else {
-            Logger.error(tag(), `${info._coverImageFilename} does not exists.`);
+            logger.error(tag(), `${info._coverImageFilename} does not exists.`);
         }
 
         SavedData.contributors = [];
         if (info?._customData?._contributors) {
             for (const contr of info._customData._contributors) {
-                Logger.info(tag(), 'Loading contributor image ' + contr._name);
+                logger.info(tag(), 'Loading contributor image ' + contr._name);
                 imageFile = mapZip.file(contr._iconPath);
                 let _base64 = null;
                 if (Settings.load.imageContributor && imageFile) {
                     _base64 = await imageFile.async('base64');
                 } else {
-                    Logger.error(tag(), `${contr._iconPath} does not exists.`);
+                    logger.error(tag(), `${contr._iconPath} does not exists.`);
                 }
                 SavedData.contributors.push({ ...contr, _base64 });
             }
@@ -78,7 +78,7 @@ export default async (type: LoadType) => {
 
         // load audio
         UILoading.status('info', 'Loading audio...', 20.875);
-        Logger.info(tag(), 'Loading audio');
+        logger.info(tag(), 'Loading audio');
         let audioFile = mapZip.file(info._songFilename);
         if (Settings.load.audio && audioFile) {
             let loaded = false;
@@ -99,11 +99,11 @@ export default async (type: LoadType) => {
                 })
                 .catch(function (err) {
                     UIHeader.setSongDuration();
-                    Logger.error(tag(), err);
+                    logger.error(tag(), err);
                 });
         } else {
             UIHeader.setSongDuration();
-            Logger.error(tag(), `${info._songFilename} does not exist.`);
+            logger.error(tag(), `${info._songFilename} does not exist.`);
         }
 
         // load diff map
@@ -112,12 +112,12 @@ export default async (type: LoadType) => {
 
         UITools.adjustTime();
         UILoading.status('info', 'Adding map difficulty stats...', 80);
-        Logger.info(tag(), 'Adding map stats');
+        logger.info(tag(), 'Adding map stats');
         UIStats.populate();
         UIInfo.populateContributors(SavedData.contributors);
 
         UILoading.status('info', 'Analysing map...', 85);
-        Logger.info(tag(), 'Analysing map');
+        logger.info(tag(), 'Analysing map');
         Analyser.runGeneral();
         UITools.displayOutputGeneral();
 
@@ -131,7 +131,7 @@ export default async (type: LoadType) => {
         console.timeEnd('loading time');
     } catch (err) {
         UILoading.status('error', err, 100);
-        Logger.error(tag(), err);
+        logger.error(tag(), err);
         SavedData.clear();
         UIInput.enable(true);
         UIHeader.switchHeader(true);
