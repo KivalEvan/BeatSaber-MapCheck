@@ -15,6 +15,7 @@
 -   More stats for v3 stuff
 -   Dynamic event name based on environment
 -   Beat numbering and rounding settings
+    -   Shows alternative on hover
 -   Standard style format (development)
 
 ### Changed

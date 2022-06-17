@@ -21,14 +21,21 @@ export function printResultTime(label: string, timeAry: number[], bpm: BeatPerMi
         .map((n) => {
             switch (settings.beatNumbering) {
                 case 'realtime':
-                    return toMMSS(bpm.toRealTime(n));
+                    return `<span title="Beat ${round(bpm.adjustTime(n), settings.rounding)}">${toMMSS(
+                        bpm.toRealTime(n),
+                    )}</span>`;
                 case 'realtimems':
-                    return toMMSSMS(bpm.toRealTime(n));
+                    return `<span title="Beat ${round(bpm.adjustTime(n), settings.rounding)}">${toMMSSMS(
+                        bpm.toRealTime(n),
+                    )}</span>`;
                 case 'jsontime':
-                    return round(n, settings.rounding);
+                    return `<span title="Time ${toMMSSMS(bpm.toRealTime(n))}">${round(n, settings.rounding)}</span>`;
                 case 'beattime':
                 default:
-                    return round(bpm.adjustTime(n), settings.rounding);
+                    return `<span title="Time ${toMMSSMS(bpm.toRealTime(n))}">${round(
+                        bpm.adjustTime(n),
+                        settings.rounding,
+                    )}</span>`;
             }
         })
         .join(', ')}`;
