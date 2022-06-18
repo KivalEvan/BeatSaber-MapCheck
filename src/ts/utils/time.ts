@@ -1,4 +1,4 @@
-export const toMMSS = (seconds: number): string => {
+export function toMMSS(seconds: number): string {
     if (!seconds) {
         return '0:00';
     }
@@ -9,9 +9,9 @@ export const toMMSS = (seconds: number): string => {
         .toString()
         .padStart(2, '0');
     return `${min}:${sec}`;
-};
+}
 
-export const toHHMMSS = (minutes: number): string => {
+export function toHHMMSS(minutes: number): string {
     if (!minutes) {
         return '0:00:00';
     }
@@ -19,12 +19,12 @@ export const toHHMMSS = (minutes: number): string => {
         .toString()
         .padStart(2, '0');
     return `${toMMSS(minutes)}:${sec}`;
-};
+}
 
-export const toMMSSMS = (seconds: number): string => {
+export function toMMSSMS(seconds: number): string {
     if (!seconds) {
         return '0:00.000';
     }
     const dec = (seconds % 1).toString().split('.')[1]?.padEnd(3, '0').slice(0, 3) || '000';
     return `${toMMSS(seconds)}.${dec}`;
-};
+}

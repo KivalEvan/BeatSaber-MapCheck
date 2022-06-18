@@ -1,5 +1,5 @@
 import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
-import { ColorArray } from '../../types/beatmap/shared/colors';
+import { ColorArray } from '../../types/colors';
 import { deltaE00, toRGBArray, round } from '../../utils';
 import * as beatmap from '../../beatmap';
 import UICheckbox from '../../ui/helpers/checkbox';
@@ -21,11 +21,11 @@ const deltaELevel: { [key: number]: string } = {
     100: 'Opposite',
 } as const;
 
-const levelMsg = (level: { [key: number]: string }, perc: number): string => {
+function levelMsg(level: { [key: number]: string }, perc: number): string {
     let findKey = Object.keys(level).find((s) => parseFloat(s) >= perc) ?? '100';
     let key = parseFloat(findKey);
     return level[key];
-};
+}
 
 const tool: Tool = {
     name,

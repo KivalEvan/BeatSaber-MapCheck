@@ -7,7 +7,7 @@ import { Obstacle } from '../../beatmap/v3/obstacle';
  * console.log(list);
  * ```
  */
-export const countObstacle = (obstacles: Obstacle[]): IObstacleCount => {
+export function countObstacle(obstacles: Obstacle[]): IObstacleCount {
     const obstacleCount: IObstacleCount = {
         total: 0,
         interactive: 0,
@@ -31,4 +31,4 @@ export const countObstacle = (obstacles: Obstacle[]): IObstacleCount => {
         }
     }
     return obstacleCount;
-};
+}

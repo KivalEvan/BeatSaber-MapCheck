@@ -4,6 +4,7 @@ import { ObjectToReturn } from '../../types/utils';
 import { NoteCutAngle } from '../shared/constants';
 import { deepCopy } from '../../utils/misc';
 
+/** Note beatmap v2 class object. */
 export class Note extends BeatmapObject<INote> {
     static default: ObjectToReturn<Required<INote>> = {
         _time: 0,
@@ -27,7 +28,7 @@ export class Note extends BeatmapObject<INote> {
         const result: Note[] = [];
         notes?.forEach((n) =>
             result.push(
-                new Note({
+                new this({
                     _time: n._time ?? Note.default._time,
                     _lineIndex: n._lineIndex ?? Note.default._lineIndex,
                     _lineLayer: n._lineLayer ?? Note.default._lineLayer,
@@ -43,7 +44,7 @@ export class Note extends BeatmapObject<INote> {
         if (result.length) {
             return result;
         }
-        return new Note({
+        return new this({
             _time: Note.default._time,
             _lineIndex: Note.default._lineIndex,
             _lineLayer: Note.default._lineLayer,
@@ -53,12 +54,12 @@ export class Note extends BeatmapObject<INote> {
         });
     }
 
-    toObject(): INote {
+    toObject(): Required<INote> {
         return {
             _time: this.time,
             _type: this.type,
-            _lineIndex: this.lineIndex,
-            _lineLayer: this.lineLayer,
+            _lineIndex: this.posX,
+            _lineLayer: this.posY,
             _cutDirection: this.cutDirection,
             _customData: deepCopy(this.customData),
         };
@@ -74,10 +75,10 @@ export class Note extends BeatmapObject<INote> {
      * ---
      * Range: `0-3`
      */
-    get lineIndex() {
+    get posX() {
         return this.data._lineIndex;
     }
-    set lineIndex(value: INote['_lineIndex']) {
+    set posX(value: INote['_lineIndex']) {
         this.data._lineIndex = value;
     }
 
@@ -90,10 +91,10 @@ export class Note extends BeatmapObject<INote> {
      * ---
      * Range: `0-2`
      */
-    get lineLayer() {
+    get posY() {
         return this.data._lineLayer;
     }
-    set lineLayer(value: INote['_lineLayer']) {
+    set posY(value: INote['_lineLayer']) {
         this.data._lineLayer = value;
     }
 
@@ -129,12 +130,12 @@ export class Note extends BeatmapObject<INote> {
         this.data._cutDirection = value;
     }
 
-    setLineIndex(value: INote['_lineIndex']) {
-        this.lineIndex = value;
+    setPosX(value: INote['_lineIndex']) {
+        this.posX = value;
         return this;
     }
-    setLineLayer(value: INote['_lineLayer']) {
-        this.lineLayer = value;
+    setPosY(value: INote['_lineLayer']) {
+        this.posY = value;
         return this;
     }
     setType(value: INote['_type']) {
@@ -174,16 +175,8 @@ export class Note extends BeatmapObject<INote> {
             return [this.customData._position[0], this.customData._position[1]];
         }
         return [
-            (this.lineIndex <= -1000
-                ? this.lineIndex / 1000
-                : this.lineIndex >= 1000
-                ? this.lineIndex / 1000
-                : this.lineIndex) - 2,
-            this.lineLayer <= -1000
-                ? this.lineLayer / 1000
-                : this.lineLayer >= 1000
-                ? this.lineLayer / 1000
-                : this.lineLayer,
+            (this.posX <= -1000 ? this.posX / 1000 : this.posX >= 1000 ? this.posX / 1000 : this.posX) - 2,
+            this.posY <= -1000 ? this.posY / 1000 : this.posY >= 1000 ? this.posY / 1000 : this.posY,
         ];
     };
 
@@ -350,13 +343,7 @@ export class Note extends BeatmapObject<INote> {
      * ```
      */
     hasMappingExtensions = (): boolean => {
-        return (
-            this.cutDirection >= 1000 ||
-            this.lineIndex > 3 ||
-            this.lineIndex < 0 ||
-            this.lineLayer > 2 ||
-            this.lineLayer < 0
-        );
+        return this.cutDirection >= 1000 || this.posX > 3 || this.posX < 0 || this.posY > 2 || this.posY < 0;
     };
 
     /** Check if note has a valid cut direction.

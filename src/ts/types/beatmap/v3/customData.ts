@@ -1,4 +1,4 @@
-import { IBookmark } from '../shared/bookmark';
+import { IBookmark } from './bookmark';
 import { IBPMChange } from '../shared/bpm';
 import { IHeckCustomData } from './heck';
 import { IChromaCustomData, IChromaNote, IChromaObstacle } from './chroma';
@@ -15,7 +15,7 @@ export interface ICustomDataDifficulty extends ICustomDataBase, IHeckCustomData,
     customEvents?: ICustomEvent[];
     time?: number;
     BPMChanges?: IBPMChange[];
-    bookmarks?: IBookmark[];
+    _bookmarks?: IBookmark[];
 }
 
 export type ICustomDataNote = ICustomDataBase & IChromaNote & INENote;

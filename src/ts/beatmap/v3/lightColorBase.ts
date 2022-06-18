@@ -1,7 +1,7 @@
 import { ILightColorBase } from '../../types/beatmap/v3/lightColorBase';
 import { Serializable } from '../shared/serializable';
 
-/** Light color for new lighting system. */
+/** Light color base beatmap v3 class object. */
 export class LightColorBase extends Serializable<ILightColorBase> {
     static default: Required<ILightColorBase> = {
         b: 0,
@@ -22,7 +22,7 @@ export class LightColorBase extends Serializable<ILightColorBase> {
         const result: LightColorBase[] = [];
         lightColors?.forEach((lc) =>
             result.push(
-                new LightColorBase({
+                new this({
                     b: lc.b ?? LightColorBase.default.b,
                     i: lc.i ?? LightColorBase.default.i,
                     c: lc.c ?? LightColorBase.default.c,
@@ -37,7 +37,7 @@ export class LightColorBase extends Serializable<ILightColorBase> {
         if (result.length) {
             return result;
         }
-        return new LightColorBase({
+        return new this({
             b: LightColorBase.default.b,
             i: LightColorBase.default.i,
             c: LightColorBase.default.c,

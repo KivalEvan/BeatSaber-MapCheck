@@ -1,4 +1,4 @@
-import { ColorObject } from './colors';
+import { ColorObject } from '../../colors';
 
 /** Color Scheme interface for difficulty info custom data. */
 export interface IColorScheme {
@@ -36,6 +36,7 @@ export type ColorSchemeList =
     | 'Weave'
     | 'Pyro'
     | 'EDM'
+    | 'The Second'
     | 'Glass Desert';
 
 export type IEnvironmentScheme = {

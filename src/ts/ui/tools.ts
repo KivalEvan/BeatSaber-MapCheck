@@ -3,9 +3,9 @@ import SavedData from '../savedData';
 import Analyser from '../tools/analyzer';
 import UILoading from './loading';
 import UIInformation from './information';
-import { removeOptions } from '../utils';
+import { removeOptions } from '../utils/web';
 import { DifficultyRename, CharacteristicRename } from '../beatmap/shared';
-import { CharacteristicName, DifficultyName, IInfoData, IInfoSetData } from '../types';
+import { CharacteristicName, DifficultyName, IInfoData, IInfoSetData } from '../types/beatmap';
 
 const logPrefix = 'UI Tools: ';
 
@@ -38,7 +38,7 @@ if (htmlToolsApplyThis && htmlToolsApplyAll) {
 htmlToolsSelectMode.forEach((elem) => elem.addEventListener('change', selectModeHandler));
 htmlToolsSelectDifficulty.forEach((elem) => elem.addEventListener('change', selectDifficultyHandler));
 
-const displayOutputGeneral = (): void => {
+function displayOutputGeneral(): void {
     const analysis = SavedData.analysis?.general;
     if (!analysis) {
         htmlToolsOutputGeneral.textContent = 'ERROR: could not find analysis for general';
@@ -53,9 +53,9 @@ const displayOutputGeneral = (): void => {
     if (!htmlToolsOutputGeneral.firstChild) {
         htmlToolsOutputGeneral.textContent = 'No issues found.';
     }
-};
+}
 
-const displayOutputDifficulty = (mode?: CharacteristicName, difficulty?: DifficultyName): void => {
+function displayOutputDifficulty(mode?: CharacteristicName, difficulty?: DifficultyName): void {
     if (!mode && !difficulty) {
         mode = htmlToolsSelectMode[0].value as CharacteristicName;
         difficulty = htmlToolsSelectDifficulty[0].value as DifficultyName;
@@ -77,13 +77,13 @@ const displayOutputDifficulty = (mode?: CharacteristicName, difficulty?: Difficu
     if (!htmlToolsOutputDifficulty.firstChild) {
         htmlToolsOutputDifficulty.textContent = 'No issues found.';
     }
-};
+}
 
-const setDifficultyLabel = (str: string): void => {
+function setDifficultyLabel(str: string): void {
     htmlToolsDifficultyLabel.forEach((elem) => (elem.textContent = str));
-};
+}
 
-const populateSelectDiff = (mapSet?: IInfoSetData): void => {
+function populateSelectDiff(mapSet?: IInfoSetData): void {
     if (!mapSet) {
         return;
     }
@@ -117,9 +117,9 @@ const populateSelectDiff = (mapSet?: IInfoSetData): void => {
             elem.add(optDiff);
         });
     }
-};
+}
 
-const populateSelect = (mapInfo?: IInfoData): void => {
+function populateSelect(mapInfo?: IInfoData): void {
     if (!mapInfo) {
         htmlToolsSelectMode.forEach((elem) => removeOptions(elem));
         htmlToolsSelectDifficulty.forEach((elem) => removeOptions(elem));
@@ -138,18 +138,18 @@ const populateSelect = (mapInfo?: IInfoData): void => {
         }
         first = false;
     });
-};
+}
 
-const adjustTime = (): void => {
+function adjustTime(): void {
     const mapInfo = SavedData.beatmapInfo;
     if (!mapInfo) {
         throw new Error(logPrefix + 'could not find map info');
     }
     const bpm = beatmap.BeatPerMinute.create(mapInfo._beatsPerMinute);
     Analyser.adjustTime(bpm);
-};
+}
 
-const populateTool = (): void => {
+function populateTool(): void {
     Analyser.toolListInput.forEach((tl) => {
         if (tl.input.html) {
             switch (tl.type) {
@@ -179,22 +179,22 @@ const populateTool = (): void => {
             }
         }
     });
-};
+}
 
-const clearOutput = (): void => {
+function clearOutput(): void {
     if (htmlToolsOutputGeneral) {
         htmlToolsOutputGeneral.innerHTML = 'No output.';
     }
     if (htmlToolsOutputDifficulty) {
         htmlToolsOutputDifficulty.innerHTML = 'No output.';
     }
-};
+}
 
-const reset = (): void => {
+function reset(): void {
     clearOutput();
     setDifficultyLabel('Difficulty Label');
     populateSelect();
-};
+}
 
 function selectModeHandler(ev: Event): void {
     const target = ev.target as HTMLSelectElement;

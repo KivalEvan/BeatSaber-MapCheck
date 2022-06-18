@@ -29,6 +29,7 @@ export const EnvironmentSchemeName: Record<EnvironmentAllName, ColorSchemeList> 
     WeaveEnvironment: 'Weave',
     PyroEnvironment: 'Pyro',
     EDMEnvironment: 'EDM',
+    TheSecondEnvironment: 'The Second',
     GlassDesertEnvironment: 'Glass Desert',
 } as const;
 
@@ -217,6 +218,15 @@ export const ColorScheme: IEnvironmentScheme = {
         _envColorLeftBoost: { r: 0.735849, g: 0, b: 0.1758632 },
         _envColorRightBoost: { r: 0.4284593, g: 0, b: 0.754717 },
         _obstacleColor: { r: 0.1764706, g: 0.6980392, b: 0.8784314 },
+    },
+    'The Second': {
+        _colorLeft: { r: 0.7843137, g: 0.07843138, b: 0.07843138 },
+        _colorRight: { r: 0.1568627, g: 0.5568627, b: 0.8235294 },
+        _envColorLeft: { r: 0.85, g: 0.08499997, b: 0.08499997 },
+        _envColorRight: { r: 0.1882353, g: 0.675294, b: 1 },
+        _envColorLeftBoost: { r: 0.8235294, g: 0.08627451, b: 0.8509804 },
+        _envColorRightBoost: { r: 0, g: 1, b: 0.6478302 },
+        _obstacleColor: { r: 1, g: 0.1882353, b: 0.1882353 },
     },
     'Glass Desert': {
         _colorLeft: { r: 0.6792453, g: 0.5712628, b: 0 },

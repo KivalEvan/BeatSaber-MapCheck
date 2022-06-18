@@ -1,6 +1,7 @@
 import { IBaseObject } from '../../types/beatmap/v2/object';
 import { Serializable } from '../shared/serializable';
 
+/** Basic building block of beatmap v2 object. */
 export abstract class BeatmapObject<T extends IBaseObject> extends Serializable<T> {
     /** Beat time `<float>` of beatmap object. */
     get time() {

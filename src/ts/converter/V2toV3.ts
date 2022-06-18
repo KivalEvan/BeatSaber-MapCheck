@@ -20,7 +20,7 @@ const tag = (name: string) => {
  * ---
  * **WARNING:** Custom data may be lost on conversion, as well as other incompatible attributes.
  */
-export const V2toV3 = (data: DifficultyDataV2, skipPrompt?: boolean): DifficultyDataV3 => {
+export function V2toV3(data: DifficultyDataV2, skipPrompt?: boolean): DifficultyDataV3 {
     if (!skipPrompt) {
         logger.warn(tag('V2toV3'), 'Converting beatmap v2 to v3 may lose certain data!');
         const confirmation = prompt('Proceed with conversion? (y/N):', 'n');
@@ -32,6 +32,7 @@ export const V2toV3 = (data: DifficultyDataV2, skipPrompt?: boolean): Difficulty
         logger.warn(tag('V2toV3'), 'Converting beatmap v2 to v3 may lose certain data!');
     }
     const template = v3.DifficultyData.create();
+    template.fileName = data.fileName;
 
     data.notes.forEach((n, i) => {
         let customData!: ICustomDataNote;
@@ -79,8 +80,8 @@ export const V2toV3 = (data: DifficultyDataV2, skipPrompt?: boolean): Difficulty
             template.bombNotes.push(
                 v3.BombNote.create({
                     b: n.time,
-                    x: n.lineIndex,
-                    y: n.lineLayer,
+                    x: n.posX,
+                    y: n.posY,
                     customData,
                 }),
             );
@@ -100,8 +101,8 @@ export const V2toV3 = (data: DifficultyDataV2, skipPrompt?: boolean): Difficulty
                 v3.ColorNote.create({
                     b: n.time,
                     c: n.type as 0 | 1,
-                    x: n.lineIndex,
-                    y: n.lineLayer,
+                    x: n.posX,
+                    y: n.posY,
                     d:
                         n.cutDirection >= 1000 || typeof n.customData._cutDirection === 'number'
                             ? n.cutDirection === 8
@@ -151,8 +152,8 @@ export const V2toV3 = (data: DifficultyDataV2, skipPrompt?: boolean): Difficulty
         template.obstacles.push(
             v3.Obstacle.create({
                 b: o.time,
-                x: o.lineIndex,
-                y: o.type === 2 ? o.lineLayer : o.type ? 2 : 0,
+                x: o.posX,
+                y: o.type === 2 ? o.posY : o.type ? 2 : 0,
                 d: o.duration,
                 w: o.width,
                 h: o.type === 2 ? o.height : o.type ? 3 : 5,
@@ -256,8 +257,8 @@ export const V2toV3 = (data: DifficultyDataV2, skipPrompt?: boolean): Difficulty
         template.waypoints.push(
             v3.Waypoint.create({
                 b: w.time,
-                x: w.lineIndex,
-                y: w.lineLayer,
+                x: w.posX,
+                y: w.posY,
                 d: w.direction,
             }),
         );
@@ -268,13 +269,13 @@ export const V2toV3 = (data: DifficultyDataV2, skipPrompt?: boolean): Difficulty
             v3.Slider.create({
                 c: s.colorType,
                 b: s.headTime,
-                x: s.headLineIndex,
-                y: s.headLineLayer,
+                x: s.headPosX,
+                y: s.headPosY,
                 d: s.headCutDirection,
                 mu: s.headLengthMultiplier,
                 tb: s.tailTime,
-                tx: s.tailLineIndex,
-                ty: s.tailLineLayer,
+                tx: s.tailPosX,
+                ty: s.tailPosY,
                 tc: s.tailCutDirection,
                 tmu: s.tailLengthMultiplier,
                 m: s.midAnchor,
@@ -297,7 +298,7 @@ export const V2toV3 = (data: DifficultyDataV2, skipPrompt?: boolean): Difficulty
                         if (ce._type === 'AnimateTrack') {
                             return {
                                 beat: ce._time,
-                                time: 'AnimateTrack',
+                                type: 'AnimateTrack',
                                 data: {
                                     track: ce._data._track,
                                     duration: ce._data._duration,
@@ -317,7 +318,7 @@ export const V2toV3 = (data: DifficultyDataV2, skipPrompt?: boolean): Difficulty
                         if (ce._type === 'AssignPathAnimation') {
                             return {
                                 beat: ce._time,
-                                time: 'AssignPathAnimation',
+                                type: 'AssignPathAnimation',
                                 data: {
                                     track: ce._data._track,
                                     duration: ce._data._duration,
@@ -337,7 +338,7 @@ export const V2toV3 = (data: DifficultyDataV2, skipPrompt?: boolean): Difficulty
                         if (ce._type === 'AssignTrackParent') {
                             return {
                                 beat: ce._time,
-                                time: 'AssignTrackParent',
+                                type: 'AssignTrackParent',
                                 data: {
                                     childrenTracks: ce._data._childrenTracks,
                                     parentTrack: ce._data._parentTrack,
@@ -348,7 +349,7 @@ export const V2toV3 = (data: DifficultyDataV2, skipPrompt?: boolean): Difficulty
                         if (ce._type === 'AssignPlayerToTrack') {
                             return {
                                 beat: ce._time,
-                                time: 'AssignPlayerToTrack',
+                                type: 'AssignPlayerToTrack',
                                 data: {
                                     track: ce._data._track,
                                 },
@@ -356,7 +357,7 @@ export const V2toV3 = (data: DifficultyDataV2, skipPrompt?: boolean): Difficulty
                         }
                         return {
                             beat: ce._time,
-                            time: 'AssignFogTrack',
+                            type: 'AssignFogTrack',
                             data: {
                                 track: ce._data._track,
                                 attenuation: ce._data._attenuation,
@@ -401,5 +402,6 @@ export const V2toV3 = (data: DifficultyDataV2, skipPrompt?: boolean): Difficulty
         }
     }
 
+    template.useNormalEventsAsCompatibleEvents = true;
     return template;
-};
+}

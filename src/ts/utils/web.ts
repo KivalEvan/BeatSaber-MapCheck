@@ -1,4 +1,4 @@
-export const sanitizeURL = (url: string): string => {
+export function sanitizeURL(url: string): string {
     // regex from stackoverflow from another source
     const regexURL = /^(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/;
     url = url.trim();
@@ -9,9 +9,9 @@ export const sanitizeURL = (url: string): string => {
         return url;
     }
     throw new Error('Invalid URL');
-};
+}
 
-export const sanitizeBeatSaverID = (id: string): string => {
+export function sanitizeBeatSaverID(id: string): string {
     const regexID = /^[0-9a-fA-F]{1,6}$/;
     id = id.trim();
     if (/^!bsr /.test(id)) {
@@ -21,10 +21,10 @@ export const sanitizeBeatSaverID = (id: string): string => {
         return id;
     }
     throw new Error('Invalid ID');
-};
+}
 
-export const removeOptions = (selectElement: HTMLSelectElement): void => {
+export function removeOptions(selectElement: HTMLSelectElement): void {
     for (let i = selectElement.options.length - 1; i >= 0; i--) {
         selectElement.remove(i);
     }
-};
+}

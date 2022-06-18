@@ -2,7 +2,7 @@ import { IBaseNote } from '../../types/beatmap/v3/baseNote';
 import { IBaseSlider } from '../../types/beatmap/v3/baseSlider';
 import { BaseNote } from './baseNote';
 
-/** Base slider beatmap object. */
+/** Base slider beatmap v3 class object. */
 export abstract class BaseSlider<T extends IBaseSlider> extends BaseNote<T> {
     /** Color type `<int>` of base slider.
      * ```ts
@@ -106,7 +106,7 @@ export abstract class BaseSlider<T extends IBaseSlider> extends BaseNote<T> {
     }
 
     getPosition(): [number, number] {
-        // if (slider._customData?._position) {
+        // if (slider._customData._position) {
         //     return [slider._customData._position[0], slider._customData._position[1]];
         // }
         return [

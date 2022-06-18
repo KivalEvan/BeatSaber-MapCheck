@@ -1,11 +1,13 @@
 import { ColorPointDefinition, PercentPointDefinition, Vector3 } from '../shared/heck';
 import { Easings } from '../shared/easings';
-import { ColorArray } from '../shared/colors';
+import { ColorArray } from '../../colors';
 import { ICustomDataBase } from '../shared/customData';
 import { LookupMethod } from '../shared/chroma';
 import { IHeckCustomEventDataBase } from './heck';
 
 export enum ChromaDataEnvAbbr {
+    id = 'Ct',
+    lookupMethod = 'Lm',
     duplicate = 'D',
     active = 'A',
     scale = 'S',
@@ -44,6 +46,14 @@ export interface IChromaEnvironment {
     localRotation?: Vector3;
     /** Assign light ID for duplicated object. */
     lightID?: number;
+}
+
+export interface IChromaGeometry {
+    geometryType: 'SPHERE' | 'CAPSULE' | 'CYLINDER' | 'CUBE' | 'PLANE' | 'QUAD';
+    spawnCount: number;
+    track?: string;
+    shaderPreset?: 'LIGHT_BOX' | 'STANDARD' | 'NO_SHADE';
+    collision?: boolean;
 }
 
 /** Chroma interface for Beatmap Note Custom Data. */
@@ -109,7 +119,7 @@ export interface IChromaAnimation {
 /** Chroma Custom Event interface for AssignFogTrack. */
 export interface IChromaCustomEventAssignFogTrack {
     beat: number;
-    time: 'AssignFogTrack';
+    type: 'AssignFogTrack';
     data: IChromaCustomEventDataAssignFogTrack;
 }
 
@@ -118,4 +128,5 @@ export type IChromaCustomEvent = IChromaCustomEventAssignFogTrack;
 /** Chroma Custom Data interface for difficulty custom data. */
 export interface IChromaCustomData {
     environment?: IChromaEnvironment[];
+    geometry?: IChromaGeometry[];
 }

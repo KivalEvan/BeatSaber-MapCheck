@@ -3,7 +3,7 @@ import settings from '../settings';
 import { round } from '../utils/math';
 import { toMMSS, toMMSSMS } from '../utils/time';
 
-export const printResult = (label: string, text?: string) => {
+export function printResult(label: string, text?: string) {
     const htmlContainer = document.createElement('div');
 
     if (text) {
@@ -13,25 +13,32 @@ export const printResult = (label: string, text?: string) => {
     }
 
     return htmlContainer;
-};
+}
 
-export const printResultTime = (label: string, timeAry: number[], bpm: BeatPerMinute) => {
+export function printResultTime(label: string, timeAry: number[], bpm: BeatPerMinute) {
     const htmlContainer = document.createElement('div');
     htmlContainer.innerHTML = `<b>${label} [${timeAry.length}]:</b> ${timeAry
         .map((n) => {
             switch (settings.beatNumbering) {
                 case 'realtime':
-                    return toMMSS(bpm.toRealTime(n));
+                    return `<span title="Beat ${round(bpm.adjustTime(n), settings.rounding)}">${toMMSS(
+                        bpm.toRealTime(n),
+                    )}</span>`;
                 case 'realtimems':
-                    return toMMSSMS(bpm.toRealTime(n));
+                    return `<span title="Beat ${round(bpm.adjustTime(n), settings.rounding)}">${toMMSSMS(
+                        bpm.toRealTime(n),
+                    )}</span>`;
                 case 'jsontime':
-                    return round(n, settings.rounding);
+                    return `<span title="Time ${toMMSSMS(bpm.toRealTime(n))}">${round(n, settings.rounding)}</span>`;
                 case 'beattime':
                 default:
-                    return round(bpm.adjustTime(n), settings.rounding);
+                    return `<span title="Time ${toMMSSMS(bpm.toRealTime(n))}">${round(
+                        bpm.adjustTime(n),
+                        settings.rounding,
+                    )}</span>`;
             }
         })
         .join(', ')}`;
 
     return htmlContainer;
-};
+}

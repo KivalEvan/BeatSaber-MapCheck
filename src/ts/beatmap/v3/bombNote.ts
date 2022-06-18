@@ -5,7 +5,7 @@ import { deepCopy } from '../../utils/misc';
 import { LINE_COUNT } from '../shared/constants';
 import { BaseNote } from './baseNote';
 
-/** Bomb note beatmap object. */
+/** Bomb note beatmap v3 class object. */
 export class BombNote extends BaseNote<IBombNote> {
     static default: ObjectToReturn<Required<IBombNote>> = {
         b: 0,
@@ -27,7 +27,7 @@ export class BombNote extends BaseNote<IBombNote> {
         const result: BombNote[] = [];
         bombNotes?.forEach((bn) =>
             result.push(
-                new BombNote({
+                new this({
                     b: bn.b ?? BombNote.default.b,
                     x: bn.x ?? BombNote.default.x,
                     y: bn.y ?? BombNote.default.y,
@@ -41,7 +41,7 @@ export class BombNote extends BaseNote<IBombNote> {
         if (result.length) {
             return result;
         }
-        return new BombNote({
+        return new this({
             b: BombNote.default.b,
             x: BombNote.default.x,
             y: BombNote.default.y,
@@ -49,7 +49,7 @@ export class BombNote extends BaseNote<IBombNote> {
         });
     }
 
-    toObject(): IBombNote {
+    toObject(): Required<IBombNote> {
         return {
             b: this.time,
             x: this.posX,

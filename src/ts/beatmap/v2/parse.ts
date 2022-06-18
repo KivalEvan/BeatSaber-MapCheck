@@ -4,13 +4,11 @@ import { deepCheck } from '../shared/dataCheck';
 import { DifficultyDataCheck } from './dataCheck';
 import logger from '../../logger';
 
-// deno-lint-ignore ban-types
 const tag = (name: string) => {
     return `[v2::parse::${name}]`;
 };
 
-// FIXME: this is a mess but i dont want to fix it anyway
-export const difficulty = (data: IDifficultyData): DifficultyData => {
+export function difficulty(data: IDifficultyData): DifficultyData {
     logger.info(tag('difficulty'), 'Parsing beatmap difficulty v2.x.x');
     if (!data._version?.startsWith('2')) {
         logger.warn(tag('difficulty'), 'Unidentified beatmap version');
@@ -32,4 +30,4 @@ export const difficulty = (data: IDifficultyData): DifficultyData => {
     data._waypoints.sort((a, b) => a._time - b._time);
 
     return DifficultyData.create(data);
-};
+}

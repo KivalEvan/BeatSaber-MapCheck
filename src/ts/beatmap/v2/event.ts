@@ -1,4 +1,3 @@
-// deno-lint-ignore-file no-unused-vars
 import { IEvent } from '../../types/beatmap/v2/event';
 import { ObjectToReturn } from '../../types/utils';
 import { BeatmapObject } from './object';
@@ -6,7 +5,7 @@ import { deepCopy } from '../../utils/misc';
 import { IChromaEventLaser, IChromaEventLight, IChromaEventRing } from '../../types/beatmap/v2/chroma';
 import { INEEvent } from '../../types/beatmap/v2/noodleExtensions';
 
-/** Basic event beatmap object. */
+/** Event beatmap v2 class object. */
 export class Event extends BeatmapObject<IEvent> {
     static default: ObjectToReturn<Required<IEvent>> = {
         _time: 0,
@@ -27,9 +26,9 @@ export class Event extends BeatmapObject<IEvent> {
     static create(...basicEvents: Partial<IEvent>[]): Event[];
     static create(...basicEvents: Partial<IEvent>[]): Event | Event[] {
         const result: Event[] = [];
-        basicEvents.forEach((ev) =>
+        basicEvents?.forEach((ev) =>
             result.push(
-                new Event({
+                new this({
                     _time: ev._time ?? Event.default._time,
                     _type: ev._type ?? Event.default._type,
                     _value: ev._value ?? Event.default._value,
@@ -44,7 +43,7 @@ export class Event extends BeatmapObject<IEvent> {
         if (result.length) {
             return result;
         }
-        return new Event({
+        return new this({
             _time: Event.default._time,
             _type: Event.default._type,
             _value: Event.default._value,
@@ -53,7 +52,7 @@ export class Event extends BeatmapObject<IEvent> {
         });
     }
 
-    toObject(): IEvent {
+    toObject(): Required<IEvent> {
         return {
             _time: this.time,
             _type: this.type,
@@ -188,7 +187,7 @@ export class Event extends BeatmapObject<IEvent> {
      * ```
      */
     isValidType = (): boolean => {
-        return (this.type >= 0 && this.type <= 17) || this.type === 100;
+        return (this.type >= 0 && this.type <= 19) || this.type === 100;
     };
 
     /** Check if  this is a light event.

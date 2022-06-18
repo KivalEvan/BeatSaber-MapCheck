@@ -5,7 +5,7 @@ export const MAX_CHAIN_HEAD_SCORE = 85;
 export const MAX_CHAIN_TAIL_SCORE = 20;
 
 // TODO: check for slider and burst
-export const calculate = (nc: NoteContainer[]) => {
+export function calculate(nc: NoteContainer[]) {
     let total = 0;
     let multiplier = 1;
     for (
@@ -24,4 +24,4 @@ export const calculate = (nc: NoteContainer[]) => {
         total += MAX_NOTE_SCORE * multiplier;
     }
     return total;
-};
+}

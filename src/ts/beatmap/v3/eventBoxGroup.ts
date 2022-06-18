@@ -1,6 +1,7 @@
 import { IEventBoxGroup } from '../../types/beatmap/v3/eventBoxGroup';
 import { BaseObject } from './baseObject';
 
+/** Base event box group beatmap v3 class object. */
 export abstract class EventBoxGroup extends BaseObject<IEventBoxGroup> {
     /** Toggle `<boolean>` of boost event. */
     get groupID() {

@@ -1,6 +1,6 @@
 import { IBPMChange, IBPMChangeOld, IBPMChangeTime } from '../../types/beatmap/shared/bpm';
 
-/** Class to store beat per minute value, BPM changes, and other properties affecting BPM. */
+/** BPM class for various utility around adjusted beat time, JSON time, reaction time, etc. */
 export class BeatPerMinute {
     private _bpm: number;
     private _bpmChange: IBPMChangeTime[];

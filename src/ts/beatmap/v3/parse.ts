@@ -5,14 +5,13 @@ import { DifficultyDataCheck } from './dataCheck';
 import { deepCheck } from '../shared/dataCheck';
 import logger from '../../logger';
 
-// deno-lint-ignore ban-types
 const tag = (name: string) => {
     return `[v3::parse::${name}]`;
 };
 
 const sortObjectTime = (a: IBaseObject, b: IBaseObject) => a.b - b.b;
 
-export const difficulty = (data: IDifficultyData): DifficultyData => {
+export function difficulty(data: IDifficultyData): DifficultyData {
     logger.info(tag('difficulty'), 'Parsing beatmap difficulty v3.x.x');
     if (data.version !== '3.0.0') {
         logger.warn(tag('difficulty'), 'Unidentified beatmap version');
@@ -48,4 +47,4 @@ export const difficulty = (data: IDifficultyData): DifficultyData => {
     data.lightRotationEventBoxGroups.sort(sortObjectTime);
 
     return DifficultyData.create(data);
-};
+}

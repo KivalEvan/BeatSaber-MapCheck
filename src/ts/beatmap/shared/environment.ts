@@ -29,10 +29,13 @@ export const EnvironmentRename: { [key in EnvironmentAllName]: string } = {
     PyroEnvironment: 'Pyro',
     EDMEnvironment: 'EDM',
     GlassDesertEnvironment: 'Glass Desert',
+    TheSecondEnvironment: 'The Second',
 } as const;
 
 /** List of available event type in environment. */
-export const EventList: { [key in EnvironmentAllName]: Readonly<[ReadonlyArray<number>, ReadonlyArray<number>]> } = {
+export const EventList: {
+    [key in EnvironmentAllName]: Readonly<[ReadonlyArray<number>, ReadonlyArray<number>]>;
+} = {
     DefaultEnvironment: [[0, 1, 2, 3, 4, 5, 8, 9, 12, 13], []],
     OriginsEnvironment: [[0, 1, 2, 3, 4, 5, 8, 9, 12, 13], []],
     TriangleEnvironment: [[0, 1, 2, 3, 4, 5, 8, 9, 12, 13], []],
@@ -65,5 +68,9 @@ export const EventList: { [key in EnvironmentAllName]: Readonly<[ReadonlyArray<n
     EDMEnvironment: [
         [0, 1, 4],
         [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
+    ],
+    TheSecondEnvironment: [
+        [0, 1, 2, 3, 4, 9],
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
     ],
 } as const;

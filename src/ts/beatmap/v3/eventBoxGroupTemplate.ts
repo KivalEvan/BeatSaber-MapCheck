@@ -3,6 +3,7 @@ import { deepCopy } from '../../utils/misc';
 import { Serializable } from '../shared/serializable';
 import { EventBoxGroup } from './eventBoxGroup';
 
+/** Base event box group template beatmap v3 class object. */
 export abstract class EventBoxGroupTemplate<T, U extends Serializable<T>> extends EventBoxGroup {
     private e: U[];
 
@@ -11,7 +12,7 @@ export abstract class EventBoxGroupTemplate<T, U extends Serializable<T>> extend
         this.e = objects;
     }
 
-    toObject(): IEventBoxGroupTemplate<T> {
+    toObject(): Required<IEventBoxGroupTemplate<T>> {
         return {
             b: this.time,
             g: this.groupID,

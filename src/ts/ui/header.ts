@@ -12,7 +12,6 @@ const htmlMetadataSongAuthor: HTMLElement = document.querySelector('.metadata__s
 const htmlMetadataSongBPM: HTMLElement = document.querySelector('.metadata__song-bpm')!;
 const htmlMetadataSongDuration: HTMLElement = document.querySelector('.metadata__song-duration')!;
 const htmlAudio: HTMLAudioElement = document.querySelector('.audio')!;
-const audioURL = '';
 
 if (!htmlIntro || !htmlMetadata) {
     throw new Error(logPrefix + 'header component is missing one of the two section');
@@ -30,7 +29,7 @@ if (
     throw new Error(logPrefix + 'metadata component is missing one of the part');
 }
 
-const switchHeader = (isIntro: boolean): void => {
+function switchHeader(isIntro: boolean): void {
     if (isIntro) {
         htmlIntro.classList.remove('hidden');
         htmlMetadata.classList.add('hidden');
@@ -38,17 +37,17 @@ const switchHeader = (isIntro: boolean): void => {
         htmlIntro.classList.add('hidden');
         htmlMetadata.classList.remove('hidden');
     }
-};
+}
 
-const setCoverImage = (src: string | null): void => {
+function setCoverImage(src: string | null): void {
     htmlCoverImage.src = src || './img/unknown.jpg';
-};
+}
 
-const getCoverImage = (): string | null => {
+function getCoverImage(): string | null {
     return htmlCoverImage.src;
-};
+}
 
-const setCoverLink = (url?: string, id?: string): void => {
+function setCoverLink(url?: string, id?: string): void {
     if (url == null && id == null) {
         htmlCoverLink.textContent = '';
         htmlCoverLink.href = '';
@@ -60,22 +59,22 @@ const setCoverLink = (url?: string, id?: string): void => {
         htmlCoverLink.href = url;
         htmlCoverLink.classList.remove('disabled');
     }
-};
+}
 
-const setSongName = (str: string): void => {
+function setSongName(str: string): void {
     htmlMetadataSongName.textContent = str;
-};
+}
 
-const setSongSubname = (str: string): void => {
+function setSongSubname(str: string): void {
     htmlMetadataSongSubname.textContent = str;
-};
+}
 
-const setSongAuthor = (str: string): void => {
+function setSongAuthor(str: string): void {
     htmlMetadataSongAuthor.textContent = str;
-};
+}
 
 // TODO: some way to save bpm change
-const setSongBPM = (num: number, minBPM?: number, maxBPM?: number): void => {
+function setSongBPM(num: number, minBPM?: number, maxBPM?: number): void {
     if ((minBPM === null || minBPM === undefined) && typeof maxBPM === 'number') {
         minBPM = Math.min(num, maxBPM);
     }
@@ -86,33 +85,33 @@ const setSongBPM = (num: number, minBPM?: number, maxBPM?: number): void => {
     if (minBPM && maxBPM) {
     }
     htmlMetadataSongBPM.textContent = text;
-};
+}
 
-const setSongDuration = (num?: number): void => {
+function setSongDuration(num?: number): void {
     if (num) {
         htmlMetadataSongDuration.textContent = toMMSSMS(num);
     } else {
         htmlMetadataSongDuration.textContent = 'No audio';
     }
-};
+}
 
-const setAudio = async (arrayBuffer: ArrayBuffer): Promise<void> => {
+async function setAudio(arrayBuffer: ArrayBuffer): Promise<void> {
     const blob = new Blob([arrayBuffer], { type: 'audio/ogg' });
     htmlAudio.src = window.URL.createObjectURL(blob);
-};
+}
 
-const unloadAudio = (): void => {
+function unloadAudio(): void {
     htmlAudio.src = '';
-    window.URL.revokeObjectURL(audioURL);
-};
+    window.URL.revokeObjectURL('');
+}
 
-const reset = (): void => {
+function reset(): void {
     switchHeader(true);
     setCoverImage(null);
     setCoverLink();
     setSongDuration(0);
     unloadAudio();
-};
+}
 export default {
     switchHeader,
     setCoverImage,

@@ -4,7 +4,7 @@ import { ISlider } from '../../types/beatmap/v3/slider';
 import { deepCopy } from '../../utils/misc';
 import { ObjectToReturn } from '../../types/utils';
 
-/** Slider beatmap object.
+/** Slider beatmap v3 class object.
  *
  * Also known as arc.
  */
@@ -15,13 +15,13 @@ export class Slider extends BaseSlider<ISlider> {
         x: 0,
         y: 0,
         d: 0,
-        mu: 0.5,
+        mu: 1,
         tb: 0,
         tx: 0,
         ty: 0,
         tc: 0,
-        tmu: 0.5,
-        m: 1,
+        tmu: 1,
+        m: 0,
         customData: () => {
             return {};
         },
@@ -38,7 +38,7 @@ export class Slider extends BaseSlider<ISlider> {
         const result: Slider[] = [];
         sliders?.forEach((s) =>
             result.push(
-                new Slider({
+                new this({
                     b: s.b ?? Slider.default.b,
                     c: s.c ?? Slider.default.c,
                     x: s.x ?? Slider.default.x,
@@ -61,7 +61,7 @@ export class Slider extends BaseSlider<ISlider> {
         if (result.length) {
             return result;
         }
-        return new Slider({
+        return new this({
             b: Slider.default.b,
             c: Slider.default.c,
             x: Slider.default.x,
@@ -78,7 +78,7 @@ export class Slider extends BaseSlider<ISlider> {
         });
     }
 
-    toObject(): ISlider {
+    toObject(): Required<ISlider> {
         return {
             b: this.time,
             c: this.color,
@@ -260,7 +260,7 @@ export class Slider extends BaseSlider<ISlider> {
         );
     }
 
-    /** Check if slider is valid & vanilla.
+    /** Check if slider is a valid & vanilla.
      * ```ts
      * if (slider.isValid()) {}
      * ```

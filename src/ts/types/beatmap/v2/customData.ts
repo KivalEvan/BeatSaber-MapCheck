@@ -1,4 +1,4 @@
-import { IBookmark } from '../shared/bookmark';
+import { IBookmark } from './bookmark';
 import { IBPMChange, IBPMChangeOld } from '../shared/bpm';
 import { IHeckCustomData, IHeckCustomEvent } from './heck';
 import { IChromaCustomData, IChromaCustomEvent, IChromaNote, IChromaObstacle } from './chroma';

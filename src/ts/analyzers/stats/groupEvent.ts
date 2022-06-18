@@ -9,10 +9,10 @@ import { ICountEventBoxGroup } from '../../types/mapcheck/analyzers/stats';
  * console.log(list);
  * ```
  */
-export const countColorEBG = (
+export function countColorEBG(
     ebg: LightColorEventBoxGroup[],
     environment: EnvironmentAllName = 'DefaultEnvironment',
-): ICountEventBoxGroup => {
+): ICountEventBoxGroup {
     const commonEvent = EventList[environment]?.[1] ?? EventList['DefaultEnvironment'][1];
     const ebgCount: ICountEventBoxGroup = {};
     for (let i = commonEvent.length - 1; i >= 0; i--) {
@@ -36,12 +36,12 @@ export const countColorEBG = (
         ebgCount[ebg[i].groupID].base += ebg[i].events.reduce((t, e) => t + e.events.length, 0);
     }
     return ebgCount;
-};
+}
 
-export const countRotationEBG = (
+export function countRotationEBG(
     ebg: LightRotationEventBoxGroup[],
     environment: EnvironmentAllName = 'DefaultEnvironment',
-): ICountEventBoxGroup => {
+): ICountEventBoxGroup {
     const commonEvent = EventList[environment]?.[1] ?? EventList['DefaultEnvironment'][1];
     const ebgCount: ICountEventBoxGroup = {};
     for (let i = commonEvent.length - 1; i >= 0; i--) {
@@ -65,4 +65,4 @@ export const countRotationEBG = (
         ebgCount[ebg[i].groupID].base += ebg[i].events.reduce((t, e) => t + e.events.length, 0);
     }
     return ebgCount;
-};
+}

@@ -1,9 +1,10 @@
 import { IBasicEvent } from '../../types/beatmap/v3/basicEvent';
+import { IChromaEventLaser, IChromaEventLight, IChromaEventRing } from '../../types/beatmap/v3/chroma';
 import { ObjectToReturn } from '../../types/utils';
 import { deepCopy } from '../../utils/misc';
 import { BaseObject } from './baseObject';
 
-/** Basic event beatmap object. */
+/** Basic event beatmap v3 class object. */
 export class BasicEvent extends BaseObject<IBasicEvent> {
     static default: ObjectToReturn<Required<IBasicEvent>> = {
         b: 0,
@@ -15,7 +16,7 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
         },
     };
 
-    private constructor(basicEvent: Required<IBasicEvent>) {
+    protected constructor(basicEvent: Required<IBasicEvent>) {
         super(basicEvent);
     }
 
@@ -26,7 +27,7 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
         const result: BasicEvent[] = [];
         basicEvents?.forEach((be) =>
             result.push(
-                new BasicEvent({
+                new this({
                     b: be.b ?? BasicEvent.default.b,
                     et: be.et ?? BasicEvent.default.et,
                     i: be.i ?? BasicEvent.default.i,
@@ -41,7 +42,7 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
         if (result.length) {
             return result;
         }
-        return new BasicEvent({
+        return new this({
             b: BasicEvent.default.b,
             et: BasicEvent.default.et,
             i: BasicEvent.default.i,
@@ -50,7 +51,7 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
         });
     }
 
-    toObject(): IBasicEvent {
+    toObject(): Required<IBasicEvent> {
         return {
             b: this.time,
             et: this.type,
@@ -132,7 +133,7 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
      * ---
      * This may check non-light event too.
      */
-    isOff() {
+    isOff(): boolean {
         return this.value === 0;
     }
 
@@ -143,7 +144,7 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
      * ---
      * This may check non-light event too.
      */
-    isOn() {
+    isOn(): boolean {
         return this.value === 1 || this.value === 5 || this.value === 9;
     }
 
@@ -154,7 +155,7 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
      * ---
      * This may check non-light event too.
      */
-    isFlash() {
+    isFlash(): boolean {
         return this.value === 2 || this.value === 6 || this.value === 10;
     }
 
@@ -165,7 +166,7 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
      * ---
      * This may check non-light event too.
      */
-    isFade() {
+    isFade(): boolean {
         return this.value === 3 || this.value === 7 || this.value === 11;
     }
 
@@ -176,7 +177,7 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
      * ---
      * This may check non-light event too.
      */
-    isTransition() {
+    isTransition(): boolean {
         return this.value === 4 || this.value === 8 || this.value === 12;
     }
 
@@ -185,8 +186,8 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
      * if (basicEvent.isValidType()) {}
      * ```
      */
-    isValidType() {
-        return (this.type >= 0 && this.type <= 17) || this.type === 100;
+    isValidType(): boolean {
+        return (this.type >= 0 && this.type <= 19) || this.type === 100;
     }
 
     /** Check if event is a light event.
@@ -194,7 +195,7 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
      * if (basicEvent.isLightEvent()) {}
      * ```
      */
-    isLightEvent(): boolean {
+    isLightEvent(): this is BasicEventLight {
         return (
             this.type === 0 ||
             this.type === 1 ||
@@ -224,8 +225,8 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
      * ---
      * This does not check for ring zoom.
      */
-    isRingEvent() {
-        return this.type === 8;
+    isRingEvent(): this is BasicEventRing {
+        return this.type === 8 || this.type === 9;
     }
 
     /** Check if event is a laser rotation event.
@@ -233,7 +234,7 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
      * if (basicEvent.isLaserRotationEvent()) {}
      * ```
      */
-    isLaserRotationEvent(): boolean {
+    isLaserRotationEvent(): this is BasicEventLaser {
         return this.type === 12 || this.type === 13;
     }
 
@@ -278,7 +279,7 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
      * if (basicEvent.isLightingEvent()) {}
      * ```
      */
-    isLightingEvent() {
+    isLightingEvent(): boolean {
         return this.isLightEvent() || this.isRingEvent() || this.isLaserRotationEvent() || this.isExtraEvent();
     }
 
@@ -287,7 +288,7 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
      * if (basicEvent.hasOldChroma()) {}
      * ```
      */
-    hasOldChroma() {
+    hasOldChroma(): boolean {
         return this.value >= 2000000000;
     }
 
@@ -300,36 +301,28 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
     hasChroma = (): boolean => {
         if (this.isLightEvent()) {
             return (
-                Array.isArray(this.customData._color) ||
-                typeof this.customData._lightID === 'number' ||
-                Array.isArray(this.customData._lightID) ||
-                typeof this.customData._propID === 'number' ||
-                typeof this.customData._lightGradient === 'object' ||
-                typeof this.customData._easing === 'string' ||
-                typeof this.customData._lerpType === 'string'
+                Array.isArray(this.customData.color) ||
+                typeof this.customData.lightID === 'number' ||
+                Array.isArray(this.customData.lightID) ||
+                typeof this.customData.easing === 'string' ||
+                typeof this.customData.lerpType === 'string'
             );
         }
         if (this.isRingEvent()) {
             return (
-                typeof this.customData._nameFilter === 'string' ||
-                typeof this.customData._reset === 'boolean' ||
-                typeof this.customData._rotation === 'number' ||
-                typeof this.customData._step === 'number' ||
-                typeof this.customData._prop === 'number' ||
-                typeof this.customData._speed === 'number' ||
-                typeof this.customData._direction === 'number' ||
-                typeof this.customData._counterSpin === 'boolean' ||
-                typeof this.customData._stepMult === 'number' ||
-                typeof this.customData._propMult === 'number' ||
-                typeof this.customData._speedMult === 'number'
+                typeof this.customData.nameFilter === 'string' ||
+                typeof this.customData.rotation === 'number' ||
+                typeof this.customData.step === 'number' ||
+                typeof this.customData.prop === 'number' ||
+                typeof this.customData.speed === 'number' ||
+                typeof this.customData.direction === 'number'
             );
         }
         if (this.isLaserRotationEvent()) {
             return (
-                typeof this.customData._lockPosition === 'boolean' ||
-                typeof this.customData._speed === 'number' ||
-                typeof this.customData._preciseSpeed === 'number' ||
-                typeof this.customData._direction === 'number'
+                typeof this.customData.lockRotation === 'boolean' ||
+                typeof this.customData.speed === 'number' ||
+                typeof this.customData.direction === 'number'
             );
         }
         return false;
@@ -340,11 +333,29 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
      * if (basicEvent.isValid()) {}
      * ```
      */
-    isValid() {
+    isValid(): boolean {
         return (
             this.isValidType() &&
             this.value >= 0 &&
             !(!this.isLaserRotationEvent() && this.value > 12 && !this.hasOldChroma())
         );
+    }
+}
+
+abstract class BasicEventLight extends BasicEvent {
+    get customData(): IChromaEventLight {
+        return this.data.customData as IChromaEventLight;
+    }
+}
+
+abstract class BasicEventRing extends BasicEvent {
+    get customData(): IChromaEventRing {
+        return this.data.customData as IChromaEventRing;
+    }
+}
+
+abstract class BasicEventLaser extends BasicEvent {
+    get customData(): IChromaEventLaser {
+        return this.data.customData as IChromaEventLaser;
     }
 }

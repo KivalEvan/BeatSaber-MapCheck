@@ -40,26 +40,14 @@ export interface IHeckCustomEventDataAssignPathAnimation extends IHeckCustomEven
     _definitePosition?: string | Vector3PointDefinition[];
 }
 
-/** Heck Custom Event interface for AnimateTrack.
- * ```ts
- * _time: float,
- * _type: 'AnimateTrack',
- * _data: NECustomEventDataAnimateTrack
- * ```
- */
+/** Heck Custom Event interface for AnimateTrack. */
 export interface IHeckCustomEventAnimateTrack {
     _time: number;
     _type: 'AnimateTrack';
     _data: IHeckCustomEventDataAnimateTrack;
 }
 
-/** Heck Custom Event interface for AssignPathAnimation.
- * ```ts
- * _time: float,
- * _type: 'AssignPathAnimation',
- * _data: NECustomEventDataAssignPathAnimation
- * ```
- */
+/** Heck Custom Event interface for AssignPathAnimation. */
 export interface IHeckCustomEventAssignPathAnimation {
     _time: number;
     _type: 'AssignPathAnimation';
@@ -68,22 +56,13 @@ export interface IHeckCustomEventAssignPathAnimation {
 
 export type IHeckCustomEvent = IHeckCustomEventAnimateTrack | IHeckCustomEventAssignPathAnimation;
 
-/** Heck Point Definition interface.
- * ```ts
- * _name: string,
- * _points: ArrayPointDefinition[];
- * ```
- */
+/** Heck Point Definition interface. */
 export interface IHeckPointDefinition {
     _name: string;
     _points: PointDefinition[];
 }
 
-/** Heck Custom Data interface for difficulty custom data.
- * ```ts
- * _track: string,
- * ```
- */
+/** Heck Custom Data interface for difficulty custom data. */
 export interface IHeckCustomData {
     _customEvents?: IHeckCustomEvent[];
     _pointDefinitions?: IHeckPointDefinition[];

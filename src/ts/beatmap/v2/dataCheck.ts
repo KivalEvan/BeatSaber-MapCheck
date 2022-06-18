@@ -102,6 +102,7 @@ export const ObstacleDataCheck: Record<keyof IObstacle, DataCheck> = {
     _lineLayer: {
         type: 'number',
         version: '2.6.0',
+        optional: true,
     },
     _type: {
         type: 'number',
@@ -118,6 +119,7 @@ export const ObstacleDataCheck: Record<keyof IObstacle, DataCheck> = {
     _height: {
         type: 'number',
         version: '2.6.0',
+        optional: true,
     },
     _customData: {
         type: 'object',
@@ -143,6 +145,7 @@ export const EventDataCheck: Record<keyof IEvent, DataCheck> = {
     _floatValue: {
         type: 'number',
         version: '2.5.0',
+        optional: true,
     },
     _customData: {
         type: 'object',

@@ -1,14 +1,14 @@
 import JSZip from 'jszip';
 import * as swing from './analyzers/swing';
-import { BeatPerMinute } from './beatmap';
+import { BeatPerMinute } from './beatmap/shared';
 import { V2toV3 } from './converter';
 import {
-    difficulty as parseDifficultyV3,
-    difficultyLegacy as parseDifficultyV2,
+    difficultyV3 as parseDifficultyV3,
+    difficultyV2 as parseDifficultyV2,
     info as parseInfo,
 } from './beatmap/parse';
 import logger from './logger';
-import { IInfoData } from './types';
+import { IInfoData } from './types/beatmap/shared';
 import { IDifficultyData as IDifficultyDataV2 } from './types/beatmap/v2/difficulty';
 import { IDifficultyData as IDifficultyDataV3 } from './types/beatmap/v3/difficulty';
 import { IBeatmapItem } from './types/mapcheck/tools/beatmapItem';
@@ -18,16 +18,16 @@ const tag = (name: string) => {
     return `[load::${name}]`;
 };
 
-export const loadInfo = async (zip: JSZip) => {
+export async function loadInfo(zip: JSZip) {
     const infoFile = zip.file('Info.dat') || zip.file('info.dat');
     if (!infoFile) {
         throw new Error("Couldn't find Info.dat");
     }
     logger.info(tag('loadInfo'), `loading info`);
     return parseInfo(JSON.parse(await infoFile.async('string')));
-};
+}
 
-export const loadDifficulty = async (info: IInfoData, zip: JSZip) => {
+export async function loadDifficulty(info: IInfoData, zip: JSZip) {
     const beatmapItem: IBeatmapItem[] = [];
     const mapSet = info._difficultyBeatmapSets;
     for (let i = mapSet.length - 1; i >= 0; i--) {
@@ -127,4 +127,4 @@ export const loadDifficulty = async (info: IInfoData, zip: JSZip) => {
         }
     }
     return beatmapItem;
-};
+}

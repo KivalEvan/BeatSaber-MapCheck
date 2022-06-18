@@ -1,6 +1,7 @@
 import { IIndexFilter } from '../../types/beatmap/v3/indexFilter';
 import { Serializable } from '../shared/serializable';
 
+/** Index filter beatmap v3 class object. */
 export class IndexFilter extends Serializable<IIndexFilter> {
     static default: Required<IIndexFilter> = {
         f: 1,

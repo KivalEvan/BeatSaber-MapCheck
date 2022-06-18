@@ -4,6 +4,7 @@ import { DeepPartial, ObjectToReturn } from '../../types/utils';
 import { EventBoxGroupTemplate } from './eventBoxGroupTemplate';
 import { LightColorEventBox } from './lightColorEventBox';
 
+/** Light color event box group beatmap v3 class object. */
 export class LightColorEventBoxGroup extends EventBoxGroupTemplate<ILightColorEventBox, LightColorEventBox> {
     static default: ObjectToReturn<Required<ILightColorEventBoxGroup>> = {
         b: 0,
@@ -30,7 +31,7 @@ export class LightColorEventBoxGroup extends EventBoxGroupTemplate<ILightColorEv
         const result: LightColorEventBoxGroup[] = [];
         eventBoxGroups?.forEach((ebg) =>
             result.push(
-                new LightColorEventBoxGroup({
+                new this({
                     b: ebg.b ?? LightColorEventBoxGroup.default.b,
                     g: ebg.g ?? LightColorEventBoxGroup.default.g,
                     e: (ebg as Required<ILightColorEventBoxGroup>).e ?? LightColorEventBoxGroup.default.e(),
@@ -44,7 +45,7 @@ export class LightColorEventBoxGroup extends EventBoxGroupTemplate<ILightColorEv
         if (result.length) {
             return result;
         }
-        return new LightColorEventBoxGroup({
+        return new this({
             b: LightColorEventBoxGroup.default.b,
             g: LightColorEventBoxGroup.default.g,
             e: LightColorEventBoxGroup.default.e(),

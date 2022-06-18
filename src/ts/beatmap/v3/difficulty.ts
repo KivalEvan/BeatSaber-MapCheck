@@ -30,7 +30,10 @@ import { IColorBoostEvent } from '../../types/beatmap/v3/colorBoostEvent';
 import { ILightRotationEventBoxGroup } from '../../types/beatmap/v3/lightRotationEventBoxGroup';
 import { ILightColorEventBoxGroup } from '../../types/beatmap/v3/lightColorEventBoxGroup';
 
+/** Difficulty beatmap v3 class object. */
 export class DifficultyData extends Serializable<IDifficultyData> {
+    private _fileName = 'UnnamedDifficulty.dat';
+
     version;
     bpmEvents: BPMEvent[];
     rotationEvents: RotationEvent[];
@@ -73,7 +76,7 @@ export class DifficultyData extends Serializable<IDifficultyData> {
     }
 
     static create(difficultyData: Partial<IDifficultyData> = {}): DifficultyData {
-        return new DifficultyData({
+        return new this({
             version: difficultyData.version || '3.0.0',
             bpmEvents: difficultyData.bpmEvents ?? [],
             rotationEvents: difficultyData.rotationEvents ?? [],
@@ -95,7 +98,7 @@ export class DifficultyData extends Serializable<IDifficultyData> {
         });
     }
 
-    toObject(): IDifficultyData {
+    toObject(): Required<IDifficultyData> {
         return {
             version: this.version || '3.0.0',
             bpmEvents: this.bpmEvents.map((obj) => obj.toObject()),
@@ -114,6 +117,17 @@ export class DifficultyData extends Serializable<IDifficultyData> {
             useNormalEventsAsCompatibleEvents: this.useNormalEventsAsCompatibleEvents,
             customData: deepCopy(this.customData),
         };
+    }
+
+    set fileName(name: string) {
+        this._fileName = name.trim();
+    }
+    get fileName() {
+        return this._fileName;
+    }
+    setFileName(fileName: string) {
+        this.fileName = fileName;
+        return this;
     }
 
     /** Calculate note per second.

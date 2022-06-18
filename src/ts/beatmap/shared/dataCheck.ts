@@ -7,13 +7,12 @@ const tag = (name: string) => {
     return `[shared::dataCheck::${name}]`;
 };
 
-export const deepCheck = (
-    // deno-lint-ignore no-explicit-any
+export function deepCheck(
     data: { [key: string]: any },
     check: { [key: string]: DataCheck },
     name: string,
     version: Version,
-) => {
+) {
     logger.verbose(tag('deepCheck'), `Looking up ${name}`);
     if (Array.isArray(data)) {
         data.forEach((d, i) => deepCheck(d, check, `${name}[${i}]`, version));
@@ -58,4 +57,4 @@ export const deepCheck = (
             throw Error(`${key} is not ${check[key].type} in object ${name}!`);
         }
     }
-};
+}

@@ -1,4 +1,4 @@
-export * as environment from './environment';
+export * as environment from './renamer';
 export * as parity from './parity';
 export * as placement from './placement';
 export * as stats from './stats';

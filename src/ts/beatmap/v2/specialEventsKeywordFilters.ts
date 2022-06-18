@@ -4,7 +4,7 @@ import { ObjectToReturn } from '../../types/utils';
 import { Serializable } from '../shared/serializable';
 import { SpecialEventsKeywordFiltersKeywords } from './specialEventsKeywordFiltersKeywords';
 
-/** Basic event types with keywords. */
+/** Special event types with keywords beatmap v2 class object. */
 export class SpecialEventsKeywordFilters extends Serializable<ISpecialEventsKeywordFilters> {
     static default: ObjectToReturn<Required<ISpecialEventsKeywordFilters>> = {
         _keywords: () => [],
@@ -22,7 +22,7 @@ export class SpecialEventsKeywordFilters extends Serializable<ISpecialEventsKeyw
     }
 
     static create(specialEventsWithKeywords: Partial<ISpecialEventsKeywordFilters> = {}): SpecialEventsKeywordFilters {
-        return new SpecialEventsKeywordFilters({
+        return new this({
             _keywords: specialEventsWithKeywords._keywords ?? SpecialEventsKeywordFilters.default._keywords(),
         });
     }

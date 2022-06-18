@@ -4,7 +4,7 @@ import { IBurstSlider } from '../../types/beatmap/v3/burstSlider';
 import { deepCopy } from '../../utils/misc';
 import { ObjectToReturn } from '../../types/utils';
 
-/** Burst slider beatmap object.
+/** Burst slider beatmap v3 class object.
  *
  * Also known as chain.
  */
@@ -36,7 +36,7 @@ export class BurstSlider extends BaseSlider<IBurstSlider> {
         const result: BurstSlider[] = [];
         burstSliders?.forEach((bs) =>
             result.push(
-                new BurstSlider({
+                new this({
                     b: bs.b ?? bs.tb ?? BurstSlider.default.b,
                     c: bs.c ?? BurstSlider.default.c,
                     x: bs.x ?? BurstSlider.default.x,
@@ -57,7 +57,7 @@ export class BurstSlider extends BaseSlider<IBurstSlider> {
         if (result.length) {
             return result;
         }
-        return new BurstSlider({
+        return new this({
             b: BurstSlider.default.b,
             c: BurstSlider.default.c,
             x: BurstSlider.default.x,
@@ -72,7 +72,7 @@ export class BurstSlider extends BaseSlider<IBurstSlider> {
         });
     }
 
-    toObject(): IBurstSlider {
+    toObject(): Required<IBurstSlider> {
         return {
             b: this.time,
             c: this.color,

@@ -5,7 +5,7 @@ import { ObjectToReturn } from '../../types/utils';
 import { BaseNote } from './baseNote';
 import { IBaseNote } from '../../types/beatmap/v3/baseNote';
 
-/** Color note beatmap object. */
+/** Color note beatmap v3 class object. */
 export class ColorNote extends BaseNote<IColorNote> {
     static default: ObjectToReturn<Required<IColorNote>> = {
         b: 0,
@@ -30,7 +30,7 @@ export class ColorNote extends BaseNote<IColorNote> {
         const result: ColorNote[] = [];
         colorNotes?.forEach((n) =>
             result.push(
-                new ColorNote({
+                new this({
                     b: n.b ?? ColorNote.default.b,
                     x: n.x ?? ColorNote.default.x,
                     y: n.y ?? ColorNote.default.y,
@@ -47,7 +47,7 @@ export class ColorNote extends BaseNote<IColorNote> {
         if (result.length) {
             return result;
         }
-        return new ColorNote({
+        return new this({
             b: ColorNote.default.b,
             x: ColorNote.default.x,
             y: ColorNote.default.y,
@@ -58,7 +58,7 @@ export class ColorNote extends BaseNote<IColorNote> {
         });
     }
 
-    toObject(): IColorNote {
+    toObject(): Required<IColorNote> {
         return {
             b: this.time,
             c: this.color,

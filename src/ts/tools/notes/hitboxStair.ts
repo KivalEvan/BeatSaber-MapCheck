@@ -32,7 +32,7 @@ const tool: Tool = {
     run,
 };
 
-const isDouble = (note: NoteContainerNote, nc: NoteContainer[], index: number): boolean => {
+function isDouble(note: NoteContainerNote, nc: NoteContainer[], index: number): boolean {
     for (let i = index, len = nc.length; i < len; i++) {
         if (nc[i].type !== 'note') {
             continue;
@@ -45,7 +45,7 @@ const isDouble = (note: NoteContainerNote, nc: NoteContainer[], index: number): 
         }
     }
     return false;
-};
+}
 
 function check(map: ToolArgs) {
     const { bpm } = map.settings;

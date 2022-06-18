@@ -4,7 +4,7 @@ import { deepCopy } from '../../utils/misc';
 import { LINE_COUNT } from '../shared/constants';
 import { BeatmapObject } from './object';
 
-/** Waypoint beatmap object. */
+/** Waypoint beatmap v2 class object. */
 export class Waypoint extends BeatmapObject<IWaypoint> {
     static default: ObjectToReturn<Required<IWaypoint>> = {
         _time: 0,
@@ -27,7 +27,7 @@ export class Waypoint extends BeatmapObject<IWaypoint> {
         const result: Waypoint[] = [];
         waypoints?.forEach((w) =>
             result.push(
-                new Waypoint({
+                new this({
                     _time: w._time ?? Waypoint.default._time,
                     _lineIndex: w._lineIndex ?? Waypoint.default._lineIndex,
                     _lineLayer: w._lineLayer ?? Waypoint.default._lineLayer,
@@ -42,7 +42,7 @@ export class Waypoint extends BeatmapObject<IWaypoint> {
         if (result.length) {
             return result;
         }
-        return new Waypoint({
+        return new this({
             _time: Waypoint.default._time,
             _lineIndex: Waypoint.default._lineIndex,
             _lineLayer: Waypoint.default._lineLayer,
@@ -51,11 +51,11 @@ export class Waypoint extends BeatmapObject<IWaypoint> {
         });
     }
 
-    toObject(): IWaypoint {
+    toObject(): Required<IWaypoint> {
         return {
             _time: this.time,
-            _lineIndex: this.lineIndex,
-            _lineLayer: this.lineLayer,
+            _lineIndex: this.posX,
+            _lineLayer: this.posY,
             _offsetDirection: this.direction,
             _customData: deepCopy(this.customData),
         };
@@ -71,10 +71,10 @@ export class Waypoint extends BeatmapObject<IWaypoint> {
      * ---
      * Range: `unknown`
      */
-    get lineIndex() {
+    get posX() {
         return this.data._lineIndex;
     }
-    set lineIndex(value: IWaypoint['_lineIndex']) {
+    set posX(value: IWaypoint['_lineIndex']) {
         this.data._lineIndex = value;
     }
 
@@ -87,10 +87,10 @@ export class Waypoint extends BeatmapObject<IWaypoint> {
      * ---
      * Range: `unknown`
      */
-    get lineLayer() {
+    get posY() {
         return this.data._lineLayer;
     }
-    set lineLayer(value: IWaypoint['_lineLayer']) {
+    set posY(value: IWaypoint['_lineLayer']) {
         this.data._lineLayer = value;
     }
 
@@ -110,12 +110,12 @@ export class Waypoint extends BeatmapObject<IWaypoint> {
         this.data._offsetDirection = value;
     }
 
-    setLineIndex(value: IWaypoint['_lineIndex']) {
-        this.lineIndex = value;
+    setPosX(value: IWaypoint['_lineIndex']) {
+        this.posX = value;
         return this;
     }
-    setLineLayer(value: IWaypoint['_lineLayer']) {
-        this.lineLayer = value;
+    setPosY(value: IWaypoint['_lineLayer']) {
+        this.posY = value;
         return this;
     }
     setDirection(value: IWaypoint['_offsetDirection']) {
@@ -124,7 +124,7 @@ export class Waypoint extends BeatmapObject<IWaypoint> {
     }
 
     mirror() {
-        this.lineIndex = LINE_COUNT - 1 - this.lineIndex;
+        this.posX = LINE_COUNT - 1 - this.posX;
         switch (this.direction) {
             case 2:
                 this.direction = 3;

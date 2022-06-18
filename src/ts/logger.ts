@@ -17,10 +17,9 @@ const logPrefixes = new Map<LogLevels, string>([
     [LogLevels.NONE, 'NONE'],
 ]);
 
-export default new (class Logger {
+export default new (class logger {
     logLevel = LogLevels.INFO;
 
-    // deno-lint-ignore no-explicit-any
     private log(level: LogLevels, ...args: any[]) {
         if (level < this.logLevel) return;
 
@@ -56,27 +55,22 @@ export default new (class Logger {
         this.info('[logger::setLevel]', `Log level set to ${logPrefixes.get(level)}`);
     }
 
-    // deno-lint-ignore no-explicit-any
     public verbose(...args: any[]) {
         this.log(LogLevels.VERBOSE, ...args);
     }
 
-    // deno-lint-ignore no-explicit-any
     public debug(...args: any[]) {
         this.log(LogLevels.DEBUG, ...args);
     }
 
-    // deno-lint-ignore no-explicit-any
     public info(...args: any[]) {
         this.log(LogLevels.INFO, ...args);
     }
 
-    // deno-lint-ignore no-explicit-any
     public warn(...args: any[]) {
         this.log(LogLevels.WARN, ...args);
     }
 
-    // deno-lint-ignore no-explicit-any
     public error(...args: any[]) {
         this.log(LogLevels.ERROR, ...args);
     }
