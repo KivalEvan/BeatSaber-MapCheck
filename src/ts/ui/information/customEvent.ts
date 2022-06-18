@@ -1,6 +1,5 @@
 import Settings from '../../settings';
 import { round, toMMSS } from '../../utils';
-
 import { BeatPerMinute } from '../../beatmap/shared';
 import { NEDataAbbr } from '../../types/beatmap/v3';
 import { ICustomEvent } from '../../types/beatmap/v3/customEvent';

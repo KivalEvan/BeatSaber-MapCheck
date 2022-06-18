@@ -1,13 +1,12 @@
 # Changelog
 
-## 2.5.0 [2022-06-##]
+## 2.5.0 [2022-06-19]
 
 ### Added
 
 -   v3 beatmap support
 -   v2 to v3 beatmap internal conversion
-    -   This may be inaccurate for modded v2 map as it internally convert modded to
-        v3
+    -   This may be inaccurate for modded v2 map as it internally convert modded to v3
 -   Weave, Pyro and EDM environment
 -   Basic slider and burst slider check
 -   More tool check including general
@@ -33,8 +32,7 @@
 ### Deprecated
 
 -   Beatmap v2.x.x is now unsupported
-    -   Beatmap v2 can still be used by map check, but will not gain any feature
-        updated around it.
+    -   Beatmap v2 can still be used by map check, but will not gain any feature updated around it.
 
 ### Removed
 
@@ -47,8 +45,7 @@
 ### Changed
 
 -   Major structure change (for better development)
--   Download from URL changes to download from ID if it detects valid BeatSaver
-    map link
+-   Download from URL changes to download from ID if it detects valid BeatSaver map link
 -   Time spent now shows HH:MM:SS instead of HH:MM
 -   Actually added Gaga color scheme
 -   Restructured custom mod stuff
@@ -88,8 +85,7 @@
     -   This allows NE/ME map to use the error check functionality
     -   This also allows for more advanced checking in the future
     -   Updated check and threshold to better fit with the system
-    -   Because of the change, some functionality may not work as intended (please
-        report if you find them)
+    -   Because of the change, some functionality may not work as intended (please report if you find them)
 -   Unlit bomb check
 
 ### Changed
@@ -167,14 +163,12 @@
 ### Changed
 
 -   NJS HJD minimum limit reduced to 0.25 to accomodate v1.18.1 update
--   Mapping Extensions and Noodle Extensions now have basic check for valid (and
-    negative) notes and obstacles
+-   Mapping Extensions and Noodle Extensions now have basic check for valid (and negative) notes and obstacles
 -   Plenty of code clean-up
 
 ### Fixed
 
--   NJS dependent check corrected formula (this affects inline, reverse stair, and
-    stacked bomb)
+-   NJS dependent check corrected formula (this affects inline, reverse stair, and stacked bomb)
 
 ### Deprecated
 

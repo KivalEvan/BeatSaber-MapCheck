@@ -5,7 +5,6 @@ import { IInfoData } from '../../types';
 import { IBeatmapItem } from '../../types/mapcheck';
 import { NoteContainer } from '../../types/beatmap/v3/container';
 import { countDirection } from '../../analyzers/stats/note';
-
 import { logPrefix, prefix } from './constants';
 import { getFilteredContainer } from './helpers';
 
