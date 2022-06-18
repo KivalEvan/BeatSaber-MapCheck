@@ -23,10 +23,24 @@ Run the development server with `yarn run dev`, the URL will be given in the CLI
 
 To run the app locally, `yarn run build` for the first time setup, then `yarn run serve` to run the server.
 
+## Contributing
+
+If you wish to contribute, do follow the guidelines. Make pull request for feature addition/enhancement/fix or create an issue if you encounter error/problem or want an improvement.
+
+### Guidelines
+
+-   File names shall use camel case.
+-   Use formatting standard given in prettier config.
+-   Top-level function must use regular function.
+-   Use `dev` branch as base for new development and only merge here.
+-   No other third-dependencies unless absolutely necessary.
+-   Avoid circular imports.
+
 ## Planned
 
 -   Rewrite swing detection
--   Save tools parameter
+-   Save tool parameters
+-   Tool presets
 
 ## Note
 
