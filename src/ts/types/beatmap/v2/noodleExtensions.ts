@@ -30,7 +30,7 @@ interface INEObject {
     _noteJumpStartBeatOffset?: number;
     _fake?: boolean;
     _interactable?: boolean;
-    _track?: string;
+    _track?: string | string[];
     _animation?: INEAnimation;
 }
 

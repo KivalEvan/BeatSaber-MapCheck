@@ -187,7 +187,7 @@ export class Event extends BeatmapObject<IEvent> {
      * ```
      */
     isValidType = (): boolean => {
-        return (this.type >= 0 && this.type <= 17) || this.type === 100;
+        return (this.type >= 0 && this.type <= 19) || this.type === 100;
     };
 
     /** Check if  this is a light event.

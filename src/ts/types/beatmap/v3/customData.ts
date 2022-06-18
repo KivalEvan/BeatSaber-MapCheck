@@ -15,7 +15,7 @@ export interface ICustomDataDifficulty extends ICustomDataBase, IHeckCustomData,
     customEvents?: ICustomEvent[];
     time?: number;
     BPMChanges?: IBPMChange[];
-    bookmarks?: IBookmark[];
+    _bookmarks?: IBookmark[];
 }
 
 export type ICustomDataNote = ICustomDataBase & IChromaNote & INENote;

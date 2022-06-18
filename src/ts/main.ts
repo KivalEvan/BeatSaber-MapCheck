@@ -6,7 +6,7 @@ import UIStats from './ui/stats';
 import UIInput from './ui/input';
 import Analyser from './tools/analyzer';
 import Settings from './settings';
-import Flag from './flag';
+import flag from './flag';
 import SavedData from './savedData';
 import { loadDifficulty, loadInfo } from './load';
 import { downloadFromHash, downloadFromID, downloadFromURL } from './download';
@@ -56,7 +56,7 @@ export default async (type: LoadType) => {
         if (Settings.load.imageCover && imageFile) {
             let imgBase64 = await imageFile.async('base64');
             UIHeader.setCoverImage('data:image;base64,' + imgBase64);
-            Flag.loading.coverImage = true;
+            flag.loading.coverImage = true;
         } else {
             logger.error(tag(), `${info._coverImageFilename} does not exists.`);
         }
@@ -95,7 +95,7 @@ export default async (type: LoadType) => {
                     let duration = buffer.duration;
                     SavedData.duration = duration;
                     UIHeader.setSongDuration(duration);
-                    Flag.loading.audio = true;
+                    flag.loading.audio = true;
                 })
                 .catch(function (err) {
                     UIHeader.setSongDuration();

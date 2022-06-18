@@ -36,6 +36,7 @@ export function eventGroupRename(id: number, environment?: EnvironmentAllName): 
                     return 'Distant Square Left Laser';
                 case 15:
                     return 'Distant Square Right Laser';
+                default:
             }
         }
         /* fall through */
@@ -69,6 +70,7 @@ export function eventGroupRename(id: number, environment?: EnvironmentAllName): 
                     return 'Left Flame';
                 case 13:
                     return 'Right Flame';
+                default:
             }
         }
         /* fall through */
@@ -110,6 +112,7 @@ export function eventGroupRename(id: number, environment?: EnvironmentAllName): 
                     return 'Left Single Source Circle Rotation';
                 case 17:
                     return 'Right Single Source Circle Rotation';
+                default:
             }
         }
         /* fall through */
@@ -143,6 +146,7 @@ export function eventGroupRename(id: number, environment?: EnvironmentAllName): 
                     return 'Bottom Lasers Left Top';
                 case 13:
                     return 'Bottom Lasers Right Top';
+                default:
             }
         }
         /* fall through */

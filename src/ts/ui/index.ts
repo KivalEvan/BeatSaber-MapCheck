@@ -7,7 +7,7 @@ export * as intro from './intro';
 export { default as loading } from './loading';
 export { default as select } from './helpers/select';
 export { default as settings } from './settings';
-export { default as stats } from './stats';
+export * as stats from './stats';
 export { default as theme } from './theme';
 export { default as tools } from './tools';
 

@@ -47,6 +47,7 @@ export function eventTypeRename(type: number, environment?: EnvironmentAllName):
                     return 'Spike Right Lights';
                 case 4:
                     return 'Distant Lasers and Spike Top Lights';
+                default:
             }
             break;
         case 'InterscopeEnvironment':
@@ -260,7 +261,6 @@ export function eventTypeRename(type: number, environment?: EnvironmentAllName):
             return 'Utility Event 3';
         case 19:
             return 'Utility Event 4';
-
         default:
             return 'Unknown';
     }

@@ -1,5 +1,7 @@
+// deno-lint-ignore ban-types
 export abstract class Serializable<T extends Object> {
-    protected data: Required<T>;
+    /** Highly not recommended to mess around with this unless you know what you are doing. */
+    readonly data: Required<T>;
     constructor(data: Required<T>) {
         this.data = data;
     }
