@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.5.1 [2022-07-##]
+
+### Fixed
+
+-   EBPM points to current note instead of next note
+-   Typo
+
 ## 2.5.0 [2022-06-19]
 
 ### Added

@@ -119,7 +119,7 @@ export function eventGroupRename(id: number, environment?: EnvironmentAllName): 
         case 'TheSecondEnvironment': {
             switch (id) {
                 case 0:
-                    return 'Bing Rings';
+                    return 'Big Rings';
                 case 1:
                     return 'Small Rings';
                 case 2:
