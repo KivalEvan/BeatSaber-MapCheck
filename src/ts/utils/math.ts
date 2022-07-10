@@ -1,5 +1,5 @@
 import logger from '../logger';
-import { EasingFunction } from '../types/beatmap/shared/easings';
+import { EasingFunction } from '../types/easings';
 
 const tag = (name: string) => {
     return `[utils::math::${name}]`;

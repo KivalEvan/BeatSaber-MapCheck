@@ -8,6 +8,7 @@ const tag = (name: string) => {
 };
 
 export function deepCheck(
+    // deno-lint-ignore no-explicit-any
     data: { [key: string]: any },
     check: { [key: string]: DataCheck },
     name: string,

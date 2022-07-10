@@ -288,12 +288,12 @@ export class DifficultyData extends Serializable<IDifficultyData> {
             this.waypoints.push(Waypoint.create(w));
         });
     };
-    addBasicBeatmapEvents = (...basicEvents: Partial<IBasicEvent>[]) => {
+    addBasicEvents = (...basicEvents: Partial<IBasicEvent>[]) => {
         basicEvents.forEach((be) => {
             this.basicBeatmapEvents.push(BasicEvent.create(be));
         });
     };
-    addColorBoostBeatmapEvents = (...colorBoostEvents: Partial<IColorBoostEvent>[]) => {
+    addColorBoostEvents = (...colorBoostEvents: Partial<IColorBoostEvent>[]) => {
         colorBoostEvents.forEach((cbe) => {
             this.colorBoostBeatmapEvents.push(ColorBoostEvent.create(cbe));
         });

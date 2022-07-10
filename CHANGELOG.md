@@ -2,6 +2,14 @@
 
 ## 2.5.1 [2022-07-##]
 
+### Added
+
+-   Bookmark color
+
+### Updated
+
+-   Beatmap structure
+
 ### Fixed
 
 -   EBPM points to current note instead of next note

@@ -7,7 +7,6 @@ export * from './coordinate';
 export * from './customData';
 export * from './dataCheck';
 export * from './difficulty';
-export * from './easings';
 export * from './editor';
 export * from './environment';
 export * from './heck';

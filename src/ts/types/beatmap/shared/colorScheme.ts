@@ -1,16 +1,16 @@
-import { ColorObject } from '../../colors';
+import { IColor } from '../../colors';
 
 /** Color Scheme interface for difficulty info custom data. */
 export interface IColorScheme {
-    _colorLeft?: Omit<ColorObject, 'a'>;
-    _colorRight?: Omit<ColorObject, 'a'>;
-    _envColorLeft?: Omit<ColorObject, 'a'>;
-    _envColorRight?: Omit<ColorObject, 'a'>;
-    _envColorWhite?: Omit<ColorObject, 'a'>;
-    _envColorLeftBoost?: Omit<ColorObject, 'a'>;
-    _envColorRightBoost?: Omit<ColorObject, 'a'>;
-    _envColorWhiteBoost?: Omit<ColorObject, 'a'>;
-    _obstacleColor?: Omit<ColorObject, 'a'>;
+    _colorLeft?: Omit<IColor, 'a'>;
+    _colorRight?: Omit<IColor, 'a'>;
+    _envColorLeft?: Omit<IColor, 'a'>;
+    _envColorRight?: Omit<IColor, 'a'>;
+    _envColorWhite?: Omit<IColor, 'a'>;
+    _envColorLeftBoost?: Omit<IColor, 'a'>;
+    _envColorRightBoost?: Omit<IColor, 'a'>;
+    _envColorWhiteBoost?: Omit<IColor, 'a'>;
+    _obstacleColor?: Omit<IColor, 'a'>;
 }
 
 /** List of available color scheme in base game. */

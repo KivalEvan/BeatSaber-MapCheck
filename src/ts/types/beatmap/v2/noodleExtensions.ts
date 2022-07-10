@@ -1,5 +1,6 @@
+import { ColorPointDefinition } from '../shared/chroma';
 import { ICustomDataBase } from '../shared/customData';
-import { ColorPointDefinition, PercentPointDefinition, Vector2, Vector3, Vector3PointDefinition } from '../shared/heck';
+import { PercentPointDefinition, Vector2, Vector3, Vector3PointDefinition } from '../shared/heck';
 import { IHeckCustomEventDataBase } from './heck';
 
 export enum NEDataAbbr {

@@ -1,3 +1,4 @@
+// deno-lint-ignore-file no-unused-vars
 import { IBasicEvent } from '../../types/beatmap/v3/basicEvent';
 import { IChromaEventLaser, IChromaEventLight, IChromaEventRing } from '../../types/beatmap/v3/chroma';
 import { ObjectToReturn } from '../../types/utils';

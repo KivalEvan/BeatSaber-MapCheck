@@ -22,7 +22,7 @@ export function interleave([x, ...xs]: number[], ys: number[] = []): number[] {
  *
  * Works best with only primitive objects.
  */
-export function deepCopy<T>(object: T): T {
+export function deepCopy<T extends object>(object: T): T {
     if (typeof object !== 'object') {
         logger.error(tag('deepCopy'), 'Received non-object type');
     }
@@ -31,4 +31,13 @@ export function deepCopy<T>(object: T): T {
 
 export function isHex(hex: string): boolean {
     return /[a-fA-F0-9]*/g.test(hex);
+}
+
+export function hexToDec(hex: string): number {
+    return parseInt(hex, 16);
+}
+
+export function decToHex(val: number): string {
+    const hex = val.toString(16);
+    return hex;
 }

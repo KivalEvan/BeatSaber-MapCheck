@@ -161,7 +161,7 @@ export class Obstacle extends BaseObject<IObstacle> {
     }
 
     mirror() {
-        this.posX = LINE_COUNT - 1 - this.posX;
+        this.posX = LINE_COUNT - 1 - (this.posX + this.width - 1);
         return this;
     }
 

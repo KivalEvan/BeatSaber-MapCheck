@@ -1,8 +1,8 @@
-import { IHeckPointDefinition } from '../../types/beatmap/v3/heck';
+import { IPointDefinition } from '../../types/beatmap/v3/pointDefinition';
 import { htmlTablePointDefinitions } from './constants';
 import { displayTableRow, hideTableRow } from './helpers';
 
-export function setPointDefinitions(arr?: IHeckPointDefinition[]): void {
+export function setPointDefinitions(arr?: IPointDefinition[]): void {
     if (arr == null || !arr.length) {
         hideTableRow(htmlTablePointDefinitions);
         return;

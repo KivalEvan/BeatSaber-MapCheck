@@ -1,9 +1,10 @@
-import { Easings } from '../shared/easings';
-import { ColorPointDefinition, PercentPointDefinition, PointDefinition, Vector3PointDefinition } from '../shared/heck';
+import { Easings } from '../../easings';
+import { Vector3PointDefinition } from '../shared/heck';
 
 /** Heck Base Custom Event interface. */
 export interface IHeckCustomEventDataBase {
     track: string | string[];
+    repeat?: number;
 }
 
 /** AssignPathAnimation interface for Heck Custom Event.
@@ -16,11 +17,6 @@ export interface IHeckCustomEventDataAnimateTrack extends IHeckCustomEventDataBa
     rotation?: string | Vector3PointDefinition[];
     localRotation?: string | Vector3PointDefinition[];
     scale?: string | Vector3PointDefinition[];
-    dissolve?: string | PercentPointDefinition[];
-    dissolveArrow?: string | PercentPointDefinition[];
-    color?: string | ColorPointDefinition[];
-    interactable?: string | PercentPointDefinition[];
-    time?: string | PercentPointDefinition[];
 }
 
 /** AssignPathAnimation interface for Heck Custom Event.
@@ -33,45 +29,9 @@ export interface IHeckCustomEventDataAssignPathAnimation extends IHeckCustomEven
     rotation?: string | Vector3PointDefinition[];
     localRotation?: string | Vector3PointDefinition[];
     scale?: string | Vector3PointDefinition[];
-    dissolve?: string | PercentPointDefinition[];
-    dissolveArrow?: string | PercentPointDefinition[];
-    color?: string | ColorPointDefinition[];
-    interactable?: string | PercentPointDefinition[];
-    definitePosition?: string | Vector3PointDefinition[];
-}
-
-/** Heck Custom Event interface for AnimateTrack. */
-export interface IHeckCustomEventAnimateTrack {
-    beat: number;
-    type: 'AnimateTrack';
-    data: IHeckCustomEventDataAnimateTrack;
-}
-
-/** Heck Custom Event interface for AssignPathAnimation. */
-export interface IHeckCustomEventAssignPathAnimation {
-    beat: number;
-    type: 'AssignPathAnimation';
-    data: IHeckCustomEventDataAssignPathAnimation;
-}
-
-/** Heck Custom Event interface for InvokeEvent. */
-// export interface IHeckCustomEventInvokeEvent {
-//     b: number;
-//     t: 'InvokeEvent';
-//     d: IHeckCustomEventDataInvokeEvent;
-// }
-
-export type IHeckCustomEvent = IHeckCustomEventAnimateTrack | IHeckCustomEventAssignPathAnimation;
-// | IHeckCustomEventInvokeEvent;
-
-/** Heck Point Definition interface. */
-export interface IHeckPointDefinition {
-    name: string;
-    points: PointDefinition[];
 }
 
 /** Heck Custom Data interface for difficulty custom data. */
 export interface IHeckCustomData {
     eventDefinitions?: unknown[];
-    pointDefinitions?: IHeckPointDefinition[];
 }

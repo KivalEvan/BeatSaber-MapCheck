@@ -1,7 +1,7 @@
 import { IBaseObject } from './baseObject';
 
 export interface IBaseNote extends IBaseObject {
-    /** Head position x `<int>` of base slider.
+    /** Position x `<int>` of base note.
      * ```ts
      * 0 -> Outer Left
      * 1 -> Middle Left
@@ -12,7 +12,7 @@ export interface IBaseNote extends IBaseObject {
      * Range: `0-3`
      */
     x: number;
-    /** Head position y `<int>` of base slider.
+    /** Position y `<int>` of base note.
      * ```ts
      * 0 -> Bottom row
      * 1 -> Middle row

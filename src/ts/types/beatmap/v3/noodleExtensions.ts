@@ -30,7 +30,7 @@ interface INEObject {
     noteJumpStartBeatOffset?: number;
     uninteractable?: boolean;
     track?: string | string[];
-    animation?: INEAnimation | IChromaAnimation;
+    animation?: INEAnimation & IChromaAnimation;
 }
 
 /** Noodle Extensions Note interface for Beatmap Note.
@@ -47,6 +47,26 @@ export interface INENote extends INEObject {
  */
 export interface INEObstacle extends INEObject {
     size?: Vector3;
+}
+
+/** AssignPathAnimation interface for Noodle Extensions Custom Event.
+ * @extends IHeckCustomEventDataBase
+ */
+export interface INECustomEventDataAnimateTrack extends IHeckCustomEventDataBase {
+    dissolve?: string | PercentPointDefinition[];
+    dissolveArrow?: string | PercentPointDefinition[];
+    interactable?: string | PercentPointDefinition[];
+    time?: string | PercentPointDefinition[];
+}
+
+/** AssignPathAnimation interface for Noodle Extensions Custom Event.
+ * @extends IHeckCustomEventDataBase
+ */
+export interface INECustomEventDataAssignPathAnimation extends IHeckCustomEventDataBase {
+    dissolve?: string | PercentPointDefinition[];
+    dissolveArrow?: string | PercentPointDefinition[];
+    interactable?: string | PercentPointDefinition[];
+    definitePosition?: string | Vector3PointDefinition[];
 }
 
 /** AssignPathAnimation interface for Noodle Extensions Custom Event. */
@@ -75,19 +95,3 @@ export interface INEAnimation {
     definitePosition?: string | Vector3PointDefinition[];
     time?: string | PercentPointDefinition[];
 }
-
-/** Noodle Extensions Custom Event interface for AssignTrackParent. */
-export interface INECustomEventAssignTrackParent {
-    beat: number;
-    type: 'AssignTrackParent';
-    data: INECustomEventDataAssignTrackParent;
-}
-
-/** Noodle Extensions Custom Event interface for AssignPlayerToTrack. */
-export interface INECustomEventAssignPlayerToTrack {
-    beat: number;
-    type: 'AssignPlayerToTrack';
-    data: INECustomEventDataAssignPlayerToTrack;
-}
-
-export type INECustomEvent = INECustomEventAssignTrackParent | INECustomEventAssignPlayerToTrack;
