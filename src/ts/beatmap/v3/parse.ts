@@ -4,6 +4,7 @@ import { DifficultyData } from './difficulty';
 import { DifficultyDataCheck } from './dataCheck';
 import { deepCheck } from '../shared/dataCheck';
 import logger from '../../logger';
+import settings from '../../settings';
 
 const tag = (name: string) => {
     return `[v3::parse::${name}]`;
@@ -17,7 +18,7 @@ export function difficulty(data: IDifficultyData): DifficultyData {
         logger.warn(tag('difficulty'), 'Unidentified beatmap version');
         data.version = '3.0.0';
     }
-    deepCheck(data, DifficultyDataCheck, 'difficulty', data.version);
+    if(settings.dataCheck) deepCheck(data, DifficultyDataCheck, 'difficulty', data.version);
 
     // haha why do i have to do this, beat games
     data.bpmEvents = data.bpmEvents ?? [];
