@@ -17,18 +17,24 @@ export const NoteDataCheck: Record<keyof INote, DataCheck> = {
     },
     _type: {
         type: 'number',
+        int: true,
+        unsigned: true,
         version: '2.0.0',
     },
     _lineIndex: {
         type: 'number',
+        int: true,
         version: '2.0.0',
     },
     _lineLayer: {
         type: 'number',
+        int: true,
         version: '2.0.0',
     },
     _cutDirection: {
         type: 'number',
+        int: true,
+        unsigned: true,
         version: '2.0.0',
     },
     _customData: {
@@ -50,14 +56,18 @@ export const SliderDataCheck: Record<keyof ISlider, DataCheck> = {
     },
     _headLineIndex: {
         type: 'number',
+        int: true,
         version: '2.0.0',
     },
     _headLineLayer: {
         type: 'number',
+        int: true,
         version: '2.0.0',
     },
     _headCutDirection: {
         type: 'number',
+        int: true,
+        unsigned: true,
         version: '2.0.0',
     },
     _headControlPointlengthMultiplier: {
@@ -70,14 +80,18 @@ export const SliderDataCheck: Record<keyof ISlider, DataCheck> = {
     },
     _tailLineIndex: {
         type: 'number',
+        int: true,
         version: '2.0.0',
     },
     _tailLineLayer: {
         type: 'number',
+        int: true,
         version: '2.0.0',
     },
     _tailCutDirection: {
         type: 'number',
+        int: true,
+        unsigned: true,
         version: '2.0.0',
     },
     _tailControlPointLengthMultiplier: {
@@ -97,15 +111,19 @@ export const ObstacleDataCheck: Record<keyof IObstacle, DataCheck> = {
     },
     _lineIndex: {
         type: 'number',
+        int: true,
         version: '2.0.0',
     },
     _lineLayer: {
         type: 'number',
+        int: true,
         version: '2.6.0',
         optional: true,
     },
     _type: {
         type: 'number',
+        int: true,
+        unsigned: true,
         version: '2.0.0',
     },
     _duration: {
@@ -114,10 +132,12 @@ export const ObstacleDataCheck: Record<keyof IObstacle, DataCheck> = {
     },
     _width: {
         type: 'number',
+        int: true,
         version: '2.0.0',
     },
     _height: {
         type: 'number',
+        int: true,
         version: '2.6.0',
         optional: true,
     },
@@ -136,10 +156,12 @@ export const EventDataCheck: Record<keyof IEvent, DataCheck> = {
     },
     _type: {
         type: 'number',
+        int: true,
         version: '2.0.0',
     },
     _value: {
         type: 'number',
+        int: true,
         version: '2.0.0',
     },
     _floatValue: {
@@ -162,14 +184,17 @@ export const WaypointDataCheck: Record<keyof IWaypoint, DataCheck> = {
     },
     _lineIndex: {
         type: 'number',
+        int: true,
         version: '2.2.0',
     },
     _lineLayer: {
         type: 'number',
+        int: true,
         version: '2.2.0',
     },
     _offsetDirection: {
         type: 'number',
+        int: true,
         version: '2.2.0',
     },
     _customData: {
@@ -190,6 +215,7 @@ export const SpecialEventsKeywordFiltersKeywordsDataCheck: Record<
     },
     _specialEvents: {
         type: 'number',
+        int: true,
         version: '2.4.0',
     },
 } as const;

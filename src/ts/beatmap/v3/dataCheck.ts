@@ -30,22 +30,27 @@ export const ColorNoteDataCheck: Record<keyof IColorNote, DataCheck> = {
     },
     c: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
     x: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
     y: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
     d: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
     a: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
     customData: {
@@ -63,10 +68,12 @@ export const BombDataCheck: Record<keyof IBombNote, DataCheck> = {
     },
     x: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
     y: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
     customData: {
@@ -84,18 +91,22 @@ export const SliderDataCheck: Record<keyof ISlider, DataCheck> = {
     },
     c: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
     x: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
     y: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
     d: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
     mu: {
@@ -108,14 +119,17 @@ export const SliderDataCheck: Record<keyof ISlider, DataCheck> = {
     },
     tx: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
     ty: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
     tc: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
     tmu: {
@@ -124,6 +138,7 @@ export const SliderDataCheck: Record<keyof ISlider, DataCheck> = {
     },
     m: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
     customData: {
@@ -141,18 +156,22 @@ export const BurstSliderDataCheck: Record<keyof IBurstSlider, DataCheck> = {
     },
     c: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
     x: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
     y: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
     d: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
     tb: {
@@ -161,14 +180,17 @@ export const BurstSliderDataCheck: Record<keyof IBurstSlider, DataCheck> = {
     },
     tx: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
     ty: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
     sc: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
     s: {
@@ -190,10 +212,12 @@ export const ObstacleDataCheck: Record<keyof IObstacle, DataCheck> = {
     },
     x: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
     y: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
     d: {
@@ -202,10 +226,12 @@ export const ObstacleDataCheck: Record<keyof IObstacle, DataCheck> = {
     },
     w: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
     h: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
     customData: {
@@ -223,10 +249,12 @@ export const BasicEventDataCheck: Record<keyof IBasicEvent, DataCheck> = {
     },
     et: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
     i: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
     f: {
@@ -265,6 +293,7 @@ export const RotationEventDataCheck: Record<keyof IRotationEvent, DataCheck> = {
     },
     e: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
     r: {
@@ -299,6 +328,7 @@ export const ColorBoostEventDataCheck: Record<keyof IColorBoostEvent, DataCheck>
 export const IndexFilterDataCheck: Record<keyof IIndexFilter, DataCheck> = {
     f: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
     p: {
@@ -311,6 +341,7 @@ export const IndexFilterDataCheck: Record<keyof IIndexFilter, DataCheck> = {
     },
     r: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
 } as const;
@@ -322,10 +353,12 @@ export const LightColorBaseDataCheck: Record<keyof ILightColorBase, DataCheck> =
     },
     i: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
     c: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
     s: {
@@ -350,6 +383,7 @@ export const LightColorEventBoxDataCheck: Record<keyof ILightColorEventBox, Data
     },
     d: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
     r: {
@@ -358,6 +392,7 @@ export const LightColorEventBoxDataCheck: Record<keyof ILightColorEventBox, Data
     },
     t: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
     e: {
@@ -367,6 +402,7 @@ export const LightColorEventBoxDataCheck: Record<keyof ILightColorEventBox, Data
     },
     b: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
 } as const;
@@ -378,6 +414,7 @@ export const LightColorEventBoxGroupDataCheck: Record<keyof ILightColorEventBoxG
     },
     g: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
     e: {
@@ -400,10 +437,12 @@ export const LightRotationBaseDataCheck: Record<keyof ILightRotationBase, DataCh
     },
     p: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
     e: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
     l: {
@@ -416,6 +455,7 @@ export const LightRotationBaseDataCheck: Record<keyof ILightRotationBase, DataCh
     },
     o: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
 } as const;
@@ -432,6 +472,7 @@ export const LightRotationEventBoxDataCheck: Record<keyof ILightRotationEventBox
     },
     d: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
     s: {
@@ -440,10 +481,12 @@ export const LightRotationEventBoxDataCheck: Record<keyof ILightRotationEventBox
     },
     t: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
     a: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
     l: {
@@ -453,10 +496,12 @@ export const LightRotationEventBoxDataCheck: Record<keyof ILightRotationEventBox
     },
     r: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
     b: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
 } as const;
@@ -468,6 +513,7 @@ export const LightRotationEventBoxGroupDataCheck: Record<keyof ILightRotationEve
     },
     g: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
     e: {
@@ -490,6 +536,7 @@ export const BasicEventTypesForKeywordsDataCheck: Record<keyof IBasicEventTypesF
     },
     e: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
 } as const;
@@ -510,14 +557,17 @@ export const WaypointDataCheck: Record<keyof IWaypoint, DataCheck> = {
     },
     d: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
     x: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
     y: {
         type: 'number',
+        int: true,
         version: '3.0.0',
     },
     customData: {

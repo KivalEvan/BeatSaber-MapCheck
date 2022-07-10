@@ -7,7 +7,13 @@ interface DataCheckBase {
 }
 
 export interface DataCheckPrimitive extends DataCheckBase {
-    type: 'string' | 'number' | 'boolean';
+    type: 'string' | 'boolean';
+}
+
+export interface DataCheckNumber extends DataCheckBase {
+    type: 'number';
+    int?: boolean;
+    unsigned?: boolean;
 }
 
 export interface DataCheckObject extends DataCheckBase {
@@ -15,4 +21,4 @@ export interface DataCheckObject extends DataCheckBase {
     check: { [key: string]: DataCheck };
 }
 
-export type DataCheck = DataCheckPrimitive | DataCheckObject;
+export type DataCheck = DataCheckPrimitive | DataCheckNumber | DataCheckObject;

@@ -1,4 +1,4 @@
-import { DataCheck, DataCheckObject } from '../../types/beatmap/shared/dataCheck';
+import { DataCheck, DataCheckNumber, DataCheckObject } from '../../types/beatmap/shared/dataCheck';
 import logger from '../../logger';
 import { Version } from '../../types/beatmap/shared/version';
 import { compareVersion } from './version';
@@ -7,12 +7,23 @@ const tag = (name: string) => {
     return `[shared::dataCheck::${name}]`;
 };
 
+function handleError(text: string, throwError: boolean, error: string[]) {
+    if (throwError) {
+        throw Error(text);
+    } else {
+        logger.warn(tag('deepCheck'), text);
+        error.push(text);
+    }
+}
+
 export function deepCheck(
     // deno-lint-ignore no-explicit-any
     data: { [key: string]: any },
     check: { [key: string]: DataCheck },
     name: string,
     version: Version,
+    throwError = true,
+    error: string[] = [],
 ) {
     logger.verbose(tag('deepCheck'), `Looking up ${name}`);
     if (Array.isArray(data)) {
@@ -25,7 +36,7 @@ export function deepCheck(
             break;
         }
         if (!dataCheckKey.includes(key)) {
-            logger.warn(tag('deepCheck'), `Unused key ${key} found in ${name}`);
+            handleError(`Unused key ${key} found in ${name}`, false, error);
         }
     }
     for (const key in check) {
@@ -36,26 +47,34 @@ export function deepCheck(
             if (compareVersion(version, check[key].version) === 'old') {
                 continue;
             }
-            throw Error(`Missing ${key} in object ${name}!`);
+            handleError(`Missing ${key} in object ${name}!`, throwError, error);
         }
         if (data[key] == null) {
-            throw Error(`${key} contain null value in object ${name}!`);
+            handleError(`${key} contain null value in object ${name}!`, throwError, error);
         }
         if (check[key].type === 'array') {
             if (!Array.isArray(data[key])) {
-                throw Error(`${key} is not an array in object ${name}!`);
+                handleError(`${key} is not an array in object ${name}!`, throwError, error);
             }
             deepCheck(data[key], (check[key] as DataCheckObject).check, `${name} ${key}`, version);
         }
         if (check[key].type === 'object') {
             if (!Array.isArray(data[key]) && !(typeof data[key] === 'object')) {
-                throw Error(`${key} is not an object in object ${name}!`);
+                handleError(`${key} is not an object in object ${name}!`, throwError, error);
             } else {
                 deepCheck(data[key], (check[key] as DataCheckObject).check, `${name} ${key}`, version);
             }
         }
         if (check[key].type !== 'array' && typeof data[key] !== check[key].type) {
-            throw Error(`${key} is not ${check[key].type} in object ${name}!`);
+            handleError(`${key} is not ${check[key].type} in object ${name}!`, throwError, error);
+        }
+        if (check[key].type === 'number' && typeof data[key] === 'number') {
+            if ((check[key] as DataCheckNumber).int && data[key] % 1 !== 0) {
+                handleError(`${name} cannot be float!`, throwError, error);
+            }
+            if ((check[key] as DataCheckNumber).unsigned && data[key] < 0) {
+                handleError(`${name} cannot be negative!`, throwError, error);
+            }
         }
     }
 }

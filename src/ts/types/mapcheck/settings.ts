@@ -27,6 +27,7 @@ export interface ISettings {
     sorting: boolean;
     beatNumbering: BeatNumbering;
     rounding: number;
+    dataCheck: boolean;
     theme: UIThemeName;
     onLoad: ISettingsOnLoad;
     show: ISettingsShow;

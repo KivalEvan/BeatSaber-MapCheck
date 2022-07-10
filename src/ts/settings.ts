@@ -2,7 +2,7 @@ import { ISettings } from './types/mapcheck/settings';
 import { deepCopy } from './utils';
 
 const settingsDefault: ISettings = {
-    version: 1,
+    version: 2,
     load: {
         audio: true,
         imageCover: true,
@@ -11,6 +11,7 @@ const settingsDefault: ISettings = {
     sorting: true,
     beatNumbering: 'beattime',
     rounding: 3,
+    dataCheck: true,
     theme: 'Dark',
     onLoad: { stats: false },
     show: {
@@ -52,6 +53,12 @@ export default new (class Settings implements ISettings {
     }
     set rounding(val: number) {
         this.property.rounding = val;
+    }
+    get dataCheck(): boolean {
+        return this.property.dataCheck;
+    }
+    set dataCheck(val: boolean) {
+        this.property.dataCheck = val;
     }
     get theme(): ISettings['theme'] {
         return this.property.theme;

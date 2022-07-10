@@ -9,6 +9,7 @@ const logPrefix = 'UI Settings: ';
 const htmlSettingsTheme: HTMLSelectElement = document.querySelector('.settings__theme')!;
 const htmlSettingsBeatNumbering: HTMLSelectElement = document.querySelector('.settings__beat-numbering')!;
 const htmlSettingsRounding: HTMLInputElement = document.querySelector('.settings__rounding')!;
+const htmlSettingsDataCheck: HTMLInputElement = document.querySelector('.settings__data-check')!;
 const htmlSettingsLoad: NodeListOf<HTMLInputElement> = document.querySelectorAll('.settings__load');
 const htmlSettingsSort: HTMLInputElement = document.querySelector('.settings__sort')!;
 const htmlSettingsShow: NodeListOf<HTMLInputElement> = document.querySelectorAll('.settings__show');
@@ -147,6 +148,10 @@ function setRounding(num: number): void {
     htmlSettingsRounding.value = num.toString();
 }
 
+function setDataCheck(bool: boolean): void {
+    htmlSettingsDataCheck.checked = bool;
+}
+
 function clear(): void {
     Settings.clear();
     Settings.reset();
@@ -161,5 +166,6 @@ export default {
     setTheme,
     setBeatNumbering,
     setRounding,
+    setDataCheck,
     clear,
 };

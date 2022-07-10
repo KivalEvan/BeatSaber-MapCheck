@@ -36,8 +36,11 @@ If you wish to contribute, do follow the guidelines. Make pull request for featu
 -   No other third-dependencies unless absolutely necessary.
 -   Avoid circular imports.
 
+Any beatmap related has to be done in [Beat Saber Deno](https://github.com/KivalEvan/BeatSaber-Deno) repository instead.
+
 ## Planned
 
+-   Pre-render page for higher performance
 -   Rewrite swing detection
 -   Save tool parameters
 -   Tool presets
