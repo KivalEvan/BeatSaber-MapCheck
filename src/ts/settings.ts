@@ -12,6 +12,7 @@ const settingsDefault: ISettings = {
     beatNumbering: 'beattime',
     rounding: 3,
     dataCheck: true,
+    dataError: true,
     theme: 'Dark',
     onLoad: { stats: false },
     show: {
@@ -60,6 +61,12 @@ export default new (class Settings implements ISettings {
     set dataCheck(val: boolean) {
         this.property.dataCheck = val;
     }
+    get dataError(): boolean {
+        return this.property.dataError;
+    }
+    set dataError(val: boolean) {
+        this.property.dataError = val;
+    }
     get theme(): ISettings['theme'] {
         return this.property.theme;
     }
@@ -90,6 +97,12 @@ export default new (class Settings implements ISettings {
                 return;
             }
             this.property = temp.settings ?? this.property;
+            for(const key in settingsDefault) {
+                if (typeof this.property[key as keyof ISettings] === 'undefined') {
+                    (this.property as any)[key as keyof ISettings] = settingsDefault[key as keyof ISettings]
+                }
+            }
+            this.property.version = settingsDefault.version
             this.save();
         }
     };

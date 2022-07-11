@@ -18,7 +18,7 @@ export function difficulty(data: IDifficultyData): DifficultyData {
         logger.warn(tag('difficulty'), 'Unidentified beatmap version');
         data.version = '3.0.0';
     }
-    if(settings.dataCheck) deepCheck(data, DifficultyDataCheck, 'difficulty', data.version);
+    if (settings.dataCheck) deepCheck(data, DifficultyDataCheck, 'difficulty', data.version, settings.dataError);
 
     // haha why do i have to do this, beat games
     data.bpmEvents = data.bpmEvents ?? [];

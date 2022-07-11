@@ -10,6 +10,7 @@ const htmlSettingsTheme: HTMLSelectElement = document.querySelector('.settings__
 const htmlSettingsBeatNumbering: HTMLSelectElement = document.querySelector('.settings__beat-numbering')!;
 const htmlSettingsRounding: HTMLInputElement = document.querySelector('.settings__rounding')!;
 const htmlSettingsDataCheck: HTMLInputElement = document.querySelector('.settings__data-check')!;
+const htmlSettingsDataError: HTMLInputElement = document.querySelector('.settings__data-error')!;
 const htmlSettingsLoad: NodeListOf<HTMLInputElement> = document.querySelectorAll('.settings__load');
 const htmlSettingsSort: HTMLInputElement = document.querySelector('.settings__sort')!;
 const htmlSettingsShow: NodeListOf<HTMLInputElement> = document.querySelectorAll('.settings__show');
@@ -34,6 +35,16 @@ if (htmlSettingsBeatNumbering) {
 }
 if (htmlSettingsRounding) {
     htmlSettingsRounding.addEventListener('change', roundingChangeHandler);
+} else {
+    throw new Error(logPrefix + 'missing settings');
+}
+if (htmlSettingsDataCheck) {
+    htmlSettingsDataCheck.addEventListener('change', dataCheckChangeHandler);
+} else {
+    throw new Error(logPrefix + 'missing settings');
+}
+if (htmlSettingsDataError) {
+    htmlSettingsDataError.addEventListener('change', dataErrorChangeHandler);
 } else {
     throw new Error(logPrefix + 'missing settings');
 }
@@ -76,6 +87,18 @@ function beatNumberingChangeHandler(ev: Event): void {
 function roundingChangeHandler(ev: Event): void {
     const target = ev.target as HTMLInputElement;
     Settings.rounding = parseInt(target.value);
+    Settings.save();
+}
+
+function dataCheckChangeHandler(ev: Event): void {
+    const target = ev.target as HTMLInputElement;
+    Settings.dataCheck = target.checked;
+    Settings.save();
+}
+
+function dataErrorChangeHandler(ev: Event): void {
+    const target = ev.target as HTMLInputElement;
+    Settings.dataError = target.checked;
     Settings.save();
 }
 
@@ -152,6 +175,10 @@ function setDataCheck(bool: boolean): void {
     htmlSettingsDataCheck.checked = bool;
 }
 
+function setDataError(bool: boolean): void {
+    htmlSettingsDataError.checked = bool;
+}
+
 function clear(): void {
     Settings.clear();
     Settings.reset();
@@ -167,5 +194,6 @@ export default {
     setBeatNumbering,
     setRounding,
     setDataCheck,
+    setDataError,
     clear,
 };
