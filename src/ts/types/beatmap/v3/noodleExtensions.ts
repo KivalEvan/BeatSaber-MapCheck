@@ -1,25 +1,6 @@
 import { PercentPointDefinition, Vector2, Vector3, Vector3PointDefinition } from '../shared/heck';
-import { IChromaAnimation } from './chroma';
+import { PlayerObject } from '../shared/noodleExtensions';
 import { IHeckCustomEventDataBase } from './heck';
-
-export enum NEDataAbbr {
-    childrenTracks = 'Ct',
-    color = 'C',
-    definitePosition = 'Dp',
-    dissolve = 'D',
-    dissolveArrow = 'Da',
-    duration = 'Dur',
-    easing = 'E',
-    interactable = 'I',
-    localRotation = 'Lr',
-    parentTrack = 'Pt',
-    position = 'P',
-    rotation = 'R',
-    scale = 'S',
-    time = 'T',
-    track = 'Tr',
-    worldPositionStays = 'Wps',
-}
 
 /** Noodle Extensions Object interface for Beatmap Object. */
 interface INEObject {
@@ -30,7 +11,6 @@ interface INEObject {
     noteJumpStartBeatOffset?: number;
     uninteractable?: boolean;
     track?: string | string[];
-    animation?: INEAnimation & IChromaAnimation;
 }
 
 /** Noodle Extensions Note interface for Beatmap Note.
@@ -40,6 +20,13 @@ export interface INENote extends INEObject {
     flip?: Vector2;
     disableNoteGravity?: boolean;
     disableNoteLook?: boolean;
+}
+
+/** Noodle Extensions Slider interface for Beatmap Slider.
+ * @extends INENote
+ */
+export interface INESlider extends INENote {
+    tailCoordinates?: Vector2;
 }
 
 /** Noodle Extensions Obstacle interface for Beatmap Obstacle.
@@ -81,6 +68,7 @@ export interface INECustomEventDataAssignTrackParent {
  */
 export interface INECustomEventDataAssignPlayerToTrack extends IHeckCustomEventDataBase {
     track: string;
+    playerTrackObject?: PlayerObject;
 }
 
 /** Noodle Extensions Animation interface for Noodle Extensions Object. */

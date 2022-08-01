@@ -1,14 +1,17 @@
 import { Easings } from '../../easings';
 import { IInfoSettingsCustomData } from './heck';
 
-export type ColorPointDefinition = [number, number, number, number, number, Easings?];
+export type ColorPointDefinition =
+    | [number, number, number, number, number, 'hsvLerp'?, Easings?]
+    | [number, number, number, number, number, Easings?, 'hsvLerp'?];
 
 export type LookupMethod = 'Regex' | 'Exact' | 'Contains' | 'StartsWith' | 'EndsWith';
 
-export type GeometryType = 'SPHERE' | 'CAPSULE' | 'CYLINDER' | 'CUBE' | 'PLANE' | 'QUAD' | 'TRIANGLE';
+export type GeometryType = 'Sphere' | 'Capsule' | 'Cylinder' | 'Cube' | 'Plane' | 'Quad' | 'Triangle';
 
-export type ShaderType = 'LIGHT_BOX' | 'STANDARD' | 'NO_SHADE';
+export type ShaderType = 'TransparentLight' | 'Standard' | 'OpaqueLight';
 
+/** Default shader keywords used in standard. */
 export type ShaderKeywordsStandard =
     | 'DIFFUSE'
     | 'ENABLE_DIFFUSE'
@@ -22,10 +25,11 @@ export type ShaderKeywordsStandard =
     | '_EMISSION'
     | '_ENABLE_FOG_TINT'
     | '_RIMLIGHT_NONE'
-    | '_ZWRITE_ON'
-    | 'REFLECTION_PROBE'
-    | 'LIGHT_FALLOFF';
+    | '_ZWRITE_ON' // possibly not needed
+    | 'REFLECTION_PROBE' // possibly not needed
+    | 'LIGHT_FALLOFF'; // possibly not needed
 
+/** Default shader keywords used in opaque light. */
 export type ShaderKeywordsOpaque =
     | 'DIFFUSE'
     | 'ENABLE_BLUE_NOISE'
@@ -34,12 +38,39 @@ export type ShaderKeywordsOpaque =
     | 'ENABLE_LIGHTNING'
     | 'USE_COLOR_FOG';
 
+/** Default shader keywords used in transparent light. */
 export type ShaderKeywordsTransparent =
     | 'ENABLE_HEIGHT_FOG'
     | 'MULTIPLY_COLOR_WITH_ALPHA'
     | '_ENABLE_MAIN_EFFECT_WHITE_BOOST';
 
-export const chromaName = 'Chroma';
+/** Shader keywords used in billie water. */
+export type ShaderKeywordsBillieWater =
+    | 'FOG'
+    | 'HEIGHT_FOG'
+    | 'INVERT_RIMLIGHT'
+    | 'MASK_RED_IS_ALPHA'
+    | 'NOISE_DITHERING'
+    | 'NORMAL_MAP'
+    | 'REFLECTION_PROBE'
+    | 'REFLECTION_PROBE_BOX_PROJECTION'
+    | '_DECALBLEND_ALPHABLEND'
+    | '_DISSOLVEAXIS_LOCALX'
+    | '_EMISSIONCOLORTYPE_FLAT'
+    | '_EMISSIONTEXTURE_NONE'
+    | '_RIMLIGHT_NONE'
+    | '_ROTATE_UV_NONE'
+    | '_VERTEXMODE_NONE'
+    | '_WHITEBOOSTTYPE_NONE'
+    | '_ZWRITE_ON';
+
+export type ShaderKeywords =
+    | ShaderKeywordsStandard
+    | ShaderKeywordsOpaque
+    | ShaderKeywordsTransparent
+    | ShaderKeywordsBillieWater;
+
+export type EnvironmentMaterial = 'BTSPillar' | 'BillieWater' | 'InterscopeConcrete' | 'InterscopeCar';
 
 /** Chroma interface for Difficulty Info Custom Data. */
 export interface IChromaInfoCustomData extends IInfoSettingsCustomData {

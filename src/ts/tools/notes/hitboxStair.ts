@@ -61,8 +61,8 @@ function check(map: ToolArgs) {
         3: [],
     };
     const noteOccupy: { [key: number]: ColorNote } = {
-        0: ColorNote.create(),
-        1: ColorNote.create({ c: 1 }),
+        0: ColorNote.create()[0],
+        1: ColorNote.create({ c: 1 })[0],
     };
 
     // FIXME: use new system
@@ -77,9 +77,9 @@ function check(map: ToolArgs) {
                 lastSpeed[note.data.color] = note.data.time - lastNote[note.data.color].data.time;
                 if (note.data.direction !== 8) {
                     noteOccupy[note.data.color].posX =
-                        note.data.posX + beatmap.NoteCutDirectionSpace[note.data.direction][0];
+                        note.data.posX + beatmap.NoteDirectionSpace[note.data.direction][0];
                     noteOccupy[note.data.color].posY =
-                        note.data.posY + beatmap.NoteCutDirectionSpace[note.data.direction][1];
+                        note.data.posY + beatmap.NoteDirectionSpace[note.data.direction][1];
                 } else {
                     noteOccupy[note.data.color].posX = -1;
                     noteOccupy[note.data.color].posY = -1;
@@ -89,15 +89,15 @@ function check(map: ToolArgs) {
             } else if (isEnd(note.data, lastNote[note.data.color].data, lastNoteDirection[note.data.color])) {
                 if (note.data.direction !== 8) {
                     noteOccupy[note.data.color].posX =
-                        note.data.posX + beatmap.NoteCutDirectionSpace[note.data.direction][0];
+                        note.data.posX + beatmap.NoteDirectionSpace[note.data.direction][0];
                     noteOccupy[note.data.color].posY =
-                        note.data.posY + beatmap.NoteCutDirectionSpace[note.data.direction][1];
+                        note.data.posY + beatmap.NoteDirectionSpace[note.data.direction][1];
                     lastNoteDirection[note.data.color] = note.data.direction;
                 } else {
                     noteOccupy[note.data.color].posX =
-                        note.data.posX + beatmap.NoteCutDirectionSpace[lastNoteDirection[note.data.color]][0];
+                        note.data.posX + beatmap.NoteDirectionSpace[lastNoteDirection[note.data.color]][0];
                     noteOccupy[note.data.color].posY =
-                        note.data.posY + beatmap.NoteCutDirectionSpace[lastNoteDirection[note.data.color]][1];
+                        note.data.posY + beatmap.NoteDirectionSpace[lastNoteDirection[note.data.color]][1];
                 }
             }
             if (
@@ -116,10 +116,8 @@ function check(map: ToolArgs) {
             }
         } else {
             if (note.data.direction !== 8) {
-                noteOccupy[note.data.color].posX =
-                    note.data.posX + beatmap.NoteCutDirectionSpace[note.data.direction][0];
-                noteOccupy[note.data.color].posY =
-                    note.data.posY + beatmap.NoteCutDirectionSpace[note.data.direction][1];
+                noteOccupy[note.data.color].posX = note.data.posX + beatmap.NoteDirectionSpace[note.data.direction][0];
+                noteOccupy[note.data.color].posY = note.data.posY + beatmap.NoteDirectionSpace[note.data.direction][1];
             } else {
                 noteOccupy[note.data.color].posX = -1;
                 noteOccupy[note.data.color].posY = -1;

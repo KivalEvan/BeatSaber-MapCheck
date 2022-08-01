@@ -1,7 +1,10 @@
+import { LooseAutocomplete } from '../../utils';
 import { CharacteristicName } from './characteristic';
 import { ICustomDataInfo, ICustomDataInfoDifficulty } from './customData';
 import { DifficultyName, DifficultyRank } from './difficulty';
-import { Environment360Name, EnvironmentName } from './environment';
+import { Environment360Name, EnvironmentName, EnvironmentV3Name } from './environment';
+
+export type GenericFileName = `${DifficultyName}${CharacteristicName | ''}.dat`;
 
 /** Info interface for info file. */
 export interface IInfoData {
@@ -17,7 +20,7 @@ export interface IInfoData {
     _previewDuration: number;
     _songFilename: string;
     _coverImageFilename: string;
-    _environmentName: EnvironmentName;
+    _environmentName: EnvironmentName | EnvironmentV3Name;
     _allDirectionsEnvironmentName: Environment360Name;
     _songTimeOffset: number;
     _customData?: ICustomDataInfo;
@@ -26,13 +29,13 @@ export interface IInfoData {
 /** Info Set interface for info. */
 export interface IInfoSetData {
     _beatmapCharacteristicName: CharacteristicName;
-    _difficultyBeatmaps: IInfoSetDifficultyData[];
+    _difficultyBeatmaps: IInfoSetDifficulty[];
 }
 /** Info Set interface for info. */
-export interface IInfoSetDifficultyData {
+export interface IInfoSetDifficulty {
     _difficulty: DifficultyName;
     _difficultyRank: DifficultyRank;
-    _beatmapFilename: string;
+    _beatmapFilename: LooseAutocomplete<GenericFileName>;
     _noteJumpMovementSpeed: number;
     _noteJumpStartBeatOffset: number;
     _customData?: ICustomDataInfoDifficulty;

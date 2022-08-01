@@ -1,6 +1,6 @@
 import {
-    IChromaCustomEventDataAnimateComponent,
     IChromaCustomEventDataAnimateTrack,
+    IChromaCustomEventDataAssignFogTrack,
     IChromaCustomEventDataAssignPathAnimation,
 } from './chroma';
 import { IHeckCustomEventDataAnimateTrack, IHeckCustomEventDataAssignPathAnimation } from './heck';
@@ -21,49 +21,49 @@ export type ICustomEventDataAssignPathAnimation = IHeckCustomEventDataAssignPath
 
 /** Custom Event interface for AnimateTrack. */
 export interface ICustomEventAnimateTrack {
-    b: number;
-    t: 'AnimateTrack';
-    d: ICustomEventDataAnimateTrack;
+    _time: number;
+    _type: 'AnimateTrack';
+    _data: ICustomEventDataAnimateTrack;
 }
 
 /** Custom Event interface for AssignPathAnimation. */
 export interface ICustomEventAssignPathAnimation {
-    b: number;
-    t: 'AssignPathAnimation';
-    d: ICustomEventDataAssignPathAnimation;
+    _time: number;
+    _type: 'AssignPathAnimation';
+    _data: ICustomEventDataAssignPathAnimation;
 }
 
 /** Custom Event interface for InvokeEvent. */
 // export interface IHeckCustomEventInvokeEvent {
-//     b: number;
-//     t: 'InvokeEvent';
-//     d: IHeckCustomEventDataInvokeEvent;
+//     _time: number;
+//     _type: 'InvokeEvent';
+//     _data: IHeckCustomEventDataInvokeEvent;
 // }
 
-/** Custom Event interface for AnimateComponent. */
-export interface ICustomEventAnimateComponent {
-    b: number;
-    t: 'AnimateComponent';
-    d: IChromaCustomEventDataAnimateComponent;
+/** Custom Event interface for AssignFogTrack. */
+export interface ICustomEventAssignFogTrack {
+    _time: number;
+    _type: 'AssignFogTrack';
+    _data: IChromaCustomEventDataAssignFogTrack;
 }
 
 /** Custom Event interface for AssignTrackParent. */
 export interface ICustomEventAssignTrackParent {
-    b: number;
-    t: 'AssignTrackParent';
-    d: INECustomEventDataAssignTrackParent;
+    _time: number;
+    _type: 'AssignTrackParent';
+    _data: INECustomEventDataAssignTrackParent;
 }
 
 /** Custom Event interface for AssignPlayerToTrack. */
 export interface ICustomEventAssignPlayerToTrack {
-    b: number;
-    t: 'AssignPlayerToTrack';
-    d: INECustomEventDataAssignPlayerToTrack;
+    _time: number;
+    _type: 'AssignPlayerToTrack';
+    _data: INECustomEventDataAssignPlayerToTrack;
 }
 
 export type ICustomEvent =
     | ICustomEventAnimateTrack
     | ICustomEventAssignPathAnimation
-    | ICustomEventAnimateComponent
+    | ICustomEventAssignFogTrack
     | ICustomEventAssignTrackParent
     | ICustomEventAssignPlayerToTrack;

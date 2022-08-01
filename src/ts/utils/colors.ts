@@ -1,3 +1,4 @@
+// deno-lint-ignore-file prefer-const
 import logger from '../logger';
 import { ColorArray, ColorInput, ColorObject, ColorType, IColor } from '../types/colors';
 import { degToRad, lerp, radToDeg, round } from './math';
@@ -37,7 +38,7 @@ export function RGBAtoHSVA(r: number, g: number, b: number, a = 1): ColorArray {
             h /= 6 * d;
             break;
     }
-    return [h, s, v, a];
+    return [h * 360, s, v, a];
 }
 
 /** Convert HSVA to RGBA array.

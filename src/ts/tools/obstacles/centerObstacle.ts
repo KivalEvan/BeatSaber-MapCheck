@@ -95,8 +95,8 @@ function check(map: ToolArgs) {
     const { bpm } = map.settings;
     const { recovery } = <{ recovery: number }>tool.input.params;
     const arr: beatmap.v3.Obstacle[] = [];
-    let obstacleLeftFull: beatmap.v3.Obstacle = beatmap.v3.Obstacle.create();
-    let obstacleRightFull: beatmap.v3.Obstacle = beatmap.v3.Obstacle.create();
+    let obstacleLeftFull: beatmap.v3.Obstacle = beatmap.v3.Obstacle.create()[0];
+    let obstacleRightFull: beatmap.v3.Obstacle = beatmap.v3.Obstacle.create()[0];
     obstacles.forEach((o) => {
         if (o.posY < 2 && o.height > 1) {
             if (o.width > 2) {

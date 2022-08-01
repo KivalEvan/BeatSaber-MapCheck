@@ -1,12 +1,12 @@
 import { IObstacle } from '../../types/beatmap/v3/obstacle';
 import { BaseObject } from './baseObject';
 import { LINE_COUNT } from '../shared/constants';
-import { ObjectToReturn } from '../../types/utils';
+import { ObjectReturnFn } from '../../types/utils';
 import { deepCopy } from '../../utils/misc';
 
 /** Obstacle beatmap v3 class object. */
 export class Obstacle extends BaseObject<IObstacle> {
-    static default: ObjectToReturn<Required<IObstacle>> = {
+    static default: ObjectReturnFn<Required<IObstacle>> = {
         b: 0,
         x: 0,
         y: 0,
@@ -18,14 +18,13 @@ export class Obstacle extends BaseObject<IObstacle> {
         },
     };
 
-    private constructor(obstacle: Required<IObstacle>) {
+    protected constructor(obstacle: Required<IObstacle>) {
         super(obstacle);
     }
 
-    static create(): Obstacle;
-    static create(obstacles: Partial<IObstacle>): Obstacle;
+    static create(): Obstacle[];
     static create(...obstacles: Partial<IObstacle>[]): Obstacle[];
-    static create(...obstacles: Partial<IObstacle>[]): Obstacle | Obstacle[] {
+    static create(...obstacles: Partial<IObstacle>[]): Obstacle[] {
         const result: Obstacle[] = [];
         obstacles?.forEach((o) =>
             result.push(
@@ -40,24 +39,23 @@ export class Obstacle extends BaseObject<IObstacle> {
                 }),
             ),
         );
-        if (result.length === 1) {
-            return result[0];
-        }
         if (result.length) {
             return result;
         }
-        return new this({
-            b: Obstacle.default.b,
-            x: Obstacle.default.x,
-            y: Obstacle.default.y,
-            d: Obstacle.default.d,
-            w: Obstacle.default.w,
-            h: Obstacle.default.h,
-            customData: Obstacle.default.customData(),
-        });
+        return [
+            new this({
+                b: Obstacle.default.b,
+                x: Obstacle.default.x,
+                y: Obstacle.default.y,
+                d: Obstacle.default.d,
+                w: Obstacle.default.w,
+                h: Obstacle.default.h,
+                customData: Obstacle.default.customData(),
+            }),
+        ];
     }
 
-    toObject(): Required<IObstacle> {
+    toJSON(): Required<IObstacle> {
         return {
             b: this.time,
             x: this.posX,
@@ -161,8 +159,40 @@ export class Obstacle extends BaseObject<IObstacle> {
     }
 
     mirror() {
+        const width = this.customData.size?.[0] ?? this.width;
+        if (this.customData.coordinates) {
+            this.customData.coordinates[0] = -1 - this.customData.coordinates[0];
+        }
+        if (this.customData.animation) {
+            if (Array.isArray(this.customData.animation.definitePosition)) {
+                this.customData.animation.definitePosition.forEach((dp) => {
+                    dp[0] = -dp[0] - (this.posX + width - 1);
+                });
+            }
+            if (Array.isArray(this.customData.animation.offsetPosition)) {
+                this.customData.animation.offsetPosition.forEach((op) => {
+                    op[0] = -op[0] - (this.posX + width - 1);
+                });
+                // fuck mirroring this tbh
+            }
+        }
         this.posX = LINE_COUNT - 1 - (this.posX + this.width - 1);
         return this;
+    }
+
+    /** Get obstacle and return the Beatwalls' position x and y value in tuple.
+     * ```ts
+     * const obstaclePos = wall.getPosition();
+     * ```
+     */
+    getPosition(): [number, number] {
+        if (this.customData.coordinates) {
+            return [this.customData.coordinates[0], this.customData.coordinates[1]];
+        }
+        return [
+            (this.posX <= -1000 ? this.posX / 1000 : this.posX >= 1000 ? this.posX / 1000 : this.posX) - 2,
+            (this.posY <= -1000 ? this.posY / 1000 : this.posY >= 1000 ? this.posY / 1000 : this.posY) - 0.5,
+        ];
     }
 
     /** Check if obstacle is interactive.
@@ -191,21 +221,6 @@ export class Obstacle extends BaseObject<IObstacle> {
      */
     hasNegative() {
         return this.posY < 0 || this.duration < 0 || this.width < 0 || this.height < 0;
-    }
-
-    /** Get obstacle and return the Beatwalls' position x and y value in tuple.
-     * ```ts
-     * const obstaclePos = wall.getPosition();
-     * ```
-     */
-    getPosition(): [number, number] {
-        if (this.customData.coordinates) {
-            return [this.customData.coordinates[0], this.customData.coordinates[1]];
-        }
-        return [
-            (this.posX <= -1000 ? this.posX / 1000 : this.posX >= 1000 ? this.posX / 1000 : this.posX) - 2,
-            (this.posY <= -1000 ? this.posY / 1000 : this.posY >= 1000 ? this.posY / 1000 : this.posY) - 0.5,
-        ];
     }
 
     /** Check if current obstacle is longer than previous obstacle.

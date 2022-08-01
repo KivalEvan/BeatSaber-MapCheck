@@ -1,74 +1,48 @@
-import { PercentPointDefinition, Vector3 } from '../shared/heck';
+import { PercentPointDefinition, Vector2, Vector3 } from '../shared/heck';
 import { Easings } from '../../easings';
 import { ColorArray } from '../../colors';
 import { ICustomDataBase } from '../shared/customData';
 import {
     ColorPointDefinition,
+    EnvironmentMaterial,
     GeometryType,
     LookupMethod,
-    ShaderKeywordsOpaque,
-    ShaderKeywordsStandard,
-    ShaderKeywordsTransparent,
+    ShaderKeywords,
     ShaderType,
 } from '../shared/chroma';
 import { IHeckCustomEventDataBase } from './heck';
-
-export enum ChromaDataEnvAbbr {
-    track = 'T',
-    duplicate = 'D',
-    active = 'A',
-    scale = 'S',
-    position = 'P',
-    localPosition = 'Lp',
-    rotation = 'R',
-    localRotation = 'Lr',
-    components = 'C',
-}
-
-/** Chroma Material Base interface for Environment Enhancement. */
-export interface IChromaMaterialBase {
-    shaderPreset: ShaderType;
-    shaderKeywords?: string[];
-    track?: string[];
-    color?: ColorArray;
-}
-
-/** Chroma Material Standard interface for Environment Enhancement.
- * @extends IChromaMaterialBase
- */
-export interface IChromaMaterialStandard extends IChromaMaterialBase {
-    shaderPreset: 'STANDARD';
-    shaderKeywords?: ShaderKeywordsStandard[];
-}
-
-/** Chroma Material Opaque interface for Environment Enhancement.
- * @extends IChromaMaterialBase
- */
-export interface IChromaMaterialOpaque extends IChromaMaterialBase {
-    shaderPreset: 'NO_SHADE';
-    shaderKeywords?: ShaderKeywordsOpaque[];
-}
-
-/** Chroma Material Transparent interface for Environment Enhancement.
- * @extends IChromaMaterialBase
- */
-export interface IChromaMaterialTransparent extends IChromaMaterialBase {
-    shaderPreset: 'LIGHT_BOX';
-    shaderKeywords?: ShaderKeywordsTransparent[];
-}
+import { LooseAutocomplete } from '../../utils';
 
 /** Chroma Material interface for Environment Enhancement. */
-export type IChromaMaterial = IChromaMaterialStandard | IChromaMaterialOpaque | IChromaMaterialTransparent;
-
-/** Chroma Geometry interface for Environment Enhancement. */
-export interface IChromaGeometry {
-    type: GeometryType;
-    material: IChromaMaterial | string;
-    spawnCount: number;
-    track?: string[];
+export interface IChromaMaterial {
+    shader: LooseAutocomplete<ShaderType | EnvironmentMaterial>;
+    /** Overrides default shader keywords. */
+    shaderKeywords?: LooseAutocomplete<ShaderKeywords>[];
     collision?: boolean;
+    track?: string;
     color?: ColorArray;
 }
+
+/** Chroma Geometry interface for Environment Enhancement. */
+export interface IChromaGeometryBase {
+    type: GeometryType;
+    material: IChromaMaterial | string;
+    collision?: boolean;
+}
+
+/** Chroma Geometry Custom interface for Environment Enhancement. */
+export interface IChromaGeometryCustom {
+    type: 'CUSTOM';
+    mesh: {
+        vertices: Vector3[];
+        uv?: Vector2[];
+        triangles?: number[];
+    };
+    material: IChromaMaterial | string;
+    collision?: boolean;
+}
+
+export type IChromaGeometry = IChromaGeometryBase | IChromaGeometryCustom;
 
 export interface IChromaComponentLightWithID {
     /** `<int>` Assign event type value. */
@@ -152,13 +126,13 @@ export interface IChromaEnvironmentID extends IChromaEnvironmentBase {
 export interface IChromaEnvironmentGeometry extends IChromaEnvironmentBase {
     id?: never;
     lookupMethod?: never;
-    geometry: IChromaGeometry[];
+    geometry: IChromaGeometry;
 }
 
 /** Chroma interface for Environment Enhancement. */
 export type IChromaEnvironment = IChromaEnvironmentID | IChromaEnvironmentGeometry;
 
-/** Chroma interface for Beatmap Note Custom Data. */
+/** Chroma interface for Beatmap Object Animation Custom Data. */
 export interface IChromaAnimation {
     color?: string | ColorPointDefinition[];
 }
@@ -215,18 +189,21 @@ export interface IChromaCustomEventDataAssignPathAnimation extends IHeckCustomEv
     color?: string | ColorPointDefinition[];
 }
 
-/** AssignFogTrack interface for Chroma Custom Event. */
-export interface IChromaCustomEventDataAssignFogTrack extends IHeckCustomEventDataBase {
-    track: string;
-    attenuation?: number | PercentPointDefinition[];
-    offset?: number | PercentPointDefinition[];
-    startY?: number | PercentPointDefinition[];
-    height?: number | PercentPointDefinition[];
-}
-
 /** AnimateComponent interface for Chroma Custom Event. */
 export interface IChromaCustomEventDataAnimateComponent extends IHeckCustomEventDataBase {
     track: string;
+    duration: number;
+    easing?: string;
+    BloomFogEnvironment?: {
+        attenuation?: PercentPointDefinition[];
+        offset?: PercentPointDefinition[];
+        startY?: PercentPointDefinition[];
+        height?: PercentPointDefinition[];
+    };
+    TubeBloomPrePassLight?: {
+        colorAlphaMultiplier: PercentPointDefinition[];
+        bloomFogIntensityMultiplier: PercentPointDefinition[];
+    };
 }
 
 /** Chroma Custom Data interface for difficulty custom data. */

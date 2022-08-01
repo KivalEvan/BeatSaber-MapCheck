@@ -9,10 +9,10 @@ export function formatNumber(num: number): string {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
-export function random(min: number, max: number, round = false) {
+export function random(min: number, max: number, rounding: boolean | number = false) {
     [min, max] = fixRange(min, max);
     const result = Math.random() * (max - min) + min;
-    return round ? Math.round(result) : result;
+    return rounding ? round(result, typeof rounding === 'number' && rounding > 0 ? rounding : 0) : result;
 }
 
 export function fixRange(min: number, max: number, inverse?: boolean): [number, number] {
@@ -35,6 +35,21 @@ export function radToDeg(rad: number) {
 
 export function degToRad(deg: number) {
     return deg * (Math.PI / 180);
+}
+
+/** Return [radius, theta, phi] */
+export function cartesianCoordToSphericalCoord(x: number, y: number, z: number): [number, number, number] {
+    const radius = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2));
+    return [radius, Math.acos(z / radius), (Math.atan2(y, x) + 2 * Math.PI) % (2 * Math.PI)];
+}
+
+/** Return [x, y, z] */
+export function sphericalCoordToCartesianCoord(radius: number, theta: number, phi: number): [number, number, number] {
+    return [
+        radius * Math.sin(theta) * Math.cos(phi),
+        radius * Math.sin(theta) * Math.sin(phi),
+        radius * Math.cos(theta),
+    ];
 }
 
 // thanks Top_Cat#1961
@@ -67,8 +82,11 @@ export function clamp(value: number, min: number, max: number): number {
 
 /** Normalize value to 0-1 from given min and max value. */
 export function normalize(value: number, min: number, max: number): number {
-    if (min >= max) {
-        logger.error(tag('normalize'), 'Min value is equal or more than max value, returning 1');
+    if (min > max) {
+        logger.warn(tag('normalize'), 'Min value is more than max value, returning 1');
+        return 1;
+    }
+    if (min === max) {
         return 1;
     }
     const result = (value - min) / (max - min);

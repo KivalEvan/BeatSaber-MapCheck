@@ -1,14 +1,15 @@
 # Changelog
 
-## 2.5.1 [2022-07-##]
+## 2.5.1 [2022-08-##]
 
 ### Added
 
+-   Chroma geometry support
 -   Bookmark color
 
-### Updated
+### Changed
 
--   Beatmap structure
+-   Updated to latest dependencies
 
 ### Fixed
 
@@ -38,9 +39,6 @@
 -   Better internal user interface work
 -   All check can now be toggled
 -   v2 event floatValue and v2 obstacle lineLayer & height is now optional
-
-### Updated
-
 -   Package dependencies updated to latest
 -   Changelog date format
 

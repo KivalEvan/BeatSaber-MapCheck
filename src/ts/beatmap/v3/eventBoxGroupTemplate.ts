@@ -1,7 +1,7 @@
 import { IEventBoxGroupTemplate } from '../../types/beatmap/v3/eventBoxGroupTemplate';
-import { deepCopy } from '../../utils/misc';
 import { Serializable } from '../shared/serializable';
 import { EventBoxGroup } from './eventBoxGroup';
+import { deepCopy } from '../../utils/misc';
 
 /** Base event box group template beatmap v3 class object. */
 export abstract class EventBoxGroupTemplate<T, U extends Serializable<T>> extends EventBoxGroup {
@@ -12,11 +12,11 @@ export abstract class EventBoxGroupTemplate<T, U extends Serializable<T>> extend
         this.e = objects;
     }
 
-    toObject(): Required<IEventBoxGroupTemplate<T>> {
+    toJSON(): Required<IEventBoxGroupTemplate<T>> {
         return {
             b: this.time,
             g: this.groupID,
-            e: this.events.map((e) => e.toObject()),
+            e: this.events.map((e) => e.toJSON()),
             customData: deepCopy(this.customData),
         };
     }

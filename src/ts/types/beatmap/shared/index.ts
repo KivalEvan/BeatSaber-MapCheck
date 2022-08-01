@@ -11,4 +11,5 @@ export * from './editor';
 export * from './environment';
 export * from './heck';
 export * from './info';
+export * from './noodleExtensions';
 export * from './version';

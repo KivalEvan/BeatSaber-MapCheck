@@ -40,9 +40,9 @@ interface IIndexFilterStepOffset extends IIndexFilterBase {
     f: 2;
     /** Light ID `<int>` in index filter.
      *
-     * Select the start ID in group event starting from `1`.
+     * Select the start ID in group event starting from `0`.
      * ```ts
-     * Default: 1
+     * Default: 0
      * ```
      */
     p: number;

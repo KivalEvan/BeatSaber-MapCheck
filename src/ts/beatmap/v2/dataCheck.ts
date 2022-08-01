@@ -1,14 +1,12 @@
 import { DataCheck } from '../../types/beatmap/shared/dataCheck';
-import {
-    IDifficultyData,
-    IEvent,
-    INote,
-    IObstacle,
-    ISlider,
-    ISpecialEventsKeywordFilters,
-    ISpecialEventsKeywordFiltersKeywords,
-    IWaypoint,
-} from '../../types/beatmap/v2';
+import { IDifficulty } from '../../types/beatmap/v2/difficulty';
+import { IEvent } from '../../types/beatmap/v2/event';
+import { INote } from '../../types/beatmap/v2/note';
+import { IObstacle } from '../../types/beatmap/v2/obstacle';
+import { ISlider } from '../../types/beatmap/v2/slider';
+import { ISpecialEventsKeywordFilters } from '../../types/beatmap/v2/specialEventsKeywordFilters';
+import { ISpecialEventsKeywordFiltersKeywords } from '../../types/beatmap/v2/specialEventsKeywordFiltersKeywords';
+import { IWaypoint } from '../../types/beatmap/v2/waypoint';
 
 export const NoteDataCheck: Record<keyof INote, DataCheck> = {
     _time: {
@@ -228,7 +226,7 @@ export const SpecialEventsKeywordFiltersDataCheck: Record<keyof ISpecialEventsKe
     },
 } as const;
 
-export const DifficultyDataCheck: Record<keyof IDifficultyData, DataCheck> = {
+export const DifficultyCheck: Record<keyof IDifficulty, DataCheck> = {
     _version: {
         type: 'string',
         version: '2.0.0',

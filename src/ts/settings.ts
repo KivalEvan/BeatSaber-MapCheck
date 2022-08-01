@@ -97,12 +97,12 @@ export default new (class Settings implements ISettings {
                 return;
             }
             this.property = temp.settings ?? this.property;
-            for(const key in settingsDefault) {
+            for (const key in settingsDefault) {
                 if (typeof this.property[key as keyof ISettings] === 'undefined') {
-                    (this.property as any)[key as keyof ISettings] = settingsDefault[key as keyof ISettings]
+                    (this.property as any)[key as keyof ISettings] = settingsDefault[key as keyof ISettings];
                 }
             }
-            this.property.version = settingsDefault.version
+            this.property.version = settingsDefault.version;
             this.save();
         }
     };

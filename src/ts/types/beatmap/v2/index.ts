@@ -1,6 +1,7 @@
 export * from './bookmark';
 export * from './chroma';
 export * from './customData';
+export * from './customEvent';
 export * from './difficulty';
 export * from './event';
 export * from './heck';
@@ -8,6 +9,7 @@ export * from './noodleExtensions';
 export * from './note';
 export * from './object';
 export * from './obstacle';
+export * from './pointDefinition';
 export * from './slider';
 export * from './specialEventsKeywordFilters';
 export * from './specialEventsKeywordFiltersKeywords';

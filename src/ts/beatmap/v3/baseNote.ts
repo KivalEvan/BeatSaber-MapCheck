@@ -65,7 +65,30 @@ export abstract class BaseNote<T extends IBaseNote> extends BaseObject<T> {
      * const notePos = note.getPosition();
      * ```
      */
-    abstract getPosition(): [number, number];
+    getPosition(type?: 'vanilla' | 'me' | 'ne'): [number, number] {
+        switch (type) {
+            case 'vanilla':
+                return [this.posX - 2, this.posY];
+            case 'me':
+                return [
+                    (this.posX <= -1000 ? this.posX / 1000 : this.posX >= 1000 ? this.posX / 1000 : this.posX) - 2,
+                    this.posY <= -1000 ? this.posY / 1000 : this.posY >= 1000 ? this.posY / 1000 : this.posY,
+                ];
+            case 'ne':
+                if (this.customData.coordinates) {
+                    return [this.customData.coordinates[0], this.customData.coordinates[1]];
+                }
+                return [this.posX - 2, this.posY];
+            default:
+                if (this.customData.coordinates) {
+                    return [this.customData.coordinates[0], this.customData.coordinates[1]];
+                }
+                return [
+                    (this.posX <= -1000 ? this.posX / 1000 : this.posX >= 1000 ? this.posX / 1000 : this.posX) - 2,
+                    this.posY <= -1000 ? this.posY / 1000 : this.posY >= 1000 ? this.posY / 1000 : this.posY,
+                ];
+        }
+    }
 
     /** Get two notes and return the distance between two notes.
      * ```ts

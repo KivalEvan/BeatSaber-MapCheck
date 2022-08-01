@@ -1,15 +1,15 @@
 import { BaseSlider } from './baseSlider';
 import { LINE_COUNT, NoteCutAngle } from '../shared/constants';
 import { IBurstSlider } from '../../types/beatmap/v3/burstSlider';
+import { ObjectReturnFn } from '../../types/utils';
 import { deepCopy } from '../../utils/misc';
-import { ObjectToReturn } from '../../types/utils';
 
 /** Burst slider beatmap v3 class object.
  *
  * Also known as chain.
  */
 export class BurstSlider extends BaseSlider<IBurstSlider> {
-    static default: ObjectToReturn<Required<IBurstSlider>> = {
+    static default: ObjectReturnFn<Required<IBurstSlider>> = {
         b: 0,
         c: 0,
         x: 0,
@@ -25,14 +25,13 @@ export class BurstSlider extends BaseSlider<IBurstSlider> {
         },
     };
 
-    private constructor(burstSlider: Required<IBurstSlider>) {
+    protected constructor(burstSlider: Required<IBurstSlider>) {
         super(burstSlider);
     }
 
-    static create(): BurstSlider;
-    static create(burstSliders: Partial<IBurstSlider>): BurstSlider;
+    static create(): BurstSlider[];
     static create(...burstSliders: Partial<IBurstSlider>[]): BurstSlider[];
-    static create(...burstSliders: Partial<IBurstSlider>[]): BurstSlider | BurstSlider[] {
+    static create(...burstSliders: Partial<IBurstSlider>[]): BurstSlider[] {
         const result: BurstSlider[] = [];
         burstSliders?.forEach((bs) =>
             result.push(
@@ -51,28 +50,27 @@ export class BurstSlider extends BaseSlider<IBurstSlider> {
                 }),
             ),
         );
-        if (result.length === 1) {
-            return result[0];
-        }
         if (result.length) {
             return result;
         }
-        return new this({
-            b: BurstSlider.default.b,
-            c: BurstSlider.default.c,
-            x: BurstSlider.default.x,
-            y: BurstSlider.default.y,
-            d: BurstSlider.default.d,
-            tb: BurstSlider.default.tb,
-            tx: BurstSlider.default.tx,
-            ty: BurstSlider.default.ty,
-            sc: BurstSlider.default.sc,
-            s: BurstSlider.default.s,
-            customData: BurstSlider.default.customData(),
-        });
+        return [
+            new this({
+                b: BurstSlider.default.b,
+                c: BurstSlider.default.c,
+                x: BurstSlider.default.x,
+                y: BurstSlider.default.y,
+                d: BurstSlider.default.d,
+                tb: BurstSlider.default.tb,
+                tx: BurstSlider.default.tx,
+                ty: BurstSlider.default.ty,
+                sc: BurstSlider.default.sc,
+                s: BurstSlider.default.s,
+                customData: BurstSlider.default.customData(),
+            }),
+        ];
     }
 
-    toObject(): Required<IBurstSlider> {
+    toJSON(): Required<IBurstSlider> {
         return {
             b: this.time,
             c: this.color,
@@ -124,6 +122,24 @@ export class BurstSlider extends BaseSlider<IBurstSlider> {
     }
 
     mirror(flipColor = true) {
+        if (this.customData.coordinates) {
+            this.customData.coordinates[0] = -1 - this.customData.coordinates[0];
+        }
+        if (this.customData.flip) {
+            this.customData.flip[0] = -1 - this.customData.flip[0];
+        }
+        if (this.customData.animation) {
+            if (Array.isArray(this.customData.animation.definitePosition)) {
+                this.customData.animation.definitePosition.forEach((dp) => {
+                    dp[0] = -dp[0];
+                });
+            }
+            if (Array.isArray(this.customData.animation.offsetPosition)) {
+                this.customData.animation.offsetPosition.forEach((op) => {
+                    op[0] = -op[0];
+                });
+            }
+        }
         this.posX = LINE_COUNT - 1 - this.posX;
         this.tailPosX = LINE_COUNT - 1 - this.tailPosX;
         if (flipColor) {
@@ -152,21 +168,28 @@ export class BurstSlider extends BaseSlider<IBurstSlider> {
         return this;
     }
 
-    /** Get and return standardised note angle.
+    /** Get chain and return standardised note angle.
      * ```ts
-     * const noteAngle = note.getAngle(noteCompare);
+     * const chainAngle = chain.getAngle();
      * ```
      */
-    getAngle() {
-        // if (this.customData._cutDirection) {
-        //     return this.customData._cutDirection > 0
-        //         ? this.customData._cutDirection % 360
-        //         : 360 + (this.customData._cutDirection % 360);
-        // }
-        if (this.direction >= 1000) {
-            return Math.abs(((this.direction % 1000) % 360) - 360);
+    getAngle(type?: 'vanilla' | 'me' | 'ne') {
+        switch (type) {
+            case 'vanilla':
+                return NoteCutAngle[this.direction as keyof typeof NoteCutAngle] || 0;
+            case 'me':
+                if (this.direction >= 1000) {
+                    return Math.abs(((this.direction % 1000) % 360) - 360);
+                }
+            /* falls through */
+            case 'ne':
+                return NoteCutAngle[this.direction as keyof typeof NoteCutAngle] || 0;
+            default:
+                if (this.direction >= 1000) {
+                    return Math.abs(((this.direction % 1000) % 360) - 360);
+                }
+                return NoteCutAngle[this.direction as keyof typeof NoteCutAngle] || 0;
         }
-        return NoteCutAngle[this.direction as keyof typeof NoteCutAngle] || 0;
     }
 
     /** Check if burst slider has Mapping Extensions properties.

@@ -1,12 +1,12 @@
 import { IWaypoint } from '../../types/beatmap/v2/waypoint';
-import { ObjectToReturn } from '../../types/utils';
-import { deepCopy } from '../../utils/misc';
+import { ObjectReturnFn } from '../../types/utils';
 import { LINE_COUNT } from '../shared/constants';
 import { BeatmapObject } from './object';
+import { deepCopy } from '../../utils/misc';
 
 /** Waypoint beatmap v2 class object. */
 export class Waypoint extends BeatmapObject<IWaypoint> {
-    static default: ObjectToReturn<Required<IWaypoint>> = {
+    static default: ObjectReturnFn<Required<IWaypoint>> = {
         _time: 0,
         _lineIndex: 0,
         _lineLayer: 0,
@@ -16,14 +16,13 @@ export class Waypoint extends BeatmapObject<IWaypoint> {
         },
     };
 
-    private constructor(waypoint: Required<IWaypoint>) {
+    protected constructor(waypoint: Required<IWaypoint>) {
         super(waypoint);
     }
 
-    static create(): Waypoint;
-    static create(waypoints: Partial<IWaypoint>): Waypoint;
+    static create(): Waypoint[];
     static create(...waypoints: Partial<IWaypoint>[]): Waypoint[];
-    static create(...waypoints: Partial<IWaypoint>[]): Waypoint | Waypoint[] {
+    static create(...waypoints: Partial<IWaypoint>[]): Waypoint[] {
         const result: Waypoint[] = [];
         waypoints?.forEach((w) =>
             result.push(
@@ -36,22 +35,21 @@ export class Waypoint extends BeatmapObject<IWaypoint> {
                 }),
             ),
         );
-        if (result.length === 1) {
-            return result[0];
-        }
         if (result.length) {
             return result;
         }
-        return new this({
-            _time: Waypoint.default._time,
-            _lineIndex: Waypoint.default._lineIndex,
-            _lineLayer: Waypoint.default._lineLayer,
-            _offsetDirection: Waypoint.default._offsetDirection,
-            _customData: Waypoint.default._customData(),
-        });
+        return [
+            new this({
+                _time: Waypoint.default._time,
+                _lineIndex: Waypoint.default._lineIndex,
+                _lineLayer: Waypoint.default._lineLayer,
+                _offsetDirection: Waypoint.default._offsetDirection,
+                _customData: Waypoint.default._customData(),
+            }),
+        ];
     }
 
-    toObject(): Required<IWaypoint> {
+    toJSON(): Required<IWaypoint> {
         return {
             _time: this.time,
             _lineIndex: this.posX,

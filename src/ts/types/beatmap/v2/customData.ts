@@ -1,28 +1,24 @@
 import { IBookmark } from './bookmark';
 import { IBPMChange, IBPMChangeOld } from '../shared/bpm';
-import { IHeckCustomData, IHeckCustomEvent } from './heck';
-import { IChromaCustomData, IChromaCustomEvent, IChromaNote, IChromaObstacle } from './chroma';
-import { INECustomData, INECustomEvent, INENote, INEObstacle } from './noodleExtensions';
+import { IChromaCustomData, IChromaNote, IChromaObstacle } from './chroma';
+import { INENote, INEObstacle } from './noodleExtensions';
 import { ICustomDataBase } from '../shared/customData';
-
-export type ICustomEvent = IHeckCustomEvent | IChromaCustomEvent | INECustomEvent;
+import { IPointDefinition } from './pointDefinition';
+import { ICustomEvent } from './customEvent';
+import { IAnimation } from './animation';
 
 /** Custom Data interface for difficulty file.
- * @extends CustomData
- * @extends CCustomData
- * @extends INECustomData
+ * @extends ICustomDataBase
+ * @extends IChromaCustomData
  */
-export interface ICustomDataDifficulty
-    extends ICustomDataBase,
-        Omit<IHeckCustomData, '_customEvents'>,
-        Omit<IChromaCustomData, '_customEvents'>,
-        Omit<INECustomData, '_customEvents'> {
+export interface ICustomDataDifficulty extends ICustomDataBase, IChromaCustomData {
     _customEvents?: ICustomEvent[];
+    _pointDefinitions?: IPointDefinition[];
     _time?: number;
     _bpmChanges?: IBPMChangeOld[];
     _BPMChanges?: IBPMChange[];
     _bookmarks?: IBookmark[];
 }
 
-export type ICustomDataNote = ICustomDataBase & IChromaNote & INENote;
-export type ICustomDataObstacle = ICustomDataBase & IChromaObstacle & INEObstacle;
+export type ICustomDataNote = ICustomDataBase & IChromaNote & INENote & IAnimation;
+export type ICustomDataObstacle = ICustomDataBase & IChromaObstacle & INEObstacle & IAnimation;

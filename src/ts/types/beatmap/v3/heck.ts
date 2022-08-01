@@ -4,7 +4,6 @@ import { Vector3PointDefinition } from '../shared/heck';
 /** Heck Base Custom Event interface. */
 export interface IHeckCustomEventDataBase {
     track: string | string[];
-    repeat?: number;
 }
 
 /** AssignPathAnimation interface for Heck Custom Event.
@@ -12,6 +11,7 @@ export interface IHeckCustomEventDataBase {
  */
 export interface IHeckCustomEventDataAnimateTrack extends IHeckCustomEventDataBase {
     duration: number;
+    repeat?: number;
     easing?: Easings;
     position?: string | Vector3PointDefinition[];
     rotation?: string | Vector3PointDefinition[];
@@ -23,7 +23,6 @@ export interface IHeckCustomEventDataAnimateTrack extends IHeckCustomEventDataBa
  * @extends IHeckCustomEventDataBase
  */
 export interface IHeckCustomEventDataAssignPathAnimation extends IHeckCustomEventDataBase {
-    duration: number;
     easing?: Easings;
     position?: string | Vector3PointDefinition[];
     rotation?: string | Vector3PointDefinition[];

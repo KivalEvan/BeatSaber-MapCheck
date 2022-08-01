@@ -1,10 +1,10 @@
 import Settings from '../../settings';
 import { round, toMMSS } from '../../utils';
 import { BeatPerMinute } from '../../beatmap/shared';
-import { NEDataAbbr } from '../../types/beatmap/v3';
 import { ICustomEvent } from '../../types/beatmap/v3/customEvent';
 import { htmlTableCustomEvents } from './constants';
 import { displayTableRow, hideTableRow } from './helpers';
+import { NEDataAbbreviation } from '../../analyzers/renamer/customData';
 
 export function setCustomEvents(arr?: ICustomEvent[], bpm?: BeatPerMinute | null): void {
     if (arr == null || !arr.length) {
@@ -33,7 +33,7 @@ export function setCustomEvents(arr?: ICustomEvent[], bpm?: BeatPerMinute | null
             ) {
                 continue;
             }
-            const k = NEDataAbbr[key as keyof typeof NEDataAbbr];
+            const k = NEDataAbbreviation[key as keyof typeof NEDataAbbreviation];
             if (elem.d[key as keyof ICustomEvent['d']] != null) {
                 keyArr.push(k);
             }

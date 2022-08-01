@@ -1,19 +1,19 @@
 import { IBasicEventTypesForKeywords } from '../../types/beatmap/v3/basicEventTypesForKeywords';
 import { IBasicEventTypesWithKeywords } from '../../types/beatmap/v3/basicEventTypesWithKeywords';
-import { ObjectToReturn } from '../../types/utils';
+import { ObjectReturnFn } from '../../types/utils';
 import { Serializable } from '../shared/serializable';
 import { BasicEventTypesForKeywords } from './basicEventTypesForKeywords';
 
 /** Basic event types with keywords beatmap v3 class object. */
 export class BasicEventTypesWithKeywords extends Serializable<IBasicEventTypesWithKeywords> {
-    static default: ObjectToReturn<Required<IBasicEventTypesWithKeywords>> = {
+    static default: ObjectReturnFn<Required<IBasicEventTypesWithKeywords>> = {
         d: () => [],
     };
 
     private d: BasicEventTypesForKeywords[];
-    private constructor(basicEventTypesWithKeywords: Required<IBasicEventTypesWithKeywords>) {
+    protected constructor(basicEventTypesWithKeywords: Required<IBasicEventTypesWithKeywords>) {
         super(basicEventTypesWithKeywords);
-        this.d = basicEventTypesWithKeywords.d.map((d) => BasicEventTypesForKeywords.create({ e: d.e, k: d.k }));
+        this.d = basicEventTypesWithKeywords.d.map((d) => BasicEventTypesForKeywords.create({ e: d.e, k: d.k })[0]);
     }
 
     static create(
@@ -24,9 +24,9 @@ export class BasicEventTypesWithKeywords extends Serializable<IBasicEventTypesWi
         });
     }
 
-    toObject(): IBasicEventTypesWithKeywords {
+    toJSON(): IBasicEventTypesWithKeywords {
         return {
-            d: this.list.map((d) => d.toObject()),
+            d: this.list.map((d) => d.toJSON()),
         };
     }
 
@@ -43,7 +43,7 @@ export class BasicEventTypesWithKeywords extends Serializable<IBasicEventTypesWi
         return this;
     }
     addData(value: IBasicEventTypesForKeywords) {
-        this.list.push(BasicEventTypesForKeywords.create(value));
+        this.list.push(BasicEventTypesForKeywords.create(value)[0]);
         return this;
     }
     removeData(value: string) {

@@ -10,7 +10,7 @@ export class IndexFilter extends Serializable<IIndexFilter> {
         r: 0,
     };
 
-    private constructor(indexFilter: IIndexFilter) {
+    protected constructor(indexFilter: IIndexFilter) {
         super(indexFilter);
         if (this.data.f === 1) {
             this.p0 = this.p0 ? this.p0 : 1;
@@ -26,7 +26,7 @@ export class IndexFilter extends Serializable<IIndexFilter> {
         });
     }
 
-    toObject(): IIndexFilter {
+    toJSON(): IIndexFilter {
         return {
             f: this.type,
             p: this.p0,

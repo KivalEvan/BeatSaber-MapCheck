@@ -1,13 +1,19 @@
-// enum const is used regardless as this will never be compiled and reused by JS.
+// const enum is used regardless as this will never be compiled and reused by JS.
 /** Also known as lane count. */
 export const LINE_COUNT = 4;
+
+/** Size of grid in unity unit */
+export const LANE_SIZE = 0.6;
+
+/** Size of regular note in unity unit */
+export const NOTE_SIZE = [0.5, 0.5] as const;
 
 export const enum NoteColor {
     RED,
     BLUE,
 }
 
-export const enum NoteCutDirection {
+export const enum NoteDirection {
     UP,
     DOWN,
     LEFT,
@@ -19,7 +25,20 @@ export const enum NoteCutDirection {
     ANY,
 }
 
-/** Array index mapped to cut angle corresponding to the `cutDirection`.
+export const enum PositionX {
+    LEFT,
+    MIDDLE_LEFT,
+    MIDDLE_RIGHT,
+    RIGHT,
+}
+
+export const enum PositionY {
+    BOTTOM,
+    MIDDLE,
+    TOP,
+}
+
+/** Cut angle corresponding to the `direction`.
  * ```ts
  * 0 -> 180
  * 1 -> 0
@@ -33,30 +52,43 @@ export const enum NoteCutDirection {
  * ```
  */
 export const NoteCutAngle: { [key: number]: number } = {
-    [NoteCutDirection.UP]: 180,
-    [NoteCutDirection.DOWN]: 0,
-    [NoteCutDirection.LEFT]: 270,
-    [NoteCutDirection.RIGHT]: 90,
-    [NoteCutDirection.UP_LEFT]: 225,
-    [NoteCutDirection.UP_RIGHT]: 135,
-    [NoteCutDirection.DOWN_LEFT]: 315,
-    [NoteCutDirection.DOWN_RIGHT]: 45,
-    [NoteCutDirection.ANY]: 0,
+    [NoteDirection.UP]: 180,
+    [NoteDirection.DOWN]: 0,
+    [NoteDirection.LEFT]: 270,
+    [NoteDirection.RIGHT]: 90,
+    [NoteDirection.UP_LEFT]: 225,
+    [NoteDirection.UP_RIGHT]: 135,
+    [NoteDirection.DOWN_LEFT]: 315,
+    [NoteDirection.DOWN_RIGHT]: 45,
+    [NoteDirection.ANY]: 0,
 } as const;
 
-export const NoteFlipDirection: { [key: number]: NoteCutDirection } = {
-    [NoteCutDirection.UP]: NoteCutDirection.DOWN,
-    [NoteCutDirection.DOWN]: NoteCutDirection.UP,
-    [NoteCutDirection.LEFT]: NoteCutDirection.RIGHT,
-    [NoteCutDirection.RIGHT]: NoteCutDirection.LEFT,
-    [NoteCutDirection.UP_LEFT]: NoteCutDirection.DOWN_RIGHT,
-    [NoteCutDirection.UP_RIGHT]: NoteCutDirection.DOWN_LEFT,
-    [NoteCutDirection.DOWN_LEFT]: NoteCutDirection.UP_RIGHT,
-    [NoteCutDirection.DOWN_RIGHT]: NoteCutDirection.UP_LEFT,
-    [NoteCutDirection.ANY]: NoteCutDirection.ANY,
+/** Opposite direction corresponding to the `direction`.
+ * ```ts
+ * 0 -> 1
+ * 1 -> 0
+ * 2 -> 3
+ * 3 -> 2
+ * 4 -> 7
+ * 5 -> 6
+ * 6 -> 5
+ * 7 -> 4
+ * 8 -> 8
+ * ```
+ */
+export const NoteDirectionFlip: { [key: number]: NoteDirection } = {
+    [NoteDirection.UP]: NoteDirection.DOWN,
+    [NoteDirection.DOWN]: NoteDirection.UP,
+    [NoteDirection.LEFT]: NoteDirection.RIGHT,
+    [NoteDirection.RIGHT]: NoteDirection.LEFT,
+    [NoteDirection.UP_LEFT]: NoteDirection.DOWN_RIGHT,
+    [NoteDirection.UP_RIGHT]: NoteDirection.DOWN_LEFT,
+    [NoteDirection.DOWN_LEFT]: NoteDirection.UP_RIGHT,
+    [NoteDirection.DOWN_RIGHT]: NoteDirection.UP_LEFT,
+    [NoteDirection.ANY]: NoteDirection.ANY,
 } as const;
 
-/** Array index mapped to tuple of `posX` and `posY` corresponding to the `cutDirection`.
+/** Array index mapped to tuple of `posX` and `posY` corresponding to the `direction`.
  * ```ts
  * 0 -> [0, 1]
  * 1 -> [0, -1]
@@ -69,17 +101,28 @@ export const NoteFlipDirection: { [key: number]: NoteCutDirection } = {
  * 8 -> [0, 0]
  * ```
  */
-export const NoteCutDirectionSpace: { [key: number]: Readonly<[number, number]> } = {
-    [NoteCutDirection.UP]: [0, 1],
-    [NoteCutDirection.DOWN]: [0, -1],
-    [NoteCutDirection.LEFT]: [-1, 0],
-    [NoteCutDirection.RIGHT]: [1, 0],
-    [NoteCutDirection.UP_LEFT]: [-1, 1],
-    [NoteCutDirection.UP_RIGHT]: [1, 1],
-    [NoteCutDirection.DOWN_LEFT]: [-1, -1],
-    [NoteCutDirection.DOWN_RIGHT]: [1, -1],
-    [NoteCutDirection.ANY]: [0, 0],
+export const NoteDirectionSpace: { [key: number]: Readonly<[number, number]> } = {
+    [NoteDirection.UP]: [0, 1],
+    [NoteDirection.DOWN]: [0, -1],
+    [NoteDirection.LEFT]: [-1, 0],
+    [NoteDirection.RIGHT]: [1, 0],
+    [NoteDirection.UP_LEFT]: [-1, 1],
+    [NoteDirection.UP_RIGHT]: [1, 1],
+    [NoteDirection.DOWN_LEFT]: [-1, -1],
+    [NoteDirection.DOWN_RIGHT]: [1, -1],
+    [NoteDirection.ANY]: [0, 0],
 } as const;
+
+export const enum EventBoxColor {
+    RED,
+    BLUE,
+    WHITE,
+}
+
+export const enum DistributionType {
+    WAVE = 1,
+    STEP,
+}
 
 export const enum EventLightValue {
     OFF,
@@ -91,6 +134,10 @@ export const enum EventLightValue {
     RED_FLASH,
     RED_FADE,
     RED_TRANSITION,
+    WHITE_ON,
+    WHITE_FLASH,
+    WHITE_FADE,
+    WHITE_TRANSITION,
 }
 
 export const enum EventType {

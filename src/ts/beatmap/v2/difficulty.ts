@@ -1,5 +1,5 @@
 import { ICustomDataDifficulty } from '../../types/beatmap/v2/customData';
-import { IDifficultyData } from '../../types/beatmap/v2/difficulty';
+import { IDifficulty } from '../../types/beatmap/v2/difficulty';
 import { Serializable } from '../shared/serializable';
 import { Note } from './note';
 import { Slider } from './slider';
@@ -8,9 +8,16 @@ import { Event } from './event';
 import { Waypoint } from './waypoint';
 import { SpecialEventsKeywordFilters } from './specialEventsKeywordFilters';
 import { deepCopy } from '../../utils/misc';
+import { GenericFileName } from '../../types/beatmap/shared/info';
+import { LooseAutocomplete } from '../../types/utils';
+import { INote } from '../../types/beatmap/v2/note';
+import { IObstacle } from '../../types/beatmap/v2/obstacle';
+import { IEvent } from '../../types/beatmap/v2/event';
+import { IWaypoint } from '../../types/beatmap/v2/waypoint';
+import { ISlider } from '../../types/beatmap/v2/slider';
 
 /** Difficulty beatmap v2 class object. */
-export class DifficultyData extends Serializable<IDifficultyData> {
+export class Difficulty extends Serializable<IDifficulty> {
     private _fileName = 'UnnamedDifficulty.dat';
 
     version: `2.${0 | 2 | 4 | 5 | 6}.0`;
@@ -21,19 +28,19 @@ export class DifficultyData extends Serializable<IDifficultyData> {
     waypoints: Waypoint[];
     specialEventsKeywordFilters: SpecialEventsKeywordFilters;
     customData: ICustomDataDifficulty;
-    private constructor(data: Required<IDifficultyData>) {
+    protected constructor(data: Required<IDifficulty>) {
         super(data);
         this.version = '2.6.0';
-        this.notes = data._notes.map((obj) => Note.create(obj));
-        this.sliders = data._sliders.map((obj) => Slider.create(obj));
-        this.obstacles = data._obstacles.map((obj) => Obstacle.create(obj));
-        this.events = data._events.map((obj) => Event.create(obj));
-        this.waypoints = data._waypoints.map((obj) => Waypoint.create(obj));
+        this.notes = data._notes.map((obj) => Note.create(obj)[0]);
+        this.sliders = data._sliders.map((obj) => Slider.create(obj)[0]);
+        this.obstacles = data._obstacles.map((obj) => Obstacle.create(obj)[0]);
+        this.events = data._events.map((obj) => Event.create(obj)[0]);
+        this.waypoints = data._waypoints.map((obj) => Waypoint.create(obj)[0]);
         this.specialEventsKeywordFilters = SpecialEventsKeywordFilters.create(data._specialEventsKeywordFilters);
         this.customData = data._customData;
     }
 
-    static create(data: Partial<IDifficultyData> = {}): DifficultyData {
+    static create(data: Partial<IDifficulty> = {}): Difficulty {
         return new this({
             _version: '2.6.0',
             _notes: data._notes ?? [],
@@ -48,26 +55,31 @@ export class DifficultyData extends Serializable<IDifficultyData> {
         });
     }
 
-    toObject(): Required<IDifficultyData> {
+    toJSON(): Required<IDifficulty> {
         return {
             _version: this.version || '2.6.0',
-            _notes: this.notes.map((obj) => obj.toObject()),
-            _sliders: this.sliders.map((obj) => obj.toObject()),
-            _obstacles: this.obstacles.map((obj) => obj.toObject()),
-            _events: this.events.map((obj) => obj.toObject()),
-            _waypoints: this.waypoints.map((obj) => obj.toObject()),
-            _specialEventsKeywordFilters: this.specialEventsKeywordFilters.toObject(),
+            _notes: this.notes.map((obj) => obj.toJSON()),
+            _sliders: this.sliders.map((obj) => obj.toJSON()),
+            _obstacles: this.obstacles.map((obj) => obj.toJSON()),
+            _events: this.events.map((obj) => obj.toJSON()),
+            _waypoints: this.waypoints.map((obj) => obj.toJSON()),
+            _specialEventsKeywordFilters: this.specialEventsKeywordFilters.toJSON(),
             _customData: deepCopy(this.customData),
         };
     }
 
-    set fileName(name: string) {
+    clone<U extends this>(): U {
+        const fileName = this.fileName;
+        return super.clone().setFileName(fileName) as U;
+    }
+
+    set fileName(name: LooseAutocomplete<GenericFileName>) {
         this._fileName = name.trim();
     }
-    get fileName() {
+    get fileName(): string {
         return this._fileName;
     }
-    setFileName(fileName: string) {
+    setFileName(fileName: LooseAutocomplete<GenericFileName>) {
         this.fileName = fileName;
         return this;
     }
@@ -109,29 +121,19 @@ export class DifficultyData extends Serializable<IDifficultyData> {
         return obstacleEnd;
     };
 
-    addNotes = (...notes: Partial<IDifficultyData['_notes'][number]>[]) => {
-        notes.forEach((n) => {
-            this.notes.push(Note.create(n));
-        });
+    addNotes = (...notes: (Partial<INote> | Note)[]) => {
+        this.notes.push(...notes.map((n) => (n instanceof Note ? n : Note.create(n)[0])));
     };
-    addObstacles = (...obstacles: Partial<IDifficultyData['_obstacles'][number]>[]) => {
-        obstacles.forEach((o) => {
-            this.obstacles.push(Obstacle.create(o));
-        });
+    addObstacles = (...obstacles: (Partial<IObstacle> | Obstacle)[]) => {
+        this.obstacles.push(...obstacles.map((o) => (o instanceof Obstacle ? o : Obstacle.create(o)[0])));
     };
-    addEvents = (...events: Partial<IDifficultyData['_events'][number]>[]) => {
-        events.forEach((e) => {
-            this.events.push(Event.create(e));
-        });
+    addEvents = (...events: (Partial<IEvent> | Event)[]) => {
+        this.events.push(...events.map((e) => (e instanceof Event ? e : Event.create(e)[0])));
     };
-    addWaypoints = (...waypoints: Partial<IDifficultyData['_waypoints'][number]>[]) => {
-        waypoints.forEach((w) => {
-            this.waypoints.push(Waypoint.create(w));
-        });
+    addWaypoints = (...waypoints: (Partial<IWaypoint> | Waypoint)[]) => {
+        this.waypoints.push(...waypoints.map((w) => (w instanceof Waypoint ? w : Waypoint.create(w)[0])));
     };
-    addSliders = (...sliders: Partial<IDifficultyData['_sliders'][number]>[]) => {
-        sliders.forEach((s) => {
-            this.sliders.push(Slider.create(s));
-        });
+    addSliders = (...sliders: (Partial<ISlider> | Slider)[]) => {
+        this.sliders.push(...sliders.map((s) => (s instanceof Slider ? s : Slider.create(s)[0])));
     };
 }

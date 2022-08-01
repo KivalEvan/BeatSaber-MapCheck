@@ -1,12 +1,12 @@
 import { ILightColorEventBox } from '../../types/beatmap/v3/lightColorEventBox';
-import { DeepPartial, ObjectToReturn } from '../../types/utils';
+import { DeepPartial, ObjectReturnFn } from '../../types/utils';
 import { EventBox } from './eventBox';
 import { IndexFilter } from './indexFilter';
 import { LightColorBase } from './lightColorBase';
 
 /** Light color event box beatmap v3 class object. */
 export class LightColorEventBox extends EventBox<ILightColorEventBox> {
-    static default: ObjectToReturn<Required<ILightColorEventBox>> = {
+    static default: ObjectReturnFn<Required<ILightColorEventBox>> = {
         f: () => {
             return {
                 f: IndexFilter.default.f,
@@ -24,19 +24,18 @@ export class LightColorEventBox extends EventBox<ILightColorEventBox> {
     };
 
     private e: LightColorBase[];
-    private constructor(lightColorEventBox: Required<ILightColorEventBox>) {
+    protected constructor(lightColorEventBox: Required<ILightColorEventBox>) {
         super(lightColorEventBox);
-        this.e = lightColorEventBox.e.map((e) => LightColorBase.create(e));
+        this.e = lightColorEventBox.e.map((e) => LightColorBase.create(e)[0]);
         const lastTime = Math.max(...this.e.map((e) => e.time));
         if (this.beatDistributionType === 2) {
             this.beatDistribution = this.beatDistribution < lastTime ? lastTime : this.beatDistribution;
         }
     }
 
-    static create(): LightColorEventBox;
-    static create(eventBoxes: DeepPartial<ILightColorEventBox>): LightColorEventBox;
+    static create(): LightColorEventBox[];
     static create(...eventBoxes: DeepPartial<ILightColorEventBox>[]): LightColorEventBox[];
-    static create(...eventBoxes: DeepPartial<ILightColorEventBox>[]): LightColorEventBox | LightColorEventBox[] {
+    static create(...eventBoxes: DeepPartial<ILightColorEventBox>[]): LightColorEventBox[] {
         const result: LightColorEventBox[] = [];
         eventBoxes?.forEach((eb) =>
             result.push(
@@ -51,32 +50,31 @@ export class LightColorEventBox extends EventBox<ILightColorEventBox> {
                 }),
             ),
         );
-        if (result.length === 1) {
-            return result[0];
-        }
         if (result.length) {
             return result;
         }
-        return new this({
-            f: LightColorEventBox.default.f(),
-            w: LightColorEventBox.default.w,
-            d: LightColorEventBox.default.d,
-            r: LightColorEventBox.default.r,
-            t: LightColorEventBox.default.t,
-            b: LightColorEventBox.default.b,
-            e: LightColorEventBox.default.e(),
-        });
+        return [
+            new this({
+                f: LightColorEventBox.default.f(),
+                w: LightColorEventBox.default.w,
+                d: LightColorEventBox.default.d,
+                r: LightColorEventBox.default.r,
+                t: LightColorEventBox.default.t,
+                b: LightColorEventBox.default.b,
+                e: LightColorEventBox.default.e(),
+            }),
+        ];
     }
 
-    toObject(): ILightColorEventBox {
+    toJSON(): ILightColorEventBox {
         return {
-            f: this.filter.toObject(),
+            f: this.filter.toJSON(),
             w: this.beatDistribution,
             d: this.beatDistributionType,
             r: this.brightnessDistribution,
             t: this.brightnessDistributionType,
             b: this.affectFirst,
-            e: this.events.map((e) => e.toObject()),
+            e: this.events.map((e) => e.toJSON()),
         };
     }
 

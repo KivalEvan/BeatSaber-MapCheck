@@ -1,6 +1,6 @@
 import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import * as beatmap from '../../beatmap';
-import { EnvironmentName } from '../../types/beatmap/shared/environment';
+import { EnvironmentAllName } from '../../types/beatmap/shared/environment';
 import UICheckbox from '../../ui/helpers/checkbox';
 import { printResultTime } from '../helpers';
 
@@ -34,7 +34,7 @@ const unlitBomb = (
     bombs: beatmap.v3.BombNote[],
     events: beatmap.v3.BasicEvent[],
     bpm: beatmap.BeatPerMinute,
-    environment: EnvironmentName,
+    environment: EnvironmentAllName,
 ) => {
     if (!events.length) {
         return [];

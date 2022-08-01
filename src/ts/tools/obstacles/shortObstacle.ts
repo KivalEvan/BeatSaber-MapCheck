@@ -37,10 +37,10 @@ function check(map: ToolArgs) {
     const { minDur: temp } = <{ minDur: number }>tool.input.params;
     const minDur = bpm.toBeatTime(temp);
     const arr: beatmap.v3.Obstacle[] = [];
-    let obstacleLFull: beatmap.v3.Obstacle = beatmap.v3.Obstacle.create();
-    let obstacleRFull: beatmap.v3.Obstacle = beatmap.v3.Obstacle.create();
-    let obstacleLHalf: beatmap.v3.Obstacle = beatmap.v3.Obstacle.create();
-    let obstacleRHalf: beatmap.v3.Obstacle = beatmap.v3.Obstacle.create();
+    let obstacleLFull: beatmap.v3.Obstacle = beatmap.v3.Obstacle.create()[0];
+    let obstacleRFull: beatmap.v3.Obstacle = beatmap.v3.Obstacle.create()[0];
+    let obstacleLHalf: beatmap.v3.Obstacle = beatmap.v3.Obstacle.create()[0];
+    let obstacleRHalf: beatmap.v3.Obstacle = beatmap.v3.Obstacle.create()[0];
     obstacles.forEach((o) => {
         if (o.posY === 0 && o.height > 2 && o.duration > 0) {
             if (o.width > 2 || (o.width > 1 && o.posX === 1)) {

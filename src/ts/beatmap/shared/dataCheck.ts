@@ -70,10 +70,10 @@ export function deepCheck(
         }
         if (check[key].type === 'number' && typeof data[key] === 'number') {
             if ((check[key] as DataCheckNumber).int && data[key] % 1 !== 0) {
-                handleError(`${name} cannot be float!`, throwError, error);
+                handleError(`${name} ${key} cannot be float!`, false, error);
             }
             if ((check[key] as DataCheckNumber).unsigned && data[key] < 0) {
-                handleError(`${name} cannot be negative!`, throwError, error);
+                handleError(`${name} ${key} cannot be negative!`, false, error);
             }
         }
     }

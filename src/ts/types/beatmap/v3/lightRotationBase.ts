@@ -1,3 +1,5 @@
+import { ICustomDataBase } from '../shared/customData';
+
 export interface ILightRotationBase {
     /** Relative beat time `<float>` to event box group. */
     b: number;
@@ -30,4 +32,5 @@ export interface ILightRotationBase {
      * ```
      */
     o: 0 | 1 | 2;
+    customData?: ICustomDataBase;
 }

@@ -139,7 +139,7 @@ function check(map: ToolArgs) {
                 if (startNoteDot[note.data.color]) {
                     startNoteDot[note.data.color] = null;
                     lastNoteDirection[note.data.color] =
-                        beatmap.NoteFlipDirection[lastNoteDirection[note.data.color]] ?? 8;
+                        beatmap.NoteDirectionFlip[lastNoteDirection[note.data.color]] ?? 8;
                 }
                 if (
                     note.data.getDistance(lastNote[note.data.color].data) >= distance &&

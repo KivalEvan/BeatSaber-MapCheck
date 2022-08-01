@@ -1,26 +1,24 @@
 import { DataCheck } from '../../types/beatmap/shared/dataCheck';
-import {
-    IBasicEvent,
-    IBasicEventTypesForKeywords,
-    IBasicEventTypesWithKeywords,
-    IBombNote,
-    IBPMEvent,
-    IBurstSlider,
-    IColorBoostEvent,
-    IColorNote,
-    IDifficultyData,
-    IIndexFilter,
-    ILightColorBase,
-    ILightColorEventBox,
-    ILightColorEventBoxGroup,
-    ILightRotationBase,
-    ILightRotationEventBox,
-    ILightRotationEventBoxGroup,
-    IObstacle,
-    IRotationEvent,
-    ISlider,
-    IWaypoint,
-} from '../../types/beatmap/v3';
+import { IBasicEvent } from '../../types/beatmap/v3/basicEvent';
+import { IBasicEventTypesForKeywords } from '../../types/beatmap/v3/basicEventTypesForKeywords';
+import { IBasicEventTypesWithKeywords } from '../../types/beatmap/v3/basicEventTypesWithKeywords';
+import { IBombNote } from '../../types/beatmap/v3/bombNote';
+import { IBPMEvent } from '../../types/beatmap/v3/bpmEvent';
+import { IBurstSlider } from '../../types/beatmap/v3/burstSlider';
+import { IColorBoostEvent } from '../../types/beatmap/v3/colorBoostEvent';
+import { IColorNote } from '../../types/beatmap/v3/colorNote';
+import { IDifficulty } from '../../types/beatmap/v3/difficulty';
+import { IIndexFilter } from '../../types/beatmap/v3/indexFilter';
+import { ILightColorBase } from '../../types/beatmap/v3/lightColorBase';
+import { ILightColorEventBox } from '../../types/beatmap/v3/lightColorEventBox';
+import { ILightColorEventBoxGroup } from '../../types/beatmap/v3/lightColorEventBoxGroup';
+import { ILightRotationBase } from '../../types/beatmap/v3/lightRotationBase';
+import { ILightRotationEventBox } from '../../types/beatmap/v3/lightRotationEventBox';
+import { ILightRotationEventBoxGroup } from '../../types/beatmap/v3/lightRotationEventBoxGroup';
+import { IObstacle } from '../../types/beatmap/v3/obstacle';
+import { IRotationEvent } from '../../types/beatmap/v3/rotationEvent';
+import { ISlider } from '../../types/beatmap/v3/slider';
+import { IWaypoint } from '../../types/beatmap/v3/waypoint';
 
 // FIXME: ALMOST EVERYTHING IS HERE IFUCKIN OPTIONAL REE
 export const ColorNoteDataCheck: Record<keyof IColorNote, DataCheck> = {
@@ -369,6 +367,12 @@ export const LightColorBaseDataCheck: Record<keyof ILightColorBase, DataCheck> =
         type: 'number',
         version: '3.0.0',
     },
+    customData: {
+        type: 'object',
+        version: '3.0.0',
+        check: {},
+        optional: true,
+    },
 } as const;
 
 export const LightColorEventBoxDataCheck: Record<keyof ILightColorEventBox, DataCheck> = {
@@ -457,6 +461,12 @@ export const LightRotationBaseDataCheck: Record<keyof ILightRotationBase, DataCh
         type: 'number',
         int: true,
         version: '3.0.0',
+    },
+    customData: {
+        type: 'object',
+        version: '3.0.0',
+        check: {},
+        optional: true,
     },
 } as const;
 
@@ -578,7 +588,7 @@ export const WaypointDataCheck: Record<keyof IWaypoint, DataCheck> = {
     },
 } as const;
 
-export const DifficultyDataCheck: Record<keyof IDifficultyData, DataCheck> = {
+export const DifficultyCheck: Record<keyof IDifficulty, DataCheck> = {
     version: {
         type: 'string',
         version: '3.0.0',

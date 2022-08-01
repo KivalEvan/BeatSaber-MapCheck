@@ -1,15 +1,15 @@
 import { BaseSlider } from './baseSlider';
 import { LINE_COUNT, NoteCutAngle } from '../shared/constants';
 import { ISlider } from '../../types/beatmap/v3/slider';
+import { ObjectReturnFn } from '../../types/utils';
 import { deepCopy } from '../../utils/misc';
-import { ObjectToReturn } from '../../types/utils';
 
 /** Slider beatmap v3 class object.
  *
  * Also known as arc.
  */
 export class Slider extends BaseSlider<ISlider> {
-    static default: ObjectToReturn<Required<ISlider>> = {
+    static default: ObjectReturnFn<Required<ISlider>> = {
         b: 0,
         c: 0,
         x: 0,
@@ -27,14 +27,13 @@ export class Slider extends BaseSlider<ISlider> {
         },
     };
 
-    private constructor(slider: Required<ISlider>) {
+    protected constructor(slider: Required<ISlider>) {
         super(slider);
     }
 
-    static create(): Slider;
-    static create(sliders: Partial<ISlider>): Slider;
+    static create(): Slider[];
     static create(...sliders: Partial<ISlider>[]): Slider[];
-    static create(...sliders: Partial<ISlider>[]): Slider | Slider[] {
+    static create(...sliders: Partial<ISlider>[]): Slider[] {
         const result: Slider[] = [];
         sliders?.forEach((s) =>
             result.push(
@@ -55,30 +54,29 @@ export class Slider extends BaseSlider<ISlider> {
                 }),
             ),
         );
-        if (result.length === 1) {
-            return result[0];
-        }
         if (result.length) {
             return result;
         }
-        return new this({
-            b: Slider.default.b,
-            c: Slider.default.c,
-            x: Slider.default.x,
-            y: Slider.default.y,
-            d: Slider.default.d,
-            mu: Slider.default.mu,
-            tb: Slider.default.tb,
-            tx: Slider.default.tx,
-            ty: Slider.default.ty,
-            tc: Slider.default.tc,
-            tmu: Slider.default.tmu,
-            m: Slider.default.m,
-            customData: Slider.default.customData(),
-        });
+        return [
+            new this({
+                b: Slider.default.b,
+                c: Slider.default.c,
+                x: Slider.default.x,
+                y: Slider.default.y,
+                d: Slider.default.d,
+                mu: Slider.default.mu,
+                tb: Slider.default.tb,
+                tx: Slider.default.tx,
+                ty: Slider.default.ty,
+                tc: Slider.default.tc,
+                tmu: Slider.default.tmu,
+                m: Slider.default.m,
+                customData: Slider.default.customData(),
+            }),
+        ];
     }
 
-    toObject(): Required<ISlider> {
+    toJSON(): Required<ISlider> {
         return {
             b: this.time,
             c: this.color,
@@ -176,6 +174,24 @@ export class Slider extends BaseSlider<ISlider> {
     }
 
     mirror(flipColor = true) {
+        if (this.customData.coordinates) {
+            this.customData.coordinates[0] = -1 - this.customData.coordinates[0];
+        }
+        if (this.customData.flip) {
+            this.customData.flip[0] = -1 - this.customData.flip[0];
+        }
+        if (this.customData.animation) {
+            if (Array.isArray(this.customData.animation.definitePosition)) {
+                this.customData.animation.definitePosition.forEach((dp) => {
+                    dp[0] = -dp[0];
+                });
+            }
+            if (Array.isArray(this.customData.animation.offsetPosition)) {
+                this.customData.animation.offsetPosition.forEach((op) => {
+                    op[0] = -op[0];
+                });
+            }
+        }
         this.posX = LINE_COUNT - 1 - this.posX;
         this.tailPosX = LINE_COUNT - 1 - this.tailPosX;
         if (flipColor) {
@@ -227,21 +243,28 @@ export class Slider extends BaseSlider<ISlider> {
         return this;
     }
 
-    /** Get and return standardised note angle.
+    /** Get arc and return standardised tail note angle.
      * ```ts
-     * const noteAngle = note.getAngle(noteCompare);
+     * const arcTailAngle = arc.getTailAngle();
      * ```
      */
-    getAngle() {
-        // if (this.customData._cutDirection) {
-        //     return this.customData._cutDirection > 0
-        //         ? this.customData._cutDirection % 360
-        //         : 360 + (this.customData._cutDirection % 360);
-        // }
-        if (this.direction >= 1000) {
-            return Math.abs(((this.direction % 1000) % 360) - 360);
+    getTailAngle(type?: 'vanilla' | 'me' | 'ne') {
+        switch (type) {
+            case 'vanilla':
+                return NoteCutAngle[this.tailDirection as keyof typeof NoteCutAngle] || 0;
+            case 'me':
+                if (this.tailDirection >= 1000) {
+                    return Math.abs(((this.tailDirection % 1000) % 360) - 360);
+                }
+            /* falls through */
+            case 'ne':
+                return NoteCutAngle[this.tailDirection as keyof typeof NoteCutAngle] || 0;
+            default:
+                if (this.tailDirection >= 1000) {
+                    return Math.abs(((this.tailDirection % 1000) % 360) - 360);
+                }
+                return NoteCutAngle[this.tailDirection as keyof typeof NoteCutAngle] || 0;
         }
-        return NoteCutAngle[this.direction as keyof typeof NoteCutAngle] || 0;
     }
 
     /** Check if slider has Mapping Extensions properties.

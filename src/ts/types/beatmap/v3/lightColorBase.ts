@@ -1,3 +1,5 @@
+import { ICustomDataBase } from '../shared/customData';
+
 export interface ILightColorBase {
     /** Relative beat time `<float>` to event box group. */
     b: number;
@@ -27,4 +29,5 @@ export interface ILightColorBase {
      * Blinking frequency in beat time of the event, `0` is static.
      */
     f: number;
+    customData?: ICustomDataBase;
 }
