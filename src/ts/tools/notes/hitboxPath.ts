@@ -1,8 +1,8 @@
 import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
-import * as beatmap from '../../beatmap';
 import { isIntersect } from '../../analyzers/placement/note';
 import UICheckbox from '../../ui/helpers/checkbox';
 import { printResultTime } from '../helpers';
+import { ColorNote } from '../../beatmap/v3/colorNote';
 
 const name = 'Hitbox Path';
 const description = 'Check for overlapping pre-swing note hitbox at same time.';
@@ -33,7 +33,7 @@ function check(map: ToolArgs) {
     const { bpm } = map.settings;
     const { colorNotes } = map.difficulty!.data;
 
-    const arr: beatmap.v3.ColorNote[] = [];
+    const arr: ColorNote[] = [];
     // to avoid multiple of stack popping up, ignore anything within this time
     let lastTime: number = 0;
     for (let i = 0, len = colorNotes.length; i < len; i++) {

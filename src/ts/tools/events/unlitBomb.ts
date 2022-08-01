@@ -1,8 +1,10 @@
 import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
-import * as beatmap from '../../beatmap';
 import { EnvironmentAllName } from '../../types/beatmap/shared/environment';
 import UICheckbox from '../../ui/helpers/checkbox';
 import { printResultTime } from '../helpers';
+import { BombNote } from '../../beatmap/v3/bombNote';
+import { BasicEvent } from '../../beatmap/v3/basicEvent';
+import { BeatPerMinute, EventList } from '../../beatmap';
 
 const name = 'Unlit Bomb';
 const description = 'Check for lighting around bomb.';
@@ -30,20 +32,15 @@ const tool: Tool = {
 };
 
 // omega scuffed clusterfuck help me pls im cryin rn
-const unlitBomb = (
-    bombs: beatmap.v3.BombNote[],
-    events: beatmap.v3.BasicEvent[],
-    bpm: beatmap.BeatPerMinute,
-    environment: EnvironmentAllName,
-) => {
+const unlitBomb = (bombs: BombNote[], events: BasicEvent[], bpm: BeatPerMinute, environment: EnvironmentAllName) => {
     if (!events.length) {
         return [];
     }
-    const arr: beatmap.v3.BombNote[] = [];
-    const commonEvent = beatmap.EventList[environment]?.[0] ?? beatmap.EventList['DefaultEnvironment'][0];
+    const arr: BombNote[] = [];
+    const commonEvent = EventList[environment]?.[0] ?? EventList['DefaultEnvironment'][0];
     const eventsLight = events
         .filter((ev) => ev.isLightEvent() && commonEvent.includes(ev.type))
-        .sort((a, b) => a.type - b.type) as beatmap.v3.BasicEvent[];
+        .sort((a, b) => a.type - b.type) as BasicEvent[];
     const eventState: {
         [key: number]: {
             state: 'off' | 'fading' | 'on';

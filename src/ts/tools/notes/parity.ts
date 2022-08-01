@@ -5,6 +5,7 @@ import swing from '../../analyzers/swing/swing';
 import { NoteContainer, NoteContainerBomb } from '../../types/beatmap/v3/container';
 import { printResultTime } from '../helpers';
 import UICheckbox from '../../ui/helpers/checkbox';
+import { NoteColor } from '../../beatmap/shared/constants';
 
 const name = 'Parity Check';
 const description = 'Perform parity check.';
@@ -80,21 +81,21 @@ function check(map: ToolArgs) {
 
     const lastNote: { [key: number]: NoteContainer } = {};
     const swingNoteArray: { [key: number]: NoteContainer[] } = {
-        0: [],
-        1: [],
+        [NoteColor.RED]: [],
+        [NoteColor.BLUE]: [],
     };
     const bombContext: { [key: number]: NoteContainerBomb[] } = {
-        0: [],
-        1: [],
+        [NoteColor.RED]: [],
+        [NoteColor.BLUE]: [],
     };
     const lastBombContext: { [key: number]: NoteContainerBomb[] } = {
-        0: [],
-        1: [],
+        [NoteColor.RED]: [],
+        [NoteColor.BLUE]: [],
     };
 
     const swingParity: { [key: number]: Parity } = {
-        0: new Parity(noteContainer, 0, warningThres, errorThres, allowedRot),
-        1: new Parity(noteContainer, 1, warningThres, errorThres, allowedRot),
+        [NoteColor.RED]: new Parity(noteContainer, 0, warningThres, errorThres, allowedRot),
+        [NoteColor.BLUE]: new Parity(noteContainer, 1, warningThres, errorThres, allowedRot),
     };
     const parity: { warning: number[]; error: number[] } = {
         warning: [],
@@ -126,8 +127,8 @@ function check(map: ToolArgs) {
             }
         }
         if (note.type === 'bomb') {
-            bombContext[0].push(note);
-            bombContext[1].push(note);
+            bombContext[NoteColor.RED].push(note);
+            bombContext[NoteColor.BLUE].push(note);
         }
         if (note.type === 'note') {
             lastNote[note.data.color] = note;

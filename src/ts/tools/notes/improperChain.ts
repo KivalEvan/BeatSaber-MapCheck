@@ -1,8 +1,8 @@
 import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
-import { NoteContainer, NoteContainerNote } from '../../types/beatmap/v3/container';
-import swing from '../../analyzers/swing/swing';
+import { NoteContainer } from '../../types/beatmap/v3/container';
 import UICheckbox from '../../ui/helpers/checkbox';
 import { printResultTime } from '../helpers';
+import { NoteDirection } from '../../beatmap/shared/constants';
 
 const name = 'Improper Chain';
 const description = 'Check for correct use of chain.';
@@ -48,7 +48,9 @@ function check(map: ToolArgs) {
                         chain.data.posY === other.data.posY &&
                         other.data.time <= chain.data.time + 0.001 &&
                         chain.data.color === other.data.color &&
-                        (other.data.direction !== 8 ? chain.data.direction === other.data.direction : true)
+                        (other.data.direction !== NoteDirection.ANY
+                            ? chain.data.direction === other.data.direction
+                            : true)
                     ) {
                         potential = false;
                         break;

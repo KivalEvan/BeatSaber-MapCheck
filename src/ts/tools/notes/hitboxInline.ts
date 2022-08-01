@@ -3,6 +3,7 @@ import { NoteContainer, NoteContainerNote } from '../../types/beatmap/v3/contain
 import swing from '../../analyzers/swing/swing';
 import UICheckbox from '../../ui/helpers/checkbox';
 import { printResultTime } from '../helpers';
+import { NoteColor } from '../../beatmap/shared/constants';
 
 const name = 'Hitbox Inline';
 const description = 'Check for overlapping note hitbox for inline note.';
@@ -36,9 +37,8 @@ function check(map: ToolArgs) {
 
     const lastNote: { [key: number]: NoteContainer } = {};
     const swingNoteArray: { [key: number]: NoteContainer[] } = {
-        0: [],
-        1: [],
-        3: [],
+        [NoteColor.RED]: [],
+        [NoteColor.BLUE]: [],
     };
 
     const arr: NoteContainer[] = [];

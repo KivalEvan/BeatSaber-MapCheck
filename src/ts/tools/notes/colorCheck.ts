@@ -1,9 +1,9 @@
 import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import { ColorArray } from '../../types/colors';
 import { deltaE00, colorObjToAry, round } from '../../utils';
-import * as beatmap from '../../beatmap';
 import UICheckbox from '../../ui/helpers/checkbox';
 import { printResult } from '../helpers';
+import { ColorScheme, EnvironmentSchemeName } from '../../beatmap';
 
 const name = 'Color Check';
 const description = 'Compare note color with other colored note and the arrow on itself.';
@@ -51,10 +51,10 @@ const tool: Tool = {
 function customColorSimilarity(map: ToolArgs) {
     const checkColorLeft =
         map.difficulty?.info._customData?._colorLeft ??
-        beatmap.ColorScheme[beatmap.EnvironmentSchemeName[map.info._environmentName] ?? 'The First']._colorLeft;
+        ColorScheme[EnvironmentSchemeName[map.info._environmentName] ?? 'The First']._colorLeft;
     const checkColorRight =
         map.difficulty?.info._customData?._colorRight ??
-        beatmap.ColorScheme[beatmap.EnvironmentSchemeName[map.info._environmentName] ?? 'The First']._colorRight;
+        ColorScheme[EnvironmentSchemeName[map.info._environmentName] ?? 'The First']._colorRight;
     if (checkColorLeft && checkColorRight) {
         return deltaE00(colorObjToAry(checkColorLeft), colorObjToAry(checkColorRight));
     }
@@ -66,10 +66,10 @@ function customColorArrowSimilarity(map: ToolArgs) {
         deltaERight = 100;
     const checkColorLeft =
         map.difficulty?.info._customData?._colorLeft ??
-        beatmap.ColorScheme[beatmap.EnvironmentSchemeName[map.info._environmentName] ?? 'The First']._colorLeft;
+        ColorScheme[EnvironmentSchemeName[map.info._environmentName] ?? 'The First']._colorLeft;
     const checkColorRight =
         map.difficulty?.info._customData?._colorRight ??
-        beatmap.ColorScheme[beatmap.EnvironmentSchemeName[map.info._environmentName] ?? 'The First']._colorRight;
+        ColorScheme[EnvironmentSchemeName[map.info._environmentName] ?? 'The First']._colorRight;
     if (checkColorLeft) {
         deltaELeft = deltaE00(arrowColor, colorObjToAry(checkColorLeft));
     }

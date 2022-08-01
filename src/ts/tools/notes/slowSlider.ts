@@ -1,8 +1,8 @@
 import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import { round } from '../../utils';
-import * as beatmap from '../../beatmap';
 import { printResultTime } from '../helpers';
 import UICheckbox from '../../ui/helpers/checkbox';
+import { BeatPerMinute } from '../../beatmap';
 
 const name = 'Slow Slider';
 const description = 'Look for slider that require slow swing.';
@@ -15,7 +15,7 @@ const htmlLabelMinTime = document.createElement('label');
 const htmlInputMinPrec = document.createElement('input');
 const htmlLabelMinPrec = document.createElement('label');
 
-let localBPM!: beatmap.BeatPerMinute;
+let localBPM!: BeatPerMinute;
 
 htmlLabelMinTime.textContent = 'min speed (ms): ';
 htmlLabelMinTime.htmlFor = 'input__tools-slow-slider-time';
@@ -66,7 +66,7 @@ const tool: Tool = {
     run,
 };
 
-function adjustTimeHandler(bpm: beatmap.BeatPerMinute) {
+function adjustTimeHandler(bpm: BeatPerMinute) {
     localBPM = bpm;
     htmlInputMinPrec.value = round(1 / localBPM.toBeatTime(tool.input.params.minSpeed as number), 2).toString();
 }

@@ -3,6 +3,7 @@ import { NoteContainer, NoteContainerNote } from '../../types/beatmap/v3/contain
 import UICheckbox from '../../ui/helpers/checkbox';
 import swing from '../../analyzers/swing/swing';
 import { printResultTime } from '../helpers';
+import { NoteColor, NoteDirection } from '../../beatmap/shared/constants';
 
 const name = 'Improper Window Snap';
 const description = 'Check for slanted window snap timing.';
@@ -34,9 +35,8 @@ function check(map: ToolArgs) {
     const { noteContainer } = map.difficulty!;
     const lastNote: { [key: number]: NoteContainerNote } = {};
     const swingNoteArray: { [key: number]: NoteContainer[] } = {
-        0: [],
-        1: [],
-        3: [],
+        [NoteColor.RED]: [],
+        [NoteColor.BLUE]: [],
     };
 
     const arr: NoteContainer[] = [];
@@ -53,8 +53,8 @@ function check(map: ToolArgs) {
                 note.data.isSlantedWindow(lastNote[note.data.color].data) &&
                 note.data.time - lastNote[note.data.color].data.time >= 0.001 &&
                 note.data.direction === lastNote[note.data.color].data.direction &&
-                note.data.direction !== 8 &&
-                lastNote[note.data.color].data.direction !== 8
+                note.data.direction !== NoteDirection.ANY &&
+                lastNote[note.data.color].data.direction !== NoteDirection.ANY
             ) {
                 arr.push(lastNote[note.data.color]);
             }

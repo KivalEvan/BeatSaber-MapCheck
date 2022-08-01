@@ -1,8 +1,8 @@
 import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import { round } from '../../utils';
-import * as beatmap from '../../beatmap';
 import { printResultTime } from '../helpers';
 import UICheckbox from '../../ui/helpers/checkbox';
+import { BeatPerMinute } from '../../beatmap';
 
 const name = 'Effective BPM';
 const description =
@@ -65,7 +65,7 @@ const tool: Tool = {
     run: run,
 };
 
-function adjustTimeHandler(bpm: beatmap.BeatPerMinute) {
+function adjustTimeHandler(bpm: BeatPerMinute) {
     tool.input.params.ebpmThres = round(Math.min(defaultEBPM, bpm.value * 2 * 1.285714), 1);
     tool.input.params.ebpmsThres = round(Math.min(defaultEBPMS, bpm.value * 2), 1);
     htmlInputEBPM.value = tool.input.params.ebpmThres.toString();

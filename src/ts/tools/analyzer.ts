@@ -1,4 +1,3 @@
-import * as beatmap from '../beatmap';
 import AnalysisComponents from './components';
 import SavedData from '../savedData';
 import { BeatPerMinute, NoteJumpSpeed } from '../beatmap';
@@ -37,8 +36,8 @@ function runGeneral(): void {
 
     const analysisExist = SavedData.analysis?.general;
 
-    const bpm = beatmap.BeatPerMinute.create(mapInfo._beatsPerMinute);
-    const njs = beatmap.NoteJumpSpeed.create(bpm);
+    const bpm = BeatPerMinute.create(mapInfo._beatsPerMinute);
+    const njs = NoteJumpSpeed.create(bpm);
 
     const mapSettings: IBeatmapSettings = {
         bpm: bpm,
