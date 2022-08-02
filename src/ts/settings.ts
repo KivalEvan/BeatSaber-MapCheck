@@ -2,7 +2,7 @@ import { ISettings } from './types/mapcheck/settings';
 import { deepCopy } from './utils';
 
 const settingsDefault: ISettings = {
-    version: 2,
+    version: 3,
     load: {
         audio: true,
         imageCover: true,
@@ -10,6 +10,7 @@ const settingsDefault: ISettings = {
     },
     sorting: true,
     beatNumbering: 'beattime',
+    infoRowHeight: 4,
     rounding: 3,
     dataCheck: true,
     dataError: true,
@@ -48,6 +49,12 @@ export default new (class Settings implements ISettings {
     }
     set beatNumbering(val: ISettings['beatNumbering']) {
         this.property.beatNumbering = val;
+    }
+    get infoRowHeight(): number {
+        return this.property.infoRowHeight;
+    }
+    set infoRowHeight(val: number) {
+        this.property.infoRowHeight = val;
     }
     get rounding(): number {
         return this.property.rounding;

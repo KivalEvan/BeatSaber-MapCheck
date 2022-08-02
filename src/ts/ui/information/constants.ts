@@ -12,6 +12,7 @@ export const htmlTableBPMChanges: HTMLElement = document.querySelector('.info__b
 export const htmlTableEnvironmentEnhancement: HTMLElement = document.querySelector('.info__environment-enhancement')!;
 export const htmlTablePointDefinitions: HTMLElement = document.querySelector('.info__point-definitions')!;
 export const htmlTableCustomEvents: HTMLElement = document.querySelector('.info__custom-events')!;
+export const htmlTableElements: NodeListOf<HTMLElement> = document.querySelectorAll('.info__table-element')!;
 
 if (
     !htmlTableVersion ||
@@ -25,7 +26,8 @@ if (
     !htmlTableBPMChanges ||
     !htmlTableEnvironmentEnhancement ||
     !htmlTablePointDefinitions ||
-    !htmlTableCustomEvents
+    !htmlTableCustomEvents ||
+    !htmlTableElements
 ) {
     throw new Error(logPrefix + 'table info component is missing part');
 }

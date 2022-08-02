@@ -26,6 +26,7 @@ export interface ISettings {
     load: ISettingsLoad;
     sorting: boolean;
     beatNumbering: BeatNumbering;
+    infoRowHeight: number;
     rounding: number;
     dataCheck: boolean;
     dataError: boolean;

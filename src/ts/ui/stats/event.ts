@@ -9,7 +9,7 @@ export function createEventCountTable(mapInfo: IInfoData, mapData: IBeatmapItem)
         mapData.characteristic === '360Degree' || mapData.characteristic === '90Degree'
             ? mapInfo._allDirectionsEnvironmentName
             : mapInfo._environmentName;
-    const eventCount = countEvent(mapData.data.basicBeatmapEvents, environment);
+    const eventCount = countEvent(mapData.data.basicBeatmapEvents, mapData.data.colorBoostBeatmapEvents, environment);
     let chroma = 0;
     let chromaOld = 0;
     let noodleExtensions = 0;

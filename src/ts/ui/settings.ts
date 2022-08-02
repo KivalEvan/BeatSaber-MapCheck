@@ -3,12 +3,14 @@ import { UIThemeName } from '../types/mapcheck/ui';
 import UITheme from './theme';
 import Settings from '../settings';
 import { BeatNumbering } from '../types/mapcheck/settings';
+import { setTableHeight } from './information/helpers';
 
 const logPrefix = 'UI Settings: ';
 
 const htmlSettingsTheme: HTMLSelectElement = document.querySelector('.settings__theme')!;
 const htmlSettingsBeatNumbering: HTMLSelectElement = document.querySelector('.settings__beat-numbering')!;
 const htmlSettingsRounding: HTMLInputElement = document.querySelector('.settings__rounding')!;
+const htmlSettingsInfoHeight: HTMLInputElement = document.querySelector('.settings__info-height')!;
 const htmlSettingsDataCheck: HTMLInputElement = document.querySelector('.settings__data-check')!;
 const htmlSettingsDataError: HTMLInputElement = document.querySelector('.settings__data-error')!;
 const htmlSettingsLoad: NodeListOf<HTMLInputElement> = document.querySelectorAll('.settings__load');
@@ -35,6 +37,11 @@ if (htmlSettingsBeatNumbering) {
 }
 if (htmlSettingsRounding) {
     htmlSettingsRounding.addEventListener('change', roundingChangeHandler);
+} else {
+    throw new Error(logPrefix + 'missing settings');
+}
+if (htmlSettingsInfoHeight) {
+    htmlSettingsInfoHeight.addEventListener('change', infoHeightChangeHandler);
 } else {
     throw new Error(logPrefix + 'missing settings');
 }
@@ -87,6 +94,13 @@ function beatNumberingChangeHandler(ev: Event): void {
 function roundingChangeHandler(ev: Event): void {
     const target = ev.target as HTMLInputElement;
     Settings.rounding = parseInt(target.value);
+    Settings.save();
+}
+
+function infoHeightChangeHandler(ev: Event): void {
+    const target = ev.target as HTMLInputElement;
+    Settings.infoRowHeight = parseInt(target.value);
+    setTableHeight(Settings.infoRowHeight);
     Settings.save();
 }
 
@@ -171,6 +185,11 @@ function setRounding(num: number): void {
     htmlSettingsRounding.value = num.toString();
 }
 
+function setInfoHeight(num: number): void {
+    htmlSettingsInfoHeight.value = num.toString();
+    setTableHeight(Settings.infoRowHeight);
+}
+
 function setDataCheck(bool: boolean): void {
     htmlSettingsDataCheck.checked = bool;
 }
@@ -193,6 +212,7 @@ export default {
     setTheme,
     setBeatNumbering,
     setRounding,
+    setInfoHeight,
     setDataCheck,
     setDataError,
     clear,

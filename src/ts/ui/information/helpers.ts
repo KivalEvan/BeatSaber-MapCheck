@@ -1,3 +1,5 @@
+import { htmlTableElements } from './constants';
+
 export function hideTableRow<T extends HTMLElement>(elem: T): void {
     const tableElem = elem.querySelector('.info__table-element');
     if (tableElem) {
@@ -32,4 +34,8 @@ export function displayTableRow<T extends HTMLElement>(elem: T, content: string 
         }
     }
     elem.classList.remove('hidden');
+}
+
+export function setTableHeight(height: number): void {
+    htmlTableElements.forEach((tr) => (tr.style.maxHeight = `${height}rem`));
 }

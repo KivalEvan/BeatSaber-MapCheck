@@ -1,4 +1,5 @@
 import { EventList } from '../../beatmap/shared/environment';
+import { ColorBoostEvent } from '../../beatmap/v3';
 import { BasicEvent } from '../../beatmap/v3/basicEvent';
 import { EnvironmentAllName } from '../../types/beatmap/shared/environment';
 import { ICountEvent } from '../../types/mapcheck/analyzers/stats';
@@ -9,7 +10,11 @@ import { ICountEvent } from '../../types/mapcheck/analyzers/stats';
  * console.log(list);
  * ```
  */
-export function countEvent(events: BasicEvent[], environment: EnvironmentAllName = 'DefaultEnvironment'): ICountEvent {
+export function countEvent(
+    events: BasicEvent[],
+    boost: ColorBoostEvent[],
+    environment: EnvironmentAllName = 'DefaultEnvironment',
+): ICountEvent {
     const commonEvent = EventList[environment]?.[0] ?? EventList['DefaultEnvironment'][0];
     const eventCount: ICountEvent = {};
     for (let i = commonEvent.length - 1; i >= 0; i--) {
@@ -19,6 +24,8 @@ export function countEvent(events: BasicEvent[], environment: EnvironmentAllName
             chromaOld: 0,
         };
     }
+
+    eventCount[5].total = boost.length;
 
     for (let i = events.length - 1; i >= 0; i--) {
         if (events[i].isValidType()) {

@@ -6,6 +6,7 @@
 
 -   Chroma geometry support
 -   Bookmark color
+-   Adjustable information table height
 
 ### Changed
 
@@ -14,6 +15,7 @@
 ### Fixed
 
 -   EBPM points to current note instead of next note
+-   Color boost not counted in stats
 -   Typo
 
 ## 2.5.0 [2022-06-19]

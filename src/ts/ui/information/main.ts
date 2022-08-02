@@ -11,6 +11,7 @@ import { setCustomEvents } from './customEvent';
 import { setEnvironmentEnhancement } from './environment';
 import { setVersion, setRequirements, setSuggestions, setInformation, setWarnings, setTimeSpend } from './misc';
 import { setPointDefinitions } from './pointDefinition';
+import { setTableHeight } from './helpers';
 
 function setInfo(mapInfo: IInfoData): void {
     UIHeader.setSongName(mapInfo._songName);
@@ -93,5 +94,6 @@ export {
     setCustomEvents,
     setInfo,
     setDiffInfoTable,
+    setTableHeight,
     reset,
 };
