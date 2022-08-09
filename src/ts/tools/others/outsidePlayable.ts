@@ -39,9 +39,6 @@ function run(map: ToolArgs) {
     const htmlResult: HTMLElement[] = [];
     if (duration) {
         let endBeat = bpm.toBeatTime(duration, true);
-        console.log(duration, colorNotes[colorNotes.length - 1].time);
-        console.log(bpm.toRealTime(bpm.toBeatTime(duration)), bpm.toBeatTime(duration));
-        console.log(bpm.toRealTime(bpm.toBeatTime(duration, true)), bpm.toBeatTime(duration, true));
         if (colorNotes.length && colorNotes[0].time < 0) {
             htmlResult.push(
                 printResult(
