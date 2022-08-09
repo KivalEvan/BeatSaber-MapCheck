@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.5.2 [2022-08-xx]
+
+### Changed
+
+-   Improved UI look
+
 ## 2.5.1 [2022-08-09]
 
 ### Added

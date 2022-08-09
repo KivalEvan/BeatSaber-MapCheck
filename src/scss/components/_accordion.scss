@@ -50,6 +50,7 @@
         background-color: var(--bg-accordion-base);
         color: var(--c-accordion-text);
         transition: filter 0.125s ease;
+        font-weight: 600;
         &--upper {
             text-transform: uppercase;
         }
@@ -63,26 +64,31 @@
             font-size: 1.375rem;
         }
         &--bg-easy {
+            background: linear-gradient(to right, #0002, #0000 25%);
             background-color: var(--bg-diff-easy);
             color: white;
             text-shadow: 0 0 0.125em black;
         }
         &--bg-normal {
+            background: linear-gradient(to right, #0002, #0000 25%);
             background-color: var(--bg-diff-normal);
             color: white;
             text-shadow: 0 0 0.125em black;
         }
         &--bg-hard {
+            background: linear-gradient(to right, #0002, #0000 25%);
             background-color: var(--bg-diff-hard);
             color: white;
             text-shadow: 0 0 0.125em black;
         }
         &--bg-expert {
+            background: linear-gradient(to right, #0002, #0000 25%);
             background-color: var(--bg-diff-expert);
             color: white;
             text-shadow: 0 0 0.125em black;
         }
         &--bg-expertplus {
+            background: linear-gradient(to right, #0002, #0000 25%);
             background-color: var(--bg-diff-expertplus);
             color: white;
             text-shadow: 0 0 0.125em black;
