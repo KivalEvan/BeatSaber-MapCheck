@@ -50,34 +50,34 @@ class logger {
      * 5 -> None
      * ```
      */
-    public setLevel(level: LogLevels) {
+    setLevel(level: LogLevels) {
         level = Math.min(level, 5);
         this.logLevel = level;
         this.info('[logger::setLevel]', `Log level set to ${logPrefixes.get(level)}`);
     }
 
     // deno-lint-ignore no-explicit-any
-    public verbose(...args: any[]) {
+    verbose(...args: any[]) {
         this.log(LogLevels.VERBOSE, ...args);
     }
 
     // deno-lint-ignore no-explicit-any
-    public debug(...args: any[]) {
+    debug(...args: any[]) {
         this.log(LogLevels.DEBUG, ...args);
     }
 
     // deno-lint-ignore no-explicit-any
-    public info(...args: any[]) {
+    info(...args: any[]) {
         this.log(LogLevels.INFO, ...args);
     }
 
     // deno-lint-ignore no-explicit-any
-    public warn(...args: any[]) {
+    warn(...args: any[]) {
         this.log(LogLevels.WARN, ...args);
     }
 
     // deno-lint-ignore no-explicit-any
-    public error(...args: any[]) {
+    error(...args: any[]) {
         this.log(LogLevels.ERROR, ...args);
     }
 }

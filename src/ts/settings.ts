@@ -113,17 +113,17 @@ export default new (class Settings implements ISettings {
             this.save();
         }
     };
-    public save = (): void => {
+    save = (): void => {
         if (localStorage) {
             localStorage.setItem('settings', this.stringify());
         }
     };
-    public clear = (): void => {
+    clear = (): void => {
         if (localStorage) {
             localStorage.clear();
         }
     };
-    public reset = (): void => {
+    reset = (): void => {
         this.property = deepCopy(settingsDefault);
     };
 })();

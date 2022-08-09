@@ -10,7 +10,7 @@ export interface IHeckCustomEventDataBase {
  * @extends IHeckCustomEventDataBase
  */
 export interface IHeckCustomEventDataAnimateTrack extends IHeckCustomEventDataBase {
-    duration: number;
+    duration?: number;
     repeat?: number;
     easing?: Easings;
     position?: string | Vector3PointDefinition[];

@@ -5,22 +5,23 @@
 import { NoteContainer, NoteContainerBomb, NoteContainerNote } from '../../types/beatmap/v3/container';
 import { ParityState, ParityStatus, ParitySwitch } from '../../types/mapcheck/analyzers/parity';
 import { predictDirection } from '../placement/note';
+import { NoteColor, NoteDirection, PositionX, PositionY } from '../../beatmap/shared/constants';
 
 const noteInitParity: {
     [key: number]: { backhand: number[]; forehand: number[] };
 } = {
-    0: {
-        forehand: [1, 3, 6, 7],
-        backhand: [0, 2, 4, 5],
+    [NoteColor.RED]: {
+        forehand: [NoteDirection.DOWN, NoteDirection.RIGHT, NoteDirection.DOWN_LEFT, NoteDirection.DOWN_RIGHT],
+        backhand: [NoteDirection.UP, NoteDirection.LEFT, NoteDirection.UP_LEFT, NoteDirection.UP_RIGHT],
     },
-    1: {
-        forehand: [1, 2, 6, 7],
-        backhand: [0, 3, 4, 5],
+    [NoteColor.BLUE]: {
+        forehand: [NoteDirection.DOWN, NoteDirection.LEFT, NoteDirection.DOWN_LEFT, NoteDirection.DOWN_RIGHT],
+        backhand: [NoteDirection.UP, NoteDirection.RIGHT, NoteDirection.UP_LEFT, NoteDirection.UP_RIGHT],
     },
 };
 const noteInitRotation: { [key: number]: number[] } = {
-    0: [0, 0, 90, 90, 45, -45, 45, -45],
-    1: [0, 0, -90, -90, -45, 45, -45, 45],
+    [NoteColor.RED]: [0, 0, 90, 90, 45, -45, 45, -45],
+    [NoteColor.BLUE]: [0, 0, -90, -90, -45, 45, -45, 45],
 };
 const noteParityRotation: {
     [key: number]: { backhand: number[]; forehand: number[] };
@@ -71,7 +72,7 @@ export default class Parity {
         this.position = this.predictStartPosition(notes, type);
     }
 
-    public check(noteContext: NoteContainer[], bombContext: NoteContainerBomb[]): ParityStatus {
+    check(noteContext: NoteContainer[], bombContext: NoteContainerBomb[]): ParityStatus {
         if (this.state === 'neutral') {
             return 'none';
         }
@@ -88,14 +89,14 @@ export default class Parity {
             if (bomb.data.time - 0.001 > startTime) {
                 return;
             }
-            if (bomb.data.posY === 0) {
-                if (bomb.data.posX === (noteType ? 2 : 1)) {
+            if (bomb.data.posY === PositionY.BOTTOM) {
+                if (bomb.data.posX === (noteType ? PositionX.MIDDLE_RIGHT : PositionX.MIDDLE_LEFT)) {
                     currentState = 'backhand';
                     currentRotation = 0;
                 }
             }
-            if (bomb.data.posY === 2) {
-                if (bomb.data.posX === (noteType ? 2 : 1)) {
+            if (bomb.data.posY === PositionY.TOP) {
+                if (bomb.data.posX === (noteType ? PositionX.MIDDLE_RIGHT : PositionX.MIDDLE_LEFT)) {
                     currentState = 'forehand';
                     currentRotation = 0;
                 }
@@ -103,20 +104,20 @@ export default class Parity {
         });
 
         let prevNote!: NoteContainerNote;
-        let expectedDirection = 8;
+        let expectedDirection = NoteDirection.ANY;
         for (const note of noteContext) {
             if (note.type !== 'note') {
                 continue;
             }
-            if (note.data.direction !== 8) {
+            if (note.data.direction !== NoteDirection.ANY) {
                 expectedDirection = note.data.direction;
             }
-            if (prevNote && expectedDirection === 8) {
+            if (prevNote && expectedDirection === NoteDirection.ANY) {
                 expectedDirection = predictDirection(note.data, prevNote.data);
             }
             prevNote = note;
         }
-        if (expectedDirection === 8) {
+        if (expectedDirection === NoteDirection.ANY) {
             return 'none';
         }
 
@@ -149,7 +150,7 @@ export default class Parity {
 
         return 'none';
     }
-    public next(noteContext: NoteContainer[], bombContext: NoteContainerBomb[]): void {
+    next(noteContext: NoteContainer[], bombContext: NoteContainerBomb[]): void {
         if (this.check(noteContext, bombContext) !== 'error') {
             switch (this.state) {
                 case 'forehand': {
@@ -174,7 +175,7 @@ export default class Parity {
                             this.state = 'forehand';
                             break;
                         }
-                        if (this.state === 'neutral' && note.data.direction === 8) {
+                        if (this.state === 'neutral' && note.data.direction === NoteDirection.ANY) {
                             if (note.data.posY === 0) {
                                 this.state = 'backhand';
                             }
@@ -198,14 +199,14 @@ export default class Parity {
             if (bomb.data.time - 0.001 > startTime) {
                 return;
             }
-            if (bomb.data.posY === 0) {
-                if (bomb.data.posX === (noteType ? 2 : 1)) {
+            if (bomb.data.posY === PositionY.BOTTOM) {
+                if (bomb.data.posX === (noteType ? PositionX.MIDDLE_RIGHT : PositionX.MIDDLE_LEFT)) {
                     this.state = 'forehand';
                     this.rotation = 0;
                 }
             }
-            if (bomb.data.posY === 2) {
-                if (bomb.data.posX === (noteType ? 2 : 1)) {
+            if (bomb.data.posY === PositionY.TOP) {
+                if (bomb.data.posX === (noteType ? PositionX.MIDDLE_RIGHT : PositionX.MIDDLE_LEFT)) {
                     this.state = 'backhand';
                     this.rotation = 0;
                 }
@@ -213,20 +214,20 @@ export default class Parity {
         });
 
         let prevNote!: NoteContainerNote;
-        let expectedDirection = 8;
+        let expectedDirection = NoteDirection.ANY;
         for (const note of noteContext) {
             if (note.type !== 'note') {
                 continue;
             }
-            if (note.data.direction !== 8) {
+            if (note.data.direction !== NoteDirection.ANY) {
                 expectedDirection = note.data.direction;
             }
-            if (prevNote && expectedDirection === 8) {
+            if (prevNote && expectedDirection === NoteDirection.ANY) {
                 expectedDirection = predictDirection(note.data, prevNote.data);
             }
             prevNote = note;
         }
-        if (expectedDirection !== 8) {
+        if (expectedDirection !== NoteDirection.ANY) {
             this.rotation = noteParityRotation[this.color][this.state][expectedDirection];
         }
     }
@@ -235,13 +236,13 @@ export default class Parity {
         let startParity: ParityState = 'neutral';
         for (let i = 0, len = nc.length; i < len; i++) {
             if (nc[i].type === 'bomb') {
-                if (nc[i].data.posY === 0) {
-                    if (nc[i].data.posX === type ? 1 : 2) {
+                if (nc[i].data.posY === PositionY.BOTTOM) {
+                    if (nc[i].data.posX === type ? PositionX.MIDDLE_RIGHT : PositionX.MIDDLE_LEFT) {
                         startParity = 'backhand';
                     }
                 }
-                if (nc[i].data.posY === 2) {
-                    if (nc[i].data.posX === type ? 1 : 2) {
+                if (nc[i].data.posY === PositionY.TOP) {
+                    if (nc[i].data.posX === type ? PositionX.MIDDLE_RIGHT : PositionX.MIDDLE_LEFT) {
                         startParity = 'forehand';
                     }
                 }
@@ -269,11 +270,11 @@ export default class Parity {
                     if (noteInitParity[note.data.color].backhand.includes(note.data.direction)) {
                         return 'forehand';
                     }
-                    if (startParity === 'neutral' && note.data.direction === 8) {
-                        if (note.data.posY === 0) {
+                    if (startParity === 'neutral' && note.data.direction === NoteDirection.ANY) {
+                        if (note.data.posY === PositionY.BOTTOM) {
                             startParity = 'backhand';
                         }
-                        if (note.data.posY > 0) {
+                        if (note.data.posY > PositionY.BOTTOM) {
                             startParity = 'forehand';
                         }
                     }
@@ -300,31 +301,31 @@ export default class Parity {
                         break;
                     }
                     note = nc[j] as NoteContainerNote;
-                    if (note.data.direction !== 8) {
+                    if (note.data.direction !== NoteDirection.ANY) {
                         return noteInitRotation[note.data.color][note.data.direction];
                     }
-                    if (note.data.direction === 8) {
-                        if (note.data.posY === 0) {
-                            if (note.data.posX === 0) {
+                    if (note.data.direction === NoteDirection.ANY) {
+                        if (note.data.posY === PositionY.BOTTOM) {
+                            if (note.data.posX === PositionX.LEFT) {
                                 rotation = noteInitRotation[note.data.color][6];
                             }
-                            if (note.data.posX === 3) {
+                            if (note.data.posX === PositionX.RIGHT) {
                                 rotation = noteInitRotation[note.data.color][7];
                             }
                         }
-                        if (note.data.posY === 1) {
-                            if (note.data.posX === 0) {
+                        if (note.data.posY === PositionY.MIDDLE) {
+                            if (note.data.posX === PositionX.LEFT) {
                                 rotation = noteInitRotation[note.data.color][2];
                             }
-                            if (note.data.posX === 3) {
+                            if (note.data.posX === PositionX.RIGHT) {
                                 rotation = noteInitRotation[note.data.color][3];
                             }
                         }
-                        if (note.data.posY === 2) {
-                            if (note.data.posX === 0) {
+                        if (note.data.posY === PositionY.BOTTOM) {
+                            if (note.data.posX === PositionX.LEFT) {
                                 rotation = noteInitRotation[note.data.color][4];
                             }
-                            if (note.data.posX === 3) {
+                            if (note.data.posX === PositionX.RIGHT) {
                                 rotation = noteInitRotation[note.data.color][5];
                             }
                         }
@@ -336,6 +337,7 @@ export default class Parity {
         return rotation;
     }
     // "predict" btw
+    // deno-lint-ignore no-unused-vars
     private predictStartPosition(notes: NoteContainer[], type: number): [number, number] {
         return type ? [-0.5, 1] : [0.5, 1];
     }

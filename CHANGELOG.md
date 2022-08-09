@@ -1,12 +1,13 @@
 # Changelog
 
-## 2.5.1 [2022-08-##]
+## 2.5.1 [2022-08-09]
 
 ### Added
 
 -   Chroma geometry support
 -   Bookmark color
 -   Adjustable information table height
+-   v3 BPM change support
 
 ### Changed
 

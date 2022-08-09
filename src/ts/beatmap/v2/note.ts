@@ -1,7 +1,7 @@
 import { INote } from '../../types/beatmap/v2/note';
 import { BeatmapObject } from './object';
 import { ObjectReturnFn } from '../../types/utils';
-import { NoteCutAngle } from '../shared/constants';
+import { NoteDirectionAngle } from '../shared/constants';
 import { deepCopy } from '../../utils/misc';
 
 /** Note beatmap v2 class object. */
@@ -192,7 +192,7 @@ export class Note extends BeatmapObject<INote> {
         if (this.cutDirection >= 1000) {
             return Math.abs(((this.cutDirection % 1000) % 360) - 360);
         }
-        return NoteCutAngle[this.cutDirection] || 0;
+        return NoteDirectionAngle[this.cutDirection] || 0;
     };
 
     /** Get two notes and return the distance between two notes.

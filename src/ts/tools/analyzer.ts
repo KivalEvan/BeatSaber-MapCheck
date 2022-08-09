@@ -95,24 +95,17 @@ function runDifficulty(characteristic: CharacteristicName, difficulty: Difficult
         (set) => set.difficulty === difficulty && set.mode === characteristic,
     );
 
-    const bpm = BeatPerMinute.create(
-        mapInfo._beatsPerMinute,
-        beatmapDifficulty.data.customData._BPMChanges ||
-            beatmapDifficulty.data.customData._bpmChanges ||
-            beatmapDifficulty.data.customData.BPMChanges,
-        beatmapDifficulty.info._customData?._editorOffset,
-    );
     const njs = NoteJumpSpeed.create(
-        bpm,
+        beatmapDifficulty.bpm,
         beatmapDifficulty.info._noteJumpMovementSpeed,
         beatmapDifficulty.info._noteJumpStartBeatOffset,
     );
 
     const mapSettings: IBeatmapSettings = {
-        bpm: bpm,
+        bpm: beatmapDifficulty.bpm,
         njs: njs,
         audioDuration: SavedData.duration ?? null,
-        mapDuration: bpm.toRealTime(beatmapDifficulty.data.getLastInteractiveTime()),
+        mapDuration: beatmapDifficulty.bpm.toRealTime(beatmapDifficulty.data.getLastInteractiveTime()),
     };
 
     logger.info(tag('runDifficulty'), `Analysing ${characteristic} ${difficulty}`);

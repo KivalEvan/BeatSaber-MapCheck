@@ -51,7 +51,7 @@ export const enum PositionY {
  * 8 -> 0
  * ```
  */
-export const NoteCutAngle: { [key: number]: number } = {
+export const NoteDirectionAngle: { [key: number]: number } = {
     [NoteDirection.UP]: 180,
     [NoteDirection.DOWN]: 0,
     [NoteDirection.LEFT]: 270,
@@ -113,17 +113,6 @@ export const NoteDirectionSpace: { [key: number]: Readonly<[number, number]> } =
     [NoteDirection.ANY]: [0, 0],
 } as const;
 
-export const enum EventBoxColor {
-    RED,
-    BLUE,
-    WHITE,
-}
-
-export const enum DistributionType {
-    WAVE = 1,
-    STEP,
-}
-
 export const enum EventLightValue {
     OFF,
     BLUE_ON,
@@ -179,6 +168,17 @@ export const EventLaneRotationValue: { [key: number]: number } = {
     6: 45,
     7: 60,
 } as const;
+
+export const enum EventBoxColor {
+    RED,
+    BLUE,
+    WHITE,
+}
+
+export const enum DistributionType {
+    WAVE = 1,
+    STEP,
+}
 
 export const enum EaseType {
     NONE = -1,

@@ -1,5 +1,5 @@
 import { BaseSlider } from './baseSlider';
-import { LINE_COUNT, NoteCutAngle } from '../shared/constants';
+import { LINE_COUNT, NoteDirectionAngle } from '../shared/constants';
 import { IBurstSlider } from '../../types/beatmap/v3/burstSlider';
 import { ObjectReturnFn } from '../../types/utils';
 import { deepCopy } from '../../utils/misc';
@@ -176,19 +176,19 @@ export class BurstSlider extends BaseSlider<IBurstSlider> {
     getAngle(type?: 'vanilla' | 'me' | 'ne') {
         switch (type) {
             case 'vanilla':
-                return NoteCutAngle[this.direction as keyof typeof NoteCutAngle] || 0;
+                return NoteDirectionAngle[this.direction as keyof typeof NoteDirectionAngle] || 0;
             case 'me':
                 if (this.direction >= 1000) {
                     return Math.abs(((this.direction % 1000) % 360) - 360);
                 }
             /* falls through */
             case 'ne':
-                return NoteCutAngle[this.direction as keyof typeof NoteCutAngle] || 0;
+                return NoteDirectionAngle[this.direction as keyof typeof NoteDirectionAngle] || 0;
             default:
                 if (this.direction >= 1000) {
                     return Math.abs(((this.direction % 1000) % 360) - 360);
                 }
-                return NoteCutAngle[this.direction as keyof typeof NoteCutAngle] || 0;
+                return NoteDirectionAngle[this.direction as keyof typeof NoteDirectionAngle] || 0;
         }
     }
 

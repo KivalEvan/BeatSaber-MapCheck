@@ -6,7 +6,7 @@ import swing from '../../analyzers/swing/swing';
 import { ColorNote } from '../../beatmap/v3';
 import { printResultTime } from '../helpers';
 import UICheckbox from '../../ui/helpers/checkbox';
-import { BeatPerMinute, NoteColor, NoteCutAngle, NoteDirection, PositionX, PositionY } from '../../beatmap';
+import { BeatPerMinute, NoteColor, NoteDirectionAngle, NoteDirection, PositionX, PositionY } from '../../beatmap';
 
 const name = 'Inline Sharp Angle';
 const description = 'Check for angle changes within inline note.';
@@ -155,12 +155,12 @@ function check(map: ToolArgs) {
             if (note.data.posY === PositionY.BOTTOM) {
                 //on right center
                 if (note.data.posX === PositionX.MIDDLE_LEFT) {
-                    lastNoteAngle[NoteColor.RED] = NoteCutAngle[NoteDirection.UP];
+                    lastNoteAngle[NoteColor.RED] = NoteDirectionAngle[NoteDirection.UP];
                     startNoteDot[NoteColor.RED] = null;
                 }
                 //on left center
                 if (note.data.posX === PositionX.MIDDLE_RIGHT) {
-                    lastNoteAngle[NoteColor.BLUE] = NoteCutAngle[NoteDirection.UP];
+                    lastNoteAngle[NoteColor.BLUE] = NoteDirectionAngle[NoteDirection.UP];
                     startNoteDot[NoteColor.BLUE] = null;
                 }
                 //on top row
@@ -168,12 +168,12 @@ function check(map: ToolArgs) {
             if (note.data.posY === PositionY.TOP) {
                 //on right center
                 if (note.data.posX === PositionX.MIDDLE_LEFT) {
-                    lastNoteAngle[NoteColor.RED] = NoteCutAngle[NoteDirection.DOWN];
+                    lastNoteAngle[NoteColor.RED] = NoteDirectionAngle[NoteDirection.DOWN];
                     startNoteDot[NoteColor.RED] = null;
                 }
                 //on left center
                 if (note.data.posX === PositionX.MIDDLE_RIGHT) {
-                    lastNoteAngle[NoteColor.BLUE] = NoteCutAngle[NoteDirection.DOWN];
+                    lastNoteAngle[NoteColor.BLUE] = NoteDirectionAngle[NoteDirection.DOWN];
                     startNoteDot[NoteColor.BLUE] = null;
                 }
             }

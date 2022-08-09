@@ -6,7 +6,7 @@ import { IBeatmapItem } from '../../types/mapcheck';
 import { prefix } from './constants';
 
 export function createNPSTable(mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTableElement {
-    const bpm = BeatPerMinute.create(mapInfo._beatsPerMinute);
+    const bpm = mapData.bpm;
     const duration = SavedData.duration || 0;
     const mapDuration = bpm.toRealTime(mapData.data.getLastInteractiveTime());
 

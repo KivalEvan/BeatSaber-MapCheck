@@ -155,14 +155,14 @@ export class Difficulty extends Serializable<IDifficulty> {
     peak = (beat: number, bpm: BeatPerMinute | number): number => {
         let peakNPS = 0;
         let currentSectionStart = 0;
-        const bpmV = typeof bpm === 'number' ? bpm : bpm.value;
+        bpm = typeof bpm === 'number' ? BeatPerMinute.create(bpm) : bpm;
         const notes = this.getNoteContainer().filter((n) => n.type !== 'bomb');
 
         for (let i = 0; i < notes.length; i++) {
             while (notes[i].data.time - notes[currentSectionStart].data.time > beat) {
                 currentSectionStart++;
             }
-            peakNPS = Math.max(peakNPS, (i - currentSectionStart + 1) / ((beat / bpmV) * 60));
+            peakNPS = Math.max(peakNPS, (i - currentSectionStart + 1) / bpm.toRealTime(beat));
         }
 
         return peakNPS;

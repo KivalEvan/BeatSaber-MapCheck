@@ -16,6 +16,12 @@ export interface IBPMChangeOld {
     _metronomeOffset: number;
 }
 
+/** Beatmap difficulty custom data interface for BPM Change Time Scale. */
+export interface IBPMTimeScale {
+    _time: number;
+    _scale: number;
+}
+
 /**
  * @extends IBPMChange
  */

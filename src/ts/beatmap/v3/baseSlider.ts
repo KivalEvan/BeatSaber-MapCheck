@@ -1,6 +1,6 @@
 import { IBaseNote } from '../../types/beatmap/v3/baseNote';
 import { IBaseSlider } from '../../types/beatmap/v3/baseSlider';
-import { NoteCutAngle } from '../shared/constants';
+import { NoteDirectionAngle } from '../shared/constants';
 import { BaseNote } from './baseNote';
 
 /** Base slider beatmap v3 class object. */
@@ -155,20 +155,20 @@ export abstract class BaseSlider<T extends IBaseSlider> extends BaseNote<T> {
     getAngle(type?: 'vanilla' | 'me' | 'ne') {
         switch (type) {
             case 'vanilla':
-                return NoteCutAngle[this.direction as keyof typeof NoteCutAngle] || 0;
+                return NoteDirectionAngle[this.direction as keyof typeof NoteDirectionAngle] || 0;
             case 'me':
                 if (this.direction >= 1000) {
                     return Math.abs(((this.direction % 1000) % 360) - 360);
                 }
             /* falls through */
             case 'ne':
-                return NoteCutAngle[this.direction as keyof typeof NoteCutAngle] || 0;
+                return NoteDirectionAngle[this.direction as keyof typeof NoteDirectionAngle] || 0;
             default:
         }
         if (this.direction >= 1000) {
             return Math.abs(((this.direction % 1000) % 360) - 360);
         }
-        return NoteCutAngle[this.direction as keyof typeof NoteCutAngle] || 0;
+        return NoteDirectionAngle[this.direction as keyof typeof NoteDirectionAngle] || 0;
     }
 
     getDistance(compareTo: BaseNote<IBaseNote | T>) {
