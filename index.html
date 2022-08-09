@@ -8,8 +8,8 @@
   <meta name="theme-color" content="#dd0000">
   <link rel="shortcut icon" type="image/png" href="/BeatSaber-MapCheck/img/favicon.png">
   <title>BS Map Check</title>
-  <script type="module" crossorigin src="/BeatSaber-MapCheck/assets/index.e28d84c7.js"></script>
-  <link rel="stylesheet" href="/BeatSaber-MapCheck/assets/index.32835604.css">
+  <script type="module" crossorigin src="/BeatSaber-MapCheck/assets/index.8dc72732.js"></script>
+  <link rel="stylesheet" href="/BeatSaber-MapCheck/assets/index.743d1132.css">
 </head>
 
 <body>
@@ -271,6 +271,14 @@
           <label for="settings__sort">
             <span>Sorting</span>
           </label><br>
+          <input type="checkbox" class="settings__checkbox settings__data-check" id="settings__data-check">
+          <label for="settings__data-check">
+            <span>Data check</span>
+          </label><br>
+          <input type="checkbox" class="settings__checkbox settings__data-error" id="settings__data-error">
+          <label for="settings__data-error">
+            <span>Data error</span>
+          </label><br>
           <br>
           <div>Disabling these speeds up loading time but may cause unintended result.</div>
         </div>
@@ -305,6 +313,11 @@
             <span>Theme:</span>
           </label>
           <select class="settings__theme" id="settings__theme"></select><br>
+          <label for="settings__info-height">
+            <span>Info Row Height:</span>
+          </label>
+          <input type="number" class="settings__info-height input-toggle input--small" id="settings__info-height"
+            step="1" min="1"><br>
           <label for="settings__beat-numbering">
             <span>Beat Numbering:</span>
           </label>
