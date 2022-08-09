@@ -17,9 +17,10 @@ const logPrefixes = new Map<LogLevels, string>([
     [LogLevels.NONE, 'NONE'],
 ]);
 
-export default new (class logger {
+class logger {
     logLevel = LogLevels.INFO;
 
+    // deno-lint-ignore no-explicit-any
     private log(level: LogLevels, ...args: any[]) {
         if (level < this.logLevel) return;
 
@@ -49,29 +50,37 @@ export default new (class logger {
      * 5 -> None
      * ```
      */
-    public setLevel(level: LogLevels) {
+    setLevel(level: LogLevels) {
         level = Math.min(level, 5);
         this.logLevel = level;
         this.info('[logger::setLevel]', `Log level set to ${logPrefixes.get(level)}`);
     }
 
-    public verbose(...args: any[]) {
+    // deno-lint-ignore no-explicit-any
+    verbose(...args: any[]) {
         this.log(LogLevels.VERBOSE, ...args);
     }
 
-    public debug(...args: any[]) {
+    // deno-lint-ignore no-explicit-any
+    debug(...args: any[]) {
         this.log(LogLevels.DEBUG, ...args);
     }
 
-    public info(...args: any[]) {
+    // deno-lint-ignore no-explicit-any
+    info(...args: any[]) {
         this.log(LogLevels.INFO, ...args);
     }
 
-    public warn(...args: any[]) {
+    // deno-lint-ignore no-explicit-any
+    warn(...args: any[]) {
         this.log(LogLevels.WARN, ...args);
     }
 
-    public error(...args: any[]) {
+    // deno-lint-ignore no-explicit-any
+    error(...args: any[]) {
         this.log(LogLevels.ERROR, ...args);
     }
-})();
+}
+
+/** Simple logging system. */
+export default new logger();

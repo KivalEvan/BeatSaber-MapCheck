@@ -1,17 +1,17 @@
 import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import { round } from '../../utils';
-import * as beatmap from '../../beatmap';
 import { NoteContainer, NoteContainerNote } from '../../types/beatmap/v3/container';
 import swing from '../../analyzers/swing/swing';
 import { printResultTime } from '../helpers';
 import UICheckbox from '../../ui/helpers/checkbox';
+import { BeatPerMinute, NoteColor, NoteDirection, NoteDirectionFlip } from '../../beatmap';
 
 const name = 'shrado Angle';
 const description = 'Look for common negative curvature pattern.';
 const enabled = false;
 const defaultMaxTime = 0.15;
 const defaultDistance = 1;
-let localBPM!: beatmap.BeatPerMinute;
+let localBPM!: BeatPerMinute;
 
 const htmlContainer = document.createElement('div');
 const htmlInputDistance = document.createElement('input');
@@ -84,7 +84,7 @@ const tool: Tool = {
     run,
 };
 
-function adjustTimeHandler(bpm: beatmap.BeatPerMinute) {
+function adjustTimeHandler(bpm: BeatPerMinute) {
     localBPM = bpm;
     htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.maxTime as number), 2).toString();
 }
@@ -123,9 +123,8 @@ function check(map: ToolArgs) {
     const lastNoteDirection: { [key: number]: number } = {};
     const startNoteDot: { [key: number]: NoteContainer | null } = {};
     const swingNoteArray: { [key: number]: NoteContainer[] } = {
-        0: [],
-        1: [],
-        3: [],
+        [NoteColor.RED]: [],
+        [NoteColor.BLUE]: [],
     };
     const arr: NoteContainer[] = [];
     for (let i = 0, len = noteContainer.length; i < len; i++) {
@@ -138,8 +137,7 @@ function check(map: ToolArgs) {
                 // FIXME: maybe fix rotation or something
                 if (startNoteDot[note.data.color]) {
                     startNoteDot[note.data.color] = null;
-                    lastNoteDirection[note.data.color] =
-                        beatmap.NoteFlipDirection[lastNoteDirection[note.data.color]] ?? 8;
+                    lastNoteDirection[note.data.color] = NoteDirectionFlip[lastNoteDirection[note.data.color]] ?? 8;
                 }
                 if (
                     note.data.getDistance(lastNote[note.data.color].data) >= distance &&
@@ -148,7 +146,7 @@ function check(map: ToolArgs) {
                 ) {
                     arr.push(note);
                 }
-                if (note.data.direction === 8) {
+                if (note.data.direction === NoteDirection.ANY) {
                     startNoteDot[note.data.color] = note;
                 } else {
                     lastNoteDirection[note.data.color] = note.data.direction;
@@ -164,7 +162,7 @@ function check(map: ToolArgs) {
                     arr.push(startNoteDot[note.data.color]!);
                     startNoteDot[note.data.color] = null;
                 }
-                if (note.data.direction !== 8) {
+                if (note.data.direction !== NoteDirection.ANY) {
                     lastNoteDirection[note.data.color] = note.data.direction;
                 }
             }

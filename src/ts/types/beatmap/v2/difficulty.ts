@@ -7,7 +7,7 @@ import { ICustomDataDifficulty } from './customData';
 import { ISpecialEventsKeywordFilters } from './specialEventsKeywordFilters';
 
 /** Difficulty interface for difficulty file. */
-export interface IDifficultyData {
+export interface IDifficulty {
     _version: `2.${0 | 2 | 4 | 5 | 6}.0`;
     _notes: INote[];
     _sliders: ISlider[];

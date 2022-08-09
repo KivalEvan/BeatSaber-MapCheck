@@ -44,8 +44,6 @@ export default class Swing implements ISwingContainer {
             maxSpeed = Number.MAX_SAFE_INTEGER;
             if (lastNote[n.data.color]) {
                 if (this.next(n, lastNote[n.data.color], bpm, swingNoteArray[n.data.color])) {
-                    ebpmSwing = this.calcEBPMBetweenObject(n.data, firstNote[n.data.color].data, bpm.value);
-                    ebpm = this.calcEBPMBetweenObject(n.data, lastNote[n.data.color].data, bpm.value);
                     minSpeed = this.calcMinSliderSpeed(swingNoteArray[n.data.color], bpm);
                     maxSpeed = this.calcMaxSliderSpeed(swingNoteArray[n.data.color], bpm);
                     if (!(minSpeed > 0 && maxSpeed !== Infinity)) {
@@ -61,6 +59,8 @@ export default class Swing implements ISwingContainer {
                         maxSpeed,
                         minSpeed,
                     });
+                    ebpmSwing = this.calcEBPMBetweenObject(n.data, firstNote[n.data.color].data, bpm.value);
+                    ebpm = this.calcEBPMBetweenObject(n.data, lastNote[n.data.color].data, bpm.value);
                     firstNote[n.data.color] = n;
                     swingNoteArray[n.data.color] = [];
                 }
@@ -72,8 +72,6 @@ export default class Swing implements ISwingContainer {
         }
         for (let i = 0; i < 2; i++) {
             if (lastNote[i]) {
-                ebpmSwing = 0;
-                ebpm = 0;
                 minSpeed = this.calcMinSliderSpeed(swingNoteArray[i], bpm);
                 maxSpeed = this.calcMaxSliderSpeed(swingNoteArray[i], bpm);
                 if (!(minSpeed > 0 && maxSpeed !== Infinity)) {

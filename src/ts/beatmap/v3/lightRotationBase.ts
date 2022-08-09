@@ -1,25 +1,29 @@
 import { ILightRotationBase } from '../../types/beatmap/v3/lightRotationBase';
+import { ObjectReturnFn } from '../../types/utils';
+import { deepCopy } from '../../utils/misc';
 import { Serializable } from '../shared/serializable';
 
 /** Light rotation base beatmap v3 class object. */
 export class LightRotationBase extends Serializable<ILightRotationBase> {
-    static default: Required<ILightRotationBase> = {
+    static default: ObjectReturnFn<Required<ILightRotationBase>> = {
         b: 0,
         p: 0,
         e: 0,
         l: 0,
         r: 0,
         o: 0,
+        customData: () => {
+            return {};
+        },
     };
 
-    private constructor(lightRotationBase: Required<ILightRotationBase>) {
+    protected constructor(lightRotationBase: Required<ILightRotationBase>) {
         super(lightRotationBase);
     }
 
-    static create(): LightRotationBase;
-    static create(lightRotations: Partial<ILightRotationBase>): LightRotationBase;
+    static create(): LightRotationBase[];
     static create(...lightRotations: Partial<ILightRotationBase>[]): LightRotationBase[];
-    static create(...lightRotations: Partial<ILightRotationBase>[]): LightRotationBase | LightRotationBase[] {
+    static create(...lightRotations: Partial<ILightRotationBase>[]): LightRotationBase[] {
         const result: LightRotationBase[] = [];
         lightRotations?.forEach((lr) =>
             result.push(
@@ -30,26 +34,27 @@ export class LightRotationBase extends Serializable<ILightRotationBase> {
                     l: lr.l ?? LightRotationBase.default.l,
                     r: lr.r ?? LightRotationBase.default.r,
                     o: lr.o ?? LightRotationBase.default.o,
+                    customData: lr.customData ?? LightRotationBase.default.customData(),
                 }),
             ),
         );
-        if (result.length === 1) {
-            return result[0];
-        }
         if (result.length) {
             return result;
         }
-        return new this({
-            b: LightRotationBase.default.b,
-            p: LightRotationBase.default.p,
-            e: LightRotationBase.default.e,
-            l: LightRotationBase.default.l,
-            r: LightRotationBase.default.r,
-            o: LightRotationBase.default.o,
-        });
+        return [
+            new this({
+                b: LightRotationBase.default.b,
+                p: LightRotationBase.default.p,
+                e: LightRotationBase.default.e,
+                l: LightRotationBase.default.l,
+                r: LightRotationBase.default.r,
+                o: LightRotationBase.default.o,
+                customData: LightRotationBase.default.customData(),
+            }),
+        ];
     }
 
-    toObject(): ILightRotationBase {
+    toJSON(): Required<ILightRotationBase> {
         return {
             b: this.time,
             p: this.previous,
@@ -57,6 +62,7 @@ export class LightRotationBase extends Serializable<ILightRotationBase> {
             l: this.loop,
             r: this.rotation,
             o: this.direction,
+            customData: deepCopy(this.data.customData),
         };
     }
 

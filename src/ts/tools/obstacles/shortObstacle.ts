@@ -1,7 +1,8 @@
 import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
-import * as beatmap from '../../beatmap';
 import UICheckbox from '../../ui/helpers/checkbox';
 import { printResultTime } from '../helpers';
+import { PositionX, PositionY } from '../../beatmap';
+import { Obstacle } from '../../beatmap/v3/obstacle';
 
 const name = '<15ms Obstacle';
 const description =
@@ -36,13 +37,13 @@ function check(map: ToolArgs) {
     const { bpm } = map.settings;
     const { minDur: temp } = <{ minDur: number }>tool.input.params;
     const minDur = bpm.toBeatTime(temp);
-    const arr: beatmap.v3.Obstacle[] = [];
-    let obstacleLFull: beatmap.v3.Obstacle = beatmap.v3.Obstacle.create();
-    let obstacleRFull: beatmap.v3.Obstacle = beatmap.v3.Obstacle.create();
-    let obstacleLHalf: beatmap.v3.Obstacle = beatmap.v3.Obstacle.create();
-    let obstacleRHalf: beatmap.v3.Obstacle = beatmap.v3.Obstacle.create();
+    const arr: Obstacle[] = [];
+    let obstacleLFull: Obstacle = Obstacle.create()[0];
+    let obstacleRFull: Obstacle = Obstacle.create()[0];
+    let obstacleLHalf: Obstacle = Obstacle.create()[0];
+    let obstacleRHalf: Obstacle = Obstacle.create()[0];
     obstacles.forEach((o) => {
-        if (o.posY === 0 && o.height > 2 && o.duration > 0) {
+        if (o.posY === PositionY.BOTTOM && o.height > 2 && o.duration > 0) {
             if (o.width > 2 || (o.width > 1 && o.posX === 1)) {
                 if (o.isLonger(obstacleLFull)) {
                     if (o.duration < minDur) {
@@ -57,14 +58,14 @@ function check(map: ToolArgs) {
                     obstacleRFull = o;
                 }
             } else if (o.width === 2) {
-                if (o.posX === 0) {
+                if (o.posX === PositionX.LEFT) {
                     if (o.isLonger(obstacleLFull)) {
                         if (o.duration < minDur) {
                             arr.push(o);
                         }
                         obstacleLFull = o;
                     }
-                } else if (o.posX === 2) {
+                } else if (o.posX === PositionX.MIDDLE_RIGHT) {
                     if (o.isLonger(obstacleRFull)) {
                         if (o.duration < minDur) {
                             arr.push(o);
@@ -73,14 +74,14 @@ function check(map: ToolArgs) {
                     }
                 }
             } else if (o.width === 1) {
-                if (o.posX === 1) {
+                if (o.posX === PositionX.MIDDLE_LEFT) {
                     if (o.isLonger(obstacleLFull)) {
                         if (o.duration < minDur) {
                             arr.push(o);
                         }
                         obstacleLFull = o;
                     }
-                } else if (o.posX === 2) {
+                } else if (o.posX === PositionX.MIDDLE_RIGHT) {
                     if (o.isLonger(obstacleRFull)) {
                         if (o.duration < minDur) {
                             arr.push(o);
@@ -89,8 +90,8 @@ function check(map: ToolArgs) {
                     }
                 }
             }
-        } else if (o.posY === 2 && o.height > 2 && o.duration > 0) {
-            if (o.width > 2 || (o.width > 1 && o.posX === 1)) {
+        } else if (o.posY === PositionY.TOP && o.height > 2 && o.duration > 0) {
+            if (o.width > 2 || (o.width > 1 && o.posX === PositionX.MIDDLE_LEFT)) {
                 if (o.isLonger(obstacleLHalf)) {
                     if (o.duration < minDur && o.isLonger(obstacleLFull, minDur) && o.isLonger(obstacleLHalf, minDur)) {
                         arr.push(o);
@@ -104,7 +105,7 @@ function check(map: ToolArgs) {
                     obstacleRHalf = o;
                 }
             } else if (o.width === 2) {
-                if (o.posX === 0) {
+                if (o.posX === PositionX.LEFT) {
                     if (o.isLonger(obstacleLHalf)) {
                         if (
                             o.duration < minDur &&
@@ -115,7 +116,7 @@ function check(map: ToolArgs) {
                         }
                         obstacleLHalf = o;
                     }
-                } else if (o.posX === 2) {
+                } else if (o.posX === PositionX.MIDDLE_RIGHT) {
                     if (o.isLonger(obstacleRHalf)) {
                         if (
                             o.duration < minDur &&
@@ -128,7 +129,7 @@ function check(map: ToolArgs) {
                     }
                 }
             } else if (o.width === 1) {
-                if (o.posX === 1) {
+                if (o.posX === PositionX.MIDDLE_LEFT) {
                     if (o.isLonger(obstacleLHalf)) {
                         if (
                             o.duration < minDur &&
@@ -139,7 +140,7 @@ function check(map: ToolArgs) {
                         }
                         obstacleLHalf = o;
                     }
-                } else if (o.posX === 2) {
+                } else if (o.posX === PositionX.MIDDLE_RIGHT) {
                     if (o.isLonger(obstacleRHalf)) {
                         if (
                             o.duration < minDur &&

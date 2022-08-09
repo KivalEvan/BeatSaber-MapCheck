@@ -3,9 +3,11 @@ import { IEditor } from './editor';
 import { IColorScheme } from './colorScheme';
 import { IHeckInfoCustomData, IInfoSettingsCustomData } from './heck';
 import { IChromaInfoCustomData } from './chroma';
+import { LooseAutocomplete } from '../../utils';
 
 /** Base custom data interface. */
 export interface ICustomDataBase {
+    // deno-lint-ignore no-explicit-any
     [key: string]: any;
 }
 
@@ -19,19 +21,24 @@ export interface ICustomDataInfo extends ICustomDataBase {
     _customEnvironmentHash?: string;
 }
 
-type IModSettingsIntersection = IInfoSettingsCustomData & IHeckInfoCustomData & IChromaInfoCustomData;
+/** Available mod suggestions. */
+export type Suggestions = 'Chroma' | 'Cinema';
+
+/** Available mod requirements. */
+export type Requirements = Suggestions | 'Noodle Extensions' | 'Mapping Extensions';
+
+type IInfoSettings = IInfoSettingsCustomData & IHeckInfoCustomData & IChromaInfoCustomData;
 /** Custom Data interface for info difficulty.
  * @extends ICustomDataBase
  * @extends IColorScheme
- * @extends IHeckInfoCustomData
- * @extends IChromaInfoCustomData
+ * @extends IInfoSettings
  */
-export interface ICustomDataInfoDifficulty extends ICustomDataBase, IColorScheme, IModSettingsIntersection {
+export interface ICustomDataInfoDifficulty extends ICustomDataBase, IColorScheme, IInfoSettings {
     _difficultyLabel?: string;
     _editorOffset?: number;
     _editorOldOffset?: number;
     _warnings?: string[];
     _information?: string[];
-    _suggestions?: string[];
-    _requirements?: string[];
+    _suggestions?: LooseAutocomplete<Suggestions>[];
+    _requirements?: LooseAutocomplete<Requirements>[];
 }

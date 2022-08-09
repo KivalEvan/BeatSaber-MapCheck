@@ -1,14 +1,12 @@
 import { DataCheck } from '../../types/beatmap/shared/dataCheck';
-import {
-    IDifficultyData,
-    IEvent,
-    INote,
-    IObstacle,
-    ISlider,
-    ISpecialEventsKeywordFilters,
-    ISpecialEventsKeywordFiltersKeywords,
-    IWaypoint,
-} from '../../types/beatmap/v2';
+import { IDifficulty } from '../../types/beatmap/v2/difficulty';
+import { IEvent } from '../../types/beatmap/v2/event';
+import { INote } from '../../types/beatmap/v2/note';
+import { IObstacle } from '../../types/beatmap/v2/obstacle';
+import { ISlider } from '../../types/beatmap/v2/slider';
+import { ISpecialEventsKeywordFilters } from '../../types/beatmap/v2/specialEventsKeywordFilters';
+import { ISpecialEventsKeywordFiltersKeywords } from '../../types/beatmap/v2/specialEventsKeywordFiltersKeywords';
+import { IWaypoint } from '../../types/beatmap/v2/waypoint';
 
 export const NoteDataCheck: Record<keyof INote, DataCheck> = {
     _time: {
@@ -17,18 +15,24 @@ export const NoteDataCheck: Record<keyof INote, DataCheck> = {
     },
     _type: {
         type: 'number',
+        int: true,
+        unsigned: true,
         version: '2.0.0',
     },
     _lineIndex: {
         type: 'number',
+        int: true,
         version: '2.0.0',
     },
     _lineLayer: {
         type: 'number',
+        int: true,
         version: '2.0.0',
     },
     _cutDirection: {
         type: 'number',
+        int: true,
+        unsigned: true,
         version: '2.0.0',
     },
     _customData: {
@@ -50,14 +54,18 @@ export const SliderDataCheck: Record<keyof ISlider, DataCheck> = {
     },
     _headLineIndex: {
         type: 'number',
+        int: true,
         version: '2.0.0',
     },
     _headLineLayer: {
         type: 'number',
+        int: true,
         version: '2.0.0',
     },
     _headCutDirection: {
         type: 'number',
+        int: true,
+        unsigned: true,
         version: '2.0.0',
     },
     _headControlPointlengthMultiplier: {
@@ -70,14 +78,18 @@ export const SliderDataCheck: Record<keyof ISlider, DataCheck> = {
     },
     _tailLineIndex: {
         type: 'number',
+        int: true,
         version: '2.0.0',
     },
     _tailLineLayer: {
         type: 'number',
+        int: true,
         version: '2.0.0',
     },
     _tailCutDirection: {
         type: 'number',
+        int: true,
+        unsigned: true,
         version: '2.0.0',
     },
     _tailControlPointLengthMultiplier: {
@@ -97,15 +109,19 @@ export const ObstacleDataCheck: Record<keyof IObstacle, DataCheck> = {
     },
     _lineIndex: {
         type: 'number',
+        int: true,
         version: '2.0.0',
     },
     _lineLayer: {
         type: 'number',
+        int: true,
         version: '2.6.0',
         optional: true,
     },
     _type: {
         type: 'number',
+        int: true,
+        unsigned: true,
         version: '2.0.0',
     },
     _duration: {
@@ -114,10 +130,12 @@ export const ObstacleDataCheck: Record<keyof IObstacle, DataCheck> = {
     },
     _width: {
         type: 'number',
+        int: true,
         version: '2.0.0',
     },
     _height: {
         type: 'number',
+        int: true,
         version: '2.6.0',
         optional: true,
     },
@@ -136,10 +154,12 @@ export const EventDataCheck: Record<keyof IEvent, DataCheck> = {
     },
     _type: {
         type: 'number',
+        int: true,
         version: '2.0.0',
     },
     _value: {
         type: 'number',
+        int: true,
         version: '2.0.0',
     },
     _floatValue: {
@@ -162,14 +182,17 @@ export const WaypointDataCheck: Record<keyof IWaypoint, DataCheck> = {
     },
     _lineIndex: {
         type: 'number',
+        int: true,
         version: '2.2.0',
     },
     _lineLayer: {
         type: 'number',
+        int: true,
         version: '2.2.0',
     },
     _offsetDirection: {
         type: 'number',
+        int: true,
         version: '2.2.0',
     },
     _customData: {
@@ -190,6 +213,7 @@ export const SpecialEventsKeywordFiltersKeywordsDataCheck: Record<
     },
     _specialEvents: {
         type: 'number',
+        int: true,
         version: '2.4.0',
     },
 } as const;
@@ -202,7 +226,7 @@ export const SpecialEventsKeywordFiltersDataCheck: Record<keyof ISpecialEventsKe
     },
 } as const;
 
-export const DifficultyDataCheck: Record<keyof IDifficultyData, DataCheck> = {
+export const DifficultyCheck: Record<keyof IDifficulty, DataCheck> = {
     _version: {
         type: 'string',
         version: '2.0.0',

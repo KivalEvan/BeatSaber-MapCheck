@@ -1,6 +1,6 @@
 import SavedData from '../../savedData';
 import { removeOptions } from '../../utils';
-import { EnvironmentName, IEditor, IEditorInfo } from '../../types/beatmap/shared';
+import { EnvironmentName, EnvironmentV3Name, IEditor, IEditorInfo } from '../../types/beatmap/shared';
 import { IContributorB64 } from '../../types/mapcheck';
 import { EnvironmentRename } from '../../beatmap/shared';
 import { logPrefix } from './constants';
@@ -34,7 +34,7 @@ export function setLevelAuthor(str?: string): void {
     htmlInfoLevelAuthor.textContent = 'Mapped by ' + str;
 }
 
-export function setEnvironment(str?: EnvironmentName): void {
+export function setEnvironment(str?: EnvironmentName | EnvironmentV3Name): void {
     if (!str) {
         htmlInfoEnvironment.textContent = '';
         return;

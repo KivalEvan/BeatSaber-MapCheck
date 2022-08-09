@@ -1,5 +1,5 @@
+import { BasicEvent } from '../../beatmap/v3/basicEvent';
 import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
-import * as beatmap from '../../beatmap';
 import UICheckbox from '../../ui/helpers/checkbox';
 import { printResult } from '../helpers';
 
@@ -28,7 +28,7 @@ const tool: Tool = {
     run,
 };
 
-function sufficientLight(events: beatmap.v3.BasicEvent[]): boolean {
+function sufficientLight(events: BasicEvent[]): boolean {
     let count = 0;
     for (let i = events.length - 1; i >= 0; i--) {
         if (events[i].isLightEvent() && !events[i].isOff()) {

@@ -1,5 +1,24 @@
 # Changelog
 
+## 2.5.1 [2022-08-09]
+
+### Added
+
+-   Chroma geometry support
+-   Bookmark color
+-   Adjustable information table height
+-   v3 BPM change support
+
+### Changed
+
+-   Updated to latest dependencies
+
+### Fixed
+
+-   EBPM points to current note instead of next note
+-   Color boost not counted in stats
+-   Typo
+
 ## 2.5.0 [2022-06-19]
 
 ### Added
@@ -23,9 +42,6 @@
 -   Better internal user interface work
 -   All check can now be toggled
 -   v2 event floatValue and v2 obstacle lineLayer & height is now optional
-
-### Updated
-
 -   Package dependencies updated to latest
 -   Changelog date format
 

@@ -1,5 +1,5 @@
 // taken from Aeroluna's Heck easing animation
-import { Easings } from '../../types/beatmap/shared/easings';
+import { Easings } from '../types/easings';
 
 const PI = Math.PI;
 const HALFPI = Math.PI / 2;
@@ -7,7 +7,9 @@ const HALFPI = Math.PI / 2;
 const easeOutBounce = (x: number) => {
     if (x < 4 / 11.0) return (121 * x * x) / 16.0;
     if (x < 8 / 11.0) return (363 / 40.0) * x * x - (99 / 10.0) * x + 17 / 5.0;
-    if (x < 9 / 10.0) return (4356 / 361.0) * x * x - (35442 / 1805.0) * x + 16061 / 1805.0;
+    if (x < 9 / 10.0) {
+        return (4356 / 361.0) * x * x - (35442 / 1805.0) * x + 16061 / 1805.0;
+    }
     return (54 / 5) * x * x - (513 / 25.0) * x + 268 / 25.0;
 };
 
@@ -21,7 +23,9 @@ const easeInOutBounce = (x: number) => (x < 0.5 ? 0.5 * easeInBounce(x * 2) : 0.
  * Define: method.name = (x) => x
  * ```
  */
-export const easings: { [easing in Exclude<Easings, 'easeStep'> | string]: (x: number) => number } = {
+export const easings: {
+    [easing in Exclude<Easings, 'easeStep'> | string]: (x: number) => number;
+} = {
     easeLinear: (x) => x,
     easeInQuad: (x) => x * x,
     easeOutQuad: (x) => x * (2 - x),

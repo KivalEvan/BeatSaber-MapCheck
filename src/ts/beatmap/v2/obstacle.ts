@@ -1,11 +1,11 @@
 import { IObstacle } from '../../types/beatmap/v2/obstacle';
-import { ObjectToReturn } from '../../types/utils';
-import { deepCopy } from '../../utils/misc';
+import { ObjectReturnFn } from '../../types/utils';
 import { BeatmapObject } from './object';
+import { deepCopy } from '../../utils/misc';
 
 /** Object beatmap v2 class object. */
 export class Obstacle extends BeatmapObject<IObstacle> {
-    static default: ObjectToReturn<Required<IObstacle>> = {
+    static default: ObjectReturnFn<Required<IObstacle>> = {
         _time: 0,
         _lineIndex: 0,
         _lineLayer: 0,
@@ -18,14 +18,13 @@ export class Obstacle extends BeatmapObject<IObstacle> {
         },
     };
 
-    private constructor(data: Required<IObstacle>) {
+    protected constructor(data: Required<IObstacle>) {
         super(data);
     }
 
-    static create(): Obstacle;
-    static create(obstacles: Partial<IObstacle>): Obstacle;
+    static create(): Obstacle[];
     static create(...obstacles: Partial<IObstacle>[]): Obstacle[];
-    static create(...obstacles: Partial<IObstacle>[]): Obstacle | Obstacle[] {
+    static create(...obstacles: Partial<IObstacle>[]): Obstacle[] {
         const result: Obstacle[] = [];
         obstacles?.forEach((o) =>
             result.push(
@@ -41,25 +40,24 @@ export class Obstacle extends BeatmapObject<IObstacle> {
                 }),
             ),
         );
-        if (result.length === 1) {
-            return result[0];
-        }
         if (result.length) {
             return result;
         }
-        return new this({
-            _time: Obstacle.default._time,
-            _type: Obstacle.default._type,
-            _lineIndex: Obstacle.default._lineIndex,
-            _lineLayer: Obstacle.default._lineLayer,
-            _duration: Obstacle.default._duration,
-            _width: Obstacle.default._width,
-            _height: Obstacle.default._height,
-            _customData: Obstacle.default._customData(),
-        });
+        return [
+            new this({
+                _time: Obstacle.default._time,
+                _type: Obstacle.default._type,
+                _lineIndex: Obstacle.default._lineIndex,
+                _lineLayer: Obstacle.default._lineLayer,
+                _duration: Obstacle.default._duration,
+                _width: Obstacle.default._width,
+                _height: Obstacle.default._height,
+                _customData: Obstacle.default._customData(),
+            }),
+        ];
     }
 
-    toObject(): Required<IObstacle> {
+    toJSON(): Required<IObstacle> {
         return {
             _time: this.time,
             _type: this.type,

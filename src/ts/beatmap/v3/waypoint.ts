@@ -1,12 +1,12 @@
 import { IWaypoint } from '../../types/beatmap/v3/waypoint';
-import { ObjectToReturn } from '../../types/utils';
-import { deepCopy } from '../../utils/misc';
+import { ObjectReturnFn } from '../../types/utils';
 import { LINE_COUNT } from '../shared/constants';
 import { BaseObject } from './baseObject';
+import { deepCopy } from '../../utils/misc';
 
 /** Waypoint beatmap v3 class object. */
 export class Waypoint extends BaseObject<IWaypoint> {
-    static default: ObjectToReturn<Required<IWaypoint>> = {
+    static default: ObjectReturnFn<Required<IWaypoint>> = {
         b: 0,
         x: 0,
         y: 0,
@@ -16,14 +16,13 @@ export class Waypoint extends BaseObject<IWaypoint> {
         },
     };
 
-    private constructor(waypoint: Required<IWaypoint>) {
+    protected constructor(waypoint: Required<IWaypoint>) {
         super(waypoint);
     }
 
-    static create(): Waypoint;
-    static create(waypoints: Partial<IWaypoint>): Waypoint;
+    static create(): Waypoint[];
     static create(...waypoints: Partial<IWaypoint>[]): Waypoint[];
-    static create(...waypoints: Partial<IWaypoint>[]): Waypoint | Waypoint[] {
+    static create(...waypoints: Partial<IWaypoint>[]): Waypoint[] {
         const result: Waypoint[] = [];
         waypoints?.forEach((w) =>
             result.push(
@@ -36,22 +35,21 @@ export class Waypoint extends BaseObject<IWaypoint> {
                 }),
             ),
         );
-        if (result.length === 1) {
-            return result[0];
-        }
         if (result.length) {
             return result;
         }
-        return new this({
-            b: Waypoint.default.b,
-            x: Waypoint.default.x,
-            y: Waypoint.default.y,
-            d: Waypoint.default.d,
-            customData: Waypoint.default.customData(),
-        });
+        return [
+            new this({
+                b: Waypoint.default.b,
+                x: Waypoint.default.x,
+                y: Waypoint.default.y,
+                d: Waypoint.default.d,
+                customData: Waypoint.default.customData(),
+            }),
+        ];
     }
 
-    toObject(): Required<IWaypoint> {
+    toJSON(): Required<IWaypoint> {
         return {
             b: this.time,
             x: this.posX,

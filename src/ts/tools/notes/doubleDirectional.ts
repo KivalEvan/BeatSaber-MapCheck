@@ -1,10 +1,11 @@
 import { IBeatmapItem, IBeatmapSettings, Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
-import * as beatmap from '../../beatmap';
 import { NoteContainer } from '../../types/beatmap/v3/container';
 import { checkDirection } from '../../analyzers/placement/note';
 import swing from '../../analyzers/swing/swing';
 import UICheckbox from '../../ui/helpers/checkbox';
 import { printResultTime } from '../helpers';
+import { NoteColor, NoteDirectionAngle, NoteDirection, PositionX, PositionY } from '../../beatmap';
+import { ColorNote } from '../../beatmap/v3/colorNote';
 
 const name = 'Double-directional';
 const description = 'Check double-directional note swing (this may not mean parity break).';
@@ -36,13 +37,13 @@ function check(settings: IBeatmapSettings, difficulty: IBeatmapItem) {
     const noteContainer = difficulty.noteContainer;
     const lastNote: { [key: number]: NoteContainer } = {};
     const lastNoteAngle: { [key: number]: number } = {};
-    const startNoteDot: { [key: number]: beatmap.v3.ColorNote | null } = {};
+    const startNoteDot: { [key: number]: ColorNote | null } = {};
     const swingNoteArray: { [key: number]: NoteContainer[] } = {
-        0: [],
-        1: [],
+        [NoteColor.RED]: [],
+        [NoteColor.BLUE]: [],
     };
 
-    const arr: beatmap.v3.ColorNote[] = [];
+    const arr: ColorNote[] = [];
     for (let i = 0, len = noteContainer.length; i < len; i++) {
         const note = noteContainer[i];
         if (note.type === 'note' && lastNote[note.data.color]) {
@@ -54,7 +55,7 @@ function check(settings: IBeatmapSettings, difficulty: IBeatmapItem) {
                 if (checkDirection(note.data, lastNoteAngle[note.data.color], 45, true)) {
                     arr.push(note.data);
                 }
-                if (note.data.direction === 8) {
+                if (note.data.direction === NoteDirection.ANY) {
                     startNoteDot[note.data.color] = note.data;
                 } else {
                     lastNoteAngle[note.data.color] = note.data.getAngle();
@@ -69,7 +70,7 @@ function check(settings: IBeatmapSettings, difficulty: IBeatmapItem) {
                     startNoteDot[note.data.color] = null;
                     lastNoteAngle[note.data.color] = note.data.getAngle();
                 }
-                if (note.data.direction !== 8) {
+                if (note.data.direction !== NoteDirection.ANY) {
                     startNoteDot[note.data.color] = null;
                     lastNoteAngle[note.data.color] = note.data.getAngle();
                 }
@@ -83,29 +84,29 @@ function check(settings: IBeatmapSettings, difficulty: IBeatmapItem) {
         }
         if (note.type === 'bomb') {
             // on bottom row
-            if (note.data.posY === 0) {
+            if (note.data.posY === PositionY.BOTTOM) {
                 //on right center
-                if (note.data.posX === 1) {
-                    lastNoteAngle[0] = beatmap.NoteCutAngle[0];
-                    startNoteDot[0] = null;
+                if (note.data.posX === PositionX.MIDDLE_LEFT) {
+                    lastNoteAngle[NoteColor.RED] = NoteDirectionAngle[NoteDirection.UP];
+                    startNoteDot[NoteColor.RED] = null;
                 }
                 //on left center
-                if (note.data.posX === 2) {
-                    lastNoteAngle[1] = beatmap.NoteCutAngle[0];
-                    startNoteDot[1] = null;
+                if (note.data.posX === PositionX.MIDDLE_RIGHT) {
+                    lastNoteAngle[NoteColor.BLUE] = NoteDirectionAngle[NoteDirection.UP];
+                    startNoteDot[NoteColor.BLUE] = null;
                 }
                 //on top row
             }
-            if (note.data.posY === 2) {
+            if (note.data.posY === PositionY.TOP) {
                 //on right center
-                if (note.data.posX === 1) {
-                    lastNoteAngle[0] = beatmap.NoteCutAngle[1];
-                    startNoteDot[0] = null;
+                if (note.data.posX === PositionX.MIDDLE_LEFT) {
+                    lastNoteAngle[NoteColor.RED] = NoteDirectionAngle[NoteDirection.DOWN];
+                    startNoteDot[NoteColor.RED] = null;
                 }
                 //on left center
-                if (note.data.posX === 2) {
-                    lastNoteAngle[1] = beatmap.NoteCutAngle[1];
-                    startNoteDot[1] = null;
+                if (note.data.posX === PositionX.MIDDLE_RIGHT) {
+                    lastNoteAngle[NoteColor.BLUE] = NoteDirectionAngle[NoteDirection.DOWN];
+                    startNoteDot[NoteColor.BLUE] = null;
                 }
             }
         }

@@ -1,24 +1,28 @@
 import { ILightColorBase } from '../../types/beatmap/v3/lightColorBase';
+import { ObjectReturnFn } from '../../types/utils';
+import { deepCopy } from '../../utils/misc';
 import { Serializable } from '../shared/serializable';
 
 /** Light color base beatmap v3 class object. */
 export class LightColorBase extends Serializable<ILightColorBase> {
-    static default: Required<ILightColorBase> = {
+    static default: ObjectReturnFn<Required<ILightColorBase>> = {
         b: 0,
         i: 0,
         c: 0,
         s: 1,
         f: 0,
+        customData: () => {
+            return {};
+        },
     };
 
-    private constructor(lightColorBase: Required<ILightColorBase>) {
+    protected constructor(lightColorBase: Required<ILightColorBase>) {
         super(lightColorBase);
     }
 
-    static create(): LightColorBase;
-    static create(lightColors: Partial<ILightColorBase>): LightColorBase;
+    static create(): LightColorBase[];
     static create(...lightColors: Partial<ILightColorBase>[]): LightColorBase[];
-    static create(...lightColors: Partial<ILightColorBase>[]): LightColorBase | LightColorBase[] {
+    static create(...lightColors: Partial<ILightColorBase>[]): LightColorBase[] {
         const result: LightColorBase[] = [];
         lightColors?.forEach((lc) =>
             result.push(
@@ -28,31 +32,33 @@ export class LightColorBase extends Serializable<ILightColorBase> {
                     c: lc.c ?? LightColorBase.default.c,
                     s: lc.s ?? LightColorBase.default.s,
                     f: lc.f ?? LightColorBase.default.f,
+                    customData: lc.customData ?? LightColorBase.default.customData(),
                 }),
             ),
         );
-        if (result.length === 1) {
-            return result[0];
-        }
         if (result.length) {
             return result;
         }
-        return new this({
-            b: LightColorBase.default.b,
-            i: LightColorBase.default.i,
-            c: LightColorBase.default.c,
-            s: LightColorBase.default.s,
-            f: LightColorBase.default.f,
-        });
+        return [
+            new this({
+                b: LightColorBase.default.b,
+                i: LightColorBase.default.i,
+                c: LightColorBase.default.c,
+                s: LightColorBase.default.s,
+                f: LightColorBase.default.f,
+                customData: LightColorBase.default.customData(),
+            }),
+        ];
     }
 
-    toObject(): ILightColorBase {
+    toJSON(): Required<ILightColorBase> {
         return {
             b: this.time,
             i: this.transition,
             c: this.color,
             s: this.brightness,
             f: this.frequency,
+            customData: deepCopy(this.data.customData),
         };
     }
 

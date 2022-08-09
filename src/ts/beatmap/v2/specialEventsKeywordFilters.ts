@@ -1,23 +1,24 @@
 import { ISpecialEventsKeywordFiltersKeywords } from '../../types/beatmap/v2/specialEventsKeywordFiltersKeywords';
 import { ISpecialEventsKeywordFilters } from '../../types/beatmap/v2/specialEventsKeywordFilters';
-import { ObjectToReturn } from '../../types/utils';
+import { ObjectReturnFn } from '../../types/utils';
 import { Serializable } from '../shared/serializable';
 import { SpecialEventsKeywordFiltersKeywords } from './specialEventsKeywordFiltersKeywords';
 
 /** Special event types with keywords beatmap v2 class object. */
 export class SpecialEventsKeywordFilters extends Serializable<ISpecialEventsKeywordFilters> {
-    static default: ObjectToReturn<Required<ISpecialEventsKeywordFilters>> = {
+    static default: ObjectReturnFn<Required<ISpecialEventsKeywordFilters>> = {
         _keywords: () => [],
     };
 
     keywords: SpecialEventsKeywordFiltersKeywords[];
-    private constructor(specialEventsWithKeywords: Required<ISpecialEventsKeywordFilters>) {
+    protected constructor(specialEventsWithKeywords: Required<ISpecialEventsKeywordFilters>) {
         super(specialEventsWithKeywords);
-        this.keywords = specialEventsWithKeywords._keywords.map((d) =>
-            SpecialEventsKeywordFiltersKeywords.create({
-                _keyword: d._keyword,
-                _specialEvents: d._specialEvents,
-            }),
+        this.keywords = specialEventsWithKeywords._keywords.map(
+            (d) =>
+                SpecialEventsKeywordFiltersKeywords.create({
+                    _keyword: d._keyword,
+                    _specialEvents: d._specialEvents,
+                })[0],
         );
     }
 
@@ -27,9 +28,9 @@ export class SpecialEventsKeywordFilters extends Serializable<ISpecialEventsKeyw
         });
     }
 
-    toObject(): ISpecialEventsKeywordFilters {
+    toJSON(): ISpecialEventsKeywordFilters {
         return {
-            _keywords: this.keywords.map((d) => d.toObject()),
+            _keywords: this.keywords.map((d) => d.toJSON()),
         };
     }
 
@@ -39,7 +40,7 @@ export class SpecialEventsKeywordFilters extends Serializable<ISpecialEventsKeyw
         return this;
     }
     addKeyword(value: ISpecialEventsKeywordFiltersKeywords) {
-        this.keywords.push(SpecialEventsKeywordFiltersKeywords.create(value));
+        this.keywords.push(SpecialEventsKeywordFiltersKeywords.create(value)[0]);
         return this;
     }
     removeKeyword(value: string) {

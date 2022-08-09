@@ -1,9 +1,9 @@
 import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import { round } from '../../utils';
-import * as beatmap from '../../beatmap';
 import { NoteContainer } from '../../types/beatmap/v3/container';
 import { printResultTime } from '../helpers';
 import UICheckbox from '../../ui/helpers/checkbox';
+import { BeatPerMinute, PositionX, PositionY } from '../../beatmap';
 
 const name = 'Vision Block';
 const description = 'Check for vision block caused by center note.';
@@ -11,7 +11,7 @@ const enabled = true;
 const defaultMinTime = 0.1;
 const defaultMaxTime = 0.5;
 
-let localBPM!: beatmap.BeatPerMinute;
+let localBPM!: BeatPerMinute;
 
 const vbDiff: { [key: string]: { min: number; max: number } } = {
     Easy: {
@@ -149,7 +149,7 @@ const tool: Tool = {
     run,
 };
 
-function adjustTimeHandler(bpm: beatmap.BeatPerMinute) {
+function adjustTimeHandler(bpm: BeatPerMinute) {
     localBPM = bpm;
     htmlInputMinBeat.value = round(localBPM.toBeatTime(tool.input.params.minTime as number), 2).toString();
     htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.maxTime as number), 2).toString();
@@ -229,7 +229,7 @@ function check(map: ToolArgs) {
         const note = noteContainer[i];
         if (lastMidL) {
             if (note.data.time - lastMidL.data.time >= minTime && note.data.time - lastMidL.data.time <= maxTime) {
-                if (note.data.posX < 2) {
+                if (note.data.posX < PositionX.MIDDLE_RIGHT) {
                     arr.push(note);
                 }
             }
@@ -240,17 +240,17 @@ function check(map: ToolArgs) {
         }
         if (lastMidR) {
             if (note.data.time - lastMidR.data.time >= minTime && note.data.time - lastMidR.data.time <= maxTime) {
-                if (note.data.posX > 1) {
+                if (note.data.posX > PositionX.MIDDLE_LEFT) {
                     arr.push(note);
                 }
             } else if (note.data.time - lastMidR.data.time > maxTime) {
                 lastMidR = null;
             }
         }
-        if (note.data.posY === 1 && note.data.posX === 1) {
+        if (note.data.posY === PositionY.MIDDLE && note.data.posX === PositionX.MIDDLE_LEFT) {
             lastMidL = note;
         }
-        if (note.data.posY === 1 && note.data.posX === 2) {
+        if (note.data.posY === PositionY.MIDDLE && note.data.posX === PositionX.MIDDLE_RIGHT) {
             lastMidR = note;
         }
     }

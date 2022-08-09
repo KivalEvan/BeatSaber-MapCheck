@@ -2,7 +2,7 @@ import { ISettings } from './types/mapcheck/settings';
 import { deepCopy } from './utils';
 
 const settingsDefault: ISettings = {
-    version: 1,
+    version: 3,
     load: {
         audio: true,
         imageCover: true,
@@ -10,7 +10,10 @@ const settingsDefault: ISettings = {
     },
     sorting: true,
     beatNumbering: 'beattime',
+    infoRowHeight: 4,
     rounding: 3,
+    dataCheck: true,
+    dataError: true,
     theme: 'Dark',
     onLoad: { stats: false },
     show: {
@@ -47,11 +50,29 @@ export default new (class Settings implements ISettings {
     set beatNumbering(val: ISettings['beatNumbering']) {
         this.property.beatNumbering = val;
     }
+    get infoRowHeight(): number {
+        return this.property.infoRowHeight;
+    }
+    set infoRowHeight(val: number) {
+        this.property.infoRowHeight = val;
+    }
     get rounding(): number {
         return this.property.rounding;
     }
     set rounding(val: number) {
         this.property.rounding = val;
+    }
+    get dataCheck(): boolean {
+        return this.property.dataCheck;
+    }
+    set dataCheck(val: boolean) {
+        this.property.dataCheck = val;
+    }
+    get dataError(): boolean {
+        return this.property.dataError;
+    }
+    set dataError(val: boolean) {
+        this.property.dataError = val;
     }
     get theme(): ISettings['theme'] {
         return this.property.theme;
@@ -83,20 +104,26 @@ export default new (class Settings implements ISettings {
                 return;
             }
             this.property = temp.settings ?? this.property;
+            for (const key in settingsDefault) {
+                if (typeof this.property[key as keyof ISettings] === 'undefined') {
+                    (this.property as any)[key as keyof ISettings] = settingsDefault[key as keyof ISettings];
+                }
+            }
+            this.property.version = settingsDefault.version;
             this.save();
         }
     };
-    public save = (): void => {
+    save = (): void => {
         if (localStorage) {
             localStorage.setItem('settings', this.stringify());
         }
     };
-    public clear = (): void => {
+    clear = (): void => {
         if (localStorage) {
             localStorage.clear();
         }
     };
-    public reset = (): void => {
+    reset = (): void => {
         this.property = deepCopy(settingsDefault);
     };
 })();

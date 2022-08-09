@@ -1,20 +1,18 @@
-import { Easings } from '../shared/easings';
+import { Easings } from '../../easings';
 export type Vector2 = [number, number];
 export type Vector3 = [number, number, number];
-export type ColorPointDefinition = [number, number, number, number, number, Easings?];
 export type PercentPointDefinition = [number, number, Easings?];
 export type Vector2PointDefinition =
     | [number, number, number, Easings?, 'splineCatmullRom'?]
-    | [number, number, number, 'splineCatmullRom'?];
+    | [number, number, number, 'splineCatmullRom'?, Easings?];
 export type Vector3PointDefinition =
     | [number, number, number, number, Easings?, 'splineCatmullRom'?]
-    | [number, number, number, number, 'splineCatmullRom'?];
-export type PointDefinition = Vector2PointDefinition[] | Vector3PointDefinition[] | ColorPointDefinition[];
-
-export const heckName = 'Heck';
+    | [number, number, number, number, 'splineCatmullRom'?, Easings?];
 
 export interface IInfoSettingsCustomData {
-    _settings?: { [key: string]: { [key: string]: boolean | string | number | undefined } | undefined };
+    _settings?: {
+        [key: string]: { [key: string]: boolean | string | number | undefined } | undefined;
+    };
 }
 
 /** Heck interface for difficulty info custom data.

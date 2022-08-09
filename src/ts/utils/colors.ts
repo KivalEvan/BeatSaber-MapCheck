@@ -1,6 +1,18 @@
-import { ColorArray, ColorObject } from '../types/colors';
+// deno-lint-ignore-file prefer-const
+import logger from '../logger';
+import { ColorArray, ColorInput, ColorObject, ColorType, IColor } from '../types/colors';
 import { degToRad, lerp, radToDeg, round } from './math';
+import { hexToDec, isHex } from './misc';
 
+const tag = (name: string) => {
+    return `[utils::colors::${name}]`;
+};
+
+/** Convert RGBA to HSVA array.
+ * ```
+ * const hsva = RGBAtoHSVA(...rgba);
+ * ```
+ */
 export function RGBAtoHSVA(r: number, g: number, b: number, a = 1): ColorArray {
     let h!: number;
     const max = Math.max(r, g, b);
@@ -26,12 +38,22 @@ export function RGBAtoHSVA(r: number, g: number, b: number, a = 1): ColorArray {
             h /= 6 * d;
             break;
     }
-    return [h, s, v, a];
+    return [h * 360, s, v, a];
 }
 
+/** Convert HSVA to RGBA array.
+ * ```
+ * const rgba = HSVAtoRGBA(...hsva);
+ * ```
+ */
 export function HSVAtoRGBA(hue: number, saturation: number, value: number, alpha = 1): ColorArray {
     hue = hue / 360;
-    let r!: number, g!: number, b!: number;
+    if (hue < 0) {
+        hue += Math.abs(Math.floor(hue));
+    }
+    let r = 0,
+        g = 0,
+        b = 0;
     const i = Math.floor(hue * 6);
     const f = hue * 6 - i;
     const p = value * (1 - saturation);
@@ -60,11 +82,12 @@ export function HSVAtoRGBA(hue: number, saturation: number, value: number, alpha
     return [r, g, b, alpha];
 }
 
+/** Interpolate [r,g,b,a] or #hex color */
 export function interpolateColor(
-    colorStart: ColorArray,
-    colorEnd: ColorArray,
+    colorStart: ColorObject | ColorArray | string,
+    colorEnd: ColorObject | ColorArray | string,
     alpha: number,
-    type: 'rgba' | 'hsva' | 'long hsva' | 'short hsva' = 'rgba',
+    type: ColorType = 'rgba',
     easing?: (x: number) => number,
 ): ColorArray {
     if (!easing) {
@@ -72,82 +95,136 @@ export function interpolateColor(
             return x;
         };
     }
-    switch (type) {
+    const fixType = type === 'rgba255' ? 'rgba' : (type as 'rgba' | 'hsva');
+    const cStart = convertColorInput(colorStart, fixType, fixType);
+    const cEnd = convertColorInput(colorEnd, fixType, fixType);
+    switch (fixType) {
         case 'hsva': {
             return HSVAtoRGBA(
-                ...(colorStart.map((c, i) => {
+                ...(cStart.map((c, i) => {
                     if (!(typeof c === 'number')) {
                         return 1;
                     }
-                    const cE = colorEnd[i] ?? c;
+                    const cE = cEnd[i] ?? c;
                     return lerp(easing!(alpha), c!, cE!);
                 }) as ColorArray),
             );
         }
-        case 'long hsva': {
-            return HSVAtoRGBA(
-                ...(colorStart.map((c, i) => {
-                    if (!(typeof c === 'number')) {
-                        return 1;
-                    }
-                    const cE = colorEnd[i] ?? c;
-                    return lerp(easing!(alpha), c!, cE!);
-                }) as ColorArray),
-            );
-        }
-        case 'short hsva': {
-            return HSVAtoRGBA(
-                ...(colorStart.map((c, i) => {
-                    if (!(typeof c === 'number')) {
-                        return 1;
-                    }
-                    const cE = colorEnd[i] ?? c;
-                    return lerp(easing!(alpha), c!, cE!);
-                }) as ColorArray),
-            );
-        }
-        default: {
-            return colorStart.map((c, i) => {
+        default:
+            return cStart.map((c, i) => {
                 if (!(typeof c === 'number')) {
                     return 1;
                 }
-                const cE = colorEnd[i] ?? c;
+                const cE = cEnd[i] ?? c;
                 return lerp(easing!(alpha), c!, cE!);
             }) as ColorArray;
-        }
     }
 }
 
-export function toRGBArray(c: ColorObject): ColorArray {
-    return [c.r, c.g, c.b];
+export function colorObjToAry(c: IColor | Omit<IColor, 'a'>): ColorArray {
+    const result: ColorArray = [c.r, c.g, c.b];
+    if (typeof (c as IColor).a === 'number') {
+        result.push((c as IColor).a);
+    }
+    return result;
 }
 
-export function compToHex(c: number): string {
+function compToHex(c: number): string {
     const hex = c.toString(16);
     return hex.length === 1 ? '0' + hex : hex;
 }
 
-export function cDenorm(c: number): number {
+function cDenorm(c: number): number {
     return c > 1 && !(c < 0) ? 255 : round(c * 255);
 }
 
-export function rgbaToHex(colorObj?: ColorObject | null): string | null {
-    if (!colorObj) {
-        return null;
-    }
-    const color: ColorObject = { r: 0, g: 0, b: 0 };
+function cNorm(c: number): number {
+    return c / 255;
+}
+
+export function RGBAtoHex(colorObj: IColor): string {
+    const color: IColor = { r: 0, g: 0, b: 0 };
     for (const c in colorObj) {
-        const num: number | undefined = colorObj[c as keyof ColorObject];
+        const num: number | undefined = colorObj[c as keyof IColor];
         if (num === undefined) {
             continue;
         }
-        color[c as keyof ColorObject] = cDenorm(num);
+        color[c as keyof IColor] = cDenorm(num);
     }
-    return `#${compToHex(color.r)}${compToHex(color.g)}${compToHex(color.b)}${color.a ? compToHex(color.a) : ''}`;
+    return `#${compToHex(color.r)}${compToHex(color.g)}${compToHex(color.b)}${
+        typeof color.a === 'number' ? compToHex(color.a) : ''
+    }`;
+}
+
+export function hexToRGBA(hex: string): ColorArray {
+    hex = hex.trim();
+    if (hex.startsWith('#')) {
+        hex = hex.substring(1);
+    }
+    if (!isHex(hex)) {
+        throw new Error('Not valid hexadecimal');
+    }
+    let result: ColorArray = [0, 0, 0];
+
+    if (hex.length === 3 || hex.length === 4) {
+        result = [
+            cNorm(hexToDec(hex.slice(0, 1) + hex.slice(0, 1))),
+            cNorm(hexToDec(hex.slice(1, 2) + hex.slice(1, 2))),
+            cNorm(hexToDec(hex.slice(2, 3) + hex.slice(2, 3))),
+        ];
+        if (hex.length === 4) {
+            result.push(cNorm(hexToDec(hex.slice(3, 4) + hex.slice(3, 4))));
+        }
+    } else if (hex.length === 6 || hex.length === 8) {
+        result = [cNorm(hexToDec(hex.slice(0, 2))), cNorm(hexToDec(hex.slice(2, 4))), cNorm(hexToDec(hex.slice(4, 6)))];
+        if (hex.length === 8) {
+            result.push(cNorm(hexToDec(hex.slice(6, 8))));
+        }
+    } else {
+        logger.warn(tag('hexToRGBA'), `Unknown color hex #${hex}`);
+    }
+    return result;
+}
+
+/** Convert color input to standard RGBA array.
+ * ```ts
+ * const rgba = convertColorInput([30, 0.75, 1], 'hsva')
+ * ```
+ * Default color output type is RGBA unless specified otherwise.
+ */
+export function convertColorInput(
+    value: ColorInput,
+    type: ColorType = 'rgba',
+    output: 'rgba' | 'hsva' = 'rgba',
+): ColorArray {
+    if (typeof value === 'string') {
+        const temp = hexToRGBA(value);
+        if (output === 'hsva') {
+            return RGBAtoHSVA(...temp);
+        }
+        return temp;
+    } else if (Array.isArray(value)) {
+        if (type === 'hsva') {
+            return output === 'hsva' ? value : HSVAtoRGBA(...value);
+        }
+        const temp = type === 'rgba255' ? (value.map((n) => cNorm(n!)) as ColorArray) : value;
+        return output === 'hsva' ? RGBAtoHSVA(...temp) : temp;
+    } else {
+        if (typeof value.value === 'string') {
+            const temp = hexToRGBA(value.value);
+            return output === 'hsva' ? RGBAtoHSVA(...temp) : temp;
+        } else {
+            if (value.type === 'hsva') {
+                return output === 'hsva' ? value.value : HSVAtoRGBA(...value.value);
+            }
+            const temp = value.type === 'rgba255' ? (value.value.map((n) => cNorm(n!)) as ColorArray) : value.value;
+            return output === 'hsva' ? RGBAtoHSVA(...temp) : temp;
+        }
+    }
 }
 
 // https://www.easyrgb.com/ with Adobe RGB reference value
-export function rgbToLab(rgbaAry: ColorArray) {
+export function RGBAtoLabA(rgbaAry: ColorArray): ColorArray {
     let r = rgbaAry[0],
         g = rgbaAry[1],
         b = rgbaAry[2],
@@ -183,8 +260,8 @@ export function labToHue(a: number, b: number): number {
 }
 
 export function deltaE00(rgbaAry1: ColorArray, rgbaAry2: ColorArray): number {
-    const [l1, a1, b1] = rgbToLab(rgbaAry1);
-    const [l2, a2, b2] = rgbToLab(rgbaAry2);
+    const [l1, a1, b1] = RGBAtoLabA(rgbaAry1);
+    const [l2, a2, b2] = RGBAtoLabA(rgbaAry2);
 
     const wL = 1;
     const wC = 1;

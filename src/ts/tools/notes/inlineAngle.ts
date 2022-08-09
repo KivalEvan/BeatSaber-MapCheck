@@ -1,18 +1,18 @@
 import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import { round } from '../../utils';
-import * as beatmap from '../../beatmap';
 import { NoteContainer } from '../../types/beatmap/v3/container';
 import { checkDirection } from '../../analyzers/placement/note';
 import swing from '../../analyzers/swing/swing';
 import { ColorNote } from '../../beatmap/v3';
 import { printResultTime } from '../helpers';
 import UICheckbox from '../../ui/helpers/checkbox';
+import { BeatPerMinute, NoteColor, NoteDirectionAngle, NoteDirection, PositionX, PositionY } from '../../beatmap';
 
 const name = 'Inline Sharp Angle';
 const description = 'Check for angle changes within inline note.';
 const enabled = true;
 const defaultMaxTime = 0.15;
-let localBPM!: beatmap.BeatPerMinute;
+let localBPM!: BeatPerMinute;
 
 const htmlContainer = document.createElement('div');
 const htmlInputMaxTime = document.createElement('input');
@@ -70,7 +70,7 @@ const tool: Tool = {
     run,
 };
 
-function adjustTimeHandler(bpm: beatmap.BeatPerMinute) {
+function adjustTimeHandler(bpm: BeatPerMinute) {
     localBPM = bpm;
     htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.maxTime as number), 2).toString();
 }
@@ -104,9 +104,8 @@ function check(map: ToolArgs) {
     const lastNoteAngle: { [key: number]: number } = {};
     const startNoteDot: { [key: number]: ColorNote | null } = {};
     const swingNoteArray: { [key: number]: NoteContainer[] } = {
-        0: [],
-        1: [],
-        3: [],
+        [NoteColor.RED]: [],
+        [NoteColor.BLUE]: [],
     };
     const arr: ColorNote[] = [];
     let lastTime = 0;
@@ -125,7 +124,7 @@ function check(map: ToolArgs) {
                 ) {
                     arr.push(note.data);
                 }
-                if (note.data.direction === 8) {
+                if (note.data.direction === NoteDirection.ANY) {
                     startNoteDot[note.data.color] = note.data;
                 } else {
                     lastNoteAngle[note.data.color] = note.data.getAngle();
@@ -140,7 +139,7 @@ function check(map: ToolArgs) {
                     arr.push(startNoteDot[note.data.color] as ColorNote);
                     startNoteDot[note.data.color] = null;
                 }
-                if (note.data.direction !== 8) {
+                if (note.data.direction !== NoteDirection.ANY) {
                     lastNoteAngle[note.data.color] = note.data.getAngle();
                 }
             }
@@ -153,29 +152,29 @@ function check(map: ToolArgs) {
         }
         if (note.type === 'bomb') {
             // on bottom row
-            if (note.data.posY === 0) {
+            if (note.data.posY === PositionY.BOTTOM) {
                 //on right center
-                if (note.data.posX === 1) {
-                    lastNoteAngle[0] = beatmap.NoteCutAngle[0];
-                    startNoteDot[0] = null;
+                if (note.data.posX === PositionX.MIDDLE_LEFT) {
+                    lastNoteAngle[NoteColor.RED] = NoteDirectionAngle[NoteDirection.UP];
+                    startNoteDot[NoteColor.RED] = null;
                 }
                 //on left center
-                if (note.data.posX === 2) {
-                    lastNoteAngle[1] = beatmap.NoteCutAngle[0];
-                    startNoteDot[1] = null;
+                if (note.data.posX === PositionX.MIDDLE_RIGHT) {
+                    lastNoteAngle[NoteColor.BLUE] = NoteDirectionAngle[NoteDirection.UP];
+                    startNoteDot[NoteColor.BLUE] = null;
                 }
                 //on top row
             }
-            if (note.data.posY === 2) {
+            if (note.data.posY === PositionY.TOP) {
                 //on right center
-                if (note.data.posX === 1) {
-                    lastNoteAngle[0] = beatmap.NoteCutAngle[1];
-                    startNoteDot[0] = null;
+                if (note.data.posX === PositionX.MIDDLE_LEFT) {
+                    lastNoteAngle[NoteColor.RED] = NoteDirectionAngle[NoteDirection.DOWN];
+                    startNoteDot[NoteColor.RED] = null;
                 }
                 //on left center
-                if (note.data.posX === 2) {
-                    lastNoteAngle[1] = beatmap.NoteCutAngle[1];
-                    startNoteDot[1] = null;
+                if (note.data.posX === PositionX.MIDDLE_RIGHT) {
+                    lastNoteAngle[NoteColor.BLUE] = NoteDirectionAngle[NoteDirection.DOWN];
+                    startNoteDot[NoteColor.BLUE] = null;
                 }
             }
         }
@@ -187,7 +186,7 @@ function check(map: ToolArgs) {
         });
 }
 
-function checkInline(n: beatmap.v3.ColorNote, notes: NoteContainer[], index: number, maxTime: number) {
+function checkInline(n: ColorNote, notes: NoteContainer[], index: number, maxTime: number) {
     for (let i = index; notes[i].data.time < n.time; i++) {
         const note = notes[i];
         if (note.type !== 'note') {

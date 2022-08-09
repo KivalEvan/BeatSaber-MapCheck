@@ -11,6 +11,7 @@ import { setCustomEvents } from './customEvent';
 import { setEnvironmentEnhancement } from './environment';
 import { setVersion, setRequirements, setSuggestions, setInformation, setWarnings, setTimeSpend } from './misc';
 import { setPointDefinitions } from './pointDefinition';
+import { setTableHeight } from './helpers';
 
 function setInfo(mapInfo: IInfoData): void {
     UIHeader.setSongName(mapInfo._songName);
@@ -31,8 +32,8 @@ function setDiffInfoTable(mapData: IBeatmapItem): void {
     }
     if (mapData.info?._customData) {
         setCustomColor(mapData.info._customData);
-        setRequirements(mapData.info._customData._requirements);
-        setSuggestions(mapData.info._customData._suggestions);
+        setRequirements(mapData.info._customData._requirements as string[]);
+        setSuggestions(mapData.info._customData._suggestions as string[]);
         setInformation(mapData.info._customData._information);
         setWarnings(mapData.info._customData._warnings);
     }
@@ -93,5 +94,6 @@ export {
     setCustomEvents,
     setInfo,
     setDiffInfoTable,
+    setTableHeight,
     reset,
 };

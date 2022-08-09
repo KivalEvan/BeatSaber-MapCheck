@@ -1,12 +1,12 @@
 import { INote } from '../../types/beatmap/v2/note';
 import { BeatmapObject } from './object';
-import { ObjectToReturn } from '../../types/utils';
-import { NoteCutAngle } from '../shared/constants';
+import { ObjectReturnFn } from '../../types/utils';
+import { NoteDirectionAngle } from '../shared/constants';
 import { deepCopy } from '../../utils/misc';
 
 /** Note beatmap v2 class object. */
 export class Note extends BeatmapObject<INote> {
-    static default: ObjectToReturn<Required<INote>> = {
+    static default: ObjectReturnFn<Required<INote>> = {
         _time: 0,
         _lineIndex: 0,
         _lineLayer: 0,
@@ -17,14 +17,13 @@ export class Note extends BeatmapObject<INote> {
         },
     };
 
-    private constructor(data: Required<INote>) {
+    protected constructor(data: Required<INote>) {
         super(data);
     }
 
-    static create(): Note;
-    static create(notes: Partial<INote>): Note;
+    static create(): Note[];
     static create(...notes: Partial<INote>[]): Note[];
-    static create(...notes: Partial<INote>[]): Note | Note[] {
+    static create(...notes: Partial<INote>[]): Note[] {
         const result: Note[] = [];
         notes?.forEach((n) =>
             result.push(
@@ -38,23 +37,22 @@ export class Note extends BeatmapObject<INote> {
                 }),
             ),
         );
-        if (result.length === 1) {
-            return result[0];
-        }
         if (result.length) {
             return result;
         }
-        return new this({
-            _time: Note.default._time,
-            _lineIndex: Note.default._lineIndex,
-            _lineLayer: Note.default._lineLayer,
-            _type: Note.default._type,
-            _cutDirection: Note.default._cutDirection,
-            _customData: Note.default._customData(),
-        });
+        return [
+            new this({
+                _time: Note.default._time,
+                _lineIndex: Note.default._lineIndex,
+                _lineLayer: Note.default._lineLayer,
+                _type: Note.default._type,
+                _cutDirection: Note.default._cutDirection,
+                _customData: Note.default._customData(),
+            }),
+        ];
     }
 
-    toObject(): Required<INote> {
+    toJSON(): Required<INote> {
         return {
             _time: this.time,
             _type: this.type,
@@ -194,7 +192,7 @@ export class Note extends BeatmapObject<INote> {
         if (this.cutDirection >= 1000) {
             return Math.abs(((this.cutDirection % 1000) % 360) - 360);
         }
-        return NoteCutAngle[this.cutDirection] || 0;
+        return NoteDirectionAngle[this.cutDirection] || 0;
     };
 
     /** Get two notes and return the distance between two notes.

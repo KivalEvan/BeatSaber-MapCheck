@@ -1,5 +1,5 @@
 import { round } from '../../utils';
-import { IInfoData } from '../../types';
+import { IInfoData } from '../../types/beatmap/shared/info';
 import { IBeatmapItem } from '../../types/mapcheck';
 import { prefix } from './constants';
 

@@ -1,14 +1,15 @@
 import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import { round } from '../../utils';
-import * as beatmap from '../../beatmap';
 import { printResultTime } from '../helpers';
 import UICheckbox from '../../ui/helpers/checkbox';
+import { BeatPerMinute, PositionX, PositionY } from '../../beatmap';
+import { Obstacle } from '../../beatmap/v3/obstacle';
 
 const name = '2-wide Center Obstacle';
 const description = 'Look for 2-wide center obstacle including obstacles that are relatively close to each other.';
 const enabled = true;
 const defaultMaxTime = 0.25;
-let localBPM!: beatmap.BeatPerMinute;
+let localBPM!: BeatPerMinute;
 
 const htmlContainer = document.createElement('div');
 const htmlInputMaxTime = document.createElement('input');
@@ -66,7 +67,7 @@ const tool: Tool = {
     run,
 };
 
-function adjustTimeHandler(bpm: beatmap.BeatPerMinute) {
+function adjustTimeHandler(bpm: BeatPerMinute) {
     localBPM = bpm;
     htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.recovery as number), 2).toString();
 }
@@ -94,11 +95,11 @@ function check(map: ToolArgs) {
     const { obstacles } = map.difficulty!.data;
     const { bpm } = map.settings;
     const { recovery } = <{ recovery: number }>tool.input.params;
-    const arr: beatmap.v3.Obstacle[] = [];
-    let obstacleLeftFull: beatmap.v3.Obstacle = beatmap.v3.Obstacle.create();
-    let obstacleRightFull: beatmap.v3.Obstacle = beatmap.v3.Obstacle.create();
+    const arr: Obstacle[] = [];
+    let obstacleLeftFull: Obstacle = Obstacle.create()[0];
+    let obstacleRightFull: Obstacle = Obstacle.create()[0];
     obstacles.forEach((o) => {
-        if (o.posY < 2 && o.height > 1) {
+        if (o.posY < PositionY.TOP && o.height > 1) {
             if (o.width > 2) {
                 arr.push(o);
                 if (o.isLonger(obstacleLeftFull)) {
@@ -109,7 +110,7 @@ function check(map: ToolArgs) {
                 }
             }
             if (o.width === 2) {
-                if (o.posX === 0) {
+                if (o.posX === PositionX.LEFT) {
                     if (o.isLonger(obstacleLeftFull)) {
                         if (
                             bpm.toRealTime(o.time) > bpm.toRealTime(obstacleRightFull.time) - recovery &&
@@ -121,7 +122,7 @@ function check(map: ToolArgs) {
                         obstacleLeftFull = o;
                     }
                 }
-                if (o.posX === 1) {
+                if (o.posX === PositionX.MIDDLE_LEFT) {
                     arr.push(o);
                     if (o.isLonger(obstacleLeftFull)) {
                         obstacleLeftFull = o;
@@ -130,7 +131,7 @@ function check(map: ToolArgs) {
                         obstacleRightFull = o;
                     }
                 }
-                if (o.posX === 2) {
+                if (o.posX === PositionX.MIDDLE_RIGHT) {
                     if (o.isLonger(obstacleRightFull)) {
                         if (
                             bpm.toRealTime(o.time) > bpm.toRealTime(obstacleLeftFull.time) - recovery &&
@@ -144,7 +145,7 @@ function check(map: ToolArgs) {
                 }
             }
             if (o.width === 1) {
-                if (o.posX === 1) {
+                if (o.posX === PositionX.MIDDLE_LEFT) {
                     if (o.isLonger(obstacleLeftFull)) {
                         if (
                             bpm.toRealTime(o.time) > bpm.toRealTime(obstacleRightFull.time) - recovery &&
@@ -156,7 +157,7 @@ function check(map: ToolArgs) {
                         obstacleLeftFull = o;
                     }
                 }
-                if (o.posX === 2) {
+                if (o.posX === PositionX.MIDDLE_RIGHT) {
                     if (o.isLonger(obstacleRightFull)) {
                         if (
                             bpm.toRealTime(o.time) > bpm.toRealTime(obstacleLeftFull.time) - recovery &&

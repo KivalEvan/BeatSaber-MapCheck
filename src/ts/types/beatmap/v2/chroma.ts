@@ -1,62 +1,106 @@
-import { ColorPointDefinition, PercentPointDefinition, Vector3 } from '../shared/heck';
-import { Easings } from '../shared/easings';
+import { PercentPointDefinition, Vector2, Vector3 } from '../shared/heck';
+import { Easings } from '../../easings';
 import { ColorArray } from '../../colors';
 import { ICustomDataBase } from '../shared/customData';
-import { LookupMethod } from '../shared/chroma';
+import {
+    ColorPointDefinition,
+    EnvironmentMaterial,
+    GeometryType,
+    LookupMethod,
+    ShaderKeywords,
+    ShaderType,
+} from '../shared/chroma';
 import { IHeckCustomEventDataBase } from './heck';
+import { LooseAutocomplete } from '../../utils';
 
-export enum ChromaDataEnvAbbr {
-    _id = 'Ct',
-    _lookupMethod = 'Lm',
-    _duplicate = 'D',
-    _active = 'A',
-    _scale = 'S',
-    _position = 'P',
-    _localPosition = 'Lp',
-    _rotation = 'R',
-    _localRotation = 'Lr',
-    _lightID = 'Li',
-    _track = 'T',
+/** Chroma Material interface for Environment Enhancement. */
+export interface IChromaMaterial {
+    _shader: LooseAutocomplete<ShaderType | EnvironmentMaterial>;
+    /** Overrides default shader keywords. */
+    _shaderKeywords?: LooseAutocomplete<ShaderKeywords>[];
+    _collision?: boolean;
+    _track?: string;
+    _color?: ColorArray;
 }
 
-/** Chroma interface for Environment Enhancement. */
-export interface IChromaEnvironment {
+/** Chroma Geometry interface for Environment Enhancement. */
+export interface IChromaGeometryBase {
+    _type: GeometryType;
+    _material: IChromaMaterial | string;
+    _collision?: boolean;
+}
+
+/** Chroma Geometry Custom interface for Environment Enhancement. */
+export interface IChromaGeometryCustom {
+    _type: 'CUSTOM';
+    _mesh: {
+        _vertices: Vector3[];
+        _uv?: Vector2[];
+        _triangles?: number[];
+    };
+    _material: IChromaMaterial | string;
+    _collision?: boolean;
+}
+
+export type IChromaGeometry = IChromaGeometryBase | IChromaGeometryCustom;
+
+/** Chroma interface for Environment Enhancement Base. */
+export interface IChromaEnvironmentBase {
     /** Look up environment object name.
+     *
      * This grabs every environment objects that match the string.
      * ```ts
-     * _id: 'Environment.[0]GlowLine' || 'Environment\.\\[\\d+\\]GlowLine$' // Regex example
+     * id: 'Environment.[0]GlowLine' || 'Environment\.\\[\\d+\\]GlowLine$' // Regex example
      * ```
      */
-    _id: string;
+    _id?: unknown;
     /** Look-up method to grab the object name.
+     *
      * Regex is considered an advanced method and more powerful than other methods.
      */
-    _lookupMethod: LookupMethod;
+    _lookupMethod?: unknown;
+    _geometry?: unknown;
     /** Assign track to the object for animation use. */
     _track?: string;
     /** Duplicate the object by set amount.
+     *
      * **WARNING:** You should always duplicate only one at a time unless you know what you are doing.
      */
     _duplicate?: number;
     _active?: boolean;
     _scale?: Vector3;
     _position?: Vector3;
-    _localPosition?: Vector3;
     _rotation?: Vector3;
+    _localPosition?: Vector3;
     _localRotation?: Vector3;
     /** Assign light ID for duplicated object. */
     _lightID?: number;
 }
 
-export interface IChromaGeometry {
-    _geometryType: 'SPHERE' | 'CAPSULE' | 'CYLINDER' | 'CUBE' | 'PLANE' | 'QUAD';
-    _spawnCount: number;
-    _track?: string;
-    _shaderPreset?: 'LIGHT_BOX' | 'STANDARD' | 'NO_SHADE';
-    _collision?: boolean;
+/** Chroma interface for Environment Enhancement ID.
+ *
+ * @extends IChromaEnvironmentBase
+ */
+export interface IChromaEnvironmentID extends IChromaEnvironmentBase {
+    _id: string;
+    _lookupMethod: LookupMethod;
+    _geometry?: never;
 }
 
-/** Chroma interface for Beatmap Note Custom Data. */
+/** Chroma interface for Environment Enhancement Geometry.
+ *
+ * @extends IChromaEnvironmentBase
+ */
+export interface IChromaEnvironmentGeometry extends IChromaEnvironmentBase {
+    _id?: never;
+    _lookupMethod?: never;
+    _geometry: IChromaGeometry;
+}
+
+/** Chroma interface for Environment Enhancement. */
+export type IChromaEnvironment = IChromaEnvironmentID | IChromaEnvironmentGeometry;
+
+/** Chroma interface for Beatmap Object Animation Custom Data. */
 export interface IChromaAnimation {
     _color?: string | ColorPointDefinition[];
 }
@@ -116,27 +160,28 @@ export interface IChromaEventZoom extends ICustomDataBase {
     _speed?: number;
 }
 
-/** AssignFogTrack interface for Noodle Extensions Custom Event. */
+/** AnimateComponent interface for Chroma Custom Event. */
+export interface IChromaCustomEventDataAnimateTrack extends IHeckCustomEventDataBase {
+    _color?: string | ColorPointDefinition[];
+}
+
+/** AnimateComponent interface for Chroma Custom Event. */
+export interface IChromaCustomEventDataAssignPathAnimation extends IHeckCustomEventDataBase {
+    _color?: string | ColorPointDefinition[];
+}
+
+/** AssignFogTrack interface for Chroma Custom Event. */
 export interface IChromaCustomEventDataAssignFogTrack extends IHeckCustomEventDataBase {
     _track: string;
+    _duration: number;
     _attenuation?: number | PercentPointDefinition[];
     _offset?: number | PercentPointDefinition[];
     _startY?: number | PercentPointDefinition[];
     _height?: number | PercentPointDefinition[];
 }
 
-/** Chroma Custom Event interface for AssignFogTrack. */
-export interface IChromaCustomEventAssignFogTrack {
-    _time: number;
-    _type: 'AssignFogTrack';
-    _data: IChromaCustomEventDataAssignFogTrack;
-}
-
-export type IChromaCustomEvent = IChromaCustomEventAssignFogTrack;
-
 /** Chroma Custom Data interface for difficulty custom data. */
 export interface IChromaCustomData {
-    _customEvents?: IChromaCustomEvent[];
     _environment?: IChromaEnvironment[];
-    _geometry?: IChromaGeometry[];
+    _materials?: { [key: string]: IChromaMaterial };
 }

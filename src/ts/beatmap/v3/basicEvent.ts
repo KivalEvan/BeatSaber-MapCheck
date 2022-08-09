@@ -1,12 +1,13 @@
+// deno-lint-ignore-file no-unused-vars
 import { IBasicEvent } from '../../types/beatmap/v3/basicEvent';
 import { IChromaEventLaser, IChromaEventLight, IChromaEventRing } from '../../types/beatmap/v3/chroma';
-import { ObjectToReturn } from '../../types/utils';
-import { deepCopy } from '../../utils/misc';
+import { ObjectReturnFn } from '../../types/utils';
 import { BaseObject } from './baseObject';
+import { deepCopy } from '../../utils/misc';
 
 /** Basic event beatmap v3 class object. */
 export class BasicEvent extends BaseObject<IBasicEvent> {
-    static default: ObjectToReturn<Required<IBasicEvent>> = {
+    static default: ObjectReturnFn<Required<IBasicEvent>> = {
         b: 0,
         et: 0,
         i: 0,
@@ -20,10 +21,9 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
         super(basicEvent);
     }
 
-    static create(): BasicEvent;
-    static create(basicEvents: Partial<IBasicEvent>): BasicEvent;
+    static create(): BasicEvent[];
     static create(...basicEvents: Partial<IBasicEvent>[]): BasicEvent[];
-    static create(...basicEvents: Partial<IBasicEvent>[]): BasicEvent | BasicEvent[] {
+    static create(...basicEvents: Partial<IBasicEvent>[]): BasicEvent[] {
         const result: BasicEvent[] = [];
         basicEvents?.forEach((be) =>
             result.push(
@@ -36,22 +36,21 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
                 }),
             ),
         );
-        if (result.length === 1) {
-            return result[0];
-        }
         if (result.length) {
             return result;
         }
-        return new this({
-            b: BasicEvent.default.b,
-            et: BasicEvent.default.et,
-            i: BasicEvent.default.i,
-            f: BasicEvent.default.f,
-            customData: BasicEvent.default.customData(),
-        });
+        return [
+            new this({
+                b: BasicEvent.default.b,
+                et: BasicEvent.default.et,
+                i: BasicEvent.default.i,
+                f: BasicEvent.default.f,
+                customData: BasicEvent.default.customData(),
+            }),
+        ];
     }
 
-    toObject(): Required<IBasicEvent> {
+    toJSON(): Required<IBasicEvent> {
         return {
             b: this.time,
             et: this.type,
@@ -168,6 +167,39 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
      */
     isFade(): boolean {
         return this.value === 3 || this.value === 7 || this.value === 11;
+    }
+
+    /** Check if light event is a red light.
+     * ```ts
+     * if (basicEvent.isRed()) {}
+     * ```
+     * ---
+     * This may check non-light event too.
+     */
+    isRed(): boolean {
+        return this.value === 5 || this.value === 6 || this.value === 7 || this.value === 8;
+    }
+
+    /** Check if light event is a blue light.
+     * ```ts
+     * if (basicEvent.isBlue()) {}
+     * ```
+     * ---
+     * This may check non-light event too.
+     */
+    isBlue(): boolean {
+        return this.value === 1 || this.value === 2 || this.value === 3 || this.value === 4;
+    }
+
+    /** Check if light event is a white light.
+     * ```ts
+     * if (basicEvent.isWhite()) {}
+     * ```
+     * ---
+     * This may check non-light event too.
+     */
+    isWhite(): boolean {
+        return this.value === 9 || this.value === 10 || this.value === 11 || this.value === 12;
     }
 
     /** Check if light event is a transition event.

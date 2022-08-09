@@ -1,14 +1,5 @@
-/** Standard color object.
- * ```ts
- * const color = {
- *      r: float,
- *      g: float,
- *      b: float,
- *      a: float | undefined
- * }
- * ```
- */
-export interface ColorObject {
+/** Standard color object. */
+export interface IColor {
     r: number;
     g: number;
     b: number;
@@ -21,3 +12,29 @@ export interface ColorObject {
  * ```
  */
 export type ColorArray = [number, number, number, number?];
+
+export type ColorType = 'rgba' | 'rgba255' | 'hsva';
+
+interface IColorBase {
+    type: ColorType;
+    value: ColorArray | string;
+}
+
+interface IColorRGBA extends IColorBase {
+    type: 'rgba';
+    value: ColorArray | string;
+}
+
+interface IColorRGBA255 extends IColorBase {
+    type: 'rgba255';
+    value: ColorArray | string;
+}
+
+interface IColorHSVA extends IColorBase {
+    type: 'hsva';
+    value: ColorArray | string;
+}
+
+export type ColorObject = IColorRGBA | IColorRGBA255 | IColorHSVA;
+
+export type ColorInput = ColorArray | ColorObject | string;

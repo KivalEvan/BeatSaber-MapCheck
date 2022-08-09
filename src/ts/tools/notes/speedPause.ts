@@ -1,16 +1,16 @@
 import { IBeatmapItem, IBeatmapSettings, Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import { round } from '../../utils';
-import * as beatmap from '../../beatmap';
 import { NoteContainer, NoteContainerNote } from '../../types/beatmap/v3/container';
 import swing from '../../analyzers/swing/swing';
 import { printResultTime } from '../helpers';
 import UICheckbox from '../../ui/helpers/checkbox';
+import { BeatPerMinute, NoteColor } from '../../beatmap';
 
 const name = 'Speed Pause';
 const description = 'Look for stream/burst containing timing gap causing sudden change of pace.';
 const enabled = false;
 const defaultMaxTime = 0.075;
-let localBPM!: beatmap.BeatPerMinute;
+let localBPM!: BeatPerMinute;
 
 const htmlContainer = document.createElement('div');
 const htmlInputMinTime = document.createElement('input');
@@ -67,7 +67,7 @@ const tool: Tool = {
     run,
 };
 
-function adjustTimeHandler(bpm: beatmap.BeatPerMinute) {
+function adjustTimeHandler(bpm: BeatPerMinute) {
     localBPM = bpm;
     htmlInputMinPrec.value = round(1 / localBPM.toBeatTime(tool.input.params.maxTime as number), 2).toString();
 }
@@ -100,14 +100,12 @@ function check(settings: IBeatmapSettings, difficulty: IBeatmapItem) {
     const lastNote: { [key: number]: NoteContainer } = {};
     const lastNotePause: { [key: number]: NoteContainer } = {};
     const maybePause: { [key: number]: boolean } = {
-        0: false,
-        1: false,
-        3: false,
+        [NoteColor.RED]: false,
+        [NoteColor.BLUE]: false,
     };
     const swingNoteArray: { [key: number]: NoteContainer[] } = {
-        0: [],
-        1: [],
-        3: [],
+        [NoteColor.RED]: [],
+        [NoteColor.BLUE]: [],
     };
 
     const arr: NoteContainer[] = [];
@@ -120,8 +118,8 @@ function check(settings: IBeatmapSettings, difficulty: IBeatmapItem) {
             if (swing.next(note, lastNote[note.data.color], bpm, swingNoteArray[note.data.color])) {
                 if (note.data.time - lastNote[note.data.color].data.time <= maxTime * 2) {
                     if (
-                        maybePause[0] &&
-                        maybePause[1] &&
+                        maybePause[NoteColor.RED] &&
+                        maybePause[NoteColor.BLUE] &&
                         lastNote[note.data.color].data.time - lastNotePause[note.data.color].data.time <= maxTime * 3
                     ) {
                         arr.push(lastNote[note.data.color]);

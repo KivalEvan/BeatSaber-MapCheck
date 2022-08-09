@@ -1,13 +1,13 @@
 import { IBaseNote } from '../../types/beatmap/v3/baseNote';
 import { IBombNote } from '../../types/beatmap/v3/bombNote';
-import { ObjectToReturn } from '../../types/utils';
-import { deepCopy } from '../../utils/misc';
+import { ObjectReturnFn } from '../../types/utils';
 import { LINE_COUNT } from '../shared/constants';
 import { BaseNote } from './baseNote';
+import { deepCopy } from '../../utils/misc';
 
 /** Bomb note beatmap v3 class object. */
 export class BombNote extends BaseNote<IBombNote> {
-    static default: ObjectToReturn<Required<IBombNote>> = {
+    static default: ObjectReturnFn<Required<IBombNote>> = {
         b: 0,
         x: 0,
         y: 0,
@@ -16,14 +16,13 @@ export class BombNote extends BaseNote<IBombNote> {
         },
     };
 
-    private constructor(bombNote: Required<IBombNote>) {
+    protected constructor(bombNote: Required<IBombNote>) {
         super(bombNote);
     }
 
-    static create(): BombNote;
-    static create(bombNotes: Partial<IBombNote>): BombNote;
+    static create(): BombNote[];
     static create(...bombNotes: Partial<IBombNote>[]): BombNote[];
-    static create(...bombNotes: Partial<IBombNote>[]): BombNote | BombNote[] {
+    static create(...bombNotes: Partial<IBombNote>[]): BombNote[] {
         const result: BombNote[] = [];
         bombNotes?.forEach((bn) =>
             result.push(
@@ -35,21 +34,20 @@ export class BombNote extends BaseNote<IBombNote> {
                 }),
             ),
         );
-        if (result.length === 1) {
-            return result[0];
-        }
         if (result.length) {
             return result;
         }
-        return new this({
-            b: BombNote.default.b,
-            x: BombNote.default.x,
-            y: BombNote.default.y,
-            customData: BombNote.default.customData(),
-        });
+        return [
+            new this({
+                b: BombNote.default.b,
+                x: BombNote.default.x,
+                y: BombNote.default.y,
+                customData: BombNote.default.customData(),
+            }),
+        ];
     }
 
-    toObject(): Required<IBombNote> {
+    toJSON(): Required<IBombNote> {
         return {
             b: this.time,
             x: this.posX,
@@ -59,18 +57,26 @@ export class BombNote extends BaseNote<IBombNote> {
     }
 
     mirror() {
+        if (this.customData.coordinates) {
+            this.customData.coordinates[0] = -1 - this.customData.coordinates[0];
+        }
+        if (this.customData.flip) {
+            this.customData.flip[0] = -1 - this.customData.flip[0];
+        }
+        if (this.customData.animation) {
+            if (Array.isArray(this.customData.animation.definitePosition)) {
+                this.customData.animation.definitePosition.forEach((dp) => {
+                    dp[0] = -dp[0];
+                });
+            }
+            if (Array.isArray(this.customData.animation.offsetPosition)) {
+                this.customData.animation.offsetPosition.forEach((op) => {
+                    op[0] = -op[0];
+                });
+            }
+        }
         this.posX = LINE_COUNT - 1 - this.posX;
         return this;
-    }
-
-    getPosition(): [number, number] {
-        if (this.customData.coordinates) {
-            return [this.customData.coordinates[0], this.customData.coordinates[1]];
-        }
-        return [
-            (this.posX <= -1000 ? this.posX / 1000 : this.posX >= 1000 ? this.posX / 1000 : this.posX) - 2,
-            this.posY <= -1000 ? this.posY / 1000 : this.posY >= 1000 ? this.posY / 1000 : this.posY,
-        ];
     }
 
     getDistance(compareTo: BaseNote<IBaseNote>) {

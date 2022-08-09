@@ -4,6 +4,7 @@ import { isIntersect } from '../../analyzers/placement/note';
 import swing from '../../analyzers/swing/swing';
 import UICheckbox from '../../ui/helpers/checkbox';
 import { printResultTime } from '../helpers';
+import { NoteColor, NoteDirection } from '../../beatmap';
 
 const name = 'Hitbox Reverse Staircase';
 const description = 'Check for overlapping pre-swing hitbox with note hitbox during swing.';
@@ -38,8 +39,8 @@ function check(map: ToolArgs) {
 
     const lastNote: { [key: number]: NoteContainer } = {};
     const swingNoteArray: { [key: number]: NoteContainer[] } = {
-        0: [],
-        1: [],
+        [NoteColor.RED]: [],
+        [NoteColor.BLUE]: [],
     };
 
     const arr: NoteContainer[] = [];
@@ -57,7 +58,7 @@ function check(map: ToolArgs) {
             if (other.type !== 'note') {
                 continue;
             }
-            if (other.data.direction !== 8) {
+            if (other.data.direction !== NoteDirection.ANY) {
                 if (!(bpm.toRealTime(note.data.time) > bpm.toRealTime(other.data.time) + 0.01)) {
                     continue;
                 }

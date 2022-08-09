@@ -1,11 +1,11 @@
 import { IRotationEvent } from '../../types/beatmap/v3/rotationEvent';
-import { ObjectToReturn } from '../../types/utils';
-import { deepCopy } from '../../utils/misc';
+import { ObjectReturnFn } from '../../types/utils';
 import { BaseObject } from './baseObject';
+import { deepCopy } from '../../utils/misc';
 
 /** Rotation event beatmap v3 class object. */
 export class RotationEvent extends BaseObject<IRotationEvent> {
-    static default: ObjectToReturn<Required<IRotationEvent>> = {
+    static default: ObjectReturnFn<Required<IRotationEvent>> = {
         b: 0,
         e: 0,
         r: 0,
@@ -14,14 +14,13 @@ export class RotationEvent extends BaseObject<IRotationEvent> {
         },
     };
 
-    private constructor(rotationEvent: Required<IRotationEvent>) {
+    protected constructor(rotationEvent: Required<IRotationEvent>) {
         super(rotationEvent);
     }
 
-    static create(): RotationEvent;
-    static create(rotationEvents: Partial<IRotationEvent>): RotationEvent;
+    static create(): RotationEvent[];
     static create(...rotationEvents: Partial<IRotationEvent>[]): RotationEvent[];
-    static create(...rotationEvents: Partial<IRotationEvent>[]): RotationEvent | RotationEvent[] {
+    static create(...rotationEvents: Partial<IRotationEvent>[]): RotationEvent[] {
         const result: RotationEvent[] = [];
         rotationEvents?.forEach((re) =>
             result.push(
@@ -33,21 +32,20 @@ export class RotationEvent extends BaseObject<IRotationEvent> {
                 }),
             ),
         );
-        if (result.length === 1) {
-            return result[0];
-        }
         if (result.length) {
             return result;
         }
-        return new this({
-            b: RotationEvent.default.b,
-            e: RotationEvent.default.e,
-            r: RotationEvent.default.r,
-            customData: RotationEvent.default.customData(),
-        });
+        return [
+            new this({
+                b: RotationEvent.default.b,
+                e: RotationEvent.default.e,
+                r: RotationEvent.default.r,
+                customData: RotationEvent.default.customData(),
+            }),
+        ];
     }
 
-    toObject(): Required<IRotationEvent> {
+    toJSON(): Required<IRotationEvent> {
         return {
             b: this.time,
             e: this.executionTime,

@@ -1,10 +1,9 @@
-import * as beatmap from '../beatmap';
 import SavedData from '../savedData';
 import Analyser from '../tools/analyzer';
 import UILoading from './loading';
 import UIInformation from './information';
 import { removeOptions } from '../utils/web';
-import { DifficultyRename, CharacteristicRename } from '../beatmap/shared';
+import { DifficultyRename, CharacteristicRename, BeatPerMinute } from '../beatmap/shared';
 import { CharacteristicName, DifficultyName, IInfoData, IInfoSetData } from '../types/beatmap';
 
 const logPrefix = 'UI Tools: ';
@@ -145,7 +144,7 @@ function adjustTime(): void {
     if (!mapInfo) {
         throw new Error(logPrefix + 'could not find map info');
     }
-    const bpm = beatmap.BeatPerMinute.create(mapInfo._beatsPerMinute);
+    const bpm = BeatPerMinute.create(mapInfo._beatsPerMinute);
     Analyser.adjustTime(bpm);
 }
 

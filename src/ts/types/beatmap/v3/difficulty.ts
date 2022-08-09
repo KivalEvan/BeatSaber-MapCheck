@@ -13,7 +13,7 @@ import { ILightRotationEventBoxGroup } from './lightRotationEventBoxGroup';
 import { IBasicEventTypesWithKeywords } from './basicEventTypesWithKeywords';
 import { ICustomDataDifficulty } from './customData';
 
-export interface IDifficultyData {
+export interface IDifficulty {
     version: '3.0.0';
     bpmEvents: IBPMEvent[];
     rotationEvents: IRotationEvent[];

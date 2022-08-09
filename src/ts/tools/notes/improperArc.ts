@@ -2,6 +2,7 @@ import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/map
 import { NoteContainer } from '../../types/beatmap/v3/container';
 import UICheckbox from '../../ui/helpers/checkbox';
 import { printResultTime } from '../helpers';
+import { NoteDirection } from '../../beatmap';
 
 const name = 'Improper Arc';
 const description = 'Check for correct use of arc.';
@@ -47,7 +48,9 @@ function check(map: ToolArgs) {
                         arc.data.posY === other.data.posY &&
                         other.data.time <= arc.data.time + 0.001 &&
                         arc.data.color === other.data.color &&
-                        (other.data.direction !== 8 ? arc.data.direction === other.data.direction : true)
+                        (other.data.direction !== NoteDirection.ANY
+                            ? arc.data.direction === other.data.direction
+                            : true)
                     ) {
                         for (let k = j; k < len; k++) {
                             const tailNote = noteContainer[j];
@@ -69,7 +72,9 @@ function check(map: ToolArgs) {
                                 arc.data.posY === other.data.posY &&
                                 other.data.time <= arc.data.time + 0.001 &&
                                 (arc.data.color !== other.data.color ||
-                                    (other.data.direction !== 8 ? arc.data.direction !== other.data.direction : true))
+                                    (other.data.direction !== NoteDirection.ANY
+                                        ? arc.data.direction !== other.data.direction
+                                        : true))
                             ) {
                                 sike = true;
                                 break;

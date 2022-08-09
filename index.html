@@ -269,6 +269,14 @@
           <label for="settings__sort">
             <span>Sorting</span>
           </label><br>
+          <input type="checkbox" class="settings__checkbox settings__data-check" id="settings__data-check">
+          <label for="settings__data-check">
+            <span>Data check</span>
+          </label><br>
+          <input type="checkbox" class="settings__checkbox settings__data-error" id="settings__data-error">
+          <label for="settings__data-error">
+            <span>Data error</span>
+          </label><br>
           <br>
           <div>Disabling these speeds up loading time but may cause unintended result.</div>
         </div>
@@ -303,6 +311,11 @@
             <span>Theme:</span>
           </label>
           <select class="settings__theme" id="settings__theme"></select><br>
+          <label for="settings__info-height">
+            <span>Info Row Height:</span>
+          </label>
+          <input type="number" class="settings__info-height input-toggle input--small" id="settings__info-height"
+            step="1" min="1"><br>
           <label for="settings__beat-numbering">
             <span>Beat Numbering:</span>
           </label>

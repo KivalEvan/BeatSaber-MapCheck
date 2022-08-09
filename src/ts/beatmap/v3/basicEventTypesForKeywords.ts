@@ -1,5 +1,5 @@
 import { IBasicEventTypesForKeywords } from '../../types/beatmap/v3/basicEventTypesForKeywords';
-import { ObjectToReturn } from '../../types/utils';
+import { ObjectReturnFn } from '../../types/utils';
 import { Serializable } from '../shared/serializable';
 
 /** Basic event types for keywords beatmap v3 class object.
@@ -7,21 +7,18 @@ import { Serializable } from '../shared/serializable';
  * Used in basic event types with keywords.
  */
 export class BasicEventTypesForKeywords extends Serializable<IBasicEventTypesForKeywords> {
-    static default: ObjectToReturn<Required<IBasicEventTypesForKeywords>> = {
+    static default: ObjectReturnFn<Required<IBasicEventTypesForKeywords>> = {
         k: '',
         e: () => [],
     };
 
-    private constructor(basicEventTypesForKeywords: Required<IBasicEventTypesForKeywords>) {
+    protected constructor(basicEventTypesForKeywords: Required<IBasicEventTypesForKeywords>) {
         super(basicEventTypesForKeywords);
     }
 
-    static create(): BasicEventTypesForKeywords;
-    static create(basicEventTypesForKeywords: Partial<IBasicEventTypesForKeywords>): BasicEventTypesForKeywords;
+    static create(): BasicEventTypesForKeywords[];
     static create(...basicEventTypesForKeywords: Partial<IBasicEventTypesForKeywords>[]): BasicEventTypesForKeywords[];
-    static create(
-        ...basicEventTypesForKeywords: Partial<IBasicEventTypesForKeywords>[]
-    ): BasicEventTypesForKeywords | BasicEventTypesForKeywords[] {
+    static create(...basicEventTypesForKeywords: Partial<IBasicEventTypesForKeywords>[]): BasicEventTypesForKeywords[] {
         const result: BasicEventTypesForKeywords[] = [];
         basicEventTypesForKeywords?.forEach((betfk) =>
             result.push(
@@ -31,19 +28,18 @@ export class BasicEventTypesForKeywords extends Serializable<IBasicEventTypesFor
                 }),
             ),
         );
-        if (result.length === 1) {
-            return result[0];
-        }
         if (result.length) {
             return result;
         }
-        return new this({
-            k: BasicEventTypesForKeywords.default.k,
-            e: BasicEventTypesForKeywords.default.e(),
-        });
+        return [
+            new this({
+                k: BasicEventTypesForKeywords.default.k,
+                e: BasicEventTypesForKeywords.default.e(),
+            }),
+        ];
     }
 
-    toObject(): IBasicEventTypesForKeywords {
+    toJSON(): IBasicEventTypesForKeywords {
         return {
             k: this.keyword,
             e: this.events,

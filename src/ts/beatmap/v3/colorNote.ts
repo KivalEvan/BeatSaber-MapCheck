@@ -1,13 +1,13 @@
 import { IColorNote } from '../../types/beatmap/v3/colorNote';
-import { LINE_COUNT, NoteCutAngle } from '../shared/constants';
-import { deepCopy } from '../../utils/misc';
-import { ObjectToReturn } from '../../types/utils';
+import { LINE_COUNT, NoteDirectionAngle } from '../shared/constants';
+import { ObjectReturnFn } from '../../types/utils';
 import { BaseNote } from './baseNote';
 import { IBaseNote } from '../../types/beatmap/v3/baseNote';
+import { deepCopy } from '../../utils/misc';
 
 /** Color note beatmap v3 class object. */
 export class ColorNote extends BaseNote<IColorNote> {
-    static default: ObjectToReturn<Required<IColorNote>> = {
+    static default: ObjectReturnFn<Required<IColorNote>> = {
         b: 0,
         c: 0,
         x: 0,
@@ -19,14 +19,13 @@ export class ColorNote extends BaseNote<IColorNote> {
         },
     };
 
-    private constructor(colorNote: Required<IColorNote>) {
+    protected constructor(colorNote: Required<IColorNote>) {
         super(colorNote);
     }
 
-    static create(): ColorNote;
-    static create(colorNotes: Partial<IColorNote>): ColorNote;
+    static create(): ColorNote[];
     static create(...colorNotes: Partial<IColorNote>[]): ColorNote[];
-    static create(...colorNotes: Partial<IColorNote>[]): ColorNote | ColorNote[] {
+    static create(...colorNotes: Partial<IColorNote>[]): ColorNote[] {
         const result: ColorNote[] = [];
         colorNotes?.forEach((n) =>
             result.push(
@@ -41,24 +40,23 @@ export class ColorNote extends BaseNote<IColorNote> {
                 }),
             ),
         );
-        if (result.length === 1) {
-            return result[0];
-        }
         if (result.length) {
             return result;
         }
-        return new this({
-            b: ColorNote.default.b,
-            x: ColorNote.default.x,
-            y: ColorNote.default.y,
-            c: ColorNote.default.c,
-            d: ColorNote.default.d,
-            a: ColorNote.default.a,
-            customData: ColorNote.default.customData(),
-        });
+        return [
+            new this({
+                b: ColorNote.default.b,
+                x: ColorNote.default.x,
+                y: ColorNote.default.y,
+                c: ColorNote.default.c,
+                d: ColorNote.default.d,
+                a: ColorNote.default.a,
+                customData: ColorNote.default.customData(),
+            }),
+        ];
     }
 
-    toObject(): Required<IColorNote> {
+    toJSON(): Required<IColorNote> {
         return {
             b: this.time,
             c: this.color,
@@ -122,7 +120,28 @@ export class ColorNote extends BaseNote<IColorNote> {
         return this;
     }
 
-    mirror() {
+    mirror(flipColor = true) {
+        if (this.customData.coordinates) {
+            this.customData.coordinates[0] = -1 - this.customData.coordinates[0];
+        }
+        if (this.customData.flip) {
+            this.customData.flip[0] = -1 - this.customData.flip[0];
+        }
+        if (this.customData.animation) {
+            if (Array.isArray(this.customData.animation.definitePosition)) {
+                this.customData.animation.definitePosition.forEach((dp) => {
+                    dp[0] = -dp[0];
+                });
+            }
+            if (Array.isArray(this.customData.animation.offsetPosition)) {
+                this.customData.animation.offsetPosition.forEach((op) => {
+                    op[0] = -op[0];
+                });
+            }
+        }
+        if (flipColor) {
+            this.color = ((1 + this.color) % 2) as typeof this.color;
+        }
         this.posX = LINE_COUNT - 1 - this.posX;
         return this;
     }
@@ -146,31 +165,28 @@ export class ColorNote extends BaseNote<IColorNote> {
         return this;
     }
 
-    /** Get note and return the Beatwalls' position x and y value in tuple.
-     * ```ts
-     * const notePos = note.getPosition();
-     * ```
-     */
-    getPosition(): [number, number] {
-        if (this.customData.coordinates) {
-            return [this.customData.coordinates[0], this.customData.coordinates[1]];
-        }
-        return [
-            (this.posX <= -1000 ? this.posX / 1000 : this.posX >= 1000 ? this.posX / 1000 : this.posX) - 2,
-            this.posY <= -1000 ? this.posY / 1000 : this.posY >= 1000 ? this.posY / 1000 : this.posY,
-        ];
-    }
-
     /** Get note and return standardised note angle.
      * ```ts
-     * const noteAngle = note.getAngle(noteCompare);
+     * const noteAngle = note.getAngle();
      * ```
      */
-    getAngle() {
-        if (this.direction >= 1000) {
-            return Math.abs(((this.direction % 1000) % 360) - 360);
+    getAngle(type?: 'vanilla' | 'me' | 'ne') {
+        switch (type) {
+            case 'vanilla':
+                return (NoteDirectionAngle[this.direction as keyof typeof NoteDirectionAngle] || 0) + this.angleOffset;
+            case 'me':
+                if (this.direction >= 1000) {
+                    return Math.abs(((this.direction % 1000) % 360) - 360);
+                }
+            /* falls through */
+            case 'ne':
+                return (NoteDirectionAngle[this.direction as keyof typeof NoteDirectionAngle] || 0) + this.angleOffset;
+            default:
+                if (this.direction >= 1000) {
+                    return Math.abs(((this.direction % 1000) % 360) - 360);
+                }
+                return (NoteDirectionAngle[this.direction as keyof typeof NoteDirectionAngle] || 0) + this.angleOffset;
         }
-        return (NoteCutAngle[this.direction as keyof typeof NoteCutAngle] || 0) + this.angleOffset;
     }
 
     getDistance(compareTo: BaseNote<IBaseNote>) {

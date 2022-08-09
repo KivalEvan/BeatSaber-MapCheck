@@ -9,8 +9,8 @@ import {
 } from './beatmap/parse';
 import logger from './logger';
 import { IInfoData } from './types/beatmap/shared';
-import { IDifficultyData as IDifficultyDataV2 } from './types/beatmap/v2/difficulty';
-import { IDifficultyData as IDifficultyDataV3 } from './types/beatmap/v3/difficulty';
+import { IDifficulty as IDifficultyV2 } from './types/beatmap/v2/difficulty';
+import { IDifficulty as IDifficultyV3 } from './types/beatmap/v3/difficulty';
 import { IBeatmapItem } from './types/mapcheck/tools/beatmapItem';
 import { Either } from './types/utils';
 
@@ -39,13 +39,13 @@ export async function loadDifficulty(info: IInfoData, zip: JSZip) {
         }
         for (let j = 0; j < mapDiff.length; j++) {
             const diffInfo = mapDiff[j];
-            const diffFile = zip.file(diffInfo._beatmapFilename);
+            const diffFile = zip.file(diffInfo._beatmapFilename as string);
             if (diffFile) {
                 logger.info(
                     tag('loadDifficulty'),
                     `Loading ${mapSet[i]._beatmapCharacteristicName} ${diffInfo._difficulty}`,
                 );
-                let diffJSON: Either<IDifficultyDataV2, IDifficultyDataV3>;
+                let diffJSON: Either<IDifficultyV2, IDifficultyV3>;
                 try {
                     diffJSON = JSON.parse(await diffFile.async('string'));
                 } catch (err) {
@@ -63,7 +63,7 @@ export async function loadDifficulty(info: IInfoData, zip: JSZip) {
                         const data = parseDifficultyV3(diffJSON);
                         const bpm = BeatPerMinute.create(
                             info._beatsPerMinute,
-                            data.customData.BPMChanges,
+                            [...(data.customData.BPMChanges ?? []), ...data.bpmEvents.map((be) => be.toJSON())],
                             diffInfo._customData?._editorOffset,
                         );
                         beatmapItem.push({

@@ -1,5 +1,5 @@
 import { BeatPerMinute } from '../../beatmap/shared/bpm';
-import { DifficultyData } from '../../beatmap/v3/difficulty';
+import { Difficulty } from '../../beatmap/v3/difficulty';
 import { CharacteristicName, DifficultyName } from '../../types/beatmap/shared';
 import { NoteContainer } from '../../types/beatmap/v3/container';
 import { ISwingAnalysis, ISwingCount } from '../../types/mapcheck/analyzers/swing';
@@ -63,7 +63,7 @@ function calcMaxRollingSPS(swingArray: number[], x: number): number {
 }
 
 export function info(
-    difficulty: DifficultyData,
+    difficulty: Difficulty,
     bpm: BeatPerMinute,
     charName: CharacteristicName,
     diffName: DifficultyName,

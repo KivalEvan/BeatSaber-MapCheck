@@ -41,7 +41,7 @@ export abstract class BeatmapObject<T extends IBaseObject> extends Serializable<
         }
         return this;
     }
-    addCustomData(object: Record<string, T['_customData']>) {
+    addCustomData(object: T['_customData']) {
         this.customData = { ...this.customData, object };
         return this;
     }

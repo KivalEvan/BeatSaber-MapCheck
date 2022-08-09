@@ -38,7 +38,7 @@ function run(map: ToolArgs) {
 
     const htmlResult: HTMLElement[] = [];
     if (duration) {
-        let endBeat = bpm.toBeatTime(duration);
+        let endBeat = bpm.toBeatTime(duration, true);
         if (colorNotes.length && colorNotes[0].time < 0) {
             htmlResult.push(
                 printResult(

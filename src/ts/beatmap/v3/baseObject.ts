@@ -41,8 +41,8 @@ export abstract class BaseObject<T extends IBaseObject> extends Serializable<T> 
         }
         return this;
     }
-    addCustomData(object: Record<string, T['customData']>) {
-        this.customData = { ...this.customData, object };
+    addCustomData(object: T['customData']) {
+        this.customData = { ...this.customData, ...object };
         return this;
     }
 }
