@@ -24,7 +24,11 @@ export function countEvent(
             chromaOld: 0,
         };
     }
-
+    eventCount[5] = {
+        total: 0,
+        chroma: 0,
+        chromaOld: 0,
+    };
     eventCount[5].total = boost.length;
 
     for (let i = events.length - 1; i >= 0; i--) {

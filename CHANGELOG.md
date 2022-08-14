@@ -6,6 +6,10 @@
 
 -   Improved UI look
 
+### Fixed
+
+-   Boost event count crash for v3 environment map
+
 ## 2.5.1 [2022-08-09]
 
 ### Added
