@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.5.2 [2022-08-16]
+
+### Changed
+
+-   Improved UI look
+-   v2 Waypoints is now optional
+
+### Fixed
+
+-   Boost event count crash for v3 environment map
+
 ## 2.5.1 [2022-08-09]
 
 ### Added

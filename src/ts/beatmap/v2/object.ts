@@ -45,4 +45,9 @@ export abstract class BeatmapObject<T extends IBaseObject> extends Serializable<
         this.customData = { ...this.customData, object };
         return this;
     }
+
+    func(fn: (object: this) => void) {
+        fn(this);
+        return this;
+    }
 }

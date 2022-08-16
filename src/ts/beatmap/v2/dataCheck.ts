@@ -255,6 +255,7 @@ export const DifficultyCheck: Record<keyof IDifficulty, DataCheck> = {
         type: 'array',
         version: '2.2.0',
         check: WaypointDataCheck,
+        optional: true,
     },
     _specialEventsKeywordFilters: {
         type: 'object',

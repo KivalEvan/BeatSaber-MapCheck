@@ -61,7 +61,7 @@ export interface INECustomEventDataAssignPathAnimation extends IHeckCustomEventD
 
 /** AssignPathAnimation interface for Noodle Extensions Custom Event. */
 export interface INECustomEventDataAssignTrackParent {
-    _childrenTracks: string[];
+    _childrenTracks: string | string[];
     _parentTrack: string;
     _worldPositionStays?: boolean;
 }

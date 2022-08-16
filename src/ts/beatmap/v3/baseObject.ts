@@ -45,4 +45,9 @@ export abstract class BaseObject<T extends IBaseObject> extends Serializable<T> 
         this.customData = { ...this.customData, ...object };
         return this;
     }
+
+    func(fn: (object: this) => void) {
+        fn(this);
+        return this;
+    }
 }

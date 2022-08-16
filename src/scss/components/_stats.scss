@@ -4,6 +4,8 @@
         box-sizing: border-box;
         padding: 0.25em 0.5em;
         font-size: 1.75rem;
+        text-transform: uppercase;
+        font-weight: bold;
     }
     &__table {
         width: 100%;
@@ -11,6 +13,7 @@
         table-layout: fixed;
         &-caption {
             text-align: left;
+            font-weight: 600;
         }
         &-header {
             border: 1px solid var(--c-border-table);
