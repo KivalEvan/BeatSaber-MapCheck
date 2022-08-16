@@ -25,7 +25,7 @@ export function countEvent(
         };
     }
 
-    eventCount[commonEvent[5]] = {
+    eventCount[5] = {
         total: boost.length,
         chroma: 0,
         chromaOld: 0,
