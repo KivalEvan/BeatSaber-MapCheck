@@ -141,6 +141,7 @@ export interface IChromaAnimation {
 export interface IChromaNote {
     color?: ColorArray;
     spawnEffect?: boolean;
+    disableDebris?: boolean;
 }
 
 /** Chroma interface for Beatmap Obstacle Custom Data. */
