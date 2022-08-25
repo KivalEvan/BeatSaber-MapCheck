@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.5.3 [2022-08-xx]
+
+### Added
+
+-   CORS proxy for URL download (thanks, BSMG)
+
 ## 2.5.2 [2022-08-16]
 
 ### Changed
