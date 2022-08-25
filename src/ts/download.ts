@@ -75,8 +75,8 @@ export async function downloadFromURL(input: string): Promise<ArrayBuffer> {
 
     UILoading.status('info', 'Requesting download from link', 0);
     logger.info(tag('downloadFromURL'), `downloading from ${url}`);
-    // apparently i need cors proxy
-    let res = await downloadMap(url);
+    // thanks BSMG for CORS proxy
+    let res = await downloadMap('https://cors.bsmg.dev/' + url);
     UIHeader.setCoverLink(url);
     return res;
 }

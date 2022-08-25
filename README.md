@@ -44,7 +44,15 @@ Any beatmap related has to be done in [Beat Saber Deno](https://github.com/Kival
 -   Rewrite swing detection
 -   Save tool parameters
 -   Tool presets
+-   Localization
 
 ## Note
 
 Since this is my first ever (web) project, I'm open to feedback to further improve skill and develop better stuff in the future. If you have any suggestion or feedback, let me know on Discord@Kival Evan#5480
+
+## Credits
+
+-   Uninstaller and Qwasyx (improving it) for note swing detection algorithm
+-   Top_Cat for math guidance
+-   BSMG Team for CORS proxy service
+-   Others for indirect contribution
