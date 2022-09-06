@@ -55,4 +55,4 @@ Since this is my first ever (web) project, I'm open to feedback to further impro
 -   Uninstaller and Qwasyx (improving it) for note swing detection algorithm
 -   Top_Cat for math guidance
 -   BSMG Team for CORS proxy service
--   Others for indirect contribution
+-   Others for helpful feedback & indirect contribution
