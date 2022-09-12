@@ -133,8 +133,6 @@ export function getProgressionMax(
         if (spsCurr > 0 && overall > 0) {
             spsPerc = (1 - spsCurr / overall) * 100;
         }
-        const min = overall * 0.6;
-        const max = overall * 0.9;
         const comparedTo = spsCurr;
         spsCurr = overall > 0 ? overall : spsCurr;
         if (spsCurr > minSPS && spsPerc > 40) {
@@ -155,8 +153,6 @@ export function getProgressionMin(
         if (spsCurr > 0 && overall > 0) {
             spsPerc = (1 - spsCurr / overall) * 100;
         }
-        const min = overall * 0.6;
-        const max = overall * 0.9;
         const comparedTo = spsCurr;
         spsCurr = overall > 0 ? overall : spsCurr;
         if (spsCurr > minSPS && spsPerc < 10) {
