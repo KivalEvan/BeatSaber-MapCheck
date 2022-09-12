@@ -1,7 +1,7 @@
 import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import UICheckbox from '../../ui/helpers/checkbox';
 import { printResultTime } from '../helpers';
-import { PositionX, PositionY } from '../../beatmap';
+import { PositionX, PositionY } from '../../beatmap/shared/constants';
 import { Obstacle } from '../../beatmap/v3/obstacle';
 
 const name = '<15ms Obstacle';

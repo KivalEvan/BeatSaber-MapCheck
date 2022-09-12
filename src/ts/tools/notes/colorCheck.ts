@@ -3,7 +3,7 @@ import { ColorArray } from '../../types/colors';
 import { deltaE00, colorObjToAry, round } from '../../utils';
 import UICheckbox from '../../ui/helpers/checkbox';
 import { printResult } from '../helpers';
-import { ColorScheme, EnvironmentSchemeName } from '../../beatmap';
+import { ColorScheme, EnvironmentSchemeName } from '../../beatmap/shared/colorScheme';
 
 const name = 'Color Check';
 const description = 'Compare note color with other colored note and the arrow on itself.';

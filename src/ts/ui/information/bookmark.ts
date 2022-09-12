@@ -1,8 +1,8 @@
 import Settings from '../../settings';
 import UIPanel from '../helpers/panel';
 import { RGBAtoHex, round, toMMSS } from '../../utils';
-import { BeatPerMinute } from '../../beatmap/shared';
-import { IBookmark } from '../../types/beatmap/v3';
+import { BeatPerMinute } from '../../beatmap/shared/bpm';
+import { IBookmark } from '../../types/beatmap/v3/bookmark';
 import { htmlTableBookmarks } from './constants';
 import { displayTableRow, hideTableRow } from './helpers';
 

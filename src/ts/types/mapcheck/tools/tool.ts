@@ -1,5 +1,6 @@
-import { BeatPerMinute, NoteJumpSpeed } from '../../../beatmap';
-import { IInfoData } from '../../beatmap';
+import { BeatPerMinute } from '../../../beatmap/shared/bpm';
+import { NoteJumpSpeed } from '../../../beatmap/shared/njs';
+import { IInfo } from '../../beatmap/shared/info';
 import { IBeatmapItem } from './beatmapItem';
 import { ToolInputOrder, ToolOutputOrder } from './order';
 
@@ -30,8 +31,7 @@ export interface ToolOutput {
 export interface ToolArgs {
     settings: IBeatmapSettings;
     difficulty?: IBeatmapItem;
-    difficulties?: IBeatmapItem[];
-    info: IInfoData;
+    info: IInfo;
 }
 
 export type ToolRun = (args: ToolArgs) => void;

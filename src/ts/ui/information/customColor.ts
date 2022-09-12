@@ -1,7 +1,8 @@
 import UIPanel from '../helpers/panel';
 import { RGBAtoHex } from '../../utils';
-import { IColorScheme, EnvironmentName } from '../../types/beatmap/shared';
-import { ColorScheme, ColorSchemeRename, EnvironmentSchemeName } from '../../beatmap/shared';
+import { IColorScheme } from '../../types/beatmap/shared/colorScheme';
+import { EnvironmentName } from '../../types/beatmap/shared/environment';
+import { ColorScheme, ColorSchemeRename, EnvironmentSchemeName } from '../../beatmap/shared/colorScheme';
 import { htmlTableCustomColor } from './constants';
 import { displayTableRow, hideTableRow } from './helpers';
 import { IColor } from '../../types/colors';

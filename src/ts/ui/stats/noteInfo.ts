@@ -1,12 +1,12 @@
 import { formatNumber, round } from '../../utils';
-import { IInfoData } from '../../types';
+import { IInfo } from '../../types/beatmap/shared/info';
 import { IBeatmapItem } from '../../types/mapcheck';
 import * as swing from '../../analyzers/swing';
 import * as score from '../../analyzers/score';
 import { prefix } from './constants';
 import { countNote } from '../../analyzers/stats/note';
 
-export function createNoteInfoTable(mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTableElement {
+export function createNoteInfoTable(mapInfo: IInfo, mapData: IBeatmapItem): HTMLTableElement {
     const noteCount = countNote(mapData.data.colorNotes);
     let htmlString = `<caption class="${prefix}table-caption">Note Information:</caption><tr><th class="${prefix}table-header" colspan="2">R/B Ratio</th><td class="${prefix}table-element">${round(
         noteCount.red.total / noteCount.blue.total,

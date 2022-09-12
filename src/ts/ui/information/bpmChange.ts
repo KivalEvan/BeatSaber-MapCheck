@@ -1,6 +1,6 @@
 import Settings from '../../settings';
 import { round, toMMSS } from '../../utils';
-import { BeatPerMinute } from '../../beatmap/shared';
+import { BeatPerMinute } from '../../beatmap/shared/bpm';
 import { htmlTableBPMChanges } from './constants';
 import { displayTableRow, hideTableRow } from './helpers';
 

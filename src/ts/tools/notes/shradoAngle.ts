@@ -4,7 +4,8 @@ import { NoteContainer, NoteContainerNote } from '../../types/beatmap/v3/contain
 import swing from '../../analyzers/swing/swing';
 import { printResultTime } from '../helpers';
 import UICheckbox from '../../ui/helpers/checkbox';
-import { BeatPerMinute, NoteColor, NoteDirection, NoteDirectionFlip } from '../../beatmap';
+import { BeatPerMinute } from '../../beatmap/shared/bpm';
+import { NoteColor, NoteDirection, NoteDirectionFlip } from '../../beatmap/shared/constants';
 
 const name = 'shrado Angle';
 const description = 'Look for common negative curvature pattern.';

@@ -11,13 +11,21 @@ const tag = (name: string) => {
 
 const sortObjectTime = (a: IBaseObject, b: IBaseObject) => a.b - b.b;
 
-export function difficulty(data: Partial<IDifficulty>): Difficulty {
+export function difficulty(
+    data: Partial<IDifficulty>,
+    checkData: {
+        enable: boolean;
+        throwError?: boolean;
+    } = { enable: true, throwError: true },
+): Difficulty {
     logger.info(tag('difficulty'), 'Parsing beatmap difficulty v3.x.x');
     if (data.version !== '3.0.0') {
         logger.warn(tag('difficulty'), 'Unidentified beatmap version');
         data.version = '3.0.0';
     }
-    deepCheck(data, DifficultyCheck, 'difficulty', data.version);
+    if (checkData.enable) {
+        deepCheck(data, DifficultyCheck, 'difficulty', data.version, checkData.throwError);
+    }
 
     // haha why do i have to do this, beat games
     data.bpmEvents = data.bpmEvents ?? [];

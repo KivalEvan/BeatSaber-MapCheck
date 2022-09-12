@@ -1,9 +1,9 @@
-import { IInfoData } from '../../types';
+import { IInfo } from '../../types/beatmap/shared/info';
 import { IBeatmapItem } from '../../types/mapcheck';
 import { countBomb, countNote } from '../../analyzers/stats/note';
 import { prefix } from './constants';
 
-export function createNoteCountTable(mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTableElement {
+export function createNoteCountTable(mapInfo: IInfo, mapData: IBeatmapItem): HTMLTableElement {
     const noteCount = countNote(mapData.data.colorNotes);
     const arcCount = countNote(mapData.data.sliders);
     const chainCount = countNote(mapData.data.burstSliders);

@@ -4,7 +4,8 @@ import UICheckbox from '../../ui/helpers/checkbox';
 import { printResultTime } from '../helpers';
 import { BombNote } from '../../beatmap/v3/bombNote';
 import { BasicEvent } from '../../beatmap/v3/basicEvent';
-import { BeatPerMinute, EventList } from '../../beatmap';
+import { BeatPerMinute } from '../../beatmap/shared/bpm';
+import { EventList } from '../../beatmap/shared/environment';
 
 const name = 'Unlit Bomb';
 const description = 'Check for lighting around bomb.';
@@ -39,7 +40,7 @@ const unlitBomb = (bombs: BombNote[], events: BasicEvent[], bpm: BeatPerMinute, 
     const arr: BombNote[] = [];
     const commonEvent = EventList[environment]?.[0] ?? EventList['DefaultEnvironment'][0];
     const eventsLight = events
-        .filter((ev) => ev.isLightEvent() && commonEvent.includes(ev.type))
+        .filter((ev) => ev.isLightEvent(environment) && commonEvent.includes(ev.type))
         .sort((a, b) => a.type - b.type) as BasicEvent[];
     const eventState: {
         [key: number]: {

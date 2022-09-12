@@ -1,5 +1,6 @@
 import { EventList } from '../../beatmap/shared/environment';
-import { LightColorEventBoxGroup, LightRotationEventBoxGroup } from '../../beatmap/v3';
+import { LightColorEventBoxGroup } from '../../beatmap/v3/lightColorEventBoxGroup';
+import { LightRotationEventBoxGroup } from '../../beatmap/v3/lightRotationEventBoxGroup';
 import { EnvironmentAllName } from '../../types/beatmap/shared/environment';
 import { ICountEventBoxGroup } from '../../types/mapcheck/analyzers/stats';
 

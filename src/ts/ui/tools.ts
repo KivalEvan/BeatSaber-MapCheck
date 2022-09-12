@@ -3,8 +3,12 @@ import Analyser from '../tools/analyzer';
 import UILoading from './loading';
 import UIInformation from './information';
 import { removeOptions } from '../utils/web';
-import { DifficultyRename, CharacteristicRename, BeatPerMinute } from '../beatmap/shared';
-import { CharacteristicName, DifficultyName, IInfoData, IInfoSetData } from '../types/beatmap';
+import { BeatPerMinute } from '../beatmap/shared/bpm';
+import { CharacteristicRename } from '../beatmap/shared/characteristic';
+import { DifficultyRename } from '../beatmap/shared/difficulty';
+import { CharacteristicName } from '../types/beatmap/shared/characteristic';
+import { DifficultyName } from '../types/beatmap/shared/difficulty';
+import { IInfo, IInfoSet } from '../types/beatmap/shared/info';
 
 const logPrefix = 'UI Tools: ';
 
@@ -82,7 +86,7 @@ function setDifficultyLabel(str: string): void {
     htmlToolsDifficultyLabel.forEach((elem) => (elem.textContent = str));
 }
 
-function populateSelectDiff(mapSet?: IInfoSetData): void {
+function populateSelectDiff(mapSet?: IInfoSet): void {
     if (!mapSet) {
         return;
     }
@@ -118,7 +122,7 @@ function populateSelectDiff(mapSet?: IInfoSetData): void {
     }
 }
 
-function populateSelect(mapInfo?: IInfoData): void {
+function populateSelect(mapInfo?: IInfo): void {
     if (!mapInfo) {
         htmlToolsSelectMode.forEach((elem) => removeOptions(elem));
         htmlToolsSelectDifficulty.forEach((elem) => removeOptions(elem));

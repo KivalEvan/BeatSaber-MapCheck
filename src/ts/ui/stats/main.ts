@@ -3,7 +3,7 @@ import UIAccordion from '../helpers/accordion';
 import UIPanel from '../helpers/panel';
 import SavedData from '../../savedData';
 import Settings from '../../settings';
-import { DifficultyRename } from '../../beatmap';
+import { DifficultyRename } from '../../beatmap/shared/difficulty';
 import { CharacteristicRename } from '../../beatmap/shared/characteristic';
 import { logPrefix, prefix } from './constants';
 import { createNPSTable } from './nps';

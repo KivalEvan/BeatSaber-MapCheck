@@ -1,4 +1,5 @@
-import { CharacteristicName, DifficultyName } from '../../beatmap';
+import { CharacteristicName } from '../../beatmap/shared/characteristic';
+import { DifficultyName } from '../../beatmap/shared/difficulty';
 import { NoteContainer } from '../../beatmap/v3/container';
 
 export interface ISwingContainer {

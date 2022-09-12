@@ -2,10 +2,10 @@ import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/map
 import { NoteContainer, NoteContainerNote } from '../../types/beatmap/v3/container';
 import { isEnd } from '../../analyzers/placement/note';
 import swing from '../../analyzers/swing/swing';
-import { ColorNote } from '../../beatmap/v3';
+import { ColorNote } from '../../beatmap/v3/colorNote';
 import UICheckbox from '../../ui/helpers/checkbox';
 import { printResultTime } from '../helpers';
-import { NoteColor, NoteDirection, NoteDirectionSpace } from '../../beatmap';
+import { NoteColor, NoteDirection, NoteDirectionSpace } from '../../beatmap/shared/constants';
 
 const name = 'Hitbox Staircase';
 const description = 'Check for overlapping post-swing hitbox with note hitbox during swing.';

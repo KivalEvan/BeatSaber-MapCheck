@@ -1,4 +1,5 @@
-import { CharacteristicName, DifficultyName } from '../../beatmap';
+import { CharacteristicName } from '../../beatmap/shared/characteristic';
+import { DifficultyName } from '../../beatmap/shared/difficulty';
 
 interface IAnalysisBase {
     html: HTMLElement[] | null;

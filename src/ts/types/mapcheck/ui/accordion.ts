@@ -1,4 +1,4 @@
-import { DifficultyName } from '../../beatmap';
+import { DifficultyName } from '../../beatmap/shared/difficulty';
 
 export type UIBackgroundColorType = DifficultyName | 'none';
 

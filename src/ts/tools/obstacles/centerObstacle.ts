@@ -2,7 +2,8 @@ import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/map
 import { round } from '../../utils';
 import { printResultTime } from '../helpers';
 import UICheckbox from '../../ui/helpers/checkbox';
-import { BeatPerMinute, PositionX, PositionY } from '../../beatmap';
+import { BeatPerMinute } from '../../beatmap/shared/bpm';
+import { PositionX, PositionY } from '../../beatmap/shared/constants';
 import { Obstacle } from '../../beatmap/v3/obstacle';
 
 const name = '2-wide Center Obstacle';

@@ -2,7 +2,7 @@ import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/map
 import { round } from '../../utils';
 import { printResultTime } from '../helpers';
 import UICheckbox from '../../ui/helpers/checkbox';
-import { BeatPerMinute } from '../../beatmap';
+import { BeatPerMinute } from '../../beatmap/shared/bpm';
 
 const name = 'Slow Slider';
 const description = 'Look for slider that require slow swing.';

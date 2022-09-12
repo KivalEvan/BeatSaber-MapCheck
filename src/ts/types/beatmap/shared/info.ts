@@ -7,7 +7,7 @@ import { Environment360Name, EnvironmentName, EnvironmentV3Name } from './enviro
 export type GenericFileName = `${DifficultyName}${CharacteristicName | ''}.dat`;
 
 /** Info interface for info file. */
-export interface IInfoData {
+export interface IInfo {
     _version: `2.${0 | 2}.0`;
     _songName: string;
     _songSubName: string;
@@ -24,10 +24,10 @@ export interface IInfoData {
     _allDirectionsEnvironmentName: Environment360Name;
     _songTimeOffset: number;
     _customData?: ICustomDataInfo;
-    _difficultyBeatmapSets: IInfoSetData[];
+    _difficultyBeatmapSets: IInfoSet[];
 }
 /** Info Set interface for info. */
-export interface IInfoSetData {
+export interface IInfoSet {
     _beatmapCharacteristicName: CharacteristicName;
     _difficultyBeatmaps: IInfoSetDifficulty[];
 }

@@ -1,10 +1,11 @@
 import { round } from '../../utils';
-import { BeatPerMinute, NoteJumpSpeed } from '../../beatmap';
-import { IInfoData } from '../../types/beatmap/shared/info';
+import { BeatPerMinute } from '../../beatmap/shared/bpm';
+import { NoteJumpSpeed } from '../../beatmap/shared/njs';
+import { IInfo } from '../../types/beatmap/shared/info';
 import { IBeatmapItem } from '../../types/mapcheck';
 import { prefix } from './constants';
 
-export function createSettingsTable(mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTableElement {
+export function createSettingsTable(mapInfo: IInfo, mapData: IBeatmapItem): HTMLTableElement {
     const bpm = BeatPerMinute.create(mapInfo._beatsPerMinute);
     const njs = NoteJumpSpeed.create(
         bpm,
