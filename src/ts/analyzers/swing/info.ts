@@ -125,7 +125,7 @@ export function info(
 export function getProgressionMax(
     spsArray: ISwingAnalysis[],
     minSPS: number,
-): { result: ISwingAnalysis; min: number; max: number } | null {
+): { result: ISwingAnalysis; min: number; max: number; comparedTo: number } | null {
     let spsPerc = 0;
     let spsCurr = 0;
     for (const spsMap of spsArray) {
@@ -135,9 +135,10 @@ export function getProgressionMax(
         }
         const min = overall * 0.6;
         const max = overall * 0.9;
+        const comparedTo = spsCurr;
         spsCurr = overall > 0 ? overall : spsCurr;
         if (spsCurr > minSPS && spsPerc > 40) {
-            return { result: spsMap, min, max };
+            return { result: spsMap, min, max, comparedTo };
         }
     }
     return null;
@@ -146,7 +147,7 @@ export function getProgressionMax(
 export function getProgressionMin(
     spsArray: ISwingAnalysis[],
     minSPS: number,
-): { result: ISwingAnalysis; min: number; max: number } | null {
+): { result: ISwingAnalysis; min: number; max: number; comparedTo: number } | null {
     let spsPerc = Number.MAX_SAFE_INTEGER;
     let spsCurr = 0;
     for (const spsMap of spsArray) {
@@ -156,9 +157,10 @@ export function getProgressionMin(
         }
         const min = overall * 0.6;
         const max = overall * 0.9;
+        const comparedTo = spsCurr;
         spsCurr = overall > 0 ? overall : spsCurr;
         if (spsCurr > minSPS && spsPerc < 10) {
-            return { result: spsMap, min, max };
+            return { result: spsMap, min, max, comparedTo };
         }
     }
     return null;

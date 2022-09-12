@@ -5,10 +5,35 @@ import * as swing from '../../analyzers/swing';
 import { printResult } from '../helpers';
 import UICheckbox from '../../ui/helpers/checkbox';
 import { DifficultyRename } from '../../beatmap/shared/difficulty';
+import { DifficultyName } from '../../types';
 
 const name = 'Difficulty Progression';
 const description = 'For ranking purpose, check difficuly progression to fit rankability criteria.';
 const enabled = true;
+
+const htmlContainer = document.createElement('div');
+const htmlDifficultyList = document.createElement('ul');
+
+const diffList: DifficultyName[] = ['ExpertPlus', 'Expert', 'Hard', 'Normal', 'Easy'];
+for (const diff of diffList) {
+    htmlDifficultyList.appendChild(
+        UICheckbox.create(
+            DifficultyRename[diff],
+            `Toggle check progression for Standard ${DifficultyRename[diff]}`,
+            true,
+            function (this: HTMLInputElement) {
+                tool.input.params[diff] = this.checked;
+            },
+        ),
+    );
+}
+
+htmlContainer.appendChild(
+    UICheckbox.create(name, description, enabled, function (this: HTMLInputElement) {
+        tool.input.enabled = this.checked;
+    }),
+);
+htmlContainer.appendChild(htmlDifficultyList);
 
 const tool: Tool = {
     name,
@@ -20,10 +45,14 @@ const tool: Tool = {
     },
     input: {
         enabled,
-        params: {},
-        html: UICheckbox.create(name, description, enabled, function (this: HTMLInputElement) {
-            tool.input.enabled = this.checked;
-        }),
+        params: {
+            ExpertPlus: true,
+            Expert: true,
+            Hard: true,
+            Normal: true,
+            Easy: true,
+        },
+        html: htmlContainer,
     },
     output: {
         html: null,
@@ -39,7 +68,7 @@ function run(map: ToolArgs) {
     }
     const filteredSPS = SavedData.beatmapDifficulty
         .map((d) => d.swingAnalysis)
-        .filter((a) => a.characteristic === 'Standard')
+        .filter((a) => a.characteristic === 'Standard' && tool.input.params[a.difficulty])
         .sort((a, b) => a.total.average - b.total.average)
         .reverse();
     if (!filteredSPS.length) {
@@ -69,10 +98,13 @@ function run(map: ToolArgs) {
         htmlResult.push(
             printResult(
                 'Violates progression',
-                `${DifficultyRename[progMax.result.difficulty]} exceeded 40% SPS drop from ${round(
+                `${DifficultyRename[progMax.result.difficulty]} exceeded 40% SPS drop, ${round(
                     progMax.result.total.average,
                     2,
-                )}, acceptable range (${round(progMax.min, 2)}-${round(progMax.max, 2)})`,
+                )} from ${round(progMax.comparedTo, 2)}, acceptable range (${round(progMax.min, 2)}-${round(
+                    progMax.max,
+                    2,
+                )})`,
             ),
         );
     }
@@ -80,10 +112,13 @@ function run(map: ToolArgs) {
         htmlResult.push(
             printResult(
                 'Violates progression',
-                `${DifficultyRename[progMin.result.difficulty]} has less than 10% SPS drop from ${round(
+                `${DifficultyRename[progMin.result.difficulty]} has less than 10% SPS drop, ${round(
                     progMin.result.total.average,
                     2,
-                )}, acceptable range (${round(progMin.min, 2)}-${round(progMin.max, 2)})`,
+                )} from ${round(progMin.comparedTo, 2)}, acceptable range (${round(progMin.min, 2)}-${round(
+                    progMin.max,
+                    2,
+                )})`,
             ),
         );
     }
