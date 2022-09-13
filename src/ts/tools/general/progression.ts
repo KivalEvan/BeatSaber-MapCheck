@@ -101,10 +101,12 @@ function run(map: ToolArgs) {
                 `${DifficultyRename[progMax.result.difficulty]} exceeded 40% SPS drop, ${round(
                     progMax.result.total.average,
                     2,
-                )} from ${round(progMax.comparedTo, 2)}, acceptable range (${round(
-                    progMax.comparedTo * 0.6,
+                )} from ${round(progMax.comparedTo?.total?.average || 0, 2)} ${
+                    DifficultyRename[progMax.comparedTo!.difficulty]
+                }, acceptable range (${round((progMax.comparedTo?.total?.average || 0) * 0.6, 2)}-${round(
+                    (progMax.comparedTo?.total.average || 0) * 0.9,
                     2,
-                )}-${round(progMax.comparedTo * 0.9, 2)})`,
+                )})`,
             ),
         );
     }
@@ -115,10 +117,12 @@ function run(map: ToolArgs) {
                 `${DifficultyRename[progMin.result.difficulty]} has less than 10% SPS drop, ${round(
                     progMin.result.total.average,
                     2,
-                )} from ${round(progMin.comparedTo, 2)}, acceptable range (${round(
-                    progMin.comparedTo * 0.6,
+                )} from ${round(progMin.comparedTo?.total.average || 0, 2)} ${
+                    DifficultyRename[progMin.comparedTo!.difficulty]
+                }, acceptable range (${round((progMin.comparedTo?.total.average || 0) * 0.6, 2)}-${round(
+                    (progMin.comparedTo?.total.average || 0) * 0.9,
                     2,
-                )}-${round(progMin.comparedTo * 0.9, 2)})`,
+                )})`,
             ),
         );
     }
