@@ -97,7 +97,7 @@ function runDifficulty(characteristic: CharacteristicName, difficulty: Difficult
 
     const njs = NoteJumpSpeed.create(
         beatmapDifficulty.bpm,
-        beatmapDifficulty.info._noteJumpMovementSpeed,
+        beatmapDifficulty.info._noteJumpMovementSpeed || NoteJumpSpeed.FallbackNJS[beatmapDifficulty.difficulty],
         beatmapDifficulty.info._noteJumpStartBeatOffset,
     );
 
