@@ -1,6 +1,8 @@
+import { BaseNote } from '../../beatmap/v3/baseNote';
 import { BurstSlider } from '../../beatmap/v3/burstSlider';
 import { ColorNote } from '../../beatmap/v3/colorNote';
 import { Slider } from '../../beatmap/v3/slider';
+import { IBaseNote } from '../../types/beatmap/v3/baseNote';
 import { radToDeg, shortRotDistance } from '../../utils/math';
 
 // TODO: update with new position/rotation system
@@ -91,19 +93,18 @@ export function isEnd(currNote: ColorNote, prevNote: ColorNote, cd: number): boo
  * ```
  */
 // a fkin abomination that's what currNote is
-export function isIntersect(
+export function isIntersect<T extends IBaseNote>(
     currNote: ColorNote,
-    compareTo: ColorNote,
+    compareTo: BaseNote<T>,
     angleDistances: [number, number, number?][],
     ahead = false,
 ): [boolean, boolean] {
     const [nX1, nY1] = currNote.getPosition();
     const [nX2, nY2] = compareTo.getPosition();
-    const nA1 = currNote.getAngle();
-    const nA2 = compareTo.getAngle();
     const angle = ahead ? 540 : 360;
     let resultN1 = false;
     if (currNote.direction !== 8) {
+        const nA1 = currNote.getAngle();
         const a = (radToDeg(Math.atan2(nY1 - nY2, nX1 - nX2)) + 450) % 360;
         for (const [angleRange, maxDistance, offsetT] of angleDistances) {
             const offset = offsetT ?? 0;
@@ -119,7 +120,8 @@ export function isIntersect(
         }
     }
     let resultN2 = false;
-    if (compareTo.direction !== 8) {
+    if (compareTo instanceof ColorNote && compareTo.direction !== 8) {
+        const nA2 = compareTo.getAngle();
         const a = (radToDeg(Math.atan2(nY2 - nY1, nX2 - nX1)) + 450) % 360;
         for (const [angleRange, maxDistance, offsetT] of angleDistances) {
             const offset = offsetT ?? 0;

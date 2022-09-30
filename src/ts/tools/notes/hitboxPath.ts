@@ -31,36 +31,43 @@ const tool: Tool = {
 
 function check(map: ToolArgs) {
     const { bpm } = map.settings;
-    const { colorNotes } = map.difficulty!.data;
+    const noteContainer = map.difficulty!.noteContainer.filter((n) => n.type === 'bomb' || n.type === 'note');
 
     const arr: ColorNote[] = [];
     // to avoid multiple of stack popping up, ignore anything within this time
     let lastTime: number = 0;
-    for (let i = 0, len = colorNotes.length; i < len; i++) {
-        if (bpm.toRealTime(colorNotes[i].time) < lastTime + 0.01) {
+    for (let i = 0, len = noteContainer.length; i < len; i++) {
+        const currentNote = noteContainer[i];
+        if (
+            currentNote.type === 'bomb' ||
+            currentNote.type === 'slider' ||
+            currentNote.type === 'burstSlider' ||
+            bpm.toRealTime(currentNote.data.time) < lastTime + 0.01
+        ) {
             continue;
         }
         for (let j = i + 1; j < len; j++) {
-            if (bpm.toRealTime(colorNotes[j].time) > bpm.toRealTime(colorNotes[i].time) + 0.01) {
+            const compareTo = noteContainer[j];
+            if (bpm.toRealTime(compareTo.data.time) > bpm.toRealTime(currentNote.data.time) + 0.01) {
                 break;
             }
-            if (colorNotes[i].color === colorNotes[j].color) {
+            if (compareTo.type === 'note' && currentNote.data.color === compareTo.data.color) {
                 continue;
             }
             if (
-                ((colorNotes[i].isHorizontal(colorNotes[j]) || colorNotes[i].isVertical(colorNotes[j])) &&
-                    isIntersect(colorNotes[i], colorNotes[j], [
+                ((currentNote.data.isHorizontal(compareTo.data) || currentNote.data.isVertical(compareTo.data)) &&
+                    isIntersect(currentNote.data, compareTo.data, [
                         [45, 1],
                         [15, 2],
                     ]).some((b) => b)) ||
-                (colorNotes[i].isDiagonal(colorNotes[j]) &&
-                    isIntersect(colorNotes[i], colorNotes[j], [
+                (currentNote.data.isDiagonal(compareTo.data) &&
+                    isIntersect(currentNote.data, compareTo.data, [
                         [45, 1],
                         [15, 1.5],
                     ]).some((b) => b))
             ) {
-                arr.push(colorNotes[i]);
-                lastTime = bpm.toRealTime(colorNotes[i].time);
+                arr.push(currentNote.data);
+                lastTime = bpm.toRealTime(currentNote.data.time);
             }
         }
     }
