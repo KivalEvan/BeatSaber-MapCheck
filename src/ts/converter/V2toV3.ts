@@ -1,13 +1,23 @@
-import * as v3 from '../beatmap/v3';
 import logger from '../logger';
 import { Difficulty as DifficultyV2 } from '../beatmap/v2/difficulty';
 import { Difficulty as DifficultyV3 } from '../beatmap/v3/difficulty';
 import { clamp } from '../utils/math';
 import { EventLaneRotationValue } from '../beatmap/shared/constants';
 import { ICustomDataNote, ICustomDataObstacle } from '../types/beatmap/v3/customData';
-import { IBasicEvent } from '../types/beatmap/v3/basicEvent';
 import { Vector3 } from '../types/beatmap/shared/heck';
 import { IChromaComponent, IChromaMaterial } from '../types/beatmap/v3/chroma';
+import objectToV3 from './customData/objectToV3';
+import eventToV3 from './customData/eventToV3';
+import { Obstacle } from '../beatmap/v3/obstacle';
+import { Slider } from '../beatmap/v3/slider';
+import { Waypoint } from '../beatmap/v3/waypoint';
+import { BasicEvent } from '../beatmap/v3/basicEvent';
+import { BasicEventTypesWithKeywords } from '../beatmap/v3/basicEventTypesWithKeywords';
+import { BombNote } from '../beatmap/v3/bombNote';
+import { BPMEvent } from '../beatmap/v3/bpmEvent';
+import { ColorBoostEvent } from '../beatmap/v3/colorBoostEvent';
+import { ColorNote } from '../beatmap/v3/colorNote';
+import { RotationEvent } from '../beatmap/v3/rotationEvent';
 
 const tag = (name: string) => {
     return `[convert::${name}]`;
@@ -31,7 +41,7 @@ export function V2toV3(data: DifficultyV2, skipPrompt?: boolean): DifficultyV3 {
     } else {
         logger.warn(tag('V2toV3'), 'Converting beatmap v2 to v3 may lose certain data!');
     }
-    const template = v3.Difficulty.create();
+    const template = DifficultyV3.create();
     template.fileName = data.fileName;
 
     template.customData.fakeBombNotes = [];
@@ -39,42 +49,14 @@ export function V2toV3(data: DifficultyV2, skipPrompt?: boolean): DifficultyV3 {
     template.customData.fakeObstacles = [];
 
     data.notes.forEach((n, i) => {
-        const customData: ICustomDataNote = {
-            color: n.customData._color,
-            coordinates: n.customData._position,
-            disableNoteGravity: n.customData._disableNoteGravity,
-            disableNoteLook: n.customData._disableNoteLook,
-            flip: n.customData._flip,
-            localRotation: n.customData._localRotation,
-            noteJumpMovementSpeed: n.customData._noteJumpMovementSpeed,
-            noteJumpStartBeatOffset: n.customData._noteJumpStartBeatOffset,
-            spawnEffect:
-                typeof n.customData._disableSpawnEffect === 'boolean' ? !n.customData._disableSpawnEffect : undefined,
-            track: n.customData._track,
-            uninteractable: typeof n.customData._interactable === 'boolean' ? !n.customData._interactable : undefined,
-            worldRotation: n.customData._rotation,
-        };
-        if (n.customData._animation) {
-            customData.animation = {
-                color: n.customData._animation._color,
-                definitePosition: n.customData._animation._definitePosition,
-                dissolve: n.customData._animation._dissolve,
-                dissolveArrow: n.customData._animation._dissolveArrow,
-                interactable: n.customData._animation._interactable,
-                localRotation: n.customData._animation._localRotation,
-                offsetPosition: n.customData._animation._position,
-                offsetRotation: n.customData._animation._rotation,
-                scale: n.customData._animation._scale,
-                time: n.customData._animation._time,
-            };
-        }
+        const customData: ICustomDataNote = objectToV3(n.customData);
         if (typeof n.customData._cutDirection === 'number') {
             logger.debug(tag('V2toV3'), `notes[${i}] at time ${n.time} NE _cutDirection will be converted.`);
         }
         if (n.isBomb()) {
             if (n.customData._fake) {
                 template.customData.fakeBombNotes!.push(
-                    v3.BombNote.create({
+                    BombNote.create({
                         b: n.time,
                         x: n.posX,
                         y: n.posY,
@@ -83,7 +65,7 @@ export function V2toV3(data: DifficultyV2, skipPrompt?: boolean): DifficultyV3 {
                 );
             } else {
                 template.bombNotes.push(
-                    v3.BombNote.create({
+                    BombNote.create({
                         b: n.time,
                         x: n.posX,
                         y: n.posY,
@@ -99,40 +81,39 @@ export function V2toV3(data: DifficultyV2, skipPrompt?: boolean): DifficultyV3 {
                     n.customData._cutDirection > 0
                         ? n.customData._cutDirection % 360
                         : 360 + (n.customData._cutDirection % 360);
-            }
-            if (n.cutDirection >= 1000) {
-                a = Math.abs(((n.cutDirection % 1000) % 360) - 360);
+            } else if (n.direction >= 1000) {
+                a = Math.abs(((n.direction % 1000) % 360) - 360);
             }
             if (n.customData._fake) {
                 template.customData.fakeColorNotes!.push(
-                    v3.ColorNote.create({
+                    ColorNote.create({
                         b: n.time,
                         c: n.type as 0 | 1,
                         x: n.posX,
                         y: n.posY,
                         d:
-                            n.cutDirection >= 1000 || typeof n.customData._cutDirection === 'number'
-                                ? n.cutDirection === 8
+                            n.direction >= 1000 || typeof n.customData._cutDirection === 'number'
+                                ? n.direction === 8
                                     ? 8
                                     : 1
-                                : clamp(n.cutDirection, 0, 8),
+                                : clamp(n.direction, 0, 8),
                         a: a,
                         customData,
                     })[0].toJSON(),
                 );
             } else {
                 template.colorNotes.push(
-                    v3.ColorNote.create({
+                    ColorNote.create({
                         b: n.time,
                         c: n.type as 0 | 1,
                         x: n.posX,
                         y: n.posY,
                         d:
-                            n.cutDirection >= 1000 || typeof n.customData._cutDirection === 'number'
-                                ? n.cutDirection === 8
+                            n.direction >= 1000 || typeof n.customData._cutDirection === 'number'
+                                ? n.direction === 8
                                     ? 8
                                     : 1
-                                : clamp(n.cutDirection, 0, 8),
+                                : clamp(n.direction, 0, 8),
                         a: a,
                         customData,
                     })[0],
@@ -142,34 +123,10 @@ export function V2toV3(data: DifficultyV2, skipPrompt?: boolean): DifficultyV3 {
     });
 
     data.obstacles.forEach((o) => {
-        const customData: ICustomDataObstacle = {
-            color: o.customData._color,
-            coordinates: o.customData._position,
-            localRotation: o.customData._localRotation,
-            noteJumpMovementSpeed: o.customData._noteJumpMovementSpeed,
-            noteJumpStartBeatOffset: o.customData._noteJumpStartBeatOffset,
-            size: o.customData._scale,
-            track: o.customData._track,
-            uninteractable: typeof o.customData._interactable === 'boolean' ? !o.customData._interactable : undefined,
-            worldRotation: o.customData._rotation,
-        };
-        if (o.customData._animation) {
-            customData.animation = {
-                color: o.customData._animation._color,
-                definitePosition: o.customData._animation._definitePosition,
-                dissolve: o.customData._animation._dissolve,
-                dissolveArrow: o.customData._animation._dissolveArrow,
-                interactable: o.customData._animation._interactable,
-                localRotation: o.customData._animation._localRotation,
-                offsetPosition: o.customData._animation._position,
-                offsetRotation: o.customData._animation._rotation,
-                scale: o.customData._animation._scale,
-                time: o.customData._animation._time,
-            };
-        }
+        const customData: ICustomDataObstacle = objectToV3(o.customData);
         if (o.customData._fake) {
             template.customData.fakeObstacles!.push(
-                v3.Obstacle.create({
+                Obstacle.create({
                     b: o.time,
                     x: o.posX,
                     y: o.type === 2 ? o.posY : o.type ? 2 : 0,
@@ -181,7 +138,7 @@ export function V2toV3(data: DifficultyV2, skipPrompt?: boolean): DifficultyV3 {
             );
         } else {
             template.obstacles.push(
-                v3.Obstacle.create({
+                Obstacle.create({
                     b: o.time,
                     x: o.posX,
                     y: o.type === 2 ? o.posY : o.type ? 2 : 0,
@@ -197,14 +154,14 @@ export function V2toV3(data: DifficultyV2, skipPrompt?: boolean): DifficultyV3 {
     data.events.forEach((e, i) => {
         if (e.isColorBoost()) {
             template.colorBoostBeatmapEvents.push(
-                v3.ColorBoostEvent.create({
+                ColorBoostEvent.create({
                     b: e.time,
                     o: e.value ? true : false,
                 })[0],
             );
         } else if (e.isLaneRotationEvent()) {
             template.rotationEvents.push(
-                v3.RotationEvent.create({
+                RotationEvent.create({
                     b: e.time,
                     e: e.type === 14 ? 0 : 1,
                     r:
@@ -217,64 +174,34 @@ export function V2toV3(data: DifficultyV2, skipPrompt?: boolean): DifficultyV3 {
             );
         } else if (e.isBPMChangeEvent()) {
             template.bpmEvents.push(
-                v3.BPMEvent.create({
+                BPMEvent.create({
                     b: e.time,
                     m: e.floatValue,
                 })[0],
             );
         } else {
-            let customData!: IBasicEvent['customData'];
-            if (e.customData) {
-                if (e.isLightEvent()) {
-                    customData = {
-                        color: e.customData._color,
-                        lightID: e.customData._lightID,
-                        easing: e.customData._easing,
-                        lerpType: e.customData._lerpType,
-                    };
-                    if (e.customData._propID) {
-                        logger.warn(tag('V2toV3'), `events[${i}] at time ${e.time} Chroma _propID will be removed.`);
-                    }
-                    if (e.customData._lightGradient) {
-                        logger.warn(
-                            tag('V2toV3'),
-                            `events[${i}] at time ${e.time} Chroma _lightGradient will be removed.`,
-                        );
-                    }
+            const customData = eventToV3(e.customData);
+            if (e.isLightEvent()) {
+                if (e.customData._propID) {
+                    logger.warn(tag('V2toV3'), `events[${i}] at time ${e.time} Chroma _propID will be removed.`);
                 }
-                if (e.isRingEvent()) {
-                    customData = {
-                        nameFilter: e.customData._nameFilter,
-                        rotation: e.customData._rotation,
-                        step: e.customData._step,
-                        prop: e.customData._prop,
-                        speed: e.customData._speed,
-                        direction: e.customData._direction,
-                    };
-                    if (e.customData._reset) {
-                        logger.warn(tag('V2toV3'), `events[${i}] at time ${e.time} Chroma _reset will be removed.`);
-                    }
-                    if (e.customData._counterSpin) {
-                        logger.warn(
-                            tag('V2toV3'),
-                            `events[${i}] at time ${e.time} Chroma _counterSpin will be removed.`,
-                        );
-                    }
-                    if (e.customData._stepMult || e.customData._propMult || e.customData._speedMult) {
-                        logger.warn(tag('V2toV3'), `events[${i}] at time ${e.time} Chroma _mult will be removed.`);
-                    }
+                if (e.customData._lightGradient) {
+                    logger.warn(tag('V2toV3'), `events[${i}] at time ${e.time} Chroma _lightGradient will be removed.`);
                 }
-                if (e.isLaserRotationEvent()) {
-                    const speed = e.customData._preciseSpeed ?? e.customData._speed;
-                    customData = {
-                        lockRotation: e.customData._lockPosition,
-                        direction: e.customData._direction,
-                        speed,
-                    };
+            }
+            if (e.isRingEvent()) {
+                if (e.customData._reset) {
+                    logger.warn(tag('V2toV3'), `events[${i}] at time ${e.time} Chroma _reset will be removed.`);
+                }
+                if (e.customData._counterSpin) {
+                    logger.warn(tag('V2toV3'), `events[${i}] at time ${e.time} Chroma _counterSpin will be removed.`);
+                }
+                if (e.customData._stepMult || e.customData._propMult || e.customData._speedMult) {
+                    logger.warn(tag('V2toV3'), `events[${i}] at time ${e.time} Chroma _mult will be removed.`);
                 }
             }
             template.basicBeatmapEvents.push(
-                v3.BasicEvent.create({
+                BasicEvent.create({
                     b: e.time,
                     et: e.type,
                     i: e.value,
@@ -287,7 +214,7 @@ export function V2toV3(data: DifficultyV2, skipPrompt?: boolean): DifficultyV3 {
 
     data.waypoints.forEach((w) => {
         template.waypoints.push(
-            v3.Waypoint.create({
+            Waypoint.create({
                 b: w.time,
                 x: w.posX,
                 y: w.posY,
@@ -298,24 +225,24 @@ export function V2toV3(data: DifficultyV2, skipPrompt?: boolean): DifficultyV3 {
 
     data.sliders.forEach((s) =>
         template.sliders.push(
-            v3.Slider.create({
+            Slider.create({
                 c: s.colorType,
                 b: s.headTime,
                 x: s.headPosX,
                 y: s.headPosY,
-                d: s.headCutDirection,
+                d: s.headDirection,
                 mu: s.headLengthMultiplier,
                 tb: s.tailTime,
                 tx: s.tailPosX,
                 ty: s.tailPosY,
-                tc: s.tailCutDirection,
+                tc: s.tailDirection,
                 tmu: s.tailLengthMultiplier,
                 m: s.midAnchor,
             })[0],
         ),
     );
 
-    template.basicEventTypesWithKeywords = v3.BasicEventTypesWithKeywords.create({
+    template.basicEventTypesWithKeywords = BasicEventTypesWithKeywords.create({
         d:
             data.specialEventsKeywordFilters?.keywords?.map((k) => {
                 return { k: k.keyword, e: k.events };
@@ -512,6 +439,29 @@ export function V2toV3(data: DifficultyV2, skipPrompt?: boolean): DifficultyV3 {
                 data.customData._pointDefinitions!.forEach((p) => {
                     template.customData.pointDefinitions![p._name] = p._points;
                 });
+                continue;
+            }
+            if (k === '_time') {
+                template.customData.time = data.customData[k];
+                continue;
+            }
+            if (k === '_BPMChanges') {
+                template.customData.BPMChanges = data.customData[k];
+                continue;
+            }
+            if (k === '_bpmChanges') {
+                template.customData.BPMChanges = data.customData[k]?.map((bpmc) => {
+                    return {
+                        _time: bpmc._time,
+                        _BPM: bpmc._bpm,
+                        _beatsPerBar: bpmc._beatsPerBar,
+                        _metronomeOffset: bpmc._metronomeOffset,
+                    };
+                });
+                continue;
+            }
+            if (k === '_bookmarks') {
+                template.customData.bookmarks = data.customData[k];
                 continue;
             }
             template.customData[k] = data.customData[k];

@@ -11,7 +11,7 @@ export interface ISlider {
     _headLineIndex: number;
     _headLineLayer: number;
     /** Head control point length multiplier `<float>` of slider. */
-    _headControlPointlengthMultiplier: number;
+    _headControlPointLengthMultiplier: number;
     /** Head cut direction `<int>` of slider.
      * ```ts
      * 4 | 0 | 5

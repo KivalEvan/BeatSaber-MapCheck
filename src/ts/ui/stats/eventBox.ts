@@ -1,10 +1,10 @@
-import { IInfoData } from '../../types';
+import { IInfo } from '../../types/beatmap/shared/info';
 import { IBeatmapItem } from '../../types/mapcheck';
 import { countColorEBG, countRotationEBG } from '../../analyzers/stats';
 import { eventGroupRename } from '../../analyzers/renamer';
 import { prefix } from './constants';
 
-export function createEBGCountTable(mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTableElement {
+export function createEBGCountTable(mapInfo: IInfo, mapData: IBeatmapItem): HTMLTableElement {
     const environment =
         mapData.characteristic === '360Degree' || mapData.characteristic === '90Degree'
             ? mapInfo._allDirectionsEnvironmentName

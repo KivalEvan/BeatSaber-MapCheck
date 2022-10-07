@@ -1,11 +1,11 @@
 import SavedData from '../../savedData';
 import { round } from '../../utils';
-import { BeatPerMinute } from '../../beatmap';
-import { IInfoData } from '../../types';
+import { BeatPerMinute } from '../../beatmap/shared/bpm';
+import { IInfo } from '../../types/beatmap/shared/info';
 import { IBeatmapItem } from '../../types/mapcheck';
 import { prefix } from './constants';
 
-export function createNPSTable(mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTableElement {
+export function createNPSTable(mapInfo: IInfo, mapData: IBeatmapItem): HTMLTableElement {
     const bpm = mapData.bpm;
     const duration = SavedData.duration || 0;
     const mapDuration = bpm.toRealTime(mapData.data.getLastInteractiveTime());

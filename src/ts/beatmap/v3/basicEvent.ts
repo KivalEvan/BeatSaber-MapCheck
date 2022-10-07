@@ -4,6 +4,7 @@ import { IChromaEventLaser, IChromaEventLight, IChromaEventRing } from '../../ty
 import { ObjectReturnFn } from '../../types/utils';
 import { BaseObject } from './baseObject';
 import { deepCopy } from '../../utils/misc';
+import { EnvironmentAllName } from '../../types/beatmap/shared/environment';
 
 /** Basic event beatmap v3 class object. */
 export class BasicEvent extends BaseObject<IBasicEvent> {
@@ -227,18 +228,36 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
      * if (basicEvent.isLightEvent()) {}
      * ```
      */
-    isLightEvent(): this is BasicEventLight {
-        return (
-            this.type === 0 ||
-            this.type === 1 ||
-            this.type === 2 ||
-            this.type === 3 ||
-            this.type === 4 ||
-            this.type === 6 ||
-            this.type === 7 ||
-            this.type === 10 ||
-            this.type === 11
-        );
+    isLightEvent(environment?: EnvironmentAllName): this is BasicEventLight {
+        switch (environment) {
+            case 'LizzoEnvironment':
+                return (
+                    this.type === 0 ||
+                    this.type === 1 ||
+                    this.type === 2 ||
+                    this.type === 3 ||
+                    this.type === 4 ||
+                    this.type === 6 ||
+                    this.type === 7 ||
+                    this.type === 8 ||
+                    this.type === 9 ||
+                    this.type === 10 ||
+                    this.type === 11 ||
+                    this.type === 12
+                );
+            default:
+                return (
+                    this.type === 0 ||
+                    this.type === 1 ||
+                    this.type === 2 ||
+                    this.type === 3 ||
+                    this.type === 4 ||
+                    this.type === 6 ||
+                    this.type === 7 ||
+                    this.type === 10 ||
+                    this.type === 11
+                );
+        }
     }
 
     /** Check if event is a boost event.
@@ -257,8 +276,13 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
      * ---
      * This does not check for ring zoom.
      */
-    isRingEvent(): this is BasicEventRing {
-        return this.type === 8 || this.type === 9;
+    isRingEvent(environment?: EnvironmentAllName): this is BasicEventRing {
+        switch (environment) {
+            case 'LizzoEnvironment':
+                return false;
+            default:
+                return this.type === 8 || this.type === 9;
+        }
     }
 
     /** Check if event is a laser rotation event.
@@ -266,8 +290,13 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
      * if (basicEvent.isLaserRotationEvent()) {}
      * ```
      */
-    isLaserRotationEvent(): this is BasicEventLaser {
-        return this.type === 12 || this.type === 13;
+    isLaserRotationEvent(environment?: EnvironmentAllName): this is BasicEventLaser {
+        switch (environment) {
+            case 'LizzoEnvironment':
+                return false;
+            default:
+                return this.type === 12 || this.type === 13;
+        }
     }
 
     /** Check if event is a lane rotation event.
@@ -275,7 +304,7 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
      * if (basicEvent.isLaneRotationEvent()) {}
      * ```
      */
-    isLaneRotationEvent(): boolean {
+    isLaneRotationEvent(environment?: EnvironmentAllName): boolean {
         return this.type === 14 || this.type === 15;
     }
 
@@ -284,7 +313,7 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
      * if (basicEvent.isExtraEvent()) {}
      * ```
      */
-    isExtraEvent(): boolean {
+    isExtraEvent(environment?: EnvironmentAllName): boolean {
         return this.type === 16 || this.type === 17 || this.type === 18 || this.type === 19;
     }
 
@@ -293,7 +322,7 @@ export class BasicEvent extends BaseObject<IBasicEvent> {
      * if (basicEvent.isSpecialEvent()) {}
      * ```
      */
-    isSpecialEvent(): boolean {
+    isSpecialEvent(environment?: EnvironmentAllName): boolean {
         return this.type === 40 || this.type === 41 || this.type === 42 || this.type === 43;
     }
 

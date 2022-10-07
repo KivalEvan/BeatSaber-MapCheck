@@ -3,7 +3,8 @@ import { round } from '../../utils';
 import { NoteContainer } from '../../types/beatmap/v3/container';
 import { printResultTime } from '../helpers';
 import UICheckbox from '../../ui/helpers/checkbox';
-import { BeatPerMinute, PositionX, PositionY } from '../../beatmap';
+import { BeatPerMinute } from '../../beatmap/shared/bpm';
+import { PositionX, PositionY } from '../../beatmap/shared/constants';
 
 const name = 'Vision Block';
 const description = 'Check for vision block caused by center note.';

@@ -3,8 +3,12 @@ import Analyser from '../tools/analyzer';
 import UILoading from './loading';
 import UIInformation from './information';
 import { removeOptions } from '../utils/web';
-import { DifficultyRename, CharacteristicRename, BeatPerMinute } from '../beatmap/shared';
-import { CharacteristicName, DifficultyName, IInfoData, IInfoSetData } from '../types/beatmap';
+import { BeatPerMinute } from '../beatmap/shared/bpm';
+import { CharacteristicRename } from '../beatmap/shared/characteristic';
+import { DifficultyRename } from '../beatmap/shared/difficulty';
+import { CharacteristicName } from '../types/beatmap/shared/characteristic';
+import { DifficultyName } from '../types/beatmap/shared/difficulty';
+import { IInfo, IInfoSet } from '../types/beatmap/shared/info';
 
 const logPrefix = 'UI Tools: ';
 
@@ -20,6 +24,7 @@ const htmlToolsOutputDifficulty: HTMLElement = document.querySelector('.tools__o
 const htmlToolsOutputGeneral: HTMLElement = document.querySelector('.tools__output-general')!;
 const htmlToolsApplyThis: HTMLInputElement = document.querySelector('.tools__apply-this')!;
 const htmlToolsApplyAll: HTMLInputElement = document.querySelector('.tools__apply-all')!;
+const htmlToolsApplyGeneral: HTMLInputElement = document.querySelector('.tools__apply-general')!;
 
 if (!htmlToolsNote || !htmlToolsObstacle || !htmlToolsEvent || !htmlToolsOther || !htmlToolsGeneral) {
     throw new Error(logPrefix + 'missing content element');
@@ -27,9 +32,10 @@ if (!htmlToolsNote || !htmlToolsObstacle || !htmlToolsEvent || !htmlToolsOther |
 if (!htmlToolsOutputDifficulty || !htmlToolsOutputGeneral) {
     throw new Error(logPrefix + 'missing output element');
 }
-if (htmlToolsApplyThis && htmlToolsApplyAll) {
+if (htmlToolsApplyThis && htmlToolsApplyAll && htmlToolsApplyGeneral) {
     htmlToolsApplyThis.addEventListener('click', applyThisHandler);
     htmlToolsApplyAll.addEventListener('click', applyAllHandler);
+    htmlToolsApplyGeneral.addEventListener('click', applyGeneralHandler);
 } else {
     throw new Error(logPrefix + 'missing apply element');
 }
@@ -82,7 +88,7 @@ function setDifficultyLabel(str: string): void {
     htmlToolsDifficultyLabel.forEach((elem) => (elem.textContent = str));
 }
 
-function populateSelectDiff(mapSet?: IInfoSetData): void {
+function populateSelectDiff(mapSet?: IInfoSet): void {
     if (!mapSet) {
         return;
     }
@@ -118,7 +124,7 @@ function populateSelectDiff(mapSet?: IInfoSetData): void {
     }
 }
 
-function populateSelect(mapInfo?: IInfoData): void {
+function populateSelect(mapInfo?: IInfo): void {
     if (!mapInfo) {
         htmlToolsSelectMode.forEach((elem) => removeOptions(elem));
         htmlToolsSelectDifficulty.forEach((elem) => removeOptions(elem));
@@ -255,6 +261,13 @@ function applyAllHandler(): void {
     Analyser.applyAll();
     UILoading.status('info', `Re-analysed all difficulties`, 100);
     displayOutputDifficulty(mode, difficulty);
+}
+
+function applyGeneralHandler(): void {
+    UILoading.status('info', `Re-analysing all difficulties`, 100);
+    Analyser.runGeneral();
+    UILoading.status('info', `Re-analysed all difficulties`, 100);
+    displayOutputGeneral();
 }
 
 export default {

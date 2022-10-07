@@ -25,9 +25,9 @@ export class NoteJumpSpeed {
      * const NJS = NoteJumpSpeed.create(BPM ?? 128, 16, 0);
      * ```
      */
-    static create = (bpm: BeatPerMinute | number, njs = 10, sdm = 0): NoteJumpSpeed => {
+    static create(bpm: BeatPerMinute | number, njs = 10, sdm = 0): NoteJumpSpeed {
         return new NoteJumpSpeed(typeof bpm === 'number' ? BeatPerMinute.create(bpm) : bpm, njs, sdm);
-    };
+    }
 
     /** Fallback value used if NJS value is null or 0.
      * ```ts
@@ -38,13 +38,13 @@ export class NoteJumpSpeed {
      * 'Easy' -> 10
      * ```
      */
-    static FallbackNJS: Record<DifficultyName, number> = {
+    static readonly FallbackNJS: Record<DifficultyName, number> = {
         ExpertPlus: 16,
         Expert: 12,
         Hard: 10,
         Normal: 10,
         Easy: 10,
-    };
+    } as const;
 
     get value(): number {
         return this._njs;

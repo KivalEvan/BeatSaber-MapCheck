@@ -1,8 +1,9 @@
 import SavedData from '../../savedData';
 import { removeOptions } from '../../utils';
-import { EnvironmentName, EnvironmentV3Name, IEditor, IEditorInfo } from '../../types/beatmap/shared';
+import { EnvironmentName, EnvironmentV3Name } from '../../types/beatmap/shared/environment';
+import { IEditor, IEditorInfo } from '../../types/beatmap/shared/editor';
 import { IContributorB64 } from '../../types/mapcheck';
-import { EnvironmentRename } from '../../beatmap/shared';
+import { EnvironmentRename } from '../../beatmap/shared/environment';
 import { logPrefix } from './constants';
 
 const htmlInfoLevelAuthor: HTMLElement = document.querySelector('.info__level-author')!;

@@ -217,6 +217,39 @@ export function eventTypeRename(type: number, environment?: EnvironmentAllName):
                 default:
             }
             break;
+        case 'LizzoEnvironment':
+            switch (type) {
+                case 0:
+                    return 'Runway Left';
+                case 1:
+                    return 'Runway Right';
+                case 2:
+                    return 'Left Ring';
+                case 3:
+                    return 'Right Ring';
+                case 4:
+                    return 'Top Square';
+                case 6:
+                    return 'Ambient';
+                case 7:
+                    return 'Cherry Left';
+                case 8:
+                    return 'Cherry Right';
+                case 9:
+                    return 'LI Sign';
+                case 10:
+                    return 'Z Left Sign';
+                case 11:
+                    return 'Z Right Sign';
+                case 12:
+                    return 'O Sign';
+                case 16:
+                    return 'Left Balloon Particles';
+                case 17:
+                    return 'Right Balloon Particles';
+                default:
+            }
+            break;
         default:
     }
     // generic
@@ -261,6 +294,14 @@ export function eventTypeRename(type: number, environment?: EnvironmentAllName):
             return 'Utility Event 3';
         case 19:
             return 'Utility Event 4';
+        case 40:
+            return 'Special Event 1';
+        case 41:
+            return 'Special Event 2';
+        case 42:
+            return 'Special Event 3';
+        case 43:
+            return 'Special Event 4';
         default:
             return 'Unknown';
     }

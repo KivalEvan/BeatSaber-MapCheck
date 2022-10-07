@@ -3,10 +3,11 @@ import { round } from '../../utils';
 import { NoteContainer } from '../../types/beatmap/v3/container';
 import { checkDirection } from '../../analyzers/placement/note';
 import swing from '../../analyzers/swing/swing';
-import { ColorNote } from '../../beatmap/v3';
+import { ColorNote } from '../../beatmap/v3/colorNote';
 import { printResultTime } from '../helpers';
 import UICheckbox from '../../ui/helpers/checkbox';
-import { BeatPerMinute, NoteColor, NoteDirectionAngle, NoteDirection, PositionX, PositionY } from '../../beatmap';
+import { BeatPerMinute } from '../../beatmap/shared/bpm';
+import { NoteColor, NoteDirectionAngle, NoteDirection, PositionX, PositionY } from '../../beatmap/shared/constants';
 
 const name = 'Inline Sharp Angle';
 const description = 'Check for angle changes within inline note.';

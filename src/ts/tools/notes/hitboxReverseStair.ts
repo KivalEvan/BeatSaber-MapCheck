@@ -4,7 +4,7 @@ import { isIntersect } from '../../analyzers/placement/note';
 import swing from '../../analyzers/swing/swing';
 import UICheckbox from '../../ui/helpers/checkbox';
 import { printResultTime } from '../helpers';
-import { NoteColor, NoteDirection } from '../../beatmap';
+import { NoteColor, NoteDirection } from '../../beatmap/shared/constants';
 
 const name = 'Hitbox Reverse Staircase';
 const description = 'Check for overlapping pre-swing hitbox with note hitbox during swing.';

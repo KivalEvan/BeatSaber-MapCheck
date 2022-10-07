@@ -1,8 +1,8 @@
 import UIHeader from '../header';
 import SavedData from '../../savedData';
-import { IInfoData } from '../../types/beatmap/shared';
+import { IInfo } from '../../types/beatmap/shared/info';
 import { IBeatmapItem } from '../../types/mapcheck';
-import { BeatPerMinute } from '../../beatmap/shared';
+import { BeatPerMinute } from '../../beatmap/shared/bpm';
 import { setLevelAuthor, setEnvironment, setEditors, populateContributors, setContributors } from './info';
 import { setBookmarks } from './bookmark';
 import { setBPMChanges } from './bpmChange';
@@ -13,7 +13,7 @@ import { setVersion, setRequirements, setSuggestions, setInformation, setWarning
 import { setPointDefinitions } from './pointDefinition';
 import { setTableHeight } from './helpers';
 
-function setInfo(mapInfo: IInfoData): void {
+function setInfo(mapInfo: IInfo): void {
     UIHeader.setSongName(mapInfo._songName);
     UIHeader.setSongSubname(mapInfo._songSubName);
     UIHeader.setSongAuthor(mapInfo._songAuthorName);

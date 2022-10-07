@@ -1,21 +1,21 @@
 import { round } from '../../utils';
-import { IInfoData } from '../../types/beatmap/shared/info';
+import { IInfo } from '../../types/beatmap/shared/info';
 import { IBeatmapItem } from '../../types/mapcheck';
 import { prefix } from './constants';
 
-export function createSPSTable(mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTableElement {
+export function createSPSTable(mapInfo: IInfo, mapData: IBeatmapItem): HTMLTableElement {
     const swingInfo = mapData.swingAnalysis;
 
     const htmlTable = document.createElement('table');
     htmlTable.className = prefix + 'table';
-    htmlTable.innerHTML = `<caption class="${prefix}table-caption">Swing Per Seconds (SPS):</caption><tr><th class="${prefix}table-header"></th><th class="${prefix}table-header">Total</th><th class="${prefix}table-header">Red</th><th class="${prefix}table-header">Blue</th></tr><tr><th class="${prefix}table-header">Count</th><td class="${prefix}table-element">${round(
-        swingInfo.total.count,
+    htmlTable.innerHTML = `<caption class="${prefix}table-caption">Swing Per Seconds (SPS):</caption><tr><th class="${prefix}table-header"></th><th class="${prefix}table-header">Total</th><th class="${prefix}table-header">Red</th><th class="${prefix}table-header">Blue</th></tr><tr><th class="${prefix}table-header">Average</th><td class="${prefix}table-element">${round(
+        swingInfo.total.average,
         2,
     )}</td><td class="${prefix}table-element">${round(
-        swingInfo.red.count,
+        swingInfo.red.average,
         2,
     )}</td><td class="${prefix}table-element">${round(
-        swingInfo.blue.count,
+        swingInfo.blue.average,
         2,
     )}</td></tr><tr><th class="${prefix}table-header">Median</th><td class="${prefix}table-element">${round(
         swingInfo.total.median,

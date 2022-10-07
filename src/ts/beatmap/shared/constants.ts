@@ -169,6 +169,23 @@ export const EventLaneRotationValue: { [key: number]: number } = {
     7: 60,
 } as const;
 
+export const enum IndexFilterType {
+    DIVISION = 1,
+    STEP_AND_OFFSET,
+}
+
+export const enum LimitAlsoAffectsType {
+    NONE,
+    DURATION,
+    DISTRIBUTION,
+}
+
+export const enum RandomType {
+    NO_RANDOM,
+    KEEP_ORDER,
+    RANDOM_ELEMENTS,
+}
+
 export const enum EventBoxColor {
     RED,
     BLUE,

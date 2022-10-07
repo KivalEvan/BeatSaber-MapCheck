@@ -1,6 +1,6 @@
 import JSZip from 'jszip';
 import * as swing from './analyzers/swing';
-import { BeatPerMinute } from './beatmap/shared';
+import { BeatPerMinute } from './beatmap/shared/bpm';
 import { V2toV3 } from './converter';
 import {
     difficultyV3 as parseDifficultyV3,
@@ -8,7 +8,7 @@ import {
     info as parseInfo,
 } from './beatmap/parse';
 import logger from './logger';
-import { IInfoData } from './types/beatmap/shared';
+import { IInfo } from './types/beatmap/shared/info';
 import { IDifficulty as IDifficultyV2 } from './types/beatmap/v2/difficulty';
 import { IDifficulty as IDifficultyV3 } from './types/beatmap/v3/difficulty';
 import { IBeatmapItem } from './types/mapcheck/tools/beatmapItem';
@@ -27,7 +27,7 @@ export async function loadInfo(zip: JSZip) {
     return parseInfo(JSON.parse(await infoFile.async('string')));
 }
 
-export async function loadDifficulty(info: IInfoData, zip: JSZip) {
+export async function loadDifficulty(info: IInfo, zip: JSZip) {
     const beatmapItem: IBeatmapItem[] = [];
     const mapSet = info._difficultyBeatmapSets;
     for (let i = mapSet.length - 1; i >= 0; i--) {

@@ -57,7 +57,7 @@ export class Difficulty extends Serializable<IDifficulty> {
 
     toJSON(): Required<IDifficulty> {
         return {
-            _version: this.version || '2.6.0',
+            _version: '2.6.0',
             _notes: this.notes.map((obj) => obj.toJSON()),
             _sliders: this.sliders.map((obj) => obj.toJSON()),
             _obstacles: this.obstacles.map((obj) => obj.toJSON()),
@@ -84,34 +84,34 @@ export class Difficulty extends Serializable<IDifficulty> {
         return this;
     }
 
-    getFirstInteractiveTime = (): number => {
+    getFirstInteractiveTime(): number {
         let firstNoteTime = Number.MAX_VALUE;
         if (this.notes.length > 0) {
             firstNoteTime = this.notes[0].time;
         }
         const firstInteractiveObstacleTime = this.findFirstInteractiveObstacleTime();
         return Math.min(firstNoteTime, firstInteractiveObstacleTime);
-    };
+    }
 
-    getLastInteractiveTime = (): number => {
+    getLastInteractiveTime(): number {
         let lastNoteTime = 0;
         if (this.notes.length > 0) {
             lastNoteTime = this.notes[this.notes.length - 1].time;
         }
         const lastInteractiveObstacleTime = this.findLastInteractiveObstacleTime();
         return Math.max(lastNoteTime, lastInteractiveObstacleTime);
-    };
+    }
 
-    findFirstInteractiveObstacleTime = (): number => {
+    findFirstInteractiveObstacleTime(): number {
         for (let i = 0, len = this.obstacles.length; i < len; i++) {
             if (this.obstacles[i].isInteractive()) {
                 return this.obstacles[i].time;
             }
         }
         return Number.MAX_VALUE;
-    };
+    }
 
-    findLastInteractiveObstacleTime = (): number => {
+    findLastInteractiveObstacleTime(): number {
         let obstacleEnd = 0;
         for (let i = this.obstacles.length - 1; i >= 0; i--) {
             if (this.obstacles[i].isInteractive()) {
@@ -119,21 +119,21 @@ export class Difficulty extends Serializable<IDifficulty> {
             }
         }
         return obstacleEnd;
-    };
+    }
 
-    addNotes = (...notes: (Partial<INote> | Note)[]) => {
+    addNotes(...notes: Partial<INote>[] | Note[]) {
         this.notes.push(...notes.map((n) => (n instanceof Note ? n : Note.create(n)[0])));
-    };
-    addObstacles = (...obstacles: (Partial<IObstacle> | Obstacle)[]) => {
+    }
+    addObstacles(...obstacles: Partial<IObstacle>[] | Obstacle[]) {
         this.obstacles.push(...obstacles.map((o) => (o instanceof Obstacle ? o : Obstacle.create(o)[0])));
-    };
-    addEvents = (...events: (Partial<IEvent> | Event)[]) => {
+    }
+    addEvents(...events: Partial<IEvent>[] | Event[]) {
         this.events.push(...events.map((e) => (e instanceof Event ? e : Event.create(e)[0])));
-    };
-    addWaypoints = (...waypoints: (Partial<IWaypoint> | Waypoint)[]) => {
+    }
+    addWaypoints(...waypoints: Partial<IWaypoint>[] | Waypoint[]) {
         this.waypoints.push(...waypoints.map((w) => (w instanceof Waypoint ? w : Waypoint.create(w)[0])));
-    };
-    addSliders = (...sliders: (Partial<ISlider> | Slider)[]) => {
+    }
+    addSliders(...sliders: Partial<ISlider>[] | Slider[]) {
         this.sliders.push(...sliders.map((s) => (s instanceof Slider ? s : Slider.create(s)[0])));
-    };
+    }
 }

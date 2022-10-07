@@ -1,6 +1,7 @@
 import AnalysisComponents from './components';
 import SavedData from '../savedData';
-import { BeatPerMinute, NoteJumpSpeed } from '../beatmap';
+import { BeatPerMinute } from '../beatmap/shared/bpm';
+import { NoteJumpSpeed } from '../beatmap/shared/njs';
 import { CharacteristicName, DifficultyName } from '../types';
 import { IBeatmapSettings } from '../types/mapcheck/tools/tool';
 import { Tool } from '../types/mapcheck';
@@ -55,7 +56,6 @@ function runGeneral(): void {
                 try {
                     tool.run({
                         settings: mapSettings,
-                        difficulties: SavedData.beatmapDifficulty,
                         info: mapInfo,
                     });
                     if (tool.output.html) {
@@ -97,7 +97,7 @@ function runDifficulty(characteristic: CharacteristicName, difficulty: Difficult
 
     const njs = NoteJumpSpeed.create(
         beatmapDifficulty.bpm,
-        beatmapDifficulty.info._noteJumpMovementSpeed,
+        beatmapDifficulty.info._noteJumpMovementSpeed || NoteJumpSpeed.FallbackNJS[beatmapDifficulty.difficulty],
         beatmapDifficulty.info._noteJumpStartBeatOffset,
     );
 

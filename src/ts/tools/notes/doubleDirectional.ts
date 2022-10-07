@@ -4,7 +4,7 @@ import { checkDirection } from '../../analyzers/placement/note';
 import swing from '../../analyzers/swing/swing';
 import UICheckbox from '../../ui/helpers/checkbox';
 import { printResultTime } from '../helpers';
-import { NoteColor, NoteDirectionAngle, NoteDirection, PositionX, PositionY } from '../../beatmap';
+import { NoteColor, NoteDirectionAngle, NoteDirection, PositionX, PositionY } from '../../beatmap/shared/constants';
 import { ColorNote } from '../../beatmap/v3/colorNote';
 
 const name = 'Double-directional';

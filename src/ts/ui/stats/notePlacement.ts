@@ -1,7 +1,7 @@
 import UISelect from '../helpers/select';
 import SavedData from '../../savedData';
 import { round } from '../../utils';
-import { IInfoData } from '../../types';
+import { IInfo } from '../../types/beatmap/shared/info';
 import { IBeatmapItem } from '../../types/mapcheck';
 import { NoteContainer } from '../../types/beatmap/v3/container';
 import { countX, countXY, countY } from '../../analyzers/stats/note';
@@ -60,7 +60,7 @@ function notePlacementTableString(nc: NoteContainer[]): string {
     return htmlString;
 }
 
-export function createNotePlacementTable(mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTableElement {
+export function createNotePlacementTable(mapInfo: IInfo, mapData: IBeatmapItem): HTMLTableElement {
     const htmlSelect = UISelect.create(
         `${prefix}table-select-placement-${mapData.characteristic}-${mapData.difficulty}`,
         'Note Placement: ',

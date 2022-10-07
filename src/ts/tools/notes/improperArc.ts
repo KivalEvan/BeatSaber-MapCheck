@@ -2,7 +2,7 @@ import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/map
 import { NoteContainer } from '../../types/beatmap/v3/container';
 import UICheckbox from '../../ui/helpers/checkbox';
 import { printResultTime } from '../helpers';
-import { NoteDirection } from '../../beatmap';
+import { NoteDirection } from '../../beatmap/shared/constants';
 
 const name = 'Improper Arc';
 const description = 'Check for correct use of arc.';

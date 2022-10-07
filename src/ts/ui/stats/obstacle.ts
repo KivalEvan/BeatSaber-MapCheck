@@ -1,9 +1,9 @@
-import { IInfoData } from '../../types';
+import { IInfo } from '../../types/beatmap/shared/info';
 import { IBeatmapItem } from '../../types/mapcheck';
 import { countObstacle } from '../../analyzers/stats/obstacle';
 import { prefix } from './constants';
 
-export function createObstacleCountTable(mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTableElement {
+export function createObstacleCountTable(mapInfo: IInfo, mapData: IBeatmapItem): HTMLTableElement {
     const obstacleCount = countObstacle(mapData.data.obstacles);
 
     let htmlString = `<caption class="${prefix}table-caption">Obstacles: ${obstacleCount.total}</caption>`;

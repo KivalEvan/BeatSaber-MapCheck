@@ -1,3 +1,4 @@
+import { NoteJumpSpeed } from '../../beatmap/mod';
 import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import UICheckbox from '../../ui/helpers/checkbox';
 import { round } from '../../utils';
@@ -42,21 +43,26 @@ function run(map: ToolArgs) {
     if (njs.value > 23) {
         htmlResult.push(printResult(`NJS is too high (${round(njs.value, 2)})`, 'use lower whenever necessary'));
     }
-    if (njs.jd < 18) {
-        htmlResult.push(printResult('Very low jump distance', `${round(njs.jd, 2)}`));
+    if (njs.value < 3) {
+        htmlResult.push(
+            printResult(`NJS is too low (${round(njs.value, 2)})`, 'timing is less significant below this'),
+        );
     }
     if (njs.jd > 36) {
         htmlResult.push(printResult('Very high jump distance', `${round(njs.jd, 2)}`));
+    }
+    if (njs.jd < 18) {
+        htmlResult.push(printResult('Very low jump distance', `${round(njs.jd, 2)}`));
     }
     if (njs.jd > njs.calcJDOptimalHigh()) {
         htmlResult.push(
             printResult(
                 `High jump distance warning (>${round(njs.calcJDOptimalHigh(), 2)})`,
-                'NJS may be uncomfortable to play',
+                'NJS & offset may be uncomfortable to play',
             ),
         );
     }
-    if (bpm.toRealTime(njs.hjd) < 0.45) {
+    if (bpm.toRealTime(njs.hjd) < 0.42) {
         htmlResult.push(
             printResult(
                 `Very quick reaction time (${round(bpm.toRealTime(njs.hjd) * 1000)}ms)`,
@@ -64,8 +70,8 @@ function run(map: ToolArgs) {
             ),
         );
     }
-    if (njs.calcHJDRaw() + njs.offset < njs.hjdMin) {
-        htmlResult.push(printResult('Unnecessary negative offset', `will not drop below ${njs.hjdMin}`));
+    if (njs.calcHJDRaw() + njs.offset < NoteJumpSpeed.HJD_MIN) {
+        htmlResult.push(printResult('Unnecessary negative offset', `will not drop below ${NoteJumpSpeed.HJD_MIN}`));
     }
 
     if (htmlResult.length) {

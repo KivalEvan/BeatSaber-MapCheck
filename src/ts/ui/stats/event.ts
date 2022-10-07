@@ -1,10 +1,10 @@
-import { IInfoData } from '../../types';
+import { IInfo } from '../../types/beatmap/shared/info';
 import { IBeatmapItem } from '../../types/mapcheck';
 import { countEvent } from '../../analyzers/stats';
 import { eventTypeRename } from '../../analyzers/renamer';
 import { prefix } from './constants';
 
-export function createEventCountTable(mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTableElement {
+export function createEventCountTable(mapInfo: IInfo, mapData: IBeatmapItem): HTMLTableElement {
     const environment =
         mapData.characteristic === '360Degree' || mapData.characteristic === '90Degree'
             ? mapInfo._allDirectionsEnvironmentName

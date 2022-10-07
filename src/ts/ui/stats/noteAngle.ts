@@ -1,7 +1,7 @@
 import UISelect from '../helpers/select';
 import SavedData from '../../savedData';
 import { round } from '../../utils';
-import { IInfoData } from '../../types';
+import { IInfo } from '../../types/beatmap/shared/info';
 import { IBeatmapItem } from '../../types/mapcheck';
 import { NoteContainer } from '../../types/beatmap/v3/container';
 import { countDirection } from '../../analyzers/stats/note';
@@ -49,7 +49,7 @@ function noteAngleTableString(notes: NoteContainer[]): string {
     return htmlString;
 }
 
-export function createNoteAngleTable(mapInfo: IInfoData, mapData: IBeatmapItem): HTMLTableElement {
+export function createNoteAngleTable(mapInfo: IInfo, mapData: IBeatmapItem): HTMLTableElement {
     const htmlSelect = UISelect.create(
         `${prefix}table-select-angle-${mapData.characteristic}-${mapData.difficulty}`,
         'Note Angle: ',
