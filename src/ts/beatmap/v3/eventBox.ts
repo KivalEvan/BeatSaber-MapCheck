@@ -4,18 +4,18 @@ import { IndexFilter } from './indexFilter';
 
 /** Base event box beatmap v3 class object. */
 export abstract class EventBox<T extends IEventBox> extends Serializable<T> {
-    private f: IndexFilter;
+    private _f: IndexFilter;
     protected constructor(eventBox: Required<T>) {
         super(eventBox);
-        this.f = IndexFilter.create(eventBox.f);
+        this._f = IndexFilter.create(eventBox.f);
     }
 
     /** Index filter of event box. */
     get filter() {
-        return this.f;
+        return this._f;
     }
     set filter(value: IndexFilter) {
-        this.f = value;
+        this._f = value;
     }
 
     /** Beat distribution `<float>` of event box. */

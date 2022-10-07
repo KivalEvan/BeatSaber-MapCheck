@@ -13,6 +13,11 @@ export class LightColorEventBox extends EventBox<ILightColorEventBox> {
                 p: IndexFilter.default.p,
                 t: IndexFilter.default.t,
                 r: IndexFilter.default.r,
+                c: IndexFilter.default.c,
+                l: IndexFilter.default.l,
+                d: IndexFilter.default.d,
+                n: IndexFilter.default.n,
+                s: IndexFilter.default.s,
             };
         },
         w: 0,
@@ -23,11 +28,11 @@ export class LightColorEventBox extends EventBox<ILightColorEventBox> {
         e: () => [],
     };
 
-    private e: LightColorBase[];
+    private _e: LightColorBase[];
     protected constructor(lightColorEventBox: Required<ILightColorEventBox>) {
         super(lightColorEventBox);
-        this.e = lightColorEventBox.e.map((e) => LightColorBase.create(e)[0]);
-        const lastTime = Math.max(...this.e.map((e) => e.time));
+        this._e = lightColorEventBox.e.map((e) => LightColorBase.create(e)[0]);
+        const lastTime = Math.max(...this._e.map((e) => e.time));
         if (this.beatDistributionType === 2) {
             this.beatDistribution = this.beatDistribution < lastTime ? lastTime : this.beatDistribution;
         }
@@ -112,9 +117,9 @@ export class LightColorEventBox extends EventBox<ILightColorEventBox> {
 
     /** Light color base data list. */
     get events() {
-        return this.e;
+        return this._e;
     }
     set events(value: LightColorBase[]) {
-        this.e = value;
+        this._e = value;
     }
 }

@@ -13,6 +13,11 @@ export class LightRotationEventBox extends EventBox<ILightRotationEventBox> {
                 p: IndexFilter.default.p,
                 t: IndexFilter.default.t,
                 r: IndexFilter.default.r,
+                c: IndexFilter.default.c,
+                l: IndexFilter.default.l,
+                d: IndexFilter.default.d,
+                n: IndexFilter.default.n,
+                s: IndexFilter.default.s,
             };
         },
         w: 0,
@@ -25,11 +30,11 @@ export class LightRotationEventBox extends EventBox<ILightRotationEventBox> {
         l: () => [],
     };
 
-    private l: LightRotationBase[];
+    private _l: LightRotationBase[];
     protected constructor(lightRotationEventBox: Required<ILightRotationEventBox>) {
         super(lightRotationEventBox);
-        this.l = lightRotationEventBox.l.map((l) => LightRotationBase.create(l)[0]);
-        const lastTime = Math.max(...this.l.map((l) => l.time));
+        this._l = lightRotationEventBox.l.map((l) => LightRotationBase.create(l)[0]);
+        const lastTime = Math.max(...this._l.map((l) => l.time));
         if (this.beatDistributionType === 2) {
             this.beatDistribution = this.beatDistribution < lastTime ? lastTime : this.beatDistribution;
         }
@@ -138,9 +143,9 @@ export class LightRotationEventBox extends EventBox<ILightRotationEventBox> {
 
     /** Light rotation base data list. */
     get events() {
-        return this.l;
+        return this._l;
     }
     set events(value: LightRotationBase[]) {
-        this.l = value;
+        this._l = value;
     }
 }

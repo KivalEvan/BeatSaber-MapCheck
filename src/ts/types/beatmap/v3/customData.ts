@@ -26,7 +26,7 @@ export interface ICustomDataDifficulty extends ICustomDataBase, IHeckCustomData,
     pointDefinitions?: IPointDefinition;
     time?: number;
     BPMChanges?: IBPMChange[];
-    _bookmarks?: IBookmark[];
+    bookmarks?: IBookmark[];
 }
 
 export type ICustomDataNote = ICustomDataBase & IChromaNote & INENote & IAnimation;

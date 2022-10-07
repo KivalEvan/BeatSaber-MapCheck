@@ -24,7 +24,12 @@ export type EnvironmentName =
     | 'HalloweenEnvironment'
     | 'GagaEnvironment';
 /** List of available v3 environment in base game. */
-export type EnvironmentV3Name = 'WeaveEnvironment' | 'PyroEnvironment' | 'EDMEnvironment' | 'TheSecondEnvironment';
+export type EnvironmentV3Name =
+    | 'WeaveEnvironment'
+    | 'PyroEnvironment'
+    | 'EDMEnvironment'
+    | 'TheSecondEnvironment'
+    | 'LizzoEnvironment';
 /** List of available 360 environment in base game. */
 export type Environment360Name = 'GlassDesertEnvironment';
 /** List of all available environment in base game. */

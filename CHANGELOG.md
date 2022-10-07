@@ -1,6 +1,24 @@
 # Changelog
 
-## 2.5.3 [2022-08-xx]
+## 2.5.4 [2022-10-07]
+
+### Added
+
+-   Lizzo environment & color scheme support
+-   Progression check provides more information
+    -   Per difficulty select
+
+### Changed
+
+-   Updated Beat Saber core script
+-   Adjusted NJS check
+-   Hitbox Path now checks for bomb
+
+### Fixed
+
+-   NJS fallback value not being used
+
+## 2.5.3 [2022-08-25]
 
 ### Added
 

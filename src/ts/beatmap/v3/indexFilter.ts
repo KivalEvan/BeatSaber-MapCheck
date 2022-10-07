@@ -8,6 +8,11 @@ export class IndexFilter extends Serializable<IIndexFilter> {
         p: 0,
         t: 0,
         r: 0,
+        c: 0,
+        l: 0,
+        d: 0,
+        n: 0,
+        s: 0,
     };
 
     protected constructor(indexFilter: IIndexFilter) {
@@ -23,6 +28,11 @@ export class IndexFilter extends Serializable<IIndexFilter> {
             p: indexFilter.p ?? IndexFilter.default.p,
             t: indexFilter.t ?? IndexFilter.default.t,
             r: indexFilter.r ?? IndexFilter.default.r,
+            c: indexFilter.c ?? IndexFilter.default.c,
+            l: indexFilter.l ?? IndexFilter.default.l,
+            d: indexFilter.d ?? IndexFilter.default.d,
+            n: indexFilter.n ?? IndexFilter.default.n,
+            s: indexFilter.s ?? IndexFilter.default.s,
         });
     }
 
@@ -32,6 +42,11 @@ export class IndexFilter extends Serializable<IIndexFilter> {
             p: this.p0,
             t: this.p1,
             r: this.reverse,
+            c: this.chunks,
+            l: this.limit,
+            d: this.limitAffectsType,
+            n: this.random,
+            s: this.seed,
         };
     }
 
@@ -70,5 +85,66 @@ export class IndexFilter extends Serializable<IIndexFilter> {
     }
     set reverse(value: IIndexFilter['r']) {
         this.data.r = value;
+    }
+
+    /** Chunks `<int>` of index filter.
+     *
+     * Pairs next ID by available denominator.
+     */
+    get chunks() {
+        return this.data.c;
+    }
+    set chunks(value: IIndexFilter['c']) {
+        this.data.c = value;
+    }
+
+    /** Limit (percentage) `<float>` of index filter.
+     *
+     * Select ID by percentage, rounded up to nearest ID. Disabled if 0.
+     *
+     * Range: `0-1` (0% to 100%) strict.
+     */
+    get limit() {
+        return this.data.l;
+    }
+    set limit(value: IIndexFilter['l']) {
+        this.data.l = value;
+    }
+
+    /** Limit also affects type `<int>` in index filter.
+     * ```ts
+     * 0 -> None
+     * 1 -> Duration
+     * 2 -> Distribution
+     * ```
+     * Adjust to limited ID list and has no effect with `Step` type.
+     */
+    get limitAffectsType() {
+        return this.data.d;
+    }
+    set limitAffectsType(value: IIndexFilter['d']) {
+        this.data.d = value;
+    }
+
+    /** Random type `<int>` of index filter.
+     * ```ts
+     * 0 -> No Random
+     * 1 -> Keep Order
+     * 2 -> Random Elements
+     * ```
+     */
+    get random() {
+        return this.data.n;
+    }
+    set random(value: IIndexFilter['n']) {
+        this.data.n = value;
+    }
+
+    /** Random seed `<int>` in index filter. */
+    get seed() {
+        return this.data.s;
+    }
+    set seed(value: IIndexFilter['s']) {
+        this.data.s = value;
     }
 }

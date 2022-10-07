@@ -70,7 +70,7 @@ export class Obstacle extends BeatmapObject<IObstacle> {
         };
     }
 
-    /** Position x `<int>` of note.
+    /** Position x `<int>` of obstacle.
      * ```ts
      * 0 -> Outer Left
      * 1 -> Middle Left
@@ -87,7 +87,7 @@ export class Obstacle extends BeatmapObject<IObstacle> {
         this.data._lineIndex = value;
     }
 
-    /** Position y `<int>` of note.
+    /** Position y `<int>` of obstacle.
      * ```ts
      * 0 -> Bottom row
      * 1 -> Middle row
@@ -103,11 +103,11 @@ export class Obstacle extends BeatmapObject<IObstacle> {
         this.data._lineLayer = value;
     }
 
-    /** Type `<int>` of note.
+    /** Type `<int>` of obstacle.
      * ```ts
-     * 0 -> Red
-     * 1 -> Blue
-     * 3 -> Bomb
+     * 0 -> Full-height Wall
+     * 1 -> Crouch Wall
+     * 2 -> Freeform Wall
      * ```
      */
     get type() {
@@ -185,7 +185,7 @@ export class Obstacle extends BeatmapObject<IObstacle> {
      * ```
      */
     // FIXME: do i bother with Mapping Extension for obstacle Y position?
-    getPosition = (): [number, number] => {
+    getPosition(): [number, number] {
         if (this.customData._position) {
             return [this.customData._position[0], this.customData._position[1]];
         }
@@ -193,59 +193,59 @@ export class Obstacle extends BeatmapObject<IObstacle> {
             (this.posX <= -1000 ? this.posX / 1000 : this.posX >= 1000 ? this.posX / 1000 : this.posX) - 2,
             this.type <= -1000 ? this.type / 1000 : this.type >= 1000 ? this.type / 1000 : this.type,
         ];
-    };
+    }
 
     /** Check if obstacle is interactive.
      * ```ts
      * if (isInteractive(wall)) {}
      * ```
      */
-    isInteractive = (): boolean => {
+    isInteractive(): boolean {
         return this.width >= 2 || this.posX === 1 || this.posX === 2;
-    };
+    }
 
     /** Check if obstacle is crouch.
      * ```ts
      * if (isCrouch(wall)) {}
      * ```
      */
-    isCrouch = (): boolean => {
+    isCrouch(): boolean {
         return this.type === 1 && (this.width > 2 || (this.width === 2 && this.posX === 1));
-    };
+    }
 
     /** Check if obstacle has zero value.
      * ```ts
      * if (isZero(wall)) {}
      * ```
      */
-    isZero = (): boolean => {
+    isZero(): boolean {
         return this.duration === 0 || this.width === 0;
-    };
+    }
 
     /** Check if current obstacle is longer than previous obstacle.
      * ```ts
      * if (isLonger(currWall, prevWall)) {}
      * ```
      */
-    isLonger = (currObstacle: IObstacle, prevObstacle: IObstacle, offset = 0): boolean => {
+    isLonger(currObstacle: IObstacle, prevObstacle: IObstacle, offset = 0): boolean {
         return currObstacle._time + currObstacle._duration > prevObstacle._time + prevObstacle._duration + offset;
-    };
+    }
 
     /** Check if obstacle has Chroma properties.
      * ```ts
      * if (hasChroma(wall)) {}
      * ```
      */
-    hasChroma = (): boolean => {
+    hasChroma(): boolean {
         return Array.isArray(this.customData._color);
-    };
+    }
 
     /** Check if obstacle has Noodle Extensions properties.
      * ```ts
      * if (hasNoodleExtensions(wall)) {}
      * ```
      */
-    hasNoodleExtensions = (): boolean => {
+    hasNoodleExtensions(): boolean {
         return (
             Array.isArray(this.customData._animation) ||
             typeof this.customData._fake === 'boolean' ||
@@ -258,23 +258,23 @@ export class Obstacle extends BeatmapObject<IObstacle> {
             Array.isArray(this.customData._scale) ||
             typeof this.customData._track === 'string'
         );
-    };
+    }
 
     /** Check if obstacle has Mapping Extensions properties.
      * ```ts
      * if (hasMappingExtensions(wall)) {}
      * ```
      */
-    hasMappingExtensions = (): boolean => {
+    hasMappingExtensions(): boolean {
         return this.width >= 1000 || this.type >= 1000 || this.posX > 3 || this.posX < 0;
-    };
+    }
 
     /** Check if obstacle is a valid, vanilla obstacle.
      * ```ts
      * if (isValid(wall)) {}
      * ```
      */
-    isValid = (): boolean => {
+    isValid(): boolean {
         return !this.hasMappingExtensions() && this.width > 0 && this.width <= 4;
-    };
+    }
 }

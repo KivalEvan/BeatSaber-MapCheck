@@ -26,7 +26,7 @@ export class NoteJumpSpeed {
      * ```
      */
     static create(bpm: BeatPerMinute | number, njs = 10, sdm = 0): NoteJumpSpeed {
-        return new NoteJumpSpeed(typeof bpm === 'number' ? BeatPerMinute.create(bpm) : bpm, njs || 10, sdm);
+        return new NoteJumpSpeed(typeof bpm === 'number' ? BeatPerMinute.create(bpm) : bpm, njs, sdm);
     }
 
     /** Fallback value used if NJS value is null or 0.

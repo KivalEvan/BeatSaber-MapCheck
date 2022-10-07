@@ -68,7 +68,7 @@ export const SliderDataCheck: Record<keyof ISlider, DataCheck> = {
         unsigned: true,
         version: '2.0.0',
     },
-    _headControlPointlengthMultiplier: {
+    _headControlPointLengthMultiplier: {
         type: 'number',
         version: '2.0.0',
     },

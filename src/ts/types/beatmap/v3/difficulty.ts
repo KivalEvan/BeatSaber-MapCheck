@@ -14,7 +14,7 @@ import { IBasicEventTypesWithKeywords } from './basicEventTypesWithKeywords';
 import { ICustomDataDifficulty } from './customData';
 
 export interface IDifficulty {
-    version: '3.0.0';
+    version: `3.${0 | 1}.0`;
     bpmEvents: IBPMEvent[];
     rotationEvents: IRotationEvent[];
     colorNotes: IColorNote[];

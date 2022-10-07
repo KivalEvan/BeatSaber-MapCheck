@@ -30,6 +30,7 @@ export const EnvironmentSchemeName: Record<EnvironmentAllName, ColorSchemeList> 
     PyroEnvironment: 'Pyro',
     EDMEnvironment: 'EDM',
     TheSecondEnvironment: 'The Second',
+    LizzoEnvironment: 'Lizzo',
     GlassDesertEnvironment: 'Glass Desert',
 } as const;
 
@@ -227,6 +228,15 @@ export const ColorScheme: IEnvironmentScheme = {
         _envColorLeftBoost: { r: 0.8235294, g: 0.08627451, b: 0.8509804 },
         _envColorRightBoost: { r: 0, g: 1, b: 0.6478302 },
         _obstacleColor: { r: 1, g: 0.1882353, b: 0.1882353 },
+    },
+    Lizzo: {
+        _colorLeft: { r: 1, g: 0.8132076, b: 0.3773585 },
+        _colorRight: { r: 0.6705883, g: 0.254902, b: 0.8980392 },
+        _envColorLeft: { r: 0.8392157, g: 0.6470588, b: 0.2156863 },
+        _envColorRight: { r: 0.8196079, g: 0.2392157, b: 0.8784314 },
+        _envColorLeftBoost: { r: 1, g: 0.4, b: 0.5529412 },
+        _envColorRightBoost: { r: 0.3686275, g: 0.7960784, b: 1 },
+        _obstacleColor: { r: 1, g: 0.5020987, b: 0.1882353 },
     },
     'Glass Desert': {
         _colorLeft: { r: 0.6792453, g: 0.5712628, b: 0 },

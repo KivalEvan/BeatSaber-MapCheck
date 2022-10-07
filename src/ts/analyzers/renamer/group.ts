@@ -150,6 +150,52 @@ export function eventGroupRename(id: number, environment?: EnvironmentAllName): 
             }
         }
         /* fall through */
+        case 'LizzoEnvironment': {
+            switch (id) {
+                case 0:
+                    return 'Main Floor Color';
+                case 1:
+                    return 'Rainbow Arcs Inner Color';
+                case 2:
+                    return 'Rainbow Arcs 2 Color';
+                case 3:
+                    return 'Rainbow Arcs 3 Color';
+                case 4:
+                    return 'Rainbow Arcs 4 Color';
+                case 5:
+                    return 'Rainbow Arcs Outer Color';
+                case 6:
+                    return 'Rainbow Rings Left Rotation';
+                case 7:
+                    return 'Rainbow Rings Right Rotation';
+                case 8:
+                    return 'Rainbow Rings Lasers Left Color';
+                case 9:
+                    return 'Rainbow Rings Lasers Right Color';
+                case 10:
+                    return 'Main Top Lasers Color';
+                case 11:
+                    return 'Environment Stands Left Color';
+                case 12:
+                    return 'Environment Stands Right Color';
+                case 13:
+                    return 'Environment Clouds Left Color';
+                case 14:
+                    return 'Environment Clouds Right Color';
+                case 15:
+                    return 'Main Left Lasers Color';
+                case 16:
+                    return 'Main Right Lasers Color';
+                case 17:
+                    return 'Environment Stand Lasers Left Color';
+                case 18:
+                    return 'Environment Stand Lasers Right Color';
+                case 19:
+                    return 'Rainbow Arcs Laser Color';
+                default:
+            }
+        }
+        /* fall through */
         default:
             return 'Unknown';
     }

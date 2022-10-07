@@ -1,3 +1,4 @@
+import { NoteDirection } from '../../beatmap/shared/constants';
 import { BaseNote } from '../../beatmap/v3/baseNote';
 import { BurstSlider } from '../../beatmap/v3/burstSlider';
 import { ColorNote } from '../../beatmap/v3/colorNote';
@@ -8,28 +9,32 @@ import { radToDeg, shortRotDistance } from '../../utils/math';
 // TODO: update with new position/rotation system
 export function isEnd(currNote: ColorNote, prevNote: ColorNote, cd: number): boolean {
     // fuck u and ur dot note stack
-    if (currNote.direction === 8 && prevNote.direction === 8 && cd !== 8) {
+    if (
+        currNote.direction === NoteDirection.ANY &&
+        prevNote.direction === NoteDirection.ANY &&
+        cd !== NoteDirection.ANY
+    ) {
         // if end note on right side
         if (currNote.posX > prevNote.posX) {
-            if (cd === 5 || cd === 3 || cd === 7) {
+            if (cd === NoteDirection.UP_RIGHT || cd === NoteDirection.RIGHT || cd === NoteDirection.DOWN_RIGHT) {
                 return true;
             }
         }
         // if end note on left side
         if (currNote.posX < prevNote.posX) {
-            if (cd === 6 || cd === 2 || cd === 4) {
+            if (cd === NoteDirection.DOWN_LEFT || cd === NoteDirection.LEFT || cd === NoteDirection.UP_LEFT) {
                 return true;
             }
         }
         // if end note is above
         if (currNote.posY > prevNote.posY) {
-            if (cd === 4 || cd === 0 || cd === 5) {
+            if (cd === NoteDirection.UP_LEFT || cd === NoteDirection.UP || cd === NoteDirection.UP_RIGHT) {
                 return true;
             }
         }
         // if end note is below
         if (currNote.posY < prevNote.posY) {
-            if (cd === 6 || cd === 1 || cd === 7) {
+            if (cd === NoteDirection.DOWN_LEFT || cd === NoteDirection.DOWN || cd === NoteDirection.DOWN_RIGHT) {
                 return true;
             }
         }
@@ -37,49 +42,73 @@ export function isEnd(currNote: ColorNote, prevNote: ColorNote, cd: number): boo
     // if end note on right side
     if (currNote.posX > prevNote.posX) {
         // check if end note is arrowed
-        if (currNote.direction === 5 || currNote.direction === 3 || currNote.direction === 7) {
+        if (
+            currNote.direction === NoteDirection.UP_RIGHT ||
+            currNote.direction === NoteDirection.RIGHT ||
+            currNote.direction === NoteDirection.DOWN_RIGHT
+        ) {
             return true;
         }
         // check if end note is dot and start arrow is pointing to it
         if (
-            (prevNote.direction === 5 || prevNote.direction === 3 || prevNote.direction === 7) &&
-            currNote.direction === 8
+            (prevNote.direction === NoteDirection.UP_RIGHT ||
+                prevNote.direction === NoteDirection.RIGHT ||
+                prevNote.direction === NoteDirection.DOWN_RIGHT) &&
+            currNote.direction === NoteDirection.ANY
         ) {
             return true;
         }
     }
     // if end note on left side
     if (currNote.posX < prevNote.posX) {
-        if (currNote.direction === 6 || currNote.direction === 2 || currNote.direction === 4) {
+        if (
+            currNote.direction === NoteDirection.DOWN_LEFT ||
+            currNote.direction === NoteDirection.LEFT ||
+            currNote.direction === NoteDirection.UP_LEFT
+        ) {
             return true;
         }
         if (
-            (prevNote.direction === 6 || prevNote.direction === 2 || prevNote.direction === 4) &&
-            currNote.direction === 8
+            (prevNote.direction === NoteDirection.DOWN_LEFT ||
+                prevNote.direction === NoteDirection.LEFT ||
+                prevNote.direction === NoteDirection.UP_LEFT) &&
+            currNote.direction === NoteDirection.ANY
         ) {
             return true;
         }
     }
     // if end note is above
     if (currNote.posY > prevNote.posY) {
-        if (currNote.direction === 4 || currNote.direction === 0 || currNote.direction === 5) {
+        if (
+            currNote.direction === NoteDirection.UP_LEFT ||
+            currNote.direction === NoteDirection.UP ||
+            currNote.direction === NoteDirection.UP_RIGHT
+        ) {
             return true;
         }
         if (
-            (prevNote.direction === 4 || prevNote.direction === 0 || prevNote.direction === 5) &&
-            currNote.direction === 8
+            (prevNote.direction === NoteDirection.UP_LEFT ||
+                prevNote.direction === NoteDirection.UP ||
+                prevNote.direction === NoteDirection.UP_RIGHT) &&
+            currNote.direction === NoteDirection.ANY
         ) {
             return true;
         }
     }
     // if end note is below
     if (currNote.posY < prevNote.posY) {
-        if (currNote.direction === 6 || currNote.direction === 1 || currNote.direction === 7) {
+        if (
+            currNote.direction === NoteDirection.DOWN_LEFT ||
+            currNote.direction === NoteDirection.DOWN ||
+            currNote.direction === NoteDirection.DOWN_RIGHT
+        ) {
             return true;
         }
         if (
-            (prevNote.direction === 6 || prevNote.direction === 1 || prevNote.direction === 7) &&
-            currNote.direction === 8
+            (prevNote.direction === NoteDirection.DOWN_LEFT ||
+                prevNote.direction === NoteDirection.DOWN ||
+                prevNote.direction === NoteDirection.DOWN_RIGHT) &&
+            currNote.direction === NoteDirection.ANY
         ) {
             return true;
         }
@@ -141,51 +170,51 @@ export function isIntersect<T extends IBaseNote>(
 
 // TODO: update with new position/rotation system
 export function predictDirection(currNote: ColorNote, prevNote: ColorNote): number {
-    if (isEnd(currNote, prevNote, 8)) {
-        return currNote.direction === 8 ? prevNote.direction : currNote.direction;
+    if (isEnd(currNote, prevNote, NoteDirection.ANY)) {
+        return currNote.direction === NoteDirection.ANY ? prevNote.direction : currNote.direction;
     }
-    if (currNote.direction !== 8) {
+    if (currNote.direction !== NoteDirection.ANY) {
         return currNote.direction;
     }
     if (currNote.time > prevNote.time) {
         // if end note on right side
         if (currNote.posX > prevNote.posX) {
             if (currNote.isHorizontal(prevNote)) {
-                return 3;
+                return NoteDirection.RIGHT;
             }
         }
         // if end note on left side
         if (currNote.posX < prevNote.posX) {
             if (currNote.isHorizontal(prevNote)) {
-                return 2;
+                return NoteDirection.LEFT;
             }
         }
         // if end note is above
         if (currNote.posY > prevNote.posY) {
             if (currNote.isVertical(prevNote)) {
-                return 0;
+                return NoteDirection.UP;
             }
             if (currNote.posX > prevNote.posX) {
-                return 5;
+                return NoteDirection.UP_RIGHT;
             }
             if (currNote.posX < prevNote.posX) {
-                return 4;
+                return NoteDirection.UP_LEFT;
             }
         }
         // if end note is below
         if (currNote.posY < prevNote.posY) {
             if (currNote.isVertical(prevNote)) {
-                return 1;
+                return NoteDirection.DOWN;
             }
             if (currNote.posX > prevNote.posX) {
-                return 7;
+                return NoteDirection.DOWN_RIGHT;
             }
             if (currNote.posX < prevNote.posX) {
-                return 6;
+                return NoteDirection.DOWN_LEFT;
             }
         }
     }
-    return 8;
+    return NoteDirection.ANY;
 }
 
 /** Check the angle equality of the two notes.
@@ -209,7 +238,7 @@ export function checkDirection(
     if (typeof n1 === 'number') {
         nA1 = n1;
     } else {
-        if (n1.direction === 8) {
+        if (n1.direction === NoteDirection.ANY) {
             return false;
         }
         nA1 = n1.getAngle();
@@ -217,7 +246,7 @@ export function checkDirection(
     if (typeof n2 === 'number') {
         nA2 = n2;
     } else {
-        if (n2.direction === 8) {
+        if (n2.direction === NoteDirection.ANY) {
             return false;
         }
         nA2 = n2.getAngle();

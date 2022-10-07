@@ -68,7 +68,7 @@ function run(map: ToolArgs) {
     }
     const filteredSPS = SavedData.beatmapDifficulty
         .map((d) => d.swingAnalysis)
-        .filter((a) => a.characteristic === 'Standard' && tool.input.params[a.difficulty])
+        .filter((a) => (a.characteristic === 'Standard' && tool.input.params[a.difficulty]) || a.total.total === 0)
         .sort((a, b) => a.total.average - b.total.average)
         .reverse();
     if (!filteredSPS.length) {
