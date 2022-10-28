@@ -1,9 +1,9 @@
 import { BeatPerMinute } from '../../beatmap/shared/bpm';
-import { ISwingContainer } from '../../types/mapcheck/analyzers/swing';
-import { NoteContainer, NoteContainerNote } from '../../types/beatmap/v3/container';
+import { ISwingContainer } from './types/swing';
+import { NoteContainer, NoteContainerNote } from '../../types/beatmap/wrapper/container';
 import { checkDirection } from '../placement/note';
-import { IBaseObject } from '../../types/beatmap/v3/baseObject';
-import { BaseObject } from '../../beatmap/v3/baseObject';
+import { NoteDirection } from '../../beatmap/shared/constants';
+import { IWrapBaseObject } from '../../types/beatmap/wrapper/baseObject';
 
 export default class Swing implements ISwingContainer {
     time: number;
@@ -14,7 +14,7 @@ export default class Swing implements ISwingContainer {
     ebpmSwing: number;
     data: NoteContainer[];
 
-    private constructor(sc: ISwingContainer) {
+    protected constructor(sc: ISwingContainer) {
         this.time = sc.time;
         this.duration = sc.duration;
         this.minSpeed = sc.minSpeed;
@@ -106,11 +106,11 @@ export default class Swing implements ISwingContainer {
             context &&
             context.length > 0 &&
             bpm.toRealTime(prevNote.data.time) + 0.005 < bpm.toRealTime(currNote.data.time) &&
-            currNote.data.direction !== 8
+            currNote.data.direction !== NoteDirection.ANY
         ) {
             for (const n of context) {
                 if (n.type === 'note') {
-                    if (n.data.direction !== 8 && checkDirection(currNote.data, n.data, 90, false)) {
+                    if (n.data.direction !== NoteDirection.ANY && checkDirection(currNote.data, n.data, 90, false)) {
                         return true;
                     }
                 }
@@ -129,11 +129,7 @@ export default class Swing implements ISwingContainer {
         );
     };
 
-    static calcEBPMBetweenObject = <T extends IBaseObject, U extends IBaseObject>(
-        currObj: BaseObject<T>,
-        prevObj: BaseObject<U>,
-        bpm: number,
-    ): number => {
+    static calcEBPMBetweenObject = (currObj: IWrapBaseObject, prevObj: IWrapBaseObject, bpm: number): number => {
         return bpm / ((currObj.time - prevObj.time) * 2);
     };
 

@@ -1,4 +1,6 @@
+export * from './animation';
 export * from './bookmark';
+export * from './bpmChange';
 export * from './chroma';
 export * from './customData';
 export * from './customEvent';

@@ -100,6 +100,12 @@ export const SliderDataCheck: Record<keyof ISlider, DataCheck> = {
         type: 'number',
         version: '2.0.0',
     },
+    _customData: {
+        type: 'object',
+        version: '2.0.0',
+        check: {},
+        optional: true,
+    },
 } as const;
 
 export const ObstacleDataCheck: Record<keyof IObstacle, DataCheck> = {

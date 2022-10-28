@@ -1,11 +1,10 @@
 import { IWaypoint } from '../../types/beatmap/v2/waypoint';
 import { ObjectReturnFn } from '../../types/utils';
-import { LINE_COUNT } from '../shared/constants';
-import { BeatmapObject } from './object';
 import { deepCopy } from '../../utils/misc';
+import { WrapWaypoint } from '../wrapper/waypoint';
 
 /** Waypoint beatmap v2 class object. */
-export class Waypoint extends BeatmapObject<IWaypoint> {
+export class Waypoint extends WrapWaypoint<Required<IWaypoint>> {
     static default: ObjectReturnFn<Required<IWaypoint>> = {
         _time: 0,
         _lineIndex: 0,
@@ -59,16 +58,13 @@ export class Waypoint extends BeatmapObject<IWaypoint> {
         };
     }
 
-    /** Position x `<int>` of waypoint.
-     * ```ts
-     * 0 -> Outer Left
-     * 1 -> Middle Left
-     * 2 -> Middle Right
-     * 3 -> Outer Right
-     * ```
-     * ---
-     * Range: `unknown`
-     */
+    get time() {
+        return this.data._time;
+    }
+    set time(value: IWaypoint['_time']) {
+        this.data._time = value;
+    }
+
     get posX() {
         return this.data._lineIndex;
     }
@@ -76,15 +72,6 @@ export class Waypoint extends BeatmapObject<IWaypoint> {
         this.data._lineIndex = value;
     }
 
-    /** Position y `<int>` of waypoint.
-     * ```ts
-     * 0 -> Bottom row
-     * 1 -> Middle row
-     * 2 -> Top row
-     * ```
-     * ---
-     * Range: `unknown`
-     */
     get posY() {
         return this.data._lineLayer;
     }
@@ -92,15 +79,6 @@ export class Waypoint extends BeatmapObject<IWaypoint> {
         this.data._lineLayer = value;
     }
 
-    /** Offset direction `<int>` of waypoint.
-     * ```ts
-     * 4 | 0 | 5
-     * 2 | 8 | 3
-     * 6 | 1 | 7
-     * ```
-     * ---
-     * Grid represents cut direction from center.
-     */
     get direction() {
         return this.data._offsetDirection;
     }
@@ -108,41 +86,19 @@ export class Waypoint extends BeatmapObject<IWaypoint> {
         this.data._offsetDirection = value;
     }
 
-    setPosX(value: IWaypoint['_lineIndex']) {
-        this.posX = value;
-        return this;
+    get customData(): NonNullable<IWaypoint['_customData']> {
+        return this.data._customData;
     }
-    setPosY(value: IWaypoint['_lineLayer']) {
-        this.posY = value;
-        return this;
-    }
-    setDirection(value: IWaypoint['_offsetDirection']) {
-        this.direction = value;
-        return this;
+    set customData(value: NonNullable<IWaypoint['_customData']>) {
+        this.data._customData = value;
     }
 
-    mirror() {
-        this.posX = LINE_COUNT - 1 - this.posX;
-        switch (this.direction) {
-            case 2:
-                this.direction = 3;
-                break;
-            case 3:
-                this.direction = 2;
-                break;
-            case 6:
-                this.direction = 7;
-                break;
-            case 7:
-                this.direction = 6;
-                break;
-            case 4:
-                this.direction = 5;
-                break;
-            case 5:
-                this.direction = 4;
-                break;
-        }
+    setCustomData(value: NonNullable<IWaypoint['_customData']>): this {
+        this.customData = value;
+        return this;
+    }
+    addCustomData(object: IWaypoint['_customData']): this {
+        this.customData = { ...this.customData, object };
         return this;
     }
 }

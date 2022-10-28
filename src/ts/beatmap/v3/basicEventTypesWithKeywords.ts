@@ -1,11 +1,10 @@
-import { IBasicEventTypesForKeywords } from '../../types/beatmap/v3/basicEventTypesForKeywords';
 import { IBasicEventTypesWithKeywords } from '../../types/beatmap/v3/basicEventTypesWithKeywords';
 import { ObjectReturnFn } from '../../types/utils';
-import { Serializable } from '../shared/serializable';
+import { WrapEventTypesWithKeywords } from '../wrapper/eventTypesWithKeywords';
 import { BasicEventTypesForKeywords } from './basicEventTypesForKeywords';
 
 /** Basic event types with keywords beatmap v3 class object. */
-export class BasicEventTypesWithKeywords extends Serializable<IBasicEventTypesWithKeywords> {
+export class BasicEventTypesWithKeywords extends WrapEventTypesWithKeywords<Required<IBasicEventTypesWithKeywords>> {
     static default: ObjectReturnFn<Required<IBasicEventTypesWithKeywords>> = {
         d: () => [],
     };
@@ -30,24 +29,15 @@ export class BasicEventTypesWithKeywords extends Serializable<IBasicEventTypesWi
         };
     }
 
-    /** Data list of basic event types with keywords. */
     get list() {
         return this.d;
     }
-    set list(value: BasicEventTypesWithKeywords['d']) {
+    set list(value: BasicEventTypesForKeywords[]) {
         this.d = value;
     }
 
-    setData(value: BasicEventTypesWithKeywords['d']) {
-        this.list = value;
-        return this;
-    }
-    addData(value: IBasicEventTypesForKeywords) {
-        this.list.push(BasicEventTypesForKeywords.create(value)[0]);
-        return this;
-    }
-    removeData(value: string) {
-        this.list = this.list.filter((d) => d.keyword !== value);
+    addData(value: BasicEventTypesForKeywords) {
+        this.list.push(value);
         return this;
     }
 }

@@ -32,7 +32,7 @@ function run(map: ToolArgs) {
         console.error('Something went wrong!');
         return;
     }
-    const { colorNotes, bombNotes, obstacles, basicBeatmapEvents, sliders, burstSliders } = map.difficulty.data;
+    const { colorNotes, bombNotes, obstacles, basicEvents, sliders, burstSliders } = map.difficulty.data;
 
     let noteResult: number[] = [];
     let obstacleResult: number[] = [];
@@ -41,11 +41,11 @@ function run(map: ToolArgs) {
     let burstSliderResult: number[] = [];
     if (!map.difficulty.info._customData?._requirements?.includes('Mapping Extensions')) {
         if (map.difficulty.info._customData?._requirements?.includes('Noodle Extensions')) {
-            noteResult = colorNotes.filter((n) => n.hasMappingExtensions()).map((n) => n.time);
-            obstacleResult = obstacles.filter((o) => o.hasMappingExtensions()).map((o) => o.time);
-            bombResult = bombNotes.filter((n) => n.hasMappingExtensions()).map((n) => n.time);
-            sliderResult = sliders.filter((o) => o.hasMappingExtensions()).map((o) => o.time);
-            burstSliderResult = burstSliders.filter((o) => o.hasMappingExtensions()).map((o) => o.time);
+            noteResult = colorNotes.filter((n) => n.isMappingExtensions()).map((n) => n.time);
+            obstacleResult = obstacles.filter((o) => o.isMappingExtensions()).map((o) => o.time);
+            bombResult = bombNotes.filter((n) => n.isMappingExtensions()).map((n) => n.time);
+            sliderResult = sliders.filter((o) => o.isMappingExtensions()).map((o) => o.time);
+            burstSliderResult = burstSliders.filter((o) => o.isMappingExtensions()).map((o) => o.time);
         } else {
             noteResult = colorNotes.filter((n) => !n.isValid()).map((n) => n.time);
             obstacleResult = obstacles.filter((o) => !o.isValid()).map((o) => o.time);
@@ -54,7 +54,7 @@ function run(map: ToolArgs) {
             burstSliderResult = burstSliders.filter((bs) => !bs.isValid()).map((bs) => bs.time);
         }
     }
-    const eventResult = basicBeatmapEvents.filter((e) => !e.isValid()).map((e) => e.time);
+    const eventResult = basicEvents.filter((e) => !e.isValid()).map((e) => e.time);
 
     const htmlResult: HTMLElement[] = [];
     if (noteResult.length) {

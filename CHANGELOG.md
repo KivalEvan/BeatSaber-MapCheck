@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.5.5 [2022-11-##]
+
+### Changed
+
+-   Updated packages and Beat Saber core script
+
+### Fixed
+
+-   Obstacle incorrectly counting interactive in specific case
+-   Version improperly set to `3.0.0` for `3.1.0` map
+
 ## 2.5.4 [2022-10-07]
 
 ### Added

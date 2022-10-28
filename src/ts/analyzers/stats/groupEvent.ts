@@ -2,7 +2,7 @@ import { EventList } from '../../beatmap/shared/environment';
 import { LightColorEventBoxGroup } from '../../beatmap/v3/lightColorEventBoxGroup';
 import { LightRotationEventBoxGroup } from '../../beatmap/v3/lightRotationEventBoxGroup';
 import { EnvironmentAllName } from '../../types/beatmap/shared/environment';
-import { ICountEventBoxGroup } from '../../types/mapcheck/analyzers/stats';
+import { ICountEventBoxGroup } from './types/stats';
 
 /** Count number of type of events with their properties in given array and return a event count object.
  * ```ts
@@ -25,16 +25,16 @@ export function countColorEBG(
     }
 
     for (let i = ebg.length - 1; i >= 0; i--) {
-        if (!ebgCount[ebg[i].groupID]) {
-            ebgCount[ebg[i].groupID] = {
+        if (!ebgCount[ebg[i].id]) {
+            ebgCount[ebg[i].id] = {
                 total: 0,
                 eventBox: 0,
                 base: 0,
             };
         }
-        ebgCount[ebg[i].groupID].total++;
-        ebgCount[ebg[i].groupID].eventBox += ebg[i].events.length;
-        ebgCount[ebg[i].groupID].base += ebg[i].events.reduce((t, e) => t + e.events.length, 0);
+        ebgCount[ebg[i].id].total++;
+        ebgCount[ebg[i].id].eventBox += ebg[i].events.length;
+        ebgCount[ebg[i].id].base += ebg[i].events.reduce((t, e) => t + e.events.length, 0);
     }
     return ebgCount;
 }
@@ -54,16 +54,16 @@ export function countRotationEBG(
     }
 
     for (let i = ebg.length - 1; i >= 0; i--) {
-        if (!ebgCount[ebg[i].groupID]) {
-            ebgCount[ebg[i].groupID] = {
+        if (!ebgCount[ebg[i].id]) {
+            ebgCount[ebg[i].id] = {
                 total: 0,
                 eventBox: 0,
                 base: 0,
             };
         }
-        ebgCount[ebg[i].groupID].total++;
-        ebgCount[ebg[i].groupID].eventBox += ebg[i].events.length;
-        ebgCount[ebg[i].groupID].base += ebg[i].events.reduce((t, e) => t + e.events.length, 0);
+        ebgCount[ebg[i].id].total++;
+        ebgCount[ebg[i].id].eventBox += ebg[i].events.length;
+        ebgCount[ebg[i].id].base += ebg[i].events.reduce((t, e) => t + e.events.length, 0);
     }
     return ebgCount;
 }

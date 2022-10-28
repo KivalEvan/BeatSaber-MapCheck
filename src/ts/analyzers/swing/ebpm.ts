@@ -1,4 +1,4 @@
-import { ISwingContainer } from '../../types/mapcheck/analyzers/swing';
+import { ISwingContainer } from './types/swing';
 
 export function getMaxEffectiveBPM(swings: ISwingContainer[]): number {
     return Math.max(...swings.map((s) => s.ebpm), 0);

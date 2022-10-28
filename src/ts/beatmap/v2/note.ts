@@ -1,11 +1,10 @@
 import { INote } from '../../types/beatmap/v2/note';
-import { BeatmapObject } from './object';
 import { ObjectReturnFn } from '../../types/utils';
-import { NoteDirectionAngle } from '../shared/constants';
 import { deepCopy } from '../../utils/misc';
+import { WrapColorNote } from '../wrapper/colorNote';
 
 /** Note beatmap v2 class object. */
-export class Note extends BeatmapObject<INote> {
+export class Note extends WrapColorNote<Required<INote>> {
     static default: ObjectReturnFn<Required<INote>> = {
         _time: 0,
         _lineIndex: 0,
@@ -63,16 +62,13 @@ export class Note extends BeatmapObject<INote> {
         };
     }
 
-    /** Position x `<int>` of note.
-     * ```ts
-     * 0 -> Outer Left
-     * 1 -> Middle Left
-     * 2 -> Middle Right
-     * 3 -> Outer Right
-     * ```
-     * ---
-     * Range: `0-3`
-     */
+    get time() {
+        return this.data._time;
+    }
+    set time(value: INote['_time']) {
+        this.data._time = value;
+    }
+
     get posX() {
         return this.data._lineIndex;
     }
@@ -80,15 +76,6 @@ export class Note extends BeatmapObject<INote> {
         this.data._lineIndex = value;
     }
 
-    /** Position y `<int>` of note.
-     * ```ts
-     * 0 -> Bottom row
-     * 1 -> Middle row
-     * 2 -> Top row
-     * ```
-     * ---
-     * Range: `0-2`
-     */
     get posY() {
         return this.data._lineLayer;
     }
@@ -96,13 +83,6 @@ export class Note extends BeatmapObject<INote> {
         this.data._lineLayer = value;
     }
 
-    /** Type `<int>` of note.
-     * ```ts
-     * 0 -> Red
-     * 1 -> Blue
-     * 3 -> Bomb
-     * ```
-     */
     get type() {
         return this.data._type;
     }
@@ -110,17 +90,13 @@ export class Note extends BeatmapObject<INote> {
         this.data._type = value;
     }
 
-    /** Cut direction `<int>` of note.
-     * ```ts
-     * 4 | 0 | 5
-     * 2 | 8 | 3
-     * 6 | 1 | 7
-     * ```
-     * ---
-     * Grid represents cut direction from center.
-     *
-     * **WARNING:** Dot-directional is not recommended with sliders, assumes down-directional.
-     */
+    get color() {
+        return this.data._type as 0;
+    }
+    set color(value: 0 | 1) {
+        this.data._type = value;
+    }
+
     get direction() {
         return this.data._cutDirection;
     }
@@ -128,196 +104,51 @@ export class Note extends BeatmapObject<INote> {
         this.data._cutDirection = value;
     }
 
-    setPosX(value: INote['_lineIndex']) {
-        this.posX = value;
+    get angleOffset() {
+        return 0;
+    }
+    set angleOffset(_: number) {
+        // TODO: do some calculation with direction?
+    }
+
+    get customData(): NonNullable<INote['_customData']> {
+        return this.data._customData;
+    }
+    set customData(value: NonNullable<INote['_customData']>) {
+        this.data._customData = value;
+    }
+
+    setCustomData(value: NonNullable<INote['_customData']>): this {
+        this.customData = value;
         return this;
     }
-    setPosY(value: INote['_lineLayer']) {
-        this.posY = value;
-        return this;
-    }
-    setType(value: INote['_type']) {
-        this.type = value;
-        return this;
-    }
-    setCutDirection(value: INote['_cutDirection']) {
-        this.direction = value;
+    addCustomData(object: INote['_customData']): this {
+        this.customData = { ...this.customData, object };
         return this;
     }
 
-    /** Check if note is a red or blue this.
-     * ```ts
-     * if (isNote(note)) {}
-     * ```
-     */
-    isNote(): boolean {
-        return this.type === 0 || this.type === 1;
-    }
-
-    /** Check if note is a bomb note
-     * ```ts
-     * if (isBomb(note)) {}
-     * ```
-     */
-    isBomb(): boolean {
-        return this.type === 3;
-    }
-
-    /** Get note and return the Beatwalls' position x and y value in tuple.
-     * ```ts
-     * const notePos = getPosition(note);
-     * ```
-     */
-    getPosition(): [number, number] {
+    getPosition(type?: 'vanilla' | 'me' | 'ne'): [number, number] {
         if (this.customData._position) {
             return [this.customData._position[0], this.customData._position[1]];
         }
-        return [
-            (this.posX <= -1000 ? this.posX / 1000 : this.posX >= 1000 ? this.posX / 1000 : this.posX) - 2,
-            this.posY <= -1000 ? this.posY / 1000 : this.posY >= 1000 ? this.posY / 1000 : this.posY,
-        ];
+        return super.getPosition(type);
     }
 
-    /** Get note and return standardised note angle.
-     * ```ts
-     * const noteAngle = getAngle(note);
-     * ```
-     */
-    getAngle(): number {
+    getAngle(type?: 'vanilla' | 'me' | 'ne'): number {
         if (this.customData._cutDirection) {
             return this.customData._cutDirection > 0
                 ? this.customData._cutDirection % 360
                 : 360 + (this.customData._cutDirection % 360);
         }
-        if (this.direction >= 1000) {
-            return Math.abs(((this.direction % 1000) % 360) - 360);
-        }
-        return NoteDirectionAngle[this.direction] || 0;
+        return super.getAngle(type);
     }
 
-    /** Get two notes and return the distance between two notes.
-     * ```ts
-     * const noteDistance = distance(note1, note2);
-     * ```
-     */
-    getDistance(compareTo: Note): number {
-        const [nX1, nY1] = this.getPosition();
-        const [nX2, nY2] = compareTo.getPosition();
-        return Math.sqrt(Math.pow(nX2 - nX1, 2) + Math.pow(nY2 - nY1, 2));
-    }
-
-    /** Compare two notes and return if the notes is in vertical alignment.
-     * ```ts
-     * if (isVertical(note1, note2)) {}
-     * ```
-     */
-    isVertical(compareTo: Note): boolean {
-        const [nX1] = this.getPosition();
-        const [nX2] = compareTo.getPosition();
-        const d = nX1 - nX2;
-        return d > -0.001 && d < 0.001;
-    }
-
-    /** Compare two notes and return if the notes is in horizontal alignment.
-     * ```ts
-     * if (isHorizontal(note1, note2)) {}
-     * ```
-     */
-    isHorizontal(compareTo: Note): boolean {
-        const [_, nY1] = this.getPosition();
-        const [_2, nY2] = compareTo.getPosition();
-        const d = nY1 - nY2;
-        return d > -0.001 && d < 0.001;
-    }
-
-    /** Compare two notes and return if the notes is in diagonal alignment.
-     * ```ts
-     * if (isDiagonal(note1, note2)) {}
-     * ```
-     */
-    isDiagonal(compareTo: Note): boolean {
-        const [nX1, nY1] = this.getPosition();
-        const [nX2, nY2] = compareTo.getPosition();
-        const dX = Math.abs(nX1 - nX2);
-        const dY = Math.abs(nY1 - nY2);
-        return dX === dY;
-    }
-
-    /** Compare two notes and return if the notes is an inline.
-     * ```ts
-     * if (isInline(note1, note2)) {}
-     * ```
-     */
-    isInline(compareTo: Note, lapping = 0.5): boolean {
-        return this.getDistance(compareTo) <= lapping;
-    }
-
-    /** Compare current note with the note ahead of it and return if the notes is a double.
-     * ```ts
-     * if (isDouble(note, notes, index)) {}
-     * ```
-     */
-    isDouble(notes: Note[], index: number): boolean {
-        for (let i = index, len = notes.length; i < len; i++) {
-            if (notes[i].time < this.time + 0.01 && notes[i].type !== this.type) {
-                return true;
-            }
-            if (notes[i].time > this.time + 0.01) {
-                return false;
-            }
-        }
-        return false;
-    }
-
-    /** Compare two notes and return if the notes is adjacent.
-     * ```ts
-     * if (isAdjacent(note1, note2)) {}
-     * ```
-     */
-    isAdjacent(compareTo: Note): boolean {
-        const d = this.getDistance(compareTo);
-        return d > 0.499 && d < 1.001;
-    }
-
-    /** Compare two notes and return if the notes is a window.
-     * ```ts
-     * if (isWindow(note1, note2)) {}
-     * ```
-     */
-    isWindow(compareTo: Note): boolean {
-        return this.getDistance(compareTo) > 1.8;
-    }
-
-    /** Compare two notes and return if the notes is a slanted window.
-     * ```ts
-     * if (isSlantedWindow(note1, note2)) {}
-     * ```
-     */
-    isSlantedWindow(compareTo: Note): boolean {
-        return (
-            this.isWindow(compareTo) &&
-            !this.isDiagonal(compareTo) &&
-            !this.isHorizontal(compareTo) &&
-            !this.isVertical(compareTo)
-        );
-    }
-
-    /** Check if note has Chroma properties.
-     * ```ts
-     * if (hasChroma(note)) {}
-     * ```
-     */
-    hasChroma(): boolean {
+    isChroma(): boolean {
         return Array.isArray(this.customData._color) || typeof this.customData._disableSpawnEffect === 'boolean';
     }
 
-    /** Check if note has Noodle Extensions properties.
-     * ```ts
-     * if (hasNoodleExtensions(note)) {}
-     * ```
-     */
     // god i hate these
-    hasNoodleExtensions(): boolean {
+    isNoodleExtensions(): boolean {
         return (
             Array.isArray(this.customData._animation) ||
             typeof this.customData._cutDirection === 'number' ||
@@ -333,32 +164,5 @@ export class Note extends BeatmapObject<INote> {
             Array.isArray(this.customData._rotation) ||
             typeof this.customData._track === 'string'
         );
-    }
-
-    /** Check if note has Mapping Extensions properties.
-     * ```ts
-     * if (hasMappingExtensions(note)) {}
-     * ```
-     */
-    hasMappingExtensions(): boolean {
-        return this.direction >= 1000 || this.posX > 3 || this.posX < 0 || this.posY > 2 || this.posY < 0;
-    }
-
-    /** Check if note has a valid cut direction.
-     * ```ts
-     * if (isValidDirection(note)) {}
-     * ```
-     */
-    isValidDirection(): boolean {
-        return this.direction >= 0 && this.direction <= 8;
-    }
-
-    /** Check if note is a valid, vanilla this.
-     * ```ts
-     * if (isValid(note)) {}
-     * ```
-     */
-    isValid(): boolean {
-        return !this.hasMappingExtensions() && this.isValidDirection();
     }
 }

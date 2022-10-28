@@ -10,9 +10,9 @@ export function setBPMChanges(bpm?: BeatPerMinute | null): void {
         return;
     }
     const bpmcText = bpm.change.map((bpmc) => {
-        const time = round(bpmc._newTime, Settings.rounding);
-        const rt = bpm.toRealTime(bpmc._time);
-        return `${time} | ${toMMSS(rt)} -- ${bpmc._BPM}`;
+        const time = round(bpmc.newTime, Settings.rounding);
+        const rt = bpm.toRealTime(bpmc.time);
+        return `${time} | ${toMMSS(rt)} -- ${bpmc.BPM}`;
     });
     displayTableRow(htmlTableBPMChanges, bpmcText);
 }

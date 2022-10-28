@@ -1,6 +1,6 @@
 import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import { round } from '../../utils';
-import { NoteContainer } from '../../types/beatmap/v3/container';
+import { NoteContainer } from '../../types/beatmap/wrapper/container';
 import { printResultTime } from '../helpers';
 import UICheckbox from '../../ui/helpers/checkbox';
 import { BeatPerMinute } from '../../beatmap/shared/bpm';

@@ -1,4 +1,4 @@
-import { ISwingContainer } from '../../types/mapcheck/analyzers';
+import { ISwingContainer } from './types/swing';
 
 export function getMinSliderSpeed(swings: ISwingContainer[]): number {
     return Math.max(...swings.map((s) => s.minSpeed), 0);

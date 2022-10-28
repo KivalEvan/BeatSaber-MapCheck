@@ -19,9 +19,9 @@ export function difficulty(
     } = { enable: true, throwError: true },
 ): Difficulty {
     logger.info(tag('difficulty'), 'Parsing beatmap difficulty v3.x.x');
-    if (data.version !== '3.0.0') {
+    if (!(data.version === '3.0.0' || data.version === '3.1.0')) {
         logger.warn(tag('difficulty'), 'Unidentified beatmap version');
-        data.version = '3.0.0';
+        data.version = '3.1.0';
     }
     if (checkData.enable) {
         deepCheck(data, DifficultyCheck, 'difficulty', data.version, checkData.throwError);

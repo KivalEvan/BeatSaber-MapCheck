@@ -1,30 +1,16 @@
-/** Beatmap difficulty custom data interface for BPM Change. */
-export interface IBPMChange {
-    _time: number;
-    _bpm?: never;
-    _BPM: number;
-    _beatsPerBar: number;
-    _metronomeOffset: number;
-}
-
-/** Beatmap difficulty custom data interface for MediocreMapper BPM Change. */
-export interface IBPMChangeOld {
-    _time: number;
-    _bpm: number;
-    _BPM: never;
-    _beatsPerBar: number;
-    _metronomeOffset: number;
-}
-
 /** Beatmap difficulty custom data interface for BPM Change Time Scale. */
 export interface IBPMTimeScale {
-    _time: number;
-    _scale: number;
+    time: number;
+    scale: number;
 }
 
 /**
  * @extends IBPMChange
  */
-export interface IBPMChangeTime extends IBPMChange {
-    _newTime: number;
+export interface IBPMChangeTime {
+    time: number;
+    newTime: number;
+    BPM: number;
+    beatsPerBar: number;
+    metronomeOffset: number;
 }

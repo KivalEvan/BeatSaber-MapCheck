@@ -1,3 +1,4 @@
+export * from './animation';
 export * from './baseObject';
 export * from './baseSlider';
 export * from './basicEvent';
@@ -5,6 +6,7 @@ export * from './basicEventTypesForKeywords';
 export * from './basicEventTypesWithKeywords';
 export * from './bombNote';
 export * from './bookmark';
+export * from './bpmChange';
 export * from './bpmEvent';
 export * from './burstSlider';
 export * from './chroma';

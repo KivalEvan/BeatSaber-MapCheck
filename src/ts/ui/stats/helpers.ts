@@ -1,4 +1,4 @@
-import { NoteContainer } from '../../types/beatmap/v3/container';
+import { NoteContainer } from '../../types/beatmap/wrapper/container';
 
 export function getFilteredContainer(container: NoteContainer[], value: string) {
     switch (value) {

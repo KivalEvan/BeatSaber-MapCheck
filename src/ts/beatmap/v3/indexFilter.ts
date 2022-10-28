@@ -1,8 +1,8 @@
 import { IIndexFilter } from '../../types/beatmap/v3/indexFilter';
-import { Serializable } from '../shared/serializable';
+import { WrapIndexFilter } from '../wrapper/indexFilter';
 
 /** Index filter beatmap v3 class object. */
-export class IndexFilter extends Serializable<IIndexFilter> {
+export class IndexFilter extends WrapIndexFilter<Required<IIndexFilter>> {
     static default: Required<IIndexFilter> = {
         f: 1,
         p: 0,
@@ -50,12 +50,6 @@ export class IndexFilter extends Serializable<IIndexFilter> {
         };
     }
 
-    /** Type `<int>` of index filter.
-     * ```ts
-     * 1 -> Division
-     * 2 -> Step And Offset
-     * ```
-     */
     get type() {
         return this.data.f;
     }
@@ -63,7 +57,6 @@ export class IndexFilter extends Serializable<IIndexFilter> {
         this.data.f = value;
     }
 
-    /** Parameter 0 `<int>` in index filter. */
     get p0() {
         return this.data.p;
     }
@@ -71,7 +64,6 @@ export class IndexFilter extends Serializable<IIndexFilter> {
         this.data.p = value;
     }
 
-    /** Parameter 1 `<int>` in index filter. */
     get p1() {
         return this.data.t;
     }
@@ -79,7 +71,6 @@ export class IndexFilter extends Serializable<IIndexFilter> {
         this.data.t = value;
     }
 
-    /** Reversed `<int>` in index filter. */
     get reverse() {
         return this.data.r;
     }
@@ -87,10 +78,6 @@ export class IndexFilter extends Serializable<IIndexFilter> {
         this.data.r = value;
     }
 
-    /** Chunks `<int>` of index filter.
-     *
-     * Pairs next ID by available denominator.
-     */
     get chunks() {
         return this.data.c;
     }
@@ -98,12 +85,6 @@ export class IndexFilter extends Serializable<IIndexFilter> {
         this.data.c = value;
     }
 
-    /** Limit (percentage) `<float>` of index filter.
-     *
-     * Select ID by percentage, rounded up to nearest ID. Disabled if 0.
-     *
-     * Range: `0-1` (0% to 100%) strict.
-     */
     get limit() {
         return this.data.l;
     }
@@ -111,14 +92,6 @@ export class IndexFilter extends Serializable<IIndexFilter> {
         this.data.l = value;
     }
 
-    /** Limit also affects type `<int>` in index filter.
-     * ```ts
-     * 0 -> None
-     * 1 -> Duration
-     * 2 -> Distribution
-     * ```
-     * Adjust to limited ID list and has no effect with `Step` type.
-     */
     get limitAffectsType() {
         return this.data.d;
     }
@@ -126,13 +99,6 @@ export class IndexFilter extends Serializable<IIndexFilter> {
         this.data.d = value;
     }
 
-    /** Random type `<int>` of index filter.
-     * ```ts
-     * 0 -> No Random
-     * 1 -> Keep Order
-     * 2 -> Random Elements
-     * ```
-     */
     get random() {
         return this.data.n;
     }
@@ -140,7 +106,6 @@ export class IndexFilter extends Serializable<IIndexFilter> {
         this.data.n = value;
     }
 
-    /** Random seed `<int>` in index filter. */
     get seed() {
         return this.data.s;
     }

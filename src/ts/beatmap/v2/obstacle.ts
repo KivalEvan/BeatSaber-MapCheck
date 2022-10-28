@@ -1,10 +1,11 @@
+import { Vector2 } from '../../types/beatmap/shared/heck';
 import { IObstacle } from '../../types/beatmap/v2/obstacle';
 import { ObjectReturnFn } from '../../types/utils';
-import { BeatmapObject } from './object';
 import { deepCopy } from '../../utils/misc';
+import { WrapObstacle } from '../wrapper/obstacle';
 
 /** Object beatmap v2 class object. */
-export class Obstacle extends BeatmapObject<IObstacle> {
+export class Obstacle extends WrapObstacle<Required<IObstacle>> {
     static default: ObjectReturnFn<Required<IObstacle>> = {
         _time: 0,
         _lineIndex: 0,
@@ -70,16 +71,13 @@ export class Obstacle extends BeatmapObject<IObstacle> {
         };
     }
 
-    /** Position x `<int>` of obstacle.
-     * ```ts
-     * 0 -> Outer Left
-     * 1 -> Middle Left
-     * 2 -> Middle Right
-     * 3 -> Outer Right
-     * ```
-     * ---
-     * Range: `0-3`
-     */
+    get time() {
+        return this.data._time;
+    }
+    set time(value: IObstacle['_time']) {
+        this.data._time = value;
+    }
+
     get posX() {
         return this.data._lineIndex;
     }
@@ -87,15 +85,6 @@ export class Obstacle extends BeatmapObject<IObstacle> {
         this.data._lineIndex = value;
     }
 
-    /** Position y `<int>` of obstacle.
-     * ```ts
-     * 0 -> Bottom row
-     * 1 -> Middle row
-     * 2 -> Top row
-     * ```
-     * ---
-     * Range: `0-2`
-     */
     get posY() {
         return this.data._lineLayer;
     }
@@ -103,13 +92,6 @@ export class Obstacle extends BeatmapObject<IObstacle> {
         this.data._lineLayer = value;
     }
 
-    /** Type `<int>` of obstacle.
-     * ```ts
-     * 0 -> Full-height Wall
-     * 1 -> Crouch Wall
-     * 2 -> Freeform Wall
-     * ```
-     */
     get type() {
         return this.data._type;
     }
@@ -117,7 +99,6 @@ export class Obstacle extends BeatmapObject<IObstacle> {
         this.data._type = value;
     }
 
-    /** Duration `<float>` of obstacle.*/
     get duration() {
         return this.data._duration;
     }
@@ -125,10 +106,6 @@ export class Obstacle extends BeatmapObject<IObstacle> {
         this.data._duration = value;
     }
 
-    /** Width `<int>` of obstacle.
-     * ---
-     * Range: `none`
-     */
     get width() {
         return this.data._width;
     }
@@ -136,17 +113,6 @@ export class Obstacle extends BeatmapObject<IObstacle> {
         this.data._width = value;
     }
 
-    /** Height `<int>` of obstacle.
-     * ```ts
-     * 1 -> Short
-     * 2 -> Moderate
-     * 3 -> Crouch
-     * 4 -> Tall
-     * 5 -> Full
-     * ```
-     * ---
-     * Range: `1-5`
-     */
     get height() {
         return this.data._height;
     }
@@ -154,98 +120,34 @@ export class Obstacle extends BeatmapObject<IObstacle> {
         this.data._height = value;
     }
 
-    setType(value: IObstacle['_type']) {
-        this.type = value;
+    get customData(): NonNullable<IObstacle['_customData']> {
+        return this.data._customData;
+    }
+    set customData(value: NonNullable<IObstacle['_customData']>) {
+        this.data._customData = value;
+    }
+
+    setCustomData(value: NonNullable<IObstacle['_customData']>): this {
+        this.customData = value;
         return this;
     }
-    setPosX(value: IObstacle['_lineIndex']) {
-        this.posX = value;
-        return this;
-    }
-    setPosY(value: IObstacle['_lineLayer']) {
-        this.posY = value;
-        return this;
-    }
-    setDuration(value: IObstacle['_duration']) {
-        this.duration = value;
-        return this;
-    }
-    setWidth(value: IObstacle['_width']) {
-        this.width = value;
-        return this;
-    }
-    setHeight(value: IObstacle['_height']) {
-        this.height = value;
+    addCustomData(object: IObstacle['_customData']): this {
+        this.customData = { ...this.customData, object };
         return this;
     }
 
-    /** Get obstacle and return the Beatwalls' position x and y value in tuple.
-     * ```ts
-     * const obstaclePos = getPosition(wall);
-     * ```
-     */
-    // FIXME: do i bother with Mapping Extension for obstacle Y position?
-    getPosition(): [number, number] {
+    getPosition(): Vector2 {
         if (this.customData._position) {
             return [this.customData._position[0], this.customData._position[1]];
         }
-        return [
-            (this.posX <= -1000 ? this.posX / 1000 : this.posX >= 1000 ? this.posX / 1000 : this.posX) - 2,
-            this.type <= -1000 ? this.type / 1000 : this.type >= 1000 ? this.type / 1000 : this.type,
-        ];
+        return super.getPosition();
     }
 
-    /** Check if obstacle is interactive.
-     * ```ts
-     * if (isInteractive(wall)) {}
-     * ```
-     */
-    isInteractive(): boolean {
-        return this.width >= 2 || this.posX === 1 || this.posX === 2;
-    }
-
-    /** Check if obstacle is crouch.
-     * ```ts
-     * if (isCrouch(wall)) {}
-     * ```
-     */
-    isCrouch(): boolean {
-        return this.type === 1 && (this.width > 2 || (this.width === 2 && this.posX === 1));
-    }
-
-    /** Check if obstacle has zero value.
-     * ```ts
-     * if (isZero(wall)) {}
-     * ```
-     */
-    isZero(): boolean {
-        return this.duration === 0 || this.width === 0;
-    }
-
-    /** Check if current obstacle is longer than previous obstacle.
-     * ```ts
-     * if (isLonger(currWall, prevWall)) {}
-     * ```
-     */
-    isLonger(currObstacle: IObstacle, prevObstacle: IObstacle, offset = 0): boolean {
-        return currObstacle._time + currObstacle._duration > prevObstacle._time + prevObstacle._duration + offset;
-    }
-
-    /** Check if obstacle has Chroma properties.
-     * ```ts
-     * if (hasChroma(wall)) {}
-     * ```
-     */
-    hasChroma(): boolean {
+    isChroma(): boolean {
         return Array.isArray(this.customData._color);
     }
 
-    /** Check if obstacle has Noodle Extensions properties.
-     * ```ts
-     * if (hasNoodleExtensions(wall)) {}
-     * ```
-     */
-    hasNoodleExtensions(): boolean {
+    isNoodleExtensions(): boolean {
         return (
             Array.isArray(this.customData._animation) ||
             typeof this.customData._fake === 'boolean' ||
@@ -258,23 +160,5 @@ export class Obstacle extends BeatmapObject<IObstacle> {
             Array.isArray(this.customData._scale) ||
             typeof this.customData._track === 'string'
         );
-    }
-
-    /** Check if obstacle has Mapping Extensions properties.
-     * ```ts
-     * if (hasMappingExtensions(wall)) {}
-     * ```
-     */
-    hasMappingExtensions(): boolean {
-        return this.width >= 1000 || this.type >= 1000 || this.posX > 3 || this.posX < 0;
-    }
-
-    /** Check if obstacle is a valid, vanilla obstacle.
-     * ```ts
-     * if (isValid(wall)) {}
-     * ```
-     */
-    isValid(): boolean {
-        return !this.hasMappingExtensions() && this.width > 0 && this.width <= 4;
     }
 }

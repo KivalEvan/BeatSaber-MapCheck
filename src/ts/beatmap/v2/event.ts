@@ -1,14 +1,14 @@
 // deno-lint-ignore-file no-unused-vars
 import { IEvent } from '../../types/beatmap/v2/event';
 import { ObjectReturnFn } from '../../types/utils';
-import { BeatmapObject } from './object';
 import { IChromaEventLaser, IChromaEventLight, IChromaEventRing } from '../../types/beatmap/v2/chroma';
 import { INEEvent } from '../../types/beatmap/v2/noodleExtensions';
 import { deepCopy } from '../../utils/misc';
 import { EnvironmentAllName } from '../../types/beatmap/shared/environment';
+import { WrapEvent } from '../wrapper/event';
 
 /** Event beatmap v2 class object. */
-export class Event extends BeatmapObject<IEvent> {
+export class Event extends WrapEvent<Required<IEvent>> {
     static default: ObjectReturnFn<Required<IEvent>> = {
         _time: 0,
         _type: 0,
@@ -62,35 +62,13 @@ export class Event extends BeatmapObject<IEvent> {
         };
     }
 
-    /** Event type `<int>` of basic event.
-     * ```ts
-     * 0 -> Back Lasers
-     * 1 -> Ring Lights
-     * 2 -> Left Lasers
-     * 3 -> Right Lasers
-     * 4 -> Center Lights
-     * 5 -> Light Boost
-     * 6 -> Extra Left Lights
-     * 7 -> Extra Right Lights
-     * 8 -> Ring Rotation
-     * 9 -> Ring Zoom
-     * 10 -> Extra Left Lasers
-     * 11 -> Extra Right Lasers
-     * 12 -> Left Laser Rotation
-     * 13 -> Right Laser Rotation
-     * 14 -> Early Lane Rotation
-     * 15 -> Late Lane Rotation
-     * 16 -> Utility Event 0
-     * 17 -> Utility Event 1
-     * 18 -> Utility Event 2
-     * 19 -> Utility Event 3
-     * 40 -> Special Event 0
-     * 41 -> Special Event 1
-     * 42 -> Special Event 2
-     * 43 -> Special Event 3
-     * 100 -> BPM Change
-     * ```
-     */
+    get time() {
+        return this.data._time;
+    }
+    set time(value: IEvent['_time']) {
+        this.data._time = value;
+    }
+
     get type() {
         return this.data._type;
     }
@@ -98,7 +76,6 @@ export class Event extends BeatmapObject<IEvent> {
         this.data._type = value;
     }
 
-    /** Value `<int>` of basic event. */
     get value() {
         return this.data._value;
     }
@@ -106,7 +83,6 @@ export class Event extends BeatmapObject<IEvent> {
         this.data._value = value;
     }
 
-    /** Float value `<float>` of basic event. */
     get floatValue() {
         return this.data._floatValue;
     }
@@ -114,243 +90,40 @@ export class Event extends BeatmapObject<IEvent> {
         this.data._floatValue = value;
     }
 
-    setType(value: IEvent['_type']) {
-        this.type = value;
+    get customData(): NonNullable<IEvent['_customData']> {
+        return this.data._customData;
+    }
+    set customData(value: NonNullable<IEvent['_customData']>) {
+        this.data._customData = value;
+    }
+
+    setCustomData(value: NonNullable<IEvent['_customData']>): this {
+        this.customData = value;
         return this;
     }
-    setValue(value: IEvent['_value']) {
-        this.value = value;
-        return this;
-    }
-    setFloatValue(value: IEvent['_floatValue']) {
-        this.floatValue = value;
+    addCustomData(object: IEvent['_customData']): this {
+        this.customData = { ...this.customData, object };
         return this;
     }
 
-    /** Check if light  this is an off event.
-     * ```ts
-     * if (event.isOff()) {}
-     * ```
-     * ---
-     * This may check non-light event too.
-     */
-    isOff(): boolean {
-        return this.value === 0;
-    }
-
-    /** Check if light  this is an on event.
-     * ```ts
-     * if (event.isOn()) {}
-     * ```
-     * ---
-     * This may check non-light event too.
-     */
-    isOn(): boolean {
-        return this.value === 1 || this.value === 5 || this.value === 9;
-    }
-
-    /** Check if light  this is a flash event.
-     * ```ts
-     * if (event.isFlash()) {}
-     * ```
-     * ---
-     * This may check non-light event too.
-     */
-    isFlash(): boolean {
-        return this.value === 2 || this.value === 6 || this.value === 10;
-    }
-
-    /** Check if light  this is a fade event.
-     * ```ts
-     * if (event.isFade()) {}
-     * ```
-     * ---
-     * This may check non-light event too.
-     */
-    isFade(): boolean {
-        return this.value === 3 || this.value === 7 || this.value === 11;
-    }
-
-    /** Check if light  this is a transition event.
-     * ```ts
-     * if (event.isTransition()) {}
-     * ```
-     * This may check non-light event too.
-     */
-    isTransition(): boolean {
-        return this.value === 4 || this.value === 8 || this.value === 12;
-    }
-
-    /** Check if light event is a red light.
-     * ```ts
-     * if (event.isRed()) {}
-     * ```
-     * ---
-     * This may check non-light event too.
-     */
-    isRed(): boolean {
-        return this.value === 5 || this.value === 6 || this.value === 7 || this.value === 8;
-    }
-
-    /** Check if light event is a blue light.
-     * ```ts
-     * if (event.isBlue()) {}
-     * ```
-     * ---
-     * This may check non-light event too.
-     */
-    isBlue(): boolean {
-        return this.value === 1 || this.value === 2 || this.value === 3 || this.value === 4;
-    }
-
-    /** Check if light event is a white light.
-     * ```ts
-     * if (event.isWhite()) {}
-     * ```
-     * ---
-     * This may check non-light event too.
-     */
-    isWhite(): boolean {
-        return this.value === 9 || this.value === 10 || this.value === 11 || this.value === 12;
-    }
-
-    /** Check if  this is a valid type.
-     * ```ts
-     * if (event.isValidType()) {}
-     * ```
-     */
-    isValidType(): boolean {
-        return (this.type >= 0 && this.type <= 19) || this.type === 100;
-    }
-
-    /** Check if  this is a light event.
-     * ```ts
-     * if (event.isLightEvent()) {}
-     * ```
-     */
     isLightEvent(environment?: EnvironmentAllName): this is EventLight {
-        switch (environment) {
-            case 'LizzoEnvironment':
-                return (
-                    this.type === 0 ||
-                    this.type === 1 ||
-                    this.type === 2 ||
-                    this.type === 3 ||
-                    this.type === 4 ||
-                    this.type === 6 ||
-                    this.type === 7 ||
-                    this.type === 8 ||
-                    this.type === 9 ||
-                    this.type === 10 ||
-                    this.type === 11 ||
-                    this.type === 12
-                );
-            default:
-                return (
-                    this.type === 0 ||
-                    this.type === 1 ||
-                    this.type === 2 ||
-                    this.type === 3 ||
-                    this.type === 4 ||
-                    this.type === 6 ||
-                    this.type === 7 ||
-                    this.type === 10 ||
-                    this.type === 11
-                );
-        }
+        return super.isLightEvent(environment);
     }
 
-    /** Check if  this is a boost event.
-     * ```ts
-     * if (event.isColorBoost()) {}
-     * ```
-     */
-    isColorBoost(): boolean {
-        return this.type === 5;
-    }
-
-    /** Check if  this is a ring event.
-     * ```ts
-     * if (event.isRingEvent()) {}
-     * ```
-     * ---
-     * This does not check for ring zoom.
-     */
     isRingEvent(environment?: EnvironmentAllName): this is EventRing {
-        switch (environment) {
-            case 'LizzoEnvironment':
-                return false;
-            default:
-                return this.type === 8 || this.type === 9;
-        }
+        return super.isRingEvent(environment);
     }
 
-    /** Check if  this is a laser rotation event.
-     * ```ts
-     * if (event.isLaserRotationEvent()) {}
-     * ```
-     */
     isLaserRotationEvent(environment?: EnvironmentAllName): this is EventLaser {
-        switch (environment) {
-            case 'LizzoEnvironment':
-                return false;
-            default:
-                return this.type === 12 || this.type === 13;
-        }
+        return super.isLaserRotationEvent(environment);
     }
 
-    /** Check if  this is a lane rotation event.
-     * ```ts
-     * if (event.isLaneRotationEvent()) {}
-     * ```
-     */
     isLaneRotationEvent(environment?: EnvironmentAllName): this is EventLaneRotation {
-        return this.type === 14 || this.type === 15;
+        return super.isLaneRotationEvent(environment);
     }
 
-    /** Check if  this is a extra event.
-     * ```ts
-     * if (event.isExtraEvent()) {}
-     * ```
-     */
-    isExtraEvent(environment?: EnvironmentAllName): boolean {
-        return this.type === 16 || this.type === 17 || this.type === 18 || this.type === 19;
-    }
-
-    /** Check if  this is a special event.
-     * ```ts
-     * if (event.isSpecialEvent()) {}
-     * ```
-     */
-    isSpecialEvent(environment?: EnvironmentAllName): boolean {
-        return this.type === 40 || this.type === 41 || this.type === 42 || this.type === 43;
-    }
-
-    /** Check if  this is a BPM change event.
-     * ```ts
-     * if (event.isBPMChangeEvent()) {}
-     * ```
-     */
-    isBPMChangeEvent(): boolean {
-        return this.type === 100;
-    }
-
-    /** Not to be confused with isLightEvent, this checks for event that affects the environment/lighting.
-     * ```ts
-     * if (event.isLightingEvent()) {}
-     * ```
-     */
-    isLightingEvent(): boolean {
-        return this.isLightEvent() || this.isRingEvent() || this.isLaserRotationEvent() || this.isExtraEvent();
-    }
-
-    /** Check if event has Chroma properties.
-     * ```ts
-     * if (event.hasChroma()) {}
-     * ```
-     */
     // holy shit i hate type guard
-    hasChroma(): boolean {
+    isChroma(): boolean {
         if (this.isLightEvent()) {
             return (
                 Array.isArray(this.customData._color) ||
@@ -388,44 +161,12 @@ export class Event extends BeatmapObject<IEvent> {
         return false;
     }
 
-    /** Check if event has old Chroma properties.
-     * ```ts
-     * if (event.hasOldChroma()) {}
-     * ```
-     */
-    hasOldChroma(): boolean {
-        return this.value >= 2000000000;
-    }
-
-    /** Check if event has Noodle Extensions properties.
-     * ```ts
-     * if (event.hasNoodleExtensions()) {}
-     * ```
-     */
-    hasNoodleExtensions(): boolean {
+    isNoodleExtensions(): boolean {
         return this.isLaneRotationEvent() && typeof this.customData._rotation === 'number';
     }
 
-    /** Check if event has Mapping Extensions properties.
-     * ```ts
-     * if (event.hasMappingExtensions()) {}
-     * ```
-     */
-    hasMappingExtensions(): boolean {
+    isMappingExtensions(): boolean {
         return this.isLaneRotationEvent() && this.value >= 1000 && this.value <= 1720;
-    }
-
-    /** Check if  this is a valid, vanilla event.
-     * ```ts
-     * if (event.isValid()) {}
-     * ```
-     */
-    isValid(): boolean {
-        return (
-            this.isValidType() &&
-            this.value >= 0 &&
-            !(!this.isLaserRotationEvent() && this.value > 12 && !this.hasOldChroma())
-        );
     }
 }
 

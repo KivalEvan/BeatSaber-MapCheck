@@ -1,14 +1,13 @@
-import { BaseSlider } from './baseSlider';
-import { LINE_COUNT, NoteDirectionAngle } from '../shared/constants';
 import { ISlider } from '../../types/beatmap/v3/slider';
 import { ObjectReturnFn } from '../../types/utils';
 import { deepCopy } from '../../utils/misc';
+import { WrapSlider } from '../wrapper/slider';
 
 /** Slider beatmap v3 class object.
  *
  * Also known as arc.
  */
-export class Slider extends BaseSlider<ISlider> {
+export class Slider extends WrapSlider<Required<ISlider>> {
     static default: ObjectReturnFn<Required<ISlider>> = {
         b: 0,
         c: 0,
@@ -94,14 +93,41 @@ export class Slider extends BaseSlider<ISlider> {
         };
     }
 
-    /** Head control point length multiplier `<float>` of slider.
-     * ```ts
-     * 0 -> Flat Start
-     * 1 -> Curved Start
-     * ```
-     * ---
-     * Range: `0-1`
-     */
+    get time() {
+        return this.data.b;
+    }
+    set time(value: ISlider['b']) {
+        this.data.b = value;
+    }
+
+    get posX() {
+        return this.data.x;
+    }
+    set posX(value: ISlider['x']) {
+        this.data.x = value;
+    }
+
+    get posY() {
+        return this.data.y;
+    }
+    set posY(value: ISlider['y']) {
+        this.data.y = value;
+    }
+
+    get color() {
+        return this.data.c;
+    }
+    set color(value: ISlider['c']) {
+        this.data.c = value;
+    }
+
+    get direction() {
+        return this.data.d;
+    }
+    set direction(value: ISlider['d']) {
+        this.data.d = value;
+    }
+
     get lengthMultiplier() {
         return this.data.mu;
     }
@@ -109,32 +135,27 @@ export class Slider extends BaseSlider<ISlider> {
         this.data.mu = value;
     }
 
-    /** Tail control point length multiplier `<float>` of slider.
-     * ```ts
-     * 0 -> Flat End
-     * 1 -> Curved End
-     * ```
-     * ---
-     * Range: `0-1`
-     */
-    get tailLengthMultiplier() {
-        return this.data.tmu;
+    get tailTime() {
+        return this.data.tb;
     }
-    set tailLengthMultiplier(value: ISlider['tmu']) {
-        this.data.tmu = value;
+    set tailTime(value: ISlider['tb']) {
+        this.data.tb = value;
     }
 
-    /** Tail cut direction `<int>` of slider.
-     * ```ts
-     * 4 | 0 | 5
-     * 2 | 8 | 3
-     * 6 | 1 | 7
-     * ```
-     * ---
-     * Grid represents cut direction from center.
-     *
-     * **WARNING:** Dot-directional is not recommended, assumes down-directional.
-     */
+    get tailPosX() {
+        return this.data.tx;
+    }
+    set tailPosX(value: ISlider['tx']) {
+        this.data.tx = value;
+    }
+
+    get tailPosY() {
+        return this.data.ty;
+    }
+    set tailPosY(value: ISlider['ty']) {
+        this.data.ty = value;
+    }
+
     get tailDirection() {
         return this.data.tc;
     }
@@ -142,13 +163,13 @@ export class Slider extends BaseSlider<ISlider> {
         this.data.tc = value;
     }
 
-    /** Mid anchor mode `<int>` of slider.
-     * ```ts
-     * 0 -> Straight
-     * 1 -> Clockwise
-     * 2 -> Counter-Clockwise
-     * ```
-     */
+    get tailLengthMultiplier() {
+        return this.data.tmu;
+    }
+    set tailLengthMultiplier(value: ISlider['tmu']) {
+        this.data.tmu = value;
+    }
+
     get midAnchor() {
         return this.data.m;
     }
@@ -156,20 +177,19 @@ export class Slider extends BaseSlider<ISlider> {
         this.data.m = value;
     }
 
-    setLengthMultiplier(value: ISlider['mu']) {
-        this.lengthMultiplier = value;
+    get customData(): NonNullable<ISlider['customData']> {
+        return this.data.customData;
+    }
+    set customData(value: NonNullable<ISlider['customData']>) {
+        this.data.customData = value;
+    }
+
+    setCustomData(value: NonNullable<ISlider['customData']>): this {
+        this.customData = value;
         return this;
     }
-    setTailLengthMultiplier(value: ISlider['tmu']) {
-        this.tailLengthMultiplier = value;
-        return this;
-    }
-    setTailDirection(value: ISlider['tc']) {
-        this.tailDirection = value;
-        return this;
-    }
-    setMidAnchor(value: ISlider['m']) {
-        this.midAnchor = value;
+    addCustomData(object: ISlider['customData']): this {
+        this.customData = { ...this.customData, object };
         return this;
     }
 
@@ -192,111 +212,21 @@ export class Slider extends BaseSlider<ISlider> {
                 });
             }
         }
-        this.posX = LINE_COUNT - 1 - this.posX;
-        this.tailPosX = LINE_COUNT - 1 - this.tailPosX;
-        if (flipColor) {
-            this.color = ((1 + this.color) % 2) as typeof this.color;
-        }
-        switch (this.direction) {
-            case 2:
-                this.direction = 3;
-                break;
-            case 3:
-                this.direction = 2;
-                break;
-            case 6:
-                this.direction = 7;
-                break;
-            case 7:
-                this.direction = 6;
-                break;
-            case 4:
-                this.direction = 5;
-                break;
-            case 5:
-                this.direction = 4;
-                break;
-        }
-        switch (this.tailDirection) {
-            case 2:
-                this.tailDirection = 3;
-                break;
-            case 3:
-                this.tailDirection = 2;
-                break;
-            case 6:
-                this.tailDirection = 7;
-                break;
-            case 7:
-                this.tailDirection = 6;
-                break;
-            case 4:
-                this.tailDirection = 5;
-                break;
-            case 5:
-                this.tailDirection = 4;
-                break;
-        }
-        if (this.midAnchor) {
-            this.midAnchor = this.midAnchor === 1 ? 2 : 1;
-        }
-        return this;
+        return super.mirror(flipColor);
     }
 
-    /** Get arc and return standardised tail note angle.
-     * ```ts
-     * const arcTailAngle = arc.getTailAngle();
-     * ```
-     */
-    getTailAngle(type?: 'vanilla' | 'me' | 'ne') {
+    getTailPosition(type?: 'vanilla' | 'me' | 'ne'): [number, number] {
         switch (type) {
-            case 'vanilla':
-                return NoteDirectionAngle[this.tailDirection as keyof typeof NoteDirectionAngle] || 0;
-            case 'me':
-                if (this.tailDirection >= 1000) {
-                    return Math.abs(((this.tailDirection % 1000) % 360) - 360);
-                }
-            /* falls through */
             case 'ne':
-                return NoteDirectionAngle[this.tailDirection as keyof typeof NoteDirectionAngle] || 0;
-            default:
-                if (this.tailDirection >= 1000) {
-                    return Math.abs(((this.tailDirection % 1000) % 360) - 360);
+                if (this.customData.tailCoordinates) {
+                    return [this.customData.tailCoordinates[0], this.customData.tailCoordinates[1]];
                 }
-                return NoteDirectionAngle[this.tailDirection as keyof typeof NoteDirectionAngle] || 0;
+                return [this.tailPosX, this.tailPosY];
+            default:
+                if (this.customData.tailCoordinates) {
+                    return [this.customData.tailCoordinates[0], this.customData.tailCoordinates[1]];
+                }
+                return super.getTailPosition(type);
         }
-    }
-
-    /** Check if slider has Mapping Extensions properties.
-     * ```ts
-     * if (slider.hasMappingExtensions()) {}
-     * ```
-     */
-    hasMappingExtensions() {
-        return (
-            this.posY > 2 ||
-            this.posY < 0 ||
-            this.posX <= -1000 ||
-            this.posX >= 1000 ||
-            (this.direction >= 1000 && this.direction <= 1360) ||
-            (this.tailDirection >= 1000 && this.tailDirection <= 1360)
-        );
-    }
-
-    /** Check if slider is a valid & vanilla.
-     * ```ts
-     * if (slider.isValid()) {}
-     * ```
-     */
-    isValid() {
-        return !(
-            this.hasMappingExtensions() ||
-            this.isInverse() ||
-            this.posX < 0 ||
-            this.posX > 3 ||
-            this.tailPosX < 0 ||
-            this.tailPosX > 3 ||
-            (this.posX === this.tailPosX && this.posY === this.tailPosY && this.time === this.tailTime)
-        );
     }
 }

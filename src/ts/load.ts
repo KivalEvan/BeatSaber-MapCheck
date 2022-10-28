@@ -1,5 +1,5 @@
 import JSZip from 'jszip';
-import * as swing from './analyzers/swing';
+import * as swing from './analyzers/swing/mod';
 import { BeatPerMinute } from './beatmap/shared/bpm';
 import { V2toV3 } from './converter';
 import {

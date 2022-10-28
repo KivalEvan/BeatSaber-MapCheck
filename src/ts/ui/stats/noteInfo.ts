@@ -1,7 +1,7 @@
 import { formatNumber, round } from '../../utils';
 import { IInfo } from '../../types/beatmap/shared/info';
 import { IBeatmapItem } from '../../types/mapcheck';
-import * as swing from '../../analyzers/swing';
+import * as swing from '../../analyzers/swing/mod';
 import * as score from '../../analyzers/score';
 import { prefix } from './constants';
 import { countNote } from '../../analyzers/stats/note';

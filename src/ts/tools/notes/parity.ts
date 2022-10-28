@@ -2,7 +2,7 @@ import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/map
 import UISelect from '../../ui/helpers/select';
 import Parity from '../../analyzers/parity/parity';
 import swing from '../../analyzers/swing/swing';
-import { NoteContainer, NoteContainerBomb } from '../../types/beatmap/v3/container';
+import { NoteContainer, NoteContainerBomb } from '../../types/beatmap/wrapper/container';
 import { printResultTime } from '../helpers';
 import UICheckbox from '../../ui/helpers/checkbox';
 import { NoteColor } from '../../beatmap/shared/constants';

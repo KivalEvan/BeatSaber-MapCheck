@@ -1,6 +1,7 @@
+import { IBaseItem } from './baseItem';
 import { IIndexFilter } from './indexFilter';
 
-export interface IEventBox {
+export interface IEventBox extends IBaseItem {
     /** Index filter of event box. */
     f: IIndexFilter;
     /** Beat distribution `<float>` of event box. */

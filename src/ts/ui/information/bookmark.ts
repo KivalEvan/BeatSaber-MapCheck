@@ -13,7 +13,7 @@ export function setBookmarks(arr?: IBookmark[], bpm?: BeatPerMinute | null): voi
     }
     const panel = UIPanel.create('max', 'none', true);
     arr.forEach((elem, i) => {
-        let time = elem._time;
+        let time = elem.b;
         let rt!: number;
         const container = document.createElement('div');
         const colorContainer = document.createElement('div');
@@ -25,7 +25,7 @@ export function setBookmarks(arr?: IBookmark[], bpm?: BeatPerMinute | null): voi
         colorContainer.style.backgroundColor = '#000000';
         textContainer.className = 'info__color-text';
 
-        if (typeof elem._name !== 'string') {
+        if (typeof elem.n !== 'string') {
             textContainer.textContent = `Error parsing bookmarks[${i}]`;
             panel.appendChild(container);
         }
@@ -33,12 +33,12 @@ export function setBookmarks(arr?: IBookmark[], bpm?: BeatPerMinute | null): voi
             time = bpm.adjustTime(time);
             rt = bpm.toRealTime(time);
         }
-        colorContainer.style.backgroundColor = elem._color
-            ? RGBAtoHex({ r: elem._color[0], g: elem._color[1], b: elem._color[2] })
+        colorContainer.style.backgroundColor = elem.c
+            ? RGBAtoHex({ r: elem.c[0], g: elem.c[1], b: elem.c[2] })
             : '#333333';
 
-        textContainer.textContent = `${round(elem._time, Settings.rounding)}${rt ? ' | ' + toMMSS(rt) : ''} -- ${
-            elem._name != '' ? elem._name : '**EMPTY NAME**'
+        textContainer.textContent = `${round(elem.b, Settings.rounding)}${rt ? ' | ' + toMMSS(rt) : ''} -- ${
+            elem.n != '' ? elem.n : '**EMPTY NAME**'
         }`;
 
         panel.appendChild(container);

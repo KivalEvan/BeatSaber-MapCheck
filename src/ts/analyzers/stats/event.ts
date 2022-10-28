@@ -2,7 +2,7 @@ import { EventList } from '../../beatmap/shared/environment';
 import { BasicEvent } from '../../beatmap/v3/basicEvent';
 import { ColorBoostEvent } from '../../beatmap/v3/colorBoostEvent';
 import { EnvironmentAllName } from '../../types/beatmap/shared/environment';
-import { ICountEvent } from '../../types/mapcheck/analyzers/stats';
+import { ICountEvent } from './types/stats';
 
 /** Count number of type of events with their properties in given array and return a event count object.
  * ```ts
@@ -41,10 +41,10 @@ export function countEvent(
                 };
             }
             eventCount[events[i].type].total++;
-            if (events[i].hasChroma()) {
+            if (events[i].isChroma()) {
                 eventCount[events[i].type].chroma++;
             }
-            if (events[i].hasOldChroma()) {
+            if (events[i].isOldChroma()) {
                 eventCount[events[i].type].chromaOld++;
             }
         }

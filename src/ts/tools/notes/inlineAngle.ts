@@ -1,6 +1,6 @@
 import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import { round } from '../../utils';
-import { NoteContainer } from '../../types/beatmap/v3/container';
+import { NoteContainer } from '../../types/beatmap/wrapper/container';
 import { checkDirection } from '../../analyzers/placement/note';
 import swing from '../../analyzers/swing/swing';
 import { ColorNote } from '../../beatmap/v3/colorNote';
@@ -8,6 +8,7 @@ import { printResultTime } from '../helpers';
 import UICheckbox from '../../ui/helpers/checkbox';
 import { BeatPerMinute } from '../../beatmap/shared/bpm';
 import { NoteColor, NoteDirectionAngle, NoteDirection, PositionX, PositionY } from '../../beatmap/shared/constants';
+import { IWrapColorNote } from '../../types/beatmap/wrapper/colorNote';
 
 const name = 'Inline Sharp Angle';
 const description = 'Check for angle changes within inline note.';
@@ -103,12 +104,12 @@ function check(map: ToolArgs) {
 
     const lastNote: { [key: number]: NoteContainer } = {};
     const lastNoteAngle: { [key: number]: number } = {};
-    const startNoteDot: { [key: number]: ColorNote | null } = {};
+    const startNoteDot: { [key: number]: IWrapColorNote | null } = {};
     const swingNoteArray: { [key: number]: NoteContainer[] } = {
         [NoteColor.RED]: [],
         [NoteColor.BLUE]: [],
     };
-    const arr: ColorNote[] = [];
+    const arr: IWrapColorNote[] = [];
     let lastTime = 0;
     let lastIndex = 0;
     for (let i = 0, len = noteContainer.length; i < len; i++) {
@@ -187,7 +188,7 @@ function check(map: ToolArgs) {
         });
 }
 
-function checkInline(n: ColorNote, notes: NoteContainer[], index: number, maxTime: number) {
+function checkInline(n: IWrapColorNote, notes: NoteContainer[], index: number, maxTime: number) {
     for (let i = index; notes[i].data.time < n.time; i++) {
         const note = notes[i];
         if (note.type !== 'note') {

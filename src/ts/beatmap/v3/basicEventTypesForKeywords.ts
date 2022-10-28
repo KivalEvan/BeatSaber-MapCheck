@@ -1,12 +1,12 @@
 import { IBasicEventTypesForKeywords } from '../../types/beatmap/v3/basicEventTypesForKeywords';
 import { ObjectReturnFn } from '../../types/utils';
-import { Serializable } from '../shared/serializable';
+import { WrapEventTypesForKeywords } from '../wrapper/eventTypesForKeywords';
 
 /** Basic event types for keywords beatmap v3 class object.
  *
  * Used in basic event types with keywords.
  */
-export class BasicEventTypesForKeywords extends Serializable<IBasicEventTypesForKeywords> {
+export class BasicEventTypesForKeywords extends WrapEventTypesForKeywords<Required<IBasicEventTypesForKeywords>> {
     static default: ObjectReturnFn<Required<IBasicEventTypesForKeywords>> = {
         k: '',
         e: () => [],
@@ -46,7 +46,6 @@ export class BasicEventTypesForKeywords extends Serializable<IBasicEventTypesFor
         };
     }
 
-    /** Keyword `<string>` of basic event types for keywords. */
     get keyword() {
         return this.data.k;
     }
@@ -54,31 +53,10 @@ export class BasicEventTypesForKeywords extends Serializable<IBasicEventTypesFor
         this.data.k = value;
     }
 
-    /** Event type `<int[]>` of basic event types for keywords. */
     get events() {
         return this.data.e;
     }
     set events(value: IBasicEventTypesForKeywords['e']) {
         this.data.e = value;
-    }
-
-    setKeyword(value: IBasicEventTypesForKeywords['k']) {
-        this.keyword = value;
-        return this;
-    }
-    setEvents(value: IBasicEventTypesForKeywords['e']) {
-        this.events = value;
-        return this;
-    }
-    addEvent(value: number) {
-        this.events.push(value);
-        return this;
-    }
-    removeEvent(value: number) {
-        const index = this.events.indexOf(value, 0);
-        if (index > -1) {
-            this.events.splice(index, 1);
-        }
-        return this;
     }
 }

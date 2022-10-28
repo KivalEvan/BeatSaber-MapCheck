@@ -1,10 +1,10 @@
 import { IRotationEvent } from '../../types/beatmap/v3/rotationEvent';
 import { ObjectReturnFn } from '../../types/utils';
-import { BaseObject } from './baseObject';
 import { deepCopy } from '../../utils/misc';
+import { WrapRotationEvent } from '../wrapper/rotationEvent';
 
 /** Rotation event beatmap v3 class object. */
-export class RotationEvent extends BaseObject<IRotationEvent> {
+export class RotationEvent extends WrapRotationEvent<Required<IRotationEvent>> {
     static default: ObjectReturnFn<Required<IRotationEvent>> = {
         b: 0,
         e: 0,
@@ -54,12 +54,13 @@ export class RotationEvent extends BaseObject<IRotationEvent> {
         };
     }
 
-    /** Execution time `<int>` of rotation event.
-     * ```ts
-     * 0 -> Early
-     * 1 -> Late
-     * ```
-     */
+    get time() {
+        return this.data.b;
+    }
+    set time(value: IRotationEvent['b']) {
+        this.data.b = value;
+    }
+
     get executionTime() {
         return this.data.e;
     }
@@ -67,7 +68,6 @@ export class RotationEvent extends BaseObject<IRotationEvent> {
         this.data.e = value;
     }
 
-    /** Clockwise rotation value `<float>` of rotation event. */
     get rotation() {
         return this.data.r;
     }
@@ -75,12 +75,19 @@ export class RotationEvent extends BaseObject<IRotationEvent> {
         this.data.r = value;
     }
 
-    setExecutionTime(value: IRotationEvent['e']) {
-        this.executionTime = value;
+    get customData(): NonNullable<IRotationEvent['customData']> {
+        return this.data.customData;
+    }
+    set customData(value: NonNullable<IRotationEvent['customData']>) {
+        this.data.customData = value;
+    }
+
+    setCustomData(value: NonNullable<IRotationEvent['customData']>): this {
+        this.customData = value;
         return this;
     }
-    setRotation(value: IRotationEvent['r']) {
-        this.rotation = value;
+    addCustomData(object: IRotationEvent['customData']): this {
+        this.customData = { ...this.customData, object };
         return this;
     }
 }

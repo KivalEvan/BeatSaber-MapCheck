@@ -1,6 +1,6 @@
-import { IBaseNote } from './baseNote';
+import { IGridObject } from './gridObject';
 
-export interface IBaseSlider extends IBaseNote {
+export interface IBaseSlider extends IGridObject {
     /** Color type `<int>` of base slider.
      * ```ts
      * 0 -> Red

@@ -1,11 +1,12 @@
 import { ILightColorEventBox } from '../../types/beatmap/v3/lightColorEventBox';
 import { DeepPartial, ObjectReturnFn } from '../../types/utils';
-import { EventBox } from './eventBox';
+import { deepCopy } from '../../utils/misc';
+import { WrapLightColorEventBox } from '../wrapper/lightColorEventBox';
 import { IndexFilter } from './indexFilter';
 import { LightColorBase } from './lightColorBase';
 
 /** Light color event box beatmap v3 class object. */
-export class LightColorEventBox extends EventBox<ILightColorEventBox> {
+export class LightColorEventBox extends WrapLightColorEventBox<Required<ILightColorEventBox>> {
     static default: ObjectReturnFn<Required<ILightColorEventBox>> = {
         f: () => {
             return {
@@ -26,11 +27,16 @@ export class LightColorEventBox extends EventBox<ILightColorEventBox> {
         t: 1,
         b: 0,
         e: () => [],
+        customData: () => {
+            return {};
+        },
     };
 
+    private _f: IndexFilter;
     private _e: LightColorBase[];
     protected constructor(lightColorEventBox: Required<ILightColorEventBox>) {
         super(lightColorEventBox);
+        this._f = IndexFilter.create(lightColorEventBox.f);
         this._e = lightColorEventBox.e.map((e) => LightColorBase.create(e)[0]);
         const lastTime = Math.max(...this._e.map((e) => e.time));
         if (this.beatDistributionType === 2) {
@@ -52,6 +58,7 @@ export class LightColorEventBox extends EventBox<ILightColorEventBox> {
                     t: eb.t ?? LightColorEventBox.default.t,
                     b: eb.b ?? LightColorEventBox.default.b,
                     e: (eb as Required<ILightColorEventBox>).e ?? LightColorEventBox.default.e(),
+                    customData: eb.customData ?? LightColorEventBox.default.customData(),
                 }),
             ),
         );
@@ -67,11 +74,12 @@ export class LightColorEventBox extends EventBox<ILightColorEventBox> {
                 t: LightColorEventBox.default.t,
                 b: LightColorEventBox.default.b,
                 e: LightColorEventBox.default.e(),
+                customData: LightColorEventBox.default.customData(),
             }),
         ];
     }
 
-    toJSON(): ILightColorEventBox {
+    toJSON(): Required<ILightColorEventBox> {
         return {
             f: this.filter.toJSON(),
             w: this.beatDistribution,
@@ -80,13 +88,31 @@ export class LightColorEventBox extends EventBox<ILightColorEventBox> {
             t: this.brightnessDistributionType,
             b: this.affectFirst,
             e: this.events.map((e) => e.toJSON()),
+            customData: deepCopy(this.customData),
         };
     }
 
-    /** Brightness distribution `<float>` of light color event box.
-     *
-     * Range: `0-1` (0% to 100%), can be more than 1.
-     */
+    get filter() {
+        return this._f;
+    }
+    set filter(value: IndexFilter) {
+        this._f = value;
+    }
+
+    get beatDistribution() {
+        return this.data.w;
+    }
+    set beatDistribution(value: ILightColorEventBox['w']) {
+        this.data.w = value;
+    }
+
+    get beatDistributionType() {
+        return this.data.d;
+    }
+    set beatDistributionType(value: ILightColorEventBox['d']) {
+        this.data.d = value;
+    }
+
     get brightnessDistribution() {
         return this.data.r;
     }
@@ -94,12 +120,6 @@ export class LightColorEventBox extends EventBox<ILightColorEventBox> {
         this.data.r = value;
     }
 
-    /** Brightness distribution type `<int>` of light color event box.
-     * ```ts
-     * 1 -> Wave // adds up to last ID.
-     * 2 -> Step // adds to consequent ID.
-     * ```
-     */
     get brightnessDistributionType() {
         return this.data.t;
     }
@@ -107,7 +127,6 @@ export class LightColorEventBox extends EventBox<ILightColorEventBox> {
         this.data.t = value;
     }
 
-    /** Brigthness distribution should affect first event `<int>` of light color event box. */
     get affectFirst(): ILightColorEventBox['b'] {
         return this.data.b;
     }
@@ -115,11 +134,31 @@ export class LightColorEventBox extends EventBox<ILightColorEventBox> {
         this.data.b = value ? 1 : 0;
     }
 
-    /** Light color base data list. */
     get events() {
         return this._e;
     }
     set events(value: LightColorBase[]) {
         this._e = value;
+    }
+
+    get customData(): NonNullable<ILightColorEventBox['customData']> {
+        return this.data.customData;
+    }
+    set customData(value: NonNullable<ILightColorEventBox['customData']>) {
+        this.data.customData = value;
+    }
+
+    setCustomData(value: NonNullable<ILightColorEventBox['customData']>): this {
+        this.customData = value;
+        return this;
+    }
+    addCustomData(object: ILightColorEventBox['customData']): this {
+        this.customData = { ...this.customData, object };
+        return this;
+    }
+
+    setEvents(value: LightColorBase[]): this {
+        this.events = value;
+        return this;
     }
 }
