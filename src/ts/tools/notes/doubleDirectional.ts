@@ -1,11 +1,12 @@
 import { IBeatmapItem, IBeatmapSettings, Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
-import { NoteContainer } from '../../types/beatmap/v3/container';
+import { NoteContainer } from '../../types/beatmap/wrapper/container';
 import { checkDirection } from '../../analyzers/placement/note';
 import swing from '../../analyzers/swing/swing';
 import UICheckbox from '../../ui/helpers/checkbox';
 import { printResultTime } from '../helpers';
 import { NoteColor, NoteDirectionAngle, NoteDirection, PositionX, PositionY } from '../../beatmap/shared/constants';
 import { ColorNote } from '../../beatmap/v3/colorNote';
+import { IWrapColorNote } from '../../types/beatmap/wrapper/colorNote';
 
 const name = 'Double-directional';
 const description = 'Check double-directional note swing (this may not mean parity break).';
@@ -37,13 +38,13 @@ function check(settings: IBeatmapSettings, difficulty: IBeatmapItem) {
     const noteContainer = difficulty.noteContainer;
     const lastNote: { [key: number]: NoteContainer } = {};
     const lastNoteAngle: { [key: number]: number } = {};
-    const startNoteDot: { [key: number]: ColorNote | null } = {};
+    const startNoteDot: { [key: number]: IWrapColorNote | null } = {};
     const swingNoteArray: { [key: number]: NoteContainer[] } = {
         [NoteColor.RED]: [],
         [NoteColor.BLUE]: [],
     };
 
-    const arr: ColorNote[] = [];
+    const arr: IWrapColorNote[] = [];
     for (let i = 0, len = noteContainer.length; i < len; i++) {
         const note = noteContainer[i];
         if (note.type === 'note' && lastNote[note.data.color]) {

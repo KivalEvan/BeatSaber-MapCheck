@@ -1,19 +1,18 @@
-import { ISpecialEventsKeywordFiltersKeywords } from '../../types/beatmap/v2/specialEventsKeywordFiltersKeywords';
 import { ISpecialEventsKeywordFilters } from '../../types/beatmap/v2/specialEventsKeywordFilters';
 import { ObjectReturnFn } from '../../types/utils';
-import { Serializable } from '../shared/serializable';
 import { SpecialEventsKeywordFiltersKeywords } from './specialEventsKeywordFiltersKeywords';
+import { WrapEventTypesWithKeywords } from '../wrapper/eventTypesWithKeywords';
 
 /** Special event types with keywords beatmap v2 class object. */
-export class SpecialEventsKeywordFilters extends Serializable<ISpecialEventsKeywordFilters> {
+export class SpecialEventsKeywordFilters extends WrapEventTypesWithKeywords<Required<ISpecialEventsKeywordFilters>> {
     static default: ObjectReturnFn<Required<ISpecialEventsKeywordFilters>> = {
         _keywords: () => [],
     };
 
-    keywords: SpecialEventsKeywordFiltersKeywords[];
+    private _d: SpecialEventsKeywordFiltersKeywords[];
     protected constructor(specialEventsWithKeywords: Required<ISpecialEventsKeywordFilters>) {
         super(specialEventsWithKeywords);
-        this.keywords = specialEventsWithKeywords._keywords.map(
+        this._d = specialEventsWithKeywords._keywords.map(
             (d) =>
                 SpecialEventsKeywordFiltersKeywords.create({
                     _keyword: d._keyword,
@@ -30,21 +29,19 @@ export class SpecialEventsKeywordFilters extends Serializable<ISpecialEventsKeyw
 
     toJSON(): ISpecialEventsKeywordFilters {
         return {
-            _keywords: this.keywords.map((d) => d.toJSON()),
+            _keywords: this._d.map((d) => d.toJSON()),
         };
     }
 
-    /** Data list of basic event types with keywords. */
-    setKeyword(value: SpecialEventsKeywordFiltersKeywords[]) {
-        this.keywords = value;
-        return this;
+    get list() {
+        return this._d;
     }
-    addKeyword(value: ISpecialEventsKeywordFiltersKeywords) {
-        this.keywords.push(SpecialEventsKeywordFiltersKeywords.create(value)[0]);
-        return this;
+    set list(value: SpecialEventsKeywordFiltersKeywords[]) {
+        this._d = value;
     }
-    removeKeyword(value: string) {
-        this.keywords = this.keywords.filter((d) => d.keyword !== value);
+
+    addData(value: SpecialEventsKeywordFiltersKeywords) {
+        this._d.push(value);
         return this;
     }
 }

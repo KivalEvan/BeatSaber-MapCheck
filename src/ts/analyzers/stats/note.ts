@@ -1,9 +1,8 @@
-import { BombNote } from '../../beatmap/v3/bombNote';
-import { BaseSlider } from '../../beatmap/v3/baseSlider';
-import { ColorNote } from '../../beatmap/v3/colorNote';
-import { IBaseSlider } from '../../types/beatmap/v3/baseSlider';
-import { NoteContainer } from '../../types/beatmap/v3/container';
-import { ICountNote, ICountStatsNote } from '../../types/mapcheck/analyzers/stats';
+import { IWrapBombNote } from '../../types/beatmap/wrapper/bombNote';
+import { IWrapColorNote } from '../../types/beatmap/wrapper/colorNote';
+import { IWrapBaseSlider } from '../../types/beatmap/wrapper/baseSlider';
+import { NoteContainer } from '../../types/beatmap/wrapper/container';
+import { ICountNote, ICountStatsNote } from './types/stats';
 
 /** Count number of red, blue, and bomb notes with their properties in given array and return a note count object.
  * ```ts
@@ -11,7 +10,7 @@ import { ICountNote, ICountStatsNote } from '../../types/mapcheck/analyzers/stat
  * console.log(list);
  * ```
  */
-export function countNote(notes: (ColorNote | BaseSlider<IBaseSlider>)[]): ICountNote {
+export function countNote(notes: (IWrapColorNote | IWrapBaseSlider)[]): ICountNote {
     const noteCount: ICountNote = {
         red: {
             total: 0,
@@ -29,24 +28,24 @@ export function countNote(notes: (ColorNote | BaseSlider<IBaseSlider>)[]): ICoun
     for (let i = notes.length - 1; i >= 0; i--) {
         if (notes[i].color === 0) {
             noteCount.red.total++;
-            if (notes[i].hasChroma()) {
+            if (notes[i].isChroma()) {
                 noteCount.red.chroma++;
             }
-            if (notes[i].hasNoodleExtensions()) {
+            if (notes[i].isNoodleExtensions()) {
                 noteCount.red.noodleExtensions++;
             }
-            if (notes[i].hasMappingExtensions()) {
+            if (notes[i].isMappingExtensions()) {
                 noteCount.red.mappingExtensions++;
             }
         } else if (notes[i].color === 1) {
             noteCount.blue.total++;
-            if (notes[i].hasChroma()) {
+            if (notes[i].isChroma()) {
                 noteCount.blue.chroma++;
             }
-            if (notes[i].hasNoodleExtensions()) {
+            if (notes[i].isNoodleExtensions()) {
                 noteCount.blue.noodleExtensions++;
             }
-            if (notes[i].hasMappingExtensions()) {
+            if (notes[i].isMappingExtensions()) {
                 noteCount.blue.mappingExtensions++;
             }
         }
@@ -54,7 +53,7 @@ export function countNote(notes: (ColorNote | BaseSlider<IBaseSlider>)[]): ICoun
     return noteCount;
 }
 
-export function countBomb(bombs: BombNote[]): ICountStatsNote {
+export function countBomb(bombs: IWrapBombNote[]): ICountStatsNote {
     const bombCount: ICountStatsNote = {
         total: 0,
         chroma: 0,
@@ -63,13 +62,13 @@ export function countBomb(bombs: BombNote[]): ICountStatsNote {
     };
     for (let i = bombs.length - 1; i >= 0; i--) {
         bombCount.total++;
-        if (bombs[i].hasChroma()) {
+        if (bombs[i].isChroma()) {
             bombCount.chroma++;
         }
-        if (bombs[i].hasNoodleExtensions()) {
+        if (bombs[i].isNoodleExtensions()) {
             bombCount.noodleExtensions++;
         }
-        if (bombs[i].hasMappingExtensions()) {
+        if (bombs[i].isMappingExtensions()) {
             bombCount.mappingExtensions++;
         }
     }
@@ -126,7 +125,7 @@ export function countAngle(notes: NoteContainer[], angle: number): number {
  * const nps = nps(notes, 10);
  * ```
  */
-export function nps(notes: ColorNote[], duration: number): number {
+export function nps(notes: IWrapColorNote[], duration: number): number {
     return duration ? notes.length / duration : 0;
 }
 
@@ -135,7 +134,7 @@ export function nps(notes: ColorNote[], duration: number): number {
  * const peakNPS = peak(notes, 10, BPM ?? 128);
  * ```
  */
-export function peak(notes: ColorNote[], beat: number, bpm: number): number {
+export function peak(notes: IWrapColorNote[], beat: number, bpm: number): number {
     let peakNPS = 0;
     let currentSectionStart = 0;
 

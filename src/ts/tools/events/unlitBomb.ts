@@ -150,7 +150,7 @@ function run(map: ToolArgs) {
     }
     const result = unlitBomb(
         map.difficulty.data.bombNotes,
-        map.difficulty.data.basicBeatmapEvents,
+        map.difficulty.data.basicEvents,
         map.settings.bpm,
         map.info._environmentName,
     );

@@ -1,12 +1,10 @@
-import { IBaseNote } from '../../types/beatmap/v3/baseNote';
 import { IBombNote } from '../../types/beatmap/v3/bombNote';
-import { ObjectReturnFn } from '../../types/utils';
-import { LINE_COUNT } from '../shared/constants';
-import { BaseNote } from './baseNote';
 import { deepCopy } from '../../utils/misc';
+import { ObjectReturnFn } from '../../types/utils';
+import { WrapBombNote } from '../wrapper/bombNote';
 
 /** Bomb note beatmap v3 class object. */
-export class BombNote extends BaseNote<IBombNote> {
+export class BombNote extends WrapBombNote<Required<IBombNote>> {
     static default: ObjectReturnFn<Required<IBombNote>> = {
         b: 0,
         x: 0,
@@ -56,6 +54,43 @@ export class BombNote extends BaseNote<IBombNote> {
         };
     }
 
+    get time() {
+        return this.data.b;
+    }
+    set time(value: IBombNote['b']) {
+        this.data.b = value;
+    }
+
+    get posX() {
+        return this.data.x;
+    }
+    set posX(value: IBombNote['x']) {
+        this.data.x = value;
+    }
+
+    get posY() {
+        return this.data.y;
+    }
+    set posY(value: IBombNote['y']) {
+        this.data.y = value;
+    }
+
+    get customData(): NonNullable<IBombNote['customData']> {
+        return this.data.customData;
+    }
+    set customData(value: NonNullable<IBombNote['customData']>) {
+        this.data.customData = value;
+    }
+
+    setCustomData(value: NonNullable<IBombNote['customData']>): this {
+        this.customData = value;
+        return this;
+    }
+    addCustomData(object: IBombNote['customData']): this {
+        this.customData = { ...this.customData, object };
+        return this;
+    }
+
     mirror() {
         if (this.customData.coordinates) {
             this.customData.coordinates[0] = -1 - this.customData.coordinates[0];
@@ -75,76 +110,15 @@ export class BombNote extends BaseNote<IBombNote> {
                 });
             }
         }
-        this.posX = LINE_COUNT - 1 - this.posX;
-        return this;
+        return super.mirror();
     }
 
-    getDistance(compareTo: BaseNote<IBaseNote>) {
-        const [nX1, nY1] = this.getPosition();
-        const [nX2, nY2] = compareTo.getPosition();
-        return Math.sqrt(Math.pow(nX2 - nX1, 2) + Math.pow(nY2 - nY1, 2));
-    }
-
-    isVertical(compareTo: BaseNote<IBaseNote>) {
-        const [nX1] = this.getPosition();
-        const [nX2] = compareTo.getPosition();
-        const d = nX1 - nX2;
-        return d > -0.001 && d < 0.001;
-    }
-
-    isHorizontal(compareTo: BaseNote<IBaseNote>) {
-        const [_, nY1] = this.getPosition();
-        const [_2, nY2] = compareTo.getPosition();
-        const d = nY1 - nY2;
-        return d > -0.001 && d < 0.001;
-    }
-
-    isDiagonal(compareTo: BaseNote<IBaseNote>) {
-        const [nX1, nY1] = this.getPosition();
-        const [nX2, nY2] = compareTo.getPosition();
-        const dX = Math.abs(nX1 - nX2);
-        const dY = Math.abs(nY1 - nY2);
-        return dX === dY;
-    }
-
-    isInline(compareTo: BaseNote<IBaseNote>, lapping = 0.5) {
-        return this.getDistance(compareTo) <= lapping;
-    }
-
-    isAdjacent(compareTo: BaseNote<IBaseNote>) {
-        const d = this.getDistance(compareTo);
-        return d > 0.499 && d < 1.001;
-    }
-
-    isWindow(compareTo: BaseNote<IBaseNote>, distance = 1.8) {
-        return this.getDistance(compareTo) > distance;
-    }
-
-    isSlantedWindow(compareTo: BaseNote<IBaseNote>) {
-        return (
-            this.isWindow(compareTo) &&
-            !this.isDiagonal(compareTo) &&
-            !this.isHorizontal(compareTo) &&
-            !this.isVertical(compareTo)
-        );
-    }
-
-    /** Check if note has Chroma properties.
-     * ```ts
-     * if (bomb.hasChroma()) {}
-     * ```
-     */
-    hasChroma = (): boolean => {
+    isChroma(): boolean {
         return Array.isArray(this.customData.color) || typeof this.customData.spawnEffect === 'boolean';
-    };
+    }
 
-    /** Check if note has Noodle Extensions properties.
-     * ```ts
-     * if (bomb.hasNoodleExtensions()) {}
-     * ```
-     */
     // god i hate these
-    hasNoodleExtensions = (): boolean => {
+    isNoodleExtensions(): boolean {
         return (
             Array.isArray(this.customData.animation) ||
             typeof this.customData.disableNoteGravity === 'boolean' ||
@@ -159,23 +133,5 @@ export class BombNote extends BaseNote<IBombNote> {
             typeof this.customData.worldRotation === 'number' ||
             typeof this.customData.track === 'string'
         );
-    };
-
-    /** Check if bomb has Mapping Extensions properties.
-     * ```ts
-     * if (bomb.hasMappingExtensions()) {}
-     * ```
-     */
-    hasMappingExtensions() {
-        return this.posX > 3 || this.posX < 0 || this.posY > 2 || this.posY < 0;
-    }
-
-    /** Check if bomb is valid & vanilla.
-     * ```ts
-     * if (bomb.isValid()) {}
-     * ```
-     */
-    isValid() {
-        return !this.hasMappingExtensions();
     }
 }

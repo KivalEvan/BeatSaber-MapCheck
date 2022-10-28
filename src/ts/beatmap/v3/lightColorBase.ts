@@ -1,10 +1,10 @@
 import { ILightColorBase } from '../../types/beatmap/v3/lightColorBase';
 import { ObjectReturnFn } from '../../types/utils';
 import { deepCopy } from '../../utils/misc';
-import { Serializable } from '../shared/serializable';
+import { WrapLightColorBase } from '../wrapper/lightColorBase';
 
 /** Light color base beatmap v3 class object. */
-export class LightColorBase extends Serializable<ILightColorBase> {
+export class LightColorBase extends WrapLightColorBase<Required<ILightColorBase>> {
     static default: ObjectReturnFn<Required<ILightColorBase>> = {
         b: 0,
         i: 0,
@@ -62,7 +62,6 @@ export class LightColorBase extends Serializable<ILightColorBase> {
         };
     }
 
-    /** Relative beat time `<float>` to event box group. */
     get time() {
         return this.data.b;
     }
@@ -70,13 +69,6 @@ export class LightColorBase extends Serializable<ILightColorBase> {
         this.data.b = value;
     }
 
-    /** Transition type `<int>` of base light color.
-     * ```ts
-     * 0 -> Instant
-     * 1 -> Interpolate
-     * 2 -> Extend
-     * ```
-     */
     get transition() {
         return this.data.i;
     }
@@ -84,13 +76,6 @@ export class LightColorBase extends Serializable<ILightColorBase> {
         this.data.i = value;
     }
 
-    /** Color `<int>` of base light color.
-     * ```ts
-     * 0 -> Red
-     * 1 -> Blue
-     * 2 -> White
-     * ```
-     */
     get color() {
         return this.data.c;
     }
@@ -98,10 +83,6 @@ export class LightColorBase extends Serializable<ILightColorBase> {
         this.data.c = value;
     }
 
-    /** Brightness `<float>` of base light color.
-     *
-     * Range: `0-1` (0% to 100%), can be more than 1.
-     */
     get brightness() {
         return this.data.s;
     }
@@ -109,14 +90,26 @@ export class LightColorBase extends Serializable<ILightColorBase> {
         this.data.s = value;
     }
 
-    /** Frequency `<int>` of base light color.
-     *
-     * Blinking frequency in beat time of the event, `0` is static.
-     */
     get frequency() {
         return this.data.f;
     }
     set frequency(value: ILightColorBase['f']) {
         this.data.f = value;
+    }
+
+    get customData(): NonNullable<ILightColorBase['customData']> {
+        return this.data.customData;
+    }
+    set customData(value: NonNullable<ILightColorBase['customData']>) {
+        this.data.customData = value;
+    }
+
+    setCustomData(value: NonNullable<ILightColorBase['customData']>): this {
+        this.customData = value;
+        return this;
+    }
+    addCustomData(object: ILightColorBase['customData']): this {
+        this.customData = { ...this.customData, object };
+        return this;
     }
 }

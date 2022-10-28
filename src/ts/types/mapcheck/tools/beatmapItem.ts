@@ -5,8 +5,8 @@ import { DifficultyName } from '../../beatmap/shared/difficulty';
 import { IInfoSetDifficulty } from '../../beatmap/shared/info';
 import { IDifficulty as IDifficultyV2 } from '../../beatmap/v2/difficulty';
 import { IDifficulty as IDifficultyV3 } from '../../beatmap/v3/difficulty';
-import { EventContainer, NoteContainer } from '../../beatmap/v3/container';
-import { ISwingAnalysis } from '../analyzers/swing';
+import { EventContainer, NoteContainer } from '../../beatmap/wrapper/container';
+import { ISwingAnalysis } from '../../../analyzers/swing/types/mod';
 
 interface IBeatmapItemBase {
     readonly info: IInfoSetDifficulty;

@@ -1,28 +1,7 @@
-import { IBaseObject } from './baseObject';
+import { IGridObject } from './gridObject';
 import { ICustomDataObstacle } from './customData';
 
-export interface IObstacle extends IBaseObject {
-    /** Position x `<int>` of obstacle.
-     * ```ts
-     * 0 -> Outer Left
-     * 1 -> Middle Left
-     * 2 -> Middle Right
-     * 3 -> Outer Right
-     * ```
-     * ---
-     * Range: `none`
-     */
-    x: number;
-    /** Position y `<int>` of obstacle.
-     * ```ts
-     * 0 -> Bottom row
-     * 1 -> Middle row
-     * 2 -> Top row
-     * ```
-     * ---
-     * Range: `0-2`
-     */
-    y: number;
+export interface IObstacle extends IGridObject {
     /** Duration `<float>` of obstacle.*/
     d: number;
     /** Width `<int>` of obstacle.

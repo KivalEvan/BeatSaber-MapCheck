@@ -1,7 +1,7 @@
 import { IInfo } from '../../types/beatmap/shared/info';
 import { IBeatmapItem } from '../../types/mapcheck';
-import { countEvent } from '../../analyzers/stats';
-import { eventTypeRename } from '../../analyzers/renamer';
+import { countEvent } from '../../analyzers/stats/mod';
+import { eventTypeRename } from '../../analyzers/renamer/mod';
 import { prefix } from './constants';
 
 export function createEventCountTable(mapInfo: IInfo, mapData: IBeatmapItem): HTMLTableElement {
@@ -9,7 +9,7 @@ export function createEventCountTable(mapInfo: IInfo, mapData: IBeatmapItem): HT
         mapData.characteristic === '360Degree' || mapData.characteristic === '90Degree'
             ? mapInfo._allDirectionsEnvironmentName
             : mapInfo._environmentName;
-    const eventCount = countEvent(mapData.data.basicBeatmapEvents, mapData.data.colorBoostBeatmapEvents, environment);
+    const eventCount = countEvent(mapData.data.basicEvents, mapData.data.colorBoostEvents, environment);
     let chroma = 0;
     let chromaOld = 0;
     let noodleExtensions = 0;

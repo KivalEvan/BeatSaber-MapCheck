@@ -1,11 +1,11 @@
 import { ILightRotationEventBoxGroup } from '../../types/beatmap/v3/lightRotationEventBoxGroup';
-import { ILightRotationEventBox } from '../../types/beatmap/v3/lightRotationEventBox';
 import { DeepPartial, ObjectReturnFn } from '../../types/utils';
-import { EventBoxGroupTemplate } from './eventBoxGroupTemplate';
 import { LightRotationEventBox } from './lightRotationEventBox';
+import { WrapLightRotationEventBoxGroup } from '../wrapper/lightRotationEventBoxGroup';
+import { deepCopy } from '../../utils/misc';
 
 /** Light rotation event box group beatmap v3 class object. */
-export class LightRotationEventBoxGroup extends EventBoxGroupTemplate<ILightRotationEventBox, LightRotationEventBox> {
+export class LightRotationEventBoxGroup extends WrapLightRotationEventBoxGroup<Required<ILightRotationEventBoxGroup>> {
     static default: ObjectReturnFn<Required<ILightRotationEventBoxGroup>> = {
         b: 0,
         g: 0,
@@ -15,11 +15,10 @@ export class LightRotationEventBoxGroup extends EventBoxGroupTemplate<ILightRota
         },
     };
 
+    private _e: LightRotationEventBox[];
     protected constructor(eventBoxGroup: Required<ILightRotationEventBoxGroup>) {
-        super(
-            eventBoxGroup,
-            eventBoxGroup.e.map((e) => LightRotationEventBox.create(e)[0]),
-        );
+        super(eventBoxGroup);
+        this._e = eventBoxGroup.e.map((e) => LightRotationEventBox.create(e)[0]);
     }
 
     static create(): LightRotationEventBoxGroup[];
@@ -47,5 +46,55 @@ export class LightRotationEventBoxGroup extends EventBoxGroupTemplate<ILightRota
                 customData: LightRotationEventBoxGroup.default.customData(),
             }),
         ];
+    }
+
+    toJSON(): Required<ILightRotationEventBoxGroup> {
+        return {
+            b: this.time,
+            g: this.id,
+            e: this.events.map((e) => e.toJSON()),
+            customData: deepCopy(this.customData),
+        };
+    }
+
+    get time() {
+        return this.data.b;
+    }
+    set time(value: ILightRotationEventBoxGroup['b']) {
+        this.data.b = value;
+    }
+
+    get id() {
+        return this.data.g;
+    }
+    set id(value: ILightRotationEventBoxGroup['g']) {
+        this.data.g = value;
+    }
+
+    get events() {
+        return this._e;
+    }
+    set events(value: LightRotationEventBox[]) {
+        this._e = value;
+    }
+
+    get customData(): NonNullable<ILightRotationEventBoxGroup['customData']> {
+        return this.data.customData;
+    }
+    set customData(value: NonNullable<ILightRotationEventBoxGroup['customData']>) {
+        this.data.customData = value;
+    }
+
+    setCustomData(value: NonNullable<ILightRotationEventBoxGroup['customData']>): this {
+        this.customData = value;
+        return this;
+    }
+    addCustomData(object: ILightRotationEventBoxGroup['customData']): this {
+        this.customData = { ...this.customData, object };
+        return this;
+    }
+
+    isValid(): boolean {
+        return this.id >= 0;
     }
 }

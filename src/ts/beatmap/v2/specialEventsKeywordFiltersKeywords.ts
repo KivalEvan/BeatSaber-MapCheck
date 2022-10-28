@@ -1,12 +1,14 @@
 import { ISpecialEventsKeywordFiltersKeywords } from '../../types/beatmap/v2/specialEventsKeywordFiltersKeywords';
 import { ObjectReturnFn } from '../../types/utils';
-import { Serializable } from '../shared/serializable';
+import { WrapEventTypesForKeywords } from '../wrapper/eventTypesForKeywords';
 
 /** Special event types for keywords beatmap v2 class object.
  *
  * Used in special event types with keywords.
  */
-export class SpecialEventsKeywordFiltersKeywords extends Serializable<ISpecialEventsKeywordFiltersKeywords> {
+export class SpecialEventsKeywordFiltersKeywords extends WrapEventTypesForKeywords<
+    Required<ISpecialEventsKeywordFiltersKeywords>
+> {
     static default: ObjectReturnFn<Required<ISpecialEventsKeywordFiltersKeywords>> = {
         _keyword: '',
         _specialEvents: () => [],
@@ -51,7 +53,6 @@ export class SpecialEventsKeywordFiltersKeywords extends Serializable<ISpecialEv
         };
     }
 
-    /** Keyword `<string>` of basic event types for keywords. */
     get keyword() {
         return this.data._keyword;
     }
@@ -59,31 +60,10 @@ export class SpecialEventsKeywordFiltersKeywords extends Serializable<ISpecialEv
         this.data._keyword = value;
     }
 
-    /** Event type `<int[]>` of basic event types for keywords. */
     get events() {
         return this.data._specialEvents;
     }
     set events(value: ISpecialEventsKeywordFiltersKeywords['_specialEvents']) {
         this.data._specialEvents = value;
-    }
-
-    setKeyword(value: ISpecialEventsKeywordFiltersKeywords['_keyword']) {
-        this.keyword = value;
-        return this;
-    }
-    setEvents(value: ISpecialEventsKeywordFiltersKeywords['_specialEvents']) {
-        this.events = value;
-        return this;
-    }
-    addEvent(value: number) {
-        this.events.push(value);
-        return this;
-    }
-    removeEvent(value: number) {
-        const index = this.events.indexOf(value, 0);
-        if (index > -1) {
-            this.events.splice(index, 1);
-        }
-        return this;
     }
 }

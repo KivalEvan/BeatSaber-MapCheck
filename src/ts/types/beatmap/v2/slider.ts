@@ -1,3 +1,5 @@
+import { ICustomDataBase } from '../shared/customData';
+
 /** not a burst slider. */
 export interface ISlider {
     /** Color type `<int>` of base slider.
@@ -45,4 +47,5 @@ export interface ISlider {
      * ```
      */
     _sliderMidAnchorMode: 0 | 1 | 2;
+    _customData?: ICustomDataBase;
 }

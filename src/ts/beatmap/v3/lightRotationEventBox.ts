@@ -1,12 +1,13 @@
 import { ILightRotationEventBox } from '../../types/beatmap/v3/lightRotationEventBox';
 import { ObjectReturnFn } from '../../types/utils';
-import { EventBox } from './eventBox';
+import { deepCopy } from '../../utils/misc';
+import { WrapLightRotationEventBox } from '../wrapper/lightRotationEventBox';
 import { IndexFilter } from './indexFilter';
 import { LightRotationBase } from './lightRotationBase';
 
 /** Light rotation event box beatmap v3 class object. */
-export class LightRotationEventBox extends EventBox<ILightRotationEventBox> {
-    static default: ObjectReturnFn<ILightRotationEventBox> = {
+export class LightRotationEventBox extends WrapLightRotationEventBox<Required<ILightRotationEventBox>> {
+    static default: ObjectReturnFn<Required<ILightRotationEventBox>> = {
         f: () => {
             return {
                 f: IndexFilter.default.f,
@@ -28,11 +29,16 @@ export class LightRotationEventBox extends EventBox<ILightRotationEventBox> {
         r: 0,
         b: 0,
         l: () => [],
+        customData: () => {
+            return {};
+        },
     };
 
+    private _f: IndexFilter;
     private _l: LightRotationBase[];
     protected constructor(lightRotationEventBox: Required<ILightRotationEventBox>) {
         super(lightRotationEventBox);
+        this._f = IndexFilter.create(lightRotationEventBox.f);
         this._l = lightRotationEventBox.l.map((l) => LightRotationBase.create(l)[0]);
         const lastTime = Math.max(...this._l.map((l) => l.time));
         if (this.beatDistributionType === 2) {
@@ -56,6 +62,7 @@ export class LightRotationEventBox extends EventBox<ILightRotationEventBox> {
                     r: eb.r ?? LightRotationEventBox.default.r,
                     b: eb.b ?? LightRotationEventBox.default.b,
                     l: eb.l ?? LightRotationEventBox.default.l(),
+                    customData: eb.customData ?? LightRotationEventBox.default.customData(),
                 }),
             ),
         );
@@ -73,11 +80,12 @@ export class LightRotationEventBox extends EventBox<ILightRotationEventBox> {
                 r: LightRotationEventBox.default.r,
                 b: LightRotationEventBox.default.b,
                 l: LightRotationEventBox.default.l(),
+                customData: LightRotationEventBox.default.customData(),
             }),
         ];
     }
 
-    toJSON(): ILightRotationEventBox {
+    toJSON(): Required<ILightRotationEventBox> {
         return {
             f: this.filter.toJSON(),
             w: this.beatDistribution,
@@ -88,10 +96,31 @@ export class LightRotationEventBox extends EventBox<ILightRotationEventBox> {
             r: this.flip,
             b: this.affectFirst,
             l: this.events.map((l) => l.toJSON()),
+            customData: deepCopy(this.customData),
         };
     }
 
-    /** Rotation distribution `<float>` of light rotation event box. */
+    get filter() {
+        return this._f;
+    }
+    set filter(value: IndexFilter) {
+        this._f = value;
+    }
+
+    get beatDistribution() {
+        return this.data.w;
+    }
+    set beatDistribution(value: ILightRotationEventBox['w']) {
+        this.data.w = value;
+    }
+
+    get beatDistributionType() {
+        return this.data.d;
+    }
+    set beatDistributionType(value: ILightRotationEventBox['d']) {
+        this.data.d = value;
+    }
+
     get rotationDistribution() {
         return this.data.s;
     }
@@ -99,12 +128,6 @@ export class LightRotationEventBox extends EventBox<ILightRotationEventBox> {
         this.data.s = value;
     }
 
-    /** Rotation distribution type `<int>` of light rotation event box.
-     * ```ts
-     * 1 -> Wave // adds up to last ID.
-     * 2 -> Step // adds to consequent ID.
-     * ```
-     */
     get rotationDistributionType() {
         return this.data.t;
     }
@@ -112,12 +135,6 @@ export class LightRotationEventBox extends EventBox<ILightRotationEventBox> {
         this.data.t = value;
     }
 
-    /** Axis `<int>` of light rotation event box.
-     * ```ts
-     * 0 -> X
-     * 1 -> Y
-     * ```
-     */
     get axis() {
         return this.data.a;
     }
@@ -125,7 +142,6 @@ export class LightRotationEventBox extends EventBox<ILightRotationEventBox> {
         this.data.a = value;
     }
 
-    /** Flip rotation `<int>` in light rotation event box. */
     get flip(): ILightRotationEventBox['r'] {
         return this.data.r;
     }
@@ -133,7 +149,6 @@ export class LightRotationEventBox extends EventBox<ILightRotationEventBox> {
         this.data.r = value ? 1 : 0;
     }
 
-    /** Rotation distribution should affect first event `<int>` of light rotation event box. */
     get affectFirst(): ILightRotationEventBox['b'] {
         return this.data.b;
     }
@@ -141,11 +156,31 @@ export class LightRotationEventBox extends EventBox<ILightRotationEventBox> {
         this.data.b = value ? 1 : 0;
     }
 
-    /** Light rotation base data list. */
     get events() {
         return this._l;
     }
     set events(value: LightRotationBase[]) {
         this._l = value;
+    }
+
+    get customData(): NonNullable<ILightRotationEventBox['customData']> {
+        return this.data.customData;
+    }
+    set customData(value: NonNullable<ILightRotationEventBox['customData']>) {
+        this.data.customData = value;
+    }
+
+    setCustomData(value: NonNullable<ILightRotationEventBox['customData']>): this {
+        this.customData = value;
+        return this;
+    }
+    addCustomData(object: ILightRotationEventBox['customData']): this {
+        this.customData = { ...this.customData, object };
+        return this;
+    }
+
+    setEvents(value: LightRotationBase[]): this {
+        this.events = value;
+        return this;
     }
 }

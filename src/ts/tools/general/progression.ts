@@ -1,7 +1,7 @@
 import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import { round } from '../../utils';
 import SavedData from '../../savedData';
-import * as swing from '../../analyzers/swing';
+import * as swing from '../../analyzers/swing/mod';
 import { printResult } from '../helpers';
 import UICheckbox from '../../ui/helpers/checkbox';
 import { DifficultyRename } from '../../beatmap/shared/difficulty';

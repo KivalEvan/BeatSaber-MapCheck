@@ -1,10 +1,10 @@
 import { ISlider } from '../../types/beatmap/v2/slider';
 import { ObjectReturnFn } from '../../types/utils';
-import { LINE_COUNT } from '../shared/constants';
-import { Serializable } from '../shared/serializable';
+import { deepCopy } from '../../utils/misc';
+import { WrapSlider } from '../wrapper/slider';
 
 /** Slider beatmap v2 class object. */
-export class Slider extends Serializable<ISlider> {
+export class Slider extends WrapSlider<Required<ISlider>> {
     static default: ObjectReturnFn<Required<ISlider>> = {
         _colorType: 0,
         _headTime: 0,
@@ -18,6 +18,9 @@ export class Slider extends Serializable<ISlider> {
         _tailCutDirection: 0,
         _tailControlPointLengthMultiplier: 1,
         _sliderMidAnchorMode: 0,
+        _customData: () => {
+            return {};
+        },
     };
 
     protected constructor(slider: Required<ISlider>) {
@@ -45,6 +48,7 @@ export class Slider extends Serializable<ISlider> {
                     _tailControlPointLengthMultiplier:
                         s._tailControlPointLengthMultiplier ?? Slider.default._tailControlPointLengthMultiplier,
                     _sliderMidAnchorMode: s._sliderMidAnchorMode ?? Slider.default._sliderMidAnchorMode,
+                    _customData: s._customData ?? Slider.default._customData(),
                 }),
             ),
         );
@@ -65,114 +69,71 @@ export class Slider extends Serializable<ISlider> {
                 _tailCutDirection: Slider.default._tailCutDirection,
                 _tailControlPointLengthMultiplier: Slider.default._tailControlPointLengthMultiplier,
                 _sliderMidAnchorMode: Slider.default._sliderMidAnchorMode,
+                _customData: Slider.default._customData(),
             }),
         ];
     }
 
     toJSON(): Required<ISlider> {
         return {
-            _colorType: this.colorType,
-            _headTime: this.headTime,
-            _headLineIndex: this.headPosX,
-            _headLineLayer: this.headPosY,
-            _headCutDirection: this.headDirection,
-            _headControlPointLengthMultiplier: this.headLengthMultiplier,
+            _colorType: this.color,
+            _headTime: this.time,
+            _headLineIndex: this.posX,
+            _headLineLayer: this.posY,
+            _headCutDirection: this.direction,
+            _headControlPointLengthMultiplier: this.lengthMultiplier,
             _tailTime: this.tailTime,
             _tailLineIndex: this.tailPosX,
             _tailLineLayer: this.tailPosY,
             _tailCutDirection: this.tailDirection,
             _tailControlPointLengthMultiplier: this.tailLengthMultiplier,
             _sliderMidAnchorMode: this.midAnchor,
+            _customData: deepCopy(this.customData),
         };
     }
-    /** Color type `<int>` of base slider.
-     * ```ts
-     * 0 -> Red
-     * 1 -> Blue
-     * ```
-     */
-    get colorType() {
+
+    get color() {
         return this.data._colorType;
     }
-    set colorType(value: ISlider['_colorType']) {
+    set color(value: ISlider['_colorType']) {
         this.data._colorType = value;
     }
 
-    /** Tail beat time `<float>` of base slider. */
-    get headTime() {
+    get time() {
         return this.data._headTime;
     }
-    set headTime(value: number) {
+    set time(value: number) {
         this.data._headTime = value;
     }
 
-    /** Head position x `<int>` of base slider.
-     * ```ts
-     * 0 -> Outer Left
-     * 1 -> Middle Left
-     * 2 -> Middle Right
-     * 3 -> Outer Right
-     * ```
-     * ---
-     * Range: `0-3`
-     */
-    get headPosX() {
+    get posX() {
         return this.data._headLineIndex;
     }
-    set headPosX(value: ISlider['_headLineIndex']) {
+    set posX(value: ISlider['_headLineIndex']) {
         this.data._headLineIndex = value;
     }
 
-    /** Head position y `<int>` of base slider.
-     * ```ts
-     * 0 -> Bottom row
-     * 1 -> Middle row
-     * 2 -> Top row
-     * ```
-     * ---
-     * Range: `0-2`
-     */
-    get headPosY() {
+    get posY() {
         return this.data._headLineLayer;
     }
-    set headPosY(value: ISlider['_headLineLayer']) {
+    set posY(value: ISlider['_headLineLayer']) {
         this.data._headLineLayer = value;
     }
 
-    /** Head cut direction `<int>` of base slider.
-     * ```ts
-     * 4 | 0 | 5
-     * 2 | 8 | 3
-     * 6 | 1 | 7
-     * ```
-     * ---
-     * Grid represents cut direction from center.
-     *
-     * **WARNING:** Dot-directional is not recommended, assumes down-directional.
-     */
-    get headDirection() {
+    get direction() {
         return this.data._headCutDirection;
     }
-    set headDirection(value: ISlider['_headCutDirection']) {
+    set direction(value: ISlider['_headCutDirection']) {
         this.data._headCutDirection = value;
     }
 
-    /** Head control point length multiplier `<float>` of slider.
-     * ```ts
-     * 0 -> Flat Start
-     * 1 -> Curved Start
-     * ```
-     * ---
-     * Range: `0-1`
-     */
-    get headLengthMultiplier() {
+    get lengthMultiplier() {
         return this.data._headControlPointLengthMultiplier;
     }
-    set headLengthMultiplier(value: ISlider['_headControlPointLengthMultiplier']) {
+    set lengthMultiplier(value: ISlider['_headControlPointLengthMultiplier']) {
         this.data._headControlPointLengthMultiplier = value;
     }
 
-    /** Tail beat time `<float>` of base slider. */
     get tailTime() {
         return this.data._tailTime;
     }
@@ -180,16 +141,6 @@ export class Slider extends Serializable<ISlider> {
         this.data._tailTime = value;
     }
 
-    /** Tail position x `<int>` of base slider.
-     * ```ts
-     * 0 -> Outer Left
-     * 1 -> Middle Left
-     * 2 -> Middle Right
-     * 3 -> Outer Right
-     * ```
-     * ---
-     * Range: `none`
-     */
     get tailPosX() {
         return this.data._tailLineIndex;
     }
@@ -197,15 +148,6 @@ export class Slider extends Serializable<ISlider> {
         this.data._tailLineIndex = value;
     }
 
-    /** Tail position y `<int>` of base slider.
-     * ```ts
-     * 0 -> Bottom row
-     * 1 -> Middle row
-     * 2 -> Top row
-     * ```
-     * ---
-     * Range: `0-2`
-     */
     get tailPosY() {
         return this.data._tailLineLayer;
     }
@@ -213,17 +155,6 @@ export class Slider extends Serializable<ISlider> {
         this.data._tailLineLayer = value;
     }
 
-    /** Tail cut direction `<int>` of slider.
-     * ```ts
-     * 4 | 0 | 5
-     * 2 | 8 | 3
-     * 6 | 1 | 7
-     * ```
-     * ---
-     * Grid represents cut direction from center.
-     *
-     * **WARNING:** Dot-directional is not recommended, assumes down-directional.
-     */
     get tailDirection() {
         return this.data._tailCutDirection;
     }
@@ -231,14 +162,6 @@ export class Slider extends Serializable<ISlider> {
         this.data._tailCutDirection = value;
     }
 
-    /** Tail control point length multiplier `<float>` of slider.
-     * ```ts
-     * 0 -> Flat End
-     * 1 -> Curved End
-     * ```
-     * ---
-     * Range: `0-1`
-     */
     get tailLengthMultiplier() {
         return this.data._tailControlPointLengthMultiplier;
     }
@@ -246,13 +169,6 @@ export class Slider extends Serializable<ISlider> {
         this.data._tailControlPointLengthMultiplier = value;
     }
 
-    /** Mid anchor mode `<int>` of slider.
-     * ```ts
-     * 0 -> Straight
-     * 1 -> Clockwise
-     * 2 -> Counter-Clockwise
-     * ```
-     */
     get midAnchor() {
         return this.data._sliderMidAnchorMode;
     }
@@ -260,116 +176,19 @@ export class Slider extends Serializable<ISlider> {
         this.data._sliderMidAnchorMode = value;
     }
 
-    setColor(value: ISlider['_colorType']) {
-        this.colorType = value;
-        return this;
+    get customData(): NonNullable<ISlider['_customData']> {
+        return this.data._customData;
     }
-    setPosX(value: ISlider['_headLineIndex']) {
-        this.headPosX = value;
-        return this;
-    }
-    setPosY(value: ISlider['_headLineLayer']) {
-        this.headPosY = value;
-        return this;
-    }
-    setDirection(value: ISlider['_headCutDirection']) {
-        this.headDirection = value;
-        return this;
-    }
-    setLengthMultiplier(value: ISlider['_headControlPointLengthMultiplier']) {
-        this.headLengthMultiplier = value;
-        return this;
-    }
-    setTailTime(value: number) {
-        this.tailTime = value;
-        return this;
-    }
-    setTailPosX(value: ISlider['_tailLineIndex']) {
-        this.tailPosX = value;
-        return this;
-    }
-    setTailPosY(value: ISlider['_tailLineLayer']) {
-        this.tailPosY = value;
-        return this;
-    }
-    setTailDirection(value: ISlider['_tailCutDirection']) {
-        this.tailDirection = value;
-        return this;
-    }
-    setTailLengthMultiplier(value: ISlider['_tailControlPointLengthMultiplier']) {
-        this.tailLengthMultiplier = value;
-        return this;
-    }
-    setMidAnchor(value: ISlider['_sliderMidAnchorMode']) {
-        this.midAnchor = value;
-        return this;
+    set customData(value: NonNullable<ISlider['_customData']>) {
+        this.data._customData = value;
     }
 
-    mirror(flipColor = true) {
-        this.headPosX = LINE_COUNT - 1 - this.headPosX;
-        this.tailPosX = LINE_COUNT - 1 - this.tailPosX;
-        if (flipColor) {
-            this.colorType = ((1 + this.colorType) % 2) as typeof this.colorType;
-        }
-        switch (this.headDirection) {
-            case 2:
-                this.headDirection = 3;
-                break;
-            case 3:
-                this.headDirection = 2;
-                break;
-            case 6:
-                this.headDirection = 7;
-                break;
-            case 7:
-                this.headDirection = 6;
-                break;
-            case 4:
-                this.headDirection = 5;
-                break;
-            case 5:
-                this.headDirection = 4;
-                break;
-        }
-        switch (this.tailDirection) {
-            case 2:
-                this.tailDirection = 3;
-                break;
-            case 3:
-                this.tailDirection = 2;
-                break;
-            case 6:
-                this.tailDirection = 7;
-                break;
-            case 7:
-                this.tailDirection = 6;
-                break;
-            case 4:
-                this.tailDirection = 5;
-                break;
-            case 5:
-                this.tailDirection = 4;
-                break;
-        }
-        if (this.midAnchor) {
-            this.midAnchor = this.midAnchor === 1 ? 2 : 1;
-        }
+    setCustomData(value: NonNullable<ISlider['_customData']>): this {
+        this.customData = value;
         return this;
     }
-
-    /** Check if slider has Mapping Extensions properties.
-     * ```ts
-     * if (slider.hasMappingExtensions()) {}
-     * ```
-     */
-    hasMappingExtensions() {
-        return (
-            this.headPosY > 2 ||
-            this.headPosY < 0 ||
-            this.headPosX <= -1000 ||
-            this.headPosX >= 1000 ||
-            (this.headDirection >= 1000 && this.headDirection <= 1360) ||
-            (this.tailDirection >= 1000 && this.tailDirection <= 1360)
-        );
+    addCustomData(object: ISlider['_customData']): this {
+        this.customData = { ...this.customData, object };
+        return this;
     }
 }

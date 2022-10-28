@@ -153,7 +153,7 @@ export function V2toV3(data: DifficultyV2, skipPrompt?: boolean): DifficultyV3 {
 
     data.events.forEach((e, i) => {
         if (e.isColorBoost()) {
-            template.colorBoostBeatmapEvents.push(
+            template.colorBoostEvents.push(
                 ColorBoostEvent.create({
                     b: e.time,
                     o: e.value ? true : false,
@@ -200,7 +200,7 @@ export function V2toV3(data: DifficultyV2, skipPrompt?: boolean): DifficultyV3 {
                     logger.warn(tag('V2toV3'), `events[${i}] at time ${e.time} Chroma _mult will be removed.`);
                 }
             }
-            template.basicBeatmapEvents.push(
+            template.basicEvents.push(
                 BasicEvent.create({
                     b: e.time,
                     et: e.type,
@@ -226,12 +226,12 @@ export function V2toV3(data: DifficultyV2, skipPrompt?: boolean): DifficultyV3 {
     data.sliders.forEach((s) =>
         template.sliders.push(
             Slider.create({
-                c: s.colorType,
-                b: s.headTime,
-                x: s.headPosX,
-                y: s.headPosY,
-                d: s.headDirection,
-                mu: s.headLengthMultiplier,
+                c: s.color,
+                b: s.time,
+                x: s.posX,
+                y: s.posY,
+                d: s.direction,
+                mu: s.lengthMultiplier,
                 tb: s.tailTime,
                 tx: s.tailPosX,
                 ty: s.tailPosY,
@@ -244,7 +244,7 @@ export function V2toV3(data: DifficultyV2, skipPrompt?: boolean): DifficultyV3 {
 
     template.basicEventTypesWithKeywords = BasicEventTypesWithKeywords.create({
         d:
-            data.specialEventsKeywordFilters?.keywords?.map((k) => {
+            data.specialEventsKeywordFilters?.list?.map((k) => {
                 return { k: k.keyword, e: k.events };
             }) ?? [],
     });
@@ -446,22 +446,35 @@ export function V2toV3(data: DifficultyV2, skipPrompt?: boolean): DifficultyV3 {
                 continue;
             }
             if (k === '_BPMChanges') {
-                template.customData.BPMChanges = data.customData[k];
+                template.customData.BPMChanges = data.customData[k]?.map((bpmc) => {
+                    return {
+                        b: bpmc._time,
+                        m: bpmc._BPM,
+                        p: bpmc._beatsPerBar,
+                        o: bpmc._metronomeOffset,
+                    };
+                });
                 continue;
             }
             if (k === '_bpmChanges') {
                 template.customData.BPMChanges = data.customData[k]?.map((bpmc) => {
                     return {
-                        _time: bpmc._time,
-                        _BPM: bpmc._bpm,
-                        _beatsPerBar: bpmc._beatsPerBar,
-                        _metronomeOffset: bpmc._metronomeOffset,
+                        b: bpmc._time,
+                        m: bpmc._bpm,
+                        p: bpmc._beatsPerBar,
+                        o: bpmc._metronomeOffset,
                     };
                 });
                 continue;
             }
             if (k === '_bookmarks') {
-                template.customData.bookmarks = data.customData[k];
+                template.customData.bookmarks = data.customData._bookmarks?.map((b) => {
+                    return {
+                        b: b._time,
+                        n: b._name,
+                        c: b._color,
+                    };
+                });
                 continue;
             }
             template.customData[k] = data.customData[k];

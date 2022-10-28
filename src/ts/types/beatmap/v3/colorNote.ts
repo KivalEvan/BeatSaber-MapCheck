@@ -1,7 +1,7 @@
-import { IBaseNote } from './baseNote';
+import { IGridObject } from './gridObject';
 import { ICustomDataNote } from './customData';
 
-export interface IColorNote extends IBaseNote {
+export interface IColorNote extends IGridObject {
     /** Color type `<int>` of note.
      * ```ts
      * 0 -> Red

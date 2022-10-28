@@ -1,13 +1,12 @@
 import { NoteDirection } from '../../beatmap/shared/constants';
-import { BaseNote } from '../../beatmap/v3/baseNote';
-import { BurstSlider } from '../../beatmap/v3/burstSlider';
-import { ColorNote } from '../../beatmap/v3/colorNote';
-import { Slider } from '../../beatmap/v3/slider';
-import { IBaseNote } from '../../types/beatmap/v3/baseNote';
+import { WrapColorNote } from '../../beatmap/wrapper/colorNote';
+import { IWrapBaseSlider } from '../../types/beatmap/wrapper/baseSlider';
+import { IWrapColorNote } from '../../types/beatmap/wrapper/colorNote';
+import { IWrapGridObject } from '../../types/beatmap/wrapper/gridObject';
 import { radToDeg, shortRotDistance } from '../../utils/math';
 
 // TODO: update with new position/rotation system
-export function isEnd(currNote: ColorNote, prevNote: ColorNote, cd: number): boolean {
+export function isEnd(currNote: IWrapColorNote, prevNote: IWrapColorNote, cd: number): boolean {
     // fuck u and ur dot note stack
     if (
         currNote.direction === NoteDirection.ANY &&
@@ -122,9 +121,9 @@ export function isEnd(currNote: ColorNote, prevNote: ColorNote, cd: number): boo
  * ```
  */
 // a fkin abomination that's what currNote is
-export function isIntersect<T extends IBaseNote>(
-    currNote: ColorNote,
-    compareTo: BaseNote<T>,
+export function isIntersect(
+    currNote: IWrapColorNote,
+    compareTo: IWrapGridObject,
     angleDistances: [number, number, number?][],
     ahead = false,
 ): [boolean, boolean] {
@@ -149,7 +148,7 @@ export function isIntersect<T extends IBaseNote>(
         }
     }
     let resultN2 = false;
-    if (compareTo instanceof ColorNote && compareTo.direction !== 8) {
+    if (compareTo instanceof WrapColorNote && compareTo.direction !== 8) {
         const nA2 = compareTo.getAngle();
         const a = (radToDeg(Math.atan2(nY2 - nY1, nX2 - nX1)) + 450) % 360;
         for (const [angleRange, maxDistance, offsetT] of angleDistances) {
@@ -169,7 +168,7 @@ export function isIntersect<T extends IBaseNote>(
 }
 
 // TODO: update with new position/rotation system
-export function predictDirection(currNote: ColorNote, prevNote: ColorNote): number {
+export function predictDirection(currNote: IWrapColorNote, prevNote: IWrapColorNote): number {
     if (isEnd(currNote, prevNote, NoteDirection.ANY)) {
         return currNote.direction === NoteDirection.ANY ? prevNote.direction : currNote.direction;
     }
@@ -225,8 +224,8 @@ export function predictDirection(currNote: ColorNote, prevNote: ColorNote): numb
  * @returns {boolean} If condition is met
  */
 export function checkDirection(
-    n1: ColorNote | Slider | BurstSlider | number | null,
-    n2: ColorNote | Slider | BurstSlider | number | null,
+    n1: IWrapColorNote | IWrapBaseSlider | number | null,
+    n2: IWrapColorNote | IWrapBaseSlider | number | null,
     angleTol: number,
     equal: boolean,
 ): boolean {

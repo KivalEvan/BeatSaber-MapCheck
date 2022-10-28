@@ -1,6 +1,6 @@
-import { IBaseNote } from './baseNote';
+import { IGridObject } from './gridObject';
 import { ICustomDataNote } from './customData';
 
-export interface IBombNote extends IBaseNote {
+export interface IBombNote extends IGridObject {
     customData?: ICustomDataNote;
 }

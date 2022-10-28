@@ -3,7 +3,7 @@ import SavedData from '../../savedData';
 import { round } from '../../utils';
 import { IInfo } from '../../types/beatmap/shared/info';
 import { IBeatmapItem } from '../../types/mapcheck';
-import { NoteContainer } from '../../types/beatmap/v3/container';
+import { NoteContainer } from '../../types/beatmap/wrapper/container';
 import { countX, countXY, countY } from '../../analyzers/stats/note';
 import { logPrefix, prefix } from './constants';
 import { getFilteredContainer } from './helpers';

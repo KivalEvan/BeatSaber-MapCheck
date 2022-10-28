@@ -1,12 +1,11 @@
 import { IColorNote } from '../../types/beatmap/v3/colorNote';
-import { LINE_COUNT, NoteDirectionAngle } from '../shared/constants';
+import { NoteDirectionAngle } from '../shared/constants';
 import { ObjectReturnFn } from '../../types/utils';
-import { BaseNote } from './baseNote';
-import { IBaseNote } from '../../types/beatmap/v3/baseNote';
 import { deepCopy } from '../../utils/misc';
+import { WrapColorNote } from '../wrapper/colorNote';
 
 /** Color note beatmap v3 class object. */
-export class ColorNote extends BaseNote<IColorNote> {
+export class ColorNote extends WrapColorNote<Required<IColorNote>> {
     static default: ObjectReturnFn<Required<IColorNote>> = {
         b: 0,
         c: 0,
@@ -68,12 +67,27 @@ export class ColorNote extends BaseNote<IColorNote> {
         };
     }
 
-    /** Color type `<int>` of note.
-     * ```ts
-     * 0 -> Red
-     * 1 -> Blue
-     * ```
-     */
+    get time() {
+        return this.data.b;
+    }
+    set time(value: IColorNote['b']) {
+        this.data.b = value;
+    }
+
+    get posX() {
+        return this.data.x;
+    }
+    set posX(value: IColorNote['x']) {
+        this.data.x = value;
+    }
+
+    get posY() {
+        return this.data.y;
+    }
+    set posY(value: IColorNote['y']) {
+        this.data.y = value;
+    }
+
     get color() {
         return this.data.c;
     }
@@ -81,17 +95,13 @@ export class ColorNote extends BaseNote<IColorNote> {
         this.data.c = value;
     }
 
-    /** Cut direction `<int>` of note.
-     * ```ts
-     * 4 | 0 | 5
-     * 2 | 8 | 3
-     * 6 | 1 | 7
-     * ```
-     * ---
-     * Grid represents cut direction from center.
-     *
-     * **WARNING:** Dot-directional is not recommended with sliders, assumes down-directional.
-     */
+    get type() {
+        return this.data.c;
+    }
+    set type(value: IColorNote['c']) {
+        this.data.c = value;
+    }
+
     get direction() {
         return this.data.d;
     }
@@ -99,12 +109,27 @@ export class ColorNote extends BaseNote<IColorNote> {
         this.data.d = value;
     }
 
-    /** Angle offset in degree counter-clockwise `<int>` of note.*/
     get angleOffset() {
         return this.data.a;
     }
     set angleOffset(value: IColorNote['a']) {
         this.data.a = value;
+    }
+
+    get customData(): NonNullable<IColorNote['customData']> {
+        return this.data.customData;
+    }
+    set customData(value: NonNullable<IColorNote['customData']>) {
+        this.data.customData = value;
+    }
+
+    setCustomData(value: NonNullable<IColorNote['customData']>): this {
+        this.customData = value;
+        return this;
+    }
+    addCustomData(object: IColorNote['customData']): this {
+        this.customData = { ...this.customData, object };
+        return this;
     }
 
     setColor(value: IColorNote['c']) {
@@ -139,37 +164,9 @@ export class ColorNote extends BaseNote<IColorNote> {
                 });
             }
         }
-        if (flipColor) {
-            this.color = ((1 + this.color) % 2) as typeof this.color;
-        }
-        this.posX = LINE_COUNT - 1 - this.posX;
-        return this;
+        return super.mirror(flipColor);
     }
 
-    /** Swap note rotation with another note.
-     * ```ts
-     * note.swapPosition(noteSwap);
-     * ```
-     */
-    swapRotation(toSwap: ColorNote, mirrorAngle = true) {
-        const tempD = toSwap.direction;
-        toSwap.direction = this.direction;
-        this.direction = tempD;
-        const tempA = toSwap.angleOffset;
-        toSwap.angleOffset = this.angleOffset;
-        this.angleOffset = tempA;
-        if (mirrorAngle) {
-            toSwap.angleOffset = 0 - toSwap.angleOffset;
-            this.angleOffset = 0 - this.angleOffset;
-        }
-        return this;
-    }
-
-    /** Get note and return standardised note angle.
-     * ```ts
-     * const noteAngle = note.getAngle();
-     * ```
-     */
     getAngle(type?: 'vanilla' | 'me' | 'ne') {
         switch (type) {
             case 'vanilla':
@@ -189,112 +186,12 @@ export class ColorNote extends BaseNote<IColorNote> {
         }
     }
 
-    getDistance(compareTo: BaseNote<IBaseNote>) {
-        const [nX1, nY1] = this.getPosition();
-        const [nX2, nY2] = compareTo.getPosition();
-        return Math.sqrt(Math.pow(nX2 - nX1, 2) + Math.pow(nY2 - nY1, 2));
-    }
-
-    /** Check if note is red note.
-     * ```ts
-     * if (note.isRed()) {}
-     * ```
-     */
-    isRed() {
-        return this.color === 0;
-    }
-
-    /** Check if note is blue note.
-     * ```ts
-     * if (note.isBlue()) {}
-     * ```
-     */
-    isBlue() {
-        return this.color === 1;
-    }
-
-    isVertical(compareTo?: BaseNote<IBaseNote>) {
-        if (compareTo) {
-            const [nX1] = this.getPosition();
-            const [nX2] = compareTo.getPosition();
-            const d = nX1 - nX2;
-            return d > -0.001 && d < 0.001;
-        }
-        return 22.5 <= (Math.abs(this.getAngle()) % 180) + 90 && (Math.abs(this.getAngle()) % 180) + 90 <= 67.5;
-    }
-
-    isHorizontal(compareTo?: BaseNote<IBaseNote>) {
-        if (compareTo) {
-            const [_, nY1] = this.getPosition();
-            const [_2, nY2] = compareTo.getPosition();
-            const d = nY1 - nY2;
-            return d > -0.001 && d < 0.001;
-        }
-        return 22.5 <= (Math.abs(this.getAngle()) % 180) + 90 && (Math.abs(this.getAngle()) % 180) + 90 <= 67.5;
-    }
-
-    isDiagonal(compareTo?: BaseNote<IBaseNote>) {
-        if (compareTo) {
-            const [nX1, nY1] = this.getPosition();
-            const [nX2, nY2] = compareTo.getPosition();
-            const dX = Math.abs(nX1 - nX2);
-            const dY = Math.abs(nY1 - nY2);
-            return dX === dY;
-        }
-        return 22.5 <= Math.abs(this.getAngle()) % 90 && Math.abs(this.getAngle()) % 90 <= 67.5;
-    }
-
-    isInline(compareTo: BaseNote<IBaseNote>, lapping = 0.5) {
-        return this.getDistance(compareTo) <= lapping;
-    }
-
-    /** Compare current note with the note ahead of it and return if the notes is a double.
-     * ```ts
-     * if (note.isDouble(notes, index)) {}
-     * ```
-     */
-    isDouble(compareTo: ColorNote, tolerance = 0.01) {
-        return (
-            compareTo.time > this.time - tolerance &&
-            compareTo.time < this.time + tolerance &&
-            this.color !== compareTo.color
-        );
-    }
-
-    isAdjacent(compareTo: BaseNote<IBaseNote>) {
-        const d = this.getDistance(compareTo);
-        return d > 0.499 && d < 1.001;
-    }
-
-    isWindow(compareTo: BaseNote<IBaseNote>, distance = 1.8) {
-        return this.getDistance(compareTo) > distance;
-    }
-
-    isSlantedWindow(compareTo: BaseNote<IBaseNote>) {
-        return (
-            this.isWindow(compareTo) &&
-            !this.isDiagonal(compareTo) &&
-            !this.isHorizontal(compareTo) &&
-            !this.isVertical(compareTo)
-        );
-    }
-
-    /** Check if note has Chroma properties.
-     * ```ts
-     * if (note.hasChroma()) {}
-     * ```
-     */
-    hasChroma = (): boolean => {
+    isChroma(): boolean {
         return Array.isArray(this.customData.color) || typeof this.customData.spawnEffect === 'boolean';
-    };
+    }
 
-    /** Check if note has Noodle Extensions properties.
-     * ```ts
-     * if (note.hasNoodleExtensions()) {}
-     * ```
-     */
     // god i hate these
-    hasNoodleExtensions = (): boolean => {
+    isNoodleExtensions(): boolean {
         return (
             Array.isArray(this.customData.animation) ||
             typeof this.customData.disableNoteGravity === 'boolean' ||
@@ -309,39 +206,5 @@ export class ColorNote extends BaseNote<IColorNote> {
             typeof this.customData.worldRotation === 'number' ||
             typeof this.customData.track === 'string'
         );
-    };
-
-    /** Check if note has Mapping Extensions properties.
-     * ```ts
-     * if (note.hasMappingExtensions()) {}
-     * ```
-     */
-    hasMappingExtensions() {
-        return (
-            this.posX > 3 ||
-            this.posX < 0 ||
-            this.posY > 2 ||
-            this.posY < 0 ||
-            (this.direction >= 1000 && this.direction <= 1360) ||
-            (this.direction >= 2000 && this.direction <= 2360)
-        );
-    }
-
-    /** Check if note has a valid cut direction.
-     * ```ts
-     * if (note.isValidDirection()) {}
-     * ```
-     */
-    isValidDirection() {
-        return this.direction >= 0 && this.direction <= 8;
-    }
-
-    /** Check if note is valid & vanilla.
-     * ```ts
-     * if (note.isValid()) {}
-     * ```
-     */
-    isValid() {
-        return !this.hasMappingExtensions() && this.isValidDirection();
     }
 }

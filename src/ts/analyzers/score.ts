@@ -1,4 +1,4 @@
-import { NoteContainer } from '../types/beatmap/v3/container';
+import { NoteContainer } from '../types/beatmap/wrapper/container';
 
 export const MAX_NOTE_SCORE = 115;
 export const MAX_CHAIN_HEAD_SCORE = 85;

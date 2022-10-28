@@ -1,10 +1,10 @@
 import { ILightRotationBase } from '../../types/beatmap/v3/lightRotationBase';
 import { ObjectReturnFn } from '../../types/utils';
 import { deepCopy } from '../../utils/misc';
-import { Serializable } from '../shared/serializable';
+import { WrapLightRotationBase } from '../wrapper/lightRotationBase';
 
 /** Light rotation base beatmap v3 class object. */
-export class LightRotationBase extends Serializable<ILightRotationBase> {
+export class LightRotationBase extends WrapLightRotationBase<Required<ILightRotationBase>> {
     static default: ObjectReturnFn<Required<ILightRotationBase>> = {
         b: 0,
         p: 0,
@@ -58,7 +58,7 @@ export class LightRotationBase extends Serializable<ILightRotationBase> {
         return {
             b: this.time,
             p: this.previous,
-            e: this.ease,
+            e: this.easing,
             l: this.loop,
             r: this.rotation,
             o: this.direction,
@@ -66,7 +66,6 @@ export class LightRotationBase extends Serializable<ILightRotationBase> {
         };
     }
 
-    /** Relative beat time `<float>` to event box group. */
     get time() {
         return this.data.b;
     }
@@ -74,7 +73,6 @@ export class LightRotationBase extends Serializable<ILightRotationBase> {
         this.data.b = value;
     }
 
-    /** Use previous event rotation value `<int>` in light rotation. */
     get previous() {
         return this.data.p;
     }
@@ -82,23 +80,13 @@ export class LightRotationBase extends Serializable<ILightRotationBase> {
         this.data.p = value;
     }
 
-    /** Ease type `<int>` of light rotation.
-     * ```ts
-     * -1 -> Step
-     * 0 -> Linear
-     * 1 -> EaseInQuad
-     * 2 -> EaseOutQuad
-     * 3 -> EaseInOutQuad
-     * ```
-     */
-    get ease() {
+    get easing() {
         return this.data.e;
     }
-    set ease(value: ILightRotationBase['e']) {
+    set easing(value: ILightRotationBase['e']) {
         this.data.e = value;
     }
 
-    /** Loop count `<int>` in light rotation. */
     get loop() {
         return this.data.l;
     }
@@ -106,12 +94,6 @@ export class LightRotationBase extends Serializable<ILightRotationBase> {
         this.data.l = value;
     }
 
-    /** Rotation value `<float>` of light rotation.
-     * ```ts
-     * Left-side -> Clockwise
-     * Right-side -> Counter-Clockwise
-     * ```
-     */
     get rotation() {
         return this.data.r;
     }
@@ -119,17 +101,26 @@ export class LightRotationBase extends Serializable<ILightRotationBase> {
         this.data.r = value;
     }
 
-    /** Rotation direction `<int>` of light rotation.
-     * ```ts
-     * 0 -> Automatic
-     * 1 -> Clockwise
-     * 2 -> Counter-clockwise
-     * ```
-     */
     get direction() {
         return this.data.o;
     }
     set direction(value: ILightRotationBase['o']) {
         this.data.o = value;
+    }
+
+    get customData(): NonNullable<ILightRotationBase['customData']> {
+        return this.data.customData;
+    }
+    set customData(value: NonNullable<ILightRotationBase['customData']>) {
+        this.data.customData = value;
+    }
+
+    setCustomData(value: NonNullable<ILightRotationBase['customData']>): this {
+        this.customData = value;
+        return this;
+    }
+    addCustomData(object: ILightRotationBase['customData']): this {
+        this.customData = { ...this.customData, object };
+        return this;
     }
 }

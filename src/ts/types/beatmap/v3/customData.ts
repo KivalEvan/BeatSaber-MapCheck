@@ -1,5 +1,5 @@
 import { IBookmark } from './bookmark';
-import { IBPMChange } from '../shared/bpm';
+import { IBPMChange } from './bpmChange';
 import { IHeckCustomData } from './heck';
 import { IChromaCustomData, IChromaNote, IChromaObstacle } from './chroma';
 import { INENote, INEObstacle, INESlider } from './noodleExtensions';

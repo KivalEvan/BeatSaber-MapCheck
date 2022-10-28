@@ -14,7 +14,6 @@ import { RotationEvent } from './rotationEvent';
 import { Slider } from './slider';
 import { Waypoint } from './waypoint';
 import { BeatPerMinute } from '../shared/bpm';
-import { EventContainer, NoteContainer } from '../../types/beatmap/v3/container';
 import { DeepPartial, LooseAutocomplete } from '../../types/utils';
 import { IBPMEvent } from '../../types/beatmap/v3/bpmEvent';
 import { IRotationEvent } from '../../types/beatmap/v3/rotationEvent';
@@ -30,6 +29,7 @@ import { ILightRotationEventBoxGroup } from '../../types/beatmap/v3/lightRotatio
 import { ILightColorEventBoxGroup } from '../../types/beatmap/v3/lightColorEventBoxGroup';
 import { deepCopy } from '../../utils/misc';
 import { GenericFileName } from '../../types/beatmap/shared/info';
+import { EventContainer, NoteContainer } from '../../types/beatmap/wrapper/container';
 
 /** Difficulty beatmap v3 class object. */
 export class Difficulty extends Serializable<IDifficulty> {
@@ -44,8 +44,8 @@ export class Difficulty extends Serializable<IDifficulty> {
     sliders: Slider[];
     burstSliders: BurstSlider[];
     waypoints: Waypoint[];
-    basicBeatmapEvents: BasicEvent[];
-    colorBoostBeatmapEvents: ColorBoostEvent[];
+    basicEvents: BasicEvent[];
+    colorBoostEvents: ColorBoostEvent[];
     lightColorEventBoxGroups: LightColorEventBoxGroup[];
     lightRotationEventBoxGroups: LightRotationEventBoxGroup[];
     basicEventTypesWithKeywords: BasicEventTypesWithKeywords;
@@ -62,8 +62,8 @@ export class Difficulty extends Serializable<IDifficulty> {
         this.sliders = data.sliders?.map((obj) => Slider.create(obj)[0]) ?? [];
         this.burstSliders = data.burstSliders?.map((obj) => BurstSlider.create(obj)[0]) ?? [];
         this.waypoints = data.waypoints?.map((obj) => Waypoint.create(obj)[0]) ?? [];
-        this.basicBeatmapEvents = data.basicBeatmapEvents?.map((obj) => BasicEvent.create(obj)[0]) ?? [];
-        this.colorBoostBeatmapEvents = data.colorBoostBeatmapEvents?.map((obj) => ColorBoostEvent.create(obj)[0]) ?? [];
+        this.basicEvents = data.basicBeatmapEvents?.map((obj) => BasicEvent.create(obj)[0]) ?? [];
+        this.colorBoostEvents = data.colorBoostBeatmapEvents?.map((obj) => ColorBoostEvent.create(obj)[0]) ?? [];
         this.lightColorEventBoxGroups =
             data.lightColorEventBoxGroups?.map((obj) => LightColorEventBoxGroup.create(obj)[0]) ?? [];
         this.lightRotationEventBoxGroups =
@@ -109,8 +109,8 @@ export class Difficulty extends Serializable<IDifficulty> {
             sliders: this.sliders.map((obj) => obj.toJSON()),
             burstSliders: this.burstSliders.map((obj) => obj.toJSON()),
             waypoints: this.waypoints.map((obj) => obj.toJSON()),
-            basicBeatmapEvents: this.basicBeatmapEvents.map((obj) => obj.toJSON()),
-            colorBoostBeatmapEvents: this.colorBoostBeatmapEvents.map((obj) => obj.toJSON()),
+            basicBeatmapEvents: this.basicEvents.map((obj) => obj.toJSON()),
+            colorBoostBeatmapEvents: this.colorBoostEvents.map((obj) => obj.toJSON()),
             lightColorEventBoxGroups: this.lightColorEventBoxGroups.map((obj) => obj.toJSON()),
             lightRotationEventBoxGroups: this.lightRotationEventBoxGroups.map((obj) => obj.toJSON()),
             basicEventTypesWithKeywords: this.basicEventTypesWithKeywords.toJSON(),
@@ -248,8 +248,8 @@ export class Difficulty extends Serializable<IDifficulty> {
      */
     getEventContainer(): EventContainer[] {
         const ec: EventContainer[] = [];
-        this.basicBeatmapEvents.forEach((be) => ec.push({ type: 'basicEvent', data: be }));
-        this.colorBoostBeatmapEvents.forEach((b) => ec.push({ type: 'boost', data: b }));
+        this.basicEvents.forEach((be) => ec.push({ type: 'basicEvent', data: be }));
+        this.colorBoostEvents.forEach((b) => ec.push({ type: 'boost', data: b }));
         return ec.sort((a, b) => a.data.time - b.data.time);
     }
 
@@ -282,12 +282,10 @@ export class Difficulty extends Serializable<IDifficulty> {
         this.waypoints.push(...waypoints.map((w) => (w instanceof Waypoint ? w : Waypoint.create(w)[0])));
     }
     addBasicEvents(...basicEvents: Partial<IBasicEvent>[] | BasicEvent[]) {
-        this.basicBeatmapEvents.push(
-            ...basicEvents.map((be) => (be instanceof BasicEvent ? be : BasicEvent.create(be)[0])),
-        );
+        this.basicEvents.push(...basicEvents.map((be) => (be instanceof BasicEvent ? be : BasicEvent.create(be)[0])));
     }
     addColorBoostEvents(...colorBoostEvents: Partial<IColorBoostEvent>[] | ColorBoostEvent[]) {
-        this.colorBoostBeatmapEvents.push(
+        this.colorBoostEvents.push(
             ...colorBoostEvents.map((cbe) => (cbe instanceof ColorBoostEvent ? cbe : ColorBoostEvent.create(cbe)[0])),
         );
     }

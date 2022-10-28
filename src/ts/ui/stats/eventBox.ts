@@ -1,7 +1,7 @@
 import { IInfo } from '../../types/beatmap/shared/info';
 import { IBeatmapItem } from '../../types/mapcheck';
-import { countColorEBG, countRotationEBG } from '../../analyzers/stats';
-import { eventGroupRename } from '../../analyzers/renamer';
+import { countColorEBG, countRotationEBG } from '../../analyzers/stats/mod';
+import { eventGroupRename } from '../../analyzers/renamer/mod';
 import { prefix } from './constants';
 
 export function createEBGCountTable(mapInfo: IInfo, mapData: IBeatmapItem): HTMLTableElement {

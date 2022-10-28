@@ -34,7 +34,7 @@ function run(map: ToolArgs) {
         return;
     }
     const { bpm, audioDuration: duration } = map.settings;
-    const { colorNotes, bombNotes, obstacles, basicBeatmapEvents, sliders, burstSliders } = map.difficulty.data;
+    const { colorNotes, bombNotes, obstacles, basicEvents, sliders, burstSliders } = map.difficulty.data;
 
     const htmlResult: HTMLElement[] = [];
     if (duration) {
@@ -79,11 +79,11 @@ function run(map: ToolArgs) {
                 ),
             );
         }
-        if (basicBeatmapEvents.length && basicBeatmapEvents[0].time < 0) {
+        if (basicEvents.length && basicEvents[0].time < 0) {
             htmlResult.push(
                 printResult(
                     'Event(s) before start time',
-                    `${round(basicBeatmapEvents[0].time, 3)} (${toMMSS(bpm.toRealTime(basicBeatmapEvents[0].time))}`,
+                    `${round(basicEvents[0].time, 3)} (${toMMSS(bpm.toRealTime(basicEvents[0].time))}`,
                 ),
             );
         }
@@ -137,12 +137,12 @@ function run(map: ToolArgs) {
                 ),
             );
         }
-        if (basicBeatmapEvents.length && basicBeatmapEvents[basicBeatmapEvents.length - 1].time > endBeat) {
+        if (basicEvents.length && basicEvents[basicEvents.length - 1].time > endBeat) {
             htmlResult.push(
                 printResult(
                     'Event(s) after end time',
-                    `${round(basicBeatmapEvents[basicBeatmapEvents.length - 1].time, 3)} (${toMMSS(
-                        bpm.toRealTime(basicBeatmapEvents[basicBeatmapEvents.length - 1].time),
+                    `${round(basicEvents[basicEvents.length - 1].time, 3)} (${toMMSS(
+                        bpm.toRealTime(basicEvents[basicEvents.length - 1].time),
                     )})`,
                 ),
             );

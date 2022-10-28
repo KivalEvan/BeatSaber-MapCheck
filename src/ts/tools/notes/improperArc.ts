@@ -1,5 +1,5 @@
 import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
-import { NoteContainer } from '../../types/beatmap/v3/container';
+import { NoteContainer } from '../../types/beatmap/wrapper/container';
 import UICheckbox from '../../ui/helpers/checkbox';
 import { printResultTime } from '../helpers';
 import { NoteDirection } from '../../beatmap/shared/constants';

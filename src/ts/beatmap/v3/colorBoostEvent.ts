@@ -1,10 +1,10 @@
 import { IColorBoostEvent } from '../../types/beatmap/v3/colorBoostEvent';
 import { ObjectReturnFn } from '../../types/utils';
-import { BaseObject } from './baseObject';
 import { deepCopy } from '../../utils/misc';
+import { WrapColorBoostEvent } from '../wrapper/colorBoostEvent';
 
 /** Boost event beatmap v3 class object. */
-export class ColorBoostEvent extends BaseObject<IColorBoostEvent> {
+export class ColorBoostEvent extends WrapColorBoostEvent<Required<IColorBoostEvent>> {
     static default: ObjectReturnFn<Required<IColorBoostEvent>> = {
         b: 0,
         o: false,
@@ -50,11 +50,37 @@ export class ColorBoostEvent extends BaseObject<IColorBoostEvent> {
         };
     }
 
-    /** Toggle `<boolean>` of boost event. */
+    get time() {
+        return this.data.b;
+    }
+    set time(value: IColorBoostEvent['b']) {
+        this.data.b = value;
+    }
+
     get toggle() {
         return this.data.o;
     }
     set toggle(value: IColorBoostEvent['o']) {
         this.data.o = value;
+    }
+
+    get customData(): NonNullable<IColorBoostEvent['customData']> {
+        return this.data.customData;
+    }
+    set customData(value: NonNullable<IColorBoostEvent['customData']>) {
+        this.data.customData = value;
+    }
+
+    setCustomData(value: NonNullable<IColorBoostEvent['customData']>): this {
+        this.customData = value;
+        return this;
+    }
+    addCustomData(object: IColorBoostEvent['customData']): this {
+        this.customData = { ...this.customData, object };
+        return this;
+    }
+
+    isValid(): boolean {
+        return true;
     }
 }

@@ -433,6 +433,12 @@ export const LightColorEventBoxDataCheck: Record<keyof ILightColorEventBox, Data
         int: true,
         version: '3.0.0',
     },
+    customData: {
+        type: 'object',
+        version: '3.0.0',
+        check: {},
+        optional: true,
+    },
 } as const;
 
 export const LightColorEventBoxGroupDataCheck: Record<keyof ILightColorEventBoxGroup, DataCheck> = {
@@ -537,6 +543,12 @@ export const LightRotationEventBoxDataCheck: Record<keyof ILightRotationEventBox
         type: 'number',
         int: true,
         version: '3.0.0',
+    },
+    customData: {
+        type: 'object',
+        version: '3.0.0',
+        check: {},
+        optional: true,
     },
 } as const;
 

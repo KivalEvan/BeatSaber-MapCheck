@@ -1,4 +1,4 @@
-import { IObstacleCount } from '../../types/mapcheck/analyzers/stats';
+import { IObstacleCount } from './types/stats';
 import { Obstacle } from '../../beatmap/v3/obstacle';
 
 /** Count number of type of obstacles with their properties in given array and return a obstacle count object.
@@ -20,13 +20,13 @@ export function countObstacle(obstacles: Obstacle[]): IObstacleCount {
         if (obstacles[i].isInteractive()) {
             obstacleCount.interactive++;
         }
-        if (obstacles[i].hasChroma()) {
+        if (obstacles[i].isChroma()) {
             obstacleCount.chroma++;
         }
-        if (obstacles[i].hasNoodleExtensions()) {
+        if (obstacles[i].isNoodleExtensions()) {
             obstacleCount.noodleExtensions++;
         }
-        if (obstacles[i].hasMappingExtensions()) {
+        if (obstacles[i].isMappingExtensions()) {
             obstacleCount.mappingExtensions++;
         }
     }
