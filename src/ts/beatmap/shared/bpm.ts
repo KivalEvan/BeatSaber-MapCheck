@@ -26,7 +26,7 @@ export class BeatPerMinute {
             }) as IBPMEvent[],
         );
         this._bpmChange = this.getBPMChangeTime(
-            bpmChange.filter((bc) => (bc as IBPMChangeV2)._time == null && (bc as IBPMChangeV3).o == null) as (
+            bpmChange.filter((bc) => (bc as IBPMChangeV2)._time != null || (bc as IBPMChangeV3).o != null) as (
                 | IBPMChangeV2
                 | IBPMChangeOld
                 | IBPMChangeV3

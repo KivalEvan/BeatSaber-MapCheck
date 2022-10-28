@@ -115,8 +115,19 @@ export default async (type: LoadType) => {
         logger.info(tag(), 'Adding map stats');
         UIStats.populate();
         UIInfo.populateContributors(SavedData.contributors);
+        let minBPM = info._beatsPerMinute;
+        let maxBPM = info._beatsPerMinute;
+        SavedData.beatmapDifficulty.forEach((d) => {
+            const bpm = d.bpm.change.map((b) => b.BPM);
+            const bpme = d.data.bpmEvents.map((b) => b.bpm);
+            minBPM = Math.min(minBPM, ...bpm, ...bpme);
+            maxBPM = Math.max(maxBPM, ...bpm, ...bpme);
+        });
+        if (minBPM !== maxBPM) {
+            UIHeader.setSongBPM(info._beatsPerMinute, minBPM, maxBPM);
+        }
 
-        UILoading.status('info', 'Analysing map...', 85);
+        UILoading.status('info', 'Analysing general...', 85);
         logger.info(tag(), 'Analysing map');
         Analyser.runGeneral();
         UITools.displayOutputGeneral();

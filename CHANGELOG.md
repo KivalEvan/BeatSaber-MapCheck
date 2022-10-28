@@ -1,10 +1,11 @@
 # Changelog
 
-## 2.5.5 [2022-11-##]
+## 2.5.5 [2022-10-29]
 
 ### Added
 
 -   Play time information
+-   BPM event/change header
 
 ### Changed
 
