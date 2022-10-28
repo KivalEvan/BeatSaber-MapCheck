@@ -1,6 +1,7 @@
 export const logPrefix = 'UI Info: ';
 
 export const htmlTableVersion: HTMLElement = document.querySelector('.info__version')!;
+export const htmlTablePlayTime: HTMLElement = document.querySelector('.info__play-time')!;
 export const htmlTableTimeSpend: HTMLElement = document.querySelector('.info__time-spend')!;
 export const htmlTableCustomColor: HTMLElement = document.querySelector('.info__custom-color')!;
 export const htmlTableRequirements: HTMLElement = document.querySelector('.info__requirements')!;
@@ -16,6 +17,7 @@ export const htmlTableElements: NodeListOf<HTMLElement> = document.querySelector
 
 if (
     !htmlTableVersion ||
+    !htmlTablePlayTime ||
     !htmlTableTimeSpend ||
     !htmlTableCustomColor ||
     !htmlTableRequirements ||

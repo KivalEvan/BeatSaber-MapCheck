@@ -12,6 +12,7 @@ import { setEnvironmentEnhancement } from './environment';
 import { setVersion, setRequirements, setSuggestions, setInformation, setWarnings, setTimeSpend } from './misc';
 import { setPointDefinitions } from './pointDefinition';
 import { setTableHeight } from './helpers';
+import { setPlayTime } from './playTime';
 
 function setInfo(mapInfo: IInfo): void {
     UIHeader.setSongName(mapInfo._songName);
@@ -53,6 +54,10 @@ function setDiffInfoTable(mapData: IBeatmapItem): void {
         setPointDefinitions(mapData.data.customData.pointDefinitions);
         setCustomEvents(mapData.data.customData.customEvents, bpm);
     }
+    setPlayTime(
+        mapData.bpm.toRealTime(mapData.data.getFirstInteractiveTime()),
+        mapData.bpm.toRealTime(mapData.data.getLastInteractiveTime()),
+    );
 }
 
 function reset(): void {
@@ -61,6 +66,7 @@ function reset(): void {
     setEditors();
     populateContributors();
     setVersion();
+    setPlayTime();
     setTimeSpend();
     setCustomColor();
     setRequirements();
@@ -81,6 +87,7 @@ export {
     setContributors,
     populateContributors,
     setVersion,
+    setPlayTime,
     setTimeSpend,
     setCustomColor,
     setRequirements,

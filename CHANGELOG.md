@@ -2,6 +2,10 @@
 
 ## 2.5.5 [2022-11-##]
 
+### Added
+
+-   Play time information
+
 ### Changed
 
 -   Updated packages and Beat Saber core script
