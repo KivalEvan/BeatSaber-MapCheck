@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.5.6 [2022-11-xx]
+
+### Fixed
+
+-   Point definitions not being shown
+
 ## 2.5.5 [2022-10-29]
 
 ### Added
