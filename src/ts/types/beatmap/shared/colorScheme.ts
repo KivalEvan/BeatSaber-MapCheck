@@ -38,6 +38,7 @@ export type ColorSchemeList =
     | 'EDM'
     | 'The Second'
     | 'Lizzo'
+    | 'The Weeknd'
     | 'Glass Desert';
 
 export type IEnvironmentScheme = {

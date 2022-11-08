@@ -4,7 +4,7 @@ import { LightRotationEventBox } from './lightRotationEventBox';
 import { WrapLightRotationEventBoxGroup } from '../wrapper/lightRotationEventBoxGroup';
 import { deepCopy } from '../../utils/misc';
 
-/** Light rotation event box group beatmap v3 class object. */
+/** Light translation event box group beatmap v3 class object. */
 export class LightRotationEventBoxGroup extends WrapLightRotationEventBoxGroup<Required<ILightRotationEventBoxGroup>> {
     static default: ObjectReturnFn<Required<ILightRotationEventBoxGroup>> = {
         b: 0,

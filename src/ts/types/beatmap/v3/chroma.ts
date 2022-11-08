@@ -210,5 +210,5 @@ export interface IChromaCustomEventDataAnimateComponent extends IHeckCustomEvent
 /** Chroma Custom Data interface for difficulty custom data. */
 export interface IChromaCustomData {
     environment?: IChromaEnvironment[];
-    materials?: { [key: string]: IChromaMaterial };
+    materials?: Record<string, IChromaMaterial>;
 }

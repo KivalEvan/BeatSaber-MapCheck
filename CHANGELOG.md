@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.5.6 [2022-11-9]
+
+###
+
+-   Beatmap 3.2.0 support
+-   The Weeknd environment & color scheme
+
+### Fixed
+
+-   Point definitions not being shown
+
 ## 2.5.5 [2022-10-29]
 
 ### Added

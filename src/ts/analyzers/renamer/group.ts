@@ -101,17 +101,17 @@ export function eventGroupRename(id: number, environment?: EnvironmentAllName): 
                 case 11:
                     return 'Right Laser (Down)';
                 case 12:
-                    return 'Left Laser (Down) / Top Circle Rotation';
+                    return 'Left Laser (Down) / Top Circle';
                 case 13:
-                    return 'Right Laser (Up) / Close Circle Rotation';
+                    return 'Right Laser (Up) / Close Circle';
                 case 14:
-                    return 'Distant Circle Rotation';
+                    return 'Distant Circle';
                 case 15:
-                    return 'Distant Circle 2 Rotation';
+                    return 'Distant Circle 2';
                 case 16:
-                    return 'Left Single Source Circle Rotation';
+                    return 'Left Single Source Circle';
                 case 17:
-                    return 'Right Single Source Circle Rotation';
+                    return 'Right Single Source Circle';
                 default:
             }
         }
@@ -153,45 +153,121 @@ export function eventGroupRename(id: number, environment?: EnvironmentAllName): 
         case 'LizzoEnvironment': {
             switch (id) {
                 case 0:
-                    return 'Main Floor Color';
+                    return 'Main Floor';
                 case 1:
-                    return 'Rainbow Arcs Inner Color';
+                    return 'Rainbow Arcs Inner';
                 case 2:
-                    return 'Rainbow Arcs 2 Color';
+                    return 'Rainbow Arcs 2';
                 case 3:
-                    return 'Rainbow Arcs 3 Color';
+                    return 'Rainbow Arcs 3';
                 case 4:
-                    return 'Rainbow Arcs 4 Color';
+                    return 'Rainbow Arcs 4';
                 case 5:
-                    return 'Rainbow Arcs Outer Color';
+                    return 'Rainbow Arcs Outer';
                 case 6:
-                    return 'Rainbow Rings Left Rotation';
+                    return 'Rainbow Rings Left';
                 case 7:
-                    return 'Rainbow Rings Right Rotation';
+                    return 'Rainbow Rings Right';
                 case 8:
-                    return 'Rainbow Rings Lasers Left Color';
+                    return 'Rainbow Rings Lasers Left';
                 case 9:
-                    return 'Rainbow Rings Lasers Right Color';
+                    return 'Rainbow Rings Lasers Right';
                 case 10:
-                    return 'Main Top Lasers Color';
+                    return 'Main Top Lasers';
                 case 11:
-                    return 'Environment Stands Left Color';
+                    return 'Environment Stands Left';
                 case 12:
-                    return 'Environment Stands Right Color';
+                    return 'Environment Stands Right';
                 case 13:
-                    return 'Environment Clouds Left Color';
+                    return 'Environment Clouds Left';
                 case 14:
-                    return 'Environment Clouds Right Color';
+                    return 'Environment Clouds Right';
                 case 15:
-                    return 'Main Left Lasers Color';
+                    return 'Main Left Lasers';
                 case 16:
-                    return 'Main Right Lasers Color';
+                    return 'Main Right Lasers';
                 case 17:
-                    return 'Environment Stand Lasers Left Color';
+                    return 'Environment Stand Lasers Left';
                 case 18:
-                    return 'Environment Stand Lasers Right Color';
+                    return 'Environment Stand Lasers Right';
                 case 19:
-                    return 'Rainbow Arcs Laser Color';
+                    return 'Rainbow Arcs Laser';
+                default:
+            }
+        }
+        /* fall through */
+        case 'TheWeekndEnvironment': {
+            switch (id) {
+                case 0:
+                    return 'Lamps Poles Left';
+                case 1:
+                    return 'Lamps Poles Right';
+                case 2:
+                    return 'Lamps Rings Left';
+                case 3:
+                    return 'Lamps Rings Right';
+                case 4:
+                    return 'Environment Arrows';
+                case 5:
+                    return 'Environment Side Lasers Left';
+                case 6:
+                    return 'Environment Side Lasers Right';
+                case 7:
+                    return 'Environment Runway Lane';
+                case 8:
+                    return 'Environment Center Ring';
+                case 9:
+                    return 'Environment Center Ring Lasers';
+                case 10:
+                    return 'Windows Left 1 Front';
+                case 11:
+                    return 'Windows Left 1 Side';
+                case 12:
+                    return 'Windows Left 2 Side';
+                case 13:
+                    return 'Windows Left 3 Front';
+                case 14:
+                    return 'Windows Left 3 Side';
+                case 15:
+                    return 'Windows Right 1 Front';
+                case 16:
+                    return 'Windows Right 1 Side';
+                case 17:
+                    return 'Windows Right 2 Side';
+                case 18:
+                    return 'Windows Right 3 Front';
+                case 19:
+                    return 'Windows Right 3 Side';
+                case 20:
+                    return 'Buildings Left';
+                case 21:
+                    return 'Buildings Right';
+                case 22:
+                    return 'Buildings Roof Left';
+                case 23:
+                    return 'Buildings Roof Right';
+                case 29:
+                    return 'Lamp Rings Left 1';
+                case 30:
+                    return 'Lamp Rings Left 2';
+                case 31:
+                    return 'Lamp Rings Left 3';
+                case 32:
+                    return 'Lamp Rings Left 4';
+                case 33:
+                    return 'Lamp Rings Right 1';
+                case 34:
+                    return 'Lamp Rings Right 2';
+                case 35:
+                    return 'Lamp Rings Right 3';
+                case 36:
+                    return 'Lamp Rings Right 4';
+                case 38:
+                    return 'Buildings Background Left';
+                case 39:
+                    return 'Buildings Background Right';
+                case 40:
+                    return 'Buildings Side Buildings';
                 default:
             }
         }

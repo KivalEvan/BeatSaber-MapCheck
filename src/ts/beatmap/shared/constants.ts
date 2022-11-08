@@ -221,6 +221,7 @@ export const enum TransitionType {
 export const enum Axis {
     X,
     Y,
+    Z,
 }
 
 export const enum LightRotationDirection {

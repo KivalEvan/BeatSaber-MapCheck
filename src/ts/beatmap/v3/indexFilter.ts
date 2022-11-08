@@ -9,10 +9,10 @@ export class IndexFilter extends WrapIndexFilter<Required<IIndexFilter>> {
         t: 0,
         r: 0,
         c: 0,
-        l: 0,
-        d: 0,
         n: 0,
         s: 0,
+        l: 0,
+        d: 0,
     };
 
     protected constructor(indexFilter: IIndexFilter) {
@@ -29,10 +29,10 @@ export class IndexFilter extends WrapIndexFilter<Required<IIndexFilter>> {
             t: indexFilter.t ?? IndexFilter.default.t,
             r: indexFilter.r ?? IndexFilter.default.r,
             c: indexFilter.c ?? IndexFilter.default.c,
-            l: indexFilter.l ?? IndexFilter.default.l,
-            d: indexFilter.d ?? IndexFilter.default.d,
             n: indexFilter.n ?? IndexFilter.default.n,
             s: indexFilter.s ?? IndexFilter.default.s,
+            l: indexFilter.l ?? IndexFilter.default.l,
+            d: indexFilter.d ?? IndexFilter.default.d,
         });
     }
 
@@ -43,10 +43,10 @@ export class IndexFilter extends WrapIndexFilter<Required<IIndexFilter>> {
             t: this.p1,
             r: this.reverse,
             c: this.chunks,
-            l: this.limit,
-            d: this.limitAffectsType,
             n: this.random,
             s: this.seed,
+            l: this.limit,
+            d: this.limitAffectsType,
         };
     }
 

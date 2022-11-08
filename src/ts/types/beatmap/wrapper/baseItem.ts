@@ -5,7 +5,7 @@ export interface IWrapBaseItem {
      *
      * This has no type-safety for unsupported data.
      */
-    customData: ICustomDataBase;
+    customData?: ICustomDataBase;
 
     setCustomData(value: Record<string, unknown>): this;
     resetCustomData(): this;

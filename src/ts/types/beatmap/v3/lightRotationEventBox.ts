@@ -15,9 +15,10 @@ export interface ILightRotationEventBox extends IEventBox {
      * ```ts
      * 0 -> X
      * 1 -> Y
+     * 2 -> Z
      * ```
      */
-    a: 0 | 1;
+    a: 0 | 1 | 2;
     /** Flip rotation `<int>` in light rotation event box. */
     r: 0 | 1;
     /** Rotation distribution should affect first event `<int>` of light rotation event box. */

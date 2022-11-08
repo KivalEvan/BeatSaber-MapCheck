@@ -11,11 +11,12 @@ import { IColorBoostEvent } from './colorBoostEvent';
 import { ILightColorEventBoxGroup } from './lightColorEventBoxGroup';
 import { ILightRotationEventBoxGroup } from './lightRotationEventBoxGroup';
 import { IBasicEventTypesWithKeywords } from './basicEventTypesWithKeywords';
+import { ILightTranslationEventBoxGroup } from './lightTranslationEventBoxGroup';
 import { ICustomDataDifficulty } from './customData';
 import { IBaseItem } from './baseItem';
 
 export interface IDifficulty extends IBaseItem {
-    version: `3.${0 | 1}.0`;
+    version: `3.${0 | 1 | 2}.0`;
     bpmEvents: IBPMEvent[];
     rotationEvents: IRotationEvent[];
     colorNotes: IColorNote[];
@@ -28,6 +29,7 @@ export interface IDifficulty extends IBaseItem {
     colorBoostBeatmapEvents: IColorBoostEvent[];
     lightColorEventBoxGroups: ILightColorEventBoxGroup[];
     lightRotationEventBoxGroups: ILightRotationEventBoxGroup[];
+    lightTranslationEventBoxGroups: ILightTranslationEventBoxGroup[];
     basicEventTypesWithKeywords: IBasicEventTypesWithKeywords;
     useNormalEventsAsCompatibleEvents: boolean;
     customData?: ICustomDataDifficulty;

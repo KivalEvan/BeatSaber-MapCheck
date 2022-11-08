@@ -20,6 +20,16 @@ interface IIndexFilterBase {
      * Pairs next ID by available denominator.
      */
     c: number;
+    /** Random type `<int>` of index filter.
+     * ```ts
+     * 0 -> No Random
+     * 1 -> Keep Order
+     * 2 -> Random Elements
+     * ```
+     */
+    n: 0 | 1 | 2;
+    /** Random seed `<int>` in index filter. */
+    s: number;
     /** Limit (percentage) `<float>` of index filter.
      *
      * Select ID by percentage, rounded up to nearest ID. Disabled if 0.
@@ -36,16 +46,6 @@ interface IIndexFilterBase {
      * Adjust to limited ID list and has no effect with `Step` type.
      */
     d: 0 | 1 | 2;
-    /** Random type `<int>` of index filter.
-     * ```ts
-     * 0 -> No Random
-     * 1 -> Keep Order
-     * 2 -> Random Elements
-     * ```
-     */
-    n: 0 | 1 | 2;
-    /** Random seed `<int>` in index filter. */
-    s: number;
 }
 
 interface IIndexFilterSection extends IIndexFilterBase {
