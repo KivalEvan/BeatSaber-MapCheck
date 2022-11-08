@@ -13,4 +13,13 @@ export interface IEventBox extends IBaseItem {
      * ```
      */
     d: 1 | 2;
+    /** Easing `<int>` of distribution.
+     * ```ts
+     * 0 -> Linear
+     * 1 -> EaseInQuad
+     * 2 -> EaseOutQuad
+     * 3 -> EaseInOutQuad
+     * ```
+     */
+    i: 0 | 1 | 2 | 3;
 }

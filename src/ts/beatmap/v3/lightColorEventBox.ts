@@ -26,6 +26,7 @@ export class LightColorEventBox extends WrapLightColorEventBox<Required<ILightCo
         r: 0,
         t: 1,
         b: 0,
+        i: 0,
         e: () => [],
         customData: () => {
             return {};
@@ -57,6 +58,7 @@ export class LightColorEventBox extends WrapLightColorEventBox<Required<ILightCo
                     r: eb.r ?? LightColorEventBox.default.r,
                     t: eb.t ?? LightColorEventBox.default.t,
                     b: eb.b ?? LightColorEventBox.default.b,
+                    i: eb.i ?? LightColorEventBox.default.i,
                     e: (eb as Required<ILightColorEventBox>).e ?? LightColorEventBox.default.e(),
                     customData: eb.customData ?? LightColorEventBox.default.customData(),
                 }),
@@ -73,6 +75,7 @@ export class LightColorEventBox extends WrapLightColorEventBox<Required<ILightCo
                 r: LightColorEventBox.default.r,
                 t: LightColorEventBox.default.t,
                 b: LightColorEventBox.default.b,
+                i: LightColorEventBox.default.i,
                 e: LightColorEventBox.default.e(),
                 customData: LightColorEventBox.default.customData(),
             }),
@@ -87,6 +90,7 @@ export class LightColorEventBox extends WrapLightColorEventBox<Required<ILightCo
             r: this.brightnessDistribution,
             t: this.brightnessDistributionType,
             b: this.affectFirst,
+            i: this.easing,
             e: this.events.map((e) => e.toJSON()),
             customData: deepCopy(this.customData),
         };
@@ -132,6 +136,13 @@ export class LightColorEventBox extends WrapLightColorEventBox<Required<ILightCo
     }
     set affectFirst(value: ILightColorEventBox['b'] | boolean) {
         this.data.b = value ? 1 : 0;
+    }
+
+    get easing() {
+        return this.data.i;
+    }
+    set easing(value: ILightColorEventBox['i']) {
+        this.data.i = value;
     }
 
     get events() {

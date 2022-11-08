@@ -20,6 +20,16 @@ export interface IWrapIndexFilter {
      * Pairs next ID by available denominator.
      */
     chunks: number;
+    /** Random type `<int>` of index filter.
+     * ```ts
+     * 0 -> No Random
+     * 1 -> Keep Order
+     * 2 -> Random Elements
+     * ```
+     */
+    random: 0 | 1 | 2;
+    /** Random seed `<int>` in index filter. */
+    seed: number;
     /** Limit (percentage) `<float>` of index filter.
      *
      * Select ID by percentage, rounded up to nearest ID. Disabled if 0.
@@ -36,24 +46,14 @@ export interface IWrapIndexFilter {
      * Adjust to limited ID list and has no effect with `Step` type.
      */
     limitAffectsType: 0 | 1 | 2;
-    /** Random type `<int>` of index filter.
-     * ```ts
-     * 0 -> No Random
-     * 1 -> Keep Order
-     * 2 -> Random Elements
-     * ```
-     */
-    random: 0 | 1 | 2;
-    /** Random seed `<int>` in index filter. */
-    seed: number;
 
     setType(value: 1 | 2): this;
     setP0(value: number): this;
     setP1(value: number): this;
     setReverse(value: 0 | 1): this;
     setChunks(value: number): this;
-    setLimit(value: number): this;
-    setLimitAffectsType(value: 0 | 1 | 2): this;
     setRandom(value: 0 | 1 | 2): this;
     setSeed(value: number): this;
+    setLimit(value: number): this;
+    setLimitAffectsType(value: 0 | 1 | 2): this;
 }

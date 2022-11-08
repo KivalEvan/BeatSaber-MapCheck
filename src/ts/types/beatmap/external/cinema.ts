@@ -1,13 +1,13 @@
 import { EnvironmentAllName } from '../mod';
 
-interface Vector3Object {
+interface IVector3Object {
     x: number;
     y: number;
     z: number;
 }
 
 // description taken directly from author's github
-export interface CinemaConfig {
+export interface ICinemaConfig {
     // BASIC SETTINGS
     /** The YouTube video ID from the part after the &v= in the URL, e.g.: `youtube.com/watch?v=_qwnHeMKbVA`
      *
@@ -90,12 +90,12 @@ export interface CinemaConfig {
      *
      * Default: `{"x": 0.0,"y": 12.4,"z": 67.8}`
      */
-    screenPosition?: Vector3Object;
+    screenPosition?: IVector3Object;
     /** Rotates the video screen. By default, it tilts down by 8 degrees for better visibility.
      *
      * Default: `{"x": -8.0,"y": 0.0,"z": 0.0}`
      */
-    screenRotation?: Vector3Object;
+    screenRotation?: IVector3Object;
     /** Determines the size `<float>` of the screen. There is no setting for the width, since that is calculated automatically by the height and the aspect ratio of the video.
      *
      * If you change the height, you might want to also change the y positioning of the screen so it doesn't float above the ground.
@@ -228,11 +228,11 @@ export interface CinemaConfig {
      */
     additionalScreens: {
         /** Moves the object to the specified location. */
-        position?: Vector3Object;
+        position?: IVector3Object;
         /** Rotates the object. */
-        rotation?: Vector3Object;
+        rotation?: IVector3Object;
         /** Scales the object. Default for each axis is usually 1.0. Setting any axis to 0 may cause the object to become invisible. */
-        scale?: Vector3Object;
+        scale?: IVector3Object;
     }[];
 
     /** Using this disables player overrides for the environment, since these modifications are specific to the mapper-chosen environment. */
@@ -252,10 +252,10 @@ export interface CinemaConfig {
         /** Set this to `false` to hide the object, or to true to show it if it's hidden by default. */
         active?: boolean;
         /** Moves the object to the specified location. */
-        position?: Vector3Object;
+        position?: IVector3Object;
         /** Rotates the object. */
-        rotation?: Vector3Object;
+        rotation?: IVector3Object;
         /** Scales the object. Default for each axis is usually 1.0. Setting any axis to 0 may cause the object to become invisible. */
-        scale?: Vector3Object;
+        scale?: IVector3Object;
     }[];
 }

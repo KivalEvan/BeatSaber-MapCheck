@@ -28,6 +28,7 @@ export class LightRotationEventBox extends WrapLightRotationEventBox<Required<IL
         a: 0,
         r: 0,
         b: 0,
+        i: 0,
         l: () => [],
         customData: () => {
             return {};
@@ -61,6 +62,7 @@ export class LightRotationEventBox extends WrapLightRotationEventBox<Required<IL
                     a: eb.a ?? LightRotationEventBox.default.a,
                     r: eb.r ?? LightRotationEventBox.default.r,
                     b: eb.b ?? LightRotationEventBox.default.b,
+                    i: eb.i ?? LightRotationEventBox.default.i,
                     l: eb.l ?? LightRotationEventBox.default.l(),
                     customData: eb.customData ?? LightRotationEventBox.default.customData(),
                 }),
@@ -79,6 +81,7 @@ export class LightRotationEventBox extends WrapLightRotationEventBox<Required<IL
                 a: LightRotationEventBox.default.a,
                 r: LightRotationEventBox.default.r,
                 b: LightRotationEventBox.default.b,
+                i: LightRotationEventBox.default.i,
                 l: LightRotationEventBox.default.l(),
                 customData: LightRotationEventBox.default.customData(),
             }),
@@ -96,6 +99,7 @@ export class LightRotationEventBox extends WrapLightRotationEventBox<Required<IL
             r: this.flip,
             b: this.affectFirst,
             l: this.events.map((l) => l.toJSON()),
+            i: this.easing,
             customData: deepCopy(this.customData),
         };
     }
@@ -154,6 +158,13 @@ export class LightRotationEventBox extends WrapLightRotationEventBox<Required<IL
     }
     set affectFirst(value: ILightRotationEventBox['b'] | boolean) {
         this.data.b = value ? 1 : 0;
+    }
+
+    get easing() {
+        return this.data.i;
+    }
+    set easing(value: ILightRotationEventBox['i']) {
+        this.data.i = value;
     }
 
     get events() {

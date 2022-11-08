@@ -9,6 +9,7 @@ import { ColorBoostEvent } from './colorBoostEvent';
 import { ColorNote } from './colorNote';
 import { LightColorEventBoxGroup } from './lightColorEventBoxGroup';
 import { LightRotationEventBoxGroup } from './lightRotationEventBoxGroup';
+import { LightTranslationEventBoxGroup } from './lightTranslationEventBoxGroup';
 import { Obstacle } from './obstacle';
 import { RotationEvent } from './rotationEvent';
 import { Slider } from './slider';
@@ -27,6 +28,7 @@ import { IBasicEvent } from '../../types/beatmap/v3/basicEvent';
 import { IColorBoostEvent } from '../../types/beatmap/v3/colorBoostEvent';
 import { ILightRotationEventBoxGroup } from '../../types/beatmap/v3/lightRotationEventBoxGroup';
 import { ILightColorEventBoxGroup } from '../../types/beatmap/v3/lightColorEventBoxGroup';
+import { ILightTranslationEventBoxGroup } from '../../types/beatmap/v3/lightTranslationEventBoxGroup';
 import { deepCopy } from '../../utils/misc';
 import { GenericFileName } from '../../types/beatmap/shared/info';
 import { EventContainer, NoteContainer } from '../../types/beatmap/wrapper/container';
@@ -48,12 +50,13 @@ export class Difficulty extends Serializable<IDifficulty> {
     colorBoostEvents: ColorBoostEvent[];
     lightColorEventBoxGroups: LightColorEventBoxGroup[];
     lightRotationEventBoxGroups: LightRotationEventBoxGroup[];
+    lightTranslationEventBoxGroups: LightTranslationEventBoxGroup[];
     basicEventTypesWithKeywords: BasicEventTypesWithKeywords;
     useNormalEventsAsCompatibleEvents;
     customData;
     protected constructor(data: Required<IDifficulty>) {
         super(data);
-        this.version = '3.1.0';
+        this.version = '3.2.0';
         this.bpmEvents = data.bpmEvents?.map((obj) => BPMEvent.create(obj)[0]) ?? [];
         this.rotationEvents = data.rotationEvents?.map((obj) => RotationEvent.create(obj)[0]) ?? [];
         this.colorNotes = data.colorNotes?.map((obj) => ColorNote.create(obj)[0]) ?? [];
@@ -68,6 +71,8 @@ export class Difficulty extends Serializable<IDifficulty> {
             data.lightColorEventBoxGroups?.map((obj) => LightColorEventBoxGroup.create(obj)[0]) ?? [];
         this.lightRotationEventBoxGroups =
             data.lightRotationEventBoxGroups?.map((obj) => LightRotationEventBoxGroup.create(obj)[0]) ?? [];
+        this.lightTranslationEventBoxGroups =
+            data.lightTranslationEventBoxGroups?.map((obj) => LightTranslationEventBoxGroup.create(obj)[0]) ?? [];
         this.basicEventTypesWithKeywords = BasicEventTypesWithKeywords.create(data.basicEventTypesWithKeywords) ?? {
             d: [],
         };
@@ -77,7 +82,7 @@ export class Difficulty extends Serializable<IDifficulty> {
 
     static create(data: Partial<IDifficulty> = {}): Difficulty {
         return new this({
-            version: '3.1.0',
+            version: '3.2.0',
             bpmEvents: data.bpmEvents ?? [],
             rotationEvents: data.rotationEvents ?? [],
             colorNotes: data.colorNotes ?? [],
@@ -90,6 +95,7 @@ export class Difficulty extends Serializable<IDifficulty> {
             colorBoostBeatmapEvents: data.colorBoostBeatmapEvents ?? [],
             lightColorEventBoxGroups: data.lightColorEventBoxGroups ?? [],
             lightRotationEventBoxGroups: data.lightRotationEventBoxGroups ?? [],
+            lightTranslationEventBoxGroups: data.lightTranslationEventBoxGroups ?? [],
             basicEventTypesWithKeywords: data.basicEventTypesWithKeywords ?? {
                 d: [],
             },
@@ -100,7 +106,7 @@ export class Difficulty extends Serializable<IDifficulty> {
 
     toJSON(): Required<IDifficulty> {
         return {
-            version: '3.1.0',
+            version: '3.2.0',
             bpmEvents: this.bpmEvents.map((obj) => obj.toJSON()),
             rotationEvents: this.rotationEvents.map((obj) => obj.toJSON()),
             colorNotes: this.colorNotes.map((obj) => obj.toJSON()),
@@ -113,6 +119,7 @@ export class Difficulty extends Serializable<IDifficulty> {
             colorBoostBeatmapEvents: this.colorBoostEvents.map((obj) => obj.toJSON()),
             lightColorEventBoxGroups: this.lightColorEventBoxGroups.map((obj) => obj.toJSON()),
             lightRotationEventBoxGroups: this.lightRotationEventBoxGroups.map((obj) => obj.toJSON()),
+            lightTranslationEventBoxGroups: this.lightTranslationEventBoxGroups.map((obj) => obj.toJSON()),
             basicEventTypesWithKeywords: this.basicEventTypesWithKeywords.toJSON(),
             useNormalEventsAsCompatibleEvents: this.useNormalEventsAsCompatibleEvents,
             customData: deepCopy(this.customData),

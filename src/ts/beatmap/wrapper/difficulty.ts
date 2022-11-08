@@ -7,6 +7,7 @@ import { IWrapColorBoostEvent } from '../../types/beatmap/wrapper/colorBoostEven
 import { IWrapColorNote } from '../../types/beatmap/wrapper/colorNote';
 import { IWrapLightColorEventBoxGroup } from '../../types/beatmap/wrapper/lightColorEventBoxGroup';
 import { IWrapLightRotationEventBoxGroup } from '../../types/beatmap/wrapper/lightRotationEventBoxGroup';
+import { IWrapLightTranslationEventBoxGroup } from '../../types/beatmap/wrapper/lightTranslationEventBoxGroup';
 import { IWrapObstacle } from '../../types/beatmap/wrapper/obstacle';
 import { IWrapRotationEvent } from '../../types/beatmap/wrapper/rotationEvent';
 import { IWrapSlider } from '../../types/beatmap/wrapper/slider';
@@ -36,6 +37,7 @@ export abstract class WrapDifficulty<T extends Record<keyof T, unknown>> extends
     abstract colorBoostEvents: IWrapColorBoostEvent[];
     abstract lightColorEventBoxGroups: IWrapLightColorEventBoxGroup[];
     abstract lightRotationEventBoxGroups: IWrapLightRotationEventBoxGroup[];
+    abstract lightTranslationEventBoxGroups: IWrapLightTranslationEventBoxGroup[];
     abstract basicEventTypesWithKeywords: IWrapEventTypesWithKeywords;
     abstract useNormalEventsAsCompatibleEvents: boolean;
     abstract customData: ICustomDataBase;

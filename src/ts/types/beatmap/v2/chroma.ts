@@ -183,5 +183,5 @@ export interface IChromaCustomEventDataAssignFogTrack extends IHeckCustomEventDa
 /** Chroma Custom Data interface for difficulty custom data. */
 export interface IChromaCustomData {
     _environment?: IChromaEnvironment[];
-    _materials?: { [key: string]: IChromaMaterial };
+    _materials?: Record<string, IChromaMaterial>;
 }

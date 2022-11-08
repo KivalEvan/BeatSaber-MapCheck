@@ -1,8 +1,8 @@
 import { IBasicEvent } from '../v3/basicEvent';
 import { EnvironmentAllName } from '../shared/environment';
-import { IChromaEnvironment } from '../v3/chroma';
+import { IChromaEnvironment, IChromaMaterial } from '../v3/chroma';
 
-export interface EnvironmentJSON {
+export interface IEnvironmentJSON {
     /** must be 1.0.0 to work */
     version: '1.0.0';
     name: string;
@@ -19,4 +19,5 @@ export interface EnvironmentJSON {
         basicBeatmapEvents?: IBasicEvent[];
     };
     environment: IChromaEnvironment[];
+    materials?: Record<string, IChromaMaterial>;
 }

@@ -250,6 +250,17 @@ export function eventTypeRename(type: number, environment?: EnvironmentAllName):
                 default:
             }
             break;
+        case 'TheWeekndEnvironment':
+            switch (type) {
+                case 0:
+                    return 'Runway Left';
+                case 1:
+                    return 'Runway Right';
+                case 6:
+                    return 'Ambient';
+                default:
+            }
+            break;
         default:
     }
     // generic

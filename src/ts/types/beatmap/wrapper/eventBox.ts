@@ -13,8 +13,18 @@ export interface IWrapEventBox extends IWrapBaseItem {
      * ```
      */
     beatDistributionType: 1 | 2;
+    /** Easing `<int>` of distribution.
+     * ```ts
+     * 0 -> Linear
+     * 1 -> EaseInQuad
+     * 2 -> EaseOutQuad
+     * 3 -> EaseInOutQuad
+     * ```
+     */
+    easing: 0 | 1 | 2 | 3;
 
     setFilter(value: IWrapIndexFilter): this;
     setBeatDistribution(value: IWrapEventBox['beatDistribution']): this;
     setBeatDistributionType(value: IWrapEventBox['beatDistributionType']): this;
+    setEasing(value: IWrapEventBox['easing']): this;
 }
