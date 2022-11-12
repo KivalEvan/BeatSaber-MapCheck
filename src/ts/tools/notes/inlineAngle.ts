@@ -209,7 +209,7 @@ function run(map: ToolArgs) {
     const result = check(map);
 
     if (result.length) {
-        tool.output.html = printResultTime('Inline sharp angle', result, map.settings.bpm);
+        tool.output.html = printResultTime('Inline sharp angle', result, map.settings.bpm, 'warning');
     } else {
         tool.output.html = null;
     }

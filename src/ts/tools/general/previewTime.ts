@@ -1,5 +1,6 @@
 import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import UICheckbox from '../../ui/helpers/checkbox';
+import { printResult } from '../helpers';
 
 const name = 'Preview Time';
 const description = 'Warn default editor preview time.';
@@ -30,9 +31,11 @@ function run(map: ToolArgs) {
     const { _previewStartTime: previewStartTime, _previewDuration: previewDuration } = map.info;
 
     if (previewStartTime === 12 && previewDuration === 10) {
-        const htmlResult = document.createElement('div');
-        htmlResult.innerHTML = "<b>Default preview time:</b> strongly recommended to set for audience's 1st impression";
-        tool.output.html = htmlResult;
+        tool.output.html = printResult(
+            'Default preview time',
+            "strongly recommended to set for audience's 1st impression",
+            'info',
+        );
     } else {
         tool.output.html = null;
     }

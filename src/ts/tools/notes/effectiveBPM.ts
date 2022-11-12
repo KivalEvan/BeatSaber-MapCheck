@@ -102,10 +102,12 @@ function run(map: ToolArgs) {
 
     const htmlResult: HTMLElement[] = [];
     if (result.base.length) {
-        htmlResult.push(printResultTime(`>${ebpmThres}EBPM warning`, result.base, map.settings.bpm));
+        htmlResult.push(printResultTime(`>${ebpmThres}EBPM warning`, result.base, map.settings.bpm, 'warning'));
     }
     if (result.swing.length) {
-        htmlResult.push(printResultTime(`>${ebpmsThres}EBPM (swing) warning`, result.swing, map.settings.bpm));
+        htmlResult.push(
+            printResultTime(`>${ebpmsThres}EBPM (swing) warning`, result.swing, map.settings.bpm, 'warning'),
+        );
     }
 
     if (htmlResult.length) {

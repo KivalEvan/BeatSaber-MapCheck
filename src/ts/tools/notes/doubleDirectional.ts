@@ -127,7 +127,7 @@ function run(map: ToolArgs) {
     const result = check(map.settings, map.difficulty);
 
     if (result.length) {
-        tool.output.html = printResultTime('Double-directional', result, map.settings.bpm);
+        tool.output.html = printResultTime('Double-directional', result, map.settings.bpm, 'warning');
     } else {
         tool.output.html = null;
     }

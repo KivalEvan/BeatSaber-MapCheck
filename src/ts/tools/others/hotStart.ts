@@ -58,7 +58,7 @@ function run(map: ToolArgs) {
     const result = map.settings.bpm.toRealTime(map.difficulty.data.getFirstInteractiveTime());
 
     if (result < time) {
-        tool.output.html = printResult('Hot start', `${round(result, 2)}s`);
+        tool.output.html = printResult('Hot start', `${round(result, 2)}s`, 'warning');
     } else {
         tool.output.html = null;
     }

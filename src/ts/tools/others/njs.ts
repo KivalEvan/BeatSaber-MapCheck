@@ -38,27 +38,30 @@ function run(map: ToolArgs) {
 
     const htmlResult: HTMLElement[] = [];
     if (map.difficulty.info._noteJumpMovementSpeed === 0) {
-        htmlResult.push(printResult('Unset NJS', 'fallback NJS is used'));
+        htmlResult.push(printResult('Unset NJS', 'fallback NJS is used', 'error'));
     }
     if (njs.value > 23) {
-        htmlResult.push(printResult(`NJS is too high (${round(njs.value, 2)})`, 'use lower whenever necessary'));
+        htmlResult.push(
+            printResult(`NJS is too high (${round(njs.value, 2)})`, 'use lower whenever necessary', 'warning'),
+        );
     }
     if (njs.value < 3) {
         htmlResult.push(
-            printResult(`NJS is too low (${round(njs.value, 2)})`, 'timing is less significant below this'),
+            printResult(`NJS is too low (${round(njs.value, 2)})`, 'timing is less significant below this', 'warning'),
         );
     }
     if (njs.jd > 36) {
-        htmlResult.push(printResult('Very high jump distance', `${round(njs.jd, 2)}`));
+        htmlResult.push(printResult('Very high jump distance', `${round(njs.jd, 2)}`, 'warning'));
     }
     if (njs.jd < 18) {
-        htmlResult.push(printResult('Very low jump distance', `${round(njs.jd, 2)}`));
+        htmlResult.push(printResult('Very low jump distance', `${round(njs.jd, 2)}`, 'warning'));
     }
     if (njs.jd > njs.calcJDOptimalHigh()) {
         htmlResult.push(
             printResult(
                 `High jump distance warning (>${round(njs.calcJDOptimalHigh(), 2)})`,
                 'NJS & offset may be uncomfortable to play',
+                'warning',
             ),
         );
     }
@@ -67,11 +70,14 @@ function run(map: ToolArgs) {
             printResult(
                 `Very quick reaction time (${round(bpm.toRealTime(njs.hjd) * 1000)}ms)`,
                 'may lead to suboptimal gameplay',
+                'warning',
             ),
         );
     }
     if (njs.calcHJDRaw() + njs.offset < NoteJumpSpeed.HJD_MIN) {
-        htmlResult.push(printResult('Unnecessary negative offset', `will not drop below ${NoteJumpSpeed.HJD_MIN}`));
+        htmlResult.push(
+            printResult('Unnecessary negative offset', `will not drop below ${NoteJumpSpeed.HJD_MIN}`, 'warning'),
+        );
     }
 
     if (htmlResult.length) {

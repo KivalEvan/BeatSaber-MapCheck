@@ -111,7 +111,12 @@ function run(map: ToolArgs) {
     const result = check(map);
 
     if (result.length) {
-        tool.output.html = printResultTime(`Slow slider (>${round(minSpeed * 1000, 1)}ms)`, result, map.settings.bpm);
+        tool.output.html = printResultTime(
+            `Slow slider (>${round(minSpeed * 1000, 1)}ms)`,
+            result,
+            map.settings.bpm,
+            'warning',
+        );
     } else {
         tool.output.html = null;
     }

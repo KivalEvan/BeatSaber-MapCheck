@@ -89,6 +89,7 @@ function run(map: ToolArgs) {
                     swing.calcSPSTotalPercDrop(filteredSPS),
                     2,
                 )}% drop from highest SPS (${round(swing.getSPSHighest(filteredSPS), 2)})`,
+                'rank',
             ),
         );
     }
@@ -107,6 +108,7 @@ function run(map: ToolArgs) {
                     (progMax.comparedTo?.total.average || 0) * 0.9,
                     2,
                 )})`,
+                'rank',
             ),
         );
     }
@@ -123,6 +125,7 @@ function run(map: ToolArgs) {
                     (progMin.comparedTo?.total.average || 0) * 0.9,
                     2,
                 )})`,
+                'rank',
             ),
         );
     }

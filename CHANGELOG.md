@@ -2,6 +2,14 @@
 
 ## 2.5.7 [2022-11-##]
 
+### Added
+
+-   Tools output symbol
+    -   🚧 Ranking: for rankability reason.
+    -   ❌ Error: should be fixed unless you know what you are doing.
+    -   ❗ Warning: not necessarily needed to be fixed but worth considering.
+    -   ⚠️ Info: no action necessary and worth noting.
+
 ### Fixed
 
 -   Progression calculation error

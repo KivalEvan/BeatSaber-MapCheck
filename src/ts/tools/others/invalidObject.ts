@@ -58,22 +58,22 @@ function run(map: ToolArgs) {
 
     const htmlResult: HTMLElement[] = [];
     if (noteResult.length) {
-        htmlResult.push(printResultTime('Invalid note', noteResult, map.settings.bpm));
+        htmlResult.push(printResultTime('Invalid note', noteResult, map.settings.bpm, 'error'));
     }
     if (bombResult.length) {
-        htmlResult.push(printResultTime('Invalid bomb', bombResult, map.settings.bpm));
+        htmlResult.push(printResultTime('Invalid bomb', bombResult, map.settings.bpm, 'error'));
     }
     if (sliderResult.length) {
-        htmlResult.push(printResultTime('Invalid arc', sliderResult, map.settings.bpm));
+        htmlResult.push(printResultTime('Invalid arc', sliderResult, map.settings.bpm, 'error'));
     }
     if (burstSliderResult.length) {
-        htmlResult.push(printResultTime('Invalid chain', burstSliderResult, map.settings.bpm));
+        htmlResult.push(printResultTime('Invalid chain', burstSliderResult, map.settings.bpm, 'error'));
     }
     if (obstacleResult.length) {
-        htmlResult.push(printResultTime('Invalid obstacle', obstacleResult, map.settings.bpm));
+        htmlResult.push(printResultTime('Invalid obstacle', obstacleResult, map.settings.bpm, 'error'));
     }
     if (eventResult.length) {
-        htmlResult.push(printResultTime('Invalid event', eventResult, map.settings.bpm));
+        htmlResult.push(printResultTime('Invalid event', eventResult, map.settings.bpm, 'error'));
     }
 
     if (htmlResult.length) {

@@ -193,6 +193,7 @@ function run(map: ToolArgs) {
             `2-wide center obstacle (<${round(recovery * 1000)}ms)`,
             result,
             map.settings.bpm,
+            'error',
         );
     } else {
         tool.output.html = null;
