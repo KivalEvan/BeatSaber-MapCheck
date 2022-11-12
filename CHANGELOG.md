@@ -1,8 +1,14 @@
 # Changelog
 
-## 2.5.6 [2022-11-9]
+## 2.5.7 [2022-11-##]
 
-###
+### Fixed
+
+-   Progression calculation error
+
+## 2.5.6 [2022-11-09]
+
+### Added
 
 -   Beatmap 3.2.0 support
 -   The Weeknd environment & color scheme
