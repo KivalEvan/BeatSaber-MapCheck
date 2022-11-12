@@ -6,7 +6,7 @@ import { Vector2 } from '../../types/beatmap/shared/heck';
 /** Beatmap grid class object. */
 export abstract class WrapGridObject<T extends Record<keyof T, unknown>>
     extends WrapBaseObject<T>
-    implements IWrapGridObject
+    implements IWrapGridObject<T>
 {
     abstract get posX(): IWrapGridObject['posX'];
     abstract set posX(value: IWrapGridObject['posX']);
@@ -56,27 +56,27 @@ export abstract class WrapGridObject<T extends Record<keyof T, unknown>>
         }
     }
 
-    getDistance(compareTo: WrapGridObject<T>) {
+    getDistance(compareTo: IWrapGridObject) {
         const [nX1, nY1] = this.getPosition();
         const [nX2, nY2] = compareTo.getPosition();
         return Math.sqrt(Math.pow(nX2 - nX1, 2) + Math.pow(nY2 - nY1, 2));
     }
 
-    isVertical(compareTo: WrapGridObject<T>) {
+    isVertical(compareTo: IWrapGridObject) {
         const [nX1] = this.getPosition();
         const [nX2] = compareTo.getPosition();
         const d = nX1 - nX2;
         return d > -0.001 && d < 0.001;
     }
 
-    isHorizontal(compareTo: WrapGridObject<T>) {
+    isHorizontal(compareTo: IWrapGridObject) {
         const [_, nY1] = this.getPosition();
         const [_2, nY2] = compareTo.getPosition();
         const d = nY1 - nY2;
         return d > -0.001 && d < 0.001;
     }
 
-    isDiagonal(compareTo: WrapGridObject<T>) {
+    isDiagonal(compareTo: IWrapGridObject) {
         const [nX1, nY1] = this.getPosition();
         const [nX2, nY2] = compareTo.getPosition();
         const dX = Math.abs(nX1 - nX2);
@@ -84,20 +84,20 @@ export abstract class WrapGridObject<T extends Record<keyof T, unknown>>
         return dX === dY;
     }
 
-    isInline(compareTo: WrapGridObject<T>, lapping = 0.5) {
+    isInline(compareTo: IWrapGridObject, lapping = 0.5) {
         return this.getDistance(compareTo) <= lapping;
     }
 
-    isAdjacent(compareTo: WrapGridObject<T>) {
+    isAdjacent(compareTo: IWrapGridObject) {
         const d = this.getDistance(compareTo);
         return d > 0.499 && d < 1.001;
     }
 
-    isWindow(compareTo: WrapGridObject<T>, distance = 1.8) {
+    isWindow(compareTo: IWrapGridObject, distance = 1.8) {
         return this.getDistance(compareTo) > distance;
     }
 
-    isSlantedWindow(compareTo: WrapGridObject<T>) {
+    isSlantedWindow(compareTo: IWrapGridObject) {
         return (
             this.isWindow(compareTo) &&
             !this.isDiagonal(compareTo) &&

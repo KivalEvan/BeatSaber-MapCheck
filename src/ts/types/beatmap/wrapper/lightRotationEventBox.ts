@@ -1,7 +1,11 @@
 import { IWrapEventBox } from './eventBox';
 import { IWrapLightRotationBase } from './lightRotationBase';
 
-export interface IWrapLightRotationEventBox extends IWrapEventBox {
+export interface IWrapLightRotationEventBox<
+    TBox extends Record<keyof TBox, unknown> = Record<string, unknown>,
+    TBase extends Record<keyof TBase, unknown> = Record<string, unknown>,
+    TFilter extends Record<keyof TFilter, unknown> = Record<string, unknown>,
+> extends IWrapEventBox<TBox, TBase, TFilter> {
     /** Rotation distribution `<float>` of light rotation event box. */
     rotationDistribution: number;
     /** Rotation distribution type `<int>` of light rotation event box.
@@ -23,13 +27,12 @@ export interface IWrapLightRotationEventBox extends IWrapEventBox {
     flip: 0 | 1;
     /** Rotation distribution should affect first event `<int>` of light rotation event box. */
     affectFirst: 0 | 1;
-    /** Light rotation base data list. */
-    events: IWrapLightRotationBase[];
+    events: IWrapLightRotationBase<TBase>[];
 
     setRotationDistribution(value: IWrapLightRotationEventBox['rotationDistribution']): this;
     setRotationDistributionType(value: IWrapLightRotationEventBox['rotationDistributionType']): this;
     setAxis(value: IWrapLightRotationEventBox['axis']): this;
     setFlip(value: IWrapLightRotationEventBox['flip']): this;
     setAffectFirst(value: IWrapLightRotationEventBox['affectFirst']): this;
-    setEvents(value: IWrapLightRotationEventBox['events']): this;
+    setEvents(value: IWrapLightRotationBase<TBase>[]): this;
 }

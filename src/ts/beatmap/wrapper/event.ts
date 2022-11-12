@@ -4,7 +4,10 @@ import { EnvironmentAllName } from '../../types/beatmap/shared/environment';
 import { IWrapEvent } from '../../types/beatmap/wrapper/event';
 
 /** Event beatmap class object. */
-export abstract class WrapEvent<T extends Record<keyof T, unknown>> extends WrapBaseObject<T> implements IWrapEvent {
+export abstract class WrapEvent<T extends Record<keyof Required<T>, unknown>>
+    extends WrapBaseObject<T>
+    implements IWrapEvent<T>
+{
     abstract get type(): IWrapEvent['type'];
     abstract set type(value: IWrapEvent['type']);
     abstract get value(): IWrapEvent['value'];

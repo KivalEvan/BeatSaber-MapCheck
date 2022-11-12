@@ -5,7 +5,7 @@ import { IWrapBaseNote } from '../../types/beatmap/wrapper/baseNote';
 /** Color note beatmap class object. */
 export abstract class WrapBaseNote<T extends Record<keyof T, unknown>>
     extends WrapGridObject<T>
-    implements IWrapBaseNote
+    implements IWrapBaseNote<T>
 {
     abstract get color(): IWrapBaseNote['color'];
     abstract set color(value: IWrapBaseNote['color']);

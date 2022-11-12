@@ -4,7 +4,7 @@ import { Serializable } from '../shared/serializable';
 /** Index filter beatmap class object. */
 export abstract class WrapIndexFilter<T extends Record<keyof T, unknown>>
     extends Serializable<T>
-    implements IWrapIndexFilter
+    implements IWrapIndexFilter<T>
 {
     abstract get type(): IWrapIndexFilter['type'];
     abstract set type(value: IWrapIndexFilter['type']);

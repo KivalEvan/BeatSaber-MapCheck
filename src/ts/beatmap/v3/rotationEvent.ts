@@ -1,5 +1,6 @@
 import { IRotationEvent } from '../../types/beatmap/v3/rotationEvent';
-import { ObjectReturnFn } from '../../types/utils';
+import { IWrapRotationEvent } from '../../types/beatmap/wrapper/rotationEvent';
+import { ObjectReturnFn, PartialWrapper } from '../../types/utils';
 import { deepCopy } from '../../utils/misc';
 import { WrapRotationEvent } from '../wrapper/rotationEvent';
 
@@ -19,15 +20,21 @@ export class RotationEvent extends WrapRotationEvent<Required<IRotationEvent>> {
     }
 
     static create(): RotationEvent[];
+    static create(...rotationEvents: PartialWrapper<IWrapRotationEvent<Required<IRotationEvent>>>[]): RotationEvent[];
     static create(...rotationEvents: Partial<IRotationEvent>[]): RotationEvent[];
-    static create(...rotationEvents: Partial<IRotationEvent>[]): RotationEvent[] {
+    static create(
+        ...rotationEvents: (Partial<IRotationEvent> & PartialWrapper<IWrapRotationEvent<Required<IRotationEvent>>>)[]
+    ): RotationEvent[];
+    static create(
+        ...rotationEvents: (Partial<IRotationEvent> & PartialWrapper<IWrapRotationEvent<Required<IRotationEvent>>>)[]
+    ): RotationEvent[] {
         const result: RotationEvent[] = [];
         rotationEvents?.forEach((re) =>
             result.push(
                 new this({
-                    b: re.b ?? RotationEvent.default.b,
-                    e: re.e ?? RotationEvent.default.e,
-                    r: re.r ?? RotationEvent.default.r,
+                    b: re.time ?? re.b ?? RotationEvent.default.b,
+                    e: re.executionTime ?? re.e ?? RotationEvent.default.e,
+                    r: re.rotation ?? re.r ?? RotationEvent.default.r,
                     customData: re.customData ?? RotationEvent.default.customData(),
                 }),
             ),
@@ -80,14 +87,5 @@ export class RotationEvent extends WrapRotationEvent<Required<IRotationEvent>> {
     }
     set customData(value: NonNullable<IRotationEvent['customData']>) {
         this.data.customData = value;
-    }
-
-    setCustomData(value: NonNullable<IRotationEvent['customData']>): this {
-        this.customData = value;
-        return this;
-    }
-    addCustomData(object: IRotationEvent['customData']): this {
-        this.customData = { ...this.customData, object };
-        return this;
     }
 }

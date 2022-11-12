@@ -1,10 +1,15 @@
+import { IBasicEventTypesForKeywords } from '../../types/beatmap/v3/basicEventTypesForKeywords';
 import { IBasicEventTypesWithKeywords } from '../../types/beatmap/v3/basicEventTypesWithKeywords';
-import { ObjectReturnFn } from '../../types/utils';
+import { IWrapEventTypesWithKeywords } from '../../types/beatmap/wrapper/eventTypesWithKeywords';
+import { DeepPartial, DeepPartialWrapper, ObjectReturnFn } from '../../types/utils';
 import { WrapEventTypesWithKeywords } from '../wrapper/eventTypesWithKeywords';
 import { BasicEventTypesForKeywords } from './basicEventTypesForKeywords';
 
 /** Basic event types with keywords beatmap v3 class object. */
-export class BasicEventTypesWithKeywords extends WrapEventTypesWithKeywords<Required<IBasicEventTypesWithKeywords>> {
+export class BasicEventTypesWithKeywords extends WrapEventTypesWithKeywords<
+    Required<IBasicEventTypesWithKeywords>,
+    Required<IBasicEventTypesForKeywords>
+> {
     static default: ObjectReturnFn<Required<IBasicEventTypesWithKeywords>> = {
         d: () => [],
     };
@@ -15,11 +20,28 @@ export class BasicEventTypesWithKeywords extends WrapEventTypesWithKeywords<Requ
         this.d = basicEventTypesWithKeywords.d.map((d) => BasicEventTypesForKeywords.create({ e: d.e, k: d.k })[0]);
     }
 
+    static create(): BasicEventTypesWithKeywords;
     static create(
-        basicEventTypesWithKeywords: Partial<IBasicEventTypesWithKeywords> = {},
+        basicEventTypesWithKeywords: DeepPartialWrapper<
+            IWrapEventTypesWithKeywords<Required<IBasicEventTypesWithKeywords>>
+        >,
+    ): BasicEventTypesWithKeywords;
+    static create(basicEventTypesWithKeywords: DeepPartial<IBasicEventTypesWithKeywords>): BasicEventTypesWithKeywords;
+    static create(
+        basicEventTypesWithKeywords: DeepPartial<IBasicEventTypesWithKeywords> &
+            DeepPartialWrapper<IWrapEventTypesWithKeywords<Required<IBasicEventTypesWithKeywords>>>,
+    ): BasicEventTypesWithKeywords;
+    static create(
+        basicEventTypesWithKeywords: DeepPartial<IBasicEventTypesWithKeywords> &
+            DeepPartialWrapper<IWrapEventTypesWithKeywords<Required<IBasicEventTypesWithKeywords>>> = {},
     ): BasicEventTypesWithKeywords {
         return new this({
-            d: basicEventTypesWithKeywords.d ?? BasicEventTypesWithKeywords.default.d(),
+            d:
+                (basicEventTypesWithKeywords.list?.map((k) => {
+                    return { k: k?.keyword, e: k?.events };
+                }) as IBasicEventTypesForKeywords[]) ??
+                basicEventTypesWithKeywords.d ??
+                BasicEventTypesWithKeywords.default.d(),
         });
     }
 

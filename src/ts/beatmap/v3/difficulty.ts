@@ -1,5 +1,4 @@
 import { IDifficulty } from '../../types/beatmap/v3/difficulty';
-import { Serializable } from '../shared/serializable';
 import { BasicEvent } from './basicEvent';
 import { BasicEventTypesWithKeywords } from './basicEventTypesWithKeywords';
 import { BombNote } from './bombNote';
@@ -14,8 +13,7 @@ import { Obstacle } from './obstacle';
 import { RotationEvent } from './rotationEvent';
 import { Slider } from './slider';
 import { Waypoint } from './waypoint';
-import { BeatPerMinute } from '../shared/bpm';
-import { DeepPartial, LooseAutocomplete } from '../../types/utils';
+import { DeepPartial, DeepPartialWrapper, PartialWrapper } from '../../types/utils';
 import { IBPMEvent } from '../../types/beatmap/v3/bpmEvent';
 import { IRotationEvent } from '../../types/beatmap/v3/rotationEvent';
 import { IColorNote } from '../../types/beatmap/v3/colorNote';
@@ -30,14 +28,31 @@ import { ILightRotationEventBoxGroup } from '../../types/beatmap/v3/lightRotatio
 import { ILightColorEventBoxGroup } from '../../types/beatmap/v3/lightColorEventBoxGroup';
 import { ILightTranslationEventBoxGroup } from '../../types/beatmap/v3/lightTranslationEventBoxGroup';
 import { deepCopy } from '../../utils/misc';
-import { GenericFileName } from '../../types/beatmap/shared/info';
-import { EventContainer, NoteContainer } from '../../types/beatmap/wrapper/container';
+import { WrapDifficulty } from '../wrapper/difficulty';
+import { IWrapBPMEvent } from '../../types/beatmap/wrapper/bpmEvent';
+import { IWrapLightTranslationEventBoxGroup } from '../../types/beatmap/wrapper/lightTranslationEventBoxGroup';
+import { IWrapBombNote } from '../../types/beatmap/wrapper/bombNote';
+import { IWrapBurstSlider } from '../../types/beatmap/wrapper/burstSlider';
+import { IWrapColorBoostEvent } from '../../types/beatmap/wrapper/colorBoostEvent';
+import { IWrapColorNote } from '../../types/beatmap/wrapper/colorNote';
+import { IWrapEvent } from '../../types/beatmap/wrapper/event';
+import { IWrapLightColorEventBoxGroup } from '../../types/beatmap/wrapper/lightColorEventBoxGroup';
+import { IWrapLightRotationEventBoxGroup } from '../../types/beatmap/wrapper/lightRotationEventBoxGroup';
+import { IWrapObstacle } from '../../types/beatmap/wrapper/obstacle';
+import { IWrapRotationEvent } from '../../types/beatmap/wrapper/rotationEvent';
+import { IWrapSlider } from '../../types/beatmap/wrapper/slider';
+import { IWrapWaypoint } from '../../types/beatmap/wrapper/waypoint';
+import { IIndexFilter } from '../../types/beatmap/v3/indexFilter';
+import { ILightColorEventBox } from '../../types/beatmap/v3/lightColorEventBox';
+import { ILightRotationEventBox } from '../../types/beatmap/v3/lightRotationEventBox';
+import { ILightTranslationEventBox } from '../../types/beatmap/v3/lightTranslationEventBox';
+import { ILightColorBase } from '../../types/beatmap/v3/lightColorBase';
+import { ILightRotationBase } from '../../types/beatmap/v3/lightRotationBase';
+import { ILightTranslationBase } from '../../types/beatmap/v3/lightTranslationBase';
 
 /** Difficulty beatmap v3 class object. */
-export class Difficulty extends Serializable<IDifficulty> {
-    private _fileName = 'UnnamedDifficulty.dat';
-
-    version;
+export class Difficulty extends WrapDifficulty<Required<IDifficulty>> {
+    version: `3.${0 | 1 | 2}.0`;
     bpmEvents: BPMEvent[];
     rotationEvents: RotationEvent[];
     colorNotes: ColorNote[];
@@ -51,9 +66,8 @@ export class Difficulty extends Serializable<IDifficulty> {
     lightColorEventBoxGroups: LightColorEventBoxGroup[];
     lightRotationEventBoxGroups: LightRotationEventBoxGroup[];
     lightTranslationEventBoxGroups: LightTranslationEventBoxGroup[];
-    basicEventTypesWithKeywords: BasicEventTypesWithKeywords;
+    eventTypesWithKeywords: BasicEventTypesWithKeywords;
     useNormalEventsAsCompatibleEvents;
-    customData;
     protected constructor(data: Required<IDifficulty>) {
         super(data);
         this.version = '3.2.0';
@@ -73,7 +87,7 @@ export class Difficulty extends Serializable<IDifficulty> {
             data.lightRotationEventBoxGroups?.map((obj) => LightRotationEventBoxGroup.create(obj)[0]) ?? [];
         this.lightTranslationEventBoxGroups =
             data.lightTranslationEventBoxGroups?.map((obj) => LightTranslationEventBoxGroup.create(obj)[0]) ?? [];
-        this.basicEventTypesWithKeywords = BasicEventTypesWithKeywords.create(data.basicEventTypesWithKeywords) ?? {
+        this.eventTypesWithKeywords = BasicEventTypesWithKeywords.create(data.basicEventTypesWithKeywords) ?? {
             d: [],
         };
         this.useNormalEventsAsCompatibleEvents = data.useNormalEventsAsCompatibleEvents ?? false;
@@ -120,7 +134,7 @@ export class Difficulty extends Serializable<IDifficulty> {
             lightColorEventBoxGroups: this.lightColorEventBoxGroups.map((obj) => obj.toJSON()),
             lightRotationEventBoxGroups: this.lightRotationEventBoxGroups.map((obj) => obj.toJSON()),
             lightTranslationEventBoxGroups: this.lightTranslationEventBoxGroups.map((obj) => obj.toJSON()),
-            basicEventTypesWithKeywords: this.basicEventTypesWithKeywords.toJSON(),
+            basicEventTypesWithKeywords: this.eventTypesWithKeywords.toJSON(),
             useNormalEventsAsCompatibleEvents: this.useNormalEventsAsCompatibleEvents,
             customData: deepCopy(this.customData),
         };
@@ -131,187 +145,232 @@ export class Difficulty extends Serializable<IDifficulty> {
         return super.clone().setFileName(fileName) as U;
     }
 
-    set fileName(name: LooseAutocomplete<GenericFileName>) {
-        this._fileName = name.trim();
+    get customData(): NonNullable<IDifficulty['customData']> {
+        return this.data.customData;
     }
-    get fileName(): string {
-        return this._fileName;
-    }
-    setFileName(fileName: LooseAutocomplete<GenericFileName>) {
-        this.fileName = fileName;
-        return this;
+    set customData(value: NonNullable<IDifficulty['customData']>) {
+        this.data.customData = value;
     }
 
-    /** Calculate note per second.
-     * ```ts
-     * const nps = difficulty.nps(Difficulty, 10);
-     * ```
-     * ---
-     * **Note:** Duration can be either in any time type.
-     */
-    nps(duration: number): number {
-        const notes = this.getNoteContainer().filter((n) => n.type !== 'bomb');
-        return duration ? notes.length / duration : 0;
+    addBPMEvents(...bpmEvents: PartialWrapper<IWrapBPMEvent<Required<IBPMEvent>>>[]): void;
+    addBPMEvents(...bpmEvents: Partial<IBPMEvent>[]): void;
+    addBPMEvents(...bpmEvents: (Partial<IBPMEvent> & PartialWrapper<IWrapBPMEvent<Required<IBPMEvent>>>)[]): void;
+    addBPMEvents(...bpmEvents: (Partial<IBPMEvent> & PartialWrapper<IWrapBPMEvent<Required<IBPMEvent>>>)[]): void {
+        this.bpmEvents.push(
+            ...bpmEvents.map((bpme) => {
+                return bpme instanceof BPMEvent ? bpme : BPMEvent.create(bpme)[0];
+            }),
+        );
     }
 
-    /** Calculate the peak by rolling average.
-     * ```ts
-     * const peakNPS = difficulty.peak(Difficulty, 10, BPM ?? 128);
-     * ```
-     */
-    peak(beat: number, bpm: BeatPerMinute | number): number {
-        let peakNPS = 0;
-        let currentSectionStart = 0;
-        bpm = typeof bpm === 'number' ? BeatPerMinute.create(bpm) : bpm;
-        const notes = this.getNoteContainer().filter((n) => n.type !== 'bomb');
-
-        for (let i = 0; i < notes.length; i++) {
-            while (notes[i].data.time - notes[currentSectionStart].data.time > beat) {
-                currentSectionStart++;
-            }
-            peakNPS = Math.max(peakNPS, (i - currentSectionStart + 1) / bpm.toRealTime(beat));
-        }
-
-        return peakNPS;
-    }
-
-    /** Get first interactible object beat time in beatmap.
-     * ```ts
-     * const firstInteractiveTime = difficulty.getFirstInteractiveTime(Difficulty);
-     * ```
-     */
-    getFirstInteractiveTime(): number {
-        const notes = this.getNoteContainer().filter((n) => n.type !== 'bomb');
-        let firstNoteTime = Number.MAX_VALUE;
-        if (notes.length > 0) {
-            firstNoteTime = notes[0].data.time;
-        }
-        const firstInteractiveObstacleTime = this.findFirstInteractiveObstacleTime();
-        return Math.min(firstNoteTime, firstInteractiveObstacleTime);
-    }
-
-    /** Get last interactible object beat time in beatmap.
-     * ```ts
-     * const lastInteractiveTime = difficulty.getLastInteractiveTime(Difficulty);
-     * ```
-     */
-    getLastInteractiveTime(): number {
-        const notes = this.getNoteContainer().filter((n) => n.type !== 'bomb');
-        let lastNoteTime = 0;
-        if (notes.length > 0) {
-            lastNoteTime = notes[notes.length - 1].data.time;
-        }
-        const lastInteractiveObstacleTime = this.findLastInteractiveObstacleTime();
-        return Math.max(lastNoteTime, lastInteractiveObstacleTime);
-    }
-
-    /** Get first interactible obstacle beat time in beatmap.
-     * ```ts
-     * const firstInteractiveObstacleTime = difficulty.findFirstInteractiveObstacleTime(obstacles);
-     * ```
-     */
-    findFirstInteractiveObstacleTime(): number {
-        for (let i = 0, len = this.obstacles.length; i < len; i++) {
-            if (this.obstacles[i].isInteractive()) {
-                return this.obstacles[i].time;
-            }
-        }
-        return Number.MAX_VALUE;
-    }
-
-    /** Get last interactible obstacle beat time in beatmap.
-     * ```ts
-     * const lastInteractiveObstacleTime = difficulty.findLastInteractiveObstacleTime(obstacles);
-     * ```
-     */
-    findLastInteractiveObstacleTime(): number {
-        let obstacleEnd = 0;
-        for (let i = this.obstacles.length - 1; i >= 0; i--) {
-            if (this.obstacles[i].isInteractive()) {
-                obstacleEnd = Math.max(obstacleEnd, this.obstacles[i].time + this.obstacles[i].duration);
-            }
-        }
-        return obstacleEnd;
-    }
-
-    /** Get container of color notes, sliders, burst sliders, and bombs (in order).
-     * ```ts
-     * const noteCountainer = getNoteContainer(Difficulty);
-     * ```
-     */
-    getNoteContainer(): NoteContainer[] {
-        const nc: NoteContainer[] = [];
-        this.colorNotes.forEach((n) => nc.push({ type: 'note', data: n }));
-        this.sliders.forEach((s) => nc.push({ type: 'slider', data: s }));
-        this.burstSliders.forEach((bs) => nc.push({ type: 'burstSlider', data: bs }));
-        this.bombNotes.forEach((b) => nc.push({ type: 'bomb', data: b }));
-        return nc.sort((a, b) => a.data.time - b.data.time);
-    }
-
-    /** Get container of basic events and boost events.
-     * ```ts
-     * const noteCountainer = getNoteContainer(Difficulty);
-     * ```
-     */
-    getEventContainer(): EventContainer[] {
-        const ec: EventContainer[] = [];
-        this.basicEvents.forEach((be) => ec.push({ type: 'basicEvent', data: be }));
-        this.colorBoostEvents.forEach((b) => ec.push({ type: 'boost', data: b }));
-        return ec.sort((a, b) => a.data.time - b.data.time);
-    }
-
-    addBPMEvents(...bpmEvents: Partial<IBPMEvent>[] | BPMEvent[]) {
-        this.bpmEvents.push(...bpmEvents.map((bpme) => (bpme instanceof BPMEvent ? bpme : BPMEvent.create(bpme)[0])));
-    }
-    addRotationEvents(...rotationEvents: Partial<IRotationEvent>[] | RotationEvent[]) {
+    addRotationEvents(...rotationEvents: PartialWrapper<IWrapRotationEvent<Required<IRotationEvent>>>[]): void;
+    addRotationEvents(...rotationEvents: Partial<IRotationEvent>[]): void;
+    addRotationEvents(
+        ...rotationEvents: (Partial<IRotationEvent> & PartialWrapper<IWrapRotationEvent<Required<IRotationEvent>>>)[]
+    ): void;
+    addRotationEvents(
+        ...rotationEvents: (Partial<IRotationEvent> & PartialWrapper<IWrapRotationEvent<Required<IRotationEvent>>>)[]
+    ): void {
         this.rotationEvents.push(
             ...rotationEvents.map((re) => (re instanceof RotationEvent ? re : RotationEvent.create(re)[0])),
         );
     }
-    addColorNotes(...colorNotes: Partial<IColorNote>[] | ColorNote[]) {
+
+    addColorNotes(...colorNotes: PartialWrapper<IWrapColorNote<Required<IColorNote>>>[]): void;
+    addColorNotes(...colorNotes: Partial<IColorNote>[]): void;
+    addColorNotes(...colorNotes: (Partial<IColorNote> & PartialWrapper<IWrapColorNote<Required<IColorNote>>>)[]): void;
+    addColorNotes(...colorNotes: (Partial<IColorNote> & PartialWrapper<IWrapColorNote<Required<IColorNote>>>)[]): void {
         this.colorNotes.push(...colorNotes.map((cn) => (cn instanceof ColorNote ? cn : ColorNote.create(cn)[0])));
     }
-    addBombNotes(...bombNotes: Partial<IBombNote>[] | BombNote[]) {
+
+    addBombNotes(...bombNotes: PartialWrapper<IWrapBombNote<Required<IBombNote>>>[]): void;
+    addBombNotes(...bombNotes: Partial<IBombNote>[]): void;
+    addBombNotes(...bombNotes: (Partial<IBombNote>[] & PartialWrapper<IWrapBombNote<Required<IBombNote>>>)[]): void;
+    addBombNotes(...bombNotes: (Partial<IBombNote>[] & PartialWrapper<IWrapBombNote<Required<IBombNote>>>)[]): void {
         this.bombNotes.push(...bombNotes.map((bn) => (bn instanceof BombNote ? bn : BombNote.create(bn)[0])));
     }
-    addObstacles(...obstacles: Partial<IObstacle>[] | Obstacle[]) {
+
+    addObstacles(...obstacles: PartialWrapper<IWrapObstacle<Required<IObstacle>>>[]): void;
+    addObstacles(...obstacles: Partial<IObstacle>[]): void;
+    addObstacles(...obstacles: (Partial<IObstacle> & PartialWrapper<IWrapObstacle<Required<IObstacle>>>)[]): void;
+    addObstacles(...obstacles: (Partial<IObstacle> & PartialWrapper<IWrapObstacle<Required<IObstacle>>>)[]): void {
         this.obstacles.push(...obstacles.map((o) => (o instanceof Obstacle ? o : Obstacle.create(o)[0])));
     }
-    addSliders(...sliders: Partial<ISlider>[] | Slider[]) {
+
+    addSliders(...sliders: PartialWrapper<IWrapSlider<Required<ISlider>>>[]): void;
+    addSliders(...sliders: Partial<ISlider>[]): void;
+    addSliders(...sliders: (Partial<ISlider> & PartialWrapper<IWrapSlider<Required<ISlider>>>)[]): void;
+    addSliders(...sliders: (Partial<ISlider> & PartialWrapper<IWrapSlider<Required<ISlider>>>)[]): void {
         this.sliders.push(...sliders.map((s) => (s instanceof Slider ? s : Slider.create(s)[0])));
     }
-    addBurstSliders(...burstSliders: Partial<IBurstSlider>[] | BurstSlider[]) {
+
+    addBurstSliders(...burstSliders: PartialWrapper<IWrapBurstSlider<Required<IBurstSlider>>>[]): void;
+    addBurstSliders(...burstSliders: Partial<IBurstSlider>[]): void;
+    addBurstSliders(
+        ...burstSliders: (Partial<IBurstSlider> & PartialWrapper<IWrapBurstSlider<Required<IBurstSlider>>>)[]
+    ): void;
+    addBurstSliders(
+        ...burstSliders: (Partial<IBurstSlider> & PartialWrapper<IWrapBurstSlider<Required<IBurstSlider>>>)[]
+    ): void {
         this.burstSliders.push(
             ...burstSliders.map((bs) => (bs instanceof BurstSlider ? bs : BurstSlider.create(bs)[0])),
         );
     }
-    addWaypoints(...waypoints: Partial<IWaypoint>[] | Waypoint[]) {
+
+    addWaypoints(...waypoints: PartialWrapper<IWrapWaypoint<Required<IWaypoint>>>[]): void;
+    addWaypoints(...waypoints: Partial<IWaypoint>[]): void;
+    addWaypoints(...waypoints: (Partial<IWaypoint> & PartialWrapper<IWrapWaypoint<Required<IWaypoint>>>)[]): void;
+    addWaypoints(...waypoints: (Partial<IWaypoint> & PartialWrapper<IWrapWaypoint<Required<IWaypoint>>>)[]): void {
         this.waypoints.push(...waypoints.map((w) => (w instanceof Waypoint ? w : Waypoint.create(w)[0])));
     }
-    addBasicEvents(...basicEvents: Partial<IBasicEvent>[] | BasicEvent[]) {
+
+    addBasicEvents(...basicEvents: PartialWrapper<IWrapEvent<Required<IBasicEvent>>>[]): void;
+    addBasicEvents(...basicEvents: Partial<IBasicEvent>[]): void;
+    addBasicEvents(
+        ...basicEvents: (Partial<IBasicEvent>[] & PartialWrapper<IWrapEvent<Required<IBasicEvent>>>)[]
+    ): void;
+    addBasicEvents(
+        ...basicEvents: (Partial<IBasicEvent>[] & PartialWrapper<IWrapEvent<Required<IBasicEvent>>>)[]
+    ): void {
         this.basicEvents.push(...basicEvents.map((be) => (be instanceof BasicEvent ? be : BasicEvent.create(be)[0])));
     }
-    addColorBoostEvents(...colorBoostEvents: Partial<IColorBoostEvent>[] | ColorBoostEvent[]) {
+
+    addColorBoostEvents(...colorBoostEvents: PartialWrapper<IWrapColorBoostEvent<Required<IColorBoostEvent>>>[]): void;
+    addColorBoostEvents(...colorBoostEvents: Partial<IColorBoostEvent>[]): void;
+    addColorBoostEvents(
+        ...colorBoostEvents: (Partial<IColorBoostEvent> &
+            PartialWrapper<IWrapColorBoostEvent<Required<IColorBoostEvent>>>)[]
+    ): void;
+    addColorBoostEvents(
+        ...colorBoostEvents: (Partial<IColorBoostEvent> &
+            PartialWrapper<IWrapColorBoostEvent<Required<IColorBoostEvent>>>)[]
+    ): void {
         this.colorBoostEvents.push(
             ...colorBoostEvents.map((cbe) => (cbe instanceof ColorBoostEvent ? cbe : ColorBoostEvent.create(cbe)[0])),
         );
     }
+
     addLightColorEventBoxGroups(
-        ...lightColorEBGs: DeepPartial<ILightColorEventBoxGroup>[] | LightColorEventBoxGroup[]
-    ) {
+        ...lightColorEBGs: DeepPartialWrapper<
+            IWrapLightColorEventBoxGroup<
+                Required<ILightColorEventBoxGroup>,
+                Required<ILightColorEventBox>,
+                Required<ILightColorBase>,
+                Required<IIndexFilter>
+            >
+        >[]
+    ): void;
+    addLightColorEventBoxGroups(...lightColorEBGs: DeepPartial<ILightColorEventBoxGroup>[]): void;
+    addLightColorEventBoxGroups(
+        ...lightColorEBGs: (DeepPartial<ILightColorEventBoxGroup> &
+            DeepPartialWrapper<
+                IWrapLightColorEventBoxGroup<
+                    Required<ILightColorEventBoxGroup>,
+                    Required<ILightColorEventBox>,
+                    Required<ILightColorBase>,
+                    Required<IIndexFilter>
+                >
+            >)[]
+    ): void;
+    addLightColorEventBoxGroups(
+        ...lightColorEBGs: (DeepPartial<ILightColorEventBoxGroup> &
+            DeepPartialWrapper<
+                IWrapLightColorEventBoxGroup<
+                    Required<ILightColorEventBoxGroup>,
+                    Required<ILightColorEventBox>,
+                    Required<ILightColorBase>,
+                    Required<IIndexFilter>
+                >
+            >)[]
+    ): void {
         this.lightColorEventBoxGroups.push(
             ...lightColorEBGs.map((lcebg) =>
                 lcebg instanceof LightColorEventBoxGroup ? lcebg : LightColorEventBoxGroup.create(lcebg)[0],
             ),
         );
     }
+
     addLightRotationEventBoxGroups(
-        ...lightRotationEBGs: DeepPartial<ILightRotationEventBoxGroup>[] | LightRotationEventBoxGroup[]
-    ) {
+        ...lightRotationEBGs: DeepPartialWrapper<
+            IWrapLightRotationEventBoxGroup<
+                Required<ILightRotationEventBoxGroup>,
+                Required<ILightRotationEventBox>,
+                Required<ILightRotationBase>,
+                Required<IIndexFilter>
+            >
+        >[]
+    ): void;
+    addLightRotationEventBoxGroups(...lightRotationEBGs: DeepPartial<ILightRotationEventBoxGroup>[]): void;
+    addLightRotationEventBoxGroups(
+        ...lightRotationEBGs: (DeepPartial<ILightRotationEventBoxGroup> &
+            DeepPartialWrapper<
+                IWrapLightRotationEventBoxGroup<
+                    Required<ILightRotationEventBoxGroup>,
+                    Required<ILightRotationEventBox>,
+                    Required<ILightRotationBase>,
+                    Required<IIndexFilter>
+                >
+            >)[]
+    ): void;
+    addLightRotationEventBoxGroups(
+        ...lightRotationEBGs: (DeepPartial<ILightRotationEventBoxGroup> &
+            DeepPartialWrapper<
+                IWrapLightRotationEventBoxGroup<
+                    Required<ILightRotationEventBoxGroup>,
+                    Required<ILightRotationEventBox>,
+                    Required<ILightRotationBase>,
+                    Required<IIndexFilter>
+                >
+            >)[]
+    ): void {
         this.lightRotationEventBoxGroups.push(
             ...lightRotationEBGs.map((lrebg) =>
                 lrebg instanceof LightRotationEventBoxGroup ? lrebg : LightRotationEventBoxGroup.create(lrebg)[0],
             ),
         );
+    }
+
+    addLightTranslationEventBoxGroups(
+        ...lightTranslationEBGs: DeepPartialWrapper<
+            IWrapLightTranslationEventBoxGroup<
+                Required<ILightTranslationEventBoxGroup>,
+                Required<ILightTranslationEventBox>,
+                Required<ILightTranslationBase>,
+                Required<IIndexFilter>
+            >
+        >[]
+    ): void;
+    addLightTranslationEventBoxGroups(...lightTranslationEBGs: DeepPartial<ILightTranslationEventBoxGroup>[]): void;
+    addLightTranslationEventBoxGroups(
+        ...lightTranslationEBGs: (DeepPartial<ILightTranslationEventBoxGroup> &
+            DeepPartialWrapper<
+                IWrapLightTranslationEventBoxGroup<
+                    Required<ILightTranslationEventBoxGroup>,
+                    Required<ILightTranslationEventBox>,
+                    Required<ILightTranslationBase>,
+                    Required<IIndexFilter>
+                >
+            >)[]
+    ): void;
+    addLightTranslationEventBoxGroups(
+        ...lightTranslationEBGs: (DeepPartial<ILightTranslationEventBoxGroup> &
+            DeepPartialWrapper<
+                IWrapLightTranslationEventBoxGroup<
+                    Required<ILightTranslationEventBoxGroup>,
+                    Required<ILightTranslationEventBox>,
+                    Required<ILightTranslationBase>,
+                    Required<IIndexFilter>
+                >
+            >)[]
+    ): void {
+        this.lightTranslationEventBoxGroups.push(
+            ...lightTranslationEBGs.map((ltebg) =>
+                ltebg instanceof LightTranslationEventBoxGroup ? ltebg : LightTranslationEventBoxGroup.create(ltebg)[0],
+            ),
+        );
+    }
+
+    isValid(): boolean {
+        throw new Error('Method not implemented.');
     }
 }

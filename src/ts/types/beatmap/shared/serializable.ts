@@ -1,7 +1,7 @@
-// deno-lint-ignore no-explicit-any
-export interface ISerializable<T extends Record<string, any> | Record<string, any>[]> {
-    readonly data: Required<T>;
-    toJSON(): Required<T>;
+export interface ISerializable<T extends Record<keyof T, unknown> | Record<keyof T, unknown>[]> {
+    readonly data: T;
+    // deno-lint-ignore no-explicit-any
+    toJSON(): Record<string, any>;
     serialize(): string;
-    clone<U extends this>(): U;
+    clone(): this;
 }

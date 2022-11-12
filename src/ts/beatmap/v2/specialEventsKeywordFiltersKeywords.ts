@@ -1,5 +1,6 @@
 import { ISpecialEventsKeywordFiltersKeywords } from '../../types/beatmap/v2/specialEventsKeywordFiltersKeywords';
-import { ObjectReturnFn } from '../../types/utils';
+import { IWrapEventTypesForKeywords } from '../../types/beatmap/wrapper/eventTypesForKeywords';
+import { ObjectReturnFn, PartialWrapper } from '../../types/utils';
 import { WrapEventTypesForKeywords } from '../wrapper/eventTypesForKeywords';
 
 /** Special event types for keywords beatmap v2 class object.
@@ -20,18 +21,28 @@ export class SpecialEventsKeywordFiltersKeywords extends WrapEventTypesForKeywor
 
     static create(): SpecialEventsKeywordFiltersKeywords[];
     static create(
-        ...basicEventTypesForKeywords: Partial<ISpecialEventsKeywordFiltersKeywords>[]
+        ...basicEventTypesForKeywords: PartialWrapper<IWrapEventTypesForKeywords>[]
     ): SpecialEventsKeywordFiltersKeywords[];
     static create(
         ...basicEventTypesForKeywords: Partial<ISpecialEventsKeywordFiltersKeywords>[]
+    ): SpecialEventsKeywordFiltersKeywords[];
+    static create(
+        ...basicEventTypesForKeywords: (Partial<ISpecialEventsKeywordFiltersKeywords> &
+            PartialWrapper<IWrapEventTypesForKeywords>)[]
+    ): SpecialEventsKeywordFiltersKeywords[];
+    static create(
+        ...basicEventTypesForKeywords: (Partial<ISpecialEventsKeywordFiltersKeywords> &
+            PartialWrapper<IWrapEventTypesForKeywords>)[]
     ): SpecialEventsKeywordFiltersKeywords[] {
         const result: SpecialEventsKeywordFiltersKeywords[] = [];
         basicEventTypesForKeywords?.forEach((betfk) =>
             result.push(
                 new this({
-                    _keyword: betfk._keyword ?? SpecialEventsKeywordFiltersKeywords.default._keyword,
+                    _keyword: betfk.keyword ?? betfk._keyword ?? SpecialEventsKeywordFiltersKeywords.default._keyword,
                     _specialEvents:
-                        betfk._specialEvents ?? SpecialEventsKeywordFiltersKeywords.default._specialEvents(),
+                        betfk.events ??
+                        betfk._specialEvents ??
+                        SpecialEventsKeywordFiltersKeywords.default._specialEvents(),
                 }),
             ),
         );

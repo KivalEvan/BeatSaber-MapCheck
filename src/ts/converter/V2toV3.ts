@@ -48,7 +48,7 @@ export function V2toV3(data: DifficultyV2, skipPrompt?: boolean): DifficultyV3 {
     template.customData.fakeColorNotes = [];
     template.customData.fakeObstacles = [];
 
-    data.notes.forEach((n, i) => {
+    data.colorNotes.forEach((n, i) => {
         const customData: ICustomDataNote = objectToV3(n.customData);
         if (typeof n.customData._cutDirection === 'number') {
             logger.debug(tag('V2toV3'), `notes[${i}] at time ${n.time} NE _cutDirection will be converted.`);
@@ -151,7 +151,7 @@ export function V2toV3(data: DifficultyV2, skipPrompt?: boolean): DifficultyV3 {
         }
     });
 
-    data.events.forEach((e, i) => {
+    data.basicEvents.forEach((e, i) => {
         if (e.isColorBoost()) {
             template.colorBoostEvents.push(
                 ColorBoostEvent.create({
@@ -242,9 +242,9 @@ export function V2toV3(data: DifficultyV2, skipPrompt?: boolean): DifficultyV3 {
         ),
     );
 
-    template.basicEventTypesWithKeywords = BasicEventTypesWithKeywords.create({
+    template.eventTypesWithKeywords = BasicEventTypesWithKeywords.create({
         d:
-            data.specialEventsKeywordFilters?.list?.map((k) => {
+            data.eventTypesWithKeywords?.list?.map((k) => {
                 return { k: k.keyword, e: k.events };
             }) ?? [],
     });

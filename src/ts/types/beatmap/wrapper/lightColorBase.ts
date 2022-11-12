@@ -1,6 +1,7 @@
-import { IWrapBaseItem } from './baseItem';
+import { IWrapBaseObject } from './baseObject';
 
-export interface IWrapLightColorBase extends IWrapBaseItem {
+export interface IWrapLightColorBase<T extends Record<keyof T, unknown> = Record<string, unknown>>
+    extends IWrapBaseObject<T> {
     /** Relative beat time `<float>` to event box group. */
     time: number;
     /** Transition type `<int>` of base light color.

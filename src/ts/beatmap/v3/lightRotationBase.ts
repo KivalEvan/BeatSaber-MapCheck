@@ -1,5 +1,6 @@
 import { ILightRotationBase } from '../../types/beatmap/v3/lightRotationBase';
-import { ObjectReturnFn } from '../../types/utils';
+import { IWrapLightRotationBase } from '../../types/beatmap/wrapper/lightRotationBase';
+import { ObjectReturnFn, PartialWrapper } from '../../types/utils';
 import { deepCopy } from '../../utils/misc';
 import { WrapLightRotationBase } from '../wrapper/lightRotationBase';
 
@@ -22,18 +23,28 @@ export class LightRotationBase extends WrapLightRotationBase<Required<ILightRota
     }
 
     static create(): LightRotationBase[];
-    static create(...lightRotations: Partial<ILightRotationBase>[]): LightRotationBase[];
-    static create(...lightRotations: Partial<ILightRotationBase>[]): LightRotationBase[] {
+    static create(
+        ...lightRotations: PartialWrapper<IWrapLightRotationBase<Required<ILightRotationBase>>>[]
+    ): LightRotationBase[];
+    static create(...waypoints: Partial<ILightRotationBase>[]): LightRotationBase[];
+    static create(
+        ...lightRotations: (Partial<ILightRotationBase> &
+            PartialWrapper<IWrapLightRotationBase<Required<ILightRotationBase>>>)[]
+    ): LightRotationBase[];
+    static create(
+        ...lightRotations: (Partial<ILightRotationBase> &
+            PartialWrapper<IWrapLightRotationBase<Required<ILightRotationBase>>>)[]
+    ): LightRotationBase[] {
         const result: LightRotationBase[] = [];
         lightRotations?.forEach((lr) =>
             result.push(
                 new this({
-                    b: lr.b ?? LightRotationBase.default.b,
-                    p: lr.p ?? LightRotationBase.default.p,
-                    e: lr.e ?? LightRotationBase.default.e,
-                    l: lr.l ?? LightRotationBase.default.l,
-                    r: lr.r ?? LightRotationBase.default.r,
-                    o: lr.o ?? LightRotationBase.default.o,
+                    b: lr.time ?? lr.b ?? LightRotationBase.default.b,
+                    p: lr.previous ?? lr.p ?? LightRotationBase.default.p,
+                    e: lr.easing ?? lr.e ?? LightRotationBase.default.e,
+                    l: lr.loop ?? lr.l ?? LightRotationBase.default.l,
+                    r: lr.rotation ?? lr.r ?? LightRotationBase.default.r,
+                    o: lr.direction ?? lr.o ?? LightRotationBase.default.o,
                     customData: lr.customData ?? LightRotationBase.default.customData(),
                 }),
             ),
@@ -113,14 +124,5 @@ export class LightRotationBase extends WrapLightRotationBase<Required<ILightRota
     }
     set customData(value: NonNullable<ILightRotationBase['customData']>) {
         this.data.customData = value;
-    }
-
-    setCustomData(value: NonNullable<ILightRotationBase['customData']>): this {
-        this.customData = value;
-        return this;
-    }
-    addCustomData(object: ILightRotationBase['customData']): this {
-        this.customData = { ...this.customData, object };
-        return this;
     }
 }

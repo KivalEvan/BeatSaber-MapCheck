@@ -15,7 +15,7 @@ export interface IEnvironmentJSON {
     description: string;
     features: {
         useChromaEvents?: boolean;
-        forceEffectsFilter?: 'NoEffects';
+        forceEffectsFilter?: 'NoEffects' | 'AllEffects';
         basicBeatmapEvents?: IBasicEvent[];
     };
     environment: IChromaEnvironment[];

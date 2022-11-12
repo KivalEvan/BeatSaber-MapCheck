@@ -1,5 +1,6 @@
 import { IBurstSlider } from '../../types/beatmap/v3/burstSlider';
-import { ObjectReturnFn } from '../../types/utils';
+import { IWrapBurstSlider } from '../../types/beatmap/wrapper/burstSlider';
+import { ObjectReturnFn, PartialWrapper } from '../../types/utils';
 import { deepCopy } from '../../utils/misc';
 import { WrapBurstSlider } from '../wrapper/burstSlider';
 
@@ -29,22 +30,28 @@ export class BurstSlider extends WrapBurstSlider<Required<IBurstSlider>> {
     }
 
     static create(): BurstSlider[];
+    static create(...burstSliders: PartialWrapper<IWrapBurstSlider<Required<IBurstSlider>>>[]): BurstSlider[];
     static create(...burstSliders: Partial<IBurstSlider>[]): BurstSlider[];
-    static create(...burstSliders: Partial<IBurstSlider>[]): BurstSlider[] {
+    static create(
+        ...burstSliders: (Partial<IBurstSlider> & PartialWrapper<IWrapBurstSlider<Required<IBurstSlider>>>)[]
+    ): BurstSlider[];
+    static create(
+        ...burstSliders: (Partial<IBurstSlider> & PartialWrapper<IWrapBurstSlider<Required<IBurstSlider>>>)[]
+    ): BurstSlider[] {
         const result: BurstSlider[] = [];
         burstSliders?.forEach((bs) =>
             result.push(
                 new this({
-                    b: bs.b ?? bs.tb ?? BurstSlider.default.b,
-                    c: bs.c ?? BurstSlider.default.c,
-                    x: bs.x ?? BurstSlider.default.x,
-                    y: bs.y ?? BurstSlider.default.y,
-                    d: bs.d ?? BurstSlider.default.d,
-                    tb: bs.tb ?? bs.b ?? BurstSlider.default.tb,
-                    tx: bs.tx ?? BurstSlider.default.tx,
-                    ty: bs.ty ?? BurstSlider.default.ty,
-                    sc: bs.sc ?? BurstSlider.default.sc,
-                    s: bs.s ?? BurstSlider.default.s,
+                    b: bs.time ?? bs.b ?? bs.tb ?? BurstSlider.default.b,
+                    c: bs.color ?? bs.c ?? BurstSlider.default.c,
+                    x: bs.posX ?? bs.x ?? BurstSlider.default.x,
+                    y: bs.posY ?? bs.y ?? BurstSlider.default.y,
+                    d: bs.direction ?? bs.d ?? BurstSlider.default.d,
+                    tb: bs.tailTime ?? bs.tb ?? bs.b ?? BurstSlider.default.tb,
+                    tx: bs.tailPosX ?? bs.tx ?? BurstSlider.default.tx,
+                    ty: bs.tailPosY ?? bs.ty ?? BurstSlider.default.ty,
+                    sc: bs.sliceCount ?? bs.sc ?? BurstSlider.default.sc,
+                    s: bs.squish ?? bs.s ?? BurstSlider.default.s,
                     customData: bs.customData ?? BurstSlider.default.customData(),
                 }),
             ),
@@ -160,15 +167,6 @@ export class BurstSlider extends WrapBurstSlider<Required<IBurstSlider>> {
     }
     set customData(value: NonNullable<IBurstSlider['customData']>) {
         this.data.customData = value;
-    }
-
-    setCustomData(value: NonNullable<IBurstSlider['customData']>): this {
-        this.customData = value;
-        return this;
-    }
-    addCustomData(object: IBurstSlider['customData']): this {
-        this.customData = { ...this.customData, object };
-        return this;
     }
 
     mirror(flipColor = true) {

@@ -1,5 +1,6 @@
 import { IColorBoostEvent } from '../../types/beatmap/v3/colorBoostEvent';
-import { ObjectReturnFn } from '../../types/utils';
+import { IWrapColorBoostEvent } from '../../types/beatmap/wrapper/colorBoostEvent';
+import { ObjectReturnFn, PartialWrapper } from '../../types/utils';
 import { deepCopy } from '../../utils/misc';
 import { WrapColorBoostEvent } from '../wrapper/colorBoostEvent';
 
@@ -18,14 +19,24 @@ export class ColorBoostEvent extends WrapColorBoostEvent<Required<IColorBoostEve
     }
 
     static create(): ColorBoostEvent[];
+    static create(
+        ...colorBoostEvents: PartialWrapper<IWrapColorBoostEvent<Required<IColorBoostEvent>>>[]
+    ): ColorBoostEvent[];
     static create(...colorBoostEvents: Partial<IColorBoostEvent>[]): ColorBoostEvent[];
-    static create(...colorBoostEvents: Partial<IColorBoostEvent>[]): ColorBoostEvent[] {
+    static create(
+        ...colorBoostEvents: (Partial<IColorBoostEvent> &
+            PartialWrapper<IWrapColorBoostEvent<Required<IColorBoostEvent>>>)[]
+    ): ColorBoostEvent[];
+    static create(
+        ...colorBoostEvents: (Partial<IColorBoostEvent> &
+            PartialWrapper<IWrapColorBoostEvent<Required<IColorBoostEvent>>>)[]
+    ): ColorBoostEvent[] {
         const result: ColorBoostEvent[] = [];
         colorBoostEvents?.forEach((be) =>
             result.push(
                 new this({
-                    b: be.b ?? ColorBoostEvent.default.b,
-                    o: be.o ?? ColorBoostEvent.default.o,
+                    b: be.time ?? be.b ?? ColorBoostEvent.default.b,
+                    o: be.toggle ?? be.o ?? ColorBoostEvent.default.o,
                     customData: be.customData ?? ColorBoostEvent.default.customData(),
                 }),
             ),
@@ -69,15 +80,6 @@ export class ColorBoostEvent extends WrapColorBoostEvent<Required<IColorBoostEve
     }
     set customData(value: NonNullable<IColorBoostEvent['customData']>) {
         this.data.customData = value;
-    }
-
-    setCustomData(value: NonNullable<IColorBoostEvent['customData']>): this {
-        this.customData = value;
-        return this;
-    }
-    addCustomData(object: IColorBoostEvent['customData']): this {
-        this.customData = { ...this.customData, object };
-        return this;
     }
 
     isValid(): boolean {

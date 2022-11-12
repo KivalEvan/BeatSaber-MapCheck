@@ -4,9 +4,13 @@ import { IWrapLightTranslationEventBox } from '../../types/beatmap/wrapper/light
 import { WrapEventBox } from './eventBox';
 
 /** Light translation event box beatmap class object. */
-export abstract class WrapLightTranslationEventBox<T extends Record<keyof T, unknown>>
-    extends WrapEventBox<T>
-    implements IWrapLightTranslationEventBox
+export abstract class WrapLightTranslationEventBox<
+        TBox extends Record<keyof TBox, unknown>,
+        TBase extends Record<keyof TBase, unknown>,
+        TFilter extends Record<keyof TFilter, unknown>,
+    >
+    extends WrapEventBox<TBox, TBase, TFilter>
+    implements IWrapLightTranslationEventBox<TBox>
 {
     abstract get translationDistribution(): ILightTranslationEventBox['s'];
     abstract set translationDistribution(value: ILightTranslationEventBox['s']);
@@ -18,8 +22,8 @@ export abstract class WrapLightTranslationEventBox<T extends Record<keyof T, unk
     abstract set flip(value: ILightTranslationEventBox['r']);
     abstract get affectFirst(): ILightTranslationEventBox['b'];
     abstract set affectFirst(value: ILightTranslationEventBox['b']);
-    abstract get events(): IWrapLightTranslationBase[];
-    abstract set events(value: IWrapLightTranslationBase[]);
+    abstract get events(): IWrapLightTranslationBase<TBase>[];
+    abstract set events(value: IWrapLightTranslationBase<TBase>[]);
 
     setTranslationDistribution(value: IWrapLightTranslationEventBox['translationDistribution']) {
         this.translationDistribution = value;
@@ -41,7 +45,7 @@ export abstract class WrapLightTranslationEventBox<T extends Record<keyof T, unk
         this.affectFirst = value;
         return this;
     }
-    abstract setEvents(value: IWrapLightTranslationBase[]): this;
+    abstract setEvents(value: IWrapLightTranslationBase<TBase>[]): this;
 
     isValid(): boolean {
         return (

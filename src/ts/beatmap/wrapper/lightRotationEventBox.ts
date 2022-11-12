@@ -4,9 +4,13 @@ import { IWrapLightRotationEventBox } from '../../types/beatmap/wrapper/lightRot
 import { WrapEventBox } from './eventBox';
 
 /** Light rotation event box beatmap class object. */
-export abstract class WrapLightRotationEventBox<T extends Record<keyof T, unknown>>
-    extends WrapEventBox<T>
-    implements IWrapLightRotationEventBox
+export abstract class WrapLightRotationEventBox<
+        TBox extends Record<keyof TBox, unknown>,
+        TBase extends Record<keyof TBase, unknown>,
+        TFilter extends Record<keyof TFilter, unknown>,
+    >
+    extends WrapEventBox<TBox, TBase, TFilter>
+    implements IWrapLightRotationEventBox<TBox, TBase, TFilter>
 {
     abstract get rotationDistribution(): ILightRotationEventBox['s'];
     abstract set rotationDistribution(value: ILightRotationEventBox['s']);
@@ -18,8 +22,8 @@ export abstract class WrapLightRotationEventBox<T extends Record<keyof T, unknow
     abstract set flip(value: ILightRotationEventBox['r']);
     abstract get affectFirst(): ILightRotationEventBox['b'];
     abstract set affectFirst(value: ILightRotationEventBox['b']);
-    abstract get events(): IWrapLightRotationBase[];
-    abstract set events(value: IWrapLightRotationBase[]);
+    abstract get events(): IWrapLightRotationBase<TBase>[];
+    abstract set events(value: IWrapLightRotationBase<TBase>[]);
 
     setRotationDistribution(value: IWrapLightRotationEventBox['rotationDistribution']) {
         this.rotationDistribution = value;
@@ -41,7 +45,6 @@ export abstract class WrapLightRotationEventBox<T extends Record<keyof T, unknow
         this.affectFirst = value;
         return this;
     }
-    abstract setEvents(value: IWrapLightRotationBase[]): this;
 
     isValid(): boolean {
         return (

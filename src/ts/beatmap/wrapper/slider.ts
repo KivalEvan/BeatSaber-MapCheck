@@ -6,7 +6,10 @@ import { IWrapSlider } from '../../types/beatmap/wrapper/slider';
  *
  * Also known as arc.
  */
-export abstract class WrapSlider<T extends Record<keyof T, unknown>> extends WrapBaseSlider<T> implements IWrapSlider {
+export abstract class WrapSlider<T extends Record<keyof T, unknown>>
+    extends WrapBaseSlider<T>
+    implements IWrapSlider<T>
+{
     abstract get lengthMultiplier(): IWrapSlider['lengthMultiplier'];
     abstract set lengthMultiplier(value: IWrapSlider['lengthMultiplier']);
     abstract get tailLengthMultiplier(): IWrapSlider['tailLengthMultiplier'];

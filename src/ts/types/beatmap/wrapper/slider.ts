@@ -1,6 +1,6 @@
 import { IWrapBaseSlider } from './baseSlider';
 
-export interface IWrapSlider extends IWrapBaseSlider {
+export interface IWrapSlider<T extends Record<keyof T, unknown> = Record<string, unknown>> extends IWrapBaseSlider<T> {
     /** Head control point length multiplier `<float>` of slider.
      * ```ts
      * 0 -> Flat Start

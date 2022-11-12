@@ -1,6 +1,7 @@
 import { IWrapBaseSlider } from './baseSlider';
 
-export interface IWrapBurstSlider extends IWrapBaseSlider {
+export interface IWrapBurstSlider<T extends Record<keyof T, unknown> = Record<string, unknown>>
+    extends IWrapBaseSlider<T> {
     /** Slice count or element `<int>` in burst slider.
      *
      * **NOTE:** Must be more than `0`, the head counts as `1`.

@@ -1,6 +1,7 @@
 import { IWrapGridObject } from './gridObject';
 
-export interface IWrapWaypoint extends IWrapGridObject {
+export interface IWrapWaypoint<T extends Record<keyof T, unknown> = Record<string, unknown>>
+    extends IWrapGridObject<T> {
     /** Offset direction `<int>` of waypoint.
      * ```ts
      * 4 | 0 | 5

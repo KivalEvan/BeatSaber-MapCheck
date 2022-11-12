@@ -1,5 +1,6 @@
 import { IWaypoint } from '../../types/beatmap/v3/waypoint';
-import { ObjectReturnFn } from '../../types/utils';
+import { IWrapWaypoint } from '../../types/beatmap/wrapper/waypoint';
+import { ObjectReturnFn, PartialWrapper } from '../../types/utils';
 import { deepCopy } from '../../utils/misc';
 import { WrapWaypoint } from '../wrapper/waypoint';
 
@@ -20,16 +21,22 @@ export class Waypoint extends WrapWaypoint<Required<IWaypoint>> {
     }
 
     static create(): Waypoint[];
+    static create(...waypoints: PartialWrapper<IWrapWaypoint<Required<IWaypoint>>>[]): Waypoint[];
     static create(...waypoints: Partial<IWaypoint>[]): Waypoint[];
-    static create(...waypoints: Partial<IWaypoint>[]): Waypoint[] {
+    static create(
+        ...waypoints: (Partial<IWaypoint> & PartialWrapper<IWrapWaypoint<Required<IWaypoint>>>)[]
+    ): Waypoint[];
+    static create(
+        ...waypoints: (Partial<IWaypoint> & PartialWrapper<IWrapWaypoint<Required<IWaypoint>>>)[]
+    ): Waypoint[] {
         const result: Waypoint[] = [];
         waypoints?.forEach((w) =>
             result.push(
                 new this({
-                    b: w.b ?? Waypoint.default.b,
-                    x: w.x ?? Waypoint.default.x,
-                    y: w.y ?? Waypoint.default.y,
-                    d: w.d ?? Waypoint.default.d,
+                    b: w.time ?? w.b ?? Waypoint.default.b,
+                    x: w.posX ?? w.x ?? Waypoint.default.x,
+                    y: w.posY ?? w.y ?? Waypoint.default.y,
+                    d: w.direction ?? w.d ?? Waypoint.default.d,
                     customData: w.customData ?? Waypoint.default.customData(),
                 }),
             ),
@@ -91,14 +98,5 @@ export class Waypoint extends WrapWaypoint<Required<IWaypoint>> {
     }
     set customData(value: NonNullable<IWaypoint['customData']>) {
         this.data.customData = value;
-    }
-
-    setCustomData(value: NonNullable<IWaypoint['customData']>): this {
-        this.customData = value;
-        return this;
-    }
-    addCustomData(object: IWaypoint['customData']): this {
-        this.customData = { ...this.customData, object };
-        return this;
     }
 }

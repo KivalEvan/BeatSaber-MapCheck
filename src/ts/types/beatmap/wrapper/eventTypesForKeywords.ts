@@ -1,4 +1,7 @@
-export interface IWrapEventTypesForKeywords {
+import { ISerializable } from '../shared/serializable';
+
+export interface IWrapEventTypesForKeywords<T extends Record<keyof T, unknown> = Record<string, unknown>>
+    extends ISerializable<T> {
     /** Keyword `<string>` of event types for keywords. */
     keyword: string;
     /** Event type `<int[]>` of event types for keywords. */

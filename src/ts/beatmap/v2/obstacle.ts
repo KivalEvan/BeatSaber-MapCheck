@@ -1,6 +1,7 @@
 import { Vector2 } from '../../types/beatmap/shared/heck';
 import { IObstacle } from '../../types/beatmap/v2/obstacle';
-import { ObjectReturnFn } from '../../types/utils';
+import { IWrapObstacle } from '../../types/beatmap/wrapper/obstacle';
+import { ObjectReturnFn, PartialWrapper } from '../../types/utils';
 import { deepCopy } from '../../utils/misc';
 import { WrapObstacle } from '../wrapper/obstacle';
 
@@ -24,20 +25,26 @@ export class Obstacle extends WrapObstacle<Required<IObstacle>> {
     }
 
     static create(): Obstacle[];
+    static create(...obstacles: PartialWrapper<IWrapObstacle<Required<IObstacle>>>[]): Obstacle[];
     static create(...obstacles: Partial<IObstacle>[]): Obstacle[];
-    static create(...obstacles: Partial<IObstacle>[]): Obstacle[] {
+    static create(
+        ...obstacles: (Partial<IObstacle> & PartialWrapper<IWrapObstacle<Required<IObstacle>>>)[]
+    ): Obstacle[];
+    static create(
+        ...obstacles: (Partial<IObstacle> & PartialWrapper<IWrapObstacle<Required<IObstacle>>>)[]
+    ): Obstacle[] {
         const result: Obstacle[] = [];
         obstacles?.forEach((o) =>
             result.push(
                 new this({
-                    _time: o._time ?? Obstacle.default._time,
+                    _time: o.time ?? o._time ?? Obstacle.default._time,
                     _type: o._type ?? Obstacle.default._type,
-                    _lineIndex: o._lineIndex ?? Obstacle.default._lineIndex,
-                    _lineLayer: o._lineLayer ?? Obstacle.default._lineLayer,
-                    _duration: o._duration ?? Obstacle.default._duration,
-                    _width: o._width ?? Obstacle.default._width,
-                    _height: o._height ?? Obstacle.default._height,
-                    _customData: o._customData ?? Obstacle.default._customData(),
+                    _lineIndex: o.posX ?? o._lineIndex ?? Obstacle.default._lineIndex,
+                    _lineLayer: o.posY ?? o._lineLayer ?? Obstacle.default._lineLayer,
+                    _duration: o.duration ?? o._duration ?? Obstacle.default._duration,
+                    _width: o.width ?? o._width ?? Obstacle.default._width,
+                    _height: o.height ?? o._height ?? Obstacle.default._height,
+                    _customData: o.customData ?? o._customData ?? Obstacle.default._customData(),
                 }),
             ),
         );
@@ -125,15 +132,6 @@ export class Obstacle extends WrapObstacle<Required<IObstacle>> {
     }
     set customData(value: NonNullable<IObstacle['_customData']>) {
         this.data._customData = value;
-    }
-
-    setCustomData(value: NonNullable<IObstacle['_customData']>): this {
-        this.customData = value;
-        return this;
-    }
-    addCustomData(object: IObstacle['_customData']): this {
-        this.customData = { ...this.customData, object };
-        return this;
     }
 
     getPosition(): Vector2 {

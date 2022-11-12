@@ -1,4 +1,7 @@
-export interface IWrapIndexFilter {
+import { ISerializable } from '../shared/serializable';
+
+export interface IWrapIndexFilter<T extends Record<keyof T, unknown> = Record<string, unknown>>
+    extends ISerializable<T> {
     /** Type `<int>` of index filter.
      * ```ts
      * 1 -> Division
