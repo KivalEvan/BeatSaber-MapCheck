@@ -8,7 +8,7 @@ const name = 'Hitbox Path';
 const description = 'Check for overlapping pre-swing note hitbox at same time.';
 const enabled = true;
 
-const tool: Tool = {
+const tool: Tool<{}> = {
     name,
     description,
     type: 'note',

@@ -62,7 +62,7 @@ htmlContainer.appendChild(htmlInputMaxTime);
 htmlContainer.appendChild(htmlLabelMaxBeat);
 htmlContainer.appendChild(htmlInputMaxBeat);
 
-const tool: Tool = {
+const tool: Tool<{ distance: number; maxTime: number }> = {
     name,
     description,
     type: 'note',
@@ -87,7 +87,7 @@ const tool: Tool = {
 
 function adjustTimeHandler(bpm: BeatPerMinute) {
     localBPM = bpm;
-    htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.maxTime as number), 2).toString();
+    htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.maxTime), 2).toString();
 }
 
 function inputDistanceHandler(this: HTMLInputElement) {
@@ -99,7 +99,7 @@ function inputTimeHandler(this: HTMLInputElement) {
     tool.input.params.maxTime = Math.abs(parseFloat(this.value)) / 1000;
     this.value = round(tool.input.params.maxTime * 1000, 1).toString();
     if (localBPM) {
-        htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.maxTime as number), 2).toString();
+        htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.maxTime), 2).toString();
     }
 }
 
@@ -117,7 +117,7 @@ function inputBeatHandler(this: HTMLInputElement) {
 function check(map: ToolArgs) {
     const { bpm } = map.settings;
     const { noteContainer } = map.difficulty!;
-    const { maxTime: temp, distance } = <{ maxTime: number; distance: number }>tool.input.params;
+    const { maxTime: temp, distance } = tool.input.params;
     const maxTime = bpm.toBeatTime(temp) + 0.001;
 
     const lastNote: { [key: number]: NoteContainer } = {};

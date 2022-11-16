@@ -46,7 +46,7 @@ htmlContainer.appendChild(htmlInputMinTime);
 htmlContainer.appendChild(htmlLabelMinPrec);
 htmlContainer.appendChild(htmlInputMinPrec);
 
-const tool: Tool = {
+const tool: Tool<{ maxTime: number }> = {
     name,
     description,
     type: 'note',

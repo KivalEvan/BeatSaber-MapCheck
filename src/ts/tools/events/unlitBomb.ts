@@ -11,7 +11,7 @@ const name = 'Unlit Bomb';
 const description = 'Check for lighting around bomb.';
 const enabled = true;
 
-const tool: Tool = {
+const tool: Tool<{}> = {
     name,
     description,
     type: 'event',

@@ -126,7 +126,7 @@ htmlContainer.appendChild(htmlInputMaxTime);
 htmlContainer.appendChild(htmlLabelMaxBeat);
 htmlContainer.appendChild(htmlInputMaxBeat);
 
-const tool: Tool = {
+const tool: Tool<{ specific: 'difficulty' | 'time'; minTime: number; maxTime: number }> = {
     name,
     description,
     type: 'note',
@@ -152,23 +152,24 @@ const tool: Tool = {
 
 function adjustTimeHandler(bpm: BeatPerMinute) {
     localBPM = bpm;
-    htmlInputMinBeat.value = round(localBPM.toBeatTime(tool.input.params.minTime as number), 2).toString();
-    htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.maxTime as number), 2).toString();
+    htmlInputMinBeat.value = round(localBPM.toBeatTime(tool.input.params.minTime), 2).toString();
+    htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.maxTime), 2).toString();
 }
 
 function inputSpecCheckHandler(this: HTMLInputElement) {
-    tool.input.params.specific = this.value;
+    // FIXME: check for string
+    tool.input.params.specific = this.value as 'difficulty' | 'time';
 }
 
 function inputMinTimeHandler(this: HTMLInputElement) {
     tool.input.params.minTime = Math.abs(parseFloat(this.value)) / 1000;
     this.value = round(tool.input.params.minTime * 1000, 1).toString();
     if (localBPM) {
-        htmlInputMinBeat.value = round(localBPM.toBeatTime(tool.input.params.minTime as number), 2).toString();
+        htmlInputMinBeat.value = round(localBPM.toBeatTime(tool.input.params.minTime), 2).toString();
         if (tool.input.params.minTime > tool.input.params.maxTime) {
             tool.input.params.maxTime = tool.input.params.minTime;
-            htmlInputMaxTime.value = round((tool.input.params.maxTime as number) * 1000, 1).toString();
-            htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.maxTime as number), 2).toString();
+            htmlInputMaxTime.value = round(tool.input.params.maxTime * 1000, 1).toString();
+            htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.maxTime), 2).toString();
         }
     }
 }
@@ -184,8 +185,8 @@ function inputMinBeatHandler(this: HTMLInputElement) {
     this.value = round(val, 2).toString();
     if (tool.input.params.minTime > tool.input.params.maxTime) {
         tool.input.params.maxTime = tool.input.params.minTime;
-        htmlInputMaxTime.value = round((tool.input.params.maxTime as number) * 1000, 1).toString();
-        htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.maxTime as number), 2).toString();
+        htmlInputMaxTime.value = round(tool.input.params.maxTime * 1000, 1).toString();
+        htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.maxTime), 2).toString();
     }
 }
 
@@ -193,7 +194,7 @@ function inputMaxTimeHandler(this: HTMLInputElement) {
     tool.input.params.maxTime = Math.abs(parseFloat(this.value)) / 1000;
     this.value = round(tool.input.params.maxTime * 1000, 1).toString();
     if (localBPM) {
-        htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.maxTime as number), 2).toString();
+        htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.maxTime), 2).toString();
     }
 }
 
@@ -211,11 +212,7 @@ function inputMaxBeatHandler(this: HTMLInputElement) {
 function check(map: ToolArgs) {
     const { bpm, njs } = map.settings;
     const noteContainer = map.difficulty!.data.getNoteContainer().filter((n) => n.type !== 'slider');
-    const {
-        minTime: temp1,
-        maxTime: temp2,
-        specific: vbSpecific,
-    } = <{ minTime: number; maxTime: number; specific: string }>tool.input.params;
+    const { minTime: temp1, maxTime: temp2, specific: vbSpecific } = tool.input.params;
     const minTime =
         vbSpecific === 'time' ? bpm.toBeatTime(temp1) : bpm.toBeatTime(vbDiff[map.difficulty!.difficulty].min);
     const maxTime =

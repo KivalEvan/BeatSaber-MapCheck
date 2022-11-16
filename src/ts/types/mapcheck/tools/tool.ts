@@ -13,13 +13,9 @@ export interface IBeatmapSettings {
 
 export type ToolType = 'note' | 'event' | 'obstacle' | 'other' | 'general';
 
-export interface ToolInputParams {
-    [key: string]: boolean | string | number | number[];
-}
-
-export interface ToolInput {
+export interface ToolInput<TParam extends Record<string, unknown>> {
     enabled: boolean;
-    params: ToolInputParams;
+    params: TParam;
     html?: HTMLElement;
     adjustTime?: (bpm: BeatPerMinute) => void;
 }
@@ -36,7 +32,7 @@ export interface ToolArgs {
 
 export type ToolRun = (args: ToolArgs) => void;
 
-export interface Tool {
+export interface Tool<TParam extends Record<string, unknown>> {
     name: string;
     description: string;
     type: ToolType;
@@ -44,7 +40,7 @@ export interface Tool {
         input: ToolInputOrder;
         output: ToolOutputOrder;
     };
-    input: ToolInput;
+    input: ToolInput<TParam>;
     output: ToolOutput;
     run: ToolRun;
 }

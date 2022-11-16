@@ -6,7 +6,7 @@ const name = 'Zero Obstacle';
 const description = 'Look for obstacle with zero value.';
 const enabled = true;
 
-const tool: Tool = {
+const tool: Tool<{}> = {
     name,
     description,
     type: 'obstacle',

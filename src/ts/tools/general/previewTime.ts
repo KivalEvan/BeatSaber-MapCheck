@@ -6,7 +6,7 @@ const name = 'Preview Time';
 const description = 'Warn default editor preview time.';
 const enabled = true;
 
-const tool: Tool = {
+const tool: Tool<{}> = {
     name,
     description,
     type: 'general',

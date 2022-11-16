@@ -11,7 +11,7 @@ const name = 'Hitbox Staircase';
 const description = 'Check for overlapping post-swing hitbox with note hitbox during swing.';
 const enabled = true;
 
-const tool: Tool = {
+const tool: Tool<{}> = {
     name,
     description,
     type: 'note',

@@ -9,7 +9,7 @@ const description =
     'Look for obstacle with inadequate duration.\nThis causes player to not take damage when in collision with obstacle.';
 const enabled = true;
 
-const tool: Tool = {
+const tool: Tool<{ minDur: number }> = {
     name,
     description,
     type: 'obstacle',
@@ -35,7 +35,7 @@ const tool: Tool = {
 function check(map: ToolArgs) {
     const { obstacles } = map.difficulty!.data;
     const { bpm } = map.settings;
-    const { minDur: temp } = <{ minDur: number }>tool.input.params;
+    const { minDur: temp } = tool.input.params;
     const minDur = bpm.toBeatTime(temp);
     const arr: Obstacle[] = [];
     let obstacleLFull: Obstacle = Obstacle.create()[0];

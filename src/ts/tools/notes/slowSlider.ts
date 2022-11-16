@@ -44,7 +44,7 @@ htmlContainer.appendChild(htmlInputMinTime);
 htmlContainer.appendChild(htmlLabelMinPrec);
 htmlContainer.appendChild(htmlInputMinPrec);
 
-const tool: Tool = {
+const tool: Tool<{ minSpeed: number }> = {
     name,
     description,
     type: 'note',
@@ -68,14 +68,14 @@ const tool: Tool = {
 
 function adjustTimeHandler(bpm: BeatPerMinute) {
     localBPM = bpm;
-    htmlInputMinPrec.value = round(1 / localBPM.toBeatTime(tool.input.params.minSpeed as number), 2).toString();
+    htmlInputMinPrec.value = round(1 / localBPM.toBeatTime(tool.input.params.minSpeed), 2).toString();
 }
 
 function inputTimeHandler(this: HTMLInputElement) {
     tool.input.params.minSpeed = Math.abs(parseFloat(this.value)) / 1000;
     this.value = round(tool.input.params.minSpeed * 1000, 1).toString();
     if (localBPM) {
-        htmlInputMinPrec.value = round(1 / localBPM.toBeatTime(tool.input.params.minSpeed as number), 2).toString();
+        htmlInputMinPrec.value = round(1 / localBPM.toBeatTime(tool.input.params.minSpeed), 2).toString();
     }
 }
 
@@ -92,7 +92,7 @@ function inputPrecHandler(this: HTMLInputElement) {
 
 function check(map: ToolArgs) {
     const { swingAnalysis } = map.difficulty!;
-    const { minSpeed } = <{ minSpeed: number }>tool.input.params;
+    const { minSpeed } = tool.input.params;
 
     return swingAnalysis.container
         .filter((s) => s.maxSpeed > minSpeed || s.minSpeed > minSpeed)
@@ -107,7 +107,7 @@ function run(map: ToolArgs) {
         console.error('Something went wrong!');
         return;
     }
-    const { minSpeed } = <{ minSpeed: number }>tool.input.params;
+    const { minSpeed } = tool.input.params;
     const result = check(map);
 
     if (result.length) {

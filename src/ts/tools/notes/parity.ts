@@ -46,7 +46,7 @@ htmlContainer.appendChild(
     }),
 );
 
-const tool: Tool = {
+const tool: Tool<{ warningThres: number; errorThres: number; allowedRot: number }> = {
     name,
     description,
     type: 'note',

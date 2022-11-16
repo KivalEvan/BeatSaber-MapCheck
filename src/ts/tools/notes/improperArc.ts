@@ -8,7 +8,7 @@ const name = 'Improper Arc';
 const description = 'Check for correct use of arc.';
 const enabled = true;
 
-const tool: Tool = {
+const tool: Tool<{}> = {
     name,
     description,
     type: 'note',

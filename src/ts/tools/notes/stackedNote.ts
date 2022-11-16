@@ -8,7 +8,7 @@ const name = 'Stacked Note';
 const description = 'Look for stacked note.';
 const enabled = true;
 
-const tool: Tool = {
+const tool: Tool<{}> = {
     name,
     description,
     type: 'note',

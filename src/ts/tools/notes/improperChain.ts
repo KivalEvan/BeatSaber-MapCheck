@@ -8,7 +8,7 @@ const name = 'Improper Chain';
 const description = 'Check for correct use of chain.';
 const enabled = true;
 
-const tool: Tool = {
+const tool: Tool<{}> = {
     name,
     description,
     type: 'note',

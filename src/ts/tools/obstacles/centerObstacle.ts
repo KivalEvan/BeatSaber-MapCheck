@@ -46,7 +46,7 @@ htmlContainer.appendChild(htmlInputMaxTime);
 htmlContainer.appendChild(htmlLabelMaxBeat);
 htmlContainer.appendChild(htmlInputMaxBeat);
 
-const tool: Tool = {
+const tool: Tool<{ recovery: number }> = {
     name,
     description,
     type: 'obstacle',
@@ -70,14 +70,14 @@ const tool: Tool = {
 
 function adjustTimeHandler(bpm: BeatPerMinute) {
     localBPM = bpm;
-    htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.recovery as number), 2).toString();
+    htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.recovery), 2).toString();
 }
 
 function inputTimeHandler(this: HTMLInputElement) {
     tool.input.params.recovery = Math.abs(parseFloat(this.value)) / 1000;
     this.value = round(tool.input.params.recovery * 1000, 1).toString();
     if (localBPM) {
-        htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.recovery as number), 2).toString();
+        htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.recovery), 2).toString();
     }
 }
 
@@ -95,7 +95,7 @@ function inputBeatHandler(this: HTMLInputElement) {
 function check(map: ToolArgs) {
     const { obstacles } = map.difficulty!.data;
     const { bpm } = map.settings;
-    const { recovery } = <{ recovery: number }>tool.input.params;
+    const { recovery } = tool.input.params;
     const arr: Obstacle[] = [];
     let obstacleLeftFull: Obstacle = Obstacle.create()[0];
     let obstacleRightFull: Obstacle = Obstacle.create()[0];
@@ -186,7 +186,7 @@ function run(map: ToolArgs) {
         return;
     }
     const result = check(map);
-    const { recovery } = <{ recovery: number }>tool.input.params;
+    const { recovery } = tool.input.params;
 
     if (result.length) {
         tool.output.html = printResultTime(

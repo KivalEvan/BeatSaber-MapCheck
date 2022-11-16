@@ -35,7 +35,7 @@ htmlContainer.appendChild(
 );
 htmlContainer.appendChild(htmlDifficultyList);
 
-const tool: Tool = {
+const tool: Tool<{ [k in DifficultyName]: boolean }> = {
     name,
     description,
     type: 'general',
