@@ -43,33 +43,33 @@ export function eventGroupRename(id: number, environment?: EnvironmentAllName): 
         case 'PyroEnvironment': {
             switch (id) {
                 case 0:
-                    return 'Left Stage Light';
+                    return 'Stage Left Platform';
                 case 1:
-                    return 'Right Stage Light';
+                    return 'Stage Right Platform';
                 case 2:
-                    return 'Top Left Laser';
+                    return 'Top Stage Left Laser';
                 case 3:
-                    return 'Top Right Laser';
+                    return 'Top Stage Right Laser';
                 case 4:
-                    return 'Top Middle Laser';
+                    return 'Top Stage Middle Laser';
                 case 5:
-                    return 'Top Light';
+                    return 'Top Stage Light';
                 case 6:
-                    return 'Left Light Tower';
+                    return 'Side Panels Left Tower';
                 case 7:
-                    return 'Right Light Tower';
+                    return 'Side Panels Right Tower';
                 case 8:
                     return 'Stage Left Laser';
                 case 9:
                     return 'Stage Right Laser';
                 case 10:
-                    return 'Stage Far Left Laser';
+                    return 'Side Panels Left Laser';
                 case 11:
-                    return 'Stage Far Right Laser';
+                    return 'Side Panels Right Laser';
                 case 12:
-                    return 'Left Flame';
+                    return 'Fire Left';
                 case 13:
-                    return 'Right Flame';
+                    return 'Fire Right';
                 default:
             }
         }
@@ -77,41 +77,41 @@ export function eventGroupRename(id: number, environment?: EnvironmentAllName): 
         case 'EDMEnvironment': {
             switch (id) {
                 case 0:
-                    return 'Top Circle';
+                    return 'Circles Top';
                 case 1:
-                    return 'Close Circle';
+                    return 'Circles Close';
                 case 2:
-                    return 'Distant Circle';
+                    return 'Circles Distant';
                 case 3:
-                    return 'Distant Circle 2';
+                    return 'Circles Distant 2';
                 case 4:
-                    return 'Left Single Source Circle';
+                    return 'Single Source Circles Left';
                 case 5:
-                    return 'Right Single Source Circle';
+                    return 'Single Source Circles Right';
                 case 6:
-                    return 'Left Laser (Up)';
+                    return 'Single Source Lasers Left (Up)';
                 case 7:
-                    return 'Left Laser (Out)';
+                    return 'Single Source Lasers Left (Out)';
                 case 8:
-                    return 'Right Laser (Up)';
+                    return 'Single Source Lasers Right (Up)';
                 case 9:
-                    return 'Right Laser (Out)';
+                    return 'Single Source Lasers Right (Out)';
                 case 10:
-                    return 'Left Laser (Down)';
+                    return 'Single Source Lasers Left (Down)';
                 case 11:
-                    return 'Right Laser (Down)';
+                    return 'Single Source Lasers Right (Down)';
                 case 12:
-                    return 'Left Laser (Down) / Top Circle';
+                    return 'Single Source Lasers Left (Down) / Circle Rotations Top';
                 case 13:
-                    return 'Right Laser (Up) / Close Circle';
+                    return 'Single Source Lasers Right (Up) / Circle Rotations Close';
                 case 14:
-                    return 'Distant Circle';
+                    return 'Circle Rotations Distant';
                 case 15:
-                    return 'Distant Circle 2';
+                    return 'Circle Rotations Distant 2';
                 case 16:
-                    return 'Left Single Source Circle';
+                    return 'Circle Rotations Single Source Left';
                 case 17:
-                    return 'Right Single Source Circle';
+                    return 'Circle Rotations Single Source Right';
                 default:
             }
         }
@@ -119,9 +119,9 @@ export function eventGroupRename(id: number, environment?: EnvironmentAllName): 
         case 'TheSecondEnvironment': {
             switch (id) {
                 case 0:
-                    return 'Big Rings';
+                    return 'Rings Big';
                 case 1:
-                    return 'Small Rings';
+                    return 'Rings Small';
                 case 2:
                     return 'Runway Left';
                 case 3:

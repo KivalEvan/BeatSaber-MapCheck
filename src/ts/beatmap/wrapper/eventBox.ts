@@ -42,6 +42,12 @@ export abstract class WrapEventBox<
     abstract setEvents(value: IWrapBaseObject<TBase>[]): this;
 
     isValid(): boolean {
-        return this.beatDistributionType === 1 || this.beatDistributionType === 2;
+        return (
+            (this.beatDistributionType === 1 || this.beatDistributionType === 2) &&
+            this.easing >= 0 &&
+            this.easing <= 3 &&
+            this.events.every((e) => e.isValid()) &&
+            this.filter.isValid()
+        );
     }
 }

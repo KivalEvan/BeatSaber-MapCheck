@@ -369,6 +369,12 @@ export const IndexFilterDataCheck: Record<keyof IIndexFilter, DataCheck> = {
         int: true,
         version: '3.1.0',
     },
+    customData: {
+        type: 'object',
+        version: '3.0.0',
+        check: {},
+        optional: true,
+    },
 } as const;
 
 export const LightColorBaseDataCheck: Record<keyof ILightColorBase, DataCheck> = {

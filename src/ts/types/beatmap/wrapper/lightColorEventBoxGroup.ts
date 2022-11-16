@@ -1,4 +1,4 @@
-import { IWrapEventBoxGroupTemplate } from './eventBoxGroupTemplate';
+import { IWrapEventBoxGroup } from './eventBoxGroup';
 import { IWrapLightColorEventBox } from './lightColorEventBox';
 
 export interface IWrapLightColorEventBoxGroup<
@@ -6,6 +6,6 @@ export interface IWrapLightColorEventBoxGroup<
     TBox extends Record<keyof TBox, unknown> = Record<string, unknown>,
     TBase extends Record<keyof TBase, unknown> = Record<string, unknown>,
     TFilter extends Record<keyof TFilter, unknown> = Record<string, unknown>,
-> extends IWrapEventBoxGroupTemplate<TGroup, TBox, TBase, TFilter> {
+> extends IWrapEventBoxGroup<TGroup, TBox, TBase, TFilter> {
     events: IWrapLightColorEventBox<TBox, TBase, TFilter>[];
 }

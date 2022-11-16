@@ -12,7 +12,6 @@ export * from './colorNote';
 export * from './difficulty';
 export * from './eventBox';
 export * from './eventBoxGroup';
-export * from './eventBoxGroupTemplate';
 export * from './indexFilter';
 export * from './lightColorBase';
 export * from './lightColorEventBox';

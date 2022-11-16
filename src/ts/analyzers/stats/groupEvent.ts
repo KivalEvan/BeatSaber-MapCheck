@@ -1,6 +1,6 @@
 import { EventList } from '../../beatmap/shared/environment';
 import { EnvironmentAllName } from '../../types/beatmap/shared/environment';
-import { IWrapEventBoxGroupTemplate } from '../../types/beatmap/wrapper/eventBoxGroupTemplate';
+import { IWrapEventBoxGroup } from '../../types/beatmap/wrapper/eventBoxGroup';
 import { ICountEventBoxGroup } from './types/stats';
 
 /** Count number of type of events with their properties in given array and return a event count object.
@@ -10,7 +10,7 @@ import { ICountEventBoxGroup } from './types/stats';
  * ```
  */
 export function countEBG(
-    ebg: IWrapEventBoxGroupTemplate[],
+    ebg: IWrapEventBoxGroup[],
     environment: EnvironmentAllName = 'DefaultEnvironment',
 ): ICountEventBoxGroup {
     const commonEvent = EventList[environment]?.[1] ?? EventList['DefaultEnvironment'][1];

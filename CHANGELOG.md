@@ -1,9 +1,10 @@
 # Changelog
 
-## 2.5.7 [2022-11-##]
+## 2.5.7 [2022-11-16]
 
 ### Added
 
+-   Event box check
 -   Tools output symbol
     -   🚧 Ranking: for rankability reason.
     -   ❌ Error: should be fixed unless you know what you are doing.

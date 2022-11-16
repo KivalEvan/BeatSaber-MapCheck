@@ -1,4 +1,4 @@
-import { WrapEventBoxGroupTemplate } from './eventBoxGroupTemplate';
+import { WrapEventBoxGroup } from './eventBoxGroup';
 import { IWrapLightRotationEventBoxGroup } from '../../types/beatmap/wrapper/lightRotationEventBoxGroup';
 import { IWrapLightRotationEventBox } from '../../types/beatmap/wrapper/lightRotationEventBox';
 
@@ -9,7 +9,7 @@ export abstract class WrapLightRotationEventBoxGroup<
         TBase extends Record<keyof TBase, unknown>,
         TFilter extends Record<keyof TFilter, unknown>,
     >
-    extends WrapEventBoxGroupTemplate<TGroup, TBox, TBase, TFilter>
+    extends WrapEventBoxGroup<TGroup, TBox, TBase, TFilter>
     implements IWrapLightRotationEventBoxGroup<TGroup, TBox, TBase, TFilter>
 {
     abstract get events(): IWrapLightRotationEventBox<TBox, TBase, TFilter>[];
