@@ -1,7 +1,8 @@
-import { Vector2 } from '../shared/heck';
+import { Vector2 } from '../shared/custom/heck';
 import { IWrapBaseObject } from './baseObject';
 
-export interface IWrapGridObject extends IWrapBaseObject {
+export interface IWrapGridObject<T extends Record<keyof T, unknown> = Record<string, unknown>>
+    extends IWrapBaseObject<T> {
     /** Position x `<int>` of base obj.
      * ```ts
      * 0 -> Outer Left

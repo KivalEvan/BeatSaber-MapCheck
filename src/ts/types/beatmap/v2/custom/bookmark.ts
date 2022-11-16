@@ -1,4 +1,4 @@
-import { ColorArray } from '../../colors';
+import { ColorArray } from '../../../colors';
 
 /** Beatmap difficulty custom data interface for Bookmark. */
 export interface IBookmark {

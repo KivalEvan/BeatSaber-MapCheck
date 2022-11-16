@@ -1,5 +1,6 @@
 import { IWaypoint } from '../../types/beatmap/v2/waypoint';
-import { ObjectReturnFn } from '../../types/utils';
+import { IWrapWaypoint } from '../../types/beatmap/wrapper/waypoint';
+import { ObjectReturnFn, PartialWrapper } from '../../types/utils';
 import { deepCopy } from '../../utils/misc';
 import { WrapWaypoint } from '../wrapper/waypoint';
 
@@ -20,17 +21,23 @@ export class Waypoint extends WrapWaypoint<Required<IWaypoint>> {
     }
 
     static create(): Waypoint[];
+    static create(...waypoints: PartialWrapper<IWrapWaypoint<Required<IWaypoint>>>[]): Waypoint[];
     static create(...waypoints: Partial<IWaypoint>[]): Waypoint[];
-    static create(...waypoints: Partial<IWaypoint>[]): Waypoint[] {
+    static create(
+        ...waypoints: (Partial<IWaypoint> & PartialWrapper<IWrapWaypoint<Required<IWaypoint>>>)[]
+    ): Waypoint[];
+    static create(
+        ...waypoints: (Partial<IWaypoint> & PartialWrapper<IWrapWaypoint<Required<IWaypoint>>>)[]
+    ): Waypoint[] {
         const result: Waypoint[] = [];
         waypoints?.forEach((w) =>
             result.push(
                 new this({
-                    _time: w._time ?? Waypoint.default._time,
-                    _lineIndex: w._lineIndex ?? Waypoint.default._lineIndex,
-                    _lineLayer: w._lineLayer ?? Waypoint.default._lineLayer,
-                    _offsetDirection: w._offsetDirection ?? Waypoint.default._offsetDirection,
-                    _customData: w._customData ?? Waypoint.default._customData(),
+                    _time: w.time ?? w._time ?? Waypoint.default._time,
+                    _lineIndex: w.posX ?? w._lineIndex ?? Waypoint.default._lineIndex,
+                    _lineLayer: w.posY ?? w._lineLayer ?? Waypoint.default._lineLayer,
+                    _offsetDirection: w.direction ?? w._offsetDirection ?? Waypoint.default._offsetDirection,
+                    _customData: w.customData ?? w._customData ?? Waypoint.default._customData(),
                 }),
             ),
         );
@@ -91,14 +98,5 @@ export class Waypoint extends WrapWaypoint<Required<IWaypoint>> {
     }
     set customData(value: NonNullable<IWaypoint['_customData']>) {
         this.data._customData = value;
-    }
-
-    setCustomData(value: NonNullable<IWaypoint['_customData']>): this {
-        this.customData = value;
-        return this;
-    }
-    addCustomData(object: IWaypoint['_customData']): this {
-        this.customData = { ...this.customData, object };
-        return this;
     }
 }

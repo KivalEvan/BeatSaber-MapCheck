@@ -1,4 +1,6 @@
-interface IIndexFilterBase {
+import { IBaseItem } from './baseItem';
+
+interface IIndexFilterBase extends IBaseItem {
     /** Type `<int>` of index filter.
      * ```ts
      * 1 -> Division

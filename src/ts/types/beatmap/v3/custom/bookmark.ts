@@ -1,4 +1,4 @@
-import { ColorArray } from '../../colors';
+import { ColorArray } from '../../../colors';
 
 /** Bookmark custom data for difficulty. */
 export interface IBookmark {

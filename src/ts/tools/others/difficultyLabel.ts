@@ -38,6 +38,7 @@ function run(map: ToolArgs) {
         tool.output.html = printResult(
             `Difficulty label is too long (${result.length} characters)`,
             'exceeded 30 max characters by ranking criteria',
+            'rank',
         );
     } else {
         tool.output.html = null;

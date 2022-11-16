@@ -7,7 +7,7 @@ import { IWrapBurstSlider } from '../../types/beatmap/wrapper/burstSlider';
  */
 export abstract class WrapBurstSlider<T extends Record<keyof T, unknown>>
     extends WrapBaseSlider<T>
-    implements IWrapBurstSlider
+    implements IWrapBurstSlider<T>
 {
     abstract get sliceCount(): IWrapBurstSlider['sliceCount'];
     abstract set sliceCount(value: IWrapBurstSlider['sliceCount']);

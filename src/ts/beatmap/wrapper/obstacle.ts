@@ -5,7 +5,7 @@ import { WrapGridObject } from './gridObject';
 /** Obstacle beatmap class object. */
 export abstract class WrapObstacle<T extends Record<keyof T, unknown>>
     extends WrapGridObject<T>
-    implements IWrapObstacle
+    implements IWrapObstacle<T>
 {
     abstract get duration(): IWrapObstacle['duration'];
     abstract set duration(value: IWrapObstacle['duration']);

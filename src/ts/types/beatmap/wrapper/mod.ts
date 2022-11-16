@@ -9,7 +9,6 @@ export * from './difficulty';
 export * from './event';
 export * from './eventBox';
 export * from './eventBoxGroup';
-export * from './eventBoxGroupTemplate';
 export * from './eventTypesForKeywords';
 export * from './eventTypesWithKeywords';
 export * from './indexFilter';

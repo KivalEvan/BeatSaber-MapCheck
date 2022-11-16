@@ -1,12 +1,19 @@
 import { ILightTranslationEventBoxGroup } from '../../types/beatmap/v3/lightTranslationEventBoxGroup';
-import { DeepPartial, ObjectReturnFn } from '../../types/utils';
+import { DeepPartial, DeepPartialWrapper, ObjectReturnFn } from '../../types/utils';
 import { LightTranslationEventBox } from './lightTranslationEventBox';
 import { WrapLightTranslationEventBoxGroup } from '../wrapper/lightTranslationEventBoxGroup';
 import { deepCopy } from '../../utils/misc';
+import { ILightTranslationEventBox } from '../../types/beatmap/v3/lightTranslationEventBox';
+import { IIndexFilter } from '../../types/beatmap/v3/indexFilter';
+import { ILightTranslationBase } from '../../types/beatmap/v3/lightTranslationBase';
+import { IWrapLightTranslationEventBoxGroup } from '../../types/beatmap/wrapper/lightTranslationEventBoxGroup';
 
 /** Light translation event box group beatmap v3 class object. */
 export class LightTranslationEventBoxGroup extends WrapLightTranslationEventBoxGroup<
-    Required<ILightTranslationEventBoxGroup>
+    Required<ILightTranslationEventBoxGroup>,
+    Required<ILightTranslationEventBox>,
+    Required<ILightTranslationBase>,
+    Required<IIndexFilter>
 > {
     static default: ObjectReturnFn<Required<ILightTranslationEventBoxGroup>> = {
         b: 0,
@@ -24,15 +31,49 @@ export class LightTranslationEventBoxGroup extends WrapLightTranslationEventBoxG
     }
 
     static create(): LightTranslationEventBoxGroup[];
+    static create(
+        ...eventBoxGroups: DeepPartialWrapper<
+            IWrapLightTranslationEventBoxGroup<
+                Required<ILightTranslationEventBoxGroup>,
+                Required<ILightTranslationEventBox>,
+                Required<ILightTranslationBase>,
+                Required<IIndexFilter>
+            >
+        >[]
+    ): LightTranslationEventBoxGroup[];
     static create(...eventBoxGroups: DeepPartial<ILightTranslationEventBoxGroup>[]): LightTranslationEventBoxGroup[];
-    static create(...eventBoxGroups: DeepPartial<ILightTranslationEventBoxGroup>[]): LightTranslationEventBoxGroup[] {
+    static create(
+        ...eventBoxGroups: (DeepPartial<ILightTranslationEventBoxGroup> &
+            DeepPartialWrapper<
+                IWrapLightTranslationEventBoxGroup<
+                    Required<ILightTranslationEventBoxGroup>,
+                    Required<ILightTranslationEventBox>,
+                    Required<ILightTranslationBase>,
+                    Required<IIndexFilter>
+                >
+            >)[]
+    ): LightTranslationEventBoxGroup[];
+    static create(
+        ...eventBoxGroups: (DeepPartial<ILightTranslationEventBoxGroup> &
+            DeepPartialWrapper<
+                IWrapLightTranslationEventBoxGroup<
+                    Required<ILightTranslationEventBoxGroup>,
+                    Required<ILightTranslationEventBox>,
+                    Required<ILightTranslationBase>,
+                    Required<IIndexFilter>
+                >
+            >)[]
+    ): LightTranslationEventBoxGroup[] {
         const result: LightTranslationEventBoxGroup[] = [];
         eventBoxGroups?.forEach((ebg) =>
             result.push(
                 new this({
-                    b: ebg.b ?? LightTranslationEventBoxGroup.default.b,
-                    g: ebg.g ?? LightTranslationEventBoxGroup.default.g,
-                    e: (ebg as Required<ILightTranslationEventBoxGroup>).e ?? LightTranslationEventBoxGroup.default.e(),
+                    b: ebg.time ?? ebg.b ?? LightTranslationEventBoxGroup.default.b,
+                    g: ebg.id ?? ebg.g ?? LightTranslationEventBoxGroup.default.g,
+                    e:
+                        (ebg.events as ILightTranslationEventBox[]) ??
+                        (ebg.e as unknown as ILightTranslationEventBox[]) ??
+                        LightTranslationEventBoxGroup.default.e(),
                     customData: ebg.customData ?? LightTranslationEventBoxGroup.default.customData(),
                 }),
             ),
@@ -73,7 +114,7 @@ export class LightTranslationEventBoxGroup extends WrapLightTranslationEventBoxG
         this.data.g = value;
     }
 
-    get events() {
+    get events(): LightTranslationEventBox[] {
         return this._e;
     }
     set events(value: LightTranslationEventBox[]) {

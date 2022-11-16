@@ -1,10 +1,15 @@
 import { ISpecialEventsKeywordFilters } from '../../types/beatmap/v2/specialEventsKeywordFilters';
-import { ObjectReturnFn } from '../../types/utils';
+import { DeepPartial, DeepPartialWrapper, ObjectReturnFn } from '../../types/utils';
 import { SpecialEventsKeywordFiltersKeywords } from './specialEventsKeywordFiltersKeywords';
 import { WrapEventTypesWithKeywords } from '../wrapper/eventTypesWithKeywords';
+import { ISpecialEventsKeywordFiltersKeywords } from '../../types/beatmap/v2/specialEventsKeywordFiltersKeywords';
+import { IWrapEventTypesWithKeywords } from '../../types/beatmap/wrapper/eventTypesWithKeywords';
 
 /** Special event types with keywords beatmap v2 class object. */
-export class SpecialEventsKeywordFilters extends WrapEventTypesWithKeywords<Required<ISpecialEventsKeywordFilters>> {
+export class SpecialEventsKeywordFilters extends WrapEventTypesWithKeywords<
+    Required<ISpecialEventsKeywordFilters>,
+    Required<ISpecialEventsKeywordFiltersKeywords>
+> {
     static default: ObjectReturnFn<Required<ISpecialEventsKeywordFilters>> = {
         _keywords: () => [],
     };
@@ -21,9 +26,26 @@ export class SpecialEventsKeywordFilters extends WrapEventTypesWithKeywords<Requ
         );
     }
 
-    static create(specialEventsWithKeywords: Partial<ISpecialEventsKeywordFilters> = {}): SpecialEventsKeywordFilters {
+    static create(): SpecialEventsKeywordFilters;
+    static create(
+        specialEventsWithKeywords: DeepPartialWrapper<IWrapEventTypesWithKeywords>,
+    ): SpecialEventsKeywordFilters;
+    static create(specialEventsWithKeywords: DeepPartial<ISpecialEventsKeywordFilters>): SpecialEventsKeywordFilters;
+    static create(
+        specialEventsWithKeywords: DeepPartial<ISpecialEventsKeywordFilters> &
+            DeepPartialWrapper<IWrapEventTypesWithKeywords>,
+    ): SpecialEventsKeywordFilters;
+    static create(
+        specialEventsWithKeywords: DeepPartial<ISpecialEventsKeywordFilters> &
+            DeepPartialWrapper<IWrapEventTypesWithKeywords> = {},
+    ): SpecialEventsKeywordFilters {
         return new this({
-            _keywords: specialEventsWithKeywords._keywords ?? SpecialEventsKeywordFilters.default._keywords(),
+            _keywords:
+                (specialEventsWithKeywords.list?.map((k) => {
+                    return { _keyword: k?.keyword, _specialEvents: k?.events };
+                }) as ISpecialEventsKeywordFiltersKeywords[]) ??
+                specialEventsWithKeywords._keywords ??
+                SpecialEventsKeywordFilters.default._keywords(),
         });
     }
 

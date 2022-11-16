@@ -21,7 +21,7 @@ htmlInputPrec.addEventListener('change', inputPrecHandler);
 
 htmlContainer.appendChild(htmlInputPrec);
 
-const tool: Tool = {
+const tool: Tool<{ prec: number[] }> = {
     name,
     description,
     type: 'note',
@@ -55,7 +55,7 @@ function check(settings: IBeatmapSettings, difficulty: IBeatmapItem) {
     const { bpm } = settings;
     const swingContainer = difficulty.swingAnalysis.container;
     // god this hurt me, but typescript sees this as number instead of number[]
-    const { prec } = <{ prec: number[] }>tool.input.params;
+    const { prec } = tool.input.params;
 
     return swingContainer
         .map((n) => n.time)
@@ -83,7 +83,7 @@ function run(map: ToolArgs) {
     const result = check(map.settings, map.difficulty);
 
     if (result.length) {
-        tool.output.html = printResultTime('Off-beat precision', result, map.settings.bpm);
+        tool.output.html = printResultTime('Off-beat precision', result, map.settings.bpm, 'warning');
     } else {
         tool.output.html = null;
     }

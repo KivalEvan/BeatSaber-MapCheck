@@ -1,5 +1,5 @@
 import { ChromaEnvironmentAbbreviation } from '../../analyzers/renamer/customData';
-import { IChromaEnvironment } from '../../types/beatmap/v3/chroma';
+import { IChromaEnvironment } from '../../types/beatmap/v3/custom/chroma';
 import { htmlTableEnvironmentEnhancement } from './constants';
 import { displayTableRow, hideTableRow } from './helpers';
 

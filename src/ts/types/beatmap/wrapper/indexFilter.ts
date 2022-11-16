@@ -1,4 +1,7 @@
-export interface IWrapIndexFilter {
+import { IWrapBaseItem } from './baseItem';
+
+export interface IWrapIndexFilter<T extends Record<keyof T, unknown> = Record<string, unknown>>
+    extends IWrapBaseItem<T> {
     /** Type `<int>` of index filter.
      * ```ts
      * 1 -> Division

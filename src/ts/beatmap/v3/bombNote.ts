@@ -1,7 +1,8 @@
 import { IBombNote } from '../../types/beatmap/v3/bombNote';
 import { deepCopy } from '../../utils/misc';
-import { ObjectReturnFn } from '../../types/utils';
+import { ObjectReturnFn, PartialWrapper } from '../../types/utils';
 import { WrapBombNote } from '../wrapper/bombNote';
+import { IWrapBombNote } from '../../types/beatmap/wrapper/bombNote';
 
 /** Bomb note beatmap v3 class object. */
 export class BombNote extends WrapBombNote<Required<IBombNote>> {
@@ -19,15 +20,21 @@ export class BombNote extends WrapBombNote<Required<IBombNote>> {
     }
 
     static create(): BombNote[];
+    static create(...bombNotes: PartialWrapper<IWrapBombNote<Required<IBombNote>>>[]): BombNote[];
     static create(...bombNotes: Partial<IBombNote>[]): BombNote[];
-    static create(...bombNotes: Partial<IBombNote>[]): BombNote[] {
+    static create(
+        ...bombNotes: (Partial<IBombNote> & PartialWrapper<IWrapBombNote<Required<IBombNote>>>)[]
+    ): BombNote[];
+    static create(
+        ...bombNotes: (Partial<IBombNote> & PartialWrapper<IWrapBombNote<Required<IBombNote>>>)[]
+    ): BombNote[] {
         const result: BombNote[] = [];
         bombNotes?.forEach((bn) =>
             result.push(
                 new this({
-                    b: bn.b ?? BombNote.default.b,
-                    x: bn.x ?? BombNote.default.x,
-                    y: bn.y ?? BombNote.default.y,
+                    b: bn.time ?? bn.b ?? BombNote.default.b,
+                    x: bn.posX ?? bn.x ?? BombNote.default.x,
+                    y: bn.posY ?? bn.y ?? BombNote.default.y,
                     customData: bn.customData ?? BombNote.default.customData(),
                 }),
             ),
@@ -80,15 +87,6 @@ export class BombNote extends WrapBombNote<Required<IBombNote>> {
     }
     set customData(value: NonNullable<IBombNote['customData']>) {
         this.data.customData = value;
-    }
-
-    setCustomData(value: NonNullable<IBombNote['customData']>): this {
-        this.customData = value;
-        return this;
-    }
-    addCustomData(object: IBombNote['customData']): this {
-        this.customData = { ...this.customData, object };
-        return this;
     }
 
     mirror() {

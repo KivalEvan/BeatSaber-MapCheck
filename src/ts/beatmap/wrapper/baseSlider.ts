@@ -6,7 +6,7 @@ import { WrapBaseNote } from './baseNote';
 /** Base slider beatmap class object. */
 export abstract class WrapBaseSlider<T extends Record<keyof T, unknown>>
     extends WrapBaseNote<T>
-    implements IWrapBaseSlider
+    implements IWrapBaseSlider<T>
 {
     abstract get tailTime(): IWrapBaseSlider['tailTime'];
     abstract set tailTime(value: IWrapBaseSlider['tailTime']);

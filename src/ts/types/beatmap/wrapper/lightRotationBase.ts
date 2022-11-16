@@ -1,6 +1,7 @@
-import { IWrapBaseItem } from './baseItem';
+import { IWrapBaseObject } from './baseObject';
 
-export interface IWrapLightRotationBase extends IWrapBaseItem {
+export interface IWrapLightRotationBase<T extends Record<keyof T, unknown> = Record<string, unknown>>
+    extends IWrapBaseObject<T> {
     /** Relative beat time `<float>` to event box group. */
     time: number;
     /** Use previous event rotation value `<int>` in light rotation. */

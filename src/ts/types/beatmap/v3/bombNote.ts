@@ -1,5 +1,5 @@
 import { IGridObject } from './gridObject';
-import { ICustomDataNote } from './customData';
+import { ICustomDataNote } from './custom/customData';
 
 export interface IBombNote extends IGridObject {
     customData?: ICustomDataNote;

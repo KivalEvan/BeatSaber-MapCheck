@@ -1,5 +1,5 @@
 import { IBaseSlider } from './baseSlider';
-import { ICustomDataSlider } from './customData';
+import { ICustomDataSlider } from './custom/customData';
 
 export interface IBurstSlider extends IBaseSlider {
     /** Slice count or element `<int>` in burst slider.

@@ -23,7 +23,7 @@ const htmlContainer = UICheckbox.create(name + ' (s): ', description, enabled, f
 });
 htmlContainer.appendChild(htmlInputTime);
 
-const tool: Tool = {
+const tool: Tool<{ time: number }> = {
     name,
     description,
     type: 'other',
@@ -54,11 +54,11 @@ function run(map: ToolArgs) {
         console.error('Something went wrong!');
         return;
     }
-    const { time } = <{ time: number }>tool.input.params;
+    const { time } = tool.input.params;
     const result = map.settings.bpm.toRealTime(map.difficulty.data.getFirstInteractiveTime());
 
     if (result < time) {
-        tool.output.html = printResult('Hot start', `${round(result, 2)}s`);
+        tool.output.html = printResult('Hot start', `${round(result, 2)}s`, 'warning');
     } else {
         tool.output.html = null;
     }

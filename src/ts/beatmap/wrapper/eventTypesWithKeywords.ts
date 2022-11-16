@@ -3,18 +3,18 @@ import { IWrapEventTypesWithKeywords } from '../../types/beatmap/wrapper/eventTy
 import { Serializable } from '../shared/serializable';
 
 /** Basic event types with keywords beatmap class object. */
-export abstract class WrapEventTypesWithKeywords<T extends Record<keyof T, unknown>>
+export abstract class WrapEventTypesWithKeywords<T extends Record<keyof T, unknown>, U extends Record<keyof U, unknown>>
     extends Serializable<T>
-    implements IWrapEventTypesWithKeywords
+    implements IWrapEventTypesWithKeywords<T>
 {
-    abstract get list(): IWrapEventTypesForKeywords[];
-    abstract set list(value: IWrapEventTypesForKeywords[]);
+    abstract get list(): IWrapEventTypesForKeywords<U>[];
+    abstract set list(value: IWrapEventTypesForKeywords<U>[]);
 
-    setData(value: WrapEventTypesWithKeywords<T>['list']) {
+    setData(value: IWrapEventTypesForKeywords<U>[]) {
         this.list = value;
         return this;
     }
-    abstract addData(value: IWrapEventTypesForKeywords): this;
+    abstract addData(value: IWrapEventTypesForKeywords<U>): this;
     removeData(value: string) {
         this.list = this.list.filter((d) => d.keyword !== value);
         return this;

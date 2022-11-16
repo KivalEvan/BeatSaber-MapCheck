@@ -42,7 +42,7 @@ htmlContainer.appendChild(htmlInputEBPM);
 htmlContainer.appendChild(htmlLabelEBPMS);
 htmlContainer.appendChild(htmlInputEBPMS);
 
-const tool: Tool = {
+const tool: Tool<{ ebpmThres: number; ebpmsThres: number }> = {
     name,
     description,
     type: 'note',
@@ -84,7 +84,7 @@ function inputEBPMSHandler(this: HTMLInputElement) {
 
 function check(map: ToolArgs) {
     const { swingAnalysis } = map.difficulty!;
-    const { ebpmThres, ebpmsThres } = <{ ebpmThres: number; ebpmsThres: number }>tool.input.params;
+    const { ebpmThres, ebpmsThres } = tool.input.params;
 
     const noteEBPM = swingAnalysis.container.filter((s) => s.ebpm > ebpmThres).map((s) => s.time);
     const noteEBPMS = swingAnalysis.container.filter((s) => s.ebpmSwing > ebpmsThres).map((s) => s.time);
@@ -98,14 +98,16 @@ function run(map: ToolArgs) {
         return;
     }
     const result = check(map);
-    const { ebpmThres, ebpmsThres } = <{ ebpmThres: number; ebpmsThres: number }>tool.input.params;
+    const { ebpmThres, ebpmsThres } = tool.input.params;
 
     const htmlResult: HTMLElement[] = [];
     if (result.base.length) {
-        htmlResult.push(printResultTime(`>${ebpmThres}EBPM warning`, result.base, map.settings.bpm));
+        htmlResult.push(printResultTime(`>${ebpmThres}EBPM warning`, result.base, map.settings.bpm, 'warning'));
     }
     if (result.swing.length) {
-        htmlResult.push(printResultTime(`>${ebpmsThres}EBPM (swing) warning`, result.swing, map.settings.bpm));
+        htmlResult.push(
+            printResultTime(`>${ebpmsThres}EBPM (swing) warning`, result.swing, map.settings.bpm, 'warning'),
+        );
     }
 
     if (htmlResult.length) {

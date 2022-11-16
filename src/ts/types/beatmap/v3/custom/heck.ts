@@ -1,5 +1,5 @@
-import { Easings } from '../../easings';
-import { Vector3PointDefinition } from '../shared/heck';
+import { Easings } from '../../../easings';
+import { Vector3PointDefinition } from '../../shared/custom/heck';
 
 /** Heck Base Custom Event interface. */
 export interface IHeckCustomEventDataBase {

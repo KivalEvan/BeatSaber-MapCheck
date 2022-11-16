@@ -1,5 +1,6 @@
 import { ISlider } from '../../types/beatmap/v3/slider';
-import { ObjectReturnFn } from '../../types/utils';
+import { IWrapSlider } from '../../types/beatmap/wrapper/slider';
+import { ObjectReturnFn, PartialWrapper } from '../../types/utils';
 import { deepCopy } from '../../utils/misc';
 import { WrapSlider } from '../wrapper/slider';
 
@@ -31,24 +32,26 @@ export class Slider extends WrapSlider<Required<ISlider>> {
     }
 
     static create(): Slider[];
+    static create(...sliders: PartialWrapper<IWrapSlider<Required<ISlider>>>[]): Slider[];
     static create(...sliders: Partial<ISlider>[]): Slider[];
-    static create(...sliders: Partial<ISlider>[]): Slider[] {
+    static create(...sliders: (Partial<ISlider> & PartialWrapper<IWrapSlider<Required<ISlider>>>)[]): Slider[];
+    static create(...sliders: (Partial<ISlider> & PartialWrapper<IWrapSlider<Required<ISlider>>>)[]): Slider[] {
         const result: Slider[] = [];
         sliders?.forEach((s) =>
             result.push(
                 new this({
-                    b: s.b ?? Slider.default.b,
-                    c: s.c ?? Slider.default.c,
-                    x: s.x ?? Slider.default.x,
-                    y: s.y ?? Slider.default.y,
-                    d: s.d ?? Slider.default.d,
-                    mu: s.mu ?? Slider.default.mu,
-                    tb: s.tb ?? Slider.default.tb,
-                    tx: s.tx ?? Slider.default.tx,
-                    ty: s.ty ?? Slider.default.ty,
-                    tc: s.tc ?? Slider.default.tc,
-                    tmu: s.tmu ?? Slider.default.tmu,
-                    m: s.m ?? Slider.default.m,
+                    b: s.time ?? s.b ?? Slider.default.b,
+                    c: s.color ?? s.c ?? Slider.default.c,
+                    x: s.posX ?? s.x ?? Slider.default.x,
+                    y: s.posY ?? s.y ?? Slider.default.y,
+                    d: s.direction ?? s.d ?? Slider.default.d,
+                    mu: s.lengthMultiplier ?? s.mu ?? Slider.default.mu,
+                    tb: s.tailTime ?? s.tb ?? Slider.default.tb,
+                    tx: s.tailPosX ?? s.tx ?? Slider.default.tx,
+                    ty: s.tailPosY ?? s.ty ?? Slider.default.ty,
+                    tc: s.tailDirection ?? s.tc ?? Slider.default.tc,
+                    tmu: s.tailLengthMultiplier ?? s.tmu ?? Slider.default.tmu,
+                    m: s.midAnchor ?? s.m ?? Slider.default.m,
                     customData: s.customData ?? Slider.default.customData(),
                 }),
             ),
@@ -182,15 +185,6 @@ export class Slider extends WrapSlider<Required<ISlider>> {
     }
     set customData(value: NonNullable<ISlider['customData']>) {
         this.data.customData = value;
-    }
-
-    setCustomData(value: NonNullable<ISlider['customData']>): this {
-        this.customData = value;
-        return this;
-    }
-    addCustomData(object: ISlider['customData']): this {
-        this.customData = { ...this.customData, object };
-        return this;
     }
 
     mirror(flipColor = true) {

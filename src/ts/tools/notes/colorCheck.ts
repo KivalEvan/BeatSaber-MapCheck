@@ -93,6 +93,7 @@ function run(map: ToolArgs) {
             printResult(
                 `${levelMsg(deltaELevel, ccSimilar)} note color (dE${round(ccSimilar, 1)})`,
                 'suggest change to better differentiate between 2 note colour',
+                'warning',
             ),
         );
     }
@@ -101,6 +102,7 @@ function run(map: ToolArgs) {
             printResult(
                 `${levelMsg(deltaELevel, ccaSimilar)} arrow note color (dE${round(ccaSimilar, 1)})`,
                 'may be difficult to see the arrow',
+                'warning',
             ),
         );
     }

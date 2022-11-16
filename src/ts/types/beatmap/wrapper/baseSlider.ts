@@ -1,6 +1,7 @@
 import { IWrapBaseNote } from './baseNote';
 
-export interface IWrapBaseSlider extends IWrapBaseNote {
+export interface IWrapBaseSlider<T extends Record<keyof T, unknown> = Record<string, unknown>>
+    extends IWrapBaseNote<T> {
     /** Tail beat time `<float>` of base slider. */
     tailTime: number;
     /** Tail position x `<int>` of base slider.

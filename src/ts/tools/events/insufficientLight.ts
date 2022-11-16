@@ -55,7 +55,7 @@ function run(map: ToolArgs) {
     );
 
     if (!result) {
-        tool.output.html = printResult('Insufficient light event');
+        tool.output.html = printResult('Insufficient light event', '', 'rank');
     } else {
         tool.output.html = null;
     }

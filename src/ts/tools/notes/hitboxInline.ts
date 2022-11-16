@@ -79,7 +79,7 @@ function run(map: ToolArgs) {
     const result = check(map);
 
     if (result.length) {
-        tool.output.html = printResultTime('Hitbox inline', result, map.settings.bpm);
+        tool.output.html = printResultTime('Hitbox inline', result, map.settings.bpm, 'rank');
     } else {
         tool.output.html = null;
     }

@@ -1,4 +1,7 @@
 import { IIndexFilter } from '../../types/beatmap/v3/indexFilter';
+import { IWrapIndexFilter } from '../../types/beatmap/wrapper/indexFilter';
+import { PartialWrapper } from '../../types/utils';
+import { deepCopy } from '../../utils/misc';
 import { WrapIndexFilter } from '../wrapper/indexFilter';
 
 /** Index filter beatmap v3 class object. */
@@ -13,30 +16,42 @@ export class IndexFilter extends WrapIndexFilter<Required<IIndexFilter>> {
         s: 0,
         l: 0,
         d: 0,
+        customData: () => {
+            return {};
+        },
     };
 
-    protected constructor(indexFilter: IIndexFilter) {
+    protected constructor(indexFilter: Required<IIndexFilter>) {
         super(indexFilter);
         if (this.data.f === 1) {
             this.p0 = this.p0 ? this.p0 : 1;
         }
     }
 
-    static create(indexFilter: Partial<IIndexFilter> = {}): IndexFilter {
+    static create(): IndexFilter;
+    static create(indexFilter: PartialWrapper<IWrapIndexFilter<Required<IIndexFilter>>>): IndexFilter;
+    static create(indexFilter: Partial<IIndexFilter>): IndexFilter;
+    static create(
+        indexFilter: Partial<IIndexFilter> & PartialWrapper<IWrapIndexFilter<Required<IIndexFilter>>>,
+    ): IndexFilter;
+    static create(
+        indexFilter: Partial<IIndexFilter> & PartialWrapper<IWrapIndexFilter<Required<IIndexFilter>>> = {},
+    ): IndexFilter {
         return new IndexFilter({
-            f: indexFilter.f ?? IndexFilter.default.f,
-            p: indexFilter.p ?? IndexFilter.default.p,
-            t: indexFilter.t ?? IndexFilter.default.t,
-            r: indexFilter.r ?? IndexFilter.default.r,
-            c: indexFilter.c ?? IndexFilter.default.c,
-            n: indexFilter.n ?? IndexFilter.default.n,
-            s: indexFilter.s ?? IndexFilter.default.s,
-            l: indexFilter.l ?? IndexFilter.default.l,
-            d: indexFilter.d ?? IndexFilter.default.d,
+            f: indexFilter.type ?? indexFilter.f ?? IndexFilter.default.f,
+            p: indexFilter.p0 ?? indexFilter.p ?? IndexFilter.default.p,
+            t: indexFilter.p1 ?? indexFilter.t ?? IndexFilter.default.t,
+            r: indexFilter.reverse ?? indexFilter.r ?? IndexFilter.default.r,
+            c: indexFilter.chunks ?? indexFilter.c ?? IndexFilter.default.c,
+            n: indexFilter.random ?? indexFilter.n ?? IndexFilter.default.n,
+            s: indexFilter.seed ?? indexFilter.s ?? IndexFilter.default.s,
+            l: indexFilter.limit ?? indexFilter.l ?? IndexFilter.default.l,
+            d: indexFilter.limitAffectsType ?? indexFilter.d ?? IndexFilter.default.d,
+            customData: indexFilter.customData ?? IndexFilter.default.customData,
         });
     }
 
-    toJSON(): IIndexFilter {
+    toJSON(): Required<IIndexFilter> {
         return {
             f: this.type,
             p: this.p0,
@@ -47,6 +62,7 @@ export class IndexFilter extends WrapIndexFilter<Required<IIndexFilter>> {
             s: this.seed,
             l: this.limit,
             d: this.limitAffectsType,
+            customData: deepCopy(this.customData),
         };
     }
 
@@ -111,5 +127,12 @@ export class IndexFilter extends WrapIndexFilter<Required<IIndexFilter>> {
     }
     set seed(value: IIndexFilter['s']) {
         this.data.s = value;
+    }
+
+    get customData(): NonNullable<IIndexFilter['customData']> {
+        return this.data.customData;
+    }
+    set customData(value: NonNullable<IIndexFilter['customData']>) {
+        this.data.customData = value;
     }
 }

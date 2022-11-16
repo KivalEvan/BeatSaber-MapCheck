@@ -2,7 +2,7 @@ import { IBookmark } from './bookmark';
 import { IBPMChange, IBPMChangeOld } from './bpmChange';
 import { IChromaCustomData, IChromaNote, IChromaObstacle } from './chroma';
 import { INENote, INEObstacle } from './noodleExtensions';
-import { ICustomDataBase } from '../shared/customData';
+import { ICustomDataBase } from '../../shared/custom/customData';
 import { IPointDefinition } from './pointDefinition';
 import { ICustomEvent } from './customEvent';
 import { IAnimation } from './animation';

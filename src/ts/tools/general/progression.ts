@@ -35,7 +35,7 @@ htmlContainer.appendChild(
 );
 htmlContainer.appendChild(htmlDifficultyList);
 
-const tool: Tool = {
+const tool: Tool<{ [k in DifficultyName]: boolean }> = {
     name,
     description,
     type: 'general',
@@ -68,7 +68,7 @@ function run(map: ToolArgs) {
     }
     const filteredSPS = SavedData.beatmapDifficulty
         .map((d) => d.swingAnalysis)
-        .filter((a) => (a.characteristic === 'Standard' && tool.input.params[a.difficulty]) || a.total.total === 0)
+        .filter((a) => (a.characteristic === 'Standard' && tool.input.params[a.difficulty]) || a.total.total !== 0)
         .sort((a, b) => a.total.average - b.total.average)
         .reverse();
     if (!filteredSPS.length) {
@@ -89,6 +89,7 @@ function run(map: ToolArgs) {
                     swing.calcSPSTotalPercDrop(filteredSPS),
                     2,
                 )}% drop from highest SPS (${round(swing.getSPSHighest(filteredSPS), 2)})`,
+                'rank',
             ),
         );
     }
@@ -107,6 +108,7 @@ function run(map: ToolArgs) {
                     (progMax.comparedTo?.total.average || 0) * 0.9,
                     2,
                 )})`,
+                'rank',
             ),
         );
     }
@@ -123,6 +125,7 @@ function run(map: ToolArgs) {
                     (progMin.comparedTo?.total.average || 0) * 0.9,
                     2,
                 )})`,
+                'rank',
             ),
         );
     }

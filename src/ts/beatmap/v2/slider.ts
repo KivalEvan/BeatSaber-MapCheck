@@ -1,5 +1,6 @@
 import { ISlider } from '../../types/beatmap/v2/slider';
-import { ObjectReturnFn } from '../../types/utils';
+import { IWrapSlider } from '../../types/beatmap/wrapper/slider';
+import { ObjectReturnFn, PartialWrapper } from '../../types/utils';
 import { deepCopy } from '../../utils/misc';
 import { WrapSlider } from '../wrapper/slider';
 
@@ -28,27 +29,34 @@ export class Slider extends WrapSlider<Required<ISlider>> {
     }
 
     static create(): Slider[];
+    static create(...sliders: PartialWrapper<IWrapSlider<Required<ISlider>>>[]): Slider[];
     static create(...sliders: Partial<ISlider>[]): Slider[];
-    static create(...sliders: Partial<ISlider>[]): Slider[] {
+    static create(...sliders: (Partial<ISlider> & PartialWrapper<IWrapSlider<Required<ISlider>>>)[]): Slider[];
+    static create(...sliders: (Partial<ISlider> & PartialWrapper<IWrapSlider<Required<ISlider>>>)[]): Slider[] {
         const result: Slider[] = [];
         sliders?.forEach((s) =>
             result.push(
                 new this({
-                    _colorType: s._colorType ?? Slider.default._colorType,
-                    _headTime: s._headTime ?? s._tailTime ?? Slider.default._headTime,
-                    _headLineIndex: s._headLineIndex ?? Slider.default._headLineIndex,
-                    _headLineLayer: s._headLineLayer ?? Slider.default._headLineLayer,
-                    _headCutDirection: s._headCutDirection ?? Slider.default._headCutDirection,
+                    _colorType: s.color ?? s._colorType ?? Slider.default._colorType,
+                    _headTime: s.time ?? s._headTime ?? s._tailTime ?? Slider.default._headTime,
+                    _headLineIndex: s.posX ?? s._headLineIndex ?? Slider.default._headLineIndex,
+                    _headLineLayer: s.posY ?? s._headLineLayer ?? Slider.default._headLineLayer,
+                    _headCutDirection: (s.direction as 0) ?? s._headCutDirection ?? Slider.default._headCutDirection,
                     _headControlPointLengthMultiplier:
-                        s._headControlPointLengthMultiplier ?? Slider.default._headControlPointLengthMultiplier,
-                    _tailTime: s._tailTime ?? s._headTime ?? Slider.default._tailTime,
-                    _tailLineIndex: s._tailLineIndex ?? Slider.default._tailLineIndex,
-                    _tailLineLayer: s._tailLineLayer ?? Slider.default._tailLineLayer,
-                    _tailCutDirection: s._tailCutDirection ?? Slider.default._tailCutDirection,
+                        s.lengthMultiplier ??
+                        s._headControlPointLengthMultiplier ??
+                        Slider.default._headControlPointLengthMultiplier,
+                    _tailTime: s.tailTime ?? s._tailTime ?? s._headTime ?? Slider.default._tailTime,
+                    _tailLineIndex: s.tailPosX ?? s._tailLineIndex ?? Slider.default._tailLineIndex,
+                    _tailLineLayer: s.tailPosY ?? s._tailLineLayer ?? Slider.default._tailLineLayer,
+                    _tailCutDirection:
+                        (s.tailDirection as 0) ?? s._tailCutDirection ?? Slider.default._tailCutDirection,
                     _tailControlPointLengthMultiplier:
-                        s._tailControlPointLengthMultiplier ?? Slider.default._tailControlPointLengthMultiplier,
-                    _sliderMidAnchorMode: s._sliderMidAnchorMode ?? Slider.default._sliderMidAnchorMode,
-                    _customData: s._customData ?? Slider.default._customData(),
+                        s.tailLengthMultiplier ??
+                        s._tailControlPointLengthMultiplier ??
+                        Slider.default._tailControlPointLengthMultiplier,
+                    _sliderMidAnchorMode: s.midAnchor ?? s._sliderMidAnchorMode ?? Slider.default._sliderMidAnchorMode,
+                    _customData: s.customData ?? s._customData ?? Slider.default._customData(),
                 }),
             ),
         );
@@ -181,14 +189,5 @@ export class Slider extends WrapSlider<Required<ISlider>> {
     }
     set customData(value: NonNullable<ISlider['_customData']>) {
         this.data._customData = value;
-    }
-
-    setCustomData(value: NonNullable<ISlider['_customData']>): this {
-        this.customData = value;
-        return this;
-    }
-    addCustomData(object: ISlider['_customData']): this {
-        this.customData = { ...this.customData, object };
-        return this;
     }
 }

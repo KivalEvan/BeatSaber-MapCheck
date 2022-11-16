@@ -1,5 +1,6 @@
 import { IBasicEventTypesForKeywords } from '../../types/beatmap/v3/basicEventTypesForKeywords';
-import { ObjectReturnFn } from '../../types/utils';
+import { IWrapEventTypesForKeywords } from '../../types/beatmap/wrapper/eventTypesForKeywords';
+import { ObjectReturnFn, PartialWrapper } from '../../types/utils';
 import { WrapEventTypesForKeywords } from '../wrapper/eventTypesForKeywords';
 
 /** Basic event types for keywords beatmap v3 class object.
@@ -17,14 +18,25 @@ export class BasicEventTypesForKeywords extends WrapEventTypesForKeywords<Requir
     }
 
     static create(): BasicEventTypesForKeywords[];
-    static create(...basicEventTypesForKeywords: Partial<IBasicEventTypesForKeywords>[]): BasicEventTypesForKeywords[];
-    static create(...basicEventTypesForKeywords: Partial<IBasicEventTypesForKeywords>[]): BasicEventTypesForKeywords[] {
+    static create(
+        ...basicEventTypesForKeywords: PartialWrapper<
+            IWrapEventTypesForKeywords<Required<IBasicEventTypesForKeywords>>
+        >[]
+    ): BasicEventTypesForKeywords[];
+    static create(
+        ...basicEventTypesForKeywords: (Partial<IBasicEventTypesForKeywords> &
+            PartialWrapper<IWrapEventTypesForKeywords<Required<IBasicEventTypesForKeywords>>>)[]
+    ): BasicEventTypesForKeywords[];
+    static create(
+        ...basicEventTypesForKeywords: (Partial<IBasicEventTypesForKeywords> &
+            PartialWrapper<IWrapEventTypesForKeywords<Required<IBasicEventTypesForKeywords>>>)[]
+    ): BasicEventTypesForKeywords[] {
         const result: BasicEventTypesForKeywords[] = [];
         basicEventTypesForKeywords?.forEach((betfk) =>
             result.push(
                 new this({
-                    k: betfk.k ?? BasicEventTypesForKeywords.default.k,
-                    e: betfk.e ?? BasicEventTypesForKeywords.default.e(),
+                    k: betfk.keyword ?? betfk.k ?? BasicEventTypesForKeywords.default.k,
+                    e: betfk.events ?? betfk.e ?? BasicEventTypesForKeywords.default.e(),
                 }),
             ),
         );

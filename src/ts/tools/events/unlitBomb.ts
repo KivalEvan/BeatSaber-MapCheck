@@ -156,7 +156,7 @@ function run(map: ToolArgs) {
     );
 
     if (result.length) {
-        tool.output.html = printResultTime('Unlit bomb', result, map.settings.bpm);
+        tool.output.html = printResultTime('Unlit bomb', result, map.settings.bpm, 'warning');
     } else {
         tool.output.html = null;
     }

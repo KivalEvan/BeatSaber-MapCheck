@@ -13,15 +13,18 @@ import { IWrapRotationEvent } from '../../types/beatmap/wrapper/rotationEvent';
 import { IWrapSlider } from '../../types/beatmap/wrapper/slider';
 import { IWrapWaypoint } from '../../types/beatmap/wrapper/waypoint';
 import { BeatPerMinute } from '../shared/bpm';
-import { DeepPartial, LooseAutocomplete } from '../../types/utils';
+import { DeepPartialWrapper, LooseAutocomplete, ObtainCustomData, PartialWrapper } from '../../types/utils';
 import { GenericFileName } from '../../types/beatmap/shared/info';
-import { ICustomDataBase } from '../../types/beatmap/shared/customData';
 import { EventContainer, NoteContainer } from '../../types/beatmap/wrapper/container';
 import { Version } from '../../types/beatmap/shared/version';
 import { WrapBaseItem } from './baseItem';
+import { IWrapDifficulty } from '../../types/beatmap/wrapper/difficulty';
 
 /** Difficulty beatmap class object. */
-export abstract class WrapDifficulty<T extends Record<keyof T, unknown>> extends WrapBaseItem<T> {
+export abstract class WrapDifficulty<T extends Record<keyof T, unknown>>
+    extends WrapBaseItem<T>
+    implements IWrapDifficulty<T>
+{
     private _fileName = 'UnnamedDifficulty.dat';
 
     abstract version: Version;
@@ -38,9 +41,9 @@ export abstract class WrapDifficulty<T extends Record<keyof T, unknown>> extends
     abstract lightColorEventBoxGroups: IWrapLightColorEventBoxGroup[];
     abstract lightRotationEventBoxGroups: IWrapLightRotationEventBoxGroup[];
     abstract lightTranslationEventBoxGroups: IWrapLightTranslationEventBoxGroup[];
-    abstract basicEventTypesWithKeywords: IWrapEventTypesWithKeywords;
+    abstract eventTypesWithKeywords: IWrapEventTypesWithKeywords;
     abstract useNormalEventsAsCompatibleEvents: boolean;
-    abstract customData: ICustomDataBase;
+    abstract customData: ObtainCustomData<T>;
 
     clone<U extends this>(): U {
         return super.clone().setFileName(this.fileName) as U;
@@ -58,23 +61,11 @@ export abstract class WrapDifficulty<T extends Record<keyof T, unknown>> extends
         return this;
     }
 
-    /** Calculate note per second.
-     * ```ts
-     * const nps = difficulty.nps(Difficulty, 10);
-     * ```
-     * ---
-     * **Note:** Duration can be either in any time type.
-     */
     nps(duration: number): number {
         const notes = this.getNoteContainer().filter((n) => n.type !== 'bomb');
         return duration ? notes.length / duration : 0;
     }
 
-    /** Calculate the peak by rolling average.
-     * ```ts
-     * const peakNPS = difficulty.peak(Difficulty, 10, BPM ?? 128);
-     * ```
-     */
     peak(beat: number, bpm: BeatPerMinute | number): number {
         let peakNPS = 0;
         let currentSectionStart = 0;
@@ -91,11 +82,6 @@ export abstract class WrapDifficulty<T extends Record<keyof T, unknown>> extends
         return peakNPS;
     }
 
-    /** Get first interactible object beat time in beatmap.
-     * ```ts
-     * const firstInteractiveTime = difficulty.getFirstInteractiveTime(Difficulty);
-     * ```
-     */
     getFirstInteractiveTime(): number {
         const notes = this.getNoteContainer().filter((n) => n.type !== 'bomb');
         let firstNoteTime = Number.MAX_VALUE;
@@ -106,11 +92,6 @@ export abstract class WrapDifficulty<T extends Record<keyof T, unknown>> extends
         return Math.min(firstNoteTime, firstInteractiveObstacleTime);
     }
 
-    /** Get last interactible object beat time in beatmap.
-     * ```ts
-     * const lastInteractiveTime = difficulty.getLastInteractiveTime(Difficulty);
-     * ```
-     */
     getLastInteractiveTime(): number {
         const notes = this.getNoteContainer().filter((n) => n.type !== 'bomb');
         let lastNoteTime = 0;
@@ -121,11 +102,6 @@ export abstract class WrapDifficulty<T extends Record<keyof T, unknown>> extends
         return Math.max(lastNoteTime, lastInteractiveObstacleTime);
     }
 
-    /** Get first interactible obstacle beat time in beatmap.
-     * ```ts
-     * const firstInteractiveObstacleTime = difficulty.findFirstInteractiveObstacleTime(obstacles);
-     * ```
-     */
     findFirstInteractiveObstacleTime(): number {
         for (let i = 0, len = this.obstacles.length; i < len; i++) {
             if (this.obstacles[i].isInteractive()) {
@@ -135,11 +111,6 @@ export abstract class WrapDifficulty<T extends Record<keyof T, unknown>> extends
         return Number.MAX_VALUE;
     }
 
-    /** Get last interactible obstacle beat time in beatmap.
-     * ```ts
-     * const lastInteractiveObstacleTime = difficulty.findLastInteractiveObstacleTime(obstacles);
-     * ```
-     */
     findLastInteractiveObstacleTime(): number {
         let obstacleEnd = 0;
         for (let i = this.obstacles.length - 1; i >= 0; i--) {
@@ -150,11 +121,6 @@ export abstract class WrapDifficulty<T extends Record<keyof T, unknown>> extends
         return obstacleEnd;
     }
 
-    /** Get container of color notes, sliders, burst sliders, and bombs (in order).
-     * ```ts
-     * const noteCountainer = getNoteContainer(Difficulty);
-     * ```
-     */
     getNoteContainer(): NoteContainer[] {
         const nc: NoteContainer[] = [];
         this.colorNotes.forEach((n) => nc.push({ type: 'note', data: n }));
@@ -164,11 +130,6 @@ export abstract class WrapDifficulty<T extends Record<keyof T, unknown>> extends
         return nc.sort((a, b) => a.data.time - b.data.time);
     }
 
-    /** Get container of basic events and boost events.
-     * ```ts
-     * const noteCountainer = getNoteContainer(Difficulty);
-     * ```
-     */
     getEventContainer(): EventContainer[] {
         const ec: EventContainer[] = [];
         this.basicEvents.forEach((be) => ec.push({ type: 'basicEvent', data: be }));
@@ -176,16 +137,21 @@ export abstract class WrapDifficulty<T extends Record<keyof T, unknown>> extends
         return ec.sort((a, b) => a.data.time - b.data.time);
     }
 
-    abstract addBPMEvents(...bpmEvents: Partial<IWrapBPMEvent>[]): void;
-    abstract addRotationEvents(...rotationEvents: Partial<IWrapRotationEvent>[]): void;
-    abstract addColorNotes(...colorNotes: Partial<IWrapColorNote>[]): void;
-    abstract addBombNotes(...bombNotes: Partial<IWrapBombNote>[]): void;
-    abstract addObstacles(...obstacles: Partial<IWrapObstacle>[]): void;
-    abstract addSliders(...sliders: Partial<IWrapSlider>[]): void;
-    abstract addBurstSliders(...burstSliders: Partial<IWrapBurstSlider>[]): void;
-    abstract addWaypoints(...waypoints: Partial<IWrapWaypoint>[]): void;
-    abstract addBasicEvents(...basicEvents: Partial<IWrapEvent>[]): void;
-    abstract addColorBoostEvents(...colorBoostEvents: Partial<IWrapColorBoostEvent>[]): void;
-    abstract addLightColorEventBoxGroups(...lightColorEBGs: DeepPartial<IWrapLightColorEventBoxGroup>[]): void;
-    abstract addLightRotationEventBoxGroups(...lightRotationEBGs: DeepPartial<IWrapLightRotationEventBoxGroup>[]): void;
+    abstract addBPMEvents(...bpmEvents: PartialWrapper<IWrapBPMEvent>[]): void;
+    abstract addRotationEvents(...rotationEvents: PartialWrapper<IWrapRotationEvent>[]): void;
+    abstract addColorNotes(...colorNotes: PartialWrapper<IWrapColorNote>[]): void;
+    abstract addBombNotes(...bombNotes: PartialWrapper<IWrapBombNote>[]): void;
+    abstract addObstacles(...obstacles: PartialWrapper<IWrapObstacle>[]): void;
+    abstract addSliders(...sliders: PartialWrapper<IWrapSlider>[]): void;
+    abstract addBurstSliders(...burstSliders: PartialWrapper<IWrapBurstSlider>[]): void;
+    abstract addWaypoints(...waypoints: PartialWrapper<IWrapWaypoint>[]): void;
+    abstract addBasicEvents(...basicEvents: PartialWrapper<IWrapEvent>[]): void;
+    abstract addColorBoostEvents(...colorBoostEvents: PartialWrapper<IWrapColorBoostEvent>[]): void;
+    abstract addLightColorEventBoxGroups(...lightColorEBGs: DeepPartialWrapper<IWrapLightColorEventBoxGroup>[]): void;
+    abstract addLightRotationEventBoxGroups(
+        ...lightRotationEBGs: DeepPartialWrapper<IWrapLightRotationEventBoxGroup>[]
+    ): void;
+    abstract addLightTranslationEventBoxGroups(
+        ...lightTranslationEBGs: DeepPartialWrapper<IWrapLightTranslationEventBoxGroup>[]
+    ): void;
 }

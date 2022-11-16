@@ -3,9 +3,9 @@ import { Difficulty as DifficultyV2 } from '../beatmap/v2/difficulty';
 import { Difficulty as DifficultyV3 } from '../beatmap/v3/difficulty';
 import { clamp } from '../utils/math';
 import { EventLaneRotationValue } from '../beatmap/shared/constants';
-import { ICustomDataNote, ICustomDataObstacle } from '../types/beatmap/v3/customData';
-import { Vector3 } from '../types/beatmap/shared/heck';
-import { IChromaComponent, IChromaMaterial } from '../types/beatmap/v3/chroma';
+import { ICustomDataNote, ICustomDataObstacle } from '../types/beatmap/v3/custom/customData';
+import { Vector3 } from '../types/beatmap/shared/custom/heck';
+import { IChromaComponent, IChromaMaterial } from '../types/beatmap/v3/custom/chroma';
 import objectToV3 from './customData/objectToV3';
 import eventToV3 from './customData/eventToV3';
 import { Obstacle } from '../beatmap/v3/obstacle';
@@ -48,7 +48,7 @@ export function V2toV3(data: DifficultyV2, skipPrompt?: boolean): DifficultyV3 {
     template.customData.fakeColorNotes = [];
     template.customData.fakeObstacles = [];
 
-    data.notes.forEach((n, i) => {
+    data.colorNotes.forEach((n, i) => {
         const customData: ICustomDataNote = objectToV3(n.customData);
         if (typeof n.customData._cutDirection === 'number') {
             logger.debug(tag('V2toV3'), `notes[${i}] at time ${n.time} NE _cutDirection will be converted.`);
@@ -151,7 +151,7 @@ export function V2toV3(data: DifficultyV2, skipPrompt?: boolean): DifficultyV3 {
         }
     });
 
-    data.events.forEach((e, i) => {
+    data.basicEvents.forEach((e, i) => {
         if (e.isColorBoost()) {
             template.colorBoostEvents.push(
                 ColorBoostEvent.create({
@@ -242,9 +242,9 @@ export function V2toV3(data: DifficultyV2, skipPrompt?: boolean): DifficultyV3 {
         ),
     );
 
-    template.basicEventTypesWithKeywords = BasicEventTypesWithKeywords.create({
+    template.eventTypesWithKeywords = BasicEventTypesWithKeywords.create({
         d:
-            data.specialEventsKeywordFilters?.list?.map((k) => {
+            data.eventTypesWithKeywords?.list?.map((k) => {
                 return { k: k.keyword, e: k.events };
             }) ?? [],
     });

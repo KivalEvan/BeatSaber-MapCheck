@@ -94,10 +94,10 @@ function run(map: ToolArgs) {
 
     const htmlResult: HTMLElement[] = [];
     if (resultNote.length) {
-        htmlResult.push(printResultTime('Stacked note', resultNote, map.settings.bpm));
+        htmlResult.push(printResultTime('Stacked note', resultNote, map.settings.bpm, 'error'));
     }
     if (resultBomb.length) {
-        htmlResult.push(printResultTime('Stacked bomb', resultBomb, map.settings.bpm));
+        htmlResult.push(printResultTime('Stacked bomb', resultBomb, map.settings.bpm, 'error'));
     }
 
     if (htmlResult.length) {

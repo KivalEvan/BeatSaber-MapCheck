@@ -86,7 +86,7 @@ function run(map: ToolArgs) {
     const result = check(map);
 
     if (result.length) {
-        tool.output.html = printResultTime('Hitbox path', result, map.settings.bpm);
+        tool.output.html = printResultTime('Hitbox path', result, map.settings.bpm, 'error');
     } else {
         tool.output.html = null;
     }

@@ -1,4 +1,4 @@
-import { ICustomDataBase } from '../shared/customData';
+import { ICustomDataBase } from '../shared/custom/customData';
 
 /** not a burst slider. */
 export interface ISlider {

@@ -1,5 +1,6 @@
 import { IObstacle } from '../../types/beatmap/v3/obstacle';
-import { ObjectReturnFn } from '../../types/utils';
+import { IWrapObstacle } from '../../types/beatmap/wrapper/obstacle';
+import { ObjectReturnFn, PartialWrapper } from '../../types/utils';
 import { deepCopy } from '../../utils/misc';
 import { WrapObstacle } from '../wrapper/obstacle';
 
@@ -22,18 +23,24 @@ export class Obstacle extends WrapObstacle<Required<IObstacle>> {
     }
 
     static create(): Obstacle[];
+    static create(...obstacles: PartialWrapper<IWrapObstacle<Required<IObstacle>>>[]): Obstacle[];
     static create(...obstacles: Partial<IObstacle>[]): Obstacle[];
-    static create(...obstacles: Partial<IObstacle>[]): Obstacle[] {
+    static create(
+        ...obstacles: (Partial<IObstacle> & PartialWrapper<IWrapObstacle<Required<IObstacle>>>)[]
+    ): Obstacle[];
+    static create(
+        ...obstacles: (Partial<IObstacle> & PartialWrapper<IWrapObstacle<Required<IObstacle>>>)[]
+    ): Obstacle[] {
         const result: Obstacle[] = [];
         obstacles?.forEach((o) =>
             result.push(
                 new this({
-                    b: o.b ?? Obstacle.default.b,
-                    x: o.x ?? Obstacle.default.x,
-                    y: o.y ?? Obstacle.default.y,
-                    d: o.d ?? Obstacle.default.d,
-                    w: o.w ?? Obstacle.default.w,
-                    h: o.h ?? Obstacle.default.h,
+                    b: o.time ?? o.b ?? Obstacle.default.b,
+                    x: o.posX ?? o.x ?? Obstacle.default.x,
+                    y: o.posY ?? o.y ?? Obstacle.default.y,
+                    d: o.duration ?? o.d ?? Obstacle.default.d,
+                    w: o.width ?? o.w ?? Obstacle.default.w,
+                    h: o.height ?? o.h ?? Obstacle.default.h,
                     customData: o.customData ?? Obstacle.default.customData(),
                 }),
             ),
@@ -113,15 +120,6 @@ export class Obstacle extends WrapObstacle<Required<IObstacle>> {
     }
     set customData(value: NonNullable<IObstacle['customData']>) {
         this.data.customData = value;
-    }
-
-    setCustomData(value: NonNullable<IObstacle['customData']>): this {
-        this.customData = value;
-        return this;
-    }
-    addCustomData(object: IObstacle['customData']): this {
-        this.customData = { ...this.customData, object };
-        return this;
     }
 
     mirror() {

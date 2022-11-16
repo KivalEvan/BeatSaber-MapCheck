@@ -50,7 +50,7 @@ htmlContainer.appendChild(htmlInputMaxTime);
 htmlContainer.appendChild(htmlLabelMaxBeat);
 htmlContainer.appendChild(htmlInputMaxBeat);
 
-const tool: Tool = {
+const tool: Tool<{ maxTime: number }> = {
     name,
     description,
     type: 'note',
@@ -74,14 +74,14 @@ const tool: Tool = {
 
 function adjustTimeHandler(bpm: BeatPerMinute) {
     localBPM = bpm;
-    htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.maxTime as number), 2).toString();
+    htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.maxTime), 2).toString();
 }
 
 function inputTimeHandler(this: HTMLInputElement) {
     tool.input.params.maxTime = Math.abs(parseFloat(this.value)) / 1000;
     this.value = round(tool.input.params.maxTime * 1000, 1).toString();
     if (localBPM) {
-        htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.maxTime as number), 2).toString();
+        htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.maxTime), 2).toString();
     }
 }
 
@@ -99,7 +99,7 @@ function inputBeatHandler(this: HTMLInputElement) {
 function check(map: ToolArgs) {
     const { bpm } = map.settings;
     const noteContainer = map.difficulty!.noteContainer;
-    const { maxTime: temp } = <{ maxTime: number }>tool.input.params;
+    const { maxTime: temp } = tool.input.params;
     const maxTime = bpm.toBeatTime(temp) + 0.001;
 
     const lastNote: { [key: number]: NoteContainer } = {};
@@ -209,7 +209,7 @@ function run(map: ToolArgs) {
     const result = check(map);
 
     if (result.length) {
-        tool.output.html = printResultTime('Inline sharp angle', result, map.settings.bpm);
+        tool.output.html = printResultTime('Inline sharp angle', result, map.settings.bpm, 'warning');
     } else {
         tool.output.html = null;
     }

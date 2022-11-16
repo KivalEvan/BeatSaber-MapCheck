@@ -1,6 +1,7 @@
 import { IWrapGridObject } from './gridObject';
 
-export interface IWrapBaseNote extends IWrapGridObject {
+export interface IWrapBaseNote<T extends Record<keyof T, unknown> = Record<string, unknown>>
+    extends IWrapGridObject<T> {
     /** Color `<int>` of note.
      * ```ts
      * 0 -> Red

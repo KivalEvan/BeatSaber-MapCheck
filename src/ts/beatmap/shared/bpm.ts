@@ -1,6 +1,6 @@
-import { IBPMChangeTime, IBPMTimeScale } from '../../types/beatmap/shared/bpm';
-import { IBPMChange as IBPMChangeV2, IBPMChangeOld } from '../../types/beatmap/v2/bpmChange';
-import { IBPMChange as IBPMChangeV3 } from '../../types/beatmap/v3/bpmChange';
+import { IBPMChangeTime, IBPMTimeScale } from '../../types/beatmap/shared/custom/bpm';
+import { IBPMChange as IBPMChangeV2, IBPMChangeOld } from '../../types/beatmap/v2/custom/bpmChange';
+import { IBPMChange as IBPMChangeV3 } from '../../types/beatmap/v3/custom/bpmChange';
 import { IBPMEvent } from '../../types/beatmap/v3/bpmEvent';
 
 /** BPM class for various utility around adjusted beat time, JSON time, reaction time, etc. */

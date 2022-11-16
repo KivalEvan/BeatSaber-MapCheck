@@ -1,7 +1,7 @@
 import Settings from '../../settings';
 import { round, toMMSS } from '../../utils';
 import { BeatPerMinute } from '../../beatmap/shared/bpm';
-import { ICustomEvent } from '../../types/beatmap/v3/customEvent';
+import { ICustomEvent } from '../../types/beatmap/v3/custom/customEvent';
 import { htmlTableCustomEvents } from './constants';
 import { displayTableRow, hideTableRow } from './helpers';
 import { NEDataAbbreviation } from '../../analyzers/renamer/customData';

@@ -1,6 +1,6 @@
 import { LooseAutocomplete } from '../../utils';
 import { CharacteristicName } from './characteristic';
-import { ICustomDataInfo, ICustomDataInfoDifficulty } from './customData';
+import { ICustomDataInfo, ICustomDataInfoDifficulty } from './custom/customData';
 import { DifficultyName, DifficultyRank } from './difficulty';
 import { Environment360Name, EnvironmentName, EnvironmentV3Name } from './environment';
 

@@ -46,7 +46,7 @@ htmlContainer.appendChild(htmlInputMinTime);
 htmlContainer.appendChild(htmlLabelMinPrec);
 htmlContainer.appendChild(htmlInputMinPrec);
 
-const tool: Tool = {
+const tool: Tool<{ maxTime: number }> = {
     name,
     description,
     type: 'note',
@@ -153,7 +153,7 @@ function run(map: ToolArgs) {
     const result = check(map.settings, map.difficulty);
 
     if (result.length) {
-        tool.output.html = printResultTime('Speed pause', result, map.settings.bpm);
+        tool.output.html = printResultTime('Speed pause', result, map.settings.bpm, 'warning');
     } else {
         tool.output.html = null;
     }

@@ -126,19 +126,19 @@ export function getProgressionMax(
     spsArray: ISwingAnalysis[],
     minSPS: number,
 ): { result: ISwingAnalysis; comparedTo?: ISwingAnalysis } | null {
-    let spsPerc = 0;
-    let spsCurr = 0;
-    let comparedTo;
+    let dropPercent = 0;
+    let spsPrevious = 0;
+    let comparedToMap;
     for (const spsMap of spsArray) {
-        const overall = spsMap.total.average;
-        if (spsCurr > 0 && overall > 0) {
-            spsPerc = Math.abs(1 - spsCurr / overall) * 100;
+        const toCompare = spsMap.total.average;
+        if (spsPrevious > 0 && toCompare > 0) {
+            dropPercent = (1 - toCompare / spsPrevious) * 100;
         }
-        spsCurr = overall > 0 ? overall : spsCurr;
-        if (spsCurr > minSPS && spsPerc > 40) {
-            return { result: spsMap, comparedTo };
+        if (spsPrevious > minSPS && dropPercent > 40) {
+            return { result: spsMap, comparedTo: comparedToMap };
         }
-        comparedTo = spsMap;
+        spsPrevious = toCompare;
+        comparedToMap = spsMap;
     }
     return null;
 }
@@ -147,19 +147,19 @@ export function getProgressionMin(
     spsArray: ISwingAnalysis[],
     minSPS: number,
 ): { result: ISwingAnalysis; comparedTo?: ISwingAnalysis } | null {
-    let spsPerc = Number.MAX_SAFE_INTEGER;
-    let spsCurr = 0;
-    let comparedTo;
+    let dropPercent = Number.MAX_SAFE_INTEGER;
+    let spsPrevious = 0;
+    let comparedToMap;
     for (const spsMap of spsArray) {
-        const overall = spsMap.total.average;
-        if (spsCurr > 0 && overall > 0) {
-            spsPerc = Math.abs(1 - spsCurr / overall) * 100;
+        const toCompare = spsMap.total.average;
+        if (spsPrevious > 0 && toCompare > 0) {
+            dropPercent = (1 - toCompare / spsPrevious) * 100;
         }
-        spsCurr = overall > 0 ? overall : spsCurr;
-        if (spsCurr > minSPS && spsPerc < 10) {
-            return { result: spsMap, comparedTo };
+        spsPrevious = toCompare > 0 ? toCompare : spsPrevious;
+        if (spsPrevious > minSPS && dropPercent < 10) {
+            return { result: spsMap, comparedTo: comparedToMap };
         }
-        comparedTo = spsMap;
+        comparedToMap = spsMap;
     }
     return null;
 }

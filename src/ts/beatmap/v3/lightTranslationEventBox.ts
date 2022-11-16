@@ -1,12 +1,19 @@
+import { IIndexFilter } from '../../types/beatmap/v3/indexFilter';
+import { ILightTranslationBase } from '../../types/beatmap/v3/lightTranslationBase';
 import { ILightTranslationEventBox } from '../../types/beatmap/v3/lightTranslationEventBox';
-import { ObjectReturnFn } from '../../types/utils';
+import { IWrapLightTranslationEventBox } from '../../types/beatmap/wrapper/lightTranslationEventBox';
+import { DeepPartial, DeepPartialWrapper, ObjectReturnFn } from '../../types/utils';
 import { deepCopy } from '../../utils/misc';
 import { WrapLightTranslationEventBox } from '../wrapper/lightTranslationEventBox';
 import { IndexFilter } from './indexFilter';
 import { LightTranslationBase } from './lightTranslationBase';
 
 /** Light translation event box beatmap v3 class object. */
-export class LightTranslationEventBox extends WrapLightTranslationEventBox<Required<ILightTranslationEventBox>> {
+export class LightTranslationEventBox extends WrapLightTranslationEventBox<
+    Required<ILightTranslationEventBox>,
+    Required<ILightTranslationBase>,
+    Required<IIndexFilter>
+> {
     static default: ObjectReturnFn<Required<ILightTranslationEventBox>> = {
         f: () => {
             return {
@@ -15,10 +22,10 @@ export class LightTranslationEventBox extends WrapLightTranslationEventBox<Requi
                 t: IndexFilter.default.t,
                 r: IndexFilter.default.r,
                 c: IndexFilter.default.c,
-                l: IndexFilter.default.l,
-                d: IndexFilter.default.d,
                 n: IndexFilter.default.n,
                 s: IndexFilter.default.s,
+                l: IndexFilter.default.l,
+                d: IndexFilter.default.d,
             };
         },
         w: 0,
@@ -48,22 +55,56 @@ export class LightTranslationEventBox extends WrapLightTranslationEventBox<Requi
     }
 
     static create(): LightTranslationEventBox[];
-    static create(...eventBoxes: Partial<ILightTranslationEventBox>[]): LightTranslationEventBox[];
-    static create(...eventBoxes: Partial<ILightTranslationEventBox>[]): LightTranslationEventBox[] {
+    static create(
+        ...eventBoxes: DeepPartialWrapper<
+            IWrapLightTranslationEventBox<
+                Required<ILightTranslationEventBox>,
+                Required<ILightTranslationBase>,
+                Required<IIndexFilter>
+            >
+        >[]
+    ): LightTranslationEventBox[];
+    static create(...eventBoxes: DeepPartial<ILightTranslationEventBox>[]): LightTranslationEventBox[];
+    static create(
+        ...eventBoxes: (DeepPartial<ILightTranslationEventBox> &
+            DeepPartialWrapper<
+                IWrapLightTranslationEventBox<
+                    Required<ILightTranslationEventBox>,
+                    Required<ILightTranslationBase>,
+                    Required<IIndexFilter>
+                >
+            >)[]
+    ): LightTranslationEventBox[];
+    static create(
+        ...eventBoxes: (DeepPartial<ILightTranslationEventBox> &
+            DeepPartialWrapper<
+                IWrapLightTranslationEventBox<
+                    Required<ILightTranslationEventBox>,
+                    Required<ILightTranslationBase>,
+                    Required<IIndexFilter>
+                >
+            >)[]
+    ): LightTranslationEventBox[] {
         const result: LightTranslationEventBox[] = [];
         eventBoxes?.forEach((eb) =>
             result.push(
                 new this({
-                    f: eb.f ?? LightTranslationEventBox.default.f(),
-                    w: eb.w ?? LightTranslationEventBox.default.w,
-                    d: eb.d ?? LightTranslationEventBox.default.d,
-                    s: eb.s ?? LightTranslationEventBox.default.s,
-                    t: eb.t ?? LightTranslationEventBox.default.t,
-                    a: eb.a ?? LightTranslationEventBox.default.a,
-                    r: eb.r ?? LightTranslationEventBox.default.r,
-                    b: eb.b ?? LightTranslationEventBox.default.b,
-                    i: eb.i ?? LightTranslationEventBox.default.i,
-                    l: eb.l ?? LightTranslationEventBox.default.l(),
+                    f:
+                        (eb.filter as IIndexFilter) ??
+                        (eb as Required<ILightTranslationEventBox>).f ??
+                        LightTranslationEventBox.default.f(),
+                    w: eb.beatDistribution ?? eb.w ?? LightTranslationEventBox.default.w,
+                    d: eb.beatDistributionType ?? eb.d ?? LightTranslationEventBox.default.d,
+                    s: eb.translationDistribution ?? eb.s ?? LightTranslationEventBox.default.s,
+                    t: eb.translationDistributionType ?? eb.t ?? LightTranslationEventBox.default.t,
+                    a: eb.axis ?? eb.a ?? LightTranslationEventBox.default.a,
+                    r: eb.flip ?? eb.r ?? LightTranslationEventBox.default.r,
+                    b: eb.affectFirst ?? eb.b ?? LightTranslationEventBox.default.b,
+                    i: eb.easing ?? eb.i ?? LightTranslationEventBox.default.i,
+                    l:
+                        (eb.events as ILightTranslationBase[]) ??
+                        (eb as Required<ILightTranslationEventBox>).l ??
+                        LightTranslationEventBox.default.l(),
                     customData: eb.customData ?? LightTranslationEventBox.default.customData(),
                 }),
             ),
@@ -98,8 +139,8 @@ export class LightTranslationEventBox extends WrapLightTranslationEventBox<Requi
             a: this.axis,
             r: this.flip,
             b: this.affectFirst,
-            l: this.events.map((l) => l.toJSON()),
             i: this.easing,
+            l: this.events.map((l) => l.toJSON()),
             customData: deepCopy(this.customData),
         };
     }
@@ -167,7 +208,7 @@ export class LightTranslationEventBox extends WrapLightTranslationEventBox<Requi
         this.data.i = value;
     }
 
-    get events() {
+    get events(): LightTranslationBase[] {
         return this._l;
     }
     set events(value: LightTranslationBase[]) {
@@ -179,15 +220,6 @@ export class LightTranslationEventBox extends WrapLightTranslationEventBox<Requi
     }
     set customData(value: NonNullable<ILightTranslationEventBox['customData']>) {
         this.data.customData = value;
-    }
-
-    setCustomData(value: NonNullable<ILightTranslationEventBox['customData']>): this {
-        this.customData = value;
-        return this;
-    }
-    addCustomData(object: ILightTranslationEventBox['customData']): this {
-        this.customData = { ...this.customData, object };
-        return this;
     }
 
     setEvents(value: LightTranslationBase[]): this {

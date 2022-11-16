@@ -32,7 +32,17 @@ function run(map: ToolArgs) {
         console.error('Something went wrong!');
         return;
     }
-    const { colorNotes, bombNotes, obstacles, basicEvents, sliders, burstSliders } = map.difficulty.data;
+    const {
+        colorNotes,
+        bombNotes,
+        obstacles,
+        basicEvents,
+        sliders,
+        burstSliders,
+        lightColorEventBoxGroups,
+        lightRotationEventBoxGroups,
+        lightTranslationEventBoxGroups,
+    } = map.difficulty.data;
 
     let noteResult: number[] = [];
     let obstacleResult: number[] = [];
@@ -55,25 +65,41 @@ function run(map: ToolArgs) {
         }
     }
     const eventResult = basicEvents.filter((e) => !e.isValid()).map((e) => e.time);
+    const lightColorBoxResult = lightColorEventBoxGroups.filter((e) => !e.isValid()).map((e) => e.time);
+    const lightRotationBoxResult = lightRotationEventBoxGroups.filter((e) => !e.isValid()).map((e) => e.time);
+    const lightTranslationBoxResult = lightTranslationEventBoxGroups.filter((e) => !e.isValid()).map((e) => e.time);
 
     const htmlResult: HTMLElement[] = [];
     if (noteResult.length) {
-        htmlResult.push(printResultTime('Invalid note', noteResult, map.settings.bpm));
+        htmlResult.push(printResultTime('Invalid note', noteResult, map.settings.bpm, 'error'));
     }
     if (bombResult.length) {
-        htmlResult.push(printResultTime('Invalid bomb', bombResult, map.settings.bpm));
+        htmlResult.push(printResultTime('Invalid bomb', bombResult, map.settings.bpm, 'error'));
     }
     if (sliderResult.length) {
-        htmlResult.push(printResultTime('Invalid arc', sliderResult, map.settings.bpm));
+        htmlResult.push(printResultTime('Invalid arc', sliderResult, map.settings.bpm, 'error'));
     }
     if (burstSliderResult.length) {
-        htmlResult.push(printResultTime('Invalid chain', burstSliderResult, map.settings.bpm));
+        htmlResult.push(printResultTime('Invalid chain', burstSliderResult, map.settings.bpm, 'error'));
     }
     if (obstacleResult.length) {
-        htmlResult.push(printResultTime('Invalid obstacle', obstacleResult, map.settings.bpm));
+        htmlResult.push(printResultTime('Invalid obstacle', obstacleResult, map.settings.bpm, 'error'));
     }
     if (eventResult.length) {
-        htmlResult.push(printResultTime('Invalid event', eventResult, map.settings.bpm));
+        htmlResult.push(printResultTime('Invalid event', eventResult, map.settings.bpm, 'error'));
+    }
+    if (lightColorBoxResult.length) {
+        htmlResult.push(printResultTime('Invalid light color event', lightColorBoxResult, map.settings.bpm, 'error'));
+    }
+    if (lightRotationBoxResult.length) {
+        htmlResult.push(
+            printResultTime('Invalid light rotation event', lightRotationBoxResult, map.settings.bpm, 'error'),
+        );
+    }
+    if (lightTranslationBoxResult.length) {
+        htmlResult.push(
+            printResultTime('Invalid light translation event', lightTranslationBoxResult, map.settings.bpm, 'error'),
+        );
     }
 
     if (htmlResult.length) {

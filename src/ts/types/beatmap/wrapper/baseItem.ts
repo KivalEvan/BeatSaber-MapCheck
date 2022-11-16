@@ -1,16 +1,17 @@
-import { ICustomDataBase } from '../shared/customData';
+import { ObtainCustomData } from '../../utils';
+import { ISerializable } from '../shared/serializable';
 
-export interface IWrapBaseItem {
+export interface IWrapBaseItem<T extends Record<keyof T, unknown> = Record<string, unknown>> extends ISerializable<T> {
     /** Custom data `<object>` of beatmap object.
      *
      * This has no type-safety for unsupported data.
      */
-    customData?: ICustomDataBase;
+    customData: ObtainCustomData<T>;
 
-    setCustomData(value: Record<string, unknown>): this;
+    setCustomData(value: ObtainCustomData<T>): this;
     resetCustomData(): this;
     removeCustomData(key: string): this;
-    addCustomData(object: Record<string, unknown>): this;
+    addCustomData(object: ObtainCustomData<T>): this;
 
     /** Allow for advanced custom function. */
     func(fn: (object: this) => void): this;

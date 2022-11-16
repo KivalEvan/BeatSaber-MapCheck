@@ -44,6 +44,7 @@ function run(map: ToolArgs) {
                 printResult(
                     'Note(s) before start time',
                     `${round(colorNotes[0].time, 3)} (${toMMSS(bpm.toRealTime(colorNotes[0].time))}`,
+                    'error',
                 ),
             );
         }
@@ -52,6 +53,7 @@ function run(map: ToolArgs) {
                 printResult(
                     'Bomb(s) before start time',
                     `${round(bombNotes[0].time, 3)} (${toMMSS(bpm.toRealTime(bombNotes[0].time))}`,
+                    'error',
                 ),
             );
         }
@@ -60,6 +62,7 @@ function run(map: ToolArgs) {
                 printResult(
                     'Arc(s) before start time',
                     `${round(sliders[0].time, 3)} (${toMMSS(bpm.toRealTime(sliders[0].time))}`,
+                    'error',
                 ),
             );
         }
@@ -68,6 +71,7 @@ function run(map: ToolArgs) {
                 printResult(
                     'Chain(s) before start time',
                     `${round(burstSliders[0].time, 3)} (${toMMSS(bpm.toRealTime(burstSliders[0].time))}`,
+                    'error',
                 ),
             );
         }
@@ -76,6 +80,7 @@ function run(map: ToolArgs) {
                 printResult(
                     'Obstacle(s) before start time',
                     `${round(obstacles[0].time, 3)} (${toMMSS(bpm.toRealTime(obstacles[0].time))}`,
+                    'error',
                 ),
             );
         }
@@ -84,6 +89,7 @@ function run(map: ToolArgs) {
                 printResult(
                     'Event(s) before start time',
                     `${round(basicEvents[0].time, 3)} (${toMMSS(bpm.toRealTime(basicEvents[0].time))}`,
+                    'error',
                 ),
             );
         }
@@ -94,6 +100,7 @@ function run(map: ToolArgs) {
                     `${round(colorNotes[colorNotes.length - 1].time, 3)} (${toMMSS(
                         bpm.toRealTime(colorNotes[colorNotes.length - 1].time),
                     )})`,
+                    'error',
                 ),
             );
         }
@@ -104,6 +111,7 @@ function run(map: ToolArgs) {
                     `${round(bombNotes[bombNotes.length - 1].time, 3)} (${toMMSS(
                         bpm.toRealTime(bombNotes[bombNotes.length - 1].time),
                     )})`,
+                    'error',
                 ),
             );
         }
@@ -114,6 +122,7 @@ function run(map: ToolArgs) {
                     `${round(sliders[sliders.length - 1].time, 3)} (${toMMSS(
                         bpm.toRealTime(sliders[sliders.length - 1].time),
                     )})`,
+                    'error',
                 ),
             );
         }
@@ -124,6 +133,7 @@ function run(map: ToolArgs) {
                     `${round(burstSliders[burstSliders.length - 1].time, 3)} (${toMMSS(
                         bpm.toRealTime(burstSliders[burstSliders.length - 1].time),
                     )})`,
+                    'error',
                 ),
             );
         }
@@ -134,6 +144,7 @@ function run(map: ToolArgs) {
                     `${round(obstacles[obstacles.length - 1].time, 3)} (${toMMSS(
                         bpm.toRealTime(obstacles[obstacles.length - 1].time),
                     )})`,
+                    'error',
                 ),
             );
         }
@@ -144,6 +155,7 @@ function run(map: ToolArgs) {
                     `${round(basicEvents[basicEvents.length - 1].time, 3)} (${toMMSS(
                         bpm.toRealTime(basicEvents[basicEvents.length - 1].time),
                     )})`,
+                    'error',
                 ),
             );
         }

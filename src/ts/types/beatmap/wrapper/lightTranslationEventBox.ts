@@ -1,7 +1,11 @@
 import { IWrapEventBox } from './eventBox';
 import { IWrapLightTranslationBase } from './lightTranslationBase';
 
-export interface IWrapLightTranslationEventBox extends IWrapEventBox {
+export interface IWrapLightTranslationEventBox<
+    TBox extends Record<keyof TBox, unknown> = Record<string, unknown>,
+    TBase extends Record<keyof TBase, unknown> = Record<string, unknown>,
+    TFilter extends Record<keyof TFilter, unknown> = Record<string, unknown>,
+> extends IWrapEventBox<TBox, TBase, TFilter> {
     /** Translation distribution `<float>` of light translation event box. */
     translationDistribution: number;
     /** Translation distribution type `<int>` of light translation event box.
@@ -23,13 +27,12 @@ export interface IWrapLightTranslationEventBox extends IWrapEventBox {
     flip: 0 | 1;
     /** Translation distribution should affect first event `<int>` of light translation event box. */
     affectFirst: 0 | 1;
-    /** Light translation base data list. */
-    events: IWrapLightTranslationBase[];
+    events: IWrapLightTranslationBase<TBase>[];
 
     setTranslationDistribution(value: IWrapLightTranslationEventBox['translationDistribution']): this;
     setTranslationDistributionType(value: IWrapLightTranslationEventBox['translationDistributionType']): this;
     setAxis(value: IWrapLightTranslationEventBox['axis']): this;
     setFlip(value: IWrapLightTranslationEventBox['flip']): this;
     setAffectFirst(value: IWrapLightTranslationEventBox['affectFirst']): this;
-    setEvents(value: IWrapLightTranslationEventBox['events']): this;
+    setEvents(value: IWrapLightTranslationBase<TBase>[]): this;
 }

@@ -1,6 +1,7 @@
 import { IWrapBaseObject } from './baseObject';
 
-export interface IWrapRotationEvent extends IWrapBaseObject {
+export interface IWrapRotationEvent<T extends Record<keyof T, unknown> = Record<string, unknown>>
+    extends IWrapBaseObject<T> {
     /** Execution time `<int>` of rotation event.
      * ```ts
      * 0 -> Early

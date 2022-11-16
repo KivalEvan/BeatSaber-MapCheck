@@ -46,7 +46,7 @@ htmlContainer.appendChild(
     }),
 );
 
-const tool: Tool = {
+const tool: Tool<{ warningThres: number; errorThres: number; allowedRot: number }> = {
     name,
     description,
     type: 'note',
@@ -173,10 +173,10 @@ function run(map: ToolArgs) {
 
     const htmlResult: HTMLElement[] = [];
     if (result.warning.length) {
-        htmlResult.push(printResultTime('Parity warning', result.warning, map.settings.bpm));
+        htmlResult.push(printResultTime('Parity warning', result.warning, map.settings.bpm, 'warning'));
     }
     if (result.error.length) {
-        htmlResult.push(printResultTime('Parity error', result.error, map.settings.bpm));
+        htmlResult.push(printResultTime('Parity error', result.error, map.settings.bpm, 'error'));
     }
 
     if (htmlResult.length) {

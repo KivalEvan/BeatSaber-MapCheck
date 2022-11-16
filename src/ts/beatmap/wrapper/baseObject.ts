@@ -4,7 +4,7 @@ import { WrapBaseItem } from './baseItem';
 /** Basic building block of beatmap object. */
 export abstract class WrapBaseObject<T extends Record<keyof T, unknown>>
     extends WrapBaseItem<T>
-    implements IWrapBaseObject
+    implements IWrapBaseObject<T>
 {
     abstract get time(): IWrapBaseObject['time'];
     abstract set time(value: IWrapBaseObject['time']);

@@ -1,5 +1,6 @@
 import { ILightColorBase } from '../../types/beatmap/v3/lightColorBase';
-import { ObjectReturnFn } from '../../types/utils';
+import { IWrapLightColorBase } from '../../types/beatmap/wrapper/lightColorBase';
+import { ObjectReturnFn, PartialWrapper } from '../../types/utils';
 import { deepCopy } from '../../utils/misc';
 import { WrapLightColorBase } from '../wrapper/lightColorBase';
 
@@ -21,17 +22,23 @@ export class LightColorBase extends WrapLightColorBase<Required<ILightColorBase>
     }
 
     static create(): LightColorBase[];
+    static create(...lightColors: PartialWrapper<IWrapLightColorBase<Required<ILightColorBase>>>[]): LightColorBase[];
     static create(...lightColors: Partial<ILightColorBase>[]): LightColorBase[];
-    static create(...lightColors: Partial<ILightColorBase>[]): LightColorBase[] {
+    static create(
+        ...lightColors: (Partial<ILightColorBase> & PartialWrapper<IWrapLightColorBase<Required<ILightColorBase>>>)[]
+    ): LightColorBase[];
+    static create(
+        ...lightColors: (Partial<ILightColorBase> & PartialWrapper<IWrapLightColorBase<Required<ILightColorBase>>>)[]
+    ): LightColorBase[] {
         const result: LightColorBase[] = [];
         lightColors?.forEach((lc) =>
             result.push(
                 new this({
-                    b: lc.b ?? LightColorBase.default.b,
-                    i: lc.i ?? LightColorBase.default.i,
-                    c: lc.c ?? LightColorBase.default.c,
-                    s: lc.s ?? LightColorBase.default.s,
-                    f: lc.f ?? LightColorBase.default.f,
+                    b: lc.time ?? lc.b ?? LightColorBase.default.b,
+                    i: lc.transition ?? lc.i ?? LightColorBase.default.i,
+                    c: lc.color ?? lc.c ?? LightColorBase.default.c,
+                    s: lc.brightness ?? lc.s ?? LightColorBase.default.s,
+                    f: lc.frequency ?? lc.f ?? LightColorBase.default.f,
                     customData: lc.customData ?? LightColorBase.default.customData(),
                 }),
             ),
@@ -102,14 +109,5 @@ export class LightColorBase extends WrapLightColorBase<Required<ILightColorBase>
     }
     set customData(value: NonNullable<ILightColorBase['customData']>) {
         this.data.customData = value;
-    }
-
-    setCustomData(value: NonNullable<ILightColorBase['customData']>): this {
-        this.customData = value;
-        return this;
-    }
-    addCustomData(object: ILightColorBase['customData']): this {
-        this.customData = { ...this.customData, object };
-        return this;
     }
 }

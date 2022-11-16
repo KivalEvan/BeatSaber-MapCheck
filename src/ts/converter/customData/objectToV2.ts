@@ -1,5 +1,5 @@
-import { ICustomDataBase } from '../../types/beatmap/shared/customData';
-import { ICustomDataNote, ICustomDataObstacle } from '../../types/beatmap/v3/customData';
+import { ICustomDataBase } from '../../types/beatmap/shared/custom/customData';
+import { ICustomDataNote, ICustomDataObstacle } from '../../types/beatmap/v3/custom/customData';
 import { deepCopy } from '../../utils/misc';
 
 export default function <T extends ICustomDataBase>(customData?: ICustomDataNote & ICustomDataObstacle): T {
