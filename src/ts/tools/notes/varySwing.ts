@@ -6,7 +6,7 @@ const name = 'Varying Swing Speed';
 const description = 'Check for varying swing speed due to changes in slider distance.';
 const enabled = true;
 
-const tool: Tool<{}> = {
+const tool: Tool = {
     name,
     description,
     type: 'note',

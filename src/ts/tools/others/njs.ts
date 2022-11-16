@@ -8,7 +8,7 @@ const name = 'NJS Check';
 const description = 'Check note jump speed for suitable value.';
 const enabled = true;
 
-const tool: Tool<{}> = {
+const tool: Tool = {
     name,
     description,
     type: 'other',

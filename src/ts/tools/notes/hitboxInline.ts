@@ -9,7 +9,7 @@ const name = 'Hitbox Inline';
 const description = 'Check for overlapping note hitbox for inline note.';
 const enabled = true;
 
-const tool: Tool<{}> = {
+const tool: Tool = {
     name,
     description,
     type: 'note',

@@ -9,7 +9,7 @@ const name = 'Audio Duration';
 const description = 'For ranking purpose, check for audio duration.';
 const enabled = true;
 
-const tool: Tool<{}> = {
+const tool: Tool = {
     name,
     description,
     type: 'general',

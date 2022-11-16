@@ -10,7 +10,7 @@ const name = 'Hitbox Reverse Staircase';
 const description = 'Check for overlapping pre-swing hitbox with note hitbox during swing.';
 const enabled = true;
 
-const tool: Tool<{}> = {
+const tool: Tool = {
     name,
     description,
     type: 'note',

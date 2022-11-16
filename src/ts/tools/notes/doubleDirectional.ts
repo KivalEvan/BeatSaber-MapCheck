@@ -12,7 +12,7 @@ const name = 'Double-directional';
 const description = 'Check double-directional note swing (this may not mean parity break).';
 const enabled = true;
 
-const tool: Tool<{}> = {
+const tool: Tool = {
     name,
     description,
     type: 'note',

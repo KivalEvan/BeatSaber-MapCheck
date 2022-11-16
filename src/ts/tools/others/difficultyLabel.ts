@@ -6,7 +6,7 @@ const name = 'Difficulty Label Check';
 const description = 'For ranking purpose, check difficulty label to fit rankability criteria.';
 const enabled = true;
 
-const tool: Tool<{}> = {
+const tool: Tool = {
     name,
     description,
     type: 'other',

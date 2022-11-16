@@ -6,7 +6,7 @@ const name = 'Invalid Object';
 const description = 'Validate beatmap object to be compatible with vanilla (ignores for modded).';
 const enabled = true;
 
-const tool: Tool<{}> = {
+const tool: Tool = {
     name,
     description,
     type: 'other',

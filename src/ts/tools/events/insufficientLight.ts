@@ -8,7 +8,7 @@ const name = 'Insufficient Lighting Event';
 const description = 'Check if there is enough light event.';
 const enabled = true;
 
-const tool: Tool<{}> = {
+const tool: Tool = {
     name,
     description,
     type: 'event',

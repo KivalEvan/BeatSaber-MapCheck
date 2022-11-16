@@ -32,7 +32,7 @@ export interface ToolArgs {
 
 export type ToolRun = (args: ToolArgs) => void;
 
-export interface Tool<TParam extends Record<string, unknown>> {
+export interface Tool<TParam extends Record<string, unknown> = Record<string, unknown>> {
     name: string;
     description: string;
     type: ToolType;

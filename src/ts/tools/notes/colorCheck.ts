@@ -27,7 +27,7 @@ function levelMsg(level: { [key: number]: string }, perc: number): string {
     return level[key];
 }
 
-const tool: Tool<{}> = {
+const tool: Tool = {
     name,
     description,
     type: 'note',

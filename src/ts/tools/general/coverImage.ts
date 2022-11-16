@@ -9,7 +9,7 @@ const name = 'Validate Cover Image';
 const description = 'Validate cover image.';
 const enabled = true;
 
-const tool: Tool<{}> = {
+const tool: Tool = {
     name,
     description,
     type: 'general',

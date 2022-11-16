@@ -9,7 +9,7 @@ const name = 'Improper Window Snap';
 const description = 'Check for slanted window snap timing.';
 const enabled = true;
 
-const tool: Tool<{}> = {
+const tool: Tool = {
     name,
     description,
     type: 'note',

@@ -7,7 +7,7 @@ const name = 'Outside Playable Object';
 const description = 'Look for any object starting before and after song timer.';
 const enabled = true;
 
-const tool: Tool<{}> = {
+const tool: Tool = {
     name,
     description,
     type: 'other',
