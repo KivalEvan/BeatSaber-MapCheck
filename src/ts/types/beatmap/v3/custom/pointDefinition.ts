@@ -1,5 +1,5 @@
-import { ColorPointDefinition } from '../shared/chroma';
-import { PercentPointDefinition, Vector2PointDefinition, Vector3PointDefinition } from '../shared/heck';
+import { ColorPointDefinition } from '../../shared/custom/chroma';
+import { PercentPointDefinition, Vector2PointDefinition, Vector3PointDefinition } from '../../shared/custom/heck';
 
 /** Point Definition interface. */
 export type IPointDefinition = {

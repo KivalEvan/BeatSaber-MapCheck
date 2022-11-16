@@ -1,6 +1,6 @@
-import { ICustomDataBase } from '../shared/customData';
-import { PercentPointDefinition, Vector2, Vector3, Vector3PointDefinition } from '../shared/heck';
-import { PlayerObject } from '../shared/noodleExtensions';
+import { ICustomDataBase } from '../../shared/custom/customData';
+import { PercentPointDefinition, Vector2, Vector3, Vector3PointDefinition } from '../../shared/custom/heck';
+import { PlayerObject } from '../../shared/custom/noodleExtensions';
 import { IHeckCustomEventDataBase } from './heck';
 
 /** Noodle Extensions Object interface for Beatmap Object. */

@@ -1,4 +1,4 @@
-import { Vector2 } from '../shared/heck';
+import { Vector2 } from '../shared/custom/heck';
 import { IWrapBaseObject } from './baseObject';
 
 export interface IWrapGridObject<T extends Record<keyof T, unknown> = Record<string, unknown>>

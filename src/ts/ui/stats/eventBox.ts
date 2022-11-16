@@ -1,6 +1,6 @@
 import { IInfo } from '../../types/beatmap/shared/info';
 import { IBeatmapItem } from '../../types/mapcheck';
-import { countColorEBG, countRotationEBG, countTranslationEBG } from '../../analyzers/stats/mod';
+import { countEBG } from '../../analyzers/stats/mod';
 import { eventGroupRename } from '../../analyzers/renamer/mod';
 import { prefix } from './constants';
 
@@ -9,9 +9,9 @@ export function createEBGCountTable(mapInfo: IInfo, mapData: IBeatmapItem): HTML
         mapData.characteristic === '360Degree' || mapData.characteristic === '90Degree'
             ? mapInfo._allDirectionsEnvironmentName
             : mapInfo._environmentName;
-    const ebgColorCount = countColorEBG(mapData.data.lightColorEventBoxGroups, environment);
-    const ebgRotationCount = countRotationEBG(mapData.data.lightRotationEventBoxGroups, environment);
-    const ebgTranslationCount = countTranslationEBG(mapData.data.lightTranslationEventBoxGroups, environment);
+    const ebgColorCount = countEBG(mapData.data.lightColorEventBoxGroups, environment);
+    const ebgRotationCount = countEBG(mapData.data.lightRotationEventBoxGroups, environment);
+    const ebgTranslationCount = countEBG(mapData.data.lightTranslationEventBoxGroups, environment);
 
     let htmlString = `<caption class="${prefix}table-caption">Color Event Box Groups: <span title="${Object.values(
         ebgColorCount,

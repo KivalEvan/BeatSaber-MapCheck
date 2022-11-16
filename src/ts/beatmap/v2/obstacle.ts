@@ -1,4 +1,4 @@
-import { Vector2 } from '../../types/beatmap/shared/heck';
+import { Vector2 } from '../../types/beatmap/shared/custom/heck';
 import { IObstacle } from '../../types/beatmap/v2/obstacle';
 import { IWrapObstacle } from '../../types/beatmap/wrapper/obstacle';
 import { ObjectReturnFn, PartialWrapper } from '../../types/utils';

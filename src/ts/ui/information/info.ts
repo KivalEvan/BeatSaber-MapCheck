@@ -1,7 +1,7 @@
 import SavedData from '../../savedData';
 import { removeOptions } from '../../utils';
 import { EnvironmentName, EnvironmentV3Name } from '../../types/beatmap/shared/environment';
-import { IEditor, IEditorInfo } from '../../types/beatmap/shared/editor';
+import { IEditor, IEditorInfo } from '../../types/beatmap/shared/custom/editor';
 import { IContributorB64 } from '../../types/mapcheck';
 import { EnvironmentRename } from '../../beatmap/shared/environment';
 import { logPrefix } from './constants';

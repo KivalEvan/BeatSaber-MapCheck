@@ -1,5 +1,5 @@
 import { IGridObject } from './gridObject';
-import { ICustomDataNote } from './customData';
+import { ICustomDataNote } from './custom/customData';
 
 export interface IColorNote extends IGridObject {
     /** Color type `<int>` of note.

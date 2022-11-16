@@ -1,9 +1,9 @@
 import { IContributor } from './contributor';
 import { IEditor } from './editor';
-import { IColorScheme } from './colorScheme';
+import { IColorScheme } from '../colorScheme';
 import { IHeckInfoCustomData, IInfoSettingsCustomData } from './heck';
 import { IChromaInfoCustomData } from './chroma';
-import { LooseAutocomplete } from '../../utils';
+import { LooseAutocomplete } from '../../../utils';
 
 /** Base custom data interface. */
 export interface ICustomDataBase {

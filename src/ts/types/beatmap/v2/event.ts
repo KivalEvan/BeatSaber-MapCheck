@@ -1,6 +1,6 @@
-import { IChromaEventLaser, IChromaEventLight, IChromaEventRing, IChromaEventZoom } from './chroma';
-import { ICustomDataBase } from '../shared/customData';
-import { INEEvent } from './noodleExtensions';
+import { IChromaEventLaser, IChromaEventLight, IChromaEventRing, IChromaEventZoom } from './custom/chroma';
+import { ICustomDataBase } from '../shared/custom/customData';
+import { INEEvent } from './custom/noodleExtensions';
 import { IBaseObject } from './object';
 
 /** Beatmap object interface for Event. */

@@ -1,7 +1,7 @@
-import { PercentPointDefinition, Vector2, Vector3 } from '../shared/heck';
-import { Easings } from '../../easings';
-import { ColorArray } from '../../colors';
-import { ICustomDataBase } from '../shared/customData';
+import { PercentPointDefinition, Vector2, Vector3 } from '../../shared/custom/heck';
+import { Easings } from '../../../easings';
+import { ColorArray } from '../../../colors';
+import { ICustomDataBase } from '../../shared/custom/customData';
 import {
     ColorPointDefinition,
     EnvironmentMaterial,
@@ -9,9 +9,9 @@ import {
     LookupMethod,
     ShaderKeywords,
     ShaderType,
-} from '../shared/chroma';
+} from '../../shared/custom/chroma';
 import { IHeckCustomEventDataBase } from './heck';
-import { LooseAutocomplete } from '../../utils';
+import { LooseAutocomplete } from '../../../utils';
 
 /** Chroma Material interface for Environment Enhancement. */
 export interface IChromaMaterial {

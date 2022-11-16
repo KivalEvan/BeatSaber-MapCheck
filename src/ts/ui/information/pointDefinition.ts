@@ -1,4 +1,4 @@
-import { IPointDefinition } from '../../types/beatmap/v3/pointDefinition';
+import { IPointDefinition } from '../../types/beatmap/v3/custom/pointDefinition';
 import { htmlTablePointDefinitions } from './constants';
 import { displayTableRow, hideTableRow } from './helpers';
 

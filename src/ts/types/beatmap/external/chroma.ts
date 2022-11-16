@@ -1,6 +1,6 @@
 import { IBasicEvent } from '../v3/basicEvent';
 import { EnvironmentAllName } from '../shared/environment';
-import { IChromaEnvironment, IChromaMaterial } from '../v3/chroma';
+import { IChromaEnvironment, IChromaMaterial } from '../v3/custom/chroma';
 
 export interface IEnvironmentJSON {
     /** must be 1.0.0 to work */
