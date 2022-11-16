@@ -133,8 +133,8 @@ const envFilterID: Record<EnvironmentV3Name, Record<number, number>> = {
         34: 3,
         35: 3,
         36: 3,
+        37: 6,
         38: 6,
-        39: 6,
         40: 2,
     },
     WeaveEnvironment: {

@@ -14,6 +14,7 @@
 ### Fixed
 
 -   Progression calculation error
+-   Event box causes error for unused ID
 
 ## 2.5.6 [2022-11-09]
 

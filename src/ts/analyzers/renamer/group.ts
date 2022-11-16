@@ -262,9 +262,9 @@ export function eventGroupRename(id: number, environment?: EnvironmentAllName): 
                     return 'Lamp Rings Right 3';
                 case 36:
                     return 'Lamp Rings Right 4';
-                case 38:
+                case 37:
                     return 'Buildings Background Left';
-                case 39:
+                case 38:
                     return 'Buildings Background Right';
                 case 40:
                     return 'Buildings Side Buildings';
