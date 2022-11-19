@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.5.8 [2022-11-##]
+
+### Fixed
+
+-   Progression filtering error
+
 ## 2.5.7 [2022-11-16]
 
 ### Added
