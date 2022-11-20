@@ -174,7 +174,7 @@ function check(map: Difficulty, environment: EnvironmentAllName) {
         if (!eventListEBG.includes(g.id)) {
             defectID.push(g);
         }
-        for (const eb of g.events) {
+        for (const eb of g.boxes) {
             const filter = eb.filter;
             if (filter.type === IndexFilterType.STEP_AND_OFFSET) {
                 if (filter.p0 > envFilterID[envV3][g.id]) {

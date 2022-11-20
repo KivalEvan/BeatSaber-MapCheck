@@ -7,5 +7,5 @@ export interface IWrapLightTranslationEventBoxGroup<
     TBase extends Record<keyof TBase, unknown> = Record<string, unknown>,
     TFilter extends Record<keyof TFilter, unknown> = Record<string, unknown>,
 > extends IWrapEventBoxGroup<TGroup, TBox, TBase, TFilter> {
-    events: IWrapLightTranslationEventBox<TBox, TBase, TFilter>[];
+    boxes: IWrapLightTranslationEventBox<TBox, TBase, TFilter>[];
 }

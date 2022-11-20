@@ -71,7 +71,7 @@ export class LightColorEventBoxGroup extends WrapLightColorEventBoxGroup<
                     b: ebg.time ?? ebg.b ?? LightColorEventBoxGroup.default.b,
                     g: ebg.id ?? ebg.g ?? LightColorEventBoxGroup.default.g,
                     e:
-                        (ebg.events as ILightColorEventBox[]) ??
+                        (ebg.boxes as ILightColorEventBox[]) ??
                         (ebg.e as unknown as ILightColorEventBox[]) ??
                         LightColorEventBoxGroup.default.e(),
                     customData: ebg.customData ?? LightColorEventBoxGroup.default.customData(),
@@ -95,7 +95,7 @@ export class LightColorEventBoxGroup extends WrapLightColorEventBoxGroup<
         return {
             b: this.time,
             g: this.id,
-            e: this.events.map((e) => e.toJSON()),
+            e: this.boxes.map((e) => e.toJSON()),
             customData: deepCopy(this.customData),
         };
     }
@@ -114,10 +114,10 @@ export class LightColorEventBoxGroup extends WrapLightColorEventBoxGroup<
         this.data.g = value;
     }
 
-    get events(): LightColorEventBox[] {
+    get boxes(): LightColorEventBox[] {
         return this._e;
     }
-    set events(value: LightColorEventBox[]) {
+    set boxes(value: LightColorEventBox[]) {
         this._e = value;
     }
 

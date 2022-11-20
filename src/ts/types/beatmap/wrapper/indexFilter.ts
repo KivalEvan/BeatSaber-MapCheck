@@ -23,14 +23,15 @@ export interface IWrapIndexFilter<T extends Record<keyof T, unknown> = Record<st
      * Pairs next ID by available denominator.
      */
     chunks: number;
-    /** Random type `<int>` of index filter.
+    /** Random type `<bitmask>` of index filter.
      * ```ts
      * 0 -> No Random
      * 1 -> Keep Order
      * 2 -> Random Elements
+     * 3 -> All
      * ```
      */
-    random: 0 | 1 | 2;
+    random: 0 | 1 | 2 | 3;
     /** Random seed `<int>` in index filter. */
     seed: number;
     /** Limit (percentage) `<float>` of index filter.
@@ -40,15 +41,16 @@ export interface IWrapIndexFilter<T extends Record<keyof T, unknown> = Record<st
      * Range: `0-1` (0% to 100%) strict.
      */
     limit: number;
-    /** Limit also affects type `<int>` in index filter.
+    /** Limit also affects type `<bitmask>` in index filter.
      * ```ts
      * 0 -> None
      * 1 -> Duration
      * 2 -> Distribution
+     * 3 -> All
      * ```
      * Adjust to limited ID list and has no effect with `Step` type.
      */
-    limitAffectsType: 0 | 1 | 2;
+    limitAffectsType: 0 | 1 | 2 | 3;
 
     setType(value: 1 | 2): this;
     setP0(value: number): this;

@@ -1,4 +1,5 @@
 import { IWrapIndexFilter } from '../../types/beatmap/wrapper/indexFilter';
+import { LimitAlsoAffectsType, RandomType } from '../mod';
 import { WrapBaseItem } from './baseItem';
 
 /** Index filter beatmap class object. */
@@ -16,14 +17,14 @@ export abstract class WrapIndexFilter<T extends Record<keyof T, unknown>>
     abstract set reverse(value: IWrapIndexFilter['reverse']);
     abstract get chunks(): IWrapIndexFilter['chunks'];
     abstract set chunks(value: IWrapIndexFilter['chunks']);
-    abstract get limit(): IWrapIndexFilter['limit'];
-    abstract set limit(value: IWrapIndexFilter['limit']);
-    abstract get limitAffectsType(): IWrapIndexFilter['limitAffectsType'];
-    abstract set limitAffectsType(value: IWrapIndexFilter['limitAffectsType']);
     abstract get random(): IWrapIndexFilter['random'];
     abstract set random(value: IWrapIndexFilter['random']);
     abstract get seed(): IWrapIndexFilter['seed'];
     abstract set seed(value: IWrapIndexFilter['seed']);
+    abstract get limit(): IWrapIndexFilter['limit'];
+    abstract set limit(value: IWrapIndexFilter['limit']);
+    abstract get limitAffectsType(): IWrapIndexFilter['limitAffectsType'];
+    abstract set limitAffectsType(value: IWrapIndexFilter['limitAffectsType']);
 
     setType(value: IWrapIndexFilter['type']) {
         this.type = value;
@@ -70,11 +71,11 @@ export abstract class WrapIndexFilter<T extends Record<keyof T, unknown>>
             (this.reverse === 0 || this.reverse === 1) &&
             this.chunks >= 0 &&
             this.random >= 0 &&
-            this.random <= 2 &&
+            this.random <= RandomType.ALL &&
             this.limit >= 0 &&
             this.limit <= 0 &&
             this.limitAffectsType >= 0 &&
-            this.limitAffectsType <= 2
+            this.limitAffectsType <= LimitAlsoAffectsType.ALL
         );
     }
 }
