@@ -71,7 +71,7 @@ export class LightTranslationEventBoxGroup extends WrapLightTranslationEventBoxG
                     b: ebg.time ?? ebg.b ?? LightTranslationEventBoxGroup.default.b,
                     g: ebg.id ?? ebg.g ?? LightTranslationEventBoxGroup.default.g,
                     e:
-                        (ebg.events as ILightTranslationEventBox[]) ??
+                        (ebg.boxes as ILightTranslationEventBox[]) ??
                         (ebg.e as unknown as ILightTranslationEventBox[]) ??
                         LightTranslationEventBoxGroup.default.e(),
                     customData: ebg.customData ?? LightTranslationEventBoxGroup.default.customData(),
@@ -95,7 +95,7 @@ export class LightTranslationEventBoxGroup extends WrapLightTranslationEventBoxG
         return {
             b: this.time,
             g: this.id,
-            e: this.events.map((e) => e.toJSON()),
+            e: this.boxes.map((e) => e.toJSON()),
             customData: deepCopy(this.customData),
         };
     }
@@ -114,10 +114,10 @@ export class LightTranslationEventBoxGroup extends WrapLightTranslationEventBoxG
         this.data.g = value;
     }
 
-    get events(): LightTranslationEventBox[] {
+    get boxes(): LightTranslationEventBox[] {
         return this._e;
     }
-    set events(value: LightTranslationEventBox[]) {
+    set boxes(value: LightTranslationEventBox[]) {
         this._e = value;
     }
 

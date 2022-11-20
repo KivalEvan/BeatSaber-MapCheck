@@ -5,6 +5,8 @@
 ### Fixed
 
 -   Progression filtering error
+-   Potential index filter instantiating error fix
+-   Index filter validation error for random type and limit affects type
 
 ## 2.5.7 [2022-11-16]
 

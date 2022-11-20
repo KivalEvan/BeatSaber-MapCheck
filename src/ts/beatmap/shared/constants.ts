@@ -176,14 +176,16 @@ export const enum IndexFilterType {
 
 export const enum LimitAlsoAffectsType {
     NONE,
-    DURATION,
-    DISTRIBUTION,
+    DURATION = 1 << 0,
+    DISTRIBUTION = 1 << 1,
+    ALL = ~(~0 << 2),
 }
 
 export const enum RandomType {
     NO_RANDOM,
-    KEEP_ORDER,
-    RANDOM_ELEMENTS,
+    KEEP_ORDER = 1 << 0,
+    RANDOM_ELEMENTS = 1 << 1,
+    ALL = ~(~0 << 2),
 }
 
 export const enum EventBoxColor {

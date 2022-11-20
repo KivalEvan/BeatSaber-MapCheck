@@ -12,6 +12,6 @@ export abstract class WrapLightColorEventBoxGroup<
     extends WrapEventBoxGroup<TGroup, TBox, TBase, TFilter>
     implements IWrapLightColorEventBoxGroup<TGroup, TBox, TBase, TFilter>
 {
-    abstract get events(): IWrapLightColorEventBox<TBox, TBase, TFilter>[];
-    abstract set events(value: IWrapLightColorEventBox<TBox, TBase, TFilter>[]);
+    abstract get boxes(): IWrapLightColorEventBox<TBox, TBase, TFilter>[];
+    abstract set boxes(value: IWrapLightColorEventBox<TBox, TBase, TFilter>[]);
 }

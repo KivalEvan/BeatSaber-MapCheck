@@ -22,14 +22,15 @@ interface IIndexFilterBase extends IBaseItem {
      * Pairs next ID by available denominator.
      */
     c: number;
-    /** Random type `<int>` of index filter.
+    /** Random type `<bitmask>` of index filter.
      * ```ts
      * 0 -> No Random
      * 1 -> Keep Order
      * 2 -> Random Elements
+     * 3 -> All
      * ```
      */
-    n: 0 | 1 | 2;
+    n: 0 | 1 | 2 | 3;
     /** Random seed `<int>` in index filter. */
     s: number;
     /** Limit (percentage) `<float>` of index filter.
@@ -39,15 +40,16 @@ interface IIndexFilterBase extends IBaseItem {
      * Range: `0-1` (0% to 100%) strict.
      */
     l: number;
-    /** Limit also affects type `<int>` in index filter.
+    /** Limit also affects type `<bitmask>` in index filter.
      * ```ts
      * 0 -> None
      * 1 -> Duration
      * 2 -> Distribution
+     * 3 -> All
      * ```
      * Adjust to limited ID list and has no effect with `Step` type.
      */
-    d: 0 | 1 | 2;
+    d: 0 | 1 | 2 | 3;
 }
 
 interface IIndexFilterSection extends IIndexFilterBase {

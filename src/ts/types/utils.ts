@@ -19,6 +19,8 @@ export type ObjectReturnFn<T> = {
 
 export type LooseAutocomplete<T extends string | number> = T extends string ? T | Omit<string, T> : T | Omit<number, T>;
 
+type OmitNever<T> = { [K in keyof T as T[K] extends never ? never : K]: T[K] };
+
 // stuff from stackoverflow https://stackoverflow.com/questions/55539387/deep-omit-with-typescript
 /** Deeply omit members of an array of interface or array of type. */
 export type DeepOmitArray<T extends any[], K> = {
@@ -28,7 +30,7 @@ export type DeepOmitArray<T extends any[], K> = {
 /** Deeply omit members of an interface or type. */
 export type DeepOmit<T, K> = T extends Primitive
     ? T
-    : {
+    : OmitNever<{
           [P in Exclude<keyof T, K>]: T[P] extends infer TP //extra level of indirection needed to trigger homomorhic behavior // distribute over unions
               ? TP extends Primitive
                   ? TP // leave primitives and functions alone
@@ -36,7 +38,7 @@ export type DeepOmit<T, K> = T extends Primitive
                   ? DeepOmitArray<TP, K> // Array special handling
                   : DeepOmit<TP, K>
               : never;
-      };
+      }>;
 
 /** Deeply omit members of an array of interface or array of type, making all members optional. */
 export type PartialDeepOmitArray<T extends any[], K> = Partial<{
@@ -58,7 +60,23 @@ export type PartialDeepOmit<T, K> = T extends Primitive
 
 export type ExcludeMethod<T> = Pick<T, { [P in keyof T]: T[P] extends Function ? never : P }[keyof T]>;
 
-export type DeepExcludeMethod<T> = Pick<T, { [P in keyof T]: T[P] extends Function ? never : P }[keyof T]>;
+export type DeepExcludeMethodArray<T extends any[]> = {
+    [P in keyof T]: DeepExcludeMethod<T[P]>;
+};
+
+export type DeepExcludeMethod<T> = T extends Primitive
+    ? T
+    : {
+          [P in Exclude<keyof T, Function>]: T[P] extends infer TP //extra level of indirection needed to trigger homomorhic behavior // distribute over unions
+              ? TP extends Exclude<Primitive, Function>
+                  ? TP // leave primitives
+                  : TP extends Function
+                  ? never
+                  : TP extends any[]
+                  ? DeepExcludeMethodArray<TP> // Array special handling
+                  : DeepExcludeMethod<TP>
+              : never;
+      };
 
 export type PartialWrapper<T> = Partial<DeepOmit<ExcludeMethod<T>, 'data'>>;
 

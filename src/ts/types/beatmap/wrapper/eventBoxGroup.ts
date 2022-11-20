@@ -9,5 +9,5 @@ export interface IWrapEventBoxGroup<
 > extends IWrapBaseObject<TGroup> {
     /** Group ID `<int>` of event box group */
     id: number;
-    events: IWrapEventBox<TBox, TBase, TFilter>[];
+    boxes: IWrapEventBox<TBox, TBase, TFilter>[];
 }

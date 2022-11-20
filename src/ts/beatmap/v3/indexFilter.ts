@@ -1,12 +1,12 @@
 import { IIndexFilter } from '../../types/beatmap/v3/indexFilter';
 import { IWrapIndexFilter } from '../../types/beatmap/wrapper/indexFilter';
-import { PartialWrapper } from '../../types/utils';
+import { ObjectReturnFn, PartialWrapper } from '../../types/utils';
 import { deepCopy } from '../../utils/misc';
 import { WrapIndexFilter } from '../wrapper/indexFilter';
 
 /** Index filter beatmap v3 class object. */
 export class IndexFilter extends WrapIndexFilter<Required<IIndexFilter>> {
-    static default: Required<IIndexFilter> = {
+    static default: ObjectReturnFn<Required<IIndexFilter>> = {
         f: 1,
         p: 0,
         t: 0,
@@ -47,7 +47,7 @@ export class IndexFilter extends WrapIndexFilter<Required<IIndexFilter>> {
             s: indexFilter.seed ?? indexFilter.s ?? IndexFilter.default.s,
             l: indexFilter.limit ?? indexFilter.l ?? IndexFilter.default.l,
             d: indexFilter.limitAffectsType ?? indexFilter.d ?? IndexFilter.default.d,
-            customData: indexFilter.customData ?? IndexFilter.default.customData,
+            customData: indexFilter.customData ?? IndexFilter.default.customData(),
         });
     }
 
@@ -101,20 +101,6 @@ export class IndexFilter extends WrapIndexFilter<Required<IIndexFilter>> {
         this.data.c = value;
     }
 
-    get limit() {
-        return this.data.l;
-    }
-    set limit(value: IIndexFilter['l']) {
-        this.data.l = value;
-    }
-
-    get limitAffectsType() {
-        return this.data.d;
-    }
-    set limitAffectsType(value: IIndexFilter['d']) {
-        this.data.d = value;
-    }
-
     get random() {
         return this.data.n;
     }
@@ -127,6 +113,20 @@ export class IndexFilter extends WrapIndexFilter<Required<IIndexFilter>> {
     }
     set seed(value: IIndexFilter['s']) {
         this.data.s = value;
+    }
+
+    get limit() {
+        return this.data.l;
+    }
+    set limit(value: IIndexFilter['l']) {
+        this.data.l = value;
+    }
+
+    get limitAffectsType() {
+        return this.data.d;
+    }
+    set limitAffectsType(value: IIndexFilter['d']) {
+        this.data.d = value;
     }
 
     get customData(): NonNullable<IIndexFilter['customData']> {
