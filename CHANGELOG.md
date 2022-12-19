@@ -1,6 +1,12 @@
 # Changelog
 
-## 2.5.8 [2022-11-##]
+## 2.5.9 [2022-12-19]
+
+### Added
+
+-   Rock Mixtape environment and color scheme
+
+## 2.5.8 [2022-11-20]
 
 ### Fixed
 

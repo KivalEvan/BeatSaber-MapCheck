@@ -30,7 +30,8 @@ export type EnvironmentV3Name =
     | 'EDMEnvironment'
     | 'TheSecondEnvironment'
     | 'LizzoEnvironment'
-    | 'TheWeekndEnvironment';
+    | 'TheWeekndEnvironment'
+    | 'RockMixtapeEnvironment';
 /** List of available 360 environment in base game. */
 export type Environment360Name = 'GlassDesertEnvironment';
 /** List of all available environment in base game. */

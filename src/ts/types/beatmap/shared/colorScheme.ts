@@ -39,7 +39,8 @@ export type ColorSchemeList =
     | 'The Second'
     | 'Lizzo'
     | 'The Weeknd'
-    | 'Glass Desert';
+    | 'Glass Desert'
+    | 'Rock Mixtape';
 
 export type IEnvironmentScheme = {
     readonly [key in ColorSchemeList]: Readonly<IColorScheme>;

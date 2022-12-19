@@ -32,6 +32,7 @@ export const EnvironmentSchemeName: Record<EnvironmentAllName, ColorSchemeList> 
     TheSecondEnvironment: 'The Second',
     LizzoEnvironment: 'Lizzo',
     TheWeekndEnvironment: 'The Weeknd',
+    RockMixtapeEnvironment: 'Rock Mixtape',
     GlassDesertEnvironment: 'Glass Desert',
 } as const;
 
@@ -247,6 +248,15 @@ export const ColorScheme: IEnvironmentScheme = {
         _envColorLeftBoost: { r: 0.9568628, g: 0.6039216, b: 0.1215686 },
         _envColorRightBoost: { r: 0.5254902, g: 0.8274511, b: 0.9921569 },
         _obstacleColor: { r: 0.9176471, g: 0.2980392, b: 0.007843138 },
+    },
+    'Rock Mixtape': {
+        _colorLeft: { r: 0.6, g: 0.4233, b: 0.042 },
+        _colorRight: { r: 0.6006, g: 0.7441199, b: 0.78 },
+        _envColorLeft: { r: 0.75, g: 0.12, b: 0.162 },
+        _envColorRight: { r: 0.95, g: 0.5820333, b: 0.1615 },
+        _envColorLeftBoost: { r: 0.96, g: 0.1344, b: 0.9187202 },
+        _envColorRightBoost: { r: 0.378, g: 0.813, b: 0.9 },
+        _obstacleColor: { r: 1, g: 1, b: 1 },
     },
     'Glass Desert': {
         _colorLeft: { r: 0.6792453, g: 0.5712628, b: 0 },

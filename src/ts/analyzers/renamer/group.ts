@@ -272,6 +272,88 @@ export function eventGroupRename(id: number, environment?: EnvironmentAllName): 
             }
         }
         /* fall through */
+        case 'RockMixtapeEnvironment': {
+            switch (id) {
+                case 0:
+                    return 'Lasers Far Left';
+                case 1:
+                    return 'Lasers Far Right';
+                case 2:
+                    return 'Mountain 1';
+                case 3:
+                    return 'Mountain 2';
+                case 4:
+                    return 'Mountain 3';
+                case 5:
+                    return 'Mountain 4';
+                case 6:
+                    return 'Mountain 5';
+                case 7:
+                    return 'Mountain 6';
+                case 8:
+                    return 'Mountain 7';
+                case 9:
+                    return 'Mountain 8';
+                case 10:
+                    return 'Mountain 9';
+                case 11:
+                    return 'Mountain 10';
+                case 12:
+                    return 'Mountain 11';
+                case 13:
+                    return 'Mountain 12';
+                case 14:
+                    return 'Face Eyes';
+                case 15:
+                    return 'Runway Frets';
+                case 16:
+                    return 'Runway Strings';
+                case 17:
+                    return 'Runway Tunnel';
+                case 18:
+                    return 'Lasers Side Left';
+                case 19:
+                    return 'Lasers Side Right';
+                case 20:
+                    return 'Lasers Side Left Rotation';
+                case 21:
+                    return 'Lasers Side Right Rotation';
+                case 22:
+                    return 'Face Left';
+                case 23:
+                    return 'Face Right';
+                case 24:
+                    return 'Spikes Left';
+                case 25:
+                    return 'Spikes Left Movement';
+                case 26:
+                    return 'Spikes Right';
+                case 27:
+                    return 'Spikes Right Movement';
+                case 28:
+                    return 'Runway Dots';
+                case 29:
+                    return 'Face Movement';
+                case 30:
+                    return 'Runway Equilizer';
+                case 31:
+                    return 'Screens Left 1';
+                case 32:
+                    return 'Screens Left 2';
+                case 33:
+                    return 'Screens Right 1';
+                case 34:
+                    return 'Screens Right 2';
+                case 35:
+                    return 'Screens Left Movement';
+                case 36:
+                    return 'Screens Right Movement';
+                case 37:
+                    return 'Lasers Side Z Translation';
+                default:
+            }
+        }
+        /* fall through */
         default:
             return 'Unknown';
     }
