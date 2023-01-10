@@ -1,3 +1,8 @@
+/** Beatmap v3 classes.
+ *
+ * @module
+ */
+
 export * from './basicEvent';
 export * from './basicEventTypesForKeywords';
 export * from './basicEventTypesWithKeywords';

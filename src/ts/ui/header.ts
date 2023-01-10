@@ -1,4 +1,4 @@
-import { round, toMMSSMS } from '../utils';
+import { round, toMmssms } from '../utils';
 
 const logPrefix = 'UI Header: ';
 
@@ -90,7 +90,7 @@ function setSongBPM(num: number, minBPM?: number, maxBPM?: number): void {
 
 function setSongDuration(num?: number): void {
     if (num) {
-        htmlMetadataSongDuration.textContent = toMMSSMS(num);
+        htmlMetadataSongDuration.textContent = toMmssms(num);
     } else {
         htmlMetadataSongDuration.textContent = 'No audio';
     }

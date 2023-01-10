@@ -13,12 +13,13 @@ export interface ILightColorBase {
     i: 0 | 1 | 2;
     /** Color `<int>` of base light color.
      * ```ts
+     * -1 -> None
      * 0 -> Red
      * 1 -> Blue
      * 2 -> White
      * ```
      */
-    c: 0 | 1 | 2;
+    c: -1 | 0 | 1 | 2;
     /** Brightness `<float>` of base light color.
      *
      * Range: `0-1` (0% to 100%), can be more than 1.

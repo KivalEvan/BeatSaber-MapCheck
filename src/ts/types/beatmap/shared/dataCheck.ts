@@ -3,6 +3,7 @@ import { Version } from './version';
 interface DataCheckBase {
     type: string | string[]; // string array because there'll soon be having to check both
     version: Version;
+    array?: boolean;
     optional?: boolean;
 }
 

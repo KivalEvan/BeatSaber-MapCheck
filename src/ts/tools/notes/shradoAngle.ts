@@ -138,7 +138,8 @@ function check(map: ToolArgs) {
                 // FIXME: maybe fix rotation or something
                 if (startNoteDot[note.data.color]) {
                     startNoteDot[note.data.color] = null;
-                    lastNoteDirection[note.data.color] = NoteDirectionFlip[lastNoteDirection[note.data.color]] ?? 8;
+                    lastNoteDirection[note.data.color] =
+                        NoteDirectionFlip[lastNoteDirection[note.data.color] as 0] ?? 8;
                 }
                 if (
                     note.data.getDistance(lastNote[note.data.color].data) >= distance &&

@@ -46,7 +46,7 @@ interface IBasicEventGeneric extends IBasicEventBase {
 
 interface IBasicEventLight extends IBasicEventBase {
     et: 0 | 1 | 2 | 3 | 4 | 6 | 7 | 10 | 11;
-    /** State of light this. ( Blue | Red | White )
+    /** State of light event. ( Blue | Red | White )
      * ```ts
      * 0 -> Off
      * 1 | 5 | 9 -> On
@@ -64,12 +64,11 @@ interface IBasicEventLight extends IBasicEventBase {
     customData?: IChromaEventLight;
 }
 
-/** **Deprecated:** use `colorBoostBeatmapEvents` to apply boost this. */
+/**  @deprecated use `colorBoostEvents` to apply boost event. */
 interface IBasicEventBoost extends IBasicEventBase {
+    /**  @deprecated use `colorBoostEvents` to apply boost event. */
     et: 5;
-    /** **Deprecated:** use `colorBoostBeatmapEvents` to apply boost this.
-     *
-     * Toggle between boost this. */
+    /**  @deprecated use `colorBoostEvents` to apply boost event. */
     i: 0 | 1;
 }
 
@@ -85,12 +84,11 @@ interface IBasicEventLaserRotation extends IBasicEventBase {
     customData?: IChromaEventLaser;
 }
 
-/** **Deprecated:** use `rotationEvents` to apply lane rotation this. */
+/** @deprecated use `rotationEvents` to apply lane rotation event. */
 interface IBasicEventLaneRotation extends IBasicEventBase {
+    /** @deprecated use `rotationEvents` to apply lane rotation event. */
     et: 14 | 15;
-    /** **Deprecated:** use `rotationEvents` to apply lane rotation this.
-     *
-     * Amount of angle changed clockwise.
+    /** Amount of angle changed clockwise.
      * ```ts
      * 0 -> -60 Degree
      * 1 -> -45 Degree
@@ -101,6 +99,7 @@ interface IBasicEventLaneRotation extends IBasicEventBase {
      * 6 -> 45 Degree
      * 7 -> 60 Degree
      * ```
+     * @deprecated use `rotationEvents` to apply lane rotation event.
      */
     i: number;
 }
@@ -114,12 +113,13 @@ interface IBasicEventSpecial extends IBasicEventBase {
     et: 40 | 41 | 42 | 43;
 }
 
-/** **Deprecated:** use `bpmEvents` to apply BPM change. */
+/** @deprecated use `bpmEvents` to apply BPM change. */
 interface IBasicEventBPMChange extends IBasicEventBase {
     et: 100;
-    /** **Deprecated:** use `bpmEvents` to apply BPM change.
+    /** Changes the BPM to event value.
      *
-     * Changes the BPM to this value. */
+     * @deprecated use `bpmEvents` to apply BPM change.
+     */
     f: number;
 }
 

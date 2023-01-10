@@ -1,5 +1,5 @@
 import Settings from '../../settings';
-import { round, toMMSS } from '../../utils';
+import { round, toMmss } from '../../utils';
 import { BeatPerMinute } from '../../beatmap/shared/bpm';
 import { ICustomEvent } from '../../types/beatmap/v3/custom/customEvent';
 import { htmlTableCustomEvents } from './constants';
@@ -38,7 +38,7 @@ export function setCustomEvents(arr?: ICustomEvent[], bpm?: BeatPerMinute | null
                 keyArr.push(k);
             }
         }
-        return `${round(elem.b, Settings.rounding)}${rt ? ' | ' + toMMSS(rt) : ''} -- ${elem.t} -> [${keyArr.join(
+        return `${round(elem.b, Settings.rounding)}${rt ? ' | ' + toMmss(rt) : ''} -- ${elem.t} -> [${keyArr.join(
             '',
         )}]${elem.t !== 'AssignTrackParent' ? `(${elem.d.track})` : ''}`;
     });

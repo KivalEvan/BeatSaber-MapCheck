@@ -1,7 +1,7 @@
 import { WrapBaseObject } from './baseObject';
 import { IWrapGridObject } from '../../types/beatmap/wrapper/gridObject';
 import { LINE_COUNT } from '../shared/constants';
-import { Vector2 } from '../../types/beatmap/shared/custom/heck';
+import { Vector2 } from '../../types/vector';
 
 /** Beatmap grid class object. */
 export abstract class WrapGridObject<T extends Record<keyof T, unknown>>

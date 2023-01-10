@@ -17,14 +17,14 @@ export abstract class WrapIndexFilter<T extends Record<keyof T, unknown>>
     abstract set reverse(value: IWrapIndexFilter['reverse']);
     abstract get chunks(): IWrapIndexFilter['chunks'];
     abstract set chunks(value: IWrapIndexFilter['chunks']);
-    abstract get random(): IWrapIndexFilter['random'];
-    abstract set random(value: IWrapIndexFilter['random']);
-    abstract get seed(): IWrapIndexFilter['seed'];
-    abstract set seed(value: IWrapIndexFilter['seed']);
     abstract get limit(): IWrapIndexFilter['limit'];
     abstract set limit(value: IWrapIndexFilter['limit']);
     abstract get limitAffectsType(): IWrapIndexFilter['limitAffectsType'];
     abstract set limitAffectsType(value: IWrapIndexFilter['limitAffectsType']);
+    abstract get random(): IWrapIndexFilter['random'];
+    abstract set random(value: IWrapIndexFilter['random']);
+    abstract get seed(): IWrapIndexFilter['seed'];
+    abstract set seed(value: IWrapIndexFilter['seed']);
 
     setType(value: IWrapIndexFilter['type']) {
         this.type = value;

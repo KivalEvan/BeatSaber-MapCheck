@@ -4,7 +4,7 @@ import { Difficulty as DifficultyV3 } from '../beatmap/v3/difficulty';
 import { clamp } from '../utils/math';
 import { EventLaneRotationValue } from '../beatmap/shared/constants';
 import { ICustomDataNote, ICustomDataObstacle } from '../types/beatmap/v3/custom/customData';
-import { Vector3 } from '../types/beatmap/shared/custom/heck';
+import { Vector3 } from '../types/vector';
 import { IChromaComponent, IChromaMaterial } from '../types/beatmap/v3/custom/chroma';
 import objectToV3 from './customData/objectToV3';
 import eventToV3 from './customData/eventToV3';

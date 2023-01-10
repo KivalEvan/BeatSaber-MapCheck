@@ -32,10 +32,10 @@ export interface IWrapDifficulty<T extends Record<keyof T, unknown> = Record<str
     waypoints: IWrapWaypoint[];
     basicEvents: IWrapEvent[];
     colorBoostEvents: IWrapColorBoostEvent[];
-    lightColorEventBoxGroups: IWrapLightColorEventBoxGroup<IWrapLightColorEventBoxGroup['data']>[];
-    lightRotationEventBoxGroups: IWrapLightRotationEventBoxGroup<IWrapLightRotationEventBoxGroup['data']>[];
-    lightTranslationEventBoxGroups: IWrapLightTranslationEventBoxGroup<IWrapLightTranslationEventBoxGroup['data']>[];
-    eventTypesWithKeywords: IWrapEventTypesWithKeywords<IWrapEventTypesWithKeywords['data']>;
+    lightColorEventBoxGroups: IWrapLightColorEventBoxGroup[];
+    lightRotationEventBoxGroups: IWrapLightRotationEventBoxGroup[];
+    lightTranslationEventBoxGroups: IWrapLightTranslationEventBoxGroup[];
+    eventTypesWithKeywords: IWrapEventTypesWithKeywords;
     useNormalEventsAsCompatibleEvents: boolean;
 
     fileName: string;
@@ -46,7 +46,7 @@ export interface IWrapDifficulty<T extends Record<keyof T, unknown> = Record<str
      * const nps = difficulty.nps(Difficulty, 10);
      * ```
      * ---
-     * **Note:** Duration can be either in any time type.
+     * **NOTE:** Duration can be either in any time type.
      */
     nps(duration: number): number;
 

@@ -1,5 +1,5 @@
 import savedData from '../../savedData';
-import { toMMSS } from '../../utils/time';
+import { toMmss } from '../../utils/time';
 import { htmlTablePlayTime } from './constants';
 import { displayTableRow, hideTableRow } from './helpers';
 
@@ -10,8 +10,8 @@ export function setPlayTime(start?: number, end?: number): void {
     }
     displayTableRow(
         htmlTablePlayTime,
-        `${toMMSS(start)} to ${toMMSS(end)}${
-            savedData.duration ? ` -- [ ${toMMSS(end - start)} / ${toMMSS(savedData.duration)} ]` : ''
+        `${toMmss(start)} to ${toMmss(end)}${
+            savedData.duration ? ` -- [ ${toMmss(end - start)} / ${toMmss(savedData.duration)} ]` : ''
         }`,
     );
 }

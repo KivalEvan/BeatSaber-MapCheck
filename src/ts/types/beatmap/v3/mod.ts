@@ -1,3 +1,8 @@
+/** Beatmap v3 JSON schema.
+ *
+ * @module
+ */
+
 export * from './custom/mod';
 export * from './baseObject';
 export * from './baseSlider';

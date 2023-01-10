@@ -220,6 +220,7 @@ export const SpecialEventsKeywordFiltersKeywordsDataCheck: Record<
     _specialEvents: {
         type: 'number',
         int: true,
+        array: true,
         version: '2.4.0',
     },
 } as const;

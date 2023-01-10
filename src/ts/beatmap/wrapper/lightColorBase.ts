@@ -36,7 +36,7 @@ export abstract class WrapLightColorBase<T extends Record<keyof T, unknown>>
         return (
             this.transition >= 0 &&
             this.transition <= 2 &&
-            this.color >= 0 &&
+            this.color >= -1 &&
             this.color <= 2 &&
             this.brightness >= 0 &&
             this.frequency >= 0
