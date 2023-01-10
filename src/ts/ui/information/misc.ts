@@ -1,4 +1,4 @@
-import { toHHMMSS } from '../../utils';
+import { toHhmmss } from '../../utils';
 import {
     htmlTableTimeSpend,
     htmlTableInformation,
@@ -22,7 +22,7 @@ export function setTimeSpend(num?: number): void {
         hideTableRow(htmlTableTimeSpend);
         return;
     }
-    displayTableRow(htmlTableTimeSpend, toHHMMSS(num));
+    displayTableRow(htmlTableTimeSpend, toHhmmss(num));
 }
 
 export function setRequirements(arr?: string[]): void {

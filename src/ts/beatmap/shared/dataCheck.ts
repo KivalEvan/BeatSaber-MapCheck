@@ -65,6 +65,20 @@ export function deepCheck(
                 deepCheck(data[key], (check[key] as DataCheckObject).check, `${name} ${key}`, version);
             }
         }
+        if (
+            check[key].array &&
+            Array.isArray(data[key]) &&
+            data[key].every(
+                (n: unknown) =>
+                    typeof n === check[key].type ||
+                    (check[key].type === 'number' &&
+                        typeof n === 'number' &&
+                        ((check[key] as DataCheckNumber).int ? n % 1 !== 0 : true) &&
+                        ((check[key] as DataCheckNumber).unsigned ? data[key] < 0 : true)),
+            )
+        ) {
+            handleError(`${key} is not ${check[key].type} in object ${name}!`, throwError, error);
+        }
         if (check[key].type !== 'array' && typeof data[key] !== check[key].type) {
             handleError(`${key} is not ${check[key].type} in object ${name}!`, throwError, error);
         }

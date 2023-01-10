@@ -1,3 +1,8 @@
+/** Wrapper interface for abstract class implementation.
+ *
+ * @module
+ */
+
 export * from './baseObject';
 export * from './baseSlider';
 export * from './bombNote';

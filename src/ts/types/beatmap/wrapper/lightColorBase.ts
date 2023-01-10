@@ -14,12 +14,13 @@ export interface IWrapLightColorBase<T extends Record<keyof T, unknown> = Record
     transition: 0 | 1 | 2;
     /** Color `<int>` of base light color.
      * ```ts
+     * -1 -> None
      * 0 -> Red
      * 1 -> Blue
      * 2 -> White
      * ```
      */
-    color: 0 | 1 | 2;
+    color: -1 | 0 | 1 | 2;
     /** Brightness `<float>` of base light color.
      *
      * Range: `0-1` (0% to 100%), can be more than 1.

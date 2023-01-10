@@ -1,12 +1,4 @@
 import { Easings } from '../../../easings';
-/**
- * Represented in `[x, y]`.
- */
-export type Vector2 = [number, number];
-/**
- * Represented in `[x, y, z]`.
- */
-export type Vector3 = [number, number, number];
 export type PercentPointDefinition = [number, number, Easings?];
 export type Vector2PointDefinition =
     | [number, number, number, Easings?, 'splineCatmullRom'?]

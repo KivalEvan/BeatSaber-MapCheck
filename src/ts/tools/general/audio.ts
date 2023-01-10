@@ -1,5 +1,5 @@
 import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
-import { toMMSS } from '../../utils';
+import { toMmss } from '../../utils';
 import settings from '../../settings';
 import flag from '../../flag';
 import { printResult } from '../helpers';
@@ -34,7 +34,7 @@ function run(map: ToolArgs) {
     const { audioDuration } = map.settings;
 
     if (audioDuration && audioDuration < 20) {
-        tool.output.html = printResult('Unrankable audio length', `too short (${toMMSS(audioDuration)}s)`, 'rank');
+        tool.output.html = printResult('Unrankable audio length', `too short (${toMmss(audioDuration)}s)`, 'rank');
     } else if (!flag.loading.audio) {
         tool.output.html = printResult(
             'No audio',

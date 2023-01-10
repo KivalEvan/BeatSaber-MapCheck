@@ -1,4 +1,4 @@
-export function toMMSS(seconds: number): string {
+export function toMmss(seconds: number): string {
     if (!seconds) {
         return '0:00';
     }
@@ -11,20 +11,26 @@ export function toMMSS(seconds: number): string {
     return `${min}:${sec}`;
 }
 
-export function toHHMMSS(minutes: number): string {
+export function toHhmmss(minutes: number): string {
     if (!minutes) {
         return '0:00:00';
     }
-    const sec = Math.round((minutes * 60) % 60)
+    const sec = Math.abs(Math.round((minutes * 60) % 60))
         .toString()
         .padStart(2, '0');
-    return `${toMMSS(minutes)}:${sec}`;
+    return `${toMmss(minutes > 0 ? Math.floor(minutes) : Math.ceil(minutes))}:${sec}`;
 }
 
-export function toMMSSMS(seconds: number): string {
+export function toMmssms(seconds: number): string {
     if (!seconds) {
         return '0:00.000';
     }
     const dec = (seconds % 1).toString().split('.')[1]?.padEnd(3, '0').slice(0, 3) || '000';
-    return `${toMMSS(seconds)}.${dec}`;
+    return `${toMmss(seconds > 0 ? Math.floor(seconds) : Math.ceil(seconds))}.${dec}`;
+}
+
+export function mmssToFloat(mmss: string): number {
+    const [m, s] = mmss.split(':').map((el) => Math.abs(parseInt(el)));
+    const sign = mmss.trim().startsWith('-');
+    return (sign ? -1 : 1) * (m * 60 + s);
 }

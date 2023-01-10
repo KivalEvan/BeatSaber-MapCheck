@@ -1,7 +1,7 @@
 import { BeatPerMinute } from '../beatmap/shared/bpm';
 import settings from '../settings';
 import { round } from '../utils/math';
-import { toMMSS, toMMSSMS } from '../utils/time';
+import { toMmss, toMmssms } from '../utils/time';
 
 type Symbol = 'info' | 'warning' | 'error' | 'rank';
 
@@ -46,18 +46,18 @@ export function printResultTime(label: string, timeAry: number[], bpm: BeatPerMi
         .map((n) => {
             switch (settings.beatNumbering) {
                 case 'realtime':
-                    return `<span title="Beat ${round(bpm.adjustTime(n), settings.rounding)}">${toMMSS(
+                    return `<span title="Beat ${round(bpm.adjustTime(n), settings.rounding)}">${toMmss(
                         bpm.toRealTime(n),
                     )}</span>`;
                 case 'realtimems':
-                    return `<span title="Beat ${round(bpm.adjustTime(n), settings.rounding)}">${toMMSSMS(
+                    return `<span title="Beat ${round(bpm.adjustTime(n), settings.rounding)}">${toMmssms(
                         bpm.toRealTime(n),
                     )}</span>`;
                 case 'jsontime':
-                    return `<span title="Time ${toMMSSMS(bpm.toRealTime(n))}">${round(n, settings.rounding)}</span>`;
+                    return `<span title="Time ${toMmssms(bpm.toRealTime(n))}">${round(n, settings.rounding)}</span>`;
                 case 'beattime':
                 default:
-                    return `<span title="Time ${toMMSSMS(bpm.toRealTime(n))}">${round(
+                    return `<span title="Time ${toMmssms(bpm.toRealTime(n))}">${round(
                         bpm.adjustTime(n),
                         settings.rounding,
                     )}</span>`;

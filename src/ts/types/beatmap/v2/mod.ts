@@ -1,3 +1,8 @@
+/** Beatmap v2 JSON schema.
+ *
+ * @module
+ */
+
 export * from './custom/mod';
 export * from './difficulty';
 export * from './event';

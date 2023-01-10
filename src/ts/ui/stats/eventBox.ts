@@ -1,6 +1,6 @@
 import { IInfo } from '../../types/beatmap/shared/info';
 import { IBeatmapItem } from '../../types/mapcheck';
-import { countEBG } from '../../analyzers/stats/mod';
+import { countEbg } from '../../analyzers/stats/mod';
 import { eventGroupRename } from '../../analyzers/renamer/mod';
 import { prefix } from './constants';
 
@@ -9,9 +9,9 @@ export function createEBGCountTable(mapInfo: IInfo, mapData: IBeatmapItem): HTML
         mapData.characteristic === '360Degree' || mapData.characteristic === '90Degree'
             ? mapInfo._allDirectionsEnvironmentName
             : mapInfo._environmentName;
-    const ebgColorCount = countEBG(mapData.data.lightColorEventBoxGroups, environment);
-    const ebgRotationCount = countEBG(mapData.data.lightRotationEventBoxGroups, environment);
-    const ebgTranslationCount = countEBG(mapData.data.lightTranslationEventBoxGroups, environment);
+    const ebgColorCount = countEbg(mapData.data.lightColorEventBoxGroups, environment);
+    const ebgRotationCount = countEbg(mapData.data.lightRotationEventBoxGroups, environment);
+    const ebgTranslationCount = countEbg(mapData.data.lightTranslationEventBoxGroups, environment);
 
     for (const ebg in ebgColorCount) {
         if (!ebgRotationCount[ebg]) {

@@ -709,6 +709,7 @@ export const BasicEventTypesForKeywordsDataCheck: Record<keyof IBasicEventTypesF
     e: {
         type: 'number',
         int: true,
+        array: true,
         version: '3.0.0',
     },
 } as const;

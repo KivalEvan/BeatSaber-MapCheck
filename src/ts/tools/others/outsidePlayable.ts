@@ -1,6 +1,6 @@
 import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import UICheckbox from '../../ui/helpers/checkbox';
-import { round, toMMSS } from '../../utils';
+import { round, toMmss } from '../../utils';
 import { printResult } from '../helpers';
 
 const name = 'Outside Playable Object';
@@ -43,7 +43,7 @@ function run(map: ToolArgs) {
             htmlResult.push(
                 printResult(
                     'Note(s) before start time',
-                    `${round(colorNotes[0].time, 3)} (${toMMSS(bpm.toRealTime(colorNotes[0].time))}`,
+                    `${round(colorNotes[0].time, 3)} (${toMmss(bpm.toRealTime(colorNotes[0].time))}`,
                     'error',
                 ),
             );
@@ -52,7 +52,7 @@ function run(map: ToolArgs) {
             htmlResult.push(
                 printResult(
                     'Bomb(s) before start time',
-                    `${round(bombNotes[0].time, 3)} (${toMMSS(bpm.toRealTime(bombNotes[0].time))}`,
+                    `${round(bombNotes[0].time, 3)} (${toMmss(bpm.toRealTime(bombNotes[0].time))}`,
                     'error',
                 ),
             );
@@ -61,7 +61,7 @@ function run(map: ToolArgs) {
             htmlResult.push(
                 printResult(
                     'Arc(s) before start time',
-                    `${round(sliders[0].time, 3)} (${toMMSS(bpm.toRealTime(sliders[0].time))}`,
+                    `${round(sliders[0].time, 3)} (${toMmss(bpm.toRealTime(sliders[0].time))}`,
                     'error',
                 ),
             );
@@ -70,7 +70,7 @@ function run(map: ToolArgs) {
             htmlResult.push(
                 printResult(
                     'Chain(s) before start time',
-                    `${round(burstSliders[0].time, 3)} (${toMMSS(bpm.toRealTime(burstSliders[0].time))}`,
+                    `${round(burstSliders[0].time, 3)} (${toMmss(bpm.toRealTime(burstSliders[0].time))}`,
                     'error',
                 ),
             );
@@ -79,7 +79,7 @@ function run(map: ToolArgs) {
             htmlResult.push(
                 printResult(
                     'Obstacle(s) before start time',
-                    `${round(obstacles[0].time, 3)} (${toMMSS(bpm.toRealTime(obstacles[0].time))}`,
+                    `${round(obstacles[0].time, 3)} (${toMmss(bpm.toRealTime(obstacles[0].time))}`,
                     'error',
                 ),
             );
@@ -88,7 +88,7 @@ function run(map: ToolArgs) {
             htmlResult.push(
                 printResult(
                     'Event(s) before start time',
-                    `${round(basicEvents[0].time, 3)} (${toMMSS(bpm.toRealTime(basicEvents[0].time))}`,
+                    `${round(basicEvents[0].time, 3)} (${toMmss(bpm.toRealTime(basicEvents[0].time))}`,
                     'error',
                 ),
             );
@@ -97,7 +97,7 @@ function run(map: ToolArgs) {
             htmlResult.push(
                 printResult(
                     'Note(s) after end time',
-                    `${round(colorNotes[colorNotes.length - 1].time, 3)} (${toMMSS(
+                    `${round(colorNotes[colorNotes.length - 1].time, 3)} (${toMmss(
                         bpm.toRealTime(colorNotes[colorNotes.length - 1].time),
                     )})`,
                     'error',
@@ -108,7 +108,7 @@ function run(map: ToolArgs) {
             htmlResult.push(
                 printResult(
                     'Bomb(s) after end time',
-                    `${round(bombNotes[bombNotes.length - 1].time, 3)} (${toMMSS(
+                    `${round(bombNotes[bombNotes.length - 1].time, 3)} (${toMmss(
                         bpm.toRealTime(bombNotes[bombNotes.length - 1].time),
                     )})`,
                     'error',
@@ -119,7 +119,7 @@ function run(map: ToolArgs) {
             htmlResult.push(
                 printResult(
                     'Arc(s) after end time',
-                    `${round(sliders[sliders.length - 1].time, 3)} (${toMMSS(
+                    `${round(sliders[sliders.length - 1].time, 3)} (${toMmss(
                         bpm.toRealTime(sliders[sliders.length - 1].time),
                     )})`,
                     'error',
@@ -130,7 +130,7 @@ function run(map: ToolArgs) {
             htmlResult.push(
                 printResult(
                     'Chain(s) after end time',
-                    `${round(burstSliders[burstSliders.length - 1].time, 3)} (${toMMSS(
+                    `${round(burstSliders[burstSliders.length - 1].time, 3)} (${toMmss(
                         bpm.toRealTime(burstSliders[burstSliders.length - 1].time),
                     )})`,
                     'error',
@@ -141,7 +141,7 @@ function run(map: ToolArgs) {
             htmlResult.push(
                 printResult(
                     'Obstacle(s) after end time',
-                    `${round(obstacles[obstacles.length - 1].time, 3)} (${toMMSS(
+                    `${round(obstacles[obstacles.length - 1].time, 3)} (${toMmss(
                         bpm.toRealTime(obstacles[obstacles.length - 1].time),
                     )})`,
                     'error',
@@ -152,7 +152,7 @@ function run(map: ToolArgs) {
             htmlResult.push(
                 printResult(
                     'Event(s) after end time',
-                    `${round(basicEvents[basicEvents.length - 1].time, 3)} (${toMMSS(
+                    `${round(basicEvents[basicEvents.length - 1].time, 3)} (${toMmss(
                         bpm.toRealTime(basicEvents[basicEvents.length - 1].time),
                     )})`,
                     'error',

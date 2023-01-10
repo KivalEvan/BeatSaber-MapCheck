@@ -40,18 +40,19 @@ export const enum PositionY {
 
 /** Cut angle corresponding to the `direction`.
  * ```ts
- * 0 -> 180
- * 1 -> 0
- * 2 -> 270
- * 3 -> 90
- * 4 -> 225
- * 5 -> 135
- * 6 -> 315
- * 7 -> 45
- * 8 -> 0
+ * 0 (UP) -> 180
+ * 1 (DOWN) -> 0
+ * 2 (LEFT) -> 270
+ * 3 (RIGHT) -> 90
+ * 4 (UP_LEFT) -> 225
+ * 5 (UP_RIGHT) -> 135
+ * 6 (DOWN_LEFT) -> 315
+ * 7 (DOWN_RIGHT) -> 45
+ * 8 (ANY) -> 0
  * ```
+ * **NOTE:** Rotation in counter-clockwise.
  */
-export const NoteDirectionAngle: { [key: number]: number } = {
+export const NoteDirectionAngle: { [d in NoteDirection]: number } = {
     [NoteDirection.UP]: 180,
     [NoteDirection.DOWN]: 0,
     [NoteDirection.LEFT]: 270,
@@ -65,18 +66,18 @@ export const NoteDirectionAngle: { [key: number]: number } = {
 
 /** Opposite direction corresponding to the `direction`.
  * ```ts
- * 0 -> 1
- * 1 -> 0
- * 2 -> 3
- * 3 -> 2
- * 4 -> 7
- * 5 -> 6
- * 6 -> 5
- * 7 -> 4
- * 8 -> 8
+ * 0 (UP) -> 1 (DOWN)
+ * 1 (DOWN) -> 0 (UP)
+ * 2 (LEFT) -> 3 (RIGHT)
+ * 3 (RIGHT) -> 2 (LEFT)
+ * 4 (UP_LEFT) -> 7 (DOWN_RIGHT)
+ * 5 (UP_RIGHT) -> 6 (DOWN_LEFT)
+ * 6 (DOWN_LEFT) -> 5 (UP_RIGHT)
+ * 7 (DOWN_RIGHT) -> 4 (UP_LEFT)
+ * 8 (ANY) -> 8 (ANY)
  * ```
  */
-export const NoteDirectionFlip: { [key: number]: NoteDirection } = {
+export const NoteDirectionFlip: { [d in NoteDirection]: NoteDirection } = {
     [NoteDirection.UP]: NoteDirection.DOWN,
     [NoteDirection.DOWN]: NoteDirection.UP,
     [NoteDirection.LEFT]: NoteDirection.RIGHT,
@@ -101,7 +102,9 @@ export const NoteDirectionFlip: { [key: number]: NoteDirection } = {
  * 8 -> [0, 0]
  * ```
  */
-export const NoteDirectionSpace: { [key: number]: Readonly<[number, number]> } = {
+export const NoteDirectionSpace: {
+    [d in NoteDirection]: Readonly<[number, number]>;
+} = {
     [NoteDirection.UP]: [0, 1],
     [NoteDirection.DOWN]: [0, -1],
     [NoteDirection.LEFT]: [-1, 0],
@@ -189,6 +192,7 @@ export const enum RandomType {
 }
 
 export const enum EventBoxColor {
+    NONE = -1,
     RED,
     BLUE,
     WHITE,

@@ -75,8 +75,8 @@ function check(map: ToolArgs) {
             if (swing.next(note, lastNote[note.data.color], bpm, swingNoteArray[note.data.color])) {
                 lastSpeed[note.data.color] = note.data.time - lastNote[note.data.color].data.time;
                 if (note.data.direction !== NoteDirection.ANY) {
-                    noteOccupy[note.data.color].posX = note.data.posX + NoteDirectionSpace[note.data.direction][0];
-                    noteOccupy[note.data.color].posY = note.data.posY + NoteDirectionSpace[note.data.direction][1];
+                    noteOccupy[note.data.color].posX = note.data.posX + NoteDirectionSpace[note.data.direction as 0][0];
+                    noteOccupy[note.data.color].posY = note.data.posY + NoteDirectionSpace[note.data.direction as 0][1];
                 } else {
                     noteOccupy[note.data.color].posX = -1;
                     noteOccupy[note.data.color].posY = -1;
@@ -85,14 +85,14 @@ function check(map: ToolArgs) {
                 lastNoteDirection[note.data.color] = note.data.direction;
             } else if (isEnd(note.data, lastNote[note.data.color].data, lastNoteDirection[note.data.color])) {
                 if (note.data.direction !== NoteDirection.ANY) {
-                    noteOccupy[note.data.color].posX = note.data.posX + NoteDirectionSpace[note.data.direction][0];
-                    noteOccupy[note.data.color].posY = note.data.posY + NoteDirectionSpace[note.data.direction][1];
+                    noteOccupy[note.data.color].posX = note.data.posX + NoteDirectionSpace[note.data.direction as 0][0];
+                    noteOccupy[note.data.color].posY = note.data.posY + NoteDirectionSpace[note.data.direction as 0][1];
                     lastNoteDirection[note.data.color] = note.data.direction;
                 } else {
                     noteOccupy[note.data.color].posX =
-                        note.data.posX + NoteDirectionSpace[lastNoteDirection[note.data.color]][0];
+                        note.data.posX + NoteDirectionSpace[lastNoteDirection[note.data.color] as 0][0];
                     noteOccupy[note.data.color].posY =
-                        note.data.posY + NoteDirectionSpace[lastNoteDirection[note.data.color]][1];
+                        note.data.posY + NoteDirectionSpace[lastNoteDirection[note.data.color] as 0][1];
                 }
             }
             if (
@@ -111,8 +111,8 @@ function check(map: ToolArgs) {
             }
         } else {
             if (note.data.direction !== NoteDirection.ANY) {
-                noteOccupy[note.data.color].posX = note.data.posX + NoteDirectionSpace[note.data.direction][0];
-                noteOccupy[note.data.color].posY = note.data.posY + NoteDirectionSpace[note.data.direction][1];
+                noteOccupy[note.data.color].posX = note.data.posX + NoteDirectionSpace[note.data.direction as 0][0];
+                noteOccupy[note.data.color].posY = note.data.posY + NoteDirectionSpace[note.data.direction as 0][1];
             } else {
                 noteOccupy[note.data.color].posX = -1;
                 noteOccupy[note.data.color].posY = -1;

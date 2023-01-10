@@ -17,7 +17,7 @@ export type ObjectReturnFn<T> = {
     [P in keyof T]: T[P] extends object ? () => T[P] : T[P];
 };
 
-export type LooseAutocomplete<T extends string | number> = T extends string ? T | Omit<string, T> : T | Omit<number, T>;
+export type LooseAutocomplete<T extends string | number> = T extends string ? T | (string & {}) : T | (number & {});
 
 type OmitNever<T> = { [K in keyof T as T[K] extends never ? never : K]: T[K] };
 

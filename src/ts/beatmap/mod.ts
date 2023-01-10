@@ -1,3 +1,8 @@
+/** Beatmap definition, class implementation, parser and various beatmap related.
+ *
+ * @module
+ */
+
 export * from './shared/mod';
 export * as wrapper from './wrapper/mod';
 export * as v2 from './v2/mod';

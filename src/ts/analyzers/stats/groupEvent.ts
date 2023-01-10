@@ -9,7 +9,7 @@ import { ICountEventBoxGroup } from './types/stats';
  * console.log(list);
  * ```
  */
-export function countEBG(
+export function countEbg(
     ebg: IWrapEventBoxGroup[],
     environment: EnvironmentAllName = 'DefaultEnvironment',
 ): ICountEventBoxGroup {
