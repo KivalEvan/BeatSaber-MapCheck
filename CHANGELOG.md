@@ -1,10 +1,14 @@
 # Changelog
 
-## 2.5.9 [2022-12-19]
+## 2.5.9 [2023-01-10]
 
 ### Added
 
 -   Rock Mixtape environment and color scheme
+
+### Fixed
+
+-   Map with event for keyword could not be loaded
 
 ## 2.5.8 [2022-11-20]
 

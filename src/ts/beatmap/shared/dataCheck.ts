@@ -68,7 +68,7 @@ export function deepCheck(
         if (
             check[key].array &&
             Array.isArray(data[key]) &&
-            data[key].every(
+            !data[key].every(
                 (n: unknown) =>
                     typeof n === check[key].type ||
                     (check[key].type === 'number' &&
@@ -77,9 +77,10 @@ export function deepCheck(
                         ((check[key] as DataCheckNumber).unsigned ? data[key] < 0 : true)),
             )
         ) {
+            console.log(1, check[key]);
             handleError(`${key} is not ${check[key].type} in object ${name}!`, throwError, error);
         }
-        if (check[key].type !== 'array' && typeof data[key] !== check[key].type) {
+        if (!check[key].array && check[key].type !== 'array' && typeof data[key] !== check[key].type) {
             handleError(`${key} is not ${check[key].type} in object ${name}!`, throwError, error);
         }
         if (check[key].type === 'number' && typeof data[key] === 'number') {
