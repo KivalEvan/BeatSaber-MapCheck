@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.5.10 [2023-02-##]
+
+### Added
+
+-   Custom white light support
+
 ## 2.5.9 [2023-01-10]
 
 ### Added

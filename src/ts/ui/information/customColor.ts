@@ -16,6 +16,8 @@ export function setCustomColor(customColor?: IColorScheme, environment?: Environ
             !customColor._envColorLeftBoost &&
             !customColor._envColorRight &&
             !customColor._envColorRightBoost &&
+            !customColor._envColorWhite &&
+            !customColor._envColorWhiteBoost &&
             !customColor._obstacleColor)
     ) {
         hideTableRow(htmlTableCustomColor);
@@ -29,8 +31,10 @@ export function setCustomColor(customColor?: IColorScheme, environment?: Environ
         _colorRight: ColorScheme[EnvironmentSchemeName[environment]]?._colorRight,
         _envColorLeft: ColorScheme[EnvironmentSchemeName[environment]]?._envColorLeft,
         _envColorRight: ColorScheme[EnvironmentSchemeName[environment]]?._envColorRight,
+        _envColorWhite: undefined,
         _envColorLeftBoost: ColorScheme[EnvironmentSchemeName[environment]]?._envColorLeftBoost,
         _envColorRightBoost: ColorScheme[EnvironmentSchemeName[environment]]?._envColorRightBoost,
+        _envColorWhiteBoost: undefined,
         _obstacleColor: ColorScheme[EnvironmentSchemeName[environment]]?._obstacleColor,
     };
     const hexColor: { [key: string]: string | null } = {
@@ -38,8 +42,10 @@ export function setCustomColor(customColor?: IColorScheme, environment?: Environ
         _colorRight: existColor._colorRight ? RgbaToHex(existColor._colorRight) : null,
         _envColorLeft: existColor._envColorLeft ? RgbaToHex(existColor._envColorLeft) : null,
         _envColorRight: existColor._envColorRight ? RgbaToHex(existColor._envColorRight) : null,
+        _envColorWhite: null,
         _envColorLeftBoost: existColor._envColorLeftBoost ? RgbaToHex(existColor._envColorLeftBoost) : null,
         _envColorRightBoost: existColor._envColorRightBoost ? RgbaToHex(existColor._envColorRightBoost) : null,
+        _envColorWhiteBoost: null,
         _obstacleColor: existColor._obstacleColor ? RgbaToHex(existColor._obstacleColor) : null,
     };
     if (customColor._colorLeft) {
@@ -75,6 +81,19 @@ export function setCustomColor(customColor?: IColorScheme, environment?: Environ
         envBoost = true;
     } else {
         envBR = existColor._envColorRightBoost ? RgbaToHex(existColor._envColorRightBoost) : hexColor._envColorRight;
+    }
+
+    if (customColor._envColorWhite) {
+        hexColor._envColorWhite = RgbaToHex(customColor._envColorWhite);
+    }
+    if (customColor._envColorWhiteBoost) {
+        hexColor._envColorWhiteBoost = RgbaToHex(customColor._envColorWhiteBoost);
+        if (!hexColor._envColorWhite) {
+            hexColor._envColorWhite = hexColor._envColorWhiteBoost;
+        }
+    }
+    if (hexColor._envColorWhite && !hexColor._envColorWhiteBoost) {
+        hexColor._envColorWhiteBoost = hexColor._envColorWhite;
     }
 
     if (envBoost) {
