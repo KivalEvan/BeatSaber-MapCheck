@@ -1,6 +1,6 @@
 import { IBasicEventTypesForKeywords } from '../../types/beatmap/v3/basicEventTypesForKeywords';
-import { IWrapEventTypesForKeywords } from '../../types/beatmap/wrapper/eventTypesForKeywords';
-import { ObjectReturnFn, PartialWrapper } from '../../types/utils';
+import { IWrapEventTypesForKeywordsAttribute } from '../../types/beatmap/wrapper/eventTypesForKeywords';
+import { ObjectReturnFn } from '../../types/utils';
 import { WrapEventTypesForKeywords } from '../wrapper/eventTypesForKeywords';
 
 /** Basic event types for keywords beatmap v3 class object.
@@ -19,17 +19,17 @@ export class BasicEventTypesForKeywords extends WrapEventTypesForKeywords<Requir
 
     static create(): BasicEventTypesForKeywords[];
     static create(
-        ...basicEventTypesForKeywords: PartialWrapper<
-            IWrapEventTypesForKeywords<Required<IBasicEventTypesForKeywords>>
+        ...basicEventTypesForKeywords: Partial<
+            IWrapEventTypesForKeywordsAttribute<Required<IBasicEventTypesForKeywords>>
         >[]
     ): BasicEventTypesForKeywords[];
     static create(
         ...basicEventTypesForKeywords: (Partial<IBasicEventTypesForKeywords> &
-            PartialWrapper<IWrapEventTypesForKeywords<Required<IBasicEventTypesForKeywords>>>)[]
+            Partial<IWrapEventTypesForKeywordsAttribute<Required<IBasicEventTypesForKeywords>>>)[]
     ): BasicEventTypesForKeywords[];
     static create(
         ...basicEventTypesForKeywords: (Partial<IBasicEventTypesForKeywords> &
-            PartialWrapper<IWrapEventTypesForKeywords<Required<IBasicEventTypesForKeywords>>>)[]
+            Partial<IWrapEventTypesForKeywordsAttribute<Required<IBasicEventTypesForKeywords>>>)[]
     ): BasicEventTypesForKeywords[] {
         const result: BasicEventTypesForKeywords[] = [];
         basicEventTypesForKeywords?.forEach((betfk) =>

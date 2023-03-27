@@ -1,8 +1,8 @@
 import { IIndexFilter } from '../../types/beatmap/v3/indexFilter';
 import { ILightTranslationBase } from '../../types/beatmap/v3/lightTranslationBase';
 import { ILightTranslationEventBox } from '../../types/beatmap/v3/lightTranslationEventBox';
-import { IWrapLightTranslationEventBox } from '../../types/beatmap/wrapper/lightTranslationEventBox';
-import { DeepPartial, DeepPartialWrapper, ObjectReturnFn } from '../../types/utils';
+import { IWrapLightTranslationEventBoxAttribute } from '../../types/beatmap/wrapper/lightTranslationEventBox';
+import { DeepPartial, ObjectReturnFn } from '../../types/utils';
 import { deepCopy } from '../../utils/misc';
 import { WrapLightTranslationEventBox } from '../wrapper/lightTranslationEventBox';
 import { IndexFilter } from './indexFilter';
@@ -48,16 +48,12 @@ export class LightTranslationEventBox extends WrapLightTranslationEventBox<
         super(lightTranslationEventBox);
         this._f = IndexFilter.create(lightTranslationEventBox.f);
         this._l = lightTranslationEventBox.l.map((l) => LightTranslationBase.create(l)[0]);
-        const lastTime = Math.max(...this._l.map((l) => l.time));
-        if (this.beatDistributionType === 2) {
-            this.beatDistribution = this.beatDistribution < lastTime ? lastTime : this.beatDistribution;
-        }
     }
 
     static create(): LightTranslationEventBox[];
     static create(
-        ...eventBoxes: DeepPartialWrapper<
-            IWrapLightTranslationEventBox<
+        ...eventBoxes: DeepPartial<
+            IWrapLightTranslationEventBoxAttribute<
                 Required<ILightTranslationEventBox>,
                 Required<ILightTranslationBase>,
                 Required<IIndexFilter>
@@ -67,8 +63,8 @@ export class LightTranslationEventBox extends WrapLightTranslationEventBox<
     static create(...eventBoxes: DeepPartial<ILightTranslationEventBox>[]): LightTranslationEventBox[];
     static create(
         ...eventBoxes: (DeepPartial<ILightTranslationEventBox> &
-            DeepPartialWrapper<
-                IWrapLightTranslationEventBox<
+            DeepPartial<
+                IWrapLightTranslationEventBoxAttribute<
                     Required<ILightTranslationEventBox>,
                     Required<ILightTranslationBase>,
                     Required<IIndexFilter>
@@ -77,8 +73,8 @@ export class LightTranslationEventBox extends WrapLightTranslationEventBox<
     ): LightTranslationEventBox[];
     static create(
         ...eventBoxes: (DeepPartial<ILightTranslationEventBox> &
-            DeepPartialWrapper<
-                IWrapLightTranslationEventBox<
+            DeepPartial<
+                IWrapLightTranslationEventBoxAttribute<
                     Required<ILightTranslationEventBox>,
                     Required<ILightTranslationBase>,
                     Required<IIndexFilter>

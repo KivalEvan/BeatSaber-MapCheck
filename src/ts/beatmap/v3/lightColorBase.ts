@@ -1,6 +1,6 @@
 import { ILightColorBase } from '../../types/beatmap/v3/lightColorBase';
-import { IWrapLightColorBase } from '../../types/beatmap/wrapper/lightColorBase';
-import { ObjectReturnFn, PartialWrapper } from '../../types/utils';
+import { IWrapLightColorBaseAttribute } from '../../types/beatmap/wrapper/lightColorBase';
+import { ObjectReturnFn } from '../../types/utils';
 import { deepCopy } from '../../utils/misc';
 import { WrapLightColorBase } from '../wrapper/lightColorBase';
 
@@ -22,13 +22,13 @@ export class LightColorBase extends WrapLightColorBase<Required<ILightColorBase>
     }
 
     static create(): LightColorBase[];
-    static create(...lightColors: PartialWrapper<IWrapLightColorBase<Required<ILightColorBase>>>[]): LightColorBase[];
+    static create(...lightColors: Partial<IWrapLightColorBaseAttribute<Required<ILightColorBase>>>[]): LightColorBase[];
     static create(...lightColors: Partial<ILightColorBase>[]): LightColorBase[];
     static create(
-        ...lightColors: (Partial<ILightColorBase> & PartialWrapper<IWrapLightColorBase<Required<ILightColorBase>>>)[]
+        ...lightColors: (Partial<ILightColorBase> & Partial<IWrapLightColorBaseAttribute<Required<ILightColorBase>>>)[]
     ): LightColorBase[];
     static create(
-        ...lightColors: (Partial<ILightColorBase> & PartialWrapper<IWrapLightColorBase<Required<ILightColorBase>>>)[]
+        ...lightColors: (Partial<ILightColorBase> & Partial<IWrapLightColorBaseAttribute<Required<ILightColorBase>>>)[]
     ): LightColorBase[] {
         const result: LightColorBase[] = [];
         lightColors?.forEach((lc) =>

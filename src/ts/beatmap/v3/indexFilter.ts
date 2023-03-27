@@ -1,6 +1,6 @@
 import { IIndexFilter } from '../../types/beatmap/v3/indexFilter';
-import { IWrapIndexFilter } from '../../types/beatmap/wrapper/indexFilter';
-import { ObjectReturnFn, PartialWrapper } from '../../types/utils';
+import { IWrapIndexFilterAttribute } from '../../types/beatmap/wrapper/indexFilter';
+import { ObjectReturnFn } from '../../types/utils';
 import { deepCopy } from '../../utils/misc';
 import { WrapIndexFilter } from '../wrapper/indexFilter';
 
@@ -29,13 +29,13 @@ export class IndexFilter extends WrapIndexFilter<Required<IIndexFilter>> {
     }
 
     static create(): IndexFilter;
-    static create(indexFilter: PartialWrapper<IWrapIndexFilter<Required<IIndexFilter>>>): IndexFilter;
+    static create(indexFilter: Partial<IWrapIndexFilterAttribute<Required<IIndexFilter>>>): IndexFilter;
     static create(indexFilter: Partial<IIndexFilter>): IndexFilter;
     static create(
-        indexFilter: Partial<IIndexFilter> & PartialWrapper<IWrapIndexFilter<Required<IIndexFilter>>>,
+        indexFilter: Partial<IIndexFilter> & Partial<IWrapIndexFilterAttribute<Required<IIndexFilter>>>,
     ): IndexFilter;
     static create(
-        indexFilter: Partial<IIndexFilter> & PartialWrapper<IWrapIndexFilter<Required<IIndexFilter>>> = {},
+        indexFilter: Partial<IIndexFilter> & Partial<IWrapIndexFilterAttribute<Required<IIndexFilter>>> = {},
     ): IndexFilter {
         return new IndexFilter({
             f: indexFilter.type ?? indexFilter.f ?? IndexFilter.default.f,

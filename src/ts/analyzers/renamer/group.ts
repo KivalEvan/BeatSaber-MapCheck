@@ -354,6 +354,38 @@ export function eventGroupRename(id: number, environment?: EnvironmentAllName): 
             }
         }
         /* fall through */
+        case 'Dragons2Environment': {
+            switch (id) {
+                case 0:
+                    return 'Small Rings (R/T)';
+                case 1:
+                    return 'Small Rings (Colors)';
+                case 2:
+                    return 'Underground';
+                case 3:
+                    return 'Big Rings';
+                case 4:
+                    return 'Top Spotlights';
+                case 5:
+                    return 'Runway Left';
+                case 6:
+                    return 'Runway Right';
+                case 7:
+                    return 'Particles Left';
+                case 8:
+                    return 'Particles Right';
+                case 9:
+                    return 'Main Lasers Bottom Left';
+                case 10:
+                    return 'Main Lasers Top Left';
+                case 11:
+                    return 'Main Lasers Top Right';
+                case 12:
+                    return 'Main Lasers Bottom Right';
+                default:
+            }
+        }
+        /* fall through */
         default:
             return 'Unknown';
     }

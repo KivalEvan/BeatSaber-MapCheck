@@ -1,6 +1,6 @@
 import { IWaypoint } from '../../types/beatmap/v3/waypoint';
-import { IWrapWaypoint } from '../../types/beatmap/wrapper/waypoint';
-import { ObjectReturnFn, PartialWrapper } from '../../types/utils';
+import { IWrapWaypointAttribute } from '../../types/beatmap/wrapper/waypoint';
+import { ObjectReturnFn } from '../../types/utils';
 import { deepCopy } from '../../utils/misc';
 import { WrapWaypoint } from '../wrapper/waypoint';
 
@@ -21,13 +21,13 @@ export class Waypoint extends WrapWaypoint<Required<IWaypoint>> {
     }
 
     static create(): Waypoint[];
-    static create(...waypoints: PartialWrapper<IWrapWaypoint<Required<IWaypoint>>>[]): Waypoint[];
+    static create(...waypoints: Partial<IWrapWaypointAttribute<Required<IWaypoint>>>[]): Waypoint[];
     static create(...waypoints: Partial<IWaypoint>[]): Waypoint[];
     static create(
-        ...waypoints: (Partial<IWaypoint> & PartialWrapper<IWrapWaypoint<Required<IWaypoint>>>)[]
+        ...waypoints: (Partial<IWaypoint> & Partial<IWrapWaypointAttribute<Required<IWaypoint>>>)[]
     ): Waypoint[];
     static create(
-        ...waypoints: (Partial<IWaypoint> & PartialWrapper<IWrapWaypoint<Required<IWaypoint>>>)[]
+        ...waypoints: (Partial<IWaypoint> & Partial<IWrapWaypointAttribute<Required<IWaypoint>>>)[]
     ): Waypoint[] {
         const result: Waypoint[] = [];
         waypoints?.forEach((w) =>

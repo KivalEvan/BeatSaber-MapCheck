@@ -1,12 +1,12 @@
 // deno-lint-ignore-file no-unused-vars
 import { IEvent } from '../../types/beatmap/v2/event';
-import { ObjectReturnFn, PartialWrapper } from '../../types/utils';
+import { ObjectReturnFn } from '../../types/utils';
 import { IChromaEventLaser, IChromaEventLight, IChromaEventRing } from '../../types/beatmap/v2/custom/chroma';
 import { INEEvent } from '../../types/beatmap/v2/custom/noodleExtensions';
 import { deepCopy } from '../../utils/misc';
 import { EnvironmentAllName } from '../../types/beatmap/shared/environment';
 import { WrapEvent } from '../wrapper/event';
-import { IWrapEvent } from '../../types/beatmap/wrapper/event';
+import { IWrapEventAttribute } from '../../types/beatmap/wrapper/event';
 
 /** Event beatmap v2 class object. */
 export class Event extends WrapEvent<Required<IEvent>> {
@@ -25,10 +25,10 @@ export class Event extends WrapEvent<Required<IEvent>> {
     }
 
     static create(): Event[];
-    static create(...basicEvents: PartialWrapper<IWrapEvent<Required<IEvent>>>[]): Event[];
+    static create(...basicEvents: Partial<IWrapEventAttribute<Required<IEvent>>>[]): Event[];
     static create(...basicEvents: Partial<IEvent>[]): Event[];
-    static create(...basicEvents: (Partial<IEvent> & PartialWrapper<IWrapEvent<Required<IEvent>>>)[]): Event[];
-    static create(...basicEvents: (Partial<IEvent> & PartialWrapper<IWrapEvent<Required<IEvent>>>)[]): Event[] {
+    static create(...basicEvents: (Partial<IEvent> & Partial<IWrapEventAttribute<Required<IEvent>>>)[]): Event[];
+    static create(...basicEvents: (Partial<IEvent> & Partial<IWrapEventAttribute<Required<IEvent>>>)[]): Event[] {
         const result: Event[] = [];
         basicEvents?.forEach((ev) =>
             result.push(

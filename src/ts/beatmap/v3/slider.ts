@@ -1,7 +1,8 @@
 import { ISlider } from '../../types/beatmap/v3/slider';
-import { IWrapSlider } from '../../types/beatmap/wrapper/slider';
-import { ObjectReturnFn, PartialWrapper } from '../../types/utils';
+import { IWrapSliderAttribute } from '../../types/beatmap/wrapper/slider';
+import { ObjectReturnFn } from '../../types/utils';
 import { deepCopy } from '../../utils/misc';
+import { isVector3 } from '../../utils/vector';
 import { WrapSlider } from '../wrapper/slider';
 
 /** Slider beatmap v3 class object.
@@ -32,10 +33,10 @@ export class Slider extends WrapSlider<Required<ISlider>> {
     }
 
     static create(): Slider[];
-    static create(...sliders: PartialWrapper<IWrapSlider<Required<ISlider>>>[]): Slider[];
+    static create(...sliders: Partial<IWrapSliderAttribute<Required<ISlider>>>[]): Slider[];
     static create(...sliders: Partial<ISlider>[]): Slider[];
-    static create(...sliders: (Partial<ISlider> & PartialWrapper<IWrapSlider<Required<ISlider>>>)[]): Slider[];
-    static create(...sliders: (Partial<ISlider> & PartialWrapper<IWrapSlider<Required<ISlider>>>)[]): Slider[] {
+    static create(...sliders: (Partial<ISlider> & Partial<IWrapSliderAttribute<Required<ISlider>>>)[]): Slider[];
+    static create(...sliders: (Partial<ISlider> & Partial<IWrapSliderAttribute<Required<ISlider>>>)[]): Slider[] {
         const result: Slider[] = [];
         sliders?.forEach((s) =>
             result.push(
@@ -196,14 +197,24 @@ export class Slider extends WrapSlider<Required<ISlider>> {
         }
         if (this.customData.animation) {
             if (Array.isArray(this.customData.animation.definitePosition)) {
-                this.customData.animation.definitePosition.forEach((dp) => {
-                    dp[0] = -dp[0];
-                });
+                if (isVector3(this.customData.animation.definitePosition)) {
+                    this.customData.animation.definitePosition[0] = -this.customData.animation.definitePosition[0];
+                } else {
+                    // deno-lint-ignore no-explicit-any
+                    this.customData.animation.definitePosition.forEach((dp: any) => {
+                        dp[0] = -dp[0];
+                    });
+                }
             }
             if (Array.isArray(this.customData.animation.offsetPosition)) {
-                this.customData.animation.offsetPosition.forEach((op) => {
-                    op[0] = -op[0];
-                });
+                if (isVector3(this.customData.animation.offsetPosition)) {
+                    this.customData.animation.offsetPosition[0] = -this.customData.animation.offsetPosition[0];
+                } else {
+                    // deno-lint-ignore no-explicit-any
+                    this.customData.animation.offsetPosition.forEach((op: any) => {
+                        op[0] = -op[0];
+                    });
+                }
             }
         }
         return super.mirror(flipColor);

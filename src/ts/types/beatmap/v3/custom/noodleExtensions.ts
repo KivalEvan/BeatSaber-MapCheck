@@ -21,6 +21,9 @@ export interface INENote extends INEObject {
     flip?: Vector2;
     disableNoteGravity?: boolean;
     disableNoteLook?: boolean;
+    disableBadCutDirection?: boolean;
+    disableBadCutSpeed?: boolean;
+    disableBadCutSaberType?: boolean;
 }
 
 /** Noodle Extensions Slider interface for Beatmap Slider.
@@ -41,20 +44,20 @@ export interface INEObstacle extends INEObject {
  * @extends IHeckCustomEventDataBase
  */
 export interface INECustomEventDataAnimateTrack extends IHeckCustomEventDataBase {
-    dissolve?: string | PercentPointDefinition[];
-    dissolveArrow?: string | PercentPointDefinition[];
-    interactable?: string | PercentPointDefinition[];
-    time?: string | PercentPointDefinition[];
+    dissolve?: string | number | PercentPointDefinition[];
+    dissolveArrow?: string | number | PercentPointDefinition[];
+    interactable?: string | number | PercentPointDefinition[];
+    time?: string | number | PercentPointDefinition[];
 }
 
 /** AssignPathAnimation interface for Noodle Extensions Custom Event.
  * @extends IHeckCustomEventDataBase
  */
 export interface INECustomEventDataAssignPathAnimation extends IHeckCustomEventDataBase {
-    dissolve?: string | PercentPointDefinition[];
-    dissolveArrow?: string | PercentPointDefinition[];
-    interactable?: string | PercentPointDefinition[];
-    definitePosition?: string | Vector3PointDefinition[];
+    dissolve?: string | number | PercentPointDefinition[];
+    dissolveArrow?: string | number | PercentPointDefinition[];
+    interactable?: string | number | PercentPointDefinition[];
+    definitePosition?: string | Vector3 | Vector3PointDefinition[];
 }
 
 /** AssignPathAnimation interface for Noodle Extensions Custom Event. */
@@ -69,18 +72,18 @@ export interface INECustomEventDataAssignTrackParent {
  */
 export interface INECustomEventDataAssignPlayerToTrack extends IHeckCustomEventDataBase {
     track: string;
-    playerTrackObject?: PlayerObject;
+    target?: PlayerObject;
 }
 
 /** Noodle Extensions Animation interface for Noodle Extensions Object. */
 export interface INEAnimation {
-    offsetPosition?: string | Vector3PointDefinition[];
-    offsetRotation?: string | Vector3PointDefinition[];
-    localRotation?: string | Vector3PointDefinition[];
-    scale?: string | Vector3PointDefinition[];
-    dissolve?: string | PercentPointDefinition[];
-    dissolveArrow?: string | PercentPointDefinition[];
-    interactable?: string | PercentPointDefinition[];
-    definitePosition?: string | Vector3PointDefinition[];
-    time?: string | PercentPointDefinition[];
+    offsetPosition?: string | Vector3 | Vector3PointDefinition[];
+    offsetRotation?: string | Vector3 | Vector3PointDefinition[];
+    localRotation?: string | Vector3 | Vector3PointDefinition[];
+    scale?: string | Vector3 | Vector3PointDefinition[];
+    dissolve?: string | number | PercentPointDefinition[];
+    dissolveArrow?: string | number | PercentPointDefinition[];
+    interactable?: string | number | PercentPointDefinition[];
+    definitePosition?: string | Vector3 | Vector3PointDefinition[];
+    time?: string | number | PercentPointDefinition[];
 }

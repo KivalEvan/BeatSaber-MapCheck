@@ -1,6 +1,6 @@
 import { ILightTranslationBase } from '../../types/beatmap/v3/lightTranslationBase';
-import { IWrapLightTranslationBase } from '../../types/beatmap/wrapper/lightTranslationBase';
-import { ObjectReturnFn, PartialWrapper } from '../../types/utils';
+import { IWrapLightTranslationBaseAttribute } from '../../types/beatmap/wrapper/lightTranslationBase';
+import { ObjectReturnFn } from '../../types/utils';
 import { deepCopy } from '../../utils/misc';
 import { WrapLightTranslationBase } from '../wrapper/lightTranslationBase';
 
@@ -22,16 +22,16 @@ export class LightTranslationBase extends WrapLightTranslationBase<Required<ILig
 
     static create(): LightTranslationBase[];
     static create(
-        ...lightTranslations: PartialWrapper<IWrapLightTranslationBase<Required<ILightTranslationBase>>>[]
+        ...lightTranslations: Partial<IWrapLightTranslationBaseAttribute<Required<ILightTranslationBase>>>[]
     ): LightTranslationBase[];
     static create(...lightTranslations: Partial<ILightTranslationBase>[]): LightTranslationBase[];
     static create(
         ...lightTranslations: (Partial<ILightTranslationBase> &
-            PartialWrapper<IWrapLightTranslationBase<Required<ILightTranslationBase>>>)[]
+            Partial<IWrapLightTranslationBaseAttribute<Required<ILightTranslationBase>>>)[]
     ): LightTranslationBase[];
     static create(
         ...lightTranslations: (Partial<ILightTranslationBase> &
-            PartialWrapper<IWrapLightTranslationBase<Required<ILightTranslationBase>>>)[]
+            Partial<IWrapLightTranslationBaseAttribute<Required<ILightTranslationBase>>>)[]
     ): LightTranslationBase[] {
         const result: LightTranslationBase[] = [];
         lightTranslations?.forEach((lr) =>

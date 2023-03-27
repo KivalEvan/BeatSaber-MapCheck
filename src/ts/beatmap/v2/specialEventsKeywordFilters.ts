@@ -1,9 +1,9 @@
 import { ISpecialEventsKeywordFilters } from '../../types/beatmap/v2/specialEventsKeywordFilters';
-import { DeepPartial, DeepPartialWrapper, ObjectReturnFn } from '../../types/utils';
+import { DeepPartial, ObjectReturnFn } from '../../types/utils';
 import { SpecialEventsKeywordFiltersKeywords } from './specialEventsKeywordFiltersKeywords';
 import { WrapEventTypesWithKeywords } from '../wrapper/eventTypesWithKeywords';
 import { ISpecialEventsKeywordFiltersKeywords } from '../../types/beatmap/v2/specialEventsKeywordFiltersKeywords';
-import { IWrapEventTypesWithKeywords } from '../../types/beatmap/wrapper/eventTypesWithKeywords';
+import { IWrapEventTypesWithKeywordsAttribute } from '../../types/beatmap/wrapper/eventTypesWithKeywords';
 
 /** Special event types with keywords beatmap v2 class object. */
 export class SpecialEventsKeywordFilters extends WrapEventTypesWithKeywords<
@@ -28,16 +28,16 @@ export class SpecialEventsKeywordFilters extends WrapEventTypesWithKeywords<
 
     static create(): SpecialEventsKeywordFilters;
     static create(
-        specialEventsWithKeywords: DeepPartialWrapper<IWrapEventTypesWithKeywords>,
+        specialEventsWithKeywords: DeepPartial<IWrapEventTypesWithKeywordsAttribute>,
     ): SpecialEventsKeywordFilters;
     static create(specialEventsWithKeywords: DeepPartial<ISpecialEventsKeywordFilters>): SpecialEventsKeywordFilters;
     static create(
         specialEventsWithKeywords: DeepPartial<ISpecialEventsKeywordFilters> &
-            DeepPartialWrapper<IWrapEventTypesWithKeywords>,
+            DeepPartial<IWrapEventTypesWithKeywordsAttribute>,
     ): SpecialEventsKeywordFilters;
     static create(
         specialEventsWithKeywords: DeepPartial<ISpecialEventsKeywordFilters> &
-            DeepPartialWrapper<IWrapEventTypesWithKeywords> = {},
+            DeepPartial<IWrapEventTypesWithKeywordsAttribute> = {},
     ): SpecialEventsKeywordFilters {
         return new this({
             _keywords:

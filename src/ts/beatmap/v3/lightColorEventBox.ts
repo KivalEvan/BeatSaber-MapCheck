@@ -1,8 +1,8 @@
 import { IIndexFilter } from '../../types/beatmap/v3/indexFilter';
 import { ILightColorBase } from '../../types/beatmap/v3/lightColorBase';
 import { ILightColorEventBox } from '../../types/beatmap/v3/lightColorEventBox';
-import { IWrapLightColorEventBox } from '../../types/beatmap/wrapper/lightColorEventBox';
-import { DeepPartial, DeepPartialWrapper, ObjectReturnFn } from '../../types/utils';
+import { IWrapLightColorEventBoxAttribute } from '../../types/beatmap/wrapper/lightColorEventBox';
+import { DeepPartial, ObjectReturnFn } from '../../types/utils';
 import { deepCopy } from '../../utils/misc';
 import { WrapLightColorEventBox } from '../wrapper/lightColorEventBox';
 import { IndexFilter } from './indexFilter';
@@ -46,23 +46,23 @@ export class LightColorEventBox extends WrapLightColorEventBox<
         super(lightColorEventBox);
         this._f = IndexFilter.create(lightColorEventBox.f);
         this._e = lightColorEventBox.e.map((e) => LightColorBase.create(e)[0]);
-        const lastTime = Math.max(...this._e.map((e) => e.time));
-        if (this.beatDistributionType === 2) {
-            this.beatDistribution = this.beatDistribution < lastTime ? lastTime : this.beatDistribution;
-        }
     }
 
     static create(): LightColorEventBox[];
     static create(
-        ...eventBoxes: DeepPartialWrapper<
-            IWrapLightColorEventBox<Required<ILightColorEventBox>, Required<ILightColorBase>, Required<IIndexFilter>>
+        ...eventBoxes: DeepPartial<
+            IWrapLightColorEventBoxAttribute<
+                Required<ILightColorEventBox>,
+                Required<ILightColorBase>,
+                Required<IIndexFilter>
+            >
         >[]
     ): LightColorEventBox[];
     static create(...eventBoxes: DeepPartial<ILightColorEventBox>[]): LightColorEventBox[];
     static create(
         ...eventBoxes: (DeepPartial<ILightColorEventBox> &
-            DeepPartialWrapper<
-                IWrapLightColorEventBox<
+            DeepPartial<
+                IWrapLightColorEventBoxAttribute<
                     Required<ILightColorEventBox>,
                     Required<ILightColorBase>,
                     Required<IIndexFilter>
@@ -71,8 +71,8 @@ export class LightColorEventBox extends WrapLightColorEventBox<
     ): LightColorEventBox[];
     static create(
         ...eventBoxes: (DeepPartial<ILightColorEventBox> &
-            DeepPartialWrapper<
-                IWrapLightColorEventBox<
+            DeepPartial<
+                IWrapLightColorEventBoxAttribute<
                     Required<ILightColorEventBox>,
                     Required<ILightColorBase>,
                     Required<IIndexFilter>

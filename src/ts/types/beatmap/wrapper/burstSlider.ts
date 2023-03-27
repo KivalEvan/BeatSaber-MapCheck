@@ -1,7 +1,7 @@
-import { IWrapBaseSlider } from './baseSlider';
+import { IWrapBaseSlider, IWrapBaseSliderAttribute } from './baseSlider';
 
-export interface IWrapBurstSlider<T extends Record<keyof T, unknown> = Record<string, unknown>>
-    extends IWrapBaseSlider<T> {
+export interface IWrapBurstSliderAttribute<T extends Record<keyof T, unknown> = Record<string, unknown>>
+    extends IWrapBaseSliderAttribute<T> {
     /** Slice count or element `<int>` in burst slider.
      *
      * **NOTE:** Must be more than `0`, the head counts as `1`.
@@ -16,7 +16,11 @@ export interface IWrapBurstSlider<T extends Record<keyof T, unknown> = Record<st
      * **WARNING:** Value `0` will crash the game.
      */
     squish: number;
+}
 
+export interface IWrapBurstSlider<T extends Record<keyof T, unknown> = Record<string, unknown>>
+    extends IWrapBaseSlider<T>,
+        IWrapBurstSliderAttribute<T> {
     setSliceCount(value: number): this;
     setSquish(value: number): this;
 }

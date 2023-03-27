@@ -1,7 +1,8 @@
 import { IObstacle } from '../../types/beatmap/v3/obstacle';
-import { IWrapObstacle } from '../../types/beatmap/wrapper/obstacle';
-import { ObjectReturnFn, PartialWrapper } from '../../types/utils';
+import { IWrapObstacleAttribute } from '../../types/beatmap/wrapper/obstacle';
+import { ObjectReturnFn } from '../../types/utils';
 import { deepCopy } from '../../utils/misc';
+import { isVector3 } from '../../utils/vector';
 import { WrapObstacle } from '../wrapper/obstacle';
 
 /** Obstacle beatmap v3 class object. */
@@ -23,13 +24,13 @@ export class Obstacle extends WrapObstacle<Required<IObstacle>> {
     }
 
     static create(): Obstacle[];
-    static create(...obstacles: PartialWrapper<IWrapObstacle<Required<IObstacle>>>[]): Obstacle[];
+    static create(...obstacles: Partial<IWrapObstacleAttribute<Required<IObstacle>>>[]): Obstacle[];
     static create(...obstacles: Partial<IObstacle>[]): Obstacle[];
     static create(
-        ...obstacles: (Partial<IObstacle> & PartialWrapper<IWrapObstacle<Required<IObstacle>>>)[]
+        ...obstacles: (Partial<IObstacle> & Partial<IWrapObstacleAttribute<Required<IObstacle>>>)[]
     ): Obstacle[];
     static create(
-        ...obstacles: (Partial<IObstacle> & PartialWrapper<IWrapObstacle<Required<IObstacle>>>)[]
+        ...obstacles: (Partial<IObstacle> & Partial<IWrapObstacleAttribute<Required<IObstacle>>>)[]
     ): Obstacle[] {
         const result: Obstacle[] = [];
         obstacles?.forEach((o) =>
@@ -129,15 +130,26 @@ export class Obstacle extends WrapObstacle<Required<IObstacle>> {
         }
         if (this.customData.animation) {
             if (Array.isArray(this.customData.animation.definitePosition)) {
-                this.customData.animation.definitePosition.forEach((dp) => {
-                    dp[0] = -dp[0] - (this.posX + width - 1);
-                });
+                if (isVector3(this.customData.animation.definitePosition)) {
+                    this.customData.animation.definitePosition[0] =
+                        -this.customData.animation.definitePosition[0] - (this.posX + width - 1);
+                } else {
+                    // deno-lint-ignore no-explicit-any
+                    this.customData.animation.definitePosition.forEach((dp: any) => {
+                        dp[0] = -dp[0] - (this.posX + width - 1);
+                    });
+                }
             }
             if (Array.isArray(this.customData.animation.offsetPosition)) {
-                this.customData.animation.offsetPosition.forEach((op) => {
-                    op[0] = -op[0] - (this.posX + width - 1);
-                });
-                // fuck mirroring this tbh
+                if (isVector3(this.customData.animation.offsetPosition)) {
+                    this.customData.animation.offsetPosition[0] =
+                        -this.customData.animation.offsetPosition[0] - (this.posX + width - 1);
+                } else {
+                    // deno-lint-ignore no-explicit-any
+                    this.customData.animation.offsetPosition.forEach((op: any) => {
+                        op[0] = -op[0] - (this.posX + width - 1);
+                    });
+                }
             }
         }
         return super.mirror();

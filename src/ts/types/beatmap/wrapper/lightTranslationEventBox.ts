@@ -1,11 +1,11 @@
-import { IWrapEventBox } from './eventBox';
-import { IWrapLightTranslationBase } from './lightTranslationBase';
+import { IWrapEventBox, IWrapEventBoxAttribute } from './eventBox';
+import { IWrapLightTranslationBase, IWrapLightTranslationBaseAttribute } from './lightTranslationBase';
 
-export interface IWrapLightTranslationEventBox<
+export interface IWrapLightTranslationEventBoxAttribute<
     TBox extends Record<keyof TBox, unknown> = Record<string, unknown>,
     TBase extends Record<keyof TBase, unknown> = Record<string, unknown>,
     TFilter extends Record<keyof TFilter, unknown> = Record<string, unknown>,
-> extends IWrapEventBox<TBox, TBase, TFilter> {
+> extends IWrapEventBoxAttribute<TBox, TBase, TFilter> {
     /** Translation distribution `<float>` of light translation event box. */
     translationDistribution: number;
     /** Translation distribution type `<int>` of light translation event box.
@@ -27,6 +27,15 @@ export interface IWrapLightTranslationEventBox<
     flip: 0 | 1;
     /** Translation distribution should affect first event `<int>` of light translation event box. */
     affectFirst: 0 | 1;
+    events: IWrapLightTranslationBaseAttribute<TBase>[];
+}
+
+export interface IWrapLightTranslationEventBox<
+    TBox extends Record<keyof TBox, unknown> = Record<string, unknown>,
+    TBase extends Record<keyof TBase, unknown> = Record<string, unknown>,
+    TFilter extends Record<keyof TFilter, unknown> = Record<string, unknown>,
+> extends IWrapEventBox<TBox, TBase, TFilter>,
+        IWrapLightTranslationEventBoxAttribute<TBox, TBase, TFilter> {
     events: IWrapLightTranslationBase<TBase>[];
 
     setTranslationDistribution(value: IWrapLightTranslationEventBox['translationDistribution']): this;

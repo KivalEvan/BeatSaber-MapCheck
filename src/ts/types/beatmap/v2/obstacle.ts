@@ -12,7 +12,6 @@ export interface IObstacle extends IBaseObject {
      * ```
      */
     _lineIndex: number;
-    _lineLayer: number;
     /** Type of obstacle.
      * ```ts
      * 0 -> Full-height Wall
@@ -23,6 +22,5 @@ export interface IObstacle extends IBaseObject {
     _type: number;
     _duration: number;
     _width: number;
-    _height: number;
     _customData?: ICustomDataObstacle;
 }
