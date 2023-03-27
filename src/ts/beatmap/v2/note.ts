@@ -1,6 +1,6 @@
 import { INote } from '../../types/beatmap/v2/note';
-import { IWrapColorNote } from '../../types/beatmap/wrapper/colorNote';
-import { ObjectReturnFn, PartialWrapper } from '../../types/utils';
+import { IWrapColorNoteAttribute } from '../../types/beatmap/wrapper/colorNote';
+import { ObjectReturnFn } from '../../types/utils';
 import { deepCopy } from '../../utils/misc';
 import { WrapColorNote } from '../wrapper/colorNote';
 
@@ -22,10 +22,10 @@ export class Note extends WrapColorNote<Required<INote>> {
     }
 
     static create(): Note[];
-    static create(...notes: PartialWrapper<IWrapColorNote<Required<INote>>>[]): Note[];
+    static create(...notes: Partial<IWrapColorNoteAttribute<Required<INote>>>[]): Note[];
     static create(...notes: Partial<INote>[]): Note[];
-    static create(...notes: (Partial<INote> & PartialWrapper<IWrapColorNote<Required<INote>>>)[]): Note[];
-    static create(...notes: (Partial<INote> & PartialWrapper<IWrapColorNote<Required<INote>>>)[]): Note[] {
+    static create(...notes: (Partial<INote> & Partial<IWrapColorNoteAttribute<Required<INote>>>)[]): Note[];
+    static create(...notes: (Partial<INote> & Partial<IWrapColorNoteAttribute<Required<INote>>>)[]): Note[] {
         const result: Note[] = [];
         notes?.forEach((n) =>
             result.push(

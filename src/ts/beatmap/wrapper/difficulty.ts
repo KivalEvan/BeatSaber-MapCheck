@@ -1,17 +1,26 @@
-import { IWrapEvent } from '../../types/beatmap/wrapper/event';
+import { IWrapEvent, IWrapEventAttribute } from '../../types/beatmap/wrapper/event';
 import { IWrapEventTypesWithKeywords } from '../../types/beatmap/wrapper/eventTypesWithKeywords';
-import { IWrapBombNote } from '../../types/beatmap/wrapper/bombNote';
-import { IWrapBPMEvent } from '../../types/beatmap/wrapper/bpmEvent';
-import { IWrapBurstSlider } from '../../types/beatmap/wrapper/burstSlider';
-import { IWrapColorBoostEvent } from '../../types/beatmap/wrapper/colorBoostEvent';
-import { IWrapColorNote } from '../../types/beatmap/wrapper/colorNote';
-import { IWrapLightColorEventBoxGroup } from '../../types/beatmap/wrapper/lightColorEventBoxGroup';
-import { IWrapLightRotationEventBoxGroup } from '../../types/beatmap/wrapper/lightRotationEventBoxGroup';
-import { IWrapLightTranslationEventBoxGroup } from '../../types/beatmap/wrapper/lightTranslationEventBoxGroup';
-import { IWrapObstacle } from '../../types/beatmap/wrapper/obstacle';
-import { IWrapRotationEvent } from '../../types/beatmap/wrapper/rotationEvent';
-import { IWrapSlider } from '../../types/beatmap/wrapper/slider';
-import { IWrapWaypoint } from '../../types/beatmap/wrapper/waypoint';
+import { IWrapBombNote, IWrapBombNoteAttribute } from '../../types/beatmap/wrapper/bombNote';
+import { IWrapBPMEvent, IWrapBPMEventAttribute } from '../../types/beatmap/wrapper/bpmEvent';
+import { IWrapBurstSlider, IWrapBurstSliderAttribute } from '../../types/beatmap/wrapper/burstSlider';
+import { IWrapColorBoostEvent, IWrapColorBoostEventAttribute } from '../../types/beatmap/wrapper/colorBoostEvent';
+import { IWrapColorNote, IWrapColorNoteAttribute } from '../../types/beatmap/wrapper/colorNote';
+import {
+    IWrapLightColorEventBoxGroup,
+    IWrapLightColorEventBoxGroupAttribute,
+} from '../../types/beatmap/wrapper/lightColorEventBoxGroup';
+import {
+    IWrapLightRotationEventBoxGroup,
+    IWrapLightRotationEventBoxGroupAttribute,
+} from '../../types/beatmap/wrapper/lightRotationEventBoxGroup';
+import {
+    IWrapLightTranslationEventBoxGroup,
+    IWrapLightTranslationEventBoxGroupAttribute,
+} from '../../types/beatmap/wrapper/lightTranslationEventBoxGroup';
+import { IWrapObstacle, IWrapObstacleAttribute } from '../../types/beatmap/wrapper/obstacle';
+import { IWrapRotationEvent, IWrapRotationEventAttribute } from '../../types/beatmap/wrapper/rotationEvent';
+import { IWrapSlider, IWrapSliderAttribute } from '../../types/beatmap/wrapper/slider';
+import { IWrapWaypoint, IWrapWaypointAttribute } from '../../types/beatmap/wrapper/waypoint';
 import { BeatPerMinute } from '../shared/bpm';
 import { DeepPartialWrapper, LooseAutocomplete, ObtainCustomData, PartialWrapper } from '../../types/utils';
 import { GenericFileName } from '../../types/beatmap/shared/info';
@@ -137,21 +146,23 @@ export abstract class WrapDifficulty<T extends Record<keyof T, unknown>>
         return ec.sort((a, b) => a.data.time - b.data.time);
     }
 
-    abstract addBPMEvents(...bpmEvents: PartialWrapper<IWrapBPMEvent>[]): void;
-    abstract addRotationEvents(...rotationEvents: PartialWrapper<IWrapRotationEvent>[]): void;
-    abstract addColorNotes(...colorNotes: PartialWrapper<IWrapColorNote>[]): void;
-    abstract addBombNotes(...bombNotes: PartialWrapper<IWrapBombNote>[]): void;
-    abstract addObstacles(...obstacles: PartialWrapper<IWrapObstacle>[]): void;
-    abstract addSliders(...sliders: PartialWrapper<IWrapSlider>[]): void;
-    abstract addBurstSliders(...burstSliders: PartialWrapper<IWrapBurstSlider>[]): void;
-    abstract addWaypoints(...waypoints: PartialWrapper<IWrapWaypoint>[]): void;
-    abstract addBasicEvents(...basicEvents: PartialWrapper<IWrapEvent>[]): void;
-    abstract addColorBoostEvents(...colorBoostEvents: PartialWrapper<IWrapColorBoostEvent>[]): void;
-    abstract addLightColorEventBoxGroups(...lightColorEBGs: DeepPartialWrapper<IWrapLightColorEventBoxGroup>[]): void;
+    abstract addBPMEvents(...bpmEvents: PartialWrapper<IWrapBPMEventAttribute>[]): void;
+    abstract addRotationEvents(...rotationEvents: PartialWrapper<IWrapRotationEventAttribute>[]): void;
+    abstract addColorNotes(...colorNotes: PartialWrapper<IWrapColorNoteAttribute>[]): void;
+    abstract addBombNotes(...bombNotes: PartialWrapper<IWrapBombNoteAttribute>[]): void;
+    abstract addObstacles(...obstacles: PartialWrapper<IWrapObstacleAttribute>[]): void;
+    abstract addSliders(...sliders: PartialWrapper<IWrapSliderAttribute>[]): void;
+    abstract addBurstSliders(...burstSliders: PartialWrapper<IWrapBurstSliderAttribute>[]): void;
+    abstract addWaypoints(...waypoints: PartialWrapper<IWrapWaypointAttribute>[]): void;
+    abstract addBasicEvents(...basicEvents: PartialWrapper<IWrapEventAttribute>[]): void;
+    abstract addColorBoostEvents(...colorBoostEvents: PartialWrapper<IWrapColorBoostEventAttribute>[]): void;
+    abstract addLightColorEventBoxGroups(
+        ...lightColorEBGs: DeepPartialWrapper<IWrapLightColorEventBoxGroupAttribute>[]
+    ): void;
     abstract addLightRotationEventBoxGroups(
-        ...lightRotationEBGs: DeepPartialWrapper<IWrapLightRotationEventBoxGroup>[]
+        ...lightRotationEBGs: DeepPartialWrapper<IWrapLightRotationEventBoxGroupAttribute>[]
     ): void;
     abstract addLightTranslationEventBoxGroups(
-        ...lightTranslationEBGs: DeepPartialWrapper<IWrapLightTranslationEventBoxGroup>[]
+        ...lightTranslationEBGs: DeepPartialWrapper<IWrapLightTranslationEventBoxGroupAttribute>[]
     ): void;
 }

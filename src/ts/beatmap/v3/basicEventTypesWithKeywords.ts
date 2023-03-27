@@ -1,7 +1,7 @@
 import { IBasicEventTypesForKeywords } from '../../types/beatmap/v3/basicEventTypesForKeywords';
 import { IBasicEventTypesWithKeywords } from '../../types/beatmap/v3/basicEventTypesWithKeywords';
-import { IWrapEventTypesWithKeywords } from '../../types/beatmap/wrapper/eventTypesWithKeywords';
-import { DeepPartial, DeepPartialWrapper, ObjectReturnFn } from '../../types/utils';
+import { IWrapEventTypesWithKeywordsAttribute } from '../../types/beatmap/wrapper/eventTypesWithKeywords';
+import { DeepPartial, ObjectReturnFn } from '../../types/utils';
 import { WrapEventTypesWithKeywords } from '../wrapper/eventTypesWithKeywords';
 import { BasicEventTypesForKeywords } from './basicEventTypesForKeywords';
 
@@ -22,18 +22,18 @@ export class BasicEventTypesWithKeywords extends WrapEventTypesWithKeywords<
 
     static create(): BasicEventTypesWithKeywords;
     static create(
-        basicEventTypesWithKeywords: DeepPartialWrapper<
-            IWrapEventTypesWithKeywords<Required<IBasicEventTypesWithKeywords>>
+        basicEventTypesWithKeywords: DeepPartial<
+            IWrapEventTypesWithKeywordsAttribute<Required<IBasicEventTypesWithKeywords>>
         >,
     ): BasicEventTypesWithKeywords;
     static create(basicEventTypesWithKeywords: DeepPartial<IBasicEventTypesWithKeywords>): BasicEventTypesWithKeywords;
     static create(
         basicEventTypesWithKeywords: DeepPartial<IBasicEventTypesWithKeywords> &
-            DeepPartialWrapper<IWrapEventTypesWithKeywords<Required<IBasicEventTypesWithKeywords>>>,
+            DeepPartial<IWrapEventTypesWithKeywordsAttribute<Required<IBasicEventTypesWithKeywords>>>,
     ): BasicEventTypesWithKeywords;
     static create(
         basicEventTypesWithKeywords: DeepPartial<IBasicEventTypesWithKeywords> &
-            DeepPartialWrapper<IWrapEventTypesWithKeywords<Required<IBasicEventTypesWithKeywords>>> = {},
+            DeepPartial<IWrapEventTypesWithKeywordsAttribute<Required<IBasicEventTypesWithKeywords>>> = {},
     ): BasicEventTypesWithKeywords {
         return new this({
             d:

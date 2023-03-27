@@ -195,6 +195,7 @@ const envFilterID: Record<EnvironmentV3Name, Record<number, number>> = {
         14: 8,
         15: 8,
     },
+    Dragons2Environment: {},
 };
 // FIXME: EDMEnvironment special case 12 and 13 filter is 1 for rotation
 function check(map: Difficulty, environment: EnvironmentAllName) {

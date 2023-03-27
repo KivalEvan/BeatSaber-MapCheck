@@ -4,7 +4,6 @@ import { Difficulty as DifficultyV3 } from '../beatmap/v3/difficulty';
 import { clamp } from '../utils/math';
 import { EventLaneRotationValue } from '../beatmap/shared/constants';
 import { ICustomDataNote, ICustomDataObstacle } from '../types/beatmap/v3/custom/customData';
-import { Vector3 } from '../types/vector';
 import { IChromaComponent, IChromaMaterial } from '../types/beatmap/v3/custom/chroma';
 import objectToV3 from './customData/objectToV3';
 import eventToV3 from './customData/eventToV3';
@@ -18,6 +17,8 @@ import { BPMEvent } from '../beatmap/v3/bpmEvent';
 import { ColorBoostEvent } from '../beatmap/v3/colorBoostEvent';
 import { ColorNote } from '../beatmap/v3/colorNote';
 import { RotationEvent } from '../beatmap/v3/rotationEvent';
+import { isVector3, vectorScale } from '../utils/vector';
+import { Vector3 } from '../types/vector';
 
 const tag = (name: string) => {
     return `[convert::${name}]`;
@@ -129,10 +130,10 @@ export function V2toV3(data: DifficultyV2, skipPrompt?: boolean): DifficultyV3 {
                 Obstacle.create({
                     b: o.time,
                     x: o.posX,
-                    y: o.type === 2 ? o.posY : o.type ? 2 : 0,
+                    y: o.type ? 2 : 0,
                     d: o.duration,
                     w: o.width,
-                    h: o.type === 2 ? o.height : o.type ? 3 : 5,
+                    h: o.type ? 3 : 5,
                     customData,
                 })[0].toJSON(),
             );
@@ -141,10 +142,10 @@ export function V2toV3(data: DifficultyV2, skipPrompt?: boolean): DifficultyV3 {
                 Obstacle.create({
                     b: o.time,
                     x: o.posX,
-                    y: o.type === 2 ? o.posY : o.type ? 2 : 0,
+                    y: o.type ? 2 : 0,
                     d: o.duration,
                     w: o.width,
-                    h: o.type === 2 ? o.height : o.type ? 3 : 5,
+                    h: o.type ? 3 : 5,
                     customData,
                 })[0],
             );
@@ -310,7 +311,7 @@ export function V2toV3(data: DifficultyV2, skipPrompt?: boolean): DifficultyV3 {
                             t: 'AssignPlayerToTrack',
                             d: {
                                 track: ce._data._track,
-                                playerTrackObject: ce._data._playerTrackObject,
+                                target: ce._data._target,
                             },
                         });
                     }
@@ -349,7 +350,9 @@ export function V2toV3(data: DifficultyV2, skipPrompt?: boolean): DifficultyV3 {
                 template.customData.environment = data.customData._environment!.map((e) => {
                     let components: IChromaComponent = {};
                     if (e._lightID) {
-                        components = { ILightWithId: { lightID: e._lightID } };
+                        components = {
+                            ILightWithId: { lightID: e._lightID },
+                        };
                     }
                     if (e._id && e._lookupMethod) {
                         return {
@@ -359,9 +362,9 @@ export function V2toV3(data: DifficultyV2, skipPrompt?: boolean): DifficultyV3 {
                             duplicate: e._duplicate,
                             active: e._active,
                             scale: e._scale,
-                            position: e._position?.map((n) => n * 0.6) as Vector3,
+                            position: vectorScale(e._position, 0.6),
                             rotation: e._rotation,
-                            localPosition: e._localPosition?.map((n) => n * 0.6) as Vector3,
+                            localPosition: vectorScale(e._localPosition, 0.6),
                             localRotation: e._localRotation,
                             components,
                         };
@@ -410,9 +413,9 @@ export function V2toV3(data: DifficultyV2, skipPrompt?: boolean): DifficultyV3 {
                             duplicate: e._duplicate,
                             active: e._active,
                             scale: e._scale,
-                            position: e._position?.map((n) => n * 0.6) as Vector3,
+                            position: vectorScale(e._position, 0.6),
                             rotation: e._rotation,
-                            localPosition: e._localPosition?.map((n) => n * 0.6) as Vector3,
+                            localPosition: vectorScale(e._localPosition, 0.6),
                             localRotation: e._localRotation,
                             components,
                         };
@@ -510,11 +513,14 @@ export function V2toV3(data: DifficultyV2, skipPrompt?: boolean): DifficultyV3 {
                 if (typeof ce.d.position === 'string') {
                     logger.warn(tag('V2toV3'), 'Cannot convert point definitions, unknown use.');
                 } else if (Array.isArray(ce.d.position)) {
-                    ce.d.position.forEach((n) => {
-                        n[0] *= 0.6;
-                        n[1] *= 0.6;
-                        n[2] *= 0.6;
-                    });
+                    isVector3(ce.d.position)
+                        ? vectorScale(ce.d.position as Vector3, 0.6)
+                        : // deno-lint-ignore no-explicit-any
+                          ce.d.position.forEach((point: any) => {
+                              point[0] *= 0.6;
+                              point[1] *= 0.6;
+                              point[2] *= 0.6;
+                          });
                 }
             } else {
                 logger.warn(tag('V2toV3'), 'Environment animate track array conversion not yet implemented.');

@@ -135,7 +135,7 @@ export type IChromaEnvironment = IChromaEnvironmentID | IChromaEnvironmentGeomet
 
 /** Chroma interface for Beatmap Object Animation Custom Data. */
 export interface IChromaAnimation {
-    color?: string | ColorPointDefinition[];
+    color?: string | ColorArray | ColorPointDefinition[];
 }
 
 /** Chroma interface for Beatmap Note Custom Data. */
@@ -183,12 +183,12 @@ export interface IChromaEventZoom extends ICustomDataBase {
 
 /** AnimateComponent interface for Chroma Custom Event. */
 export interface IChromaCustomEventDataAnimateTrack extends IHeckCustomEventDataBase {
-    color?: string | ColorPointDefinition[];
+    color?: string | ColorArray | ColorPointDefinition[];
 }
 
 /** AnimateComponent interface for Chroma Custom Event. */
 export interface IChromaCustomEventDataAssignPathAnimation extends IHeckCustomEventDataBase {
-    color?: string | ColorPointDefinition[];
+    color?: string | ColorArray | ColorPointDefinition[];
 }
 
 /** AnimateComponent interface for Chroma Custom Event. */
@@ -197,14 +197,14 @@ export interface IChromaCustomEventDataAnimateComponent extends IHeckCustomEvent
     duration: number;
     easing?: string;
     BloomFogEnvironment?: {
-        attenuation?: PercentPointDefinition[];
-        offset?: PercentPointDefinition[];
-        startY?: PercentPointDefinition[];
-        height?: PercentPointDefinition[];
+        attenuation?: string | number | PercentPointDefinition[];
+        offset?: string | number | PercentPointDefinition[];
+        startY?: string | number | PercentPointDefinition[];
+        height?: string | number | PercentPointDefinition[];
     };
     TubeBloomPrePassLight?: {
-        colorAlphaMultiplier: PercentPointDefinition[];
-        bloomFogIntensityMultiplier: PercentPointDefinition[];
+        colorAlphaMultiplier: string | number | PercentPointDefinition[];
+        bloomFogIntensityMultiplier: string | number | PercentPointDefinition[];
     };
 }
 

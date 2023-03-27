@@ -1,12 +1,12 @@
 import { ILightRotationEventBoxGroup } from '../../types/beatmap/v3/lightRotationEventBoxGroup';
-import { DeepPartial, DeepPartialWrapper, ObjectReturnFn } from '../../types/utils';
+import { DeepPartial, ObjectReturnFn } from '../../types/utils';
 import { LightRotationEventBox } from './lightRotationEventBox';
 import { WrapLightRotationEventBoxGroup } from '../wrapper/lightRotationEventBoxGroup';
 import { deepCopy } from '../../utils/misc';
 import { ILightRotationEventBox } from '../../types/beatmap/v3/lightRotationEventBox';
 import { IIndexFilter } from '../../types/beatmap/v3/indexFilter';
 import { ILightRotationBase } from '../../types/beatmap/v3/lightRotationBase';
-import { IWrapLightRotationEventBoxGroup } from '../../types/beatmap/wrapper/lightRotationEventBoxGroup';
+import { IWrapLightRotationEventBoxGroupAttribute } from '../../types/beatmap/wrapper/lightRotationEventBoxGroup';
 
 /** Light translation event box group beatmap v3 class object. */
 export class LightRotationEventBoxGroup extends WrapLightRotationEventBoxGroup<
@@ -32,8 +32,8 @@ export class LightRotationEventBoxGroup extends WrapLightRotationEventBoxGroup<
 
     static create(): LightRotationEventBoxGroup[];
     static create(
-        ...eventBoxGroups: DeepPartialWrapper<
-            IWrapLightRotationEventBoxGroup<
+        ...eventBoxGroups: DeepPartial<
+            IWrapLightRotationEventBoxGroupAttribute<
                 Required<ILightRotationEventBoxGroup>,
                 Required<ILightRotationEventBox>,
                 Required<ILightRotationBase>,
@@ -44,8 +44,8 @@ export class LightRotationEventBoxGroup extends WrapLightRotationEventBoxGroup<
     static create(...eventBoxGroups: DeepPartial<ILightRotationEventBoxGroup>[]): LightRotationEventBoxGroup[];
     static create(
         ...eventBoxGroups: (DeepPartial<ILightRotationEventBoxGroup> &
-            DeepPartialWrapper<
-                IWrapLightRotationEventBoxGroup<
+            DeepPartial<
+                IWrapLightRotationEventBoxGroupAttribute<
                     Required<ILightRotationEventBoxGroup>,
                     Required<ILightRotationEventBox>,
                     Required<ILightRotationBase>,
@@ -55,8 +55,8 @@ export class LightRotationEventBoxGroup extends WrapLightRotationEventBoxGroup<
     ): LightRotationEventBoxGroup[];
     static create(
         ...eventBoxGroups: (DeepPartial<ILightRotationEventBoxGroup> &
-            DeepPartialWrapper<
-                IWrapLightRotationEventBoxGroup<
+            DeepPartial<
+                IWrapLightRotationEventBoxGroupAttribute<
                     Required<ILightRotationEventBoxGroup>,
                     Required<ILightRotationEventBox>,
                     Required<ILightRotationBase>,

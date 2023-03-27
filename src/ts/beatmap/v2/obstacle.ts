@@ -1,7 +1,7 @@
 import { Vector2 } from '../../types/vector';
 import { IObstacle } from '../../types/beatmap/v2/obstacle';
-import { IWrapObstacle } from '../../types/beatmap/wrapper/obstacle';
-import { ObjectReturnFn, PartialWrapper } from '../../types/utils';
+import { IWrapObstacleAttribute } from '../../types/beatmap/wrapper/obstacle';
+import { ObjectReturnFn } from '../../types/utils';
 import { deepCopy } from '../../utils/misc';
 import { WrapObstacle } from '../wrapper/obstacle';
 
@@ -10,11 +10,9 @@ export class Obstacle extends WrapObstacle<Required<IObstacle>> {
     static default: ObjectReturnFn<Required<IObstacle>> = {
         _time: 0,
         _lineIndex: 0,
-        _lineLayer: 0,
         _type: 0,
         _duration: 1,
         _width: 1,
-        _height: 1,
         _customData: () => {
             return {};
         },
@@ -25,13 +23,13 @@ export class Obstacle extends WrapObstacle<Required<IObstacle>> {
     }
 
     static create(): Obstacle[];
-    static create(...obstacles: PartialWrapper<IWrapObstacle<Required<IObstacle>>>[]): Obstacle[];
+    static create(...obstacles: Partial<IWrapObstacleAttribute<Required<IObstacle>>>[]): Obstacle[];
     static create(...obstacles: Partial<IObstacle>[]): Obstacle[];
     static create(
-        ...obstacles: (Partial<IObstacle> & PartialWrapper<IWrapObstacle<Required<IObstacle>>>)[]
+        ...obstacles: (Partial<IObstacle> & Partial<IWrapObstacleAttribute<Required<IObstacle>>>)[]
     ): Obstacle[];
     static create(
-        ...obstacles: (Partial<IObstacle> & PartialWrapper<IWrapObstacle<Required<IObstacle>>>)[]
+        ...obstacles: (Partial<IObstacle> & Partial<IWrapObstacleAttribute<Required<IObstacle>>>)[]
     ): Obstacle[] {
         const result: Obstacle[] = [];
         obstacles?.forEach((o) =>
@@ -40,10 +38,8 @@ export class Obstacle extends WrapObstacle<Required<IObstacle>> {
                     _time: o.time ?? o._time ?? Obstacle.default._time,
                     _type: o._type ?? Obstacle.default._type,
                     _lineIndex: o.posX ?? o._lineIndex ?? Obstacle.default._lineIndex,
-                    _lineLayer: o.posY ?? o._lineLayer ?? Obstacle.default._lineLayer,
                     _duration: o.duration ?? o._duration ?? Obstacle.default._duration,
                     _width: o.width ?? o._width ?? Obstacle.default._width,
-                    _height: o.height ?? o._height ?? Obstacle.default._height,
                     _customData: o.customData ?? o._customData ?? Obstacle.default._customData(),
                 }),
             ),
@@ -56,10 +52,8 @@ export class Obstacle extends WrapObstacle<Required<IObstacle>> {
                 _time: Obstacle.default._time,
                 _type: Obstacle.default._type,
                 _lineIndex: Obstacle.default._lineIndex,
-                _lineLayer: Obstacle.default._lineLayer,
                 _duration: Obstacle.default._duration,
                 _width: Obstacle.default._width,
-                _height: Obstacle.default._height,
                 _customData: Obstacle.default._customData(),
             }),
         ];
@@ -70,10 +64,8 @@ export class Obstacle extends WrapObstacle<Required<IObstacle>> {
             _time: this.time,
             _type: this.type,
             _lineIndex: this.posX,
-            _lineLayer: this.posY,
             _duration: this.duration,
             _width: this.width,
-            _height: this.height,
             _customData: deepCopy(this.customData),
         };
     }
@@ -92,18 +84,21 @@ export class Obstacle extends WrapObstacle<Required<IObstacle>> {
         this.data._lineIndex = value;
     }
 
-    get posY() {
-        return this.data._lineLayer;
-    }
-    set posY(value: IObstacle['_lineLayer']) {
-        this.data._lineLayer = value;
-    }
-
     get type() {
         return this.data._type;
     }
     set type(value: IObstacle['_type']) {
         this.data._type = value;
+    }
+
+    get posY() {
+        return this.type == 1 ? 0 : 2;
+    }
+    set posY(value: 0 | 2) {
+        if (value != 0 && value != 2) {
+            this.type = 0;
+            return;
+        }
     }
 
     get duration() {
@@ -121,10 +116,13 @@ export class Obstacle extends WrapObstacle<Required<IObstacle>> {
     }
 
     get height() {
-        return this.data._height;
+        return this.type == 1 ? 3 : 5;
     }
-    set height(value: IObstacle['_height']) {
-        this.data._height = value;
+    set height(value: 3 | 5) {
+        if (value != 3 && value != 5) {
+            this.type = 0;
+            return;
+        }
     }
 
     get customData(): NonNullable<IObstacle['_customData']> {

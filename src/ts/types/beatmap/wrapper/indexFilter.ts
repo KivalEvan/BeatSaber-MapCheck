@@ -1,7 +1,7 @@
-import { IWrapBaseItem } from './baseItem';
+import { IWrapBaseItem, IWrapBaseItemAttribute } from './baseItem';
 
-export interface IWrapIndexFilter<T extends Record<keyof T, unknown> = Record<string, unknown>>
-    extends IWrapBaseItem<T> {
+export interface IWrapIndexFilterAttribute<T extends Record<keyof T, unknown> = Record<string, unknown>>
+    extends IWrapBaseItemAttribute<T> {
     /** Type `<int>` of index filter.
      * ```ts
      * 1 -> Division
@@ -51,7 +51,11 @@ export interface IWrapIndexFilter<T extends Record<keyof T, unknown> = Record<st
      * Adjust to limited ID list and has no effect with `Step` type.
      */
     limitAffectsType: 0 | 1 | 2 | 3;
+}
 
+export interface IWrapIndexFilter<T extends Record<keyof T, unknown> = Record<string, unknown>>
+    extends IWrapBaseItem<T>,
+        IWrapIndexFilterAttribute<T> {
     setType(value: 1 | 2): this;
     setP0(value: number): this;
     setP1(value: number): this;

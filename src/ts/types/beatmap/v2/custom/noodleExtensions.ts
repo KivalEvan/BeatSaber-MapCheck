@@ -44,20 +44,20 @@ export interface INEEvent extends ICustomDataBase {
  * @extends IHeckCustomEventDataBase
  */
 export interface INECustomEventDataAnimateTrack extends IHeckCustomEventDataBase {
-    _dissolve?: string | PercentPointDefinition[];
-    _dissolveArrow?: string | PercentPointDefinition[];
-    _interactable?: string | PercentPointDefinition[];
-    _time?: string | PercentPointDefinition[];
+    _dissolve?: string | number | PercentPointDefinition[];
+    _dissolveArrow?: string | number | PercentPointDefinition[];
+    _interactable?: string | number | PercentPointDefinition[];
+    _time?: string | number | PercentPointDefinition[];
 }
 
 /** AssignPathAnimation interface for Noodle Extensions Custom Event.
  * @extends IHeckCustomEventDataBase
  */
 export interface INECustomEventDataAssignPathAnimation extends IHeckCustomEventDataBase {
-    _dissolve?: string | PercentPointDefinition[];
-    _dissolveArrow?: string | PercentPointDefinition[];
-    _interactable?: string | PercentPointDefinition[];
-    _definitePosition?: string | Vector3PointDefinition[];
+    _dissolve?: string | number | PercentPointDefinition[];
+    _dissolveArrow?: string | number | PercentPointDefinition[];
+    _interactable?: string | number | PercentPointDefinition[];
+    _definitePosition?: string | Vector3 | Vector3PointDefinition[];
 }
 
 /** AssignPathAnimation interface for Noodle Extensions Custom Event. */
@@ -72,18 +72,18 @@ export interface INECustomEventDataAssignTrackParent {
  */
 export interface INECustomEventDataAssignPlayerToTrack extends IHeckCustomEventDataBase {
     _track: string;
-    _playerTrackObject?: PlayerObject;
+    _target?: PlayerObject;
 }
 
 /** Noodle Extensions Animation interface for Noodle Extensions Object. */
 export interface INEAnimation {
-    _position?: string | Vector3PointDefinition[];
-    _rotation?: string | Vector3PointDefinition[];
-    _localRotation?: string | Vector3PointDefinition[];
-    _scale?: string | Vector3PointDefinition[];
-    _dissolve?: string | PercentPointDefinition[];
-    _dissolveArrow?: string | PercentPointDefinition[];
-    _interactable?: string | PercentPointDefinition[];
-    _definitePosition?: string | Vector3PointDefinition[];
-    _time?: string | PercentPointDefinition[];
+    _position?: string | Vector3 | Vector3PointDefinition[];
+    _rotation?: string | Vector3 | Vector3PointDefinition[];
+    _localRotation?: string | Vector3 | Vector3PointDefinition[];
+    _scale?: string | Vector3 | Vector3PointDefinition[];
+    _dissolve?: string | number | PercentPointDefinition[];
+    _dissolveArrow?: string | number | PercentPointDefinition[];
+    _interactable?: string | number | PercentPointDefinition[];
+    _definitePosition?: string | Vector3 | Vector3PointDefinition[];
+    _time?: string | number | PercentPointDefinition[];
 }

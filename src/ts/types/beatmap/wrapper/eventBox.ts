@@ -1,14 +1,14 @@
-import { IWrapBaseItem } from './baseItem';
-import { IWrapBaseObject } from './baseObject';
-import { IWrapIndexFilter } from './indexFilter';
+import { IWrapBaseItem, IWrapBaseItemAttribute } from './baseItem';
+import { IWrapBaseObject, IWrapBaseObjectAttribute } from './baseObject';
+import { IWrapIndexFilter, IWrapIndexFilterAttribute } from './indexFilter';
 
-export interface IWrapEventBox<
+export interface IWrapEventBoxAttribute<
     TBox extends Record<keyof TBox, unknown> = Record<string, unknown>,
     TBase extends Record<keyof TBase, unknown> = Record<string, unknown>,
     TFilter extends Record<keyof TFilter, unknown> = Record<string, unknown>,
-> extends IWrapBaseItem<TBox> {
+> extends IWrapBaseItemAttribute<TBox> {
     /** Index filter of event box. */
-    filter: IWrapIndexFilter<TFilter>;
+    filter: IWrapIndexFilterAttribute<TFilter>;
     /** Beat distribution `<float>` of event box. */
     beatDistribution: number;
     /** Beat distribution type `<int>` of event box.
@@ -27,7 +27,15 @@ export interface IWrapEventBox<
      * ```
      */
     easing: 0 | 1 | 2 | 3;
-    /** Light base data list. */
+    events: IWrapBaseObjectAttribute<TBase>[];
+}
+
+export interface IWrapEventBox<
+    TBox extends Record<keyof TBox, unknown> = Record<string, unknown>,
+    TBase extends Record<keyof TBase, unknown> = Record<string, unknown>,
+    TFilter extends Record<keyof TFilter, unknown> = Record<string, unknown>,
+> extends IWrapBaseItem<TBox>,
+        IWrapEventBoxAttribute<TBox, TBase, TFilter> {
     events: IWrapBaseObject<TBase>[];
 
     setFilter(value: IWrapIndexFilter<TFilter>): this;

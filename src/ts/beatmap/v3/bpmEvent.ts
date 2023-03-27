@@ -1,6 +1,6 @@
 import { IBPMEvent } from '../../types/beatmap/v3/bpmEvent';
-import { IWrapBPMEvent } from '../../types/beatmap/wrapper/bpmEvent';
-import { ObjectReturnFn, PartialWrapper } from '../../types/utils';
+import { IWrapBPMEventAttribute } from '../../types/beatmap/wrapper/bpmEvent';
+import { ObjectReturnFn } from '../../types/utils';
 import { deepCopy } from '../../utils/misc';
 import { WrapBPMEvent } from '../wrapper/bpmEvent';
 
@@ -19,13 +19,13 @@ export class BPMEvent extends WrapBPMEvent<Required<IBPMEvent>> {
     }
 
     static create(): BPMEvent[];
-    static create(...bpmEvents: PartialWrapper<IWrapBPMEvent<Required<IBPMEvent>>>[]): BPMEvent[];
+    static create(...bpmEvents: Partial<IWrapBPMEventAttribute<Required<IBPMEvent>>>[]): BPMEvent[];
     static create(...bpmEvents: Partial<IBPMEvent>[]): BPMEvent[];
     static create(
-        ...bpmEvents: (Partial<IBPMEvent> & PartialWrapper<IWrapBPMEvent<Required<IBPMEvent>>>)[]
+        ...bpmEvents: (Partial<IBPMEvent> & Partial<IWrapBPMEventAttribute<Required<IBPMEvent>>>)[]
     ): BPMEvent[];
     static create(
-        ...bpmEvents: (Partial<IBPMEvent> & PartialWrapper<IWrapBPMEvent<Required<IBPMEvent>>>)[]
+        ...bpmEvents: (Partial<IBPMEvent> & Partial<IWrapBPMEventAttribute<Required<IBPMEvent>>>)[]
     ): BPMEvent[] {
         const result: BPMEvent[] = [];
         bpmEvents?.forEach((be) =>

@@ -1,6 +1,7 @@
-import { IWrapBaseNote } from './baseNote';
+import { IWrapBaseNote, IWrapBaseNoteAttribute } from './baseNote';
 
-export interface IWrapColorNote<T extends Record<keyof T, unknown> = Record<string, unknown>> extends IWrapBaseNote<T> {
+export interface IWrapColorNoteAttribute<T extends Record<keyof T, unknown> = Record<string, unknown>>
+    extends IWrapBaseNoteAttribute<T> {
     /** Type `<int>` of note.
      * ```ts
      * 0 -> Red
@@ -11,7 +12,11 @@ export interface IWrapColorNote<T extends Record<keyof T, unknown> = Record<stri
     type: 0 | 1 | 3;
     /** Angle offset in degree counter-clockwise `<int>` of note.*/
     angleOffset: number;
+}
 
+export interface IWrapColorNote<T extends Record<keyof T, unknown> = Record<string, unknown>>
+    extends IWrapBaseNote<T>,
+        IWrapColorNoteAttribute<T> {
     setType(value: 0 | 1 | 3): this;
     setAngleOffset(value: number): this;
 

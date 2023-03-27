@@ -16,6 +16,8 @@ export function setCustomColor(customColor?: IColorScheme, environment?: Environ
             !customColor._envColorLeftBoost &&
             !customColor._envColorRight &&
             !customColor._envColorRightBoost &&
+            !customColor._envColorWhite &&
+            !customColor._envColorWhiteBoost &&
             !customColor._obstacleColor)
     ) {
         hideTableRow(htmlTableCustomColor);
@@ -24,24 +26,37 @@ export function setCustomColor(customColor?: IColorScheme, environment?: Environ
     if (!environment) {
         environment = 'DefaultEnvironment';
     }
-    const existColor: { [key: string]: Omit<IColor, 'a'> | undefined } = {
-        _colorLeft: ColorScheme[EnvironmentSchemeName[environment]]?._colorLeft,
-        _colorRight: ColorScheme[EnvironmentSchemeName[environment]]?._colorRight,
-        _envColorLeft: ColorScheme[EnvironmentSchemeName[environment]]?._envColorLeft,
-        _envColorRight: ColorScheme[EnvironmentSchemeName[environment]]?._envColorRight,
-        _envColorLeftBoost: ColorScheme[EnvironmentSchemeName[environment]]?._envColorLeftBoost,
-        _envColorRightBoost: ColorScheme[EnvironmentSchemeName[environment]]?._envColorRightBoost,
-        _obstacleColor: ColorScheme[EnvironmentSchemeName[environment]]?._obstacleColor,
+    const existColor: { [key: string]: Omit<IColor, 'a'> | null } = {
+        _colorLeft: ColorScheme[EnvironmentSchemeName[environment]]?._colorLeft || null,
+        _colorRight: ColorScheme[EnvironmentSchemeName[environment]]?._colorRight || null,
+        _envColorLeft: ColorScheme[EnvironmentSchemeName[environment]]?._envColorLeft || null,
+        _envColorRight: ColorScheme[EnvironmentSchemeName[environment]]?._envColorRight || null,
+        _envColorWhite: null,
+        _envColorLeftBoost: ColorScheme[EnvironmentSchemeName[environment]]?._envColorLeftBoost || null,
+        _envColorRightBoost: ColorScheme[EnvironmentSchemeName[environment]]?._envColorRightBoost || null,
+        _envColorWhiteBoost: null,
+        _obstacleColor: ColorScheme[EnvironmentSchemeName[environment]]?._obstacleColor || null,
     };
     const hexColor: { [key: string]: string | null } = {
         _colorLeft: existColor._colorLeft ? RgbaToHex(existColor._colorLeft) : null,
         _colorRight: existColor._colorRight ? RgbaToHex(existColor._colorRight) : null,
         _envColorLeft: existColor._envColorLeft ? RgbaToHex(existColor._envColorLeft) : null,
         _envColorRight: existColor._envColorRight ? RgbaToHex(existColor._envColorRight) : null,
+        _envColorWhite: null,
         _envColorLeftBoost: existColor._envColorLeftBoost ? RgbaToHex(existColor._envColorLeftBoost) : null,
         _envColorRightBoost: existColor._envColorRightBoost ? RgbaToHex(existColor._envColorRightBoost) : null,
+        _envColorWhiteBoost: null,
         _obstacleColor: existColor._obstacleColor ? RgbaToHex(existColor._obstacleColor) : null,
     };
+    const hasComponent: { [key: string]: boolean } = {
+        noteColor: !!(customColor._colorLeft || customColor._colorRight || false),
+        eventColor: !!(customColor._envColorLeft || customColor._envColorRight || false),
+        eventWhiteColor: !!(customColor._envColorWhite || false),
+        eventBoostColor: !!(customColor._envColorLeftBoost || customColor._envColorRightBoost || false),
+        eventWhiteBoostColor: !!(customColor._envColorWhiteBoost || false),
+        obstacleColor: !!(customColor._obstacleColor || false),
+    };
+
     if (customColor._colorLeft) {
         hexColor._colorLeft = RgbaToHex(customColor._colorLeft);
     }
@@ -77,6 +92,19 @@ export function setCustomColor(customColor?: IColorScheme, environment?: Environ
         envBR = existColor._envColorRightBoost ? RgbaToHex(existColor._envColorRightBoost) : hexColor._envColorRight;
     }
 
+    if (customColor._envColorWhite) {
+        hexColor._envColorWhite = RgbaToHex(customColor._envColorWhite);
+    }
+    if (customColor._envColorWhiteBoost) {
+        hexColor._envColorWhiteBoost = RgbaToHex(customColor._envColorWhiteBoost);
+        if (!hexColor._envColorWhite) {
+            hexColor._envColorWhite = hexColor._envColorWhiteBoost;
+        }
+    }
+    if (hexColor._envColorWhite && !hexColor._envColorWhiteBoost) {
+        hexColor._envColorWhiteBoost = hexColor._envColorWhite;
+    }
+
     if (envBoost) {
         hexColor._envColorLeftBoost = envBL;
         hexColor._envColorRightBoost = envBR;
@@ -84,6 +112,22 @@ export function setCustomColor(customColor?: IColorScheme, environment?: Environ
 
     if (customColor._obstacleColor) {
         hexColor._obstacleColor = RgbaToHex(customColor._obstacleColor);
+    }
+
+    if (!hasComponent.noteColor) {
+        hexColor._colorLeft = null;
+        hexColor._colorRight = null;
+    }
+    if (!hasComponent.eventColor) {
+        hexColor._envColorLeft = null;
+        hexColor._envColorRight = null;
+    }
+    if (hasComponent.noteColor && !hasComponent.eventColor) {
+        hexColor._envColorLeft = hexColor._colorLeft;
+        hexColor._envColorRight = hexColor._colorRight;
+    }
+    if (!hasComponent.obstacleColor) {
+        hexColor._obstacleColor = null;
     }
 
     const panel = UIPanel.create('max', 'none', true);

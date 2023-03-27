@@ -1,6 +1,6 @@
 import { IColorBoostEvent } from '../../types/beatmap/v3/colorBoostEvent';
-import { IWrapColorBoostEvent } from '../../types/beatmap/wrapper/colorBoostEvent';
-import { ObjectReturnFn, PartialWrapper } from '../../types/utils';
+import { IWrapColorBoostEventAttribute } from '../../types/beatmap/wrapper/colorBoostEvent';
+import { ObjectReturnFn } from '../../types/utils';
 import { deepCopy } from '../../utils/misc';
 import { WrapColorBoostEvent } from '../wrapper/colorBoostEvent';
 
@@ -20,16 +20,16 @@ export class ColorBoostEvent extends WrapColorBoostEvent<Required<IColorBoostEve
 
     static create(): ColorBoostEvent[];
     static create(
-        ...colorBoostEvents: PartialWrapper<IWrapColorBoostEvent<Required<IColorBoostEvent>>>[]
+        ...colorBoostEvents: Partial<IWrapColorBoostEventAttribute<Required<IColorBoostEvent>>>[]
     ): ColorBoostEvent[];
     static create(...colorBoostEvents: Partial<IColorBoostEvent>[]): ColorBoostEvent[];
     static create(
         ...colorBoostEvents: (Partial<IColorBoostEvent> &
-            PartialWrapper<IWrapColorBoostEvent<Required<IColorBoostEvent>>>)[]
+            Partial<IWrapColorBoostEventAttribute<Required<IColorBoostEvent>>>)[]
     ): ColorBoostEvent[];
     static create(
         ...colorBoostEvents: (Partial<IColorBoostEvent> &
-            PartialWrapper<IWrapColorBoostEvent<Required<IColorBoostEvent>>>)[]
+            Partial<IWrapColorBoostEventAttribute<Required<IColorBoostEvent>>>)[]
     ): ColorBoostEvent[] {
         const result: ColorBoostEvent[] = [];
         colorBoostEvents?.forEach((be) =>

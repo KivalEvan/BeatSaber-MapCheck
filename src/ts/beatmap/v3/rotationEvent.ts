@@ -1,6 +1,6 @@
 import { IRotationEvent } from '../../types/beatmap/v3/rotationEvent';
-import { IWrapRotationEvent } from '../../types/beatmap/wrapper/rotationEvent';
-import { ObjectReturnFn, PartialWrapper } from '../../types/utils';
+import { IWrapRotationEventAttribute } from '../../types/beatmap/wrapper/rotationEvent';
+import { ObjectReturnFn } from '../../types/utils';
 import { deepCopy } from '../../utils/misc';
 import { WrapRotationEvent } from '../wrapper/rotationEvent';
 
@@ -20,13 +20,13 @@ export class RotationEvent extends WrapRotationEvent<Required<IRotationEvent>> {
     }
 
     static create(): RotationEvent[];
-    static create(...rotationEvents: PartialWrapper<IWrapRotationEvent<Required<IRotationEvent>>>[]): RotationEvent[];
+    static create(...rotationEvents: Partial<IWrapRotationEventAttribute<Required<IRotationEvent>>>[]): RotationEvent[];
     static create(...rotationEvents: Partial<IRotationEvent>[]): RotationEvent[];
     static create(
-        ...rotationEvents: (Partial<IRotationEvent> & PartialWrapper<IWrapRotationEvent<Required<IRotationEvent>>>)[]
+        ...rotationEvents: (Partial<IRotationEvent> & Partial<IWrapRotationEventAttribute<Required<IRotationEvent>>>)[]
     ): RotationEvent[];
     static create(
-        ...rotationEvents: (Partial<IRotationEvent> & PartialWrapper<IWrapRotationEvent<Required<IRotationEvent>>>)[]
+        ...rotationEvents: (Partial<IRotationEvent> & Partial<IWrapRotationEventAttribute<Required<IRotationEvent>>>)[]
     ): RotationEvent[] {
         const result: RotationEvent[] = [];
         rotationEvents?.forEach((re) =>

@@ -1,6 +1,6 @@
 import { ILightRotationBase } from '../../types/beatmap/v3/lightRotationBase';
-import { IWrapLightRotationBase } from '../../types/beatmap/wrapper/lightRotationBase';
-import { ObjectReturnFn, PartialWrapper } from '../../types/utils';
+import { IWrapLightRotationBaseAttribute } from '../../types/beatmap/wrapper/lightRotationBase';
+import { ObjectReturnFn } from '../../types/utils';
 import { deepCopy } from '../../utils/misc';
 import { WrapLightRotationBase } from '../wrapper/lightRotationBase';
 
@@ -24,16 +24,16 @@ export class LightRotationBase extends WrapLightRotationBase<Required<ILightRota
 
     static create(): LightRotationBase[];
     static create(
-        ...lightRotations: PartialWrapper<IWrapLightRotationBase<Required<ILightRotationBase>>>[]
+        ...lightRotations: Partial<IWrapLightRotationBaseAttribute<Required<ILightRotationBase>>>[]
     ): LightRotationBase[];
     static create(...waypoints: Partial<ILightRotationBase>[]): LightRotationBase[];
     static create(
         ...lightRotations: (Partial<ILightRotationBase> &
-            PartialWrapper<IWrapLightRotationBase<Required<ILightRotationBase>>>)[]
+            Partial<IWrapLightRotationBaseAttribute<Required<ILightRotationBase>>>)[]
     ): LightRotationBase[];
     static create(
         ...lightRotations: (Partial<ILightRotationBase> &
-            PartialWrapper<IWrapLightRotationBase<Required<ILightRotationBase>>>)[]
+            Partial<IWrapLightRotationBaseAttribute<Required<ILightRotationBase>>>)[]
     ): LightRotationBase[] {
         const result: LightRotationBase[] = [];
         lightRotations?.forEach((lr) =>

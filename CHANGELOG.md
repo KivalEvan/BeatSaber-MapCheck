@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.5.10 [2023-03-28]
+
+### Added
+
+-   Dragons 2.0 environment and color scheme
+-   Custom white light support
+
+### Changed
+
+-   Custom color no longer shows non-custom color in information
+
 ## 2.5.9 [2023-01-10]
 
 ### Added

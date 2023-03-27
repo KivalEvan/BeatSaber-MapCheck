@@ -118,12 +118,6 @@ export const ObstacleDataCheck: Record<keyof IObstacle, DataCheck> = {
         int: true,
         version: '2.0.0',
     },
-    _lineLayer: {
-        type: 'number',
-        int: true,
-        version: '2.6.0',
-        optional: true,
-    },
     _type: {
         type: 'number',
         int: true,
@@ -138,12 +132,6 @@ export const ObstacleDataCheck: Record<keyof IObstacle, DataCheck> = {
         type: 'number',
         int: true,
         version: '2.0.0',
-    },
-    _height: {
-        type: 'number',
-        int: true,
-        version: '2.6.0',
-        optional: true,
     },
     _customData: {
         type: 'object',

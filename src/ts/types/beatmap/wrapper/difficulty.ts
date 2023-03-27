@@ -12,15 +12,15 @@ import { IWrapLightColorEventBoxGroup } from './lightColorEventBoxGroup';
 import { IWrapLightRotationEventBoxGroup } from './lightRotationEventBoxGroup';
 import { IWrapLightTranslationEventBoxGroup } from './lightTranslationEventBoxGroup';
 import { IWrapEventTypesWithKeywords } from './eventTypesWithKeywords';
-import { IWrapBaseItem } from './baseItem';
+import { IWrapBaseItem, IWrapBaseItemAttribute } from './baseItem';
 import { Version } from '../shared/version';
 import { DeepPartialWrapper, LooseAutocomplete, PartialWrapper } from '../../utils';
 import { GenericFileName } from '../shared/info';
 import { EventContainer, NoteContainer } from './container';
 import { BeatPerMinute } from '../../../beatmap/shared/bpm';
 
-export interface IWrapDifficulty<T extends Record<keyof T, unknown> = Record<string, unknown>>
-    extends IWrapBaseItem<T> {
+export interface IWrapDifficultyAttribute<T extends Record<keyof T, unknown> = Record<string, unknown>>
+    extends IWrapBaseItemAttribute<T> {
     version: Version;
     bpmEvents: IWrapBPMEvent[];
     rotationEvents: IWrapRotationEvent[];
@@ -39,6 +39,11 @@ export interface IWrapDifficulty<T extends Record<keyof T, unknown> = Record<str
     useNormalEventsAsCompatibleEvents: boolean;
 
     fileName: string;
+}
+
+export interface IWrapDifficulty<T extends Record<keyof T, unknown> = Record<string, unknown>>
+    extends IWrapBaseItem<T>,
+        IWrapDifficultyAttribute<T> {
     setFileName(fileName: LooseAutocomplete<GenericFileName>): this;
 
     /** Calculate note per second.

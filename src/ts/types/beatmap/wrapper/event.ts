@@ -1,7 +1,8 @@
-import { IWrapBaseObject } from './baseObject';
+import { IWrapBaseObject, IWrapBaseObjectAttribute } from './baseObject';
 import { EnvironmentAllName } from '../shared/environment';
 
-export interface IWrapEvent<T extends Record<keyof T, unknown> = Record<string, unknown>> extends IWrapBaseObject<T> {
+export interface IWrapEventAttribute<T extends Record<keyof T, unknown> = Record<string, unknown>>
+    extends IWrapBaseObjectAttribute<T> {
     /** Event type `<int>` of basic event.
      * ```ts
      * 0 -> Back Lasers
@@ -36,7 +37,11 @@ export interface IWrapEvent<T extends Record<keyof T, unknown> = Record<string, 
     value: number;
     /** Float value `<float>` of basic event. */
     floatValue: number;
+}
 
+export interface IWrapEvent<T extends Record<keyof T, unknown> = Record<string, unknown>>
+    extends IWrapBaseObject<T>,
+        IWrapEventAttribute<T> {
     setType(value: number): this;
     setValue(value: number): this;
     setFloatValue(value: number): this;

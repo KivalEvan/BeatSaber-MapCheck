@@ -1,8 +1,8 @@
 import { IIndexFilter } from '../../types/beatmap/v3/indexFilter';
 import { ILightRotationBase } from '../../types/beatmap/v3/lightRotationBase';
 import { ILightRotationEventBox } from '../../types/beatmap/v3/lightRotationEventBox';
-import { IWrapLightRotationEventBox } from '../../types/beatmap/wrapper/lightRotationEventBox';
-import { DeepPartial, DeepPartialWrapper, ObjectReturnFn } from '../../types/utils';
+import { IWrapLightRotationEventBoxAttribute } from '../../types/beatmap/wrapper/lightRotationEventBox';
+import { DeepPartial, ObjectReturnFn } from '../../types/utils';
 import { deepCopy } from '../../utils/misc';
 import { WrapLightRotationEventBox } from '../wrapper/lightRotationEventBox';
 import { IndexFilter } from './indexFilter';
@@ -48,16 +48,12 @@ export class LightRotationEventBox extends WrapLightRotationEventBox<
         super(lightRotationEventBox);
         this._f = IndexFilter.create(lightRotationEventBox.f);
         this._l = lightRotationEventBox.l.map((l) => LightRotationBase.create(l)[0]);
-        const lastTime = Math.max(...this._l.map((l) => l.time));
-        if (this.beatDistributionType === 2) {
-            this.beatDistribution = this.beatDistribution < lastTime ? lastTime : this.beatDistribution;
-        }
     }
 
     static create(): LightRotationEventBox[];
     static create(
-        ...eventBoxes: DeepPartialWrapper<
-            IWrapLightRotationEventBox<
+        ...eventBoxes: DeepPartial<
+            IWrapLightRotationEventBoxAttribute<
                 Required<ILightRotationEventBox>,
                 Required<ILightRotationBase>,
                 Required<IIndexFilter>
@@ -67,8 +63,8 @@ export class LightRotationEventBox extends WrapLightRotationEventBox<
     static create(...eventBoxes: DeepPartial<ILightRotationEventBox>[]): LightRotationEventBox[];
     static create(
         ...eventBoxes: (DeepPartial<ILightRotationEventBox> &
-            DeepPartialWrapper<
-                IWrapLightRotationEventBox<
+            DeepPartial<
+                IWrapLightRotationEventBoxAttribute<
                     Required<ILightRotationEventBox>,
                     Required<ILightRotationBase>,
                     Required<IIndexFilter>
@@ -77,8 +73,8 @@ export class LightRotationEventBox extends WrapLightRotationEventBox<
     ): LightRotationEventBox[];
     static create(
         ...eventBoxes: (DeepPartial<ILightRotationEventBox> &
-            DeepPartialWrapper<
-                IWrapLightRotationEventBox<
+            DeepPartial<
+                IWrapLightRotationEventBoxAttribute<
                     Required<ILightRotationEventBox>,
                     Required<ILightRotationBase>,
                     Required<IIndexFilter>

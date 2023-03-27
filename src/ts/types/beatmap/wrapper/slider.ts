@@ -1,6 +1,7 @@
-import { IWrapBaseSlider } from './baseSlider';
+import { IWrapBaseSlider, IWrapBaseSliderAttribute } from './baseSlider';
 
-export interface IWrapSlider<T extends Record<keyof T, unknown> = Record<string, unknown>> extends IWrapBaseSlider<T> {
+export interface IWrapSliderAttribute<T extends Record<keyof T, unknown> = Record<string, unknown>>
+    extends IWrapBaseSliderAttribute<T> {
     /** Head control point length multiplier `<float>` of slider.
      * ```ts
      * 0 -> Flat Start
@@ -39,7 +40,11 @@ export interface IWrapSlider<T extends Record<keyof T, unknown> = Record<string,
      * ```
      */
     midAnchor: 0 | 1 | 2;
+}
 
+export interface IWrapSlider<T extends Record<keyof T, unknown> = Record<string, unknown>>
+    extends IWrapBaseSlider<T>,
+        IWrapSliderAttribute<T> {
     setLengthMultiplier(value: number): this;
     setTailLengthMultiplier(value: number): this;
     setTailDirection(value: number): this;

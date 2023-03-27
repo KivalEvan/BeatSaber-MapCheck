@@ -1,7 +1,8 @@
 import { IBurstSlider } from '../../types/beatmap/v3/burstSlider';
-import { IWrapBurstSlider } from '../../types/beatmap/wrapper/burstSlider';
-import { ObjectReturnFn, PartialWrapper } from '../../types/utils';
+import { IWrapBurstSliderAttribute } from '../../types/beatmap/wrapper/burstSlider';
+import { ObjectReturnFn } from '../../types/utils';
 import { deepCopy } from '../../utils/misc';
+import { isVector3 } from '../../utils/vector';
 import { WrapBurstSlider } from '../wrapper/burstSlider';
 
 /** Burst slider beatmap v3 class object.
@@ -30,13 +31,13 @@ export class BurstSlider extends WrapBurstSlider<Required<IBurstSlider>> {
     }
 
     static create(): BurstSlider[];
-    static create(...burstSliders: PartialWrapper<IWrapBurstSlider<Required<IBurstSlider>>>[]): BurstSlider[];
+    static create(...burstSliders: Partial<IWrapBurstSliderAttribute<Required<IBurstSlider>>>[]): BurstSlider[];
     static create(...burstSliders: Partial<IBurstSlider>[]): BurstSlider[];
     static create(
-        ...burstSliders: (Partial<IBurstSlider> & PartialWrapper<IWrapBurstSlider<Required<IBurstSlider>>>)[]
+        ...burstSliders: (Partial<IBurstSlider> & Partial<IWrapBurstSliderAttribute<Required<IBurstSlider>>>)[]
     ): BurstSlider[];
     static create(
-        ...burstSliders: (Partial<IBurstSlider> & PartialWrapper<IWrapBurstSlider<Required<IBurstSlider>>>)[]
+        ...burstSliders: (Partial<IBurstSlider> & Partial<IWrapBurstSliderAttribute<Required<IBurstSlider>>>)[]
     ): BurstSlider[] {
         const result: BurstSlider[] = [];
         burstSliders?.forEach((bs) =>
@@ -178,14 +179,24 @@ export class BurstSlider extends WrapBurstSlider<Required<IBurstSlider>> {
         }
         if (this.customData.animation) {
             if (Array.isArray(this.customData.animation.definitePosition)) {
-                this.customData.animation.definitePosition.forEach((dp) => {
-                    dp[0] = -dp[0];
-                });
+                if (isVector3(this.customData.animation.definitePosition)) {
+                    this.customData.animation.definitePosition[0] = -this.customData.animation.definitePosition[0];
+                } else {
+                    // deno-lint-ignore no-explicit-any
+                    this.customData.animation.definitePosition.forEach((dp: any) => {
+                        dp[0] = -dp[0];
+                    });
+                }
             }
             if (Array.isArray(this.customData.animation.offsetPosition)) {
-                this.customData.animation.offsetPosition.forEach((op) => {
-                    op[0] = -op[0];
-                });
+                if (isVector3(this.customData.animation.offsetPosition)) {
+                    this.customData.animation.offsetPosition[0] = -this.customData.animation.offsetPosition[0];
+                } else {
+                    // deno-lint-ignore no-explicit-any
+                    this.customData.animation.offsetPosition.forEach((op: any) => {
+                        op[0] = -op[0];
+                    });
+                }
             }
         }
         return super.mirror(flipColor);
