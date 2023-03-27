@@ -26,16 +26,16 @@ export function setCustomColor(customColor?: IColorScheme, environment?: Environ
     if (!environment) {
         environment = 'DefaultEnvironment';
     }
-    const existColor: { [key: string]: Omit<IColor, 'a'> | undefined } = {
-        _colorLeft: ColorScheme[EnvironmentSchemeName[environment]]?._colorLeft,
-        _colorRight: ColorScheme[EnvironmentSchemeName[environment]]?._colorRight,
-        _envColorLeft: ColorScheme[EnvironmentSchemeName[environment]]?._envColorLeft,
-        _envColorRight: ColorScheme[EnvironmentSchemeName[environment]]?._envColorRight,
-        _envColorWhite: undefined,
-        _envColorLeftBoost: ColorScheme[EnvironmentSchemeName[environment]]?._envColorLeftBoost,
-        _envColorRightBoost: ColorScheme[EnvironmentSchemeName[environment]]?._envColorRightBoost,
-        _envColorWhiteBoost: undefined,
-        _obstacleColor: ColorScheme[EnvironmentSchemeName[environment]]?._obstacleColor,
+    const existColor: { [key: string]: Omit<IColor, 'a'> | null } = {
+        _colorLeft: ColorScheme[EnvironmentSchemeName[environment]]?._colorLeft || null,
+        _colorRight: ColorScheme[EnvironmentSchemeName[environment]]?._colorRight || null,
+        _envColorLeft: ColorScheme[EnvironmentSchemeName[environment]]?._envColorLeft || null,
+        _envColorRight: ColorScheme[EnvironmentSchemeName[environment]]?._envColorRight || null,
+        _envColorWhite: null,
+        _envColorLeftBoost: ColorScheme[EnvironmentSchemeName[environment]]?._envColorLeftBoost || null,
+        _envColorRightBoost: ColorScheme[EnvironmentSchemeName[environment]]?._envColorRightBoost || null,
+        _envColorWhiteBoost: null,
+        _obstacleColor: ColorScheme[EnvironmentSchemeName[environment]]?._obstacleColor || null,
     };
     const hexColor: { [key: string]: string | null } = {
         _colorLeft: existColor._colorLeft ? RgbaToHex(existColor._colorLeft) : null,
@@ -48,6 +48,15 @@ export function setCustomColor(customColor?: IColorScheme, environment?: Environ
         _envColorWhiteBoost: null,
         _obstacleColor: existColor._obstacleColor ? RgbaToHex(existColor._obstacleColor) : null,
     };
+    const hasComponent: { [key: string]: boolean } = {
+        noteColor: !!(customColor._colorLeft || customColor._colorRight || false),
+        eventColor: !!(customColor._envColorLeft || customColor._envColorRight || false),
+        eventWhiteColor: !!(customColor._envColorWhite || false),
+        eventBoostColor: !!(customColor._envColorLeftBoost || customColor._envColorRightBoost || false),
+        eventWhiteBoostColor: !!(customColor._envColorWhiteBoost || false),
+        obstacleColor: !!(customColor._obstacleColor || false),
+    };
+
     if (customColor._colorLeft) {
         hexColor._colorLeft = RgbaToHex(customColor._colorLeft);
     }
@@ -103,6 +112,22 @@ export function setCustomColor(customColor?: IColorScheme, environment?: Environ
 
     if (customColor._obstacleColor) {
         hexColor._obstacleColor = RgbaToHex(customColor._obstacleColor);
+    }
+
+    if (!hasComponent.noteColor) {
+        hexColor._colorLeft = null;
+        hexColor._colorRight = null;
+    }
+    if (!hasComponent.eventColor) {
+        hexColor._envColorLeft = null;
+        hexColor._envColorRight = null;
+    }
+    if (hasComponent.noteColor && !hasComponent.eventColor) {
+        hexColor._envColorLeft = hexColor._colorLeft;
+        hexColor._envColorRight = hexColor._colorRight;
+    }
+    if (!hasComponent.obstacleColor) {
+        hexColor._obstacleColor = null;
     }
 
     const panel = UIPanel.create('max', 'none', true);
