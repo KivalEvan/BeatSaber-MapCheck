@@ -33,6 +33,7 @@ export const EnvironmentRename: { [key in EnvironmentAllName]: string } = {
     TheWeekndEnvironment: 'The Weeknd',
     RockMixtapeEnvironment: 'Rock Mixtape',
     Dragons2Environment: 'Dragons 2.0',
+    Panic2Environment: 'Panic 2.0',
     GlassDesertEnvironment: 'Glass Desert',
 } as const;
 
@@ -99,4 +100,5 @@ export const EventList: {
         [0, 1, 2, 3, 4, 6],
         [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
     ],
+    Panic2Environment: [[3], [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]],
 } as const;

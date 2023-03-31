@@ -32,15 +32,7 @@ const tool: Tool = {
     run,
 };
 
-const environmentV3: EnvironmentV3Name[] = [
-    'EDMEnvironment',
-    'LizzoEnvironment',
-    'PyroEnvironment',
-    'TheSecondEnvironment',
-    'TheWeekndEnvironment',
-    'WeaveEnvironment',
-];
-const envFilterID: Record<EnvironmentV3Name, Record<number, number>> = {
+const envFilterID: { [key in EnvironmentV3Name]?: Record<number, number> } = {
     EDMEnvironment: {
         0: 24,
         1: 24,
@@ -195,14 +187,55 @@ const envFilterID: Record<EnvironmentV3Name, Record<number, number>> = {
         14: 8,
         15: 8,
     },
-    Dragons2Environment: {},
+    Dragons2Environment: {
+        0: 24,
+        1: 96,
+        2: 35,
+        3: 15,
+        4: 8,
+        5: 12,
+        6: 12,
+        7: 5,
+        8: 5,
+        9: 5,
+        10: 5,
+        11: 5,
+        12: 5,
+    },
+    Panic2Environment: {
+        0: 7,
+        1: 7,
+        2: 7,
+        3: 7,
+        4: 8,
+        5: 8,
+        6: 24,
+        7: 24,
+        8: 24,
+        9: 6,
+        10: 6,
+        11: 6,
+        12: 6,
+        13: 14,
+        14: 14,
+        15: 2,
+        16: 28,
+        17: 28,
+        18: 1,
+        19: 1,
+        20: 12,
+        21: 1,
+        22: 12,
+        23: 1,
+    },
 };
+
 // FIXME: EDMEnvironment special case 12 and 13 filter is 1 for rotation
 function check(map: Difficulty, environment: EnvironmentAllName) {
     const defectID: IWrapEventBoxGroup[] = [];
     const defectFilter: IWrapEventBoxGroup[] = [];
 
-    if (!environmentV3.includes(environment as EnvironmentV3Name)) return { defectID: [], defectFilter: [] };
+    if (!envFilterID[environment as EnvironmentV3Name]) return { defectID: [], defectFilter: [] };
     const envV3 = environment as EnvironmentV3Name;
     const eventListEBG = EventList[envV3][1];
 
@@ -218,7 +251,7 @@ function check(map: Difficulty, environment: EnvironmentAllName) {
         for (const eb of g.boxes) {
             const filter = eb.filter;
             if (filter.type === IndexFilterType.STEP_AND_OFFSET) {
-                if (filter.p0 > envFilterID[envV3][g.id]) {
+                if (filter.p0 > envFilterID[envV3]![g.id]) {
                     defectFilter.push(g);
                 }
             }

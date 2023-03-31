@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.5.11 [2023-03-31]
+
+### Added
+
+-   Panic 2.0 environment and color scheme
+
 ## 2.5.10 [2023-03-28]
 
 ### Added

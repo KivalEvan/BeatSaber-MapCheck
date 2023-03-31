@@ -118,7 +118,8 @@ export class Event extends WrapEvent<Required<IEvent>> {
 
     // holy shit i hate type guard
     isChroma(): boolean {
-        if (this.isLightEvent()) {
+        const ev = this as Event;
+        if (ev.isLightEvent()) {
             return (
                 Array.isArray(this.customData._color) ||
                 typeof this.customData._lightID === 'number' ||
@@ -129,7 +130,7 @@ export class Event extends WrapEvent<Required<IEvent>> {
                 typeof this.customData._lerpType === 'string'
             );
         }
-        if (this.isRingEvent()) {
+        if (ev.isRingEvent()) {
             return (
                 typeof this.customData._nameFilter === 'string' ||
                 typeof this.customData._reset === 'boolean' ||
@@ -144,7 +145,7 @@ export class Event extends WrapEvent<Required<IEvent>> {
                 typeof this.customData._speedMult === 'number'
             );
         }
-        if (this.isLaserRotationEvent()) {
+        if (ev.isLaserRotationEvent()) {
             return (
                 typeof this.customData._lockPosition === 'boolean' ||
                 typeof this.customData._speed === 'number' ||
