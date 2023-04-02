@@ -6,6 +6,10 @@
 
 -   Panic 2.0 environment and color scheme
 
+### Removed
+
+-   Headless arc check (a valid use since 1.29.0)
+
 ## 2.5.10 [2023-03-28]
 
 ### Added
