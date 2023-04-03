@@ -2,7 +2,11 @@
 // TODO: proper rotation check based on position
 // TODO: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA there's still more work needed for parity check
 // TODO: cleanup the implementation
-import { NoteContainer, NoteContainerBomb, NoteContainerNote } from '../../types/beatmap/wrapper/container';
+import {
+    NoteContainer,
+    NoteContainerBomb,
+    NoteContainerNote,
+} from '../../types/beatmap/wrapper/container';
 import { ParityState, ParityStatus, ParitySwitch } from './types/parity';
 import { predictDirection } from '../placement/note';
 import { NoteColor, NoteDirection, PositionX, PositionY } from '../../beatmap/shared/constants';
@@ -11,12 +15,32 @@ const noteInitParity: {
     [key: number]: { backhand: number[]; forehand: number[] };
 } = {
     [NoteColor.RED]: {
-        forehand: [NoteDirection.DOWN, NoteDirection.RIGHT, NoteDirection.DOWN_LEFT, NoteDirection.DOWN_RIGHT],
-        backhand: [NoteDirection.UP, NoteDirection.LEFT, NoteDirection.UP_LEFT, NoteDirection.UP_RIGHT],
+        forehand: [
+            NoteDirection.DOWN,
+            NoteDirection.RIGHT,
+            NoteDirection.DOWN_LEFT,
+            NoteDirection.DOWN_RIGHT,
+        ],
+        backhand: [
+            NoteDirection.UP,
+            NoteDirection.LEFT,
+            NoteDirection.UP_LEFT,
+            NoteDirection.UP_RIGHT,
+        ],
     },
     [NoteColor.BLUE]: {
-        forehand: [NoteDirection.DOWN, NoteDirection.LEFT, NoteDirection.DOWN_LEFT, NoteDirection.DOWN_RIGHT],
-        backhand: [NoteDirection.UP, NoteDirection.RIGHT, NoteDirection.UP_LEFT, NoteDirection.UP_RIGHT],
+        forehand: [
+            NoteDirection.DOWN,
+            NoteDirection.LEFT,
+            NoteDirection.DOWN_LEFT,
+            NoteDirection.DOWN_RIGHT,
+        ],
+        backhand: [
+            NoteDirection.UP,
+            NoteDirection.RIGHT,
+            NoteDirection.UP_LEFT,
+            NoteDirection.UP_RIGHT,
+        ],
     },
 };
 const noteInitRotation: { [key: number]: number[] } = {
@@ -90,13 +114,17 @@ export default class Parity {
                 return;
             }
             if (bomb.data.posY === PositionY.BOTTOM) {
-                if (bomb.data.posX === (noteType ? PositionX.MIDDLE_RIGHT : PositionX.MIDDLE_LEFT)) {
+                if (
+                    bomb.data.posX === (noteType ? PositionX.MIDDLE_RIGHT : PositionX.MIDDLE_LEFT)
+                ) {
                     currentState = 'backhand';
                     currentRotation = 0;
                 }
             }
             if (bomb.data.posY === PositionY.TOP) {
-                if (bomb.data.posX === (noteType ? PositionX.MIDDLE_RIGHT : PositionX.MIDDLE_LEFT)) {
+                if (
+                    bomb.data.posX === (noteType ? PositionX.MIDDLE_RIGHT : PositionX.MIDDLE_LEFT)
+                ) {
                     currentState = 'forehand';
                     currentRotation = 0;
                 }
@@ -121,11 +149,13 @@ export default class Parity {
             return 'none';
         }
 
-        const parityRotation = noteParityRotation[noteType][ParitySwitch[currentState]][expectedDirection];
+        const parityRotation =
+            noteParityRotation[noteType][ParitySwitch[currentState]][expectedDirection];
 
         if (
-            (currentRotation > parityRotation ? currentRotation - parityRotation : parityRotation - currentRotation) >
-            180
+            (currentRotation > parityRotation
+                ? currentRotation - parityRotation
+                : parityRotation - currentRotation) > 180
         ) {
             return 'error';
         }
@@ -142,8 +172,9 @@ export default class Parity {
             return 'warning';
         }
         if (
-            (currentRotation > parityRotation ? currentRotation - parityRotation : parityRotation - currentRotation) >
-            this.allowedRotation
+            (currentRotation > parityRotation
+                ? currentRotation - parityRotation
+                : parityRotation - currentRotation) > this.allowedRotation
         ) {
             return 'warning';
         }
@@ -167,11 +198,15 @@ export default class Parity {
                             continue;
                         }
                         const note = noteContext[i] as NoteContainerNote;
-                        if (noteInitParity[note.data.color].forehand.includes(note.data.direction)) {
+                        if (
+                            noteInitParity[note.data.color].forehand.includes(note.data.direction)
+                        ) {
                             this.state = 'backhand';
                             break;
                         }
-                        if (noteInitParity[note.data.color].backhand.includes(note.data.direction)) {
+                        if (
+                            noteInitParity[note.data.color].backhand.includes(note.data.direction)
+                        ) {
                             this.state = 'forehand';
                             break;
                         }
@@ -200,13 +235,17 @@ export default class Parity {
                 return;
             }
             if (bomb.data.posY === PositionY.BOTTOM) {
-                if (bomb.data.posX === (noteType ? PositionX.MIDDLE_RIGHT : PositionX.MIDDLE_LEFT)) {
+                if (
+                    bomb.data.posX === (noteType ? PositionX.MIDDLE_RIGHT : PositionX.MIDDLE_LEFT)
+                ) {
                     this.state = 'forehand';
                     this.rotation = 0;
                 }
             }
             if (bomb.data.posY === PositionY.TOP) {
-                if (bomb.data.posX === (noteType ? PositionX.MIDDLE_RIGHT : PositionX.MIDDLE_LEFT)) {
+                if (
+                    bomb.data.posX === (noteType ? PositionX.MIDDLE_RIGHT : PositionX.MIDDLE_LEFT)
+                ) {
                     this.state = 'backhand';
                     this.rotation = 0;
                 }
@@ -260,7 +299,10 @@ export default class Parity {
                 }
                 const startTime = note.data.time;
                 for (let j = i; j < nc.length; j++) {
-                    if (nc[j].data.time > note.data.time + 0.001 && startTime < note.data.time + 0.001) {
+                    if (
+                        nc[j].data.time > note.data.time + 0.001 &&
+                        startTime < note.data.time + 0.001
+                    ) {
                         break;
                     }
                     note = nc[j] as NoteContainerNote;
@@ -297,7 +339,10 @@ export default class Parity {
             if (note.data.color === color) {
                 const startTime = note.data.time;
                 for (let j = i; j < nc.length; j++) {
-                    if (nc[j].data.time > note.data.time + 0.001 && startTime < note.data.time + 0.001) {
+                    if (
+                        nc[j].data.time > note.data.time + 0.001 &&
+                        startTime < note.data.time + 0.001
+                    ) {
                         break;
                     }
                     note = nc[j] as NoteContainerNote;

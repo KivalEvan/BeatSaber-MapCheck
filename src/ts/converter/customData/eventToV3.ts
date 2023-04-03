@@ -2,7 +2,9 @@ import { IEvent } from '../../types/beatmap/v2/event';
 import { IBasicEvent } from '../../types/beatmap/v3/basicEvent';
 import { deepCopy } from '../../utils/misc';
 
-export default function (customData?: IEvent['_customData']): NonNullable<IBasicEvent['customData']> {
+export default function (
+    customData?: IEvent['_customData'],
+): NonNullable<IBasicEvent['customData']> {
     if (!customData) {
         return {};
     }

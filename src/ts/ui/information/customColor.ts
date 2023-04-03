@@ -2,7 +2,11 @@ import UIPanel from '../helpers/panel';
 import { RgbaToHex } from '../../utils';
 import { IColorScheme } from '../../types/beatmap/shared/colorScheme';
 import { EnvironmentName } from '../../types/beatmap/shared/environment';
-import { ColorScheme, ColorSchemeRename, EnvironmentSchemeName } from '../../beatmap/shared/colorScheme';
+import {
+    ColorScheme,
+    ColorSchemeRename,
+    EnvironmentSchemeName,
+} from '../../beatmap/shared/colorScheme';
 import { htmlTableCustomColor } from './constants';
 import { displayTableRow, hideTableRow } from './helpers';
 import { IColor } from '../../types/colors';
@@ -32,8 +36,10 @@ export function setCustomColor(customColor?: IColorScheme, environment?: Environ
         _envColorLeft: ColorScheme[EnvironmentSchemeName[environment]]?._envColorLeft || null,
         _envColorRight: ColorScheme[EnvironmentSchemeName[environment]]?._envColorRight || null,
         _envColorWhite: null,
-        _envColorLeftBoost: ColorScheme[EnvironmentSchemeName[environment]]?._envColorLeftBoost || null,
-        _envColorRightBoost: ColorScheme[EnvironmentSchemeName[environment]]?._envColorRightBoost || null,
+        _envColorLeftBoost:
+            ColorScheme[EnvironmentSchemeName[environment]]?._envColorLeftBoost || null,
+        _envColorRightBoost:
+            ColorScheme[EnvironmentSchemeName[environment]]?._envColorRightBoost || null,
         _envColorWhiteBoost: null,
         _obstacleColor: ColorScheme[EnvironmentSchemeName[environment]]?._obstacleColor || null,
     };
@@ -43,8 +49,12 @@ export function setCustomColor(customColor?: IColorScheme, environment?: Environ
         _envColorLeft: existColor._envColorLeft ? RgbaToHex(existColor._envColorLeft) : null,
         _envColorRight: existColor._envColorRight ? RgbaToHex(existColor._envColorRight) : null,
         _envColorWhite: null,
-        _envColorLeftBoost: existColor._envColorLeftBoost ? RgbaToHex(existColor._envColorLeftBoost) : null,
-        _envColorRightBoost: existColor._envColorRightBoost ? RgbaToHex(existColor._envColorRightBoost) : null,
+        _envColorLeftBoost: existColor._envColorLeftBoost
+            ? RgbaToHex(existColor._envColorLeftBoost)
+            : null,
+        _envColorRightBoost: existColor._envColorRightBoost
+            ? RgbaToHex(existColor._envColorRightBoost)
+            : null,
         _envColorWhiteBoost: null,
         _obstacleColor: existColor._obstacleColor ? RgbaToHex(existColor._obstacleColor) : null,
     };
@@ -52,7 +62,11 @@ export function setCustomColor(customColor?: IColorScheme, environment?: Environ
         noteColor: !!(customColor._colorLeft || customColor._colorRight || false),
         eventColor: !!(customColor._envColorLeft || customColor._envColorRight || false),
         eventWhiteColor: !!(customColor._envColorWhite || false),
-        eventBoostColor: !!(customColor._envColorLeftBoost || customColor._envColorRightBoost || false),
+        eventBoostColor: !!(
+            customColor._envColorLeftBoost ||
+            customColor._envColorRightBoost ||
+            false
+        ),
         eventWhiteBoostColor: !!(customColor._envColorWhiteBoost || false),
         obstacleColor: !!(customColor._obstacleColor || false),
     };
@@ -83,13 +97,17 @@ export function setCustomColor(customColor?: IColorScheme, environment?: Environ
         envBL = RgbaToHex(customColor._envColorLeftBoost);
         envBoost = true;
     } else {
-        envBL = existColor._envColorLeftBoost ? RgbaToHex(existColor._envColorLeftBoost) : hexColor._envColorLeft;
+        envBL = existColor._envColorLeftBoost
+            ? RgbaToHex(existColor._envColorLeftBoost)
+            : hexColor._envColorLeft;
     }
     if (customColor._envColorRightBoost) {
         envBR = RgbaToHex(customColor._envColorRightBoost);
         envBoost = true;
     } else {
-        envBR = existColor._envColorRightBoost ? RgbaToHex(existColor._envColorRightBoost) : hexColor._envColorRight;
+        envBR = existColor._envColorRightBoost
+            ? RgbaToHex(existColor._envColorRightBoost)
+            : hexColor._envColorRight;
     }
 
     if (customColor._envColorWhite) {
@@ -147,7 +165,9 @@ export function setCustomColor(customColor?: IColorScheme, environment?: Environ
         textMonoContainer.textContent = `${hexColor[key]}`;
 
         textContainer.className = 'info__color-text';
-        textContainer.textContent = ` -- ${ColorSchemeRename[key as keyof typeof ColorSchemeRename]}`;
+        textContainer.textContent = ` -- ${
+            ColorSchemeRename[key as keyof typeof ColorSchemeRename]
+        }`;
 
         container.appendChild(colorContainer);
         container.appendChild(textMonoContainer);

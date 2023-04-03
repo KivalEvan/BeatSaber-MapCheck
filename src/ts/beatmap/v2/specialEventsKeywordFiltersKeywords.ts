@@ -15,7 +15,9 @@ export class SpecialEventsKeywordFiltersKeywords extends WrapEventTypesForKeywor
         _specialEvents: () => [],
     };
 
-    protected constructor(specialEventsForKeywords: Required<ISpecialEventsKeywordFiltersKeywords>) {
+    protected constructor(
+        specialEventsForKeywords: Required<ISpecialEventsKeywordFiltersKeywords>,
+    ) {
         super(specialEventsForKeywords);
     }
 
@@ -38,7 +40,10 @@ export class SpecialEventsKeywordFiltersKeywords extends WrapEventTypesForKeywor
         basicEventTypesForKeywords?.forEach((betfk) =>
             result.push(
                 new this({
-                    _keyword: betfk.keyword ?? betfk._keyword ?? SpecialEventsKeywordFiltersKeywords.default._keyword,
+                    _keyword:
+                        betfk.keyword ??
+                        betfk._keyword ??
+                        SpecialEventsKeywordFiltersKeywords.default._keyword,
                     _specialEvents:
                         betfk.events ??
                         betfk._specialEvents ??

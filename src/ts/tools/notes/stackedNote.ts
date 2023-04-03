@@ -1,4 +1,11 @@
-import { IBeatmapItem, IBeatmapSettings, Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
+import {
+    IBeatmapItem,
+    IBeatmapSettings,
+    Tool,
+    ToolArgs,
+    ToolInputOrder,
+    ToolOutputOrder,
+} from '../../types/mapcheck';
 import UICheckbox from '../../ui/helpers/checkbox';
 import { printResultTime } from '../helpers';
 import { BombNote } from '../../beatmap/v3/bombNote';

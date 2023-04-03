@@ -10,7 +10,7 @@ import {
     ShaderKeywords,
     ShaderType,
 } from '../../shared/custom/chroma';
-import { IHeckCustomEventDataBase } from './heck';
+import { IHeckBase } from './heck';
 import { LooseAutocomplete } from '../../../utils';
 import { Vector2, Vector3 } from '../../../vector';
 
@@ -182,18 +182,17 @@ export interface IChromaEventZoom extends ICustomDataBase {
 }
 
 /** AnimateComponent interface for Chroma Custom Event. */
-export interface IChromaCustomEventDataAnimateTrack extends IHeckCustomEventDataBase {
+export interface IChromaCustomEventDataAnimateTrack extends Required<IHeckBase> {
     color?: string | ColorArray | ColorPointDefinition[];
 }
 
 /** AnimateComponent interface for Chroma Custom Event. */
-export interface IChromaCustomEventDataAssignPathAnimation extends IHeckCustomEventDataBase {
+export interface IChromaCustomEventDataAssignPathAnimation extends Required<IHeckBase> {
     color?: string | ColorArray | ColorPointDefinition[];
 }
 
 /** AnimateComponent interface for Chroma Custom Event. */
-export interface IChromaCustomEventDataAnimateComponent extends IHeckCustomEventDataBase {
-    track: string;
+export interface IChromaCustomEventDataAnimateComponent extends Required<IHeckBase> {
     duration: number;
     easing?: string;
     BloomFogEnvironment?: {

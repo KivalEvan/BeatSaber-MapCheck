@@ -11,7 +11,11 @@ import Swing from './swing';
 // some variable or function may have been modified
 // translating from Python to JavaScript is hard
 // this is special function SPS used by ScoreSaber
-export function count(noteContainer: NoteContainer[], duration: number, bpm: BeatPerMinute): ISwingCount {
+export function count(
+    noteContainer: NoteContainer[],
+    duration: number,
+    bpm: BeatPerMinute,
+): ISwingCount {
     const swingCount: ISwingCount = {
         left: new Array(Math.floor(duration + 1)).fill(0),
         right: new Array(Math.floor(duration + 1)).fill(0),

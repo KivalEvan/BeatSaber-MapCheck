@@ -58,7 +58,8 @@ function check(map: ToolArgs) {
                 continue;
             }
             if (
-                njs.value < 1.425 / ((60 * (note.data.time - other.data.time)) / bpm.value + constant) &&
+                njs.value <
+                    1.425 / ((60 * (note.data.time - other.data.time)) / bpm.value + constant) &&
                 note.data.isInline(other.data)
             ) {
                 arr.push(note);

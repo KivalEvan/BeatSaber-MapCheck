@@ -11,7 +11,9 @@ export function setPlayTime(start?: number, end?: number): void {
     displayTableRow(
         htmlTablePlayTime,
         `${toMmss(start)} to ${toMmss(end)}${
-            savedData.duration ? ` -- [ ${toMmss(end - start)} / ${toMmss(savedData.duration)} ]` : ''
+            savedData.duration
+                ? ` -- [ ${toMmss(end - start)} / ${toMmss(savedData.duration)} ]`
+                : ''
         }`,
     );
 }

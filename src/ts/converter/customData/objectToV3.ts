@@ -2,7 +2,9 @@ import { ICustomDataBase } from '../../types/beatmap/shared/custom/customData';
 import { ICustomDataNote, ICustomDataObstacle } from '../../types/beatmap/v2/custom/customData';
 import { deepCopy } from '../../utils/misc';
 
-export default function <T extends ICustomDataBase>(customData?: ICustomDataNote & ICustomDataObstacle): T {
+export default function <T extends ICustomDataBase>(
+    customData?: ICustomDataNote & ICustomDataObstacle,
+): T {
     if (!customData) {
         return {} as T;
     }
@@ -20,7 +22,8 @@ export default function <T extends ICustomDataBase>(customData?: ICustomDataNote
     cd.localRotation ??= cd._localRotation;
     cd.noteJumpMovementSpeed ??= cd._noteJumpMovementSpeed;
     cd.noteJumpStartBeatOffset ??= cd._noteJumpStartBeatOffset;
-    cd.spawnEffect ??= typeof cd._disableSpawnEffect === 'boolean' ? !cd._disableSpawnEffect : undefined;
+    cd.spawnEffect ??=
+        typeof cd._disableSpawnEffect === 'boolean' ? !cd._disableSpawnEffect : undefined;
     cd.size ??= cd._scale;
     cd.track ??= cd._track;
     cd.uninteractable ??= typeof cd._interactable === 'boolean' ? !cd._interactable : undefined;

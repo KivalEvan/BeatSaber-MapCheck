@@ -13,7 +13,10 @@ export function calculate(nc: NoteContainer[]) {
             len = nc.filter(
                 (n) =>
                     n.type === 'note' &&
-                    !(typeof n.data.customData.uninteractable !== 'undefined' || !n.data.customData.uninteractable),
+                    !(
+                        typeof n.data.customData.uninteractable !== 'undefined' ||
+                        !n.data.customData.uninteractable
+                    ),
             ).length;
         i < len;
         i++

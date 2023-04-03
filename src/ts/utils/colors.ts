@@ -176,7 +176,11 @@ export function hexToRgba(hex: string): ColorArray {
             result.push(cNorm(hexToDec(hex.slice(3, 4) + hex.slice(3, 4))));
         }
     } else if (hex.length === 6 || hex.length === 8) {
-        result = [cNorm(hexToDec(hex.slice(0, 2))), cNorm(hexToDec(hex.slice(2, 4))), cNorm(hexToDec(hex.slice(4, 6)))];
+        result = [
+            cNorm(hexToDec(hex.slice(0, 2))),
+            cNorm(hexToDec(hex.slice(2, 4))),
+            cNorm(hexToDec(hex.slice(4, 6))),
+        ];
         if (hex.length === 8) {
             result.push(cNorm(hexToDec(hex.slice(6, 8))));
         }
@@ -217,7 +221,10 @@ export function convertColorInput(
             if (value.type === 'hsva') {
                 return output === 'hsva' ? value.value : HsvaToRgba(...value.value);
             }
-            const temp = value.type === 'rgba255' ? (value.value.map((n) => cNorm(n!)) as ColorArray) : value.value;
+            const temp =
+                value.type === 'rgba255'
+                    ? (value.value.map((n) => cNorm(n!)) as ColorArray)
+                    : value.value;
             return output === 'hsva' ? RgbaToHsva(...temp) : temp;
         }
     }

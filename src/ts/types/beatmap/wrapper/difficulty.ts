@@ -19,8 +19,9 @@ import { GenericFileName } from '../shared/info';
 import { EventContainer, NoteContainer } from './container';
 import { BeatPerMinute } from '../../../beatmap/shared/bpm';
 
-export interface IWrapDifficultyAttribute<T extends Record<keyof T, unknown> = Record<string, unknown>>
-    extends IWrapBaseItemAttribute<T> {
+export interface IWrapDifficultyAttribute<
+    T extends Record<keyof T, unknown> = Record<string, unknown>,
+> extends IWrapBaseItemAttribute<T> {
     version: Version;
     bpmEvents: IWrapBPMEvent[];
     rotationEvents: IWrapRotationEvent[];
@@ -114,8 +115,12 @@ export interface IWrapDifficulty<T extends Record<keyof T, unknown> = Record<str
     addWaypoints(...waypoints: PartialWrapper<IWrapWaypoint>[]): void;
     addBasicEvents(...basicEvents: PartialWrapper<IWrapEvent>[]): void;
     addColorBoostEvents(...colorBoostEvents: PartialWrapper<IWrapColorBoostEvent>[]): void;
-    addLightColorEventBoxGroups(...lightColorEBGs: DeepPartialWrapper<IWrapLightColorEventBoxGroup>[]): void;
-    addLightRotationEventBoxGroups(...lightRotationEBGs: DeepPartialWrapper<IWrapLightRotationEventBoxGroup>[]): void;
+    addLightColorEventBoxGroups(
+        ...lightColorEBGs: DeepPartialWrapper<IWrapLightColorEventBoxGroup>[]
+    ): void;
+    addLightRotationEventBoxGroups(
+        ...lightRotationEBGs: DeepPartialWrapper<IWrapLightRotationEventBoxGroup>[]
+    ): void;
     addLightTranslationEventBoxGroups(
         ...lightTranslationEBGs: DeepPartialWrapper<IWrapLightTranslationEventBoxGroup>[]
     ): void;

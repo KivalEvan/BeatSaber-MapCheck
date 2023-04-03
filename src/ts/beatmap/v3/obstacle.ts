@@ -175,8 +175,7 @@ export class Obstacle extends WrapObstacle<Required<IObstacle>> {
             typeof this.customData.noteJumpStartBeatOffset === 'number' ||
             Array.isArray(this.customData.coordinates) ||
             Array.isArray(this.customData.worldRotation) ||
-            Array.isArray(this.customData.size) ||
-            typeof this.customData.track === 'string'
+            Array.isArray(this.customData.size)
         );
     }
 }

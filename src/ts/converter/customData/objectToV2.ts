@@ -2,7 +2,9 @@ import { ICustomDataBase } from '../../types/beatmap/shared/custom/customData';
 import { ICustomDataNote, ICustomDataObstacle } from '../../types/beatmap/v3/custom/customData';
 import { deepCopy } from '../../utils/misc';
 
-export default function <T extends ICustomDataBase>(customData?: ICustomDataNote & ICustomDataObstacle): T {
+export default function <T extends ICustomDataBase>(
+    customData?: ICustomDataNote & ICustomDataObstacle,
+): T {
     if (!customData) {
         return {} as T;
     }

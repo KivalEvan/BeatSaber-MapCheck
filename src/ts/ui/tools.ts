@@ -12,9 +12,13 @@ import { IInfo, IInfoSet } from '../types/beatmap/shared/info';
 
 const logPrefix = 'UI Tools: ';
 
-const htmlToolsSelectMode: NodeListOf<HTMLSelectElement> = document.querySelectorAll('.tools__select-mode');
-const htmlToolsSelectDifficulty: NodeListOf<HTMLSelectElement> = document.querySelectorAll('.tools__select-difficulty');
-const htmlToolsDifficultyLabel: NodeListOf<HTMLElement> = document.querySelectorAll('.difficulty__label');
+const htmlToolsSelectMode: NodeListOf<HTMLSelectElement> =
+    document.querySelectorAll('.tools__select-mode');
+const htmlToolsSelectDifficulty: NodeListOf<HTMLSelectElement> = document.querySelectorAll(
+    '.tools__select-difficulty',
+);
+const htmlToolsDifficultyLabel: NodeListOf<HTMLElement> =
+    document.querySelectorAll('.difficulty__label');
 const htmlToolsNote: HTMLElement = document.querySelector('.tools__note-content')!;
 const htmlToolsObstacle: HTMLElement = document.querySelector('.tools__obstacle-content')!;
 const htmlToolsEvent: HTMLElement = document.querySelector('.tools__event-content')!;
@@ -26,7 +30,13 @@ const htmlToolsApplyThis: HTMLInputElement = document.querySelector('.tools__app
 const htmlToolsApplyAll: HTMLInputElement = document.querySelector('.tools__apply-all')!;
 const htmlToolsApplyGeneral: HTMLInputElement = document.querySelector('.tools__apply-general')!;
 
-if (!htmlToolsNote || !htmlToolsObstacle || !htmlToolsEvent || !htmlToolsOther || !htmlToolsGeneral) {
+if (
+    !htmlToolsNote ||
+    !htmlToolsObstacle ||
+    !htmlToolsEvent ||
+    !htmlToolsOther ||
+    !htmlToolsGeneral
+) {
     throw new Error(logPrefix + 'missing content element');
 }
 if (!htmlToolsOutputDifficulty || !htmlToolsOutputGeneral) {
@@ -41,7 +51,9 @@ if (htmlToolsApplyThis && htmlToolsApplyAll && htmlToolsApplyGeneral) {
 }
 
 htmlToolsSelectMode.forEach((elem) => elem.addEventListener('change', selectModeHandler));
-htmlToolsSelectDifficulty.forEach((elem) => elem.addEventListener('change', selectDifficultyHandler));
+htmlToolsSelectDifficulty.forEach((elem) =>
+    elem.addEventListener('change', selectDifficultyHandler),
+);
 
 function displayOutputGeneral(): void {
     const analysis = SavedData.analysis?.general;
@@ -69,13 +81,17 @@ function displayOutputDifficulty(mode?: CharacteristicName, difficulty?: Difficu
         throw new Error(logPrefix + 'something went wrong!');
     }
     htmlToolsOutputDifficulty.innerHTML = '';
-    const analysis = SavedData.analysis?.map.find((set) => set.difficulty === difficulty && set.mode === mode);
+    const analysis = SavedData.analysis?.map.find(
+        (set) => set.difficulty === difficulty && set.mode === mode,
+    );
     if (!analysis) {
-        htmlToolsOutputDifficulty.textContent = 'ERROR: could not find analysis for ' + mode + ' ' + difficulty;
+        htmlToolsOutputDifficulty.textContent =
+            'ERROR: could not find analysis for ' + mode + ' ' + difficulty;
         return;
     }
     if (!analysis.html) {
-        htmlToolsOutputDifficulty.textContent = 'ERROR: could not find HTML for ' + mode + ' ' + difficulty;
+        htmlToolsOutputDifficulty.textContent =
+            'ERROR: could not find HTML for ' + mode + ' ' + difficulty;
         return;
     }
     analysis.html.forEach((h) => htmlToolsOutputDifficulty.appendChild(h));
@@ -105,17 +121,22 @@ function populateSelectDiff(mapSet?: IInfoSet): void {
             optDiff.value = diff._difficulty;
             optDiff.textContent =
                 DifficultyRename[diff._difficulty] +
-                (diff._customData?._difficultyLabel ? ' -- ' + diff._customData?._difficultyLabel : '');
+                (diff._customData?._difficultyLabel
+                    ? ' -- ' + diff._customData?._difficultyLabel
+                    : '');
             if (first) {
                 const diffData = SavedData.beatmapDifficulty?.find(
                     (el) =>
-                        el.difficulty === diff._difficulty && el.characteristic === mapSet._beatmapCharacteristicName,
+                        el.difficulty === diff._difficulty &&
+                        el.characteristic === mapSet._beatmapCharacteristicName,
                 );
                 if (!diffData) {
                     throw new Error('missing _mapSetData');
                 }
                 UIInformation.setDiffInfoTable(diffData);
-                setDifficultyLabel(diff._customData?._difficultyLabel || DifficultyRename[diff._difficulty]);
+                setDifficultyLabel(
+                    diff._customData?._difficultyLabel || DifficultyRename[diff._difficulty],
+                );
                 displayOutputDifficulty(mapSet._beatmapCharacteristicName, diff._difficulty);
             }
             first = false;
@@ -179,7 +200,9 @@ function populateTool(): void {
                     break;
                 }
                 default: {
-                    console.error(logPrefix + 'could not recognise type ' + tl.type + ' for ' + tl.name);
+                    console.error(
+                        logPrefix + 'could not recognise type ' + tl.type + ' for ' + tl.name,
+                    );
                 }
             }
         }
@@ -228,12 +251,15 @@ function selectDifficultyHandler(ev: Event): void {
         throw new Error('aaaaaaaaaaaaaaaaaaa');
     }
     const diff = SavedData.beatmapDifficulty?.find(
-        (elem) => elem.difficulty === target.value && elem.characteristic === mode._beatmapCharacteristicName,
+        (elem) =>
+            elem.difficulty === target.value &&
+            elem.characteristic === mode._beatmapCharacteristicName,
     );
     if (diff) {
         UIInformation.setDiffInfoTable(diff);
         setDifficultyLabel(
-            diff.info?._customData?._difficultyLabel || DifficultyRename[target.value as keyof typeof DifficultyRename],
+            diff.info?._customData?._difficultyLabel ||
+                DifficultyRename[target.value as keyof typeof DifficultyRename],
         );
         displayOutputDifficulty(diff.characteristic, diff.difficulty);
     }

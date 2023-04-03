@@ -99,7 +99,10 @@ function inputTimeHandler(this: HTMLInputElement) {
     tool.input.params.maxTime = Math.abs(parseFloat(this.value)) / 1000;
     this.value = round(tool.input.params.maxTime * 1000, 1).toString();
     if (localBPM) {
-        htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.maxTime), 2).toString();
+        htmlInputMaxBeat.value = round(
+            localBPM.toBeatTime(tool.input.params.maxTime),
+            2,
+        ).toString();
     }
 }
 
@@ -143,7 +146,11 @@ function check(map: ToolArgs) {
                 }
                 if (
                     note.data.getDistance(lastNote[note.data.color].data) >= distance &&
-                    checkShrAngle(note.data.direction, lastNoteDirection[note.data.color], note.data.color) &&
+                    checkShrAngle(
+                        note.data.direction,
+                        lastNoteDirection[note.data.color],
+                        note.data.color,
+                    ) &&
                     note.data.time - lastNote[note.data.color].data.time <= maxTime
                 ) {
                     arr.push(note);
@@ -158,7 +165,11 @@ function check(map: ToolArgs) {
                 if (
                     startNoteDot[note.data.color] &&
                     note.data.getDistance(lastNote[note.data.color].data) >= distance &&
-                    checkShrAngle(note.data.direction, lastNoteDirection[note.data.color], note.data.color) &&
+                    checkShrAngle(
+                        note.data.direction,
+                        lastNoteDirection[note.data.color],
+                        note.data.color,
+                    ) &&
                     note.data.time - lastNote[note.data.color].data.time <= maxTime
                 ) {
                     arr.push(startNoteDot[note.data.color]!);

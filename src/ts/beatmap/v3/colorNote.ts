@@ -25,13 +25,17 @@ export class ColorNote extends WrapColorNote<Required<IColorNote>> {
     }
 
     static create(): ColorNote[];
-    static create(...colorNotes: Partial<IWrapColorNoteAttribute<Required<IColorNote>>>[]): ColorNote[];
+    static create(
+        ...colorNotes: Partial<IWrapColorNoteAttribute<Required<IColorNote>>>[]
+    ): ColorNote[];
     static create(...colorNotes: Partial<IColorNote>[]): ColorNote[];
     static create(
-        ...colorNotes: (Partial<IColorNote> & Partial<IWrapColorNoteAttribute<Required<IColorNote>>>)[]
+        ...colorNotes: (Partial<IColorNote> &
+            Partial<IWrapColorNoteAttribute<Required<IColorNote>>>)[]
     ): ColorNote[];
     static create(
-        ...colorNotes: (Partial<IColorNote> & Partial<IWrapColorNoteAttribute<Required<IColorNote>>>)[]
+        ...colorNotes: (Partial<IColorNote> &
+            Partial<IWrapColorNoteAttribute<Required<IColorNote>>>)[]
     ): ColorNote[] {
         const result: ColorNote[] = [];
         colorNotes?.forEach((n) =>
@@ -141,7 +145,8 @@ export class ColorNote extends WrapColorNote<Required<IColorNote>> {
         if (this.customData.animation) {
             if (Array.isArray(this.customData.animation.definitePosition)) {
                 if (isVector3(this.customData.animation.definitePosition)) {
-                    this.customData.animation.definitePosition[0] = -this.customData.animation.definitePosition[0];
+                    this.customData.animation.definitePosition[0] =
+                        -this.customData.animation.definitePosition[0];
                 } else {
                     // deno-lint-ignore no-explicit-any
                     this.customData.animation.definitePosition.forEach((dp: any) => {
@@ -151,7 +156,8 @@ export class ColorNote extends WrapColorNote<Required<IColorNote>> {
             }
             if (Array.isArray(this.customData.animation.offsetPosition)) {
                 if (isVector3(this.customData.animation.offsetPosition)) {
-                    this.customData.animation.offsetPosition[0] = -this.customData.animation.offsetPosition[0];
+                    this.customData.animation.offsetPosition[0] =
+                        -this.customData.animation.offsetPosition[0];
                 } else {
                     // deno-lint-ignore no-explicit-any
                     this.customData.animation.offsetPosition.forEach((op: any) => {
@@ -166,24 +172,37 @@ export class ColorNote extends WrapColorNote<Required<IColorNote>> {
     getAngle(type?: 'vanilla' | 'me' | 'ne') {
         switch (type) {
             case 'vanilla':
-                return (NoteDirectionAngle[this.direction as keyof typeof NoteDirectionAngle] || 0) + this.angleOffset;
+                return (
+                    (NoteDirectionAngle[this.direction as keyof typeof NoteDirectionAngle] || 0) +
+                    this.angleOffset
+                );
             case 'me':
                 if (this.direction >= 1000) {
                     return Math.abs(((this.direction % 1000) % 360) - 360);
                 }
             /* falls through */
             case 'ne':
-                return (NoteDirectionAngle[this.direction as keyof typeof NoteDirectionAngle] || 0) + this.angleOffset;
+                return (
+                    (NoteDirectionAngle[this.direction as keyof typeof NoteDirectionAngle] || 0) +
+                    this.angleOffset
+                );
             default:
                 if (this.direction >= 1000) {
                     return Math.abs(((this.direction % 1000) % 360) - 360);
                 }
-                return (NoteDirectionAngle[this.direction as keyof typeof NoteDirectionAngle] || 0) + this.angleOffset;
+                return (
+                    (NoteDirectionAngle[this.direction as keyof typeof NoteDirectionAngle] || 0) +
+                    this.angleOffset
+                );
         }
     }
 
     isChroma(): boolean {
-        return Array.isArray(this.customData.color) || typeof this.customData.spawnEffect === 'boolean';
+        return (
+            Array.isArray(this.customData.color) ||
+            typeof this.customData.spawnEffect === 'boolean' ||
+            typeof this.customData.disableDebris === 'boolean'
+        );
     }
 
     // god i hate these
@@ -192,6 +211,9 @@ export class ColorNote extends WrapColorNote<Required<IColorNote>> {
             Array.isArray(this.customData.animation) ||
             typeof this.customData.disableNoteGravity === 'boolean' ||
             typeof this.customData.disableNoteLook === 'boolean' ||
+            typeof this.customData.disableBadCutDirection === 'boolean' ||
+            typeof this.customData.disableBadCutSaberType === 'boolean' ||
+            typeof this.customData.disableBadCutSpeed === 'boolean' ||
             Array.isArray(this.customData.flip) ||
             typeof this.customData.uninteractable === 'boolean' ||
             Array.isArray(this.customData.localRotation) ||
@@ -199,8 +221,7 @@ export class ColorNote extends WrapColorNote<Required<IColorNote>> {
             typeof this.customData.noteJumpStartBeatOffset === 'number' ||
             Array.isArray(this.customData.coordinates) ||
             Array.isArray(this.customData.worldRotation) ||
-            typeof this.customData.worldRotation === 'number' ||
-            typeof this.customData.track === 'string'
+            typeof this.customData.worldRotation === 'number'
         );
     }
 }

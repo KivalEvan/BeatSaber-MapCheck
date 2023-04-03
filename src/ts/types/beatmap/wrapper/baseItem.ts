@@ -1,7 +1,9 @@
 import { ObtainCustomData } from '../../utils';
 import { ISerializable } from '../shared/serializable';
 
-export interface IWrapBaseItemAttribute<T extends Record<keyof T, unknown> = Record<string, unknown>> {
+export interface IWrapBaseItemAttribute<
+    T extends Record<keyof T, unknown> = Record<string, unknown>,
+> {
     /** Custom data `<object>` of beatmap object.
      *
      * This has no type-safety for unsupported data.

@@ -15,25 +15,41 @@ export function isEnd(currNote: IWrapColorNote, prevNote: IWrapColorNote, cd: nu
     ) {
         // if end note on right side
         if (currNote.posX > prevNote.posX) {
-            if (cd === NoteDirection.UP_RIGHT || cd === NoteDirection.RIGHT || cd === NoteDirection.DOWN_RIGHT) {
+            if (
+                cd === NoteDirection.UP_RIGHT ||
+                cd === NoteDirection.RIGHT ||
+                cd === NoteDirection.DOWN_RIGHT
+            ) {
                 return true;
             }
         }
         // if end note on left side
         if (currNote.posX < prevNote.posX) {
-            if (cd === NoteDirection.DOWN_LEFT || cd === NoteDirection.LEFT || cd === NoteDirection.UP_LEFT) {
+            if (
+                cd === NoteDirection.DOWN_LEFT ||
+                cd === NoteDirection.LEFT ||
+                cd === NoteDirection.UP_LEFT
+            ) {
                 return true;
             }
         }
         // if end note is above
         if (currNote.posY > prevNote.posY) {
-            if (cd === NoteDirection.UP_LEFT || cd === NoteDirection.UP || cd === NoteDirection.UP_RIGHT) {
+            if (
+                cd === NoteDirection.UP_LEFT ||
+                cd === NoteDirection.UP ||
+                cd === NoteDirection.UP_RIGHT
+            ) {
                 return true;
             }
         }
         // if end note is below
         if (currNote.posY < prevNote.posY) {
-            if (cd === NoteDirection.DOWN_LEFT || cd === NoteDirection.DOWN || cd === NoteDirection.DOWN_RIGHT) {
+            if (
+                cd === NoteDirection.DOWN_LEFT ||
+                cd === NoteDirection.DOWN ||
+                cd === NoteDirection.DOWN_RIGHT
+            ) {
                 return true;
             }
         }
@@ -250,5 +266,7 @@ export function checkDirection(
         }
         nA2 = n2.getAngle();
     }
-    return equal ? shortRotDistance(nA1, nA2, 360) <= angleTol : shortRotDistance(nA1, nA2, 360) >= angleTol;
+    return equal
+        ? shortRotDistance(nA1, nA2, 360) <= angleTol
+        : shortRotDistance(nA1, nA2, 360) >= angleTol;
 }

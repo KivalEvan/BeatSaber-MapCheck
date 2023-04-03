@@ -5,7 +5,9 @@ import { deepCopy } from '../../utils/misc';
 import { WrapLightTranslationBase } from '../wrapper/lightTranslationBase';
 
 /** Light translation base beatmap v3 class object. */
-export class LightTranslationBase extends WrapLightTranslationBase<Required<ILightTranslationBase>> {
+export class LightTranslationBase extends WrapLightTranslationBase<
+    Required<ILightTranslationBase>
+> {
     static default: ObjectReturnFn<Required<ILightTranslationBase>> = {
         b: 0,
         p: 0,
@@ -22,7 +24,9 @@ export class LightTranslationBase extends WrapLightTranslationBase<Required<ILig
 
     static create(): LightTranslationBase[];
     static create(
-        ...lightTranslations: Partial<IWrapLightTranslationBaseAttribute<Required<ILightTranslationBase>>>[]
+        ...lightTranslations: Partial<
+            IWrapLightTranslationBaseAttribute<Required<ILightTranslationBase>>
+        >[]
     ): LightTranslationBase[];
     static create(...lightTranslations: Partial<ILightTranslationBase>[]): LightTranslationBase[];
     static create(

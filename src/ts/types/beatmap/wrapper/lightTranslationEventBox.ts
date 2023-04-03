@@ -1,5 +1,8 @@
 import { IWrapEventBox, IWrapEventBoxAttribute } from './eventBox';
-import { IWrapLightTranslationBase, IWrapLightTranslationBaseAttribute } from './lightTranslationBase';
+import {
+    IWrapLightTranslationBase,
+    IWrapLightTranslationBaseAttribute,
+} from './lightTranslationBase';
 
 export interface IWrapLightTranslationEventBoxAttribute<
     TBox extends Record<keyof TBox, unknown> = Record<string, unknown>,
@@ -38,8 +41,12 @@ export interface IWrapLightTranslationEventBox<
         IWrapLightTranslationEventBoxAttribute<TBox, TBase, TFilter> {
     events: IWrapLightTranslationBase<TBase>[];
 
-    setTranslationDistribution(value: IWrapLightTranslationEventBox['translationDistribution']): this;
-    setTranslationDistributionType(value: IWrapLightTranslationEventBox['translationDistributionType']): this;
+    setTranslationDistribution(
+        value: IWrapLightTranslationEventBox['translationDistribution'],
+    ): this;
+    setTranslationDistributionType(
+        value: IWrapLightTranslationEventBox['translationDistributionType'],
+    ): this;
     setAxis(value: IWrapLightTranslationEventBox['axis']): this;
     setFlip(value: IWrapLightTranslationEventBox['flip']): this;
     setAffectFirst(value: IWrapLightTranslationEventBox['affectFirst']): this;

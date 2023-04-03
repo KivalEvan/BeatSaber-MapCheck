@@ -60,7 +60,9 @@ export class LightTranslationEventBox extends WrapLightTranslationEventBox<
             >
         >[]
     ): LightTranslationEventBox[];
-    static create(...eventBoxes: DeepPartial<ILightTranslationEventBox>[]): LightTranslationEventBox[];
+    static create(
+        ...eventBoxes: DeepPartial<ILightTranslationEventBox>[]
+    ): LightTranslationEventBox[];
     static create(
         ...eventBoxes: (DeepPartial<ILightTranslationEventBox> &
             DeepPartial<

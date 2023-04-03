@@ -1,7 +1,8 @@
 import { IWrapBaseNote, IWrapBaseNoteAttribute } from './baseNote';
 
-export interface IWrapColorNoteAttribute<T extends Record<keyof T, unknown> = Record<string, unknown>>
-    extends IWrapBaseNoteAttribute<T> {
+export interface IWrapColorNoteAttribute<
+    T extends Record<keyof T, unknown> = Record<string, unknown>,
+> extends IWrapBaseNoteAttribute<T> {
     /** Type `<int>` of note.
      * ```ts
      * 0 -> Red

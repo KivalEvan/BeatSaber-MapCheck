@@ -3,8 +3,10 @@
 // otherwise i dont need the queryselectorall
 const logPrefix = 'UI Footer: ';
 
-const htmlWatermark: NodeListOf<HTMLElement> = document.querySelectorAll<HTMLElement>('.link__watermark');
-const htmlVersion: NodeListOf<HTMLElement> = document.querySelectorAll<HTMLElement>('.link__version');
+const htmlWatermark: NodeListOf<HTMLElement> =
+    document.querySelectorAll<HTMLElement>('.link__watermark');
+const htmlVersion: NodeListOf<HTMLElement> =
+    document.querySelectorAll<HTMLElement>('.link__version');
 
 if (!htmlWatermark.length || !htmlVersion.length) {
     console.error(logPrefix + 'missing part');

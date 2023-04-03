@@ -1,7 +1,8 @@
 import { IWrapBaseObject, IWrapBaseObjectAttribute } from './baseObject';
 
-export interface IWrapLightTranslationBaseAttribute<T extends Record<keyof T, unknown> = Record<string, unknown>>
-    extends IWrapBaseObjectAttribute<T> {
+export interface IWrapLightTranslationBaseAttribute<
+    T extends Record<keyof T, unknown> = Record<string, unknown>,
+> extends IWrapBaseObjectAttribute<T> {
     /** Relative beat time `<float>` to event box group. */
     time: number;
     /** Use previous event translation value `<int>` in light translation. */
@@ -20,8 +21,9 @@ export interface IWrapLightTranslationBaseAttribute<T extends Record<keyof T, un
     translation: number;
 }
 
-export interface IWrapLightTranslationBase<T extends Record<keyof T, unknown> = Record<string, unknown>>
-    extends IWrapBaseObject<T>,
+export interface IWrapLightTranslationBase<
+    T extends Record<keyof T, unknown> = Record<string, unknown>,
+> extends IWrapBaseObject<T>,
         IWrapLightTranslationBaseAttribute<T> {
     setTime(value: number): this;
     setPrevious(value: 0 | 1): this;

@@ -2,8 +2,14 @@ import { IWrapEvent, IWrapEventAttribute } from '../../types/beatmap/wrapper/eve
 import { IWrapEventTypesWithKeywords } from '../../types/beatmap/wrapper/eventTypesWithKeywords';
 import { IWrapBombNote, IWrapBombNoteAttribute } from '../../types/beatmap/wrapper/bombNote';
 import { IWrapBPMEvent, IWrapBPMEventAttribute } from '../../types/beatmap/wrapper/bpmEvent';
-import { IWrapBurstSlider, IWrapBurstSliderAttribute } from '../../types/beatmap/wrapper/burstSlider';
-import { IWrapColorBoostEvent, IWrapColorBoostEventAttribute } from '../../types/beatmap/wrapper/colorBoostEvent';
+import {
+    IWrapBurstSlider,
+    IWrapBurstSliderAttribute,
+} from '../../types/beatmap/wrapper/burstSlider';
+import {
+    IWrapColorBoostEvent,
+    IWrapColorBoostEventAttribute,
+} from '../../types/beatmap/wrapper/colorBoostEvent';
 import { IWrapColorNote, IWrapColorNoteAttribute } from '../../types/beatmap/wrapper/colorNote';
 import {
     IWrapLightColorEventBoxGroup,
@@ -18,11 +24,19 @@ import {
     IWrapLightTranslationEventBoxGroupAttribute,
 } from '../../types/beatmap/wrapper/lightTranslationEventBoxGroup';
 import { IWrapObstacle, IWrapObstacleAttribute } from '../../types/beatmap/wrapper/obstacle';
-import { IWrapRotationEvent, IWrapRotationEventAttribute } from '../../types/beatmap/wrapper/rotationEvent';
+import {
+    IWrapRotationEvent,
+    IWrapRotationEventAttribute,
+} from '../../types/beatmap/wrapper/rotationEvent';
 import { IWrapSlider, IWrapSliderAttribute } from '../../types/beatmap/wrapper/slider';
 import { IWrapWaypoint, IWrapWaypointAttribute } from '../../types/beatmap/wrapper/waypoint';
 import { BeatPerMinute } from '../shared/bpm';
-import { DeepPartialWrapper, LooseAutocomplete, ObtainCustomData, PartialWrapper } from '../../types/utils';
+import {
+    DeepPartialWrapper,
+    LooseAutocomplete,
+    ObtainCustomData,
+    PartialWrapper,
+} from '../../types/utils';
 import { GenericFileName } from '../../types/beatmap/shared/info';
 import { EventContainer, NoteContainer } from '../../types/beatmap/wrapper/container';
 import { Version } from '../../types/beatmap/shared/version';
@@ -124,7 +138,10 @@ export abstract class WrapDifficulty<T extends Record<keyof T, unknown>>
         let obstacleEnd = 0;
         for (let i = this.obstacles.length - 1; i >= 0; i--) {
             if (this.obstacles[i].isInteractive()) {
-                obstacleEnd = Math.max(obstacleEnd, this.obstacles[i].time + this.obstacles[i].duration);
+                obstacleEnd = Math.max(
+                    obstacleEnd,
+                    this.obstacles[i].time + this.obstacles[i].duration,
+                );
             }
         }
         return obstacleEnd;
@@ -147,7 +164,9 @@ export abstract class WrapDifficulty<T extends Record<keyof T, unknown>>
     }
 
     abstract addBPMEvents(...bpmEvents: PartialWrapper<IWrapBPMEventAttribute>[]): void;
-    abstract addRotationEvents(...rotationEvents: PartialWrapper<IWrapRotationEventAttribute>[]): void;
+    abstract addRotationEvents(
+        ...rotationEvents: PartialWrapper<IWrapRotationEventAttribute>[]
+    ): void;
     abstract addColorNotes(...colorNotes: PartialWrapper<IWrapColorNoteAttribute>[]): void;
     abstract addBombNotes(...bombNotes: PartialWrapper<IWrapBombNoteAttribute>[]): void;
     abstract addObstacles(...obstacles: PartialWrapper<IWrapObstacleAttribute>[]): void;
@@ -155,7 +174,9 @@ export abstract class WrapDifficulty<T extends Record<keyof T, unknown>>
     abstract addBurstSliders(...burstSliders: PartialWrapper<IWrapBurstSliderAttribute>[]): void;
     abstract addWaypoints(...waypoints: PartialWrapper<IWrapWaypointAttribute>[]): void;
     abstract addBasicEvents(...basicEvents: PartialWrapper<IWrapEventAttribute>[]): void;
-    abstract addColorBoostEvents(...colorBoostEvents: PartialWrapper<IWrapColorBoostEventAttribute>[]): void;
+    abstract addColorBoostEvents(
+        ...colorBoostEvents: PartialWrapper<IWrapColorBoostEventAttribute>[]
+    ): void;
     abstract addLightColorEventBoxGroups(
         ...lightColorEBGs: DeepPartialWrapper<IWrapLightColorEventBoxGroupAttribute>[]
     ): void;

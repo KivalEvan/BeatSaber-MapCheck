@@ -11,9 +11,13 @@ const tag = (name: string) => {
     return `[analyzer::${name}]`;
 };
 
-const toolListInput: ReadonlyArray<Tool> = AnalysisComponents.getAll().sort((a, b) => a.order.input - b.order.input);
+const toolListInput: ReadonlyArray<Tool> = AnalysisComponents.getAll().sort(
+    (a, b) => a.order.input - b.order.input,
+);
 
-const toolListOutput: ReadonlyArray<Tool> = [...toolListInput].sort((a, b) => a.order.output - b.order.output);
+const toolListOutput: ReadonlyArray<Tool> = [...toolListInput].sort(
+    (a, b) => a.order.output - b.order.output,
+);
 
 function init(): void {
     SavedData.analysis = {
@@ -97,7 +101,8 @@ function runDifficulty(characteristic: CharacteristicName, difficulty: Difficult
 
     const njs = NoteJumpSpeed.create(
         beatmapDifficulty.bpm,
-        beatmapDifficulty.info._noteJumpMovementSpeed || NoteJumpSpeed.FallbackNJS[beatmapDifficulty.difficulty],
+        beatmapDifficulty.info._noteJumpMovementSpeed ||
+            NoteJumpSpeed.FallbackNJS[beatmapDifficulty.difficulty],
         beatmapDifficulty.info._noteJumpStartBeatOffset,
     );
 
@@ -105,7 +110,9 @@ function runDifficulty(characteristic: CharacteristicName, difficulty: Difficult
         bpm: beatmapDifficulty.bpm,
         njs: njs,
         audioDuration: SavedData.duration ?? null,
-        mapDuration: beatmapDifficulty.bpm.toRealTime(beatmapDifficulty.data.getLastInteractiveTime()),
+        mapDuration: beatmapDifficulty.bpm.toRealTime(
+            beatmapDifficulty.data.getLastInteractiveTime(),
+        ),
     };
 
     logger.info(tag('runDifficulty'), `Analysing ${characteristic} ${difficulty}`);
@@ -141,7 +148,9 @@ function runDifficulty(characteristic: CharacteristicName, difficulty: Difficult
 }
 
 function adjustTime(bpm: BeatPerMinute): void {
-    const toolList = AnalysisComponents.getDifficulty().sort((a, b) => a.order.output - b.order.output);
+    const toolList = AnalysisComponents.getDifficulty().sort(
+        (a, b) => a.order.output - b.order.output,
+    );
     toolList.forEach((tool) => {
         if (tool.input.adjustTime) {
             tool.input.adjustTime(bpm);
@@ -150,7 +159,9 @@ function adjustTime(bpm: BeatPerMinute): void {
 }
 
 function applyAll(): void {
-    SavedData.beatmapDifficulty?.forEach((set) => runDifficulty(set.characteristic, set.difficulty));
+    SavedData.beatmapDifficulty?.forEach((set) =>
+        runDifficulty(set.characteristic, set.difficulty),
+    );
 }
 
 export default {

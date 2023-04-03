@@ -34,7 +34,8 @@ function run(map: ToolArgs) {
         return;
     }
     const { bpm, audioDuration: duration } = map.settings;
-    const { colorNotes, bombNotes, obstacles, basicEvents, sliders, burstSliders } = map.difficulty.data;
+    const { colorNotes, bombNotes, obstacles, basicEvents, sliders, burstSliders } =
+        map.difficulty.data;
 
     const htmlResult: HTMLElement[] = [];
     if (duration) {
@@ -43,7 +44,9 @@ function run(map: ToolArgs) {
             htmlResult.push(
                 printResult(
                     'Note(s) before start time',
-                    `${round(colorNotes[0].time, 3)} (${toMmss(bpm.toRealTime(colorNotes[0].time))}`,
+                    `${round(colorNotes[0].time, 3)} (${toMmss(
+                        bpm.toRealTime(colorNotes[0].time),
+                    )}`,
                     'error',
                 ),
             );
@@ -70,7 +73,9 @@ function run(map: ToolArgs) {
             htmlResult.push(
                 printResult(
                     'Chain(s) before start time',
-                    `${round(burstSliders[0].time, 3)} (${toMmss(bpm.toRealTime(burstSliders[0].time))}`,
+                    `${round(burstSliders[0].time, 3)} (${toMmss(
+                        bpm.toRealTime(burstSliders[0].time),
+                    )}`,
                     'error',
                 ),
             );
@@ -88,7 +93,9 @@ function run(map: ToolArgs) {
             htmlResult.push(
                 printResult(
                     'Event(s) before start time',
-                    `${round(basicEvents[0].time, 3)} (${toMmss(bpm.toRealTime(basicEvents[0].time))}`,
+                    `${round(basicEvents[0].time, 3)} (${toMmss(
+                        bpm.toRealTime(basicEvents[0].time),
+                    )}`,
                     'error',
                 ),
             );

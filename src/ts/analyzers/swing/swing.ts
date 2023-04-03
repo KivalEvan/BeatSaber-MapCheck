@@ -52,15 +52,24 @@ export default class Swing implements ISwingContainer {
                     }
                     sc.push({
                         time: firstNote[n.data.color].data.time,
-                        duration: lastNote[n.data.color].data.time - firstNote[n.data.color].data.time,
+                        duration:
+                            lastNote[n.data.color].data.time - firstNote[n.data.color].data.time,
                         data: swingNoteArray[n.data.color],
                         ebpm,
                         ebpmSwing,
                         maxSpeed,
                         minSpeed,
                     });
-                    ebpmSwing = this.calcEBPMBetweenObject(n.data, firstNote[n.data.color].data, bpm.value);
-                    ebpm = this.calcEBPMBetweenObject(n.data, lastNote[n.data.color].data, bpm.value);
+                    ebpmSwing = this.calcEBPMBetweenObject(
+                        n.data,
+                        firstNote[n.data.color].data,
+                        bpm.value,
+                    );
+                    ebpm = this.calcEBPMBetweenObject(
+                        n.data,
+                        lastNote[n.data.color].data,
+                        bpm.value,
+                    );
                     firstNote[n.data.color] = n;
                     swingNoteArray[n.data.color] = [];
                 }
@@ -110,7 +119,10 @@ export default class Swing implements ISwingContainer {
         ) {
             for (const n of context) {
                 if (n.type === 'note') {
-                    if (n.data.direction !== NoteDirection.ANY && checkDirection(currNote.data, n.data, 90, false)) {
+                    if (
+                        n.data.direction !== NoteDirection.ANY &&
+                        checkDirection(currNote.data, n.data, 90, false)
+                    ) {
                         return true;
                     }
                 }
@@ -124,12 +136,17 @@ export default class Swing implements ISwingContainer {
             }
         }
         return (
-            (currNote.data.isWindow(prevNote.data) && bpm.toRealTime(currNote.data.time - prevNote.data.time) > 0.08) ||
+            (currNote.data.isWindow(prevNote.data) &&
+                bpm.toRealTime(currNote.data.time - prevNote.data.time) > 0.08) ||
             bpm.toRealTime(currNote.data.time - prevNote.data.time) > 0.07
         );
     };
 
-    static calcEBPMBetweenObject = (currObj: IWrapBaseObject, prevObj: IWrapBaseObject, bpm: number): number => {
+    static calcEBPMBetweenObject = (
+        currObj: IWrapBaseObject,
+        prevObj: IWrapBaseObject,
+        bpm: number,
+    ): number => {
         return bpm / ((currObj.time - prevObj.time) * 2);
     };
 

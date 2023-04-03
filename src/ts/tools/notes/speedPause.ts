@@ -1,4 +1,11 @@
-import { IBeatmapItem, IBeatmapSettings, Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
+import {
+    IBeatmapItem,
+    IBeatmapSettings,
+    Tool,
+    ToolArgs,
+    ToolInputOrder,
+    ToolOutputOrder,
+} from '../../types/mapcheck';
 import { round } from '../../utils';
 import { NoteContainer, NoteContainerNote } from '../../types/beatmap/wrapper/container';
 import swing from '../../analyzers/swing/swing';
@@ -70,14 +77,20 @@ const tool: Tool<{ maxTime: number }> = {
 
 function adjustTimeHandler(bpm: BeatPerMinute) {
     localBPM = bpm;
-    htmlInputMinPrec.value = round(1 / localBPM.toBeatTime(tool.input.params.maxTime as number), 2).toString();
+    htmlInputMinPrec.value = round(
+        1 / localBPM.toBeatTime(tool.input.params.maxTime as number),
+        2,
+    ).toString();
 }
 
 function inputTimeHandler(this: HTMLInputElement) {
     tool.input.params.maxTime = Math.abs(parseFloat(this.value)) / 1000;
     this.value = round(tool.input.params.maxTime * 1000, 1).toString();
     if (localBPM) {
-        htmlInputMinPrec.value = round(1 / localBPM.toBeatTime(tool.input.params.maxTime as number), 2).toString();
+        htmlInputMinPrec.value = round(
+            1 / localBPM.toBeatTime(tool.input.params.maxTime as number),
+            2,
+        ).toString();
     }
 }
 
@@ -121,7 +134,9 @@ function check(settings: IBeatmapSettings, difficulty: IBeatmapItem) {
                     if (
                         maybePause[NoteColor.RED] &&
                         maybePause[NoteColor.BLUE] &&
-                        lastNote[note.data.color].data.time - lastNotePause[note.data.color].data.time <= maxTime * 3
+                        lastNote[note.data.color].data.time -
+                            lastNotePause[note.data.color].data.time <=
+                            maxTime * 3
                     ) {
                         arr.push(lastNote[note.data.color]);
                     }

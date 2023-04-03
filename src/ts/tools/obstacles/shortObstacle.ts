@@ -93,13 +93,21 @@ function check(map: ToolArgs) {
         } else if (o.posY === PositionY.TOP && o.height > 2 && o.duration > 0) {
             if (o.width > 2 || (o.width > 1 && o.posX === PositionX.MIDDLE_LEFT)) {
                 if (o.isLonger(obstacleLHalf)) {
-                    if (o.duration < minDur && o.isLonger(obstacleLFull, minDur) && o.isLonger(obstacleLHalf, minDur)) {
+                    if (
+                        o.duration < minDur &&
+                        o.isLonger(obstacleLFull, minDur) &&
+                        o.isLonger(obstacleLHalf, minDur)
+                    ) {
                         arr.push(o);
                     }
                     obstacleLHalf = o;
                 }
                 if (o.isLonger(obstacleRHalf)) {
-                    if (o.duration < minDur && o.isLonger(obstacleRFull, minDur) && o.isLonger(obstacleRHalf, minDur)) {
+                    if (
+                        o.duration < minDur &&
+                        o.isLonger(obstacleRFull, minDur) &&
+                        o.isLonger(obstacleRHalf, minDur)
+                    ) {
                         arr.push(o);
                     }
                     obstacleRHalf = o;

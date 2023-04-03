@@ -1,4 +1,11 @@
-import { IBeatmapItem, IBeatmapSettings, Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
+import {
+    IBeatmapItem,
+    IBeatmapSettings,
+    Tool,
+    ToolArgs,
+    ToolInputOrder,
+    ToolOutputOrder,
+} from '../../types/mapcheck';
 import UICheckbox from '../../ui/helpers/checkbox';
 import { printResultTime } from '../helpers';
 
@@ -8,9 +15,14 @@ const enabled = true;
 
 const defaultPrec = [8, 6];
 
-const htmlContainer = UICheckbox.create(name + ': ', description, enabled, function (this: HTMLInputElement) {
-    tool.input.enabled = this.checked;
-});
+const htmlContainer = UICheckbox.create(
+    name + ': ',
+    description,
+    enabled,
+    function (this: HTMLInputElement) {
+        tool.input.enabled = this.checked;
+    },
+);
 const htmlInputPrec = document.createElement('input');
 
 htmlInputPrec.id = 'input__tools-prec';
@@ -83,7 +95,12 @@ function run(map: ToolArgs) {
     const result = check(map.settings, map.difficulty);
 
     if (result.length) {
-        tool.output.html = printResultTime('Off-beat precision', result, map.settings.bpm, 'warning');
+        tool.output.html = printResultTime(
+            'Off-beat precision',
+            result,
+            map.settings.bpm,
+            'warning',
+        );
     } else {
         tool.output.html = null;
     }

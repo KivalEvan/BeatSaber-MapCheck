@@ -31,7 +31,9 @@ const tool: Tool = {
 
 function check(map: ToolArgs) {
     const { bpm } = map.settings;
-    const noteContainer = map.difficulty!.noteContainer.filter((n) => n.type === 'bomb' || n.type === 'note');
+    const noteContainer = map.difficulty!.noteContainer.filter(
+        (n) => n.type === 'bomb' || n.type === 'note',
+    );
 
     const arr: IWrapColorNote[] = [];
     // to avoid multiple of stack popping up, ignore anything within this time
@@ -48,14 +50,18 @@ function check(map: ToolArgs) {
         }
         for (let j = i + 1; j < len; j++) {
             const compareTo = noteContainer[j];
-            if (bpm.toRealTime(compareTo.data.time) > bpm.toRealTime(currentNote.data.time) + 0.01) {
+            if (
+                bpm.toRealTime(compareTo.data.time) >
+                bpm.toRealTime(currentNote.data.time) + 0.01
+            ) {
                 break;
             }
             if (compareTo.type === 'note' && currentNote.data.color === compareTo.data.color) {
                 continue;
             }
             if (
-                ((currentNote.data.isHorizontal(compareTo.data) || currentNote.data.isVertical(compareTo.data)) &&
+                ((currentNote.data.isHorizontal(compareTo.data) ||
+                    currentNote.data.isVertical(compareTo.data)) &&
                     isIntersect(currentNote.data, compareTo.data, [
                         [45, 1],
                         [15, 2],

@@ -17,7 +17,9 @@ export type ObjectReturnFn<T> = {
     [P in keyof T]: T[P] extends object ? () => T[P] : T[P];
 };
 
-export type LooseAutocomplete<T extends string | number> = T extends string ? T | (string & {}) : T | (number & {});
+export type LooseAutocomplete<T extends string | number> = T extends string
+    ? T | (string & {})
+    : T | (number & {});
 
 type OmitNever<T> = { [K in keyof T as T[K] extends never ? never : K]: T[K] };
 
@@ -58,7 +60,10 @@ export type PartialDeepOmit<T, K> = T extends Primitive
               : never;
       }>;
 
-export type ExcludeMethod<T> = Pick<T, { [P in keyof T]: T[P] extends Function ? never : P }[keyof T]>;
+export type ExcludeMethod<T> = Pick<
+    T,
+    { [P in keyof T]: T[P] extends Function ? never : P }[keyof T]
+>;
 
 export type DeepExcludeMethodArray<T extends any[]> = {
     [P in keyof T]: DeepExcludeMethod<T[P]>;
@@ -82,8 +87,17 @@ export type PartialWrapper<T> = Partial<DeepOmit<ExcludeMethod<T>, 'data'>>;
 
 export type DeepPartialWrapper<T> = DeepPartial<DeepOmit<DeepExcludeMethod<T>, 'data'>>;
 
+export type Nullable<T> = T extends Primitive
+    ? T | null
+    : {
+          [P in keyof T]?: Nullable<T[P]>;
+      };
+
 /** INTERNAL USE ONLY */
-export type ObtainCustomData<T extends Record<string, unknown>> = T['customData'] extends Record<string, unknown>
+export type ObtainCustomData<T extends Record<string, unknown>> = T['customData'] extends Record<
+    string,
+    unknown
+>
     ? T['customData']
     : T['_customData'] extends Record<string, unknown>
     ? T['_customData']

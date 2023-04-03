@@ -1,5 +1,8 @@
 import { IWrapEventBoxGroup, IWrapEventBoxGroupAttribute } from './eventBoxGroup';
-import { IWrapLightRotationEventBox, IWrapLightRotationEventBoxAttribute } from './lightRotationEventBox';
+import {
+    IWrapLightRotationEventBox,
+    IWrapLightRotationEventBoxAttribute,
+} from './lightRotationEventBox';
 
 export interface IWrapLightRotationEventBoxGroupAttribute<
     TGroup extends Record<keyof TGroup, unknown> = Record<string, unknown>,

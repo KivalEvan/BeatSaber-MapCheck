@@ -38,7 +38,8 @@ function populate(): void {
             const diff = set._difficultyBeatmaps[i];
             const mapData = SavedData.beatmapDifficulty.find(
                 (data) =>
-                    data.characteristic === set._beatmapCharacteristicName && data.difficulty === diff._difficulty,
+                    data.characteristic === set._beatmapCharacteristicName &&
+                    data.difficulty === diff._difficulty,
             );
             if (!mapData) {
                 throw new Error(logPrefix + 'Could not find map data');
@@ -47,13 +48,16 @@ function populate(): void {
             const htmlAccordion = UIAccordion.create(
                 `${prefix}${set._beatmapCharacteristicName}-${diff._difficulty}`,
                 DifficultyRename[diff._difficulty] +
-                    (diff._customData?._difficultyLabel ? ' -- ' + diff._customData?._difficultyLabel : ''),
+                    (diff._customData?._difficultyLabel
+                        ? ' -- ' + diff._customData?._difficultyLabel
+                        : ''),
                 diff._difficulty,
                 true,
             );
 
             const htmlContent = htmlAccordion.querySelector('.accordion__collapsible-flex');
-            const htmlCheckbox = htmlAccordion.querySelector<HTMLInputElement>('.accordion__button');
+            const htmlCheckbox =
+                htmlAccordion.querySelector<HTMLInputElement>('.accordion__button');
             if (!htmlContent || !htmlCheckbox) {
                 throw new Error(logPrefix + 'something went wrong!');
             }

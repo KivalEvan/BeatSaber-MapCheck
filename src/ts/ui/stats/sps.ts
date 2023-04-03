@@ -37,9 +37,9 @@ export function createSPSTable(mapInfo: IInfo, mapData: IBeatmapItem): HTMLTable
         2,
     )}</td></tr><tr><th class="${prefix}table-header">Total</th><td class="${prefix}table-element">${
         swingInfo.total.total
-    }</td><td class="${prefix}table-element">${swingInfo.red.total}</td><td class="${prefix}table-element">${
-        swingInfo.blue.total
-    }</td></tr>`;
+    }</td><td class="${prefix}table-element">${
+        swingInfo.red.total
+    }</td><td class="${prefix}table-element">${swingInfo.blue.total}</td></tr>`;
 
     return htmlTable;
 }

@@ -75,7 +75,22 @@ const envFilterID: { [key in EnvironmentV3Name]?: Record<number, number> } = {
         18: 3,
         19: 14,
     },
-    PyroEnvironment: { 0: 3, 1: 3, 2: 5, 3: 5, 4: 3, 5: 12, 6: 48, 7: 48, 8: 4, 9: 4, 10: 3, 11: 3, 12: 10, 13: 10 },
+    PyroEnvironment: {
+        0: 3,
+        1: 3,
+        2: 5,
+        3: 5,
+        4: 3,
+        5: 12,
+        6: 48,
+        7: 48,
+        8: 4,
+        9: 4,
+        10: 3,
+        11: 3,
+        12: 10,
+        13: 10,
+    },
     TheSecondEnvironment: {
         0: 15,
         1: 24,
@@ -279,17 +294,32 @@ function run(map: ToolArgs) {
     }
     const result = check(
         map.difficulty.data,
-        map.difficulty.characteristic === '360Degree' || map.difficulty.characteristic === '90Degree'
+        map.difficulty.characteristic === '360Degree' ||
+            map.difficulty.characteristic === '90Degree'
             ? map.info._allDirectionsEnvironmentName
             : map.info._environmentName,
     );
 
     const htmlResult: HTMLElement[] = [];
     if (result.defectID.length) {
-        htmlResult.push(printResultTime('Invalid event box group ID', result.defectID, map.settings.bpm, 'error'));
+        htmlResult.push(
+            printResultTime(
+                'Invalid event box group ID',
+                result.defectID,
+                map.settings.bpm,
+                'error',
+            ),
+        );
     }
     if (result.defectFilter.length) {
-        htmlResult.push(printResultTime('Invalid event box filter', result.defectFilter, map.settings.bpm, 'error'));
+        htmlResult.push(
+            printResultTime(
+                'Invalid event box filter',
+                result.defectFilter,
+                map.settings.bpm,
+                'error',
+            ),
+        );
     }
 
     if (htmlResult.length) {

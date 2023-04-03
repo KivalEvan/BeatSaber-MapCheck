@@ -64,29 +64,35 @@ export function createEBGCountTable(mapInfo: IInfo, mapData: IBeatmapItem): HTML
 
     let htmlString = `<caption class="${prefix}table-caption">Event Box Group:</caption><tr><th class="${prefix}table-header"></th><th class="${prefix}table-header">Group</th><th class="${prefix}table-header">Box</th><th class="${prefix}table-header">Base</th><tr><th class="${prefix}table-header">Color</th><td class="${prefix}table-element">${Object.values(
         ebgColorCount,
-    ).reduce((t, { total }) => t + total, 0)}</td><td class="${prefix}table-element">${Object.values(
-        ebgColorCount,
-    ).reduce((t, { eventBox }) => t + eventBox, 0)}</td><td class="${prefix}table-element">${Object.values(
-        ebgColorCount,
     ).reduce(
+        (t, { total }) => t + total,
+        0,
+    )}</td><td class="${prefix}table-element">${Object.values(ebgColorCount).reduce(
+        (t, { eventBox }) => t + eventBox,
+        0,
+    )}</td><td class="${prefix}table-element">${Object.values(ebgColorCount).reduce(
         (t, { base }) => t + base,
         0,
     )}</td></tr><tr><th class="${prefix}table-header">Rotate</th><td class="${prefix}table-element">${Object.values(
         ebgRotationCount,
-    ).reduce((t, { total }) => t + total, 0)}</td><td class="${prefix}table-element">${Object.values(
-        ebgRotationCount,
-    ).reduce((t, { eventBox }) => t + eventBox, 0)}</td><td class="${prefix}table-element">${Object.values(
-        ebgRotationCount,
     ).reduce(
+        (t, { total }) => t + total,
+        0,
+    )}</td><td class="${prefix}table-element">${Object.values(ebgRotationCount).reduce(
+        (t, { eventBox }) => t + eventBox,
+        0,
+    )}</td><td class="${prefix}table-element">${Object.values(ebgRotationCount).reduce(
         (t, { base }) => t + base,
         0,
     )}</td></tr><tr><th class="${prefix}table-header">Translate</th><td class="${prefix}table-element">${Object.values(
         ebgTranslationCount,
-    ).reduce((t, { total }) => t + total, 0)}</td><td class="${prefix}table-element">${Object.values(
-        ebgTranslationCount,
-    ).reduce((t, { eventBox }) => t + eventBox, 0)}</td><td class="${prefix}table-element">${Object.values(
-        ebgTranslationCount,
     ).reduce(
+        (t, { total }) => t + total,
+        0,
+    )}</td><td class="${prefix}table-element">${Object.values(ebgTranslationCount).reduce(
+        (t, { eventBox }) => t + eventBox,
+        0,
+    )}</td><td class="${prefix}table-element">${Object.values(ebgTranslationCount).reduce(
         (t, { base }) => t + base,
         0,
     )}</td></tr><tr><th class="${prefix}table-header">Total</th><td class="${prefix}table-element">${

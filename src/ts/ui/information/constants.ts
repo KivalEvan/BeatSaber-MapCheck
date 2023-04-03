@@ -10,10 +10,15 @@ export const htmlTableInformation: HTMLElement = document.querySelector('.info__
 export const htmlTableWarnings: HTMLElement = document.querySelector('.info__warnings')!;
 export const htmlTableBookmarks: HTMLElement = document.querySelector('.info__bookmarks')!;
 export const htmlTableBPMChanges: HTMLElement = document.querySelector('.info__bpm-changes')!;
-export const htmlTableEnvironmentEnhancement: HTMLElement = document.querySelector('.info__environment-enhancement')!;
-export const htmlTablePointDefinitions: HTMLElement = document.querySelector('.info__point-definitions')!;
+export const htmlTableEnvironmentEnhancement: HTMLElement = document.querySelector(
+    '.info__environment-enhancement',
+)!;
+export const htmlTablePointDefinitions: HTMLElement = document.querySelector(
+    '.info__point-definitions',
+)!;
 export const htmlTableCustomEvents: HTMLElement = document.querySelector('.info__custom-events')!;
-export const htmlTableElements: NodeListOf<HTMLElement> = document.querySelectorAll('.info__table-element')!;
+export const htmlTableElements: NodeListOf<HTMLElement> =
+    document.querySelectorAll('.info__table-element')!;
 
 if (
     !htmlTableVersion ||

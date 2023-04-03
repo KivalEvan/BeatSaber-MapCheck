@@ -10,8 +10,12 @@ const htmlInfoLevelAuthor: HTMLElement = document.querySelector('.info__level-au
 const htmlInfoEnvironment: HTMLElement = document.querySelector('.info__environment')!;
 const htmlInfoEditors: HTMLElement = document.querySelector('.info__editors')!;
 const htmlInfoContributors: HTMLElement = document.querySelector('.info__contributors')!;
-const htmlInfoContributorsSelect: HTMLSelectElement = document.querySelector('.info__contributors-select')!;
-const htmlInfoContributorsImage: HTMLImageElement = document.querySelector('.info__contributors-image')!;
+const htmlInfoContributorsSelect: HTMLSelectElement = document.querySelector(
+    '.info__contributors-select',
+)!;
+const htmlInfoContributorsImage: HTMLImageElement = document.querySelector(
+    '.info__contributors-image',
+)!;
 const htmlInfoContributorsName: HTMLElement = document.querySelector('.info__contributors-name')!;
 const htmlInfoContributorsRole: HTMLElement = document.querySelector('.info__contributors-role')!;
 

@@ -1,8 +1,9 @@
 import { Vector2 } from '../../vector';
 import { IWrapBaseObject, IWrapBaseObjectAttribute } from './baseObject';
 
-export interface IWrapGridObjectAttribute<T extends Record<keyof T, unknown> = Record<string, unknown>>
-    extends IWrapBaseObjectAttribute<T> {
+export interface IWrapGridObjectAttribute<
+    T extends Record<keyof T, unknown> = Record<string, unknown>,
+> extends IWrapBaseObjectAttribute<T> {
     /** Position x `<int>` of base obj.
      * ```ts
      * 0 -> Outer Left

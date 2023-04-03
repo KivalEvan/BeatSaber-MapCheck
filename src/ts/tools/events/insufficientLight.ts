@@ -49,7 +49,8 @@ function run(map: ToolArgs) {
     }
     const result = sufficientLight(
         map.difficulty.data.basicEvents,
-        map.difficulty.characteristic === '360Degree' || map.difficulty.characteristic === '90Degree'
+        map.difficulty.characteristic === '360Degree' ||
+            map.difficulty.characteristic === '90Degree'
             ? map.info._allDirectionsEnvironmentName
             : map.info._environmentName,
     );

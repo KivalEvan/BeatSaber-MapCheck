@@ -1,4 +1,8 @@
-import { ColorSchemeList, IColorScheme, IEnvironmentScheme } from '../../types/beatmap/shared/colorScheme';
+import {
+    ColorSchemeList,
+    IColorScheme,
+    IEnvironmentScheme,
+} from '../../types/beatmap/shared/colorScheme';
 import { EnvironmentAllName } from '../../types/beatmap/shared/environment';
 
 /** Record of Environment Color to Color Scheme. */

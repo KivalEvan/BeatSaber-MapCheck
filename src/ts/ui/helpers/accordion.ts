@@ -2,14 +2,20 @@ import { UIBackgroundColorType, UIBackgroundColor } from '../../types/mapcheck/u
 
 const logPrefix = 'UI Accordion: ';
 const prefix = 'accordion__';
-const htmlAccordion: NodeListOf<HTMLInputElement> = document.querySelectorAll<HTMLInputElement>('.accordion__button');
+const htmlAccordion: NodeListOf<HTMLInputElement> =
+    document.querySelectorAll<HTMLInputElement>('.accordion__button');
 
 if (!htmlAccordion.length) {
     console.error(logPrefix + 'empty accordion list, intentional or typo error?');
 }
 
 export default {
-    create: (id: string, title: string, bg: UIBackgroundColorType, isFlex: boolean = false): HTMLElement => {
+    create: (
+        id: string,
+        title: string,
+        bg: UIBackgroundColorType,
+        isFlex: boolean = false,
+    ): HTMLElement => {
         const accBase = document.createElement('div');
         accBase.className = 'accordion';
 

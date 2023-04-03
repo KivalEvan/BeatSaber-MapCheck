@@ -3,14 +3,14 @@ import { Vector3 } from '../../../vector';
 import { Vector3PointDefinition } from '../../shared/custom/heck';
 
 /** Heck Base Custom Event interface. */
-export interface IHeckCustomEventDataBase {
-    track: string | string[];
+export interface IHeckBase {
+    track?: string | string[];
 }
 
 /** AssignPathAnimation interface for Heck Custom Event.
- * @extends IHeckCustomEventDataBase
+ * @extends Required<IHeckBase>
  */
-export interface IHeckCustomEventDataAnimateTrack extends IHeckCustomEventDataBase {
+export interface IHeckCustomEventDataAnimateTrack extends Required<IHeckBase> {
     duration?: number;
     repeat?: number;
     easing?: Easings;
@@ -21,9 +21,9 @@ export interface IHeckCustomEventDataAnimateTrack extends IHeckCustomEventDataBa
 }
 
 /** AssignPathAnimation interface for Heck Custom Event.
- * @extends IHeckCustomEventDataBase
+ * @extends Required<IHeckBase>
  */
-export interface IHeckCustomEventDataAssignPathAnimation extends IHeckCustomEventDataBase {
+export interface IHeckCustomEventDataAssignPathAnimation extends Required<IHeckBase> {
     easing?: Easings;
     position?: string | Vector3 | Vector3PointDefinition[];
     rotation?: string | Vector3 | Vector3PointDefinition[];

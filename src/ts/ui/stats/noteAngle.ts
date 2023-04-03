@@ -66,7 +66,9 @@ export function createNoteAngleTable(mapInfo: IInfo, mapData: IBeatmapItem): HTM
         { text: 'Red Chain', value: 'redChain' },
         { text: 'Blue Chain', value: 'blueChain' },
     );
-    htmlSelect.querySelector<HTMLSelectElement>('select')?.addEventListener('change', noteAngleSelectHandler);
+    htmlSelect
+        .querySelector<HTMLSelectElement>('select')
+        ?.addEventListener('change', noteAngleSelectHandler);
 
     let htmlString = `<tbody id="${prefix}table-angle-${mapData.characteristic}-${
         mapData.difficulty

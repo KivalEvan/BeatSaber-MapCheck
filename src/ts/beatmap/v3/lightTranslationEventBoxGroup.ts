@@ -41,7 +41,9 @@ export class LightTranslationEventBoxGroup extends WrapLightTranslationEventBoxG
             >
         >[]
     ): LightTranslationEventBoxGroup[];
-    static create(...eventBoxGroups: DeepPartial<ILightTranslationEventBoxGroup>[]): LightTranslationEventBoxGroup[];
+    static create(
+        ...eventBoxGroups: DeepPartial<ILightTranslationEventBoxGroup>[]
+    ): LightTranslationEventBoxGroup[];
     static create(
         ...eventBoxGroups: (DeepPartial<ILightTranslationEventBoxGroup> &
             DeepPartial<
@@ -74,7 +76,8 @@ export class LightTranslationEventBoxGroup extends WrapLightTranslationEventBoxG
                         (ebg.boxes as ILightTranslationEventBox[]) ??
                         (ebg.e as unknown as ILightTranslationEventBox[]) ??
                         LightTranslationEventBoxGroup.default.e(),
-                    customData: ebg.customData ?? LightTranslationEventBoxGroup.default.customData(),
+                    customData:
+                        ebg.customData ?? LightTranslationEventBoxGroup.default.customData(),
                 }),
             ),
         );

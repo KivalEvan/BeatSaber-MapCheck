@@ -3,7 +3,6 @@ import { NoteContainer } from '../../types/beatmap/wrapper/container';
 import UICheckbox from '../../ui/helpers/checkbox';
 import { printResultTime } from '../helpers';
 import { NoteDirection } from '../../beatmap/shared/constants';
-import { equalNear } from '../../utils';
 
 const name = 'Improper Arc';
 const description = 'Check for correct use of arc.';
@@ -50,7 +49,9 @@ function check(map: ToolArgs) {
                         arc.data.posY === head.data.posY &&
                         head.data.time <= arc.data.time + 0.001 &&
                         arc.data.color === head.data.color &&
-                        (head.data.direction !== NoteDirection.ANY ? arc.data.direction === head.data.direction : true)
+                        (head.data.direction !== NoteDirection.ANY
+                            ? arc.data.direction === head.data.direction
+                            : true)
                     ) {
                         for (let k = j; k < len; k++) {
                             const tail = noteContainer[j];
@@ -100,7 +101,10 @@ function check(map: ToolArgs) {
                     potential = false;
                     break;
                 }
-                if ((head.type === 'slider' || head.type === 'burstSlider') && head.data.time + 0.001 > lastTime) {
+                if (
+                    (head.type === 'slider' || head.type === 'burstSlider') &&
+                    head.data.time + 0.001 > lastTime
+                ) {
                     potential = false;
                 }
             }

@@ -8,7 +8,10 @@ export function hideTableRow<T extends HTMLElement>(elem: T): void {
     elem.classList.add('hidden');
 }
 
-export function displayTableRow<T extends HTMLElement>(elem: T, content: string | string[] | HTMLElement[]): void {
+export function displayTableRow<T extends HTMLElement>(
+    elem: T,
+    content: string | string[] | HTMLElement[],
+): void {
     const tableElem = elem.querySelector('.info__table-element');
     if (tableElem) {
         while (tableElem.firstChild) {
