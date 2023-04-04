@@ -12,6 +12,10 @@
     -   While arc can affect scoring, visibility and haptic can be disabled and mostly served as cosmetic
 -   Bomb should now count towards interactive time (idk why this was filtered in the first place)
 
+### Fixed
+
+-   Custom white color should no longer set if boost or non-boost does not exist
+
 ### Removed
 
 -   Headless arc check (a valid use since 1.29.0)

@@ -61,13 +61,11 @@ export function setCustomColor(customColor?: IColorScheme, environment?: Environ
     const hasComponent: { [key: string]: boolean } = {
         noteColor: !!(customColor._colorLeft || customColor._colorRight || false),
         eventColor: !!(customColor._envColorLeft || customColor._envColorRight || false),
-        eventWhiteColor: !!(customColor._envColorWhite || false),
         eventBoostColor: !!(
             customColor._envColorLeftBoost ||
             customColor._envColorRightBoost ||
             false
         ),
-        eventWhiteBoostColor: !!(customColor._envColorWhiteBoost || false),
         obstacleColor: !!(customColor._obstacleColor || false),
     };
 
@@ -115,12 +113,6 @@ export function setCustomColor(customColor?: IColorScheme, environment?: Environ
     }
     if (customColor._envColorWhiteBoost) {
         hexColor._envColorWhiteBoost = RgbaToHex(customColor._envColorWhiteBoost);
-        if (!hexColor._envColorWhite) {
-            hexColor._envColorWhite = hexColor._envColorWhiteBoost;
-        }
-    }
-    if (hexColor._envColorWhite && !hexColor._envColorWhiteBoost) {
-        hexColor._envColorWhiteBoost = hexColor._envColorWhite;
     }
 
     if (envBoost) {
