@@ -12,9 +12,20 @@ if (!htmlWatermark.length || !htmlVersion.length) {
     console.error(logPrefix + 'missing part');
 }
 
+function isBirthday() {
+    const date = new Date();
+    return date.getMonth() == 5 && date.getDate() == 10;
+}
+
 export default {
     setWatermark: (str: string): void => {
-        htmlWatermark.forEach((elem) => (elem.textContent = str));
+        htmlWatermark.forEach((elem) => {
+            elem.textContent = (isBirthday() ? 'Happy Birthday, ' : '') + str;
+            if (isBirthday())
+                elem.title = `Happy ${
+                    new Date().getFullYear() - new Date('1999-06-10').getFullYear()
+                } Birthday, 10th June`;
+        });
     },
     setVersion: (str: string): void => {
         htmlVersion.forEach((elem) => (elem.textContent = str));
