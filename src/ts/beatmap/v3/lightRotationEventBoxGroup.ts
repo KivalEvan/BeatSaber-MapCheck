@@ -41,7 +41,9 @@ export class LightRotationEventBoxGroup extends WrapLightRotationEventBoxGroup<
             >
         >[]
     ): LightRotationEventBoxGroup[];
-    static create(...eventBoxGroups: DeepPartial<ILightRotationEventBoxGroup>[]): LightRotationEventBoxGroup[];
+    static create(
+        ...eventBoxGroups: DeepPartial<ILightRotationEventBoxGroup>[]
+    ): LightRotationEventBoxGroup[];
     static create(
         ...eventBoxGroups: (DeepPartial<ILightRotationEventBoxGroup> &
             DeepPartial<

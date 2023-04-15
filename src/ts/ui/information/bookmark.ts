@@ -37,9 +37,9 @@ export function setBookmarks(arr?: IBookmark[], bpm?: BeatPerMinute | null): voi
             ? RgbaToHex({ r: elem.c[0], g: elem.c[1], b: elem.c[2] })
             : '#333333';
 
-        textContainer.textContent = `${round(elem.b, Settings.rounding)}${rt ? ' | ' + toMmss(rt) : ''} -- ${
-            elem.n != '' ? elem.n : '**EMPTY NAME**'
-        }`;
+        textContainer.textContent = `${round(elem.b, Settings.rounding)}${
+            rt ? ' | ' + toMmss(rt) : ''
+        } -- ${elem.n != '' ? elem.n : '**EMPTY NAME**'}`;
 
         panel.appendChild(container);
     });

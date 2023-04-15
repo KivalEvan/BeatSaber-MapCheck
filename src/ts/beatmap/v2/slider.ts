@@ -31,8 +31,12 @@ export class Slider extends WrapSlider<Required<ISlider>> {
     static create(): Slider[];
     static create(...sliders: Partial<IWrapSliderAttribute<Required<ISlider>>>[]): Slider[];
     static create(...sliders: Partial<ISlider>[]): Slider[];
-    static create(...sliders: (Partial<ISlider> & Partial<IWrapSliderAttribute<Required<ISlider>>>)[]): Slider[];
-    static create(...sliders: (Partial<ISlider> & Partial<IWrapSliderAttribute<Required<ISlider>>>)[]): Slider[] {
+    static create(
+        ...sliders: (Partial<ISlider> & Partial<IWrapSliderAttribute<Required<ISlider>>>)[]
+    ): Slider[];
+    static create(
+        ...sliders: (Partial<ISlider> & Partial<IWrapSliderAttribute<Required<ISlider>>>)[]
+    ): Slider[] {
         const result: Slider[] = [];
         sliders?.forEach((s) =>
             result.push(
@@ -41,7 +45,10 @@ export class Slider extends WrapSlider<Required<ISlider>> {
                     _headTime: s.time ?? s._headTime ?? s._tailTime ?? Slider.default._headTime,
                     _headLineIndex: s.posX ?? s._headLineIndex ?? Slider.default._headLineIndex,
                     _headLineLayer: s.posY ?? s._headLineLayer ?? Slider.default._headLineLayer,
-                    _headCutDirection: (s.direction as 0) ?? s._headCutDirection ?? Slider.default._headCutDirection,
+                    _headCutDirection:
+                        (s.direction as 0) ??
+                        s._headCutDirection ??
+                        Slider.default._headCutDirection,
                     _headControlPointLengthMultiplier:
                         s.lengthMultiplier ??
                         s._headControlPointLengthMultiplier ??
@@ -50,12 +57,17 @@ export class Slider extends WrapSlider<Required<ISlider>> {
                     _tailLineIndex: s.tailPosX ?? s._tailLineIndex ?? Slider.default._tailLineIndex,
                     _tailLineLayer: s.tailPosY ?? s._tailLineLayer ?? Slider.default._tailLineLayer,
                     _tailCutDirection:
-                        (s.tailDirection as 0) ?? s._tailCutDirection ?? Slider.default._tailCutDirection,
+                        (s.tailDirection as 0) ??
+                        s._tailCutDirection ??
+                        Slider.default._tailCutDirection,
                     _tailControlPointLengthMultiplier:
                         s.tailLengthMultiplier ??
                         s._tailControlPointLengthMultiplier ??
                         Slider.default._tailControlPointLengthMultiplier,
-                    _sliderMidAnchorMode: s.midAnchor ?? s._sliderMidAnchorMode ?? Slider.default._sliderMidAnchorMode,
+                    _sliderMidAnchorMode:
+                        s.midAnchor ??
+                        s._sliderMidAnchorMode ??
+                        Slider.default._sliderMidAnchorMode,
                     _customData: s.customData ?? s._customData ?? Slider.default._customData(),
                 }),
             ),

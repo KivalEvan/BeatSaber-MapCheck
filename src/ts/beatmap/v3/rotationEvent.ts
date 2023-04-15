@@ -20,13 +20,17 @@ export class RotationEvent extends WrapRotationEvent<Required<IRotationEvent>> {
     }
 
     static create(): RotationEvent[];
-    static create(...rotationEvents: Partial<IWrapRotationEventAttribute<Required<IRotationEvent>>>[]): RotationEvent[];
+    static create(
+        ...rotationEvents: Partial<IWrapRotationEventAttribute<Required<IRotationEvent>>>[]
+    ): RotationEvent[];
     static create(...rotationEvents: Partial<IRotationEvent>[]): RotationEvent[];
     static create(
-        ...rotationEvents: (Partial<IRotationEvent> & Partial<IWrapRotationEventAttribute<Required<IRotationEvent>>>)[]
+        ...rotationEvents: (Partial<IRotationEvent> &
+            Partial<IWrapRotationEventAttribute<Required<IRotationEvent>>>)[]
     ): RotationEvent[];
     static create(
-        ...rotationEvents: (Partial<IRotationEvent> & Partial<IWrapRotationEventAttribute<Required<IRotationEvent>>>)[]
+        ...rotationEvents: (Partial<IRotationEvent> &
+            Partial<IWrapRotationEventAttribute<Required<IRotationEvent>>>)[]
     ): RotationEvent[] {
         const result: RotationEvent[] = [];
         rotationEvents?.forEach((re) =>

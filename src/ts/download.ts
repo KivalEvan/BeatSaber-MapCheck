@@ -20,7 +20,10 @@ export async function downloadMap(url: string): Promise<ArrayBuffer> {
             xhr.timeout += Date.now() - startTime;
             UILoading.status(
                 'download',
-                `Downloading map: ${round(e.loaded / 1024 / 1024, 1)}MB / ${round(e.total / 1024 / 1024, 1)}MB`,
+                `Downloading map: ${round(e.loaded / 1024 / 1024, 1)}MB / ${round(
+                    e.total / 1024 / 1024,
+                    1,
+                )}MB`,
                 (e.loaded / e.total) * 100,
             );
         };
@@ -70,7 +73,9 @@ export async function downloadFromURL(input: string): Promise<ArrayBuffer> {
 
     // check if URL is BeatSaver map URL
     if (url.match(/^(https?:\/\/)?(www\.)?beatsaver\.com\/maps\//)) {
-        return downloadFromID(url.replace(/^https?:\/\/(www\.)?beatsaver\.com\/maps\//, '').match(/[a-fA-F0-9]*/)![0]);
+        return downloadFromID(
+            url.replace(/^https?:\/\/(www\.)?beatsaver\.com\/maps\//, '').match(/[a-fA-F0-9]*/)![0],
+        );
     }
 
     UILoading.status('info', 'Requesting download from link', 0);
@@ -90,7 +95,10 @@ export async function downloadFromHash(input: string): Promise<ArrayBuffer> {
         throw new Error('invalid hash');
     }
 
-    logger.info(tag('downloadFromHash'), `fetching download URL from BeatSaver for map hash ${hash}`);
+    logger.info(
+        tag('downloadFromHash'),
+        `fetching download URL from BeatSaver for map hash ${hash}`,
+    );
     UILoading.status('info', 'Fetching download URL from BeatSaver', 0);
     const url = await getZipHashURL(hash);
     logger.info(tag('downloadFromHash'), `downloading from BeatSaver for map hash ${hash}`);

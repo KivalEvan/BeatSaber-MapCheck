@@ -20,24 +20,27 @@ const tag = () => {
     return `[main]`;
 };
 
+async function getFileInput(type: LoadType): Promise<ArrayBuffer | File> {
+    if (type.file) {
+        return type.file;
+    } else if (type.link) {
+        return downloadFromURL(sanitizeURL(decodeURI(type.link)));
+    } else if (type.id) {
+        return downloadFromID(sanitizeBeatSaverID(decodeURI(type.id)));
+    } else if (type.hash && isHex(decodeURI(type.hash).trim())) {
+        return downloadFromHash(decodeURI(type.hash).trim());
+    } else {
+        throw new Error('Could not search for file.');
+    }
+}
+
 // TODO: break these to smaller functions, and probably slap in async while at it
 // TODO: possibly do more accurate & predictive loading bar based on the amount of file available (may be farfetched and likely not be implemented)
 export default async (type: LoadType) => {
     try {
         console.time('loading time');
         UIInput.enable(false);
-        let file: ArrayBuffer | File;
-        if (type.file) {
-            file = type.file;
-        } else if (type.link) {
-            file = await downloadFromURL(sanitizeURL(decodeURI(type.link)));
-        } else if (type.id) {
-            file = await downloadFromID(sanitizeBeatSaverID(decodeURI(type.id)));
-        } else if (type.hash && isHex(decodeURI(type.hash).trim())) {
-            file = await downloadFromHash(decodeURI(type.hash).trim());
-        } else {
-            throw new Error('Could not search for file.');
-        }
+        let file = await getFileInput(type);
         UILoading.status('info', 'Extracting zip', 0);
         UIHeader.switchHeader(false);
         const mapZip = await extractZip(file);
@@ -83,7 +86,8 @@ export default async (type: LoadType) => {
         if (Settings.load.audio && audioFile) {
             let loaded = false;
             setTimeout(() => {
-                if (!loaded) UILoading.status('info', 'Loading audio... (this may take a while)', 20.875);
+                if (!loaded)
+                    UILoading.status('info', 'Loading audio... (this may take a while)', 20.875);
             }, 10000);
             let arrayBuffer = await audioFile.async('arraybuffer');
             UIHeader.setAudio(arrayBuffer);

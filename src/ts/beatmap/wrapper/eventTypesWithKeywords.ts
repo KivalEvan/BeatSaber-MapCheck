@@ -3,7 +3,10 @@ import { IWrapEventTypesWithKeywords } from '../../types/beatmap/wrapper/eventTy
 import { Serializable } from '../shared/serializable';
 
 /** Basic event types with keywords beatmap class object. */
-export abstract class WrapEventTypesWithKeywords<T extends Record<keyof T, unknown>, U extends Record<keyof U, unknown>>
+export abstract class WrapEventTypesWithKeywords<
+        T extends Record<keyof T, unknown>,
+        U extends Record<keyof U, unknown>,
+    >
     extends Serializable<T>
     implements IWrapEventTypesWithKeywords<T>
 {

@@ -36,7 +36,8 @@ export class Waypoint extends WrapWaypoint<Required<IWaypoint>> {
                     _time: w.time ?? w._time ?? Waypoint.default._time,
                     _lineIndex: w.posX ?? w._lineIndex ?? Waypoint.default._lineIndex,
                     _lineLayer: w.posY ?? w._lineLayer ?? Waypoint.default._lineLayer,
-                    _offsetDirection: w.direction ?? w._offsetDirection ?? Waypoint.default._offsetDirection,
+                    _offsetDirection:
+                        w.direction ?? w._offsetDirection ?? Waypoint.default._offsetDirection,
                     _customData: w.customData ?? w._customData ?? Waypoint.default._customData(),
                 }),
             ),

@@ -2,7 +2,7 @@ import { IBaseObject } from './baseObject';
 import { IChromaEventLaser, IChromaEventLight, IChromaEventRing } from './custom/chroma';
 import { ICustomDataBase } from '../shared/custom/customData';
 
-interface IBasicEventBase extends IBaseObject {
+export interface IBasicEventBase extends IBaseObject {
     /** Event type `<int>` of basic event.
      * ```ts
      * 0 -> Back Lasers
@@ -40,11 +40,11 @@ interface IBasicEventBase extends IBaseObject {
     customData?: ICustomDataBase;
 }
 
-interface IBasicEventGeneric extends IBasicEventBase {
+export interface IBasicEventGeneric extends IBasicEventBase {
     et: number;
 }
 
-interface IBasicEventLight extends IBasicEventBase {
+export interface IBasicEventLight extends IBasicEventBase {
     et: 0 | 1 | 2 | 3 | 4 | 6 | 7 | 10 | 11;
     /** State of light event. ( Blue | Red | White )
      * ```ts
@@ -65,19 +65,19 @@ interface IBasicEventLight extends IBasicEventBase {
 }
 
 /**  @deprecated use `colorBoostEvents` to apply boost event. */
-interface IBasicEventBoost extends IBasicEventBase {
+export interface IBasicEventBoost extends IBasicEventBase {
     /**  @deprecated use `colorBoostEvents` to apply boost event. */
     et: 5;
     /**  @deprecated use `colorBoostEvents` to apply boost event. */
     i: 0 | 1;
 }
 
-interface IBasicEventRing extends IBasicEventBase {
+export interface IBasicEventRing extends IBasicEventBase {
     et: 8 | 9;
     customData?: IChromaEventRing;
 }
 
-interface IBasicEventLaserRotation extends IBasicEventBase {
+export interface IBasicEventLaserRotation extends IBasicEventBase {
     et: 12 | 13;
     /** Laser rotation speed in degree per second multiplied by 20. */
     i: number;
@@ -85,7 +85,7 @@ interface IBasicEventLaserRotation extends IBasicEventBase {
 }
 
 /** @deprecated use `rotationEvents` to apply lane rotation event. */
-interface IBasicEventLaneRotation extends IBasicEventBase {
+export interface IBasicEventLaneRotation extends IBasicEventBase {
     /** @deprecated use `rotationEvents` to apply lane rotation event. */
     et: 14 | 15;
     /** Amount of angle changed clockwise.
@@ -104,17 +104,17 @@ interface IBasicEventLaneRotation extends IBasicEventBase {
     i: number;
 }
 
-interface IBasicEventExtra extends IBasicEventBase {
+export interface IBasicEventExtra extends IBasicEventBase {
     et: 16 | 17 | 18 | 19;
 }
 
 /** but why? */
-interface IBasicEventSpecial extends IBasicEventBase {
+export interface IBasicEventSpecial extends IBasicEventBase {
     et: 40 | 41 | 42 | 43;
 }
 
 /** @deprecated use `bpmEvents` to apply BPM change. */
-interface IBasicEventBPMChange extends IBasicEventBase {
+export interface IBasicEventBPMChange extends IBasicEventBase {
     et: 100;
     /** Changes the BPM to event value.
      *

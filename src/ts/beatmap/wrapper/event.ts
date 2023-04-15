@@ -146,7 +146,11 @@ export abstract class WrapEvent<T extends Record<keyof Required<T>, unknown>>
     abstract isChroma(): boolean;
 
     isValidType(): boolean {
-        return (this.type >= 0 && this.type <= 19) || (this.type >= 40 && this.type <= 43) || this.type === 100;
+        return (
+            (this.type >= 0 && this.type <= 19) ||
+            (this.type >= 40 && this.type <= 43) ||
+            this.type === 100
+        );
     }
 
     isValid(): boolean {

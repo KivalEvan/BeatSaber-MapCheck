@@ -1,5 +1,25 @@
 # Changelog
 
+## 2.5.11 [2023-04-15]
+
+### Added
+
+-   Panic 2.0 environment and color scheme
+
+### Changed
+
+-   Arc no longer count towards interactive time
+    -   While arc can affect scoring, visibility and haptic can be disabled and mostly served as cosmetic
+-   Bomb should now count towards interactive time (idk why this was filtered in the first place)
+
+### Fixed
+
+-   Custom white color should no longer set if boost or non-boost does not exist
+
+### Removed
+
+-   Headless arc check (a valid use since 1.29.0)
+
 ## 2.5.10 [2023-03-28]
 
 ### Added

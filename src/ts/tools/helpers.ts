@@ -11,10 +11,14 @@ function addLabel(str: string, symbol?: Symbol): string {
             str = '<span title="Ranking: for rankability reason."> 🚧 </span>' + str;
             break;
         case 'error':
-            str = '<span title="Error: should be fixed unless you know what you are doing."> ❌ </span>' + str;
+            str =
+                '<span title="Error: should be fixed unless you know what you are doing."> ❌ </span>' +
+                str;
             break;
         case 'warning':
-            str = '<span title="Warning: not necessarily needed to be fixed but worth considering."> ❗ </span>' + str;
+            str =
+                '<span title="Warning: not necessarily needed to be fixed but worth considering."> ❗ </span>' +
+                str;
             break;
         case 'info':
             str = '<span title="Info: no action necessary and worth noting."> ⚠️ </span>' + str;
@@ -37,7 +41,12 @@ export function printResult(label: string, text?: string, symbol?: Symbol) {
     return htmlContainer;
 }
 
-export function printResultTime(label: string, timeAry: number[], bpm: BeatPerMinute, symbol?: Symbol) {
+export function printResultTime(
+    label: string,
+    timeAry: number[],
+    bpm: BeatPerMinute,
+    symbol?: Symbol,
+) {
     const htmlContainer = document.createElement('div');
 
     label = addLabel(label, symbol);
@@ -46,15 +55,20 @@ export function printResultTime(label: string, timeAry: number[], bpm: BeatPerMi
         .map((n) => {
             switch (settings.beatNumbering) {
                 case 'realtime':
-                    return `<span title="Beat ${round(bpm.adjustTime(n), settings.rounding)}">${toMmss(
-                        bpm.toRealTime(n),
-                    )}</span>`;
+                    return `<span title="Beat ${round(
+                        bpm.adjustTime(n),
+                        settings.rounding,
+                    )}">${toMmss(bpm.toRealTime(n))}</span>`;
                 case 'realtimems':
-                    return `<span title="Beat ${round(bpm.adjustTime(n), settings.rounding)}">${toMmssms(
-                        bpm.toRealTime(n),
-                    )}</span>`;
+                    return `<span title="Beat ${round(
+                        bpm.adjustTime(n),
+                        settings.rounding,
+                    )}">${toMmssms(bpm.toRealTime(n))}</span>`;
                 case 'jsontime':
-                    return `<span title="Time ${toMmssms(bpm.toRealTime(n))}">${round(n, settings.rounding)}</span>`;
+                    return `<span title="Time ${toMmssms(bpm.toRealTime(n))}">${round(
+                        n,
+                        settings.rounding,
+                    )}</span>`;
                 case 'beattime':
                 default:
                     return `<span title="Time ${toMmssms(bpm.toRealTime(n))}">${round(

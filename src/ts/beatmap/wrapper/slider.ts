@@ -66,19 +66,25 @@ export abstract class WrapSlider<T extends Record<keyof T, unknown>>
     getTailAngle(type?: 'vanilla' | 'me' | 'ne') {
         switch (type) {
             case 'vanilla':
-                return NoteDirectionAngle[this.tailDirection as keyof typeof NoteDirectionAngle] || 0;
+                return (
+                    NoteDirectionAngle[this.tailDirection as keyof typeof NoteDirectionAngle] || 0
+                );
             case 'me':
                 if (this.tailDirection >= 1000) {
                     return Math.abs(((this.tailDirection % 1000) % 360) - 360);
                 }
             /* falls through */
             case 'ne':
-                return NoteDirectionAngle[this.tailDirection as keyof typeof NoteDirectionAngle] || 0;
+                return (
+                    NoteDirectionAngle[this.tailDirection as keyof typeof NoteDirectionAngle] || 0
+                );
             default:
                 if (this.tailDirection >= 1000) {
                     return Math.abs(((this.tailDirection % 1000) % 360) - 360);
                 }
-                return NoteDirectionAngle[this.tailDirection as keyof typeof NoteDirectionAngle] || 0;
+                return (
+                    NoteDirectionAngle[this.tailDirection as keyof typeof NoteDirectionAngle] || 0
+                );
         }
     }
 
@@ -101,7 +107,9 @@ export abstract class WrapSlider<T extends Record<keyof T, unknown>>
             this.posX > 3 ||
             this.tailPosX < 0 ||
             this.tailPosX > 3 ||
-            (this.posX === this.tailPosX && this.posY === this.tailPosY && this.time === this.tailTime)
+            (this.posX === this.tailPosX &&
+                this.posY === this.tailPosY &&
+                this.time === this.tailTime)
         );
     }
 }

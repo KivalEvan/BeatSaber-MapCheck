@@ -1,4 +1,11 @@
-import { Vector2, Vector2Object, Vector3, Vector3Object, Vector4, Vector4Object } from '../types/vector';
+import {
+    Vector2,
+    Vector2Object,
+    Vector3,
+    Vector3Object,
+    Vector4,
+    Vector4Object,
+} from '../types/vector';
 
 export function isVector2(obj: unknown): obj is Vector2 {
     return Array.isArray(obj) && obj.every((n) => typeof n === 'number') && obj.length === 2;

@@ -42,12 +42,20 @@ function run(map: ToolArgs) {
     }
     if (njs.value > 23) {
         htmlResult.push(
-            printResult(`NJS is too high (${round(njs.value, 2)})`, 'use lower whenever necessary', 'warning'),
+            printResult(
+                `NJS is too high (${round(njs.value, 2)})`,
+                'use lower whenever necessary',
+                'warning',
+            ),
         );
     }
     if (njs.value < 3) {
         htmlResult.push(
-            printResult(`NJS is too low (${round(njs.value, 2)})`, 'timing is less significant below this', 'warning'),
+            printResult(
+                `NJS is too low (${round(njs.value, 2)})`,
+                'timing is less significant below this',
+                'warning',
+            ),
         );
     }
     if (njs.jd > 36) {
@@ -76,7 +84,11 @@ function run(map: ToolArgs) {
     }
     if (njs.calcHJDRaw() + njs.offset < NoteJumpSpeed.HJD_MIN) {
         htmlResult.push(
-            printResult('Unnecessary negative offset', `will not drop below ${NoteJumpSpeed.HJD_MIN}`, 'warning'),
+            printResult(
+                'Unnecessary negative offset',
+                `will not drop below ${NoteJumpSpeed.HJD_MIN}`,
+                'warning',
+            ),
         );
     }
 

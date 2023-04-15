@@ -34,7 +34,11 @@ function run(map: ToolArgs) {
     const { audioDuration } = map.settings;
 
     if (audioDuration && audioDuration < 20) {
-        tool.output.html = printResult('Unrankable audio length', `too short (${toMmss(audioDuration)}s)`, 'rank');
+        tool.output.html = printResult(
+            'Unrankable audio length',
+            `too short (${toMmss(audioDuration)}s)`,
+            'rank',
+        );
     } else if (!flag.loading.audio) {
         tool.output.html = printResult(
             'No audio',

@@ -78,7 +78,9 @@ export function createNotePlacementTable(mapInfo: IInfo, mapData: IBeatmapItem):
         { text: 'Blue Chain', value: 'blueChain' },
         { text: 'Bomb', value: 'bomb' },
     );
-    htmlSelect.querySelector<HTMLSelectElement>('select')?.addEventListener('change', notePlacementSelectHandler);
+    htmlSelect
+        .querySelector<HTMLSelectElement>('select')
+        ?.addEventListener('change', notePlacementSelectHandler);
 
     let htmlString = `<tbody id="${prefix}table-placement-${mapData.characteristic}-${
         mapData.difficulty

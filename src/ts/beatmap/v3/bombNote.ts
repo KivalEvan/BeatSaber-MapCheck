@@ -100,7 +100,8 @@ export class BombNote extends WrapBombNote<Required<IBombNote>> {
         if (this.customData.animation) {
             if (Array.isArray(this.customData.animation.definitePosition)) {
                 if (isVector3(this.customData.animation.definitePosition)) {
-                    this.customData.animation.definitePosition[0] = -this.customData.animation.definitePosition[0];
+                    this.customData.animation.definitePosition[0] =
+                        -this.customData.animation.definitePosition[0];
                 } else {
                     // deno-lint-ignore no-explicit-any
                     this.customData.animation.definitePosition.forEach((dp: any) => {
@@ -110,7 +111,8 @@ export class BombNote extends WrapBombNote<Required<IBombNote>> {
             }
             if (Array.isArray(this.customData.animation.offsetPosition)) {
                 if (isVector3(this.customData.animation.offsetPosition)) {
-                    this.customData.animation.offsetPosition[0] = -this.customData.animation.offsetPosition[0];
+                    this.customData.animation.offsetPosition[0] =
+                        -this.customData.animation.offsetPosition[0];
                 } else {
                     // deno-lint-ignore no-explicit-any
                     this.customData.animation.offsetPosition.forEach((op: any) => {
@@ -123,7 +125,11 @@ export class BombNote extends WrapBombNote<Required<IBombNote>> {
     }
 
     isChroma(): boolean {
-        return Array.isArray(this.customData.color) || typeof this.customData.spawnEffect === 'boolean';
+        return (
+            Array.isArray(this.customData.color) ||
+            typeof this.customData.spawnEffect === 'boolean' ||
+            typeof this.customData.disableDebris === 'boolean'
+        );
     }
 
     // god i hate these
@@ -132,6 +138,9 @@ export class BombNote extends WrapBombNote<Required<IBombNote>> {
             Array.isArray(this.customData.animation) ||
             typeof this.customData.disableNoteGravity === 'boolean' ||
             typeof this.customData.disableNoteLook === 'boolean' ||
+            typeof this.customData.disableBadCutDirection === 'boolean' ||
+            typeof this.customData.disableBadCutSaberType === 'boolean' ||
+            typeof this.customData.disableBadCutSpeed === 'boolean' ||
             Array.isArray(this.customData.flip) ||
             typeof this.customData.uninteractable === 'boolean' ||
             Array.isArray(this.customData.localRotation) ||
@@ -139,8 +148,7 @@ export class BombNote extends WrapBombNote<Required<IBombNote>> {
             typeof this.customData.noteJumpStartBeatOffset === 'number' ||
             Array.isArray(this.customData.coordinates) ||
             Array.isArray(this.customData.worldRotation) ||
-            typeof this.customData.worldRotation === 'number' ||
-            typeof this.customData.track === 'string'
+            typeof this.customData.worldRotation === 'number'
         );
     }
 }

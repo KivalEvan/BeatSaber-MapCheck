@@ -571,7 +571,10 @@ export const LightRotationEventBoxDataCheck: Record<keyof ILightRotationEventBox
     },
 } as const;
 
-export const LightRotationEventBoxGroupDataCheck: Record<keyof ILightRotationEventBoxGroup, DataCheck> = {
+export const LightRotationEventBoxGroupDataCheck: Record<
+    keyof ILightRotationEventBoxGroup,
+    DataCheck
+> = {
     b: {
         type: 'number',
         version: '3.0.0',
@@ -621,64 +624,68 @@ export const LightTranslationBaseDataCheck: Record<keyof ILightTranslationBase, 
     },
 } as const;
 
-export const LightTranslationEventBoxDataCheck: Record<keyof ILightTranslationEventBox, DataCheck> = {
-    f: {
-        type: 'object',
-        version: '3.2.0',
-        check: IndexFilterDataCheck,
-    },
-    w: {
-        type: 'number',
-        version: '3.2.0',
-    },
-    d: {
-        type: 'number',
-        int: true,
-        version: '3.2.0',
-    },
-    s: {
-        type: 'number',
-        version: '3.2.0',
-    },
-    t: {
-        type: 'number',
-        int: true,
-        version: '3.2.0',
-    },
-    a: {
-        type: 'number',
-        int: true,
-        version: '3.2.0',
-    },
-    l: {
-        type: 'array',
-        version: '3.2.0',
-        check: LightTranslationBaseDataCheck,
-    },
-    r: {
-        type: 'number',
-        int: true,
-        version: '3.2.0',
-    },
-    b: {
-        type: 'number',
-        int: true,
-        version: '3.2.0',
-    },
-    i: {
-        type: 'number',
-        int: true,
-        version: '3.2.0',
-    },
-    customData: {
-        type: 'object',
-        version: '3.0.0',
-        check: {},
-        optional: true,
-    },
-} as const;
+export const LightTranslationEventBoxDataCheck: Record<keyof ILightTranslationEventBox, DataCheck> =
+    {
+        f: {
+            type: 'object',
+            version: '3.2.0',
+            check: IndexFilterDataCheck,
+        },
+        w: {
+            type: 'number',
+            version: '3.2.0',
+        },
+        d: {
+            type: 'number',
+            int: true,
+            version: '3.2.0',
+        },
+        s: {
+            type: 'number',
+            version: '3.2.0',
+        },
+        t: {
+            type: 'number',
+            int: true,
+            version: '3.2.0',
+        },
+        a: {
+            type: 'number',
+            int: true,
+            version: '3.2.0',
+        },
+        l: {
+            type: 'array',
+            version: '3.2.0',
+            check: LightTranslationBaseDataCheck,
+        },
+        r: {
+            type: 'number',
+            int: true,
+            version: '3.2.0',
+        },
+        b: {
+            type: 'number',
+            int: true,
+            version: '3.2.0',
+        },
+        i: {
+            type: 'number',
+            int: true,
+            version: '3.2.0',
+        },
+        customData: {
+            type: 'object',
+            version: '3.0.0',
+            check: {},
+            optional: true,
+        },
+    } as const;
 
-export const LightTranslationEventBoxGroupDataCheck: Record<keyof ILightTranslationEventBoxGroup, DataCheck> = {
+export const LightTranslationEventBoxGroupDataCheck: Record<
+    keyof ILightTranslationEventBoxGroup,
+    DataCheck
+> = {
     b: {
         type: 'number',
         version: '3.2.0',
@@ -701,7 +708,10 @@ export const LightTranslationEventBoxGroupDataCheck: Record<keyof ILightTranslat
     },
 } as const;
 
-export const BasicEventTypesForKeywordsDataCheck: Record<keyof IBasicEventTypesForKeywords, DataCheck> = {
+export const BasicEventTypesForKeywordsDataCheck: Record<
+    keyof IBasicEventTypesForKeywords,
+    DataCheck
+> = {
     k: {
         type: 'string',
         version: '3.0.0',
@@ -714,7 +724,10 @@ export const BasicEventTypesForKeywordsDataCheck: Record<keyof IBasicEventTypesF
     },
 } as const;
 
-export const BasicEventTypesWithKeywordsDataCheck: Record<keyof IBasicEventTypesWithKeywords, DataCheck> = {
+export const BasicEventTypesWithKeywordsDataCheck: Record<
+    keyof IBasicEventTypesWithKeywords,
+    DataCheck
+> = {
     d: {
         type: 'array',
         version: '3.0.0',

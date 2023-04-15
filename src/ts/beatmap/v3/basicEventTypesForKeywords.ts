@@ -7,7 +7,9 @@ import { WrapEventTypesForKeywords } from '../wrapper/eventTypesForKeywords';
  *
  * Used in basic event types with keywords.
  */
-export class BasicEventTypesForKeywords extends WrapEventTypesForKeywords<Required<IBasicEventTypesForKeywords>> {
+export class BasicEventTypesForKeywords extends WrapEventTypesForKeywords<
+    Required<IBasicEventTypesForKeywords>
+> {
     static default: ObjectReturnFn<Required<IBasicEventTypesForKeywords>> = {
         k: '',
         e: () => [],

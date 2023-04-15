@@ -52,7 +52,10 @@ export function V2toV3(data: DifficultyV2, skipPrompt?: boolean): DifficultyV3 {
     data.colorNotes.forEach((n, i) => {
         const customData: ICustomDataNote = objectToV3(n.customData);
         if (typeof n.customData._cutDirection === 'number') {
-            logger.debug(tag('V2toV3'), `notes[${i}] at time ${n.time} NE _cutDirection will be converted.`);
+            logger.debug(
+                tag('V2toV3'),
+                `notes[${i}] at time ${n.time} NE _cutDirection will be converted.`,
+            );
         }
         if (n.isBomb()) {
             if (n.customData._fake) {
@@ -184,21 +187,36 @@ export function V2toV3(data: DifficultyV2, skipPrompt?: boolean): DifficultyV3 {
             const customData = eventToV3(e.customData);
             if (e.isLightEvent()) {
                 if (e.customData._propID) {
-                    logger.warn(tag('V2toV3'), `events[${i}] at time ${e.time} Chroma _propID will be removed.`);
+                    logger.warn(
+                        tag('V2toV3'),
+                        `events[${i}] at time ${e.time} Chroma _propID will be removed.`,
+                    );
                 }
                 if (e.customData._lightGradient) {
-                    logger.warn(tag('V2toV3'), `events[${i}] at time ${e.time} Chroma _lightGradient will be removed.`);
+                    logger.warn(
+                        tag('V2toV3'),
+                        `events[${i}] at time ${e.time} Chroma _lightGradient will be removed.`,
+                    );
                 }
             }
             if (e.isRingEvent()) {
                 if (e.customData._reset) {
-                    logger.warn(tag('V2toV3'), `events[${i}] at time ${e.time} Chroma _reset will be removed.`);
+                    logger.warn(
+                        tag('V2toV3'),
+                        `events[${i}] at time ${e.time} Chroma _reset will be removed.`,
+                    );
                 }
                 if (e.customData._counterSpin) {
-                    logger.warn(tag('V2toV3'), `events[${i}] at time ${e.time} Chroma _counterSpin will be removed.`);
+                    logger.warn(
+                        tag('V2toV3'),
+                        `events[${i}] at time ${e.time} Chroma _counterSpin will be removed.`,
+                    );
                 }
                 if (e.customData._stepMult || e.customData._propMult || e.customData._speedMult) {
-                    logger.warn(tag('V2toV3'), `events[${i}] at time ${e.time} Chroma _mult will be removed.`);
+                    logger.warn(
+                        tag('V2toV3'),
+                        `events[${i}] at time ${e.time} Chroma _mult will be removed.`,
+                    );
                 }
             }
             template.basicEvents.push(
@@ -388,7 +406,8 @@ export function V2toV3(data: DifficultyV2, skipPrompt?: boolean): DifficultyV3 {
                                                   ? e._geometry._material
                                                   : {
                                                         shader: e._geometry._material._shader,
-                                                        shaderKeywords: e._geometry._material._shaderKeywords,
+                                                        shaderKeywords:
+                                                            e._geometry._material._shaderKeywords,
                                                         collision: e._geometry._material._collision,
                                                         track: e._geometry._material._track,
                                                         color: e._geometry._material._color,
@@ -402,7 +421,8 @@ export function V2toV3(data: DifficultyV2, skipPrompt?: boolean): DifficultyV3 {
                                                   ? e._geometry._material
                                                   : {
                                                         shader: e._geometry._material._shader,
-                                                        shaderKeywords: e._geometry._material._shaderKeywords,
+                                                        shaderKeywords:
+                                                            e._geometry._material._shaderKeywords,
                                                         collision: e._geometry._material._collision,
                                                         track: e._geometry._material._track,
                                                         color: e._geometry._material._color,
@@ -523,7 +543,10 @@ export function V2toV3(data: DifficultyV2, skipPrompt?: boolean): DifficultyV3 {
                           });
                 }
             } else {
-                logger.warn(tag('V2toV3'), 'Environment animate track array conversion not yet implemented.');
+                logger.warn(
+                    tag('V2toV3'),
+                    'Environment animate track array conversion not yet implemented.',
+                );
             }
         }
     }

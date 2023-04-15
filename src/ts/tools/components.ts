@@ -33,6 +33,12 @@ export default class AnalysisComponent {
     };
 
     static getAll = (): Tool[] => {
-        return [...this.getNote(), ...this.getObstacle(), ...this.getEvent(), ...this.getOther(), ...this.getGeneral()];
+        return [
+            ...this.getNote(),
+            ...this.getObstacle(),
+            ...this.getEvent(),
+            ...this.getOther(),
+            ...this.getGeneral(),
+        ];
     };
 }

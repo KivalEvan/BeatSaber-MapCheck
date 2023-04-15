@@ -14,7 +14,9 @@ export abstract class WrapLightColorEventBox<
     abstract get brightnessDistribution(): IWrapLightColorEventBox['brightnessDistribution'];
     abstract set brightnessDistribution(value: IWrapLightColorEventBox['brightnessDistribution']);
     abstract get brightnessDistributionType(): IWrapLightColorEventBox['brightnessDistributionType'];
-    abstract set brightnessDistributionType(value: IWrapLightColorEventBox['brightnessDistributionType']);
+    abstract set brightnessDistributionType(
+        value: IWrapLightColorEventBox['brightnessDistributionType'],
+    );
     abstract get affectFirst(): IWrapLightColorEventBox['affectFirst'];
     abstract set affectFirst(value: IWrapLightColorEventBox['affectFirst']);
     abstract get events(): IWrapLightColorBase<TBase>[];

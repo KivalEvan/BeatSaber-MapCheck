@@ -1,4 +1,9 @@
-import { IChromaEventLaser, IChromaEventLight, IChromaEventRing, IChromaEventZoom } from './custom/chroma';
+import {
+    IChromaEventLaser,
+    IChromaEventLight,
+    IChromaEventRing,
+    IChromaEventZoom,
+} from './custom/chroma';
 import { ICustomDataBase } from '../shared/custom/customData';
 import { INEEvent } from './custom/noodleExtensions';
 import { IBaseObject } from './object';

@@ -68,7 +68,12 @@ function run(map: ToolArgs) {
     }
     const filteredSPS = SavedData.beatmapDifficulty
         .map((d) => d.swingAnalysis)
-        .filter((a) => a.characteristic === 'Standard' && tool.input.params[a.difficulty] && a.total.total > 0)
+        .filter(
+            (a) =>
+                a.characteristic === 'Standard' &&
+                tool.input.params[a.difficulty] &&
+                a.total.total > 0,
+        )
         .sort((a, b) => a.total.average - b.total.average)
         .reverse();
     if (!filteredSPS.length) {
@@ -104,10 +109,10 @@ function run(map: ToolArgs) {
                     2,
                 )} from ${round(progMax.comparedTo?.total?.average || 0, 2)} ${
                     DifficultyRename[progMax.comparedTo!.difficulty]
-                }, acceptable range (${round((progMax.comparedTo?.total?.average || 0) * 0.6, 2)}-${round(
-                    (progMax.comparedTo?.total.average || 0) * 0.9,
+                }, acceptable range (${round(
+                    (progMax.comparedTo?.total?.average || 0) * 0.6,
                     2,
-                )})`,
+                )}-${round((progMax.comparedTo?.total.average || 0) * 0.9, 2)})`,
                 'rank',
             ),
         );
@@ -121,10 +126,10 @@ function run(map: ToolArgs) {
                     2,
                 )} from ${round(progMin.comparedTo?.total.average || 0, 2)} ${
                     DifficultyRename[progMin.comparedTo!.difficulty]
-                }, acceptable range (${round((progMin.comparedTo?.total.average || 0) * 0.6, 2)}-${round(
-                    (progMin.comparedTo?.total.average || 0) * 0.9,
+                }, acceptable range (${round(
+                    (progMin.comparedTo?.total.average || 0) * 0.6,
                     2,
-                )})`,
+                )}-${round((progMin.comparedTo?.total.average || 0) * 0.9, 2)})`,
                 'rank',
             ),
         );

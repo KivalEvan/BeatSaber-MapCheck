@@ -29,7 +29,9 @@ export abstract class WrapLightTranslationEventBox<
         this.translationDistribution = value;
         return this;
     }
-    setTranslationDistributionType(value: IWrapLightTranslationEventBox['translationDistributionType']) {
+    setTranslationDistributionType(
+        value: IWrapLightTranslationEventBox['translationDistributionType'],
+    ) {
         this.translationDistributionType = value;
         return this;
     }

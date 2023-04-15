@@ -34,8 +34,16 @@ export abstract class WrapObstacle<T extends Record<keyof T, unknown>>
 
     getPosition(): [number, number] {
         return [
-            (this.posX <= -1000 ? this.posX / 1000 : this.posX >= 1000 ? this.posX / 1000 : this.posX) - 2,
-            (this.posY <= -1000 ? this.posY / 1000 : this.posY >= 1000 ? this.posY / 1000 : this.posY) - 0.5,
+            (this.posX <= -1000
+                ? this.posX / 1000
+                : this.posX >= 1000
+                ? this.posX / 1000
+                : this.posX) - 2,
+            (this.posY <= -1000
+                ? this.posY / 1000
+                : this.posY >= 1000
+                ? this.posY / 1000
+                : this.posY) - 0.5,
         ];
     }
 

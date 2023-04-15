@@ -22,13 +22,17 @@ export class LightColorBase extends WrapLightColorBase<Required<ILightColorBase>
     }
 
     static create(): LightColorBase[];
-    static create(...lightColors: Partial<IWrapLightColorBaseAttribute<Required<ILightColorBase>>>[]): LightColorBase[];
+    static create(
+        ...lightColors: Partial<IWrapLightColorBaseAttribute<Required<ILightColorBase>>>[]
+    ): LightColorBase[];
     static create(...lightColors: Partial<ILightColorBase>[]): LightColorBase[];
     static create(
-        ...lightColors: (Partial<ILightColorBase> & Partial<IWrapLightColorBaseAttribute<Required<ILightColorBase>>>)[]
+        ...lightColors: (Partial<ILightColorBase> &
+            Partial<IWrapLightColorBaseAttribute<Required<ILightColorBase>>>)[]
     ): LightColorBase[];
     static create(
-        ...lightColors: (Partial<ILightColorBase> & Partial<IWrapLightColorBaseAttribute<Required<ILightColorBase>>>)[]
+        ...lightColors: (Partial<ILightColorBase> &
+            Partial<IWrapLightColorBaseAttribute<Required<ILightColorBase>>>)[]
     ): LightColorBase[] {
         const result: LightColorBase[] = [];
         lightColors?.forEach((lc) =>

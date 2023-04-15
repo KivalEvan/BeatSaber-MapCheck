@@ -32,7 +32,8 @@ export type EnvironmentV3Name =
     | 'LizzoEnvironment'
     | 'TheWeekndEnvironment'
     | 'RockMixtapeEnvironment'
-    | 'Dragons2Environment';
+    | 'Dragons2Environment'
+    | 'Panic2Environment';
 /** List of available 360 environment in base game. */
 export type Environment360Name = 'GlassDesertEnvironment';
 /** List of all available environment in base game. */

@@ -68,14 +68,20 @@ const tool: Tool<{ minSpeed: number }> = {
 
 function adjustTimeHandler(bpm: BeatPerMinute) {
     localBPM = bpm;
-    htmlInputMinPrec.value = round(1 / localBPM.toBeatTime(tool.input.params.minSpeed), 2).toString();
+    htmlInputMinPrec.value = round(
+        1 / localBPM.toBeatTime(tool.input.params.minSpeed),
+        2,
+    ).toString();
 }
 
 function inputTimeHandler(this: HTMLInputElement) {
     tool.input.params.minSpeed = Math.abs(parseFloat(this.value)) / 1000;
     this.value = round(tool.input.params.minSpeed * 1000, 1).toString();
     if (localBPM) {
-        htmlInputMinPrec.value = round(1 / localBPM.toBeatTime(tool.input.params.minSpeed), 2).toString();
+        htmlInputMinPrec.value = round(
+            1 / localBPM.toBeatTime(tool.input.params.minSpeed),
+            2,
+        ).toString();
     }
 }
 

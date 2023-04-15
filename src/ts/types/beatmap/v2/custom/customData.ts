@@ -6,6 +6,7 @@ import { ICustomDataBase } from '../../shared/custom/customData';
 import { IPointDefinition } from './pointDefinition';
 import { ICustomEvent } from './customEvent';
 import { IAnimation } from './animation';
+import { IHeckBase } from './heck';
 
 /** Custom Data interface for difficulty file.
  * @extends ICustomDataBase
@@ -20,5 +21,9 @@ export interface ICustomDataDifficulty extends ICustomDataBase, IChromaCustomDat
     _bookmarks?: IBookmark[];
 }
 
-export type ICustomDataNote = ICustomDataBase & IChromaNote & INENote & IAnimation;
-export type ICustomDataObstacle = ICustomDataBase & IChromaObstacle & INEObstacle & IAnimation;
+export type ICustomDataNote = ICustomDataBase & IHeckBase & IChromaNote & INENote & IAnimation;
+export type ICustomDataObstacle = ICustomDataBase &
+    IHeckBase &
+    IChromaObstacle &
+    INEObstacle &
+    IAnimation;

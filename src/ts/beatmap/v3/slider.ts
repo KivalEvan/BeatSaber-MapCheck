@@ -35,8 +35,12 @@ export class Slider extends WrapSlider<Required<ISlider>> {
     static create(): Slider[];
     static create(...sliders: Partial<IWrapSliderAttribute<Required<ISlider>>>[]): Slider[];
     static create(...sliders: Partial<ISlider>[]): Slider[];
-    static create(...sliders: (Partial<ISlider> & Partial<IWrapSliderAttribute<Required<ISlider>>>)[]): Slider[];
-    static create(...sliders: (Partial<ISlider> & Partial<IWrapSliderAttribute<Required<ISlider>>>)[]): Slider[] {
+    static create(
+        ...sliders: (Partial<ISlider> & Partial<IWrapSliderAttribute<Required<ISlider>>>)[]
+    ): Slider[];
+    static create(
+        ...sliders: (Partial<ISlider> & Partial<IWrapSliderAttribute<Required<ISlider>>>)[]
+    ): Slider[] {
         const result: Slider[] = [];
         sliders?.forEach((s) =>
             result.push(
@@ -198,7 +202,8 @@ export class Slider extends WrapSlider<Required<ISlider>> {
         if (this.customData.animation) {
             if (Array.isArray(this.customData.animation.definitePosition)) {
                 if (isVector3(this.customData.animation.definitePosition)) {
-                    this.customData.animation.definitePosition[0] = -this.customData.animation.definitePosition[0];
+                    this.customData.animation.definitePosition[0] =
+                        -this.customData.animation.definitePosition[0];
                 } else {
                     // deno-lint-ignore no-explicit-any
                     this.customData.animation.definitePosition.forEach((dp: any) => {
@@ -208,7 +213,8 @@ export class Slider extends WrapSlider<Required<ISlider>> {
             }
             if (Array.isArray(this.customData.animation.offsetPosition)) {
                 if (isVector3(this.customData.animation.offsetPosition)) {
-                    this.customData.animation.offsetPosition[0] = -this.customData.animation.offsetPosition[0];
+                    this.customData.animation.offsetPosition[0] =
+                        -this.customData.animation.offsetPosition[0];
                 } else {
                     // deno-lint-ignore no-explicit-any
                     this.customData.animation.offsetPosition.forEach((op: any) => {
@@ -233,5 +239,33 @@ export class Slider extends WrapSlider<Required<ISlider>> {
                 }
                 return super.getTailPosition(type);
         }
+    }
+
+    isChroma(): boolean {
+        return (
+            Array.isArray(this.customData.color) ||
+            typeof this.customData.spawnEffect === 'boolean' ||
+            typeof this.customData.disableDebris === 'boolean'
+        );
+    }
+
+    isNoodleExtensions(): boolean {
+        return (
+            Array.isArray(this.customData.animation) ||
+            typeof this.customData.disableNoteGravity === 'boolean' ||
+            typeof this.customData.disableNoteLook === 'boolean' ||
+            typeof this.customData.disableBadCutDirection === 'boolean' ||
+            typeof this.customData.disableBadCutSaberType === 'boolean' ||
+            typeof this.customData.disableBadCutSpeed === 'boolean' ||
+            Array.isArray(this.customData.flip) ||
+            typeof this.customData.uninteractable === 'boolean' ||
+            Array.isArray(this.customData.localRotation) ||
+            typeof this.customData.noteJumpMovementSpeed === 'number' ||
+            typeof this.customData.noteJumpStartBeatOffset === 'number' ||
+            Array.isArray(this.customData.coordinates) ||
+            Array.isArray(this.customData.tailCoordinates) ||
+            Array.isArray(this.customData.worldRotation) ||
+            typeof this.customData.worldRotation === 'number'
+        );
     }
 }

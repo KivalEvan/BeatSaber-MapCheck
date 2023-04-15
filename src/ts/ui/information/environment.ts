@@ -18,14 +18,15 @@ export function setEnvironmentEnhancement(arr?: IChromaEnvironment[]): void {
             if (key == 'lookupMethod' || key == 'id' || key == 'geometry') {
                 continue;
             }
-            const k = ChromaEnvironmentAbbreviation[key as keyof typeof ChromaEnvironmentAbbreviation];
+            const k =
+                ChromaEnvironmentAbbreviation[key as keyof typeof ChromaEnvironmentAbbreviation];
             if (elem[key as keyof IChromaEnvironment] != null) {
                 keyArr.push(k);
             }
         }
-        return `${elem.lookupMethod} [${keyArr.join('')}]${elem.track ? `(${elem.track})` : ''} -> ${
-            elem.geometry ? elem.geometry.type : elem.id
-        }`;
+        return `${elem.lookupMethod} [${keyArr.join('')}]${
+            elem.track ? `(${elem.track})` : ''
+        } -> ${elem.geometry ? elem.geometry.type : elem.id}`;
     });
     displayTableRow(htmlTableEnvironmentEnhancement, envEnhance);
 }

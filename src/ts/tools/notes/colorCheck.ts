@@ -38,9 +38,14 @@ const tool: Tool = {
     input: {
         enabled,
         params: {},
-        html: UICheckbox.create(name + ' (EXPERIMENTAL)', description, enabled, function (this: HTMLInputElement) {
-            tool.input.enabled = this.checked;
-        }),
+        html: UICheckbox.create(
+            name + ' (EXPERIMENTAL)',
+            description,
+            enabled,
+            function (this: HTMLInputElement) {
+                tool.input.enabled = this.checked;
+            },
+        ),
     },
     output: {
         html: null,
@@ -80,7 +85,10 @@ function customColorArrowSimilarity(map: ToolArgs) {
 }
 
 function run(map: ToolArgs) {
-    if (!map.difficulty?.info._customData?._colorLeft && !map.difficulty?.info._customData?._colorRight) {
+    if (
+        !map.difficulty?.info._customData?._colorLeft &&
+        !map.difficulty?.info._customData?._colorRight
+    ) {
         return;
     }
 

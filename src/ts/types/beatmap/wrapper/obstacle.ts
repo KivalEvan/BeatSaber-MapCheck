@@ -1,7 +1,8 @@
 import { IWrapGridObject, IWrapGridObjectAttribute } from './gridObject';
 
-export interface IWrapObstacleAttribute<T extends Record<keyof T, unknown> = Record<string, unknown>>
-    extends IWrapGridObjectAttribute<T> {
+export interface IWrapObstacleAttribute<
+    T extends Record<keyof T, unknown> = Record<string, unknown>,
+> extends IWrapGridObjectAttribute<T> {
     /** Duration `<float>` of obstacle.*/
     duration: number;
     /** Width `<int>` of obstacle.

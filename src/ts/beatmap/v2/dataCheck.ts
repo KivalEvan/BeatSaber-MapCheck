@@ -213,7 +213,10 @@ export const SpecialEventsKeywordFiltersKeywordsDataCheck: Record<
     },
 } as const;
 
-export const SpecialEventsKeywordFiltersDataCheck: Record<keyof ISpecialEventsKeywordFilters, DataCheck> = {
+export const SpecialEventsKeywordFiltersDataCheck: Record<
+    keyof ISpecialEventsKeywordFilters,
+    DataCheck
+> = {
     _keywords: {
         type: 'array',
         version: '2.4.0',

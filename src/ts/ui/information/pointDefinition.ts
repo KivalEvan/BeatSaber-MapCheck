@@ -14,7 +14,9 @@ export function setPointDefinitions(obj?: IPointDefinition): void {
         }
         const el = obj[elem];
         if (!Array.isArray(el)) pointDef.push(`Error parsing pointDefinitions[${elem}]`);
-        pointDef.push(`${elem} -- ${(el as number[]).length} point${(el as number[]).length > 1 ? 's' : ''}`);
+        pointDef.push(
+            `${elem} -- ${(el as number[]).length} point${(el as number[]).length > 1 ? 's' : ''}`,
+        );
     }
     displayTableRow(htmlTablePointDefinitions, pointDef);
 }

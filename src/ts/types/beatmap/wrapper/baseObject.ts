@@ -1,7 +1,8 @@
 import { IWrapBaseItem, IWrapBaseItemAttribute } from './baseItem';
 
-export interface IWrapBaseObjectAttribute<T extends Record<keyof T, unknown> = Record<string, unknown>>
-    extends IWrapBaseItemAttribute<T> {
+export interface IWrapBaseObjectAttribute<
+    T extends Record<keyof T, unknown> = Record<string, unknown>,
+> extends IWrapBaseItemAttribute<T> {
     /** Beat time `<float>` of beatmap object. */
     time: number;
 }

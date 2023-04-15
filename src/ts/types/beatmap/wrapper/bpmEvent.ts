@@ -1,7 +1,8 @@
 import { IWrapBaseObject, IWrapBaseObjectAttribute } from './baseObject';
 
-export interface IWrapBPMEventAttribute<T extends Record<keyof T, unknown> = Record<string, unknown>>
-    extends IWrapBaseObjectAttribute<T> {
+export interface IWrapBPMEventAttribute<
+    T extends Record<keyof T, unknown> = Record<string, unknown>,
+> extends IWrapBaseObjectAttribute<T> {
     /** Value `<float>` of BPM change event. */
     bpm: number;
 }

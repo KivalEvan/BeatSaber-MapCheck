@@ -38,48 +38,49 @@ function check(map: ToolArgs) {
     const arr: NoteContainer[] = [];
     for (let i = 0, potential = true, len = noteContainer.length; i < len; i++) {
         const arc = noteContainer[i];
+        const lastTime = noteContainer.at(-1)!.data.time;
         if (arc.type === 'slider') {
             potential = true;
             for (let j = i, sike = false; j < len; j++) {
-                const other = noteContainer[j];
-                if (other.type === 'note') {
+                const head = noteContainer[j];
+                if (head.type === 'note') {
                     if (
-                        arc.data.posX === other.data.posX &&
-                        arc.data.posY === other.data.posY &&
-                        other.data.time <= arc.data.time + 0.001 &&
-                        arc.data.color === other.data.color &&
-                        (other.data.direction !== NoteDirection.ANY
-                            ? arc.data.direction === other.data.direction
+                        arc.data.posX === head.data.posX &&
+                        arc.data.posY === head.data.posY &&
+                        head.data.time <= arc.data.time + 0.001 &&
+                        arc.data.color === head.data.color &&
+                        (head.data.direction !== NoteDirection.ANY
+                            ? arc.data.direction === head.data.direction
                             : true)
                     ) {
                         for (let k = j; k < len; k++) {
-                            const tailNote = noteContainer[j];
-                            if (tailNote.type === 'bomb') {
+                            const tail = noteContainer[j];
+                            if (tail.type === 'bomb') {
                                 if (
-                                    arc.data.posX === tailNote.data.posX &&
-                                    arc.data.posY === tailNote.data.posY &&
-                                    tailNote.data.time <= arc.data.time + 0.001
+                                    arc.data.posX === tail.data.posX &&
+                                    arc.data.posY === tail.data.posY &&
+                                    tail.data.time <= arc.data.time + 0.001
                                 ) {
                                     sike = true;
                                     break;
                                 }
                             }
-                            if (tailNote.type !== 'note' || tailNote.data.time < arc.data.tailTime) {
+                            if (tail.type !== 'note' || tail.data.time < arc.data.tailTime) {
                                 continue;
                             }
                             if (
-                                arc.data.posX === other.data.posX &&
-                                arc.data.posY === other.data.posY &&
-                                other.data.time <= arc.data.time + 0.001 &&
-                                (arc.data.color !== other.data.color ||
-                                    (other.data.direction !== NoteDirection.ANY
-                                        ? arc.data.direction !== other.data.direction
+                                arc.data.posX === head.data.posX &&
+                                arc.data.posY === head.data.posY &&
+                                head.data.time <= arc.data.time + 0.001 &&
+                                (arc.data.color !== head.data.color ||
+                                    (head.data.direction !== NoteDirection.ANY
+                                        ? arc.data.direction !== head.data.direction
                                         : true))
                             ) {
                                 sike = true;
                                 break;
                             }
-                            if (other.data.time > arc.data.tailTime + 0.001) {
+                            if (head.data.time > arc.data.tailTime + 0.001) {
                                 break;
                             }
                         }
@@ -87,17 +88,24 @@ function check(map: ToolArgs) {
                         break;
                     }
                 }
-                if (other.type === 'bomb') {
+                if (head.type === 'bomb') {
                     if (
-                        arc.data.posX === other.data.posX &&
-                        arc.data.posY === other.data.posY &&
-                        other.data.time <= arc.data.time + 0.001
+                        arc.data.posX === head.data.posX &&
+                        arc.data.posY === head.data.posY &&
+                        head.data.time <= arc.data.time + 0.001
                     ) {
                         break;
                     }
                 }
-                if (other.data.time > arc.data.time + 0.001) {
+                if (head.data.time > arc.data.time + 0.001) {
+                    potential = false;
                     break;
+                }
+                if (
+                    (head.type === 'slider' || head.type === 'burstSlider') &&
+                    head.data.time + 0.001 > lastTime
+                ) {
+                    potential = false;
                 }
             }
             if (potential) {

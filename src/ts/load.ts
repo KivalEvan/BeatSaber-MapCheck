@@ -49,7 +49,9 @@ export async function loadDifficulty(info: IInfo, zip: JSZip) {
                 try {
                     diffJSON = JSON.parse(await diffFile.async('string'));
                 } catch (err) {
-                    throw new Error(`${mapSet[i]._beatmapCharacteristicName} ${diffInfo._difficulty} ${err}`);
+                    throw new Error(
+                        `${mapSet[i]._beatmapCharacteristicName} ${diffInfo._difficulty} ${err}`,
+                    );
                 }
                 try {
                     // _notes in v2 and version in v3 is required, _version in v2 is patched via mod if does not exist
@@ -63,7 +65,10 @@ export async function loadDifficulty(info: IInfo, zip: JSZip) {
                         const data = parseDifficultyV3(diffJSON);
                         const bpm = BeatPerMinute.create(
                             info._beatsPerMinute,
-                            [...(data.customData.BPMChanges ?? []), ...data.bpmEvents.map((be) => be.toJSON())],
+                            [
+                                ...(data.customData.BPMChanges ?? []),
+                                ...data.bpmEvents.map((be) => be.toJSON()),
+                            ],
                             diffInfo._customData?._editorOffset,
                         );
                         beatmapItem.push({
@@ -109,7 +114,9 @@ export async function loadDifficulty(info: IInfo, zip: JSZip) {
                         });
                     }
                 } catch (err) {
-                    throw new Error(`${mapSet[i]._beatmapCharacteristicName} ${diffInfo._difficulty} ${err}`);
+                    throw new Error(
+                        `${mapSet[i]._beatmapCharacteristicName} ${diffInfo._difficulty} ${err}`,
+                    );
                 }
             } else {
                 logger.error(
@@ -119,7 +126,9 @@ export async function loadDifficulty(info: IInfo, zip: JSZip) {
                 mapSet[i]._difficultyBeatmaps.splice(j, 1);
                 j--;
                 if (mapSet[i]._difficultyBeatmaps.length < 1) {
-                    logger.error(`${mapSet[i]._beatmapCharacteristicName} difficulty set now empty, ignoring.`);
+                    logger.error(
+                        `${mapSet[i]._beatmapCharacteristicName} difficulty set now empty, ignoring.`,
+                    );
                     mapSet.splice(i, 1);
                     continue;
                 }

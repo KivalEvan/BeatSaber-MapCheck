@@ -1,4 +1,14 @@
-type Curve = 'Sine' | 'Quad' | 'Cubic' | 'Quart' | 'Quint' | 'Expo' | 'Circ' | 'Back' | 'Elastic' | 'Bounce';
+type Curve =
+    | 'Sine'
+    | 'Quad'
+    | 'Cubic'
+    | 'Quart'
+    | 'Quint'
+    | 'Expo'
+    | 'Circ'
+    | 'Back'
+    | 'Elastic'
+    | 'Bounce';
 
 type Transition = 'In' | 'Out' | 'InOut';
 

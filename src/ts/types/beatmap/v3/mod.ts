@@ -4,6 +4,7 @@
  */
 
 export * from './custom/mod';
+export * from './gridObject';
 export * from './baseObject';
 export * from './baseSlider';
 export * from './basicEvent';

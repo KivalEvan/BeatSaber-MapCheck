@@ -41,9 +41,14 @@ const htmlSelectParityRight = UISelect.create(
 );
 
 htmlContainer.appendChild(
-    UICheckbox.create(name + ' (EXPERIMENTAL)', description, enabled, function (this: HTMLInputElement) {
-        tool.input.enabled = this.checked;
-    }),
+    UICheckbox.create(
+        name + ' (EXPERIMENTAL)',
+        description,
+        enabled,
+        function (this: HTMLInputElement) {
+            tool.input.enabled = this.checked;
+        },
+    ),
 );
 
 const tool: Tool<{ warningThres: number; errorThres: number; allowedRot: number }> = {
@@ -75,9 +80,9 @@ function inputSelectParityHandler(this: HTMLInputElement) {}
 function check(map: ToolArgs) {
     const { bpm } = map.settings;
     const { noteContainer } = map.difficulty!;
-    const { warningThres, errorThres, allowedRot } = <{ warningThres: number; errorThres: number; allowedRot: number }>(
-        tool.input.params
-    );
+    const { warningThres, errorThres, allowedRot } = <
+        { warningThres: number; errorThres: number; allowedRot: number }
+    >tool.input.params;
 
     const lastNote: { [key: number]: NoteContainer } = {};
     const swingNoteArray: { [key: number]: NoteContainer[] } = {
@@ -120,7 +125,10 @@ function check(map: ToolArgs) {
                         break;
                     }
                 }
-                swingParity[note.data.color].next(swingNoteArray[note.data.color], lastBombContext[note.data.color]);
+                swingParity[note.data.color].next(
+                    swingNoteArray[note.data.color],
+                    lastBombContext[note.data.color],
+                );
                 lastBombContext[note.data.color] = bombContext[note.data.color];
                 bombContext[note.data.color] = [];
                 swingNoteArray[note.data.color] = [];
@@ -173,7 +181,9 @@ function run(map: ToolArgs) {
 
     const htmlResult: HTMLElement[] = [];
     if (result.warning.length) {
-        htmlResult.push(printResultTime('Parity warning', result.warning, map.settings.bpm, 'warning'));
+        htmlResult.push(
+            printResultTime('Parity warning', result.warning, map.settings.bpm, 'warning'),
+        );
     }
     if (result.error.length) {
         htmlResult.push(printResultTime('Parity error', result.error, map.settings.bpm, 'error'));

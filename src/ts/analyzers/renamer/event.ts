@@ -1,347 +1,173 @@
 import { EnvironmentAllName } from '../../types/beatmap/shared/environment';
 
+const genericType: { [key: number]: string } = {
+    0: 'Back Lasers',
+    1: 'Ring Lights',
+    2: 'Left Lasers',
+    3: 'Right Lasers',
+    4: 'Center Lights',
+    5: 'Boost Colors',
+    6: 'Extra Left Lights',
+    7: 'Extra Right Lights',
+    8: 'Ring Rotation',
+    9: 'Ring Zoom',
+    10: 'Extra Left Lasers',
+    11: 'Extra Right Lasers',
+    12: 'Left Laser Speed',
+    13: 'Right Laser Speed',
+    14: 'Early Lane Rotation',
+    15: 'Late Lane Rotation',
+    16: 'Utility Event 1',
+    17: 'Utility Event 2',
+    18: 'Utility Event 3',
+    19: 'Utility Event 4',
+    40: 'Special Event 1',
+    41: 'Special Event 2',
+    42: 'Special Event 3',
+    43: 'Special Event 4',
+};
+
+const environmentType: { [env in EnvironmentAllName]?: { [key: number]: string } } = {
+    LinkinParkEnvironment: {
+        0: 'Lane Light',
+        1: 'Ceiling Lights',
+        8: 'Laser Mode',
+    },
+    BTSEnvironment: {
+        0: 'Door Light',
+        1: 'Vertical Pillar Lights',
+        8: 'Distant Tower Spin',
+        9: 'Raise/Lower Pillars',
+        40: 'BTS Event 1',
+        41: 'BTS Event 2',
+        42: 'BTS Event 3',
+        43: 'BTS Event 4',
+    },
+    KaleidoscopeEnvironment: {
+        0: 'Spike Tip Lights',
+        1: 'Spike Mid Lights',
+        2: 'Spike Left Lights',
+        3: 'Spike Right Lights',
+        4: 'Distant Lasers and Spike Top Lights',
+    },
+    InterscopeEnvironment: {
+        0: 'Gate 1',
+        1: 'Gate 2',
+        2: 'Gate 3',
+        3: 'Gate 4',
+        4: 'Gate 5',
+        6: 'Extra 1',
+        7: 'Extra 2',
+    },
+    SkrillexEnvironment: {
+        0: 'Logo',
+        1: 'Top Lanes and 1st Ring Set',
+        4: 'Bottom Lanes and 2nd Ring Set',
+        6: 'Left Panel',
+        7: 'Right Panel',
+        12: 'Left Laser & Panel Speed',
+        13: 'Right Laser & Panel Speed',
+    },
+    BillieEnvironment: {
+        0: 'Water 4',
+        1: 'Water 1',
+        2: 'Left Sun Beams',
+        3: 'Right Sun Beams',
+        4: 'Sun',
+        6: 'Water 2',
+        7: 'Water 3',
+        8: 'Toggle Rain',
+        9: 'Sunbeam Mode',
+        10: 'Left Bottom Lasers',
+        11: 'Right Bottom Lasers',
+        12: 'Left Sun Beams Speed',
+        13: 'Right Sun Beams Speed',
+    },
+    HalloweenEnvironment: {
+        0: 'Sky Lasers',
+        1: 'Moon',
+        4: 'Lane + Castle Interior',
+    },
+    GagaEnvironment: {
+        0: 'Aurora 1',
+        1: 'Aurora 2',
+        2: 'Tower 1',
+        3: 'Tower 2',
+        4: 'Logo',
+        6: 'Tower 3',
+        7: 'Tower 4',
+        10: 'Tower 5',
+        11: 'Tower 6',
+        14: 'Tower 1 Height',
+        15: 'Tower 2 Height',
+        16: 'Tower 3 Height',
+        17: 'Tower 4 Height',
+        18: 'Tower 5 Height',
+        19: 'Tower 6 Height',
+    },
+    WeaveEnvironment: {
+        4: 'Player Space',
+    },
+    PyroEnvironment: {
+        0: 'Video Alpha',
+        1: 'Logo',
+        2: 'Left Projectors',
+        3: 'Right Projectors',
+        4: 'Platform',
+        6: 'Ambient',
+        40: 'Video Projection',
+    },
+    EDMEnvironment: {
+        0: 'Lane Lights Bottom',
+        1: 'Lane Lights Top',
+        4: 'Player Space & Spectrogram',
+    },
+    TheSecondEnvironment: {
+        0: 'Logo',
+        1: 'Runway',
+        2: 'Left Flags',
+        3: 'Right Flags',
+        4: 'Buildings',
+    },
+    LizzoEnvironment: {
+        0: 'Runway Left',
+        1: 'Runway Right',
+        2: 'Left Ring',
+        3: 'Right Ring',
+        4: 'Top Square',
+        6: 'Ambient',
+        7: 'Cherry Left',
+        8: 'Cherry Right',
+        9: 'LI Sign',
+        10: 'Z Left Sign',
+        11: 'Z Right Sign',
+        12: 'O Sign',
+        16: 'Left Balloon Particles',
+        17: 'Right Balloon Particles',
+    },
+    TheWeekndEnvironment: {
+        0: 'Runway Left',
+        1: 'Runway Right',
+        6: 'Ambient',
+    },
+    RockMixtapeEnvironment: {
+        3: 'BG Bloom',
+        4: 'Aurora',
+        6: 'Ambient',
+    },
+    Dragons2Environment: {
+        0: 'Inner Laser Left',
+        1: 'Inner Laser Right',
+        2: 'Outer Laser Left',
+        3: 'Outer Laser Right',
+        4: 'Logo',
+        6: 'Ambient',
+    },
+    Panic2Environment: {
+        3: 'Ambient',
+    },
+};
+
 export function eventTypeRename(type: number, environment?: EnvironmentAllName): string {
-    // environment specific
-    switch (environment) {
-        case 'LinkinParkEnvironment':
-            switch (type) {
-                case 0:
-                    return 'Lane Light';
-                case 1:
-                    return 'Ceiling Lights';
-                case 8:
-                    return 'Laser Mode';
-                default:
-            }
-            break;
-        case 'BTSEnvironment':
-            switch (type) {
-                case 0:
-                    return 'Door Light';
-                case 1:
-                    return 'Vertical Pillar Lights';
-                case 8:
-                    return 'Distant Tower Spin';
-                case 9:
-                    return 'Raise/Lower Pillars';
-                case 40:
-                    return 'BTS Event 1';
-                case 41:
-                    return 'BTS Event 2';
-                case 42:
-                    return 'BTS Event 3';
-                case 43:
-                    return 'BTS Event 4';
-                default:
-            }
-            break;
-        case 'KaleidoscopeEnvironment':
-            switch (type) {
-                case 0:
-                    return 'Spike Tip Lights';
-                case 1:
-                    return 'Spike Mid Lights';
-                case 2:
-                    return 'Spike Left Lights';
-                case 3:
-                    return 'Spike Right Lights';
-                case 4:
-                    return 'Distant Lasers and Spike Top Lights';
-                default:
-            }
-            break;
-        case 'InterscopeEnvironment':
-            switch (type) {
-                case 0:
-                    return 'Gate 1';
-                case 1:
-                    return 'Gate 2';
-                case 2:
-                    return 'Gate 3';
-                case 3:
-                    return 'Gate 4';
-                case 4:
-                    return 'Gate 5';
-                case 6:
-                    return 'Extra 1';
-                case 7:
-                    return 'Extra 2';
-                default:
-            }
-            break;
-        case 'SkrillexEnvironment':
-            switch (type) {
-                case 0:
-                    return 'Logo';
-                case 1:
-                    return 'Top Lanes and 1st Ring Set';
-                case 4:
-                    return 'Bottom Lanes and 2nd Ring Set';
-                case 6:
-                    return 'Left Panel';
-                case 7:
-                    return 'Right Panel';
-                case 12:
-                    return 'Left Laser & Panel Speed';
-                case 13:
-                    return 'Right Laser & Panel Speed';
-                default:
-            }
-            break;
-        case 'BillieEnvironment':
-            switch (type) {
-                case 0:
-                    return 'Water 4';
-                case 1:
-                    return 'Water 1';
-                case 2:
-                    return 'Left Sun Beams';
-                case 3:
-                    return 'Right Sun Beams';
-                case 4:
-                    return 'Sun';
-                case 6:
-                    return 'Water 2';
-                case 7:
-                    return 'Water 3';
-                case 8:
-                    return 'Toggle Rain';
-                case 9:
-                    return 'Sunbeam Mode';
-                case 10:
-                    return 'Left Bottom Lasers';
-                case 11:
-                    return 'Right Bottom Lasers';
-                case 12:
-                    return 'Left Sun Beams Speed';
-                case 13:
-                    return 'Right Sun Beams Speed';
-                default:
-            }
-            break;
-        case 'HalloweenEnvironment':
-            switch (type) {
-                case 0:
-                    return 'Sky Lasers';
-                case 1:
-                    return 'Moon';
-                case 4:
-                    return 'Lane + Castle Interior';
-                default:
-            }
-            break;
-        case 'GagaEnvironment':
-            switch (type) {
-                case 0:
-                    return 'Aurora 1';
-                case 1:
-                    return 'Aurora 2';
-                case 2:
-                    return 'Tower 1';
-                case 3:
-                    return 'Tower 2';
-                case 4:
-                    return 'Logo';
-                case 6:
-                    return 'Tower 3';
-                case 7:
-                    return 'Tower 4';
-                case 10:
-                    return 'Tower 5';
-                case 11:
-                    return 'Tower 6';
-                case 14:
-                    return 'Tower 1 Height';
-                case 15:
-                    return 'Tower 2 Height';
-                case 16:
-                    return 'Tower 3 Height';
-                case 17:
-                    return 'Tower 4 Height';
-                case 18:
-                    return 'Tower 5 Height';
-                case 19:
-                    return 'Tower 6 Height';
-                default:
-            }
-            break;
-        case 'WeaveEnvironment':
-            switch (type) {
-                case 4:
-                    return 'Player Space';
-                default:
-            }
-            break;
-        case 'PyroEnvironment':
-            switch (type) {
-                case 0:
-                    return 'Video Alpha';
-                case 1:
-                    return 'Logo';
-                case 2:
-                    return 'Left Projectors';
-                case 3:
-                    return 'Right Projectors';
-                case 4:
-                    return 'Platform';
-                case 6:
-                    return 'Ambient';
-                case 40:
-                    return 'Video Projection';
-                default:
-            }
-            break;
-        case 'EDMEnvironment':
-            switch (type) {
-                case 0:
-                    return 'Lane Lights Bottom';
-                case 1:
-                    return 'Lane Lights Top';
-                case 4:
-                    return 'Player Space & Spectrogram';
-                default:
-            }
-            break;
-        case 'TheSecondEnvironment':
-            switch (type) {
-                case 0:
-                    return 'Logo';
-                case 1:
-                    return 'Runway';
-                case 2:
-                    return 'Left Flags';
-                case 3:
-                    return 'Right Flags';
-                case 4:
-                    return 'Buildings';
-                default:
-            }
-            break;
-        case 'LizzoEnvironment':
-            switch (type) {
-                case 0:
-                    return 'Runway Left';
-                case 1:
-                    return 'Runway Right';
-                case 2:
-                    return 'Left Ring';
-                case 3:
-                    return 'Right Ring';
-                case 4:
-                    return 'Top Square';
-                case 6:
-                    return 'Ambient';
-                case 7:
-                    return 'Cherry Left';
-                case 8:
-                    return 'Cherry Right';
-                case 9:
-                    return 'LI Sign';
-                case 10:
-                    return 'Z Left Sign';
-                case 11:
-                    return 'Z Right Sign';
-                case 12:
-                    return 'O Sign';
-                case 16:
-                    return 'Left Balloon Particles';
-                case 17:
-                    return 'Right Balloon Particles';
-                default:
-            }
-            break;
-        case 'TheWeekndEnvironment':
-            switch (type) {
-                case 0:
-                    return 'Runway Left';
-                case 1:
-                    return 'Runway Right';
-                case 6:
-                    return 'Ambient';
-                default:
-            }
-            break;
-        case 'RockMixtapeEnvironment':
-            switch (type) {
-                case 3:
-                    return 'BG Bloom';
-                case 4:
-                    return 'Aurora';
-                case 6:
-                    return 'Ambient';
-                default:
-            }
-            break;
-        case 'Dragons2Environment':
-            switch (type) {
-                case 0:
-                    return 'Inner Laser Left';
-                case 1:
-                    return 'Inner Laser Right';
-                case 2:
-                    return 'Outer Laser Left';
-                case 3:
-                    return 'Outer Laser Right';
-                case 4:
-                    return 'Logo';
-                case 6:
-                    return 'Ambient';
-                default:
-            }
-            break;
-        default:
-    }
-    // generic
-    switch (type) {
-        case 0:
-            return 'Back Lasers';
-        case 1:
-            return 'Ring Lights';
-        case 2:
-            return 'Left Lasers';
-        case 3:
-            return 'Right Lasers';
-        case 4:
-            return 'Center Lights';
-        case 5:
-            return 'Boost Colors';
-        case 6:
-            return 'Extra Left Lights';
-        case 7:
-            return 'Extra Right Lights';
-        case 8:
-            return 'Ring Rotation';
-        case 9:
-            return 'Ring Zoom';
-        case 10:
-            return 'Extra Left Lasers';
-        case 11:
-            return 'Extra Right Lasers';
-        case 12:
-            return 'Left Laser Speed';
-        case 13:
-            return 'Right Laser Speed';
-        case 14:
-            return 'Early Lane Rotation';
-        case 15:
-            return 'Late Lane Rotation';
-        case 16:
-            return 'Utility Event 1';
-        case 17:
-            return 'Utility Event 2';
-        case 18:
-            return 'Utility Event 3';
-        case 19:
-            return 'Utility Event 4';
-        case 40:
-            return 'Special Event 1';
-        case 41:
-            return 'Special Event 2';
-        case 42:
-            return 'Special Event 3';
-        case 43:
-            return 'Special Event 4';
-        default:
-            return 'Unknown';
-    }
+    return environmentType[environment!]?.[type] || genericType[type] || 'Unknown';
 }

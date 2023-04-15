@@ -33,7 +33,12 @@ const tool: Tool = {
 };
 
 // omega scuffed clusterfuck help me pls im cryin rn
-const unlitBomb = (bombs: BombNote[], events: BasicEvent[], bpm: BeatPerMinute, environment: EnvironmentAllName) => {
+const unlitBomb = (
+    bombs: BombNote[],
+    events: BasicEvent[],
+    bpm: BeatPerMinute,
+    environment: EnvironmentAllName,
+) => {
     if (!events.length) {
         return [];
     }
@@ -100,15 +105,22 @@ const unlitBomb = (bombs: BombNote[], events: BasicEvent[], bpm: BeatPerMinute, 
             ((ev?.floatValue ?? 1) < 0.25 ||
                 ev.isOff() ||
                 (ev.customData._color &&
-                    ((typeof ev.customData._color[3] === 'number' && ev.customData._color[3] < 0.25) ||
-                        Math.max(ev.customData._color[0], ev.customData._color[1], ev.customData._color[2]) < 0.25))) &&
+                    ((typeof ev.customData._color[3] === 'number' &&
+                        ev.customData._color[3] < 0.25) ||
+                        Math.max(
+                            ev.customData._color[0],
+                            ev.customData._color[1],
+                            ev.customData._color[2],
+                        ) < 0.25))) &&
             eventState[ev.type].state !== 'off'
         ) {
             eventState[ev.type] = {
                 state: 'off',
                 time: ev.time,
                 fadeTime:
-                    eventState[ev.type].state === 'on' ? reactTime : Math.min(reactTime, eventState[ev.type].fadeTime),
+                    eventState[ev.type].state === 'on'
+                        ? reactTime
+                        : Math.min(reactTime, eventState[ev.type].fadeTime),
             };
             eventLitTime[ev.type].push([
                 ev.time +

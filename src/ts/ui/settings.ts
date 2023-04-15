@@ -8,7 +8,9 @@ import { setTableHeight } from './information/helpers';
 const logPrefix = 'UI Settings: ';
 
 const htmlSettingsTheme: HTMLSelectElement = document.querySelector('.settings__theme')!;
-const htmlSettingsBeatNumbering: HTMLSelectElement = document.querySelector('.settings__beat-numbering')!;
+const htmlSettingsBeatNumbering: HTMLSelectElement = document.querySelector(
+    '.settings__beat-numbering',
+)!;
 const htmlSettingsRounding: HTMLInputElement = document.querySelector('.settings__rounding')!;
 const htmlSettingsInfoHeight: HTMLInputElement = document.querySelector('.settings__info-height')!;
 const htmlSettingsDataCheck: HTMLInputElement = document.querySelector('.settings__data-check')!;
@@ -16,7 +18,8 @@ const htmlSettingsDataError: HTMLInputElement = document.querySelector('.setting
 const htmlSettingsLoad: NodeListOf<HTMLInputElement> = document.querySelectorAll('.settings__load');
 const htmlSettingsSort: HTMLInputElement = document.querySelector('.settings__sort')!;
 const htmlSettingsShow: NodeListOf<HTMLInputElement> = document.querySelectorAll('.settings__show');
-const htmlSettingsOnLoad: NodeListOf<HTMLInputElement> = document.querySelectorAll('.settings__onload');
+const htmlSettingsOnLoad: NodeListOf<HTMLInputElement> =
+    document.querySelectorAll('.settings__onload');
 const htmlSettingsClear: HTMLInputElement = document.querySelector('.settings__clear-button')!;
 
 if (htmlSettingsTheme) {

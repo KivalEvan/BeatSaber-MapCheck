@@ -41,7 +41,9 @@ export class LightColorEventBoxGroup extends WrapLightColorEventBoxGroup<
             >
         >[]
     ): LightColorEventBoxGroup[];
-    static create(...eventBoxGroups: DeepPartial<ILightColorEventBoxGroup>[]): LightColorEventBoxGroup[];
+    static create(
+        ...eventBoxGroups: DeepPartial<ILightColorEventBoxGroup>[]
+    ): LightColorEventBoxGroup[];
     static create(
         ...eventBoxGroups: (DeepPartial<ILightColorEventBoxGroup> &
             DeepPartial<

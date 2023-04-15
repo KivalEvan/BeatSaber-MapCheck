@@ -31,13 +31,17 @@ export class BurstSlider extends WrapBurstSlider<Required<IBurstSlider>> {
     }
 
     static create(): BurstSlider[];
-    static create(...burstSliders: Partial<IWrapBurstSliderAttribute<Required<IBurstSlider>>>[]): BurstSlider[];
+    static create(
+        ...burstSliders: Partial<IWrapBurstSliderAttribute<Required<IBurstSlider>>>[]
+    ): BurstSlider[];
     static create(...burstSliders: Partial<IBurstSlider>[]): BurstSlider[];
     static create(
-        ...burstSliders: (Partial<IBurstSlider> & Partial<IWrapBurstSliderAttribute<Required<IBurstSlider>>>)[]
+        ...burstSliders: (Partial<IBurstSlider> &
+            Partial<IWrapBurstSliderAttribute<Required<IBurstSlider>>>)[]
     ): BurstSlider[];
     static create(
-        ...burstSliders: (Partial<IBurstSlider> & Partial<IWrapBurstSliderAttribute<Required<IBurstSlider>>>)[]
+        ...burstSliders: (Partial<IBurstSlider> &
+            Partial<IWrapBurstSliderAttribute<Required<IBurstSlider>>>)[]
     ): BurstSlider[] {
         const result: BurstSlider[] = [];
         burstSliders?.forEach((bs) =>
@@ -180,7 +184,8 @@ export class BurstSlider extends WrapBurstSlider<Required<IBurstSlider>> {
         if (this.customData.animation) {
             if (Array.isArray(this.customData.animation.definitePosition)) {
                 if (isVector3(this.customData.animation.definitePosition)) {
-                    this.customData.animation.definitePosition[0] = -this.customData.animation.definitePosition[0];
+                    this.customData.animation.definitePosition[0] =
+                        -this.customData.animation.definitePosition[0];
                 } else {
                     // deno-lint-ignore no-explicit-any
                     this.customData.animation.definitePosition.forEach((dp: any) => {
@@ -190,7 +195,8 @@ export class BurstSlider extends WrapBurstSlider<Required<IBurstSlider>> {
             }
             if (Array.isArray(this.customData.animation.offsetPosition)) {
                 if (isVector3(this.customData.animation.offsetPosition)) {
-                    this.customData.animation.offsetPosition[0] = -this.customData.animation.offsetPosition[0];
+                    this.customData.animation.offsetPosition[0] =
+                        -this.customData.animation.offsetPosition[0];
                 } else {
                     // deno-lint-ignore no-explicit-any
                     this.customData.animation.offsetPosition.forEach((op: any) => {
@@ -200,5 +206,33 @@ export class BurstSlider extends WrapBurstSlider<Required<IBurstSlider>> {
             }
         }
         return super.mirror(flipColor);
+    }
+
+    isChroma(): boolean {
+        return (
+            Array.isArray(this.customData.color) ||
+            typeof this.customData.spawnEffect === 'boolean' ||
+            typeof this.customData.disableDebris === 'boolean'
+        );
+    }
+
+    isNoodleExtensions(): boolean {
+        return (
+            Array.isArray(this.customData.animation) ||
+            typeof this.customData.disableNoteGravity === 'boolean' ||
+            typeof this.customData.disableNoteLook === 'boolean' ||
+            typeof this.customData.disableBadCutDirection === 'boolean' ||
+            typeof this.customData.disableBadCutSaberType === 'boolean' ||
+            typeof this.customData.disableBadCutSpeed === 'boolean' ||
+            Array.isArray(this.customData.flip) ||
+            typeof this.customData.uninteractable === 'boolean' ||
+            Array.isArray(this.customData.localRotation) ||
+            typeof this.customData.noteJumpMovementSpeed === 'number' ||
+            typeof this.customData.noteJumpStartBeatOffset === 'number' ||
+            Array.isArray(this.customData.coordinates) ||
+            Array.isArray(this.customData.tailCoordinates) ||
+            Array.isArray(this.customData.worldRotation) ||
+            typeof this.customData.worldRotation === 'number'
+        );
     }
 }

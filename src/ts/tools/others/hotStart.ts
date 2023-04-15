@@ -18,9 +18,14 @@ htmlInputTime.step = '0.1';
 htmlInputTime.value = defaultTime.toString();
 htmlInputTime.addEventListener('change', inputTimeHandler);
 
-const htmlContainer = UICheckbox.create(name + ' (s): ', description, enabled, function (this: HTMLInputElement) {
-    tool.input.enabled = this.checked;
-});
+const htmlContainer = UICheckbox.create(
+    name + ' (s): ',
+    description,
+    enabled,
+    function (this: HTMLInputElement) {
+        tool.input.enabled = this.checked;
+    },
+);
 htmlContainer.appendChild(htmlInputTime);
 
 const tool: Tool<{ time: number }> = {

@@ -62,7 +62,8 @@ function check(map: ToolArgs) {
                 if (!(bpm.toRealTime(note.data.time) > bpm.toRealTime(other.data.time) + 0.01)) {
                     continue;
                 }
-                const isDiagonal = other.data.getAngle() % 90 > 15 && other.data.getAngle() % 90 < 75;
+                const isDiagonal =
+                    other.data.getAngle() % 90 > 15 && other.data.getAngle() % 90 < 75;
                 // magic number 1.425 from saber length + good/bad hitbox
                 if (
                     njs.value <
@@ -94,7 +95,12 @@ function run(map: ToolArgs) {
     const result = check(map);
 
     if (result.length) {
-        tool.output.html = printResultTime('Hitbox reverse Staircase', result, map.settings.bpm, 'rank');
+        tool.output.html = printResultTime(
+            'Hitbox reverse Staircase',
+            result,
+            map.settings.bpm,
+            'rank',
+        );
     } else {
         tool.output.html = null;
     }

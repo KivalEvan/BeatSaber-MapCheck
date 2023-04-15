@@ -153,8 +153,7 @@ export class Obstacle extends WrapObstacle<Required<IObstacle>> {
             typeof this.customData._noteJumpStartBeatOffset === 'number' ||
             Array.isArray(this.customData._position) ||
             Array.isArray(this.customData._rotation) ||
-            Array.isArray(this.customData._scale) ||
-            typeof this.customData._track === 'string'
+            Array.isArray(this.customData._scale)
         );
     }
 }

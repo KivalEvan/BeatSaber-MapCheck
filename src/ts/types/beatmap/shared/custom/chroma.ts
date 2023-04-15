@@ -7,7 +7,14 @@ export type ColorPointDefinition =
 
 export type LookupMethod = 'Regex' | 'Exact' | 'Contains' | 'StartsWith' | 'EndsWith';
 
-export type GeometryType = 'Sphere' | 'Capsule' | 'Cylinder' | 'Cube' | 'Plane' | 'Quad' | 'Triangle';
+export type GeometryType =
+    | 'Sphere'
+    | 'Capsule'
+    | 'Cylinder'
+    | 'Cube'
+    | 'Plane'
+    | 'Quad'
+    | 'Triangle';
 
 export type ShaderType =
     | 'Standard'
@@ -80,7 +87,11 @@ export type ShaderKeywords =
     | ShaderKeywordsTransparent
     | ShaderKeywordsBaseWater;
 
-export type EnvironmentMaterial = 'BTSPillar' | 'BillieWater' | 'InterscopeConcrete' | 'InterscopeCar';
+export type EnvironmentMaterial =
+    | 'BTSPillar'
+    | 'BillieWater'
+    | 'InterscopeConcrete'
+    | 'InterscopeCar';
 
 /** Chroma interface for Difficulty Info Custom Data. */
 export interface IChromaInfoCustomData extends IInfoSettingsCustomData {

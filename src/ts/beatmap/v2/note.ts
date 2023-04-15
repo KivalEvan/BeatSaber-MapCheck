@@ -24,8 +24,12 @@ export class Note extends WrapColorNote<Required<INote>> {
     static create(): Note[];
     static create(...notes: Partial<IWrapColorNoteAttribute<Required<INote>>>[]): Note[];
     static create(...notes: Partial<INote>[]): Note[];
-    static create(...notes: (Partial<INote> & Partial<IWrapColorNoteAttribute<Required<INote>>>)[]): Note[];
-    static create(...notes: (Partial<INote> & Partial<IWrapColorNoteAttribute<Required<INote>>>)[]): Note[] {
+    static create(
+        ...notes: (Partial<INote> & Partial<IWrapColorNoteAttribute<Required<INote>>>)[]
+    ): Note[];
+    static create(
+        ...notes: (Partial<INote> & Partial<IWrapColorNoteAttribute<Required<INote>>>)[]
+    ): Note[] {
         const result: Note[] = [];
         notes?.forEach((n) =>
             result.push(
@@ -138,7 +142,10 @@ export class Note extends WrapColorNote<Required<INote>> {
     }
 
     isChroma(): boolean {
-        return Array.isArray(this.customData._color) || typeof this.customData._disableSpawnEffect === 'boolean';
+        return (
+            Array.isArray(this.customData._color) ||
+            typeof this.customData._disableSpawnEffect === 'boolean'
+        );
     }
 
     // god i hate these
@@ -155,8 +162,7 @@ export class Note extends WrapColorNote<Required<INote>> {
             typeof this.customData._noteJumpMovementSpeed === 'number' ||
             typeof this.customData._noteJumpStartBeatOffset === 'number' ||
             Array.isArray(this.customData._position) ||
-            Array.isArray(this.customData._rotation) ||
-            typeof this.customData._track === 'string'
+            Array.isArray(this.customData._rotation)
         );
     }
 }

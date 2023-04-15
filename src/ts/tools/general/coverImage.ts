@@ -38,16 +38,22 @@ function run() {
     if (flag.loading.coverImage && src !== null) {
         img.src = src;
         if (img.width !== img.height) {
-            htmlResult.push(printResult('Cover image is not square', 'resize to fit square', 'error'));
+            htmlResult.push(
+                printResult('Cover image is not square', 'resize to fit square', 'error'),
+            );
         }
         if (img.width < 256 || img.height < 256) {
-            htmlResult.push(printResult('Cover image is too small', 'require at least 256x256', 'error'));
+            htmlResult.push(
+                printResult('Cover image is too small', 'require at least 256x256', 'error'),
+            );
         }
     } else {
         htmlResult.push(
             printResult(
                 'No cover image',
-                settings.load.imageCover ? 'could not be loaded or found' : 'no cover image option is enabled',
+                settings.load.imageCover
+                    ? 'could not be loaded or found'
+                    : 'no cover image option is enabled',
             ),
         );
     }

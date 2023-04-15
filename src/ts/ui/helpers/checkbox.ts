@@ -2,7 +2,12 @@ export default class UICheckbox {
     private static list: string[] = [];
     private constructor() {}
 
-    static create = (label: string, title: string, bool: boolean, callback: EventListener): HTMLDivElement => {
+    static create = (
+        label: string,
+        title: string,
+        bool: boolean,
+        callback: EventListener,
+    ): HTMLDivElement => {
         const internalName = label.trim().toLowerCase().replace(' ', '-');
         if (UICheckbox.list.includes(internalName)) {
             throw new Error(internalName + ' is already being used.');

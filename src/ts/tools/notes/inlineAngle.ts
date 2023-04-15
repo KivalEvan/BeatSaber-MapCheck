@@ -7,7 +7,13 @@ import { ColorNote } from '../../beatmap/v3/colorNote';
 import { printResultTime } from '../helpers';
 import UICheckbox from '../../ui/helpers/checkbox';
 import { BeatPerMinute } from '../../beatmap/shared/bpm';
-import { NoteColor, NoteDirectionAngle, NoteDirection, PositionX, PositionY } from '../../beatmap/shared/constants';
+import {
+    NoteColor,
+    NoteDirectionAngle,
+    NoteDirection,
+    PositionX,
+    PositionY,
+} from '../../beatmap/shared/constants';
 import { IWrapColorNote } from '../../types/beatmap/wrapper/colorNote';
 
 const name = 'Inline Sharp Angle';
@@ -81,7 +87,10 @@ function inputTimeHandler(this: HTMLInputElement) {
     tool.input.params.maxTime = Math.abs(parseFloat(this.value)) / 1000;
     this.value = round(tool.input.params.maxTime * 1000, 1).toString();
     if (localBPM) {
-        htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.maxTime), 2).toString();
+        htmlInputMaxBeat.value = round(
+            localBPM.toBeatTime(tool.input.params.maxTime),
+            2,
+        ).toString();
     }
 }
 
@@ -209,7 +218,12 @@ function run(map: ToolArgs) {
     const result = check(map);
 
     if (result.length) {
-        tool.output.html = printResultTime('Inline sharp angle', result, map.settings.bpm, 'warning');
+        tool.output.html = printResultTime(
+            'Inline sharp angle',
+            result,
+            map.settings.bpm,
+            'warning',
+        );
     } else {
         tool.output.html = null;
     }

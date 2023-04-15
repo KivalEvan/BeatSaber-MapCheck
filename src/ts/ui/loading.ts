@@ -11,7 +11,11 @@ if (!htmlLoadingBar || !htmlLoadingText) {
     throw new Error(logPrefix + 'loading component is missing part');
 }
 
-function status(statusType: UILoadingStatusType, statusString: string, percentage: number = 100): void {
+function status(
+    statusType: UILoadingStatusType,
+    statusString: string,
+    percentage: number = 100,
+): void {
     htmlLoadingText.textContent = statusString;
     htmlLoadingBar.style.width = `${percentage}%`;
     statusType === 'error'

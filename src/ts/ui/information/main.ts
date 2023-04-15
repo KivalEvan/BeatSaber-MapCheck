@@ -3,13 +3,26 @@ import SavedData from '../../savedData';
 import { IInfo } from '../../types/beatmap/shared/info';
 import { IBeatmapItem } from '../../types/mapcheck';
 import { BeatPerMinute } from '../../beatmap/shared/bpm';
-import { setLevelAuthor, setEnvironment, setEditors, populateContributors, setContributors } from './info';
+import {
+    setLevelAuthor,
+    setEnvironment,
+    setEditors,
+    populateContributors,
+    setContributors,
+} from './info';
 import { setBookmarks } from './bookmark';
 import { setBPMChanges } from './bpmChange';
 import { setCustomColor } from './customColor';
 import { setCustomEvents } from './customEvent';
 import { setEnvironmentEnhancement } from './environment';
-import { setVersion, setRequirements, setSuggestions, setInformation, setWarnings, setTimeSpend } from './misc';
+import {
+    setVersion,
+    setRequirements,
+    setSuggestions,
+    setInformation,
+    setWarnings,
+    setTimeSpend,
+} from './misc';
 import { setPointDefinitions } from './pointDefinition';
 import { setTableHeight } from './helpers';
 import { setPlayTime } from './playTime';

@@ -1,10 +1,10 @@
-const versionMajor: number = 2;
-const versionMinor: number = 5;
-const versionPatch: number = 10;
+const vMajor: number = 2;
+const vMinor: number = 5;
+const vPatch: number = 11;
 const watermark: string = 'Kival Evan#5480';
 
 export default new (class Version {
-    private _version: string = `${versionMajor}.${versionMinor}.${versionPatch}`;
+    private _version: string = `${vMajor}.${vMinor}.${vPatch}`;
     private _wm: string = watermark;
 
     get value(): string {

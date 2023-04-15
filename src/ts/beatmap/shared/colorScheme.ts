@@ -1,4 +1,8 @@
-import { ColorSchemeList, IColorScheme, IEnvironmentScheme } from '../../types/beatmap/shared/colorScheme';
+import {
+    ColorSchemeList,
+    IColorScheme,
+    IEnvironmentScheme,
+} from '../../types/beatmap/shared/colorScheme';
 import { EnvironmentAllName } from '../../types/beatmap/shared/environment';
 
 /** Record of Environment Color to Color Scheme. */
@@ -34,6 +38,7 @@ export const EnvironmentSchemeName: Record<EnvironmentAllName, ColorSchemeList> 
     TheWeekndEnvironment: 'The Weeknd',
     RockMixtapeEnvironment: 'Rock Mixtape',
     Dragons2Environment: 'Dragons 2.0',
+    Panic2Environment: 'Panic 2.0',
     GlassDesertEnvironment: 'Glass Desert',
 } as const;
 
@@ -267,6 +272,15 @@ export const ColorScheme: IEnvironmentScheme = {
         _envColorLeftBoost: { r: 0.9764706, g: 0.03137255, b: 0.01960784 },
         _envColorRightBoost: { r: 1, g: 0.8292086, b: 0.2264151 },
         _obstacleColor: { r: 0.5548979, g: 0.2470588, b: 1 },
+    },
+    'Panic 2.0': {
+        _colorLeft: { r: 0.9019608, g: 0.3333333, b: 0.5686275 },
+        _colorRight: { r: 0.1529412, g: 0.5568628, b: 0.4862745 },
+        _envColorLeft: { r: 0.6980392, g: 0.1137255, b: 0.372549 },
+        _envColorRight: { r: 0.1882353, g: 0.6196079, b: 0.6235294 },
+        _envColorLeftBoost: { r: 0.9019608, g: 0.4470589, b: 0.06666667 },
+        _envColorRightBoost: { r: 0.6365692, g: 0.4373443, b: 0.8584906 },
+        _obstacleColor: { r: 0.9686275, g: 0.3803922, b: 0.2745098 },
     },
     'Glass Desert': {
         _colorLeft: { r: 0.6792453, g: 0.5712628, b: 0 },

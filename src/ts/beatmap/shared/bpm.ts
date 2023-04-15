@@ -26,11 +26,9 @@ export class BeatPerMinute {
             }) as IBPMEvent[],
         );
         this._bpmChange = this.getBPMChangeTime(
-            bpmChange.filter((bc) => (bc as IBPMChangeV2)._time != null || (bc as IBPMChangeV3).o != null) as (
-                | IBPMChangeV2
-                | IBPMChangeOld
-                | IBPMChangeV3
-            )[],
+            bpmChange.filter(
+                (bc) => (bc as IBPMChangeV2)._time != null || (bc as IBPMChangeV3).o != null,
+            ) as (IBPMChangeV2 | IBPMChangeOld | IBPMChangeV3)[],
         );
     }
 
@@ -77,19 +75,27 @@ export class BeatPerMinute {
      * const newBPMChange = BPM.getBPMChangeTime(bpmc);
      * ```
      */
-    private getBPMChangeTime(bpmc: (IBPMChangeV2 | IBPMChangeOld | IBPMChangeV3)[] = []): IBPMChangeTime[] {
+    private getBPMChangeTime(
+        bpmc: (IBPMChangeV2 | IBPMChangeOld | IBPMChangeV3)[] = [],
+    ): IBPMChangeTime[] {
         let temp!: IBPMChangeTime;
         const bpmChange: IBPMChangeTime[] = [];
         for (let i = 0; i < bpmc.length; i++) {
             const curBPMC: IBPMChangeTime = {
                 time: (bpmc[i] as IBPMChangeV2)._time ?? (bpmc[i] as IBPMChangeV3).b,
-                BPM: (bpmc[i] as IBPMChangeV2)._BPM ?? (bpmc[i] as IBPMChangeOld)._bpm ?? (bpmc[i] as IBPMChangeV3).m,
+                BPM:
+                    (bpmc[i] as IBPMChangeV2)._BPM ??
+                    (bpmc[i] as IBPMChangeOld)._bpm ??
+                    (bpmc[i] as IBPMChangeV3).m,
                 beatsPerBar: (bpmc[i] as IBPMChangeV2)._beatsPerBar ?? (bpmc[i] as IBPMChangeV3).p,
-                metronomeOffset: (bpmc[i] as IBPMChangeV2)._metronomeOffset ?? (bpmc[i] as IBPMChangeV3).o,
+                metronomeOffset:
+                    (bpmc[i] as IBPMChangeV2)._metronomeOffset ?? (bpmc[i] as IBPMChangeV3).o,
                 newTime: 0,
             };
             if (temp) {
-                curBPMC.newTime = Math.ceil(((curBPMC.time - temp.time) / this._bpm) * temp.BPM + temp.newTime - 0.01);
+                curBPMC.newTime = Math.ceil(
+                    ((curBPMC.time - temp.time) / this._bpm) * temp.BPM + temp.newTime - 0.01,
+                );
             } else {
                 curBPMC.newTime = Math.ceil(curBPMC.time - (this._offset * this._bpm) / 60 - 0.01);
             }
@@ -169,7 +175,8 @@ export class BeatPerMinute {
         for (let i = this._bpmChange.length - 1; i >= 0; i--) {
             if (beat > this._bpmChange[i].newTime) {
                 return (
-                    ((beat - this._bpmChange[i].newTime) / this._bpmChange[i].BPM) * this._bpm + this._bpmChange[i].time
+                    ((beat - this._bpmChange[i].newTime) / this._bpmChange[i].BPM) * this._bpm +
+                    this._bpmChange[i].time
                 );
             }
         }
@@ -185,7 +192,8 @@ export class BeatPerMinute {
         for (let i = this._bpmChange.length - 1; i >= 0; i--) {
             if (beat > this._bpmChange[i].time) {
                 return (
-                    ((beat - this._bpmChange[i].time) / this._bpm) * this._bpmChange[i].BPM + this._bpmChange[i].newTime
+                    ((beat - this._bpmChange[i].time) / this._bpm) * this._bpmChange[i].BPM +
+                    this._bpmChange[i].newTime
                 );
             }
         }

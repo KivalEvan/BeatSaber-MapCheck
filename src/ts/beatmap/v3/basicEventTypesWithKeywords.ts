@@ -17,7 +17,9 @@ export class BasicEventTypesWithKeywords extends WrapEventTypesWithKeywords<
     private d: BasicEventTypesForKeywords[];
     protected constructor(basicEventTypesWithKeywords: Required<IBasicEventTypesWithKeywords>) {
         super(basicEventTypesWithKeywords);
-        this.d = basicEventTypesWithKeywords.d.map((d) => BasicEventTypesForKeywords.create({ e: d.e, k: d.k })[0]);
+        this.d = basicEventTypesWithKeywords.d.map(
+            (d) => BasicEventTypesForKeywords.create({ e: d.e, k: d.k })[0],
+        );
     }
 
     static create(): BasicEventTypesWithKeywords;
@@ -26,14 +28,20 @@ export class BasicEventTypesWithKeywords extends WrapEventTypesWithKeywords<
             IWrapEventTypesWithKeywordsAttribute<Required<IBasicEventTypesWithKeywords>>
         >,
     ): BasicEventTypesWithKeywords;
-    static create(basicEventTypesWithKeywords: DeepPartial<IBasicEventTypesWithKeywords>): BasicEventTypesWithKeywords;
     static create(
-        basicEventTypesWithKeywords: DeepPartial<IBasicEventTypesWithKeywords> &
-            DeepPartial<IWrapEventTypesWithKeywordsAttribute<Required<IBasicEventTypesWithKeywords>>>,
+        basicEventTypesWithKeywords: DeepPartial<IBasicEventTypesWithKeywords>,
     ): BasicEventTypesWithKeywords;
     static create(
         basicEventTypesWithKeywords: DeepPartial<IBasicEventTypesWithKeywords> &
-            DeepPartial<IWrapEventTypesWithKeywordsAttribute<Required<IBasicEventTypesWithKeywords>>> = {},
+            DeepPartial<
+                IWrapEventTypesWithKeywordsAttribute<Required<IBasicEventTypesWithKeywords>>
+            >,
+    ): BasicEventTypesWithKeywords;
+    static create(
+        basicEventTypesWithKeywords: DeepPartial<IBasicEventTypesWithKeywords> &
+            DeepPartial<
+                IWrapEventTypesWithKeywordsAttribute<Required<IBasicEventTypesWithKeywords>>
+            > = {},
     ): BasicEventTypesWithKeywords {
         return new this({
             d:

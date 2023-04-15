@@ -16,7 +16,8 @@ const easeOutBounce = (x: number) => {
 
 const easeInBounce = (x: number) => 1 - easeOutBounce(1 - x);
 
-const easeInOutBounce = (x: number) => (x < 0.5 ? 0.5 * easeInBounce(x * 2) : 0.5 * easeOutBounce(x * 2 - 1) + 0.5);
+const easeInOutBounce = (x: number) =>
+    x < 0.5 ? 0.5 * easeInBounce(x * 2) : 0.5 * easeOutBounce(x * 2 - 1) + 0.5;
 
 /** Easings function methods, able to define own function.
  * ```
@@ -46,7 +47,9 @@ export const easings: {
     easeInCirc: (x) => 1 - Math.sqrt(1 - x * x),
     easeOutCirc: (x) => Math.sqrt((2 - x) * x),
     easeInOutCirc: (x) =>
-        x < 0.5 ? 0.5 * (1 - Math.sqrt(1 - 4 * (x * x))) : 0.5 * (Math.sqrt(-(2 * x - 3) * (2 * x - 1)) + 1),
+        x < 0.5
+            ? 0.5 * (1 - Math.sqrt(1 - 4 * (x * x)))
+            : 0.5 * (Math.sqrt(-(2 * x - 3) * (2 * x - 1)) + 1),
     easeInExpo: (x) => (x <= 0.0 ? x : Math.pow(2, 10 * (x - 1))),
     easeOutExpo: (x) => (x >= 1.0 ? x : 1 - Math.pow(2, -10 * x)),
     easeInOutExpo: (x) => {

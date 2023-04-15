@@ -1,7 +1,8 @@
 import { IWrapBaseItem, IWrapBaseItemAttribute } from './baseItem';
 
-export interface IWrapIndexFilterAttribute<T extends Record<keyof T, unknown> = Record<string, unknown>>
-    extends IWrapBaseItemAttribute<T> {
+export interface IWrapIndexFilterAttribute<
+    T extends Record<keyof T, unknown> = Record<string, unknown>,
+> extends IWrapBaseItemAttribute<T> {
     /** Type `<int>` of index filter.
      * ```ts
      * 1 -> Division

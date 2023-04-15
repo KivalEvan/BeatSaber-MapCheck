@@ -29,13 +29,17 @@ export class IndexFilter extends WrapIndexFilter<Required<IIndexFilter>> {
     }
 
     static create(): IndexFilter;
-    static create(indexFilter: Partial<IWrapIndexFilterAttribute<Required<IIndexFilter>>>): IndexFilter;
+    static create(
+        indexFilter: Partial<IWrapIndexFilterAttribute<Required<IIndexFilter>>>,
+    ): IndexFilter;
     static create(indexFilter: Partial<IIndexFilter>): IndexFilter;
     static create(
-        indexFilter: Partial<IIndexFilter> & Partial<IWrapIndexFilterAttribute<Required<IIndexFilter>>>,
+        indexFilter: Partial<IIndexFilter> &
+            Partial<IWrapIndexFilterAttribute<Required<IIndexFilter>>>,
     ): IndexFilter;
     static create(
-        indexFilter: Partial<IIndexFilter> & Partial<IWrapIndexFilterAttribute<Required<IIndexFilter>>> = {},
+        indexFilter: Partial<IIndexFilter> &
+            Partial<IWrapIndexFilterAttribute<Required<IIndexFilter>>> = {},
     ): IndexFilter {
         return new IndexFilter({
             f: indexFilter.type ?? indexFilter.f ?? IndexFilter.default.f,

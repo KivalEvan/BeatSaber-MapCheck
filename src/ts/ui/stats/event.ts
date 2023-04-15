@@ -9,16 +9,19 @@ export function createEventCountTable(mapInfo: IInfo, mapData: IBeatmapItem): HT
         mapData.characteristic === '360Degree' || mapData.characteristic === '90Degree'
             ? mapInfo._allDirectionsEnvironmentName
             : mapInfo._environmentName;
-    const eventCount = countEvent(mapData.data.basicEvents, mapData.data.colorBoostEvents, environment);
+    const eventCount = countEvent(
+        mapData.data.basicEvents,
+        mapData.data.colorBoostEvents,
+        environment,
+    );
     let chroma = 0;
     let chromaOld = 0;
     let noodleExtensions = 0;
     let mappingExtensions = 0;
 
-    let htmlString = `<caption class="${prefix}table-caption">Events: ${Object.values(eventCount).reduce(
-        (t, { total }) => t + total,
-        0,
-    )}</caption>`;
+    let htmlString = `<caption class="${prefix}table-caption">Events: ${Object.values(
+        eventCount,
+    ).reduce((t, { total }) => t + total, 0)}</caption>`;
 
     for (const key in eventCount) {
         chroma += eventCount[key].chroma;

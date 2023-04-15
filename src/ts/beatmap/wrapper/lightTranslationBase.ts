@@ -27,6 +27,8 @@ export abstract class WrapLightTranslationBase<T extends Record<keyof T, unknown
     }
 
     isValid(): boolean {
-        return (this.previous === 0 || this.previous === 1) && this.easing >= -1 && this.easing <= 3;
+        return (
+            (this.previous === 0 || this.previous === 1) && this.easing >= -1 && this.easing <= 3
+        );
     }
 }

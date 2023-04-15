@@ -40,7 +40,12 @@ function run(map: ToolArgs) {
     const result = check(map);
 
     if (result.length) {
-        tool.output.html = printResultTime('Zero value obstacle', result, map.settings.bpm, 'error');
+        tool.output.html = printResultTime(
+            'Zero value obstacle',
+            result,
+            map.settings.bpm,
+            'error',
+        );
     } else {
         tool.output.html = null;
     }

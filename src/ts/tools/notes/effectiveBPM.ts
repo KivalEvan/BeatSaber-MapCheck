@@ -11,9 +11,14 @@ const enabled = true;
 const defaultEBPM = 450;
 const defaultEBPMS = 350;
 
-const htmlContainer = UICheckbox.create(name + ' threshold', description, enabled, function (this: HTMLInputElement) {
-    tool.input.enabled = this.checked;
-});
+const htmlContainer = UICheckbox.create(
+    name + ' threshold',
+    description,
+    enabled,
+    function (this: HTMLInputElement) {
+        tool.input.enabled = this.checked;
+    },
+);
 const htmlInputEBPM = document.createElement('input');
 const htmlLabelEBPM = document.createElement('label');
 const htmlInputEBPMS = document.createElement('input');
@@ -87,7 +92,9 @@ function check(map: ToolArgs) {
     const { ebpmThres, ebpmsThres } = tool.input.params;
 
     const noteEBPM = swingAnalysis.container.filter((s) => s.ebpm > ebpmThres).map((s) => s.time);
-    const noteEBPMS = swingAnalysis.container.filter((s) => s.ebpmSwing > ebpmsThres).map((s) => s.time);
+    const noteEBPMS = swingAnalysis.container
+        .filter((s) => s.ebpmSwing > ebpmsThres)
+        .map((s) => s.time);
 
     return { base: noteEBPM, swing: noteEBPMS };
 }
@@ -102,11 +109,18 @@ function run(map: ToolArgs) {
 
     const htmlResult: HTMLElement[] = [];
     if (result.base.length) {
-        htmlResult.push(printResultTime(`>${ebpmThres}EBPM warning`, result.base, map.settings.bpm, 'warning'));
+        htmlResult.push(
+            printResultTime(`>${ebpmThres}EBPM warning`, result.base, map.settings.bpm, 'warning'),
+        );
     }
     if (result.swing.length) {
         htmlResult.push(
-            printResultTime(`>${ebpmsThres}EBPM (swing) warning`, result.swing, map.settings.bpm, 'warning'),
+            printResultTime(
+                `>${ebpmsThres}EBPM (swing) warning`,
+                result.swing,
+                map.settings.bpm,
+                'warning',
+            ),
         );
     }
 
