@@ -32,13 +32,13 @@ const tool: Tool = {
 function check(map: ToolArgs) {
     // kinda slow but i need slider first
     const noteContainer = [...map.difficulty!.noteContainer]
-        .sort((a, b) => (a.type !== 'burstSlider' ? 1 : b.type !== 'burstSlider' ? -1 : 0))
+        .sort((a, b) => (a.type !== 'chain' ? 1 : b.type !== 'chain' ? -1 : 0))
         .sort((a, b) => a.data.time - b.data.time);
 
     const arr: NoteContainer[] = [];
     for (let i = 0, potential = true, len = noteContainer.length; i < len; i++) {
         const chain = noteContainer[i];
-        if (chain.type === 'burstSlider') {
+        if (chain.type === 'chain') {
             potential = true;
             for (let j = i; j < len; j++) {
                 const other = noteContainer[j];

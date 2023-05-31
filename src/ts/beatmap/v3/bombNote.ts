@@ -6,8 +6,8 @@ import { IWrapBombNoteAttribute } from '../../types/beatmap/wrapper/bombNote';
 import { isVector3 } from '../../utils/vector';
 
 /** Bomb note beatmap v3 class object. */
-export class BombNote extends WrapBombNote<Required<IBombNote>> {
-    static default: ObjectReturnFn<Required<IBombNote>> = {
+export class BombNote extends WrapBombNote<IBombNote> {
+    static default: ObjectReturnFn<IBombNote> = {
         b: 0,
         x: 0,
         y: 0,
@@ -16,44 +16,37 @@ export class BombNote extends WrapBombNote<Required<IBombNote>> {
         },
     };
 
-    protected constructor(bombNote: Required<IBombNote>) {
-        super(bombNote);
+    constructor();
+    constructor(data: Partial<IWrapBombNoteAttribute<IBombNote>>);
+    constructor(data: Partial<IBombNote>);
+    constructor(data: Partial<IBombNote> & Partial<IWrapBombNoteAttribute<IBombNote>>);
+    constructor(data: Partial<IBombNote> & Partial<IWrapBombNoteAttribute<IBombNote>> = {}) {
+        super();
+
+        this._time = data.time ?? data.b ?? BombNote.default.b;
+        this._posX = data.posX ?? data.x ?? BombNote.default.x;
+        this._posY = data.posY ?? data.y ?? BombNote.default.y;
+        this._customData = data.customData ?? BombNote.default.customData();
     }
 
     static create(): BombNote[];
-    static create(...bombNotes: Partial<IWrapBombNoteAttribute<Required<IBombNote>>>[]): BombNote[];
-    static create(...bombNotes: Partial<IBombNote>[]): BombNote[];
+    static create(...data: Partial<IWrapBombNoteAttribute<IBombNote>>[]): BombNote[];
+    static create(...data: Partial<IBombNote>[]): BombNote[];
     static create(
-        ...bombNotes: (Partial<IBombNote> & Partial<IWrapBombNoteAttribute<Required<IBombNote>>>)[]
+        ...data: (Partial<IBombNote> & Partial<IWrapBombNoteAttribute<IBombNote>>)[]
     ): BombNote[];
     static create(
-        ...bombNotes: (Partial<IBombNote> & Partial<IWrapBombNoteAttribute<Required<IBombNote>>>)[]
+        ...data: (Partial<IBombNote> & Partial<IWrapBombNoteAttribute<IBombNote>>)[]
     ): BombNote[] {
         const result: BombNote[] = [];
-        bombNotes?.forEach((bn) =>
-            result.push(
-                new this({
-                    b: bn.time ?? bn.b ?? BombNote.default.b,
-                    x: bn.posX ?? bn.x ?? BombNote.default.x,
-                    y: bn.posY ?? bn.y ?? BombNote.default.y,
-                    customData: bn.customData ?? BombNote.default.customData(),
-                }),
-            ),
-        );
+        data.forEach((obj) => result.push(new this(obj)));
         if (result.length) {
             return result;
         }
-        return [
-            new this({
-                b: BombNote.default.b,
-                x: BombNote.default.x,
-                y: BombNote.default.y,
-                customData: BombNote.default.customData(),
-            }),
-        ];
+        return [new this()];
     }
 
-    toJSON(): Required<IBombNote> {
+    toJSON(): IBombNote {
         return {
             b: this.time,
             x: this.posX,
@@ -62,32 +55,11 @@ export class BombNote extends WrapBombNote<Required<IBombNote>> {
         };
     }
 
-    get time() {
-        return this.data.b;
-    }
-    set time(value: IBombNote['b']) {
-        this.data.b = value;
-    }
-
-    get posX() {
-        return this.data.x;
-    }
-    set posX(value: IBombNote['x']) {
-        this.data.x = value;
-    }
-
-    get posY() {
-        return this.data.y;
-    }
-    set posY(value: IBombNote['y']) {
-        this.data.y = value;
-    }
-
     get customData(): NonNullable<IBombNote['customData']> {
-        return this.data.customData;
+        return this._customData;
     }
     set customData(value: NonNullable<IBombNote['customData']>) {
-        this.data.customData = value;
+        this._customData = value;
     }
 
     mirror() {
@@ -103,8 +75,7 @@ export class BombNote extends WrapBombNote<Required<IBombNote>> {
                     this.customData.animation.definitePosition[0] =
                         -this.customData.animation.definitePosition[0];
                 } else {
-                    // deno-lint-ignore no-explicit-any
-                    this.customData.animation.definitePosition.forEach((dp: any) => {
+                    this.customData.animation.definitePosition.forEach((dp) => {
                         dp[0] = -dp[0];
                     });
                 }
@@ -114,8 +85,7 @@ export class BombNote extends WrapBombNote<Required<IBombNote>> {
                     this.customData.animation.offsetPosition[0] =
                         -this.customData.animation.offsetPosition[0];
                 } else {
-                    // deno-lint-ignore no-explicit-any
-                    this.customData.animation.offsetPosition.forEach((op: any) => {
+                    this.customData.animation.offsetPosition.forEach((op) => {
                         op[0] = -op[0];
                     });
                 }
@@ -132,7 +102,6 @@ export class BombNote extends WrapBombNote<Required<IBombNote>> {
         );
     }
 
-    // god i hate these
     isNoodleExtensions(): boolean {
         return (
             Array.isArray(this.customData.animation) ||
@@ -148,7 +117,8 @@ export class BombNote extends WrapBombNote<Required<IBombNote>> {
             typeof this.customData.noteJumpStartBeatOffset === 'number' ||
             Array.isArray(this.customData.coordinates) ||
             Array.isArray(this.customData.worldRotation) ||
-            typeof this.customData.worldRotation === 'number'
+            typeof this.customData.worldRotation === 'number' ||
+            typeof this.customData.link === 'string'
         );
     }
 }

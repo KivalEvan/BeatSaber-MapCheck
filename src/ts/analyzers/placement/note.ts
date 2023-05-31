@@ -1,12 +1,11 @@
 import { NoteDirection } from '../../beatmap/shared/constants';
 import { WrapColorNote } from '../../beatmap/wrapper/colorNote';
-import { IWrapBaseSlider } from '../../types/beatmap/wrapper/baseSlider';
-import { IWrapColorNote } from '../../types/beatmap/wrapper/colorNote';
+import { IWrapBaseNote } from '../../types/beatmap/wrapper/baseNote';
 import { IWrapGridObject } from '../../types/beatmap/wrapper/gridObject';
 import { radToDeg, shortRotDistance } from '../../utils/math';
 
 // TODO: update with new position/rotation system
-export function isEnd(currNote: IWrapColorNote, prevNote: IWrapColorNote, cd: number): boolean {
+export function isEnd(currNote: IWrapBaseNote, prevNote: IWrapBaseNote, cd: number): boolean {
     // fuck u and ur dot note stack
     if (
         currNote.direction === NoteDirection.ANY &&
@@ -138,7 +137,7 @@ export function isEnd(currNote: IWrapColorNote, prevNote: IWrapColorNote, cd: nu
  */
 // a fkin abomination that's what currNote is
 export function isIntersect(
-    currNote: IWrapColorNote,
+    currNote: IWrapBaseNote,
     compareTo: IWrapGridObject,
     angleDistances: [number, number, number?][],
     ahead = false,
@@ -184,7 +183,7 @@ export function isIntersect(
 }
 
 // TODO: update with new position/rotation system
-export function predictDirection(currNote: IWrapColorNote, prevNote: IWrapColorNote): number {
+export function predictDirection(currNote: IWrapBaseNote, prevNote: IWrapBaseNote): number {
     if (isEnd(currNote, prevNote, NoteDirection.ANY)) {
         return currNote.direction === NoteDirection.ANY ? prevNote.direction : currNote.direction;
     }
@@ -233,15 +232,15 @@ export function predictDirection(currNote: IWrapColorNote, prevNote: IWrapColorN
 }
 
 /** Check the angle equality of the two notes.
- * @param {(Note|number|null)}  - First beatmap note, note `_direction`, or null value
- * @param {(Note|number|null)} n2 - Second beatmap note, note `_direction`, or null value
+ * @param {(IWrapBaseNote|number|null)}  - First beatmap note, note `direction`, or null value
+ * @param {(IWrapBaseNote|number|null)} n2 - Second beatmap note, note `direction`, or null value
  * @param {number} angleTol - Angle tolerance
  * @param {boolean} equal - If it should check inner or outer angle
  * @returns {boolean} If condition is met
  */
 export function checkDirection(
-    n1: IWrapColorNote | IWrapBaseSlider | number | null,
-    n2: IWrapColorNote | IWrapBaseSlider | number | null,
+    n1: IWrapBaseNote | number | null,
+    n2: IWrapBaseNote | number | null,
     angleTol: number,
     equal: boolean,
 ): boolean {

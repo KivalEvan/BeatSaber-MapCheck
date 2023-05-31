@@ -1,4 +1,4 @@
-import { ICustomDataNote } from './custom/customData';
+import { ICustomDataNote } from './custom/note';
 import { IBaseObject } from './object';
 
 /** Beatmap object interface for Note. */

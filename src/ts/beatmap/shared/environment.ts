@@ -1,7 +1,7 @@
 import { EnvironmentAllName } from '../../types/beatmap/shared/environment';
 
 /** Environment rename to human readable. */
-export const EnvironmentRename: { [key in EnvironmentAllName]: string } = {
+export const EnvironmentRename: { readonly [key in EnvironmentAllName]: string } = {
     DefaultEnvironment: 'The First',
     OriginsEnvironment: 'Origins',
     TriangleEnvironment: 'Triangle',
@@ -34,12 +34,13 @@ export const EnvironmentRename: { [key in EnvironmentAllName]: string } = {
     RockMixtapeEnvironment: 'Rock Mixtape',
     Dragons2Environment: 'Dragons 2.0',
     Panic2Environment: 'Panic 2.0',
+    QueenEnvironment: 'Queen',
     GlassDesertEnvironment: 'Glass Desert',
 } as const;
 
 /** List of available event type in environment. */
 export const EventList: {
-    [key in EnvironmentAllName]: Readonly<[ReadonlyArray<number>, ReadonlyArray<number>]>;
+    [key in EnvironmentAllName]: readonly [readonly number[], readonly number[]];
 } = {
     DefaultEnvironment: [[0, 1, 2, 3, 4, 8, 9, 12, 13], []],
     OriginsEnvironment: [[0, 1, 2, 3, 4, 8, 9, 12, 13], []],
@@ -67,7 +68,7 @@ export const EventList: {
     GlassDesertEnvironment: [[0, 1, 2, 3, 4, 8, 9, 12, 13], []],
     WeaveEnvironment: [[], [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]],
     PyroEnvironment: [
-        [0, 1, 2, 3, 4, 6],
+        [0, 1, 2, 3, 4, 6, 40],
         [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
     ],
     EDMEnvironment: [
@@ -103,5 +104,9 @@ export const EventList: {
     Panic2Environment: [
         [3],
         [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
+    ],
+    QueenEnvironment: [
+        [6, 40],
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
     ],
 } as const;

@@ -1,7 +1,7 @@
 /** Fisher–Yates shuffle algorithm. */
-export function shuffle<T>(array: T[]): void {
+export function shuffle<T>(array: T[], fn = Math.random): void {
     for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
+        const j = Math.floor(fn() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
     }
 }
@@ -12,8 +12,8 @@ export function interleave<T, U>([x, ...xs]: T[], ys: U[] = []): (T | U)[] {
         : [x, ...interleave(ys, xs)]; // inductive: some x
 }
 
-export function pickRandom<T>(ary: T[], func = Math.random): T {
-    return ary[Math.floor(func() * ary.length)];
+export function pickRandom<T>(ary: T[], fn = Math.random): T {
+    return ary[Math.floor(fn() * ary.length)];
 }
 
 /** Simple old-fashioned deep copy JSON object or JSON array.

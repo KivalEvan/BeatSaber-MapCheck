@@ -223,9 +223,7 @@ function inputMaxBeatHandler(this: HTMLInputElement) {
 
 function check(map: ToolArgs) {
     const { bpm, njs } = map.settings;
-    const noteContainer = map
-        .difficulty!.data.getNoteContainer()
-        .filter((n) => n.type !== 'slider');
+    const noteContainer = map.difficulty!.data.getNoteContainer().filter((n) => n.type !== 'arc');
     const { minTime: temp1, maxTime: temp2, specific: vbSpecific } = tool.input.params;
     const minTime =
         vbSpecific === 'time'

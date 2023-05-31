@@ -1,9 +1,8 @@
-import { PercentPointDefinition } from '../../shared/custom/heck';
+import { FloatPointDefinition, Vector4PointDefinition } from '../../shared/custom/heck';
 import { Easings } from '../../../easings';
 import { ColorArray } from '../../../colors';
 import { ICustomDataBase } from '../../shared/custom/customData';
 import {
-    ColorPointDefinition,
     EnvironmentMaterial,
     GeometryType,
     LookupMethod,
@@ -83,7 +82,8 @@ export interface IChromaEnvironmentBase {
      *
      * This grabs every environment objects that match the string.
      * ```ts
-     * id: 'Environment.[0]GlowLine' || 'Environment\.\\[\\d+\\]GlowLine$' // Regex example
+     * id: 'Environment.[0]GlowLine' // Non-regex
+     * id: 'Environment\.\\[\\d+\\]GlowLine$' // Regex
      * ```
      */
     id?: unknown;
@@ -135,7 +135,7 @@ export type IChromaEnvironment = IChromaEnvironmentID | IChromaEnvironmentGeomet
 
 /** Chroma interface for Beatmap Object Animation Custom Data. */
 export interface IChromaAnimation {
-    color?: string | ColorArray | ColorPointDefinition[];
+    color?: string | ColorArray | Vector4PointDefinition[];
 }
 
 /** Chroma interface for Beatmap Note Custom Data. */
@@ -183,12 +183,12 @@ export interface IChromaEventZoom extends ICustomDataBase {
 
 /** AnimateComponent interface for Chroma Custom Event. */
 export interface IChromaCustomEventDataAnimateTrack extends Required<IHeckBase> {
-    color?: string | ColorArray | ColorPointDefinition[];
+    color?: string | ColorArray | Vector4PointDefinition[];
 }
 
 /** AnimateComponent interface for Chroma Custom Event. */
 export interface IChromaCustomEventDataAssignPathAnimation extends Required<IHeckBase> {
-    color?: string | ColorArray | ColorPointDefinition[];
+    color?: string | ColorArray | Vector4PointDefinition[];
 }
 
 /** AnimateComponent interface for Chroma Custom Event. */
@@ -196,14 +196,14 @@ export interface IChromaCustomEventDataAnimateComponent extends Required<IHeckBa
     duration: number;
     easing?: string;
     BloomFogEnvironment?: {
-        attenuation?: string | number | PercentPointDefinition[];
-        offset?: string | number | PercentPointDefinition[];
-        startY?: string | number | PercentPointDefinition[];
-        height?: string | number | PercentPointDefinition[];
+        attenuation?: string | number | FloatPointDefinition[];
+        offset?: string | number | FloatPointDefinition[];
+        startY?: string | number | FloatPointDefinition[];
+        height?: string | number | FloatPointDefinition[];
     };
     TubeBloomPrePassLight?: {
-        colorAlphaMultiplier: string | number | PercentPointDefinition[];
-        bloomFogIntensityMultiplier: string | number | PercentPointDefinition[];
+        colorAlphaMultiplier: string | number | FloatPointDefinition[];
+        bloomFogIntensityMultiplier: string | number | FloatPointDefinition[];
     };
 }
 

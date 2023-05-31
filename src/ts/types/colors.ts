@@ -11,7 +11,7 @@ export interface IColor {
  * const color = [red, green, blue] || [red, green, blue, alpha];
  * ```
  */
-export type ColorArray = [number, number, number, number?];
+export type ColorArray = [r: number, g: number, b: number, a?: number];
 
 export type ColorType = 'rgba' | 'rgba255' | 'hsva';
 

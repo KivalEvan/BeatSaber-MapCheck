@@ -1,6 +1,7 @@
 import { IEvent } from '../../types/beatmap/v2/event';
 import { IBasicEvent } from '../../types/beatmap/v3/basicEvent';
 import { deepCopy } from '../../utils/misc';
+import { renameKey } from './_helpers';
 
 export default function (
     customData?: IEvent['_customData'],
@@ -13,39 +14,30 @@ export default function (
         return {};
     }
 
-    const speed = cd._preciseSpeed ?? cd._speed;
-    cd.color ??= cd._color;
-    cd.lightID ??= cd._lightID;
-    cd.easing ??= cd._easing;
-    cd.lerpType ??= cd._lerpType;
-    cd.nameFilter ??= cd._nameFilter;
-    cd.rotation ??= cd._rotation;
-    cd.step ??= cd._step;
-    cd.prop ??= cd._prop;
-    cd.speed ??= speed;
-    cd.direction ??= cd._direction;
-    cd.lockRotation ??= cd._lockPosition;
+    renameKey(cd, '_color', 'color');
+    renameKey(cd, '_lightID', 'lightID');
+    renameKey(cd, '_easing', 'easing');
+    renameKey(cd, '_lerpType', 'lerpType');
+    renameKey(cd, '_nameFilter', 'nameFilter');
+    renameKey(cd, '_rotation', 'rotation');
+    renameKey(cd, '_step', 'step');
+    renameKey(cd, '_prop', 'prop');
+    renameKey(cd, '_direction', 'direction');
+    renameKey(cd, '_lockPosition', 'lockRotation');
 
-    // delete converted customData and deprecated feature
-    delete cd._color;
-    delete cd._lightID;
-    delete cd._easing;
-    delete cd._lerpType;
-    delete cd._propID;
-    delete cd._lightGradient;
-    delete cd._nameFilter;
-    delete cd._rotation;
-    delete cd._step;
-    delete cd._prop;
+    // special case
+    const speed = cd._preciseSpeed ?? cd._speed;
+    cd.speed ??= speed;
     delete cd._speed;
     delete cd._preciseSpeed;
-    delete cd._direction;
+
+    delete cd._propID;
+    delete cd._lightGradient;
     delete cd._reset;
     delete cd._counterSpin;
     delete cd._stepMult;
     delete cd._propMult;
     delete cd._speedMult;
-    delete cd._lockPosition;
 
     return cd;
 }

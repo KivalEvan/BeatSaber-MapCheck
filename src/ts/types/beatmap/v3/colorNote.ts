@@ -1,5 +1,5 @@
 import { IGridObject } from './gridObject';
-import { ICustomDataNote } from './custom/customData';
+import { ICustomDataNote } from './custom/note';
 
 export interface IColorNote extends IGridObject {
     /** Color type `<int>` of note.
@@ -18,7 +18,7 @@ export interface IColorNote extends IGridObject {
      * ---
      * Grid represents cut direction from center.
      *
-     * **WARNING:** Dot-directional is not recommended with sliders, assumes down-directional.
+     * **WARNING:** Dot-directional is not recommended with arcs, assumes down-directional.
      */
     d: number;
     /** Angle offset in degree counter-clockwise `<int>` of note.*/

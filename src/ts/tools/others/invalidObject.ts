@@ -37,8 +37,8 @@ function run(map: ToolArgs) {
         bombNotes,
         obstacles,
         basicEvents,
-        sliders,
-        burstSliders,
+        arcs,
+        chains,
         lightColorEventBoxGroups,
         lightRotationEventBoxGroups,
         lightTranslationEventBoxGroups,
@@ -48,22 +48,20 @@ function run(map: ToolArgs) {
     let obstacleResult: number[] = [];
     let bombResult: number[] = [];
     let sliderResult: number[] = [];
-    let burstSliderResult: number[] = [];
+    let chainResult: number[] = [];
     if (!map.difficulty.info._customData?._requirements?.includes('Mapping Extensions')) {
         if (map.difficulty.info._customData?._requirements?.includes('Noodle Extensions')) {
             noteResult = colorNotes.filter((n) => n.isMappingExtensions()).map((n) => n.time);
             obstacleResult = obstacles.filter((o) => o.isMappingExtensions()).map((o) => o.time);
             bombResult = bombNotes.filter((n) => n.isMappingExtensions()).map((n) => n.time);
-            sliderResult = sliders.filter((o) => o.isMappingExtensions()).map((o) => o.time);
-            burstSliderResult = burstSliders
-                .filter((o) => o.isMappingExtensions())
-                .map((o) => o.time);
+            sliderResult = arcs.filter((o) => o.isMappingExtensions()).map((o) => o.time);
+            chainResult = chains.filter((o) => o.isMappingExtensions()).map((o) => o.time);
         } else {
             noteResult = colorNotes.filter((n) => !n.isValid()).map((n) => n.time);
             obstacleResult = obstacles.filter((o) => !o.isValid()).map((o) => o.time);
             bombResult = bombNotes.filter((b) => !b.isValid()).map((b) => b.time);
-            sliderResult = sliders.filter((s) => !s.isValid()).map((s) => s.time);
-            burstSliderResult = burstSliders.filter((bs) => !bs.isValid()).map((bs) => bs.time);
+            sliderResult = arcs.filter((s) => !s.isValid()).map((s) => s.time);
+            chainResult = chains.filter((bs) => !bs.isValid()).map((bs) => bs.time);
         }
     }
     const eventResult = basicEvents.filter((e) => !e.isValid()).map((e) => e.time);
@@ -87,10 +85,8 @@ function run(map: ToolArgs) {
     if (sliderResult.length) {
         htmlResult.push(printResultTime('Invalid arc', sliderResult, map.settings.bpm, 'error'));
     }
-    if (burstSliderResult.length) {
-        htmlResult.push(
-            printResultTime('Invalid chain', burstSliderResult, map.settings.bpm, 'error'),
-        );
+    if (chainResult.length) {
+        htmlResult.push(printResultTime('Invalid chain', chainResult, map.settings.bpm, 'error'));
     }
     if (obstacleResult.length) {
         htmlResult.push(

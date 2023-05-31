@@ -4,14 +4,20 @@ import { IWrapLightRotationEventBox } from '../../types/beatmap/wrapper/lightRot
 
 /** Light rotation event box group beatmap class object. */
 export abstract class WrapLightRotationEventBoxGroup<
-        TGroup extends Record<keyof TGroup, unknown>,
-        TBox extends Record<keyof TBox, unknown>,
-        TBase extends Record<keyof TBase, unknown>,
-        TFilter extends Record<keyof TFilter, unknown>,
+        TGroup extends { [P in keyof TGroup]: TGroup[P] },
+        TBox extends { [P in keyof TBox]: TBox[P] },
+        TBase extends { [P in keyof TBase]: TBase[P] },
+        TFilter extends { [P in keyof TFilter]: TFilter[P] },
     >
     extends WrapEventBoxGroup<TGroup, TBox, TBase, TFilter>
     implements IWrapLightRotationEventBoxGroup<TGroup, TBox, TBase, TFilter>
 {
-    abstract get boxes(): IWrapLightRotationEventBox<TBox, TBase, TFilter>[];
-    abstract set boxes(value: IWrapLightRotationEventBox<TBox, TBase, TFilter>[]);
+    protected declare _boxes: IWrapLightRotationEventBox<TBox, TBase, TFilter>[];
+
+    get boxes(): IWrapLightRotationEventBox<TBox, TBase, TFilter>[] {
+        return this._boxes;
+    }
+    set boxes(value: IWrapLightRotationEventBox<TBox, TBase, TFilter>[]) {
+        this._boxes = value;
+    }
 }

@@ -1,6 +1,8 @@
 import { ICustomDataBase } from '../../types/beatmap/shared/custom/customData';
-import { ICustomDataNote, ICustomDataObstacle } from '../../types/beatmap/v2/custom/customData';
+import { ICustomDataNote } from '../../types/beatmap/v2/custom/note';
+import { ICustomDataObstacle } from '../../types/beatmap/v2/custom/obstacle';
 import { deepCopy } from '../../utils/misc';
+import { renameKey } from './_helpers';
 
 export default function <T extends ICustomDataBase>(
     customData?: ICustomDataNote & ICustomDataObstacle,
@@ -13,21 +15,26 @@ export default function <T extends ICustomDataBase>(
         return {} as T;
     }
 
-    // notes & obstacles
-    cd.color ??= cd._color;
-    cd.coordinates ??= cd._position;
-    cd.disableNoteGravity ??= cd._disableNoteGravity;
-    cd.disableNoteLook ??= cd._disableNoteLook;
-    cd.flip ??= cd._flip;
-    cd.localRotation ??= cd._localRotation;
-    cd.noteJumpMovementSpeed ??= cd._noteJumpMovementSpeed;
-    cd.noteJumpStartBeatOffset ??= cd._noteJumpStartBeatOffset;
+    renameKey(cd, '_color', 'color');
+    renameKey(cd, '_position', 'coordinates');
+    renameKey(cd, '_disableNoteGravity', 'disableNoteGravity');
+    renameKey(cd, '_disableNoteLook', 'disableNoteLook');
+    renameKey(cd, '_flip', 'flip');
+    renameKey(cd, '_localRotation', 'localRotation');
+    renameKey(cd, '_noteJumpMovementSpeed', 'noteJumpMovementSpeed');
+    renameKey(cd, '_noteJumpStartBeatOffset', 'noteJumpStartBeatOffset');
+    renameKey(cd, '_scale', 'size');
+    renameKey(cd, '_track', 'track');
+    renameKey(cd, '_rotation', 'worldRotation');
+
+    // special case
     cd.spawnEffect ??=
         typeof cd._disableSpawnEffect === 'boolean' ? !cd._disableSpawnEffect : undefined;
-    cd.size ??= cd._scale;
-    cd.track ??= cd._track;
+    delete cd._disableSpawnEffect;
+
     cd.uninteractable ??= typeof cd._interactable === 'boolean' ? !cd._interactable : undefined;
-    cd.worldRotation ??= cd._rotation;
+    delete cd._interactable;
+
     if (cd._animation) {
         cd.animation ??= {
             color: cd._animation._color,
@@ -42,22 +49,6 @@ export default function <T extends ICustomDataBase>(
             time: cd._animation._time,
         };
     }
-
-    // delete converted customData and deprecated feature
-    delete cd._color;
-    delete cd._position;
-    delete cd._disableNoteGravity;
-    delete cd._disableNoteLook;
-    delete cd._flip;
-    delete cd._cutDirection;
-    delete cd._localRotation;
-    delete cd._noteJumpMovementSpeed;
-    delete cd._noteJumpStartBeatOffset;
-    delete cd._disableSpawnEffect;
-    delete cd._scale;
-    delete cd._track;
-    delete cd._interactable;
-    delete cd._rotation;
     delete cd._animation;
 
     return cd as T;

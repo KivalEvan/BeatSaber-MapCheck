@@ -2,10 +2,7 @@ import { IWrapEvent, IWrapEventAttribute } from '../../types/beatmap/wrapper/eve
 import { IWrapEventTypesWithKeywords } from '../../types/beatmap/wrapper/eventTypesWithKeywords';
 import { IWrapBombNote, IWrapBombNoteAttribute } from '../../types/beatmap/wrapper/bombNote';
 import { IWrapBPMEvent, IWrapBPMEventAttribute } from '../../types/beatmap/wrapper/bpmEvent';
-import {
-    IWrapBurstSlider,
-    IWrapBurstSliderAttribute,
-} from '../../types/beatmap/wrapper/burstSlider';
+import { IWrapChain, IWrapChainAttribute } from '../../types/beatmap/wrapper/chain';
 import {
     IWrapColorBoostEvent,
     IWrapColorBoostEventAttribute,
@@ -28,13 +25,13 @@ import {
     IWrapRotationEvent,
     IWrapRotationEventAttribute,
 } from '../../types/beatmap/wrapper/rotationEvent';
-import { IWrapSlider, IWrapSliderAttribute } from '../../types/beatmap/wrapper/slider';
+import { IWrapArc, IWrapArcAttribute } from '../../types/beatmap/wrapper/arc';
 import { IWrapWaypoint, IWrapWaypointAttribute } from '../../types/beatmap/wrapper/waypoint';
 import { BeatPerMinute } from '../shared/bpm';
 import {
+    _ObtainCustomData,
     DeepPartialWrapper,
     LooseAutocomplete,
-    ObtainCustomData,
     PartialWrapper,
 } from '../../types/utils';
 import { GenericFileName } from '../../types/beatmap/shared/info';
@@ -44,7 +41,7 @@ import { WrapBaseItem } from './baseItem';
 import { IWrapDifficulty } from '../../types/beatmap/wrapper/difficulty';
 
 /** Difficulty beatmap class object. */
-export abstract class WrapDifficulty<T extends Record<keyof T, unknown>>
+export abstract class WrapDifficulty<T extends { [P in keyof T]: T[P] }>
     extends WrapBaseItem<T>
     implements IWrapDifficulty<T>
 {
@@ -56,8 +53,8 @@ export abstract class WrapDifficulty<T extends Record<keyof T, unknown>>
     abstract colorNotes: IWrapColorNote[];
     abstract bombNotes: IWrapBombNote[];
     abstract obstacles: IWrapObstacle[];
-    abstract sliders: IWrapSlider[];
-    abstract burstSliders: IWrapBurstSlider[];
+    abstract arcs: IWrapArc[];
+    abstract chains: IWrapChain[];
     abstract waypoints: IWrapWaypoint[];
     abstract basicEvents: IWrapEvent[];
     abstract colorBoostEvents: IWrapColorBoostEvent[];
@@ -66,7 +63,6 @@ export abstract class WrapDifficulty<T extends Record<keyof T, unknown>>
     abstract lightTranslationEventBoxGroups: IWrapLightTranslationEventBoxGroup[];
     abstract eventTypesWithKeywords: IWrapEventTypesWithKeywords;
     abstract useNormalEventsAsCompatibleEvents: boolean;
-    abstract customData: ObtainCustomData<T>;
 
     clone<U extends this>(): U {
         return super.clone().setFileName(this.fileName) as U;
@@ -84,6 +80,16 @@ export abstract class WrapDifficulty<T extends Record<keyof T, unknown>>
         return this;
     }
 
+    abstract reparse(keepRef?: boolean): void;
+
+    protected createOrKeep<T, U>(concrete: { new (data: T | U): U }, obj: U, keep?: boolean): U {
+        return keep && obj instanceof concrete ? obj : new concrete(obj);
+    }
+
+    protected checkClass<T, U>(concrete: { new (data: T): U }, obj: U): boolean {
+        return obj instanceof concrete;
+    }
+
     nps(duration: number): number {
         const notes = this.getNoteContainer().filter((n) => n.type !== 'bomb');
         return duration ? notes.length / duration : 0;
@@ -92,7 +98,7 @@ export abstract class WrapDifficulty<T extends Record<keyof T, unknown>>
     peak(beat: number, bpm: BeatPerMinute | number): number {
         let peakNPS = 0;
         let currentSectionStart = 0;
-        bpm = typeof bpm === 'number' ? BeatPerMinute.create(bpm) : bpm;
+        bpm = typeof bpm === 'number' ? new BeatPerMinute(bpm) : bpm;
         const notes = this.getNoteContainer().filter((n) => n.type !== 'bomb');
 
         for (let i = 0; i < notes.length; i++) {
@@ -106,7 +112,7 @@ export abstract class WrapDifficulty<T extends Record<keyof T, unknown>>
     }
 
     getFirstInteractiveTime(): number {
-        const notes = this.getNoteContainer().filter((n) => n.type !== 'slider');
+        const notes = this.getNoteContainer().filter((n) => n.type !== 'arc');
         let firstNoteTime = Number.MAX_VALUE;
         if (notes.length > 0) {
             firstNoteTime = notes[0].data.time;
@@ -116,7 +122,7 @@ export abstract class WrapDifficulty<T extends Record<keyof T, unknown>>
     }
 
     getLastInteractiveTime(): number {
-        const notes = this.getNoteContainer().filter((n) => n.type !== 'slider');
+        const notes = this.getNoteContainer().filter((n) => n.type !== 'arc');
         let lastNoteTime = 0;
         if (notes.length > 0) {
             lastNoteTime = notes[notes.length - 1].data.time;
@@ -150,8 +156,8 @@ export abstract class WrapDifficulty<T extends Record<keyof T, unknown>>
     getNoteContainer(): NoteContainer[] {
         const nc: NoteContainer[] = [];
         this.colorNotes.forEach((n) => nc.push({ type: 'note', data: n }));
-        this.sliders.forEach((s) => nc.push({ type: 'slider', data: s }));
-        this.burstSliders.forEach((bs) => nc.push({ type: 'burstSlider', data: bs }));
+        this.arcs.forEach((s) => nc.push({ type: 'arc', data: s }));
+        this.chains.forEach((bs) => nc.push({ type: 'chain', data: bs }));
         this.bombNotes.forEach((b) => nc.push({ type: 'bomb', data: b }));
         return nc.sort((a, b) => a.data.time - b.data.time);
     }
@@ -163,27 +169,23 @@ export abstract class WrapDifficulty<T extends Record<keyof T, unknown>>
         return ec.sort((a, b) => a.data.time - b.data.time);
     }
 
-    abstract addBPMEvents(...bpmEvents: PartialWrapper<IWrapBPMEventAttribute>[]): void;
-    abstract addRotationEvents(
-        ...rotationEvents: PartialWrapper<IWrapRotationEventAttribute>[]
-    ): void;
-    abstract addColorNotes(...colorNotes: PartialWrapper<IWrapColorNoteAttribute>[]): void;
-    abstract addBombNotes(...bombNotes: PartialWrapper<IWrapBombNoteAttribute>[]): void;
-    abstract addObstacles(...obstacles: PartialWrapper<IWrapObstacleAttribute>[]): void;
-    abstract addSliders(...sliders: PartialWrapper<IWrapSliderAttribute>[]): void;
-    abstract addBurstSliders(...burstSliders: PartialWrapper<IWrapBurstSliderAttribute>[]): void;
-    abstract addWaypoints(...waypoints: PartialWrapper<IWrapWaypointAttribute>[]): void;
-    abstract addBasicEvents(...basicEvents: PartialWrapper<IWrapEventAttribute>[]): void;
-    abstract addColorBoostEvents(
-        ...colorBoostEvents: PartialWrapper<IWrapColorBoostEventAttribute>[]
-    ): void;
+    abstract addBpmEvents(...data: PartialWrapper<IWrapBPMEventAttribute>[]): void;
+    abstract addRotationEvents(...data: PartialWrapper<IWrapRotationEventAttribute>[]): void;
+    abstract addColorNotes(...data: PartialWrapper<IWrapColorNoteAttribute>[]): void;
+    abstract addBombNotes(...data: PartialWrapper<IWrapBombNoteAttribute>[]): void;
+    abstract addObstacles(...data: PartialWrapper<IWrapObstacleAttribute>[]): void;
+    abstract addArcs(...data: PartialWrapper<IWrapArcAttribute>[]): void;
+    abstract addChains(...data: PartialWrapper<IWrapChainAttribute>[]): void;
+    abstract addWaypoints(...data: PartialWrapper<IWrapWaypointAttribute>[]): void;
+    abstract addBasicEvents(...data: PartialWrapper<IWrapEventAttribute>[]): void;
+    abstract addColorBoostEvents(...data: PartialWrapper<IWrapColorBoostEventAttribute>[]): void;
     abstract addLightColorEventBoxGroups(
-        ...lightColorEBGs: DeepPartialWrapper<IWrapLightColorEventBoxGroupAttribute>[]
+        ...data: DeepPartialWrapper<IWrapLightColorEventBoxGroupAttribute>[]
     ): void;
     abstract addLightRotationEventBoxGroups(
-        ...lightRotationEBGs: DeepPartialWrapper<IWrapLightRotationEventBoxGroupAttribute>[]
+        ...data: DeepPartialWrapper<IWrapLightRotationEventBoxGroupAttribute>[]
     ): void;
     abstract addLightTranslationEventBoxGroups(
-        ...lightTranslationEBGs: DeepPartialWrapper<IWrapLightTranslationEventBoxGroupAttribute>[]
+        ...data: DeepPartialWrapper<IWrapLightTranslationEventBoxGroupAttribute>[]
     ): void;
 }

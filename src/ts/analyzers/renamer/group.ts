@@ -211,6 +211,26 @@ const environmentGroup: { [env in EnvironmentAllName]?: { [key: number]: string 
         22: 'Window Right Pieces',
         23: 'Window Right Aura',
     },
+    QueenEnvironment: {
+        0: 'Vinyls Left',
+        1: 'Vinyl Left 1',
+        2: 'Vinyl Left 2',
+        3: 'Vinyl Left 3',
+        4: 'Vinyl Left 4',
+        5: 'Vinyls Right',
+        6: 'Vinyl Right 1',
+        7: 'Vinyl Right 2',
+        8: 'Vinyl Right 3',
+        9: 'Vinyl Right 4',
+        10: 'Tunnel Rings Wrapper',
+        11: 'Distant Circular Lasers Z',
+        12: 'Distant Circular Lasers',
+        13: 'Top Circular Lasers Rot Y',
+        14: 'Top Circular Lasers',
+        15: 'Platform Lane Left',
+        16: 'Platform Lane Right',
+        17: 'Silhouette Contour',
+    },
 };
 
 export function eventGroupRename(id: number, environment?: EnvironmentAllName): string {

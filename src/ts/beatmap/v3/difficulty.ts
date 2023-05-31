@@ -3,7 +3,7 @@ import { BasicEvent } from './basicEvent';
 import { BasicEventTypesWithKeywords } from './basicEventTypesWithKeywords';
 import { BombNote } from './bombNote';
 import { BPMEvent } from './bpmEvent';
-import { BurstSlider } from './burstSlider';
+import { Chain } from './chain';
 import { ColorBoostEvent } from './colorBoostEvent';
 import { ColorNote } from './colorNote';
 import { LightColorEventBoxGroup } from './lightColorEventBoxGroup';
@@ -11,7 +11,7 @@ import { LightRotationEventBoxGroup } from './lightRotationEventBoxGroup';
 import { LightTranslationEventBoxGroup } from './lightTranslationEventBoxGroup';
 import { Obstacle } from './obstacle';
 import { RotationEvent } from './rotationEvent';
-import { Slider } from './slider';
+import { Arc } from './arc';
 import { Waypoint } from './waypoint';
 import { DeepPartial } from '../../types/utils';
 import { IBPMEvent } from '../../types/beatmap/v3/bpmEvent';
@@ -19,8 +19,8 @@ import { IRotationEvent } from '../../types/beatmap/v3/rotationEvent';
 import { IColorNote } from '../../types/beatmap/v3/colorNote';
 import { IBombNote } from '../../types/beatmap/v3/bombNote';
 import { IObstacle } from '../../types/beatmap/v3/obstacle';
-import { ISlider } from '../../types/beatmap/v3/slider';
-import { IBurstSlider } from '../../types/beatmap/v3/burstSlider';
+import { IArc } from '../../types/beatmap/v3/arc';
+import { IChain } from '../../types/beatmap/v3/chain';
 import { IWaypoint } from '../../types/beatmap/v3/waypoint';
 import { IBasicEvent } from '../../types/beatmap/v3/basicEvent';
 import { IColorBoostEvent } from '../../types/beatmap/v3/colorBoostEvent';
@@ -32,7 +32,7 @@ import { WrapDifficulty } from '../wrapper/difficulty';
 import { IWrapBPMEventAttribute } from '../../types/beatmap/wrapper/bpmEvent';
 import { IWrapLightTranslationEventBoxGroupAttribute } from '../../types/beatmap/wrapper/lightTranslationEventBoxGroup';
 import { IWrapBombNoteAttribute } from '../../types/beatmap/wrapper/bombNote';
-import { IWrapBurstSliderAttribute } from '../../types/beatmap/wrapper/burstSlider';
+import { IWrapChainAttribute } from '../../types/beatmap/wrapper/chain';
 import { IWrapColorBoostEventAttribute } from '../../types/beatmap/wrapper/colorBoostEvent';
 import { IWrapColorNoteAttribute } from '../../types/beatmap/wrapper/colorNote';
 import { IWrapEventAttribute } from '../../types/beatmap/wrapper/event';
@@ -40,7 +40,7 @@ import { IWrapLightColorEventBoxGroupAttribute } from '../../types/beatmap/wrapp
 import { IWrapLightRotationEventBoxGroupAttribute } from '../../types/beatmap/wrapper/lightRotationEventBoxGroup';
 import { IWrapObstacleAttribute } from '../../types/beatmap/wrapper/obstacle';
 import { IWrapRotationEventAttribute } from '../../types/beatmap/wrapper/rotationEvent';
-import { IWrapSliderAttribute } from '../../types/beatmap/wrapper/slider';
+import { IWrapArcAttribute } from '../../types/beatmap/wrapper/arc';
 import { IWrapWaypointAttribute } from '../../types/beatmap/wrapper/waypoint';
 import { IIndexFilter } from '../../types/beatmap/v3/indexFilter';
 import { ILightColorEventBox } from '../../types/beatmap/v3/lightColorEventBox';
@@ -51,15 +51,15 @@ import { ILightRotationBase } from '../../types/beatmap/v3/lightRotationBase';
 import { ILightTranslationBase } from '../../types/beatmap/v3/lightTranslationBase';
 
 /** Difficulty beatmap v3 class object. */
-export class Difficulty extends WrapDifficulty<Required<IDifficulty>> {
+export class Difficulty extends WrapDifficulty<IDifficulty> {
     version: `3.${0 | 1 | 2}.0`;
     bpmEvents: BPMEvent[];
     rotationEvents: RotationEvent[];
     colorNotes: ColorNote[];
     bombNotes: BombNote[];
     obstacles: Obstacle[];
-    sliders: Slider[];
-    burstSliders: BurstSlider[];
+    arcs: Arc[];
+    chains: Chain[];
     waypoints: Waypoint[];
     basicEvents: BasicEvent[];
     colorBoostEvents: ColorBoostEvent[];
@@ -68,65 +68,46 @@ export class Difficulty extends WrapDifficulty<Required<IDifficulty>> {
     lightTranslationEventBoxGroups: LightTranslationEventBoxGroup[];
     eventTypesWithKeywords: BasicEventTypesWithKeywords;
     useNormalEventsAsCompatibleEvents;
-    protected constructor(data: Required<IDifficulty>) {
-        super(data);
+
+    constructor(data: Partial<IDifficulty> = {}) {
+        super();
+
         this.version = '3.2.0';
-        this.bpmEvents = data.bpmEvents?.map((obj) => BPMEvent.create(obj)[0]) ?? [];
-        this.rotationEvents = data.rotationEvents?.map((obj) => RotationEvent.create(obj)[0]) ?? [];
-        this.colorNotes = data.colorNotes?.map((obj) => ColorNote.create(obj)[0]) ?? [];
-        this.bombNotes = data.bombNotes?.map((obj) => BombNote.create(obj)[0]) ?? [];
-        this.obstacles = data.obstacles?.map((obj) => Obstacle.create(obj)[0]) ?? [];
-        this.sliders = data.sliders?.map((obj) => Slider.create(obj)[0]) ?? [];
-        this.burstSliders = data.burstSliders?.map((obj) => BurstSlider.create(obj)[0]) ?? [];
-        this.waypoints = data.waypoints?.map((obj) => Waypoint.create(obj)[0]) ?? [];
-        this.basicEvents = data.basicBeatmapEvents?.map((obj) => BasicEvent.create(obj)[0]) ?? [];
+        this.bpmEvents = (data.bpmEvents ?? []).map((obj) => new BPMEvent(obj)) ?? [];
+        this.rotationEvents =
+            (data.rotationEvents ?? []).map((obj) => new RotationEvent(obj)) ?? [];
+        this.colorNotes = (data.colorNotes ?? []).map((obj) => new ColorNote(obj)) ?? [];
+        this.bombNotes = (data.bombNotes ?? []).map((obj) => new BombNote(obj)) ?? [];
+        this.obstacles = (data.obstacles ?? []).map((obj) => new Obstacle(obj)) ?? [];
+        this.arcs = (data.sliders ?? []).map((obj) => new Arc(obj)) ?? [];
+        this.chains = (data.burstSliders ?? []).map((obj) => new Chain(obj)) ?? [];
+        this.waypoints = (data.waypoints ?? []).map((obj) => new Waypoint(obj)) ?? [];
+        this.basicEvents = (data.basicBeatmapEvents ?? []).map((obj) => new BasicEvent(obj)) ?? [];
         this.colorBoostEvents =
-            data.colorBoostBeatmapEvents?.map((obj) => ColorBoostEvent.create(obj)[0]) ?? [];
+            data.colorBoostBeatmapEvents?.map((obj) => new ColorBoostEvent(obj)) ?? [];
         this.lightColorEventBoxGroups =
-            data.lightColorEventBoxGroups?.map((obj) => LightColorEventBoxGroup.create(obj)[0]) ??
-            [];
+            data.lightColorEventBoxGroups?.map((obj) => new LightColorEventBoxGroup(obj)) ?? [];
         this.lightRotationEventBoxGroups =
-            data.lightRotationEventBoxGroups?.map(
-                (obj) => LightRotationEventBoxGroup.create(obj)[0],
-            ) ?? [];
+            data.lightRotationEventBoxGroups?.map((obj) => new LightRotationEventBoxGroup(obj)) ??
+            [];
         this.lightTranslationEventBoxGroups =
             data.lightTranslationEventBoxGroups?.map(
-                (obj) => LightTranslationEventBoxGroup.create(obj)[0],
+                (obj) => new LightTranslationEventBoxGroup(obj),
             ) ?? [];
-        this.eventTypesWithKeywords = BasicEventTypesWithKeywords.create(
-            data.basicEventTypesWithKeywords,
-        ) ?? {
-            d: [],
-        };
+        this.eventTypesWithKeywords = new BasicEventTypesWithKeywords(
+            data.basicEventTypesWithKeywords ?? {
+                d: [],
+            },
+        );
         this.useNormalEventsAsCompatibleEvents = data.useNormalEventsAsCompatibleEvents ?? false;
         this.customData = data.customData ?? {};
     }
 
     static create(data: Partial<IDifficulty> = {}): Difficulty {
-        return new this({
-            version: '3.2.0',
-            bpmEvents: data.bpmEvents ?? [],
-            rotationEvents: data.rotationEvents ?? [],
-            colorNotes: data.colorNotes ?? [],
-            bombNotes: data.bombNotes ?? [],
-            obstacles: data.obstacles ?? [],
-            sliders: data.sliders ?? [],
-            burstSliders: data.burstSliders ?? [],
-            waypoints: data.waypoints ?? [],
-            basicBeatmapEvents: data.basicBeatmapEvents ?? [],
-            colorBoostBeatmapEvents: data.colorBoostBeatmapEvents ?? [],
-            lightColorEventBoxGroups: data.lightColorEventBoxGroups ?? [],
-            lightRotationEventBoxGroups: data.lightRotationEventBoxGroups ?? [],
-            lightTranslationEventBoxGroups: data.lightTranslationEventBoxGroups ?? [],
-            basicEventTypesWithKeywords: data.basicEventTypesWithKeywords ?? {
-                d: [],
-            },
-            useNormalEventsAsCompatibleEvents: data.useNormalEventsAsCompatibleEvents ?? false,
-            customData: data.customData ?? {},
-        });
+        return new this(data);
     }
 
-    toJSON(): Required<IDifficulty> {
+    toJSON(): IDifficulty {
         return {
             version: '3.2.0',
             bpmEvents: this.bpmEvents.map((obj) => obj.toJSON()),
@@ -134,8 +115,8 @@ export class Difficulty extends WrapDifficulty<Required<IDifficulty>> {
             colorNotes: this.colorNotes.map((obj) => obj.toJSON()),
             bombNotes: this.bombNotes.map((obj) => obj.toJSON()),
             obstacles: this.obstacles.map((obj) => obj.toJSON()),
-            sliders: this.sliders.map((obj) => obj.toJSON()),
-            burstSliders: this.burstSliders.map((obj) => obj.toJSON()),
+            sliders: this.arcs.map((obj) => obj.toJSON()),
+            burstSliders: this.chains.map((obj) => obj.toJSON()),
             waypoints: this.waypoints.map((obj) => obj.toJSON()),
             basicBeatmapEvents: this.basicEvents.map((obj) => obj.toJSON()),
             colorBoostBeatmapEvents: this.colorBoostEvents.map((obj) => obj.toJSON()),
@@ -153,297 +134,300 @@ export class Difficulty extends WrapDifficulty<Required<IDifficulty>> {
     }
 
     get customData(): NonNullable<IDifficulty['customData']> {
-        return this.data.customData;
+        return this._customData;
     }
     set customData(value: NonNullable<IDifficulty['customData']>) {
-        this.data.customData = value;
+        this._customData = value;
     }
 
-    addBPMEvents(...bpmEvents: Partial<IWrapBPMEventAttribute<Required<IBPMEvent>>>[]): void;
-    addBPMEvents(...bpmEvents: Partial<IBPMEvent>[]): void;
-    addBPMEvents(
-        ...bpmEvents: (Partial<IBPMEvent> & Partial<IWrapBPMEventAttribute<Required<IBPMEvent>>>)[]
+    reparse(keepRef?: boolean): void {
+        this.colorNotes = this.colorNotes.map((obj) => this.createOrKeep(ColorNote, obj, keepRef));
+        this.bombNotes = this.bombNotes.map((obj) => this.createOrKeep(BombNote, obj, keepRef));
+        this.arcs = this.arcs.map((obj) => this.createOrKeep(Arc, obj, keepRef));
+        this.chains = this.chains.map((obj) => this.createOrKeep(Chain, obj, keepRef));
+        this.obstacles = this.obstacles.map((obj) => this.createOrKeep(Obstacle, obj, keepRef));
+        this.basicEvents = this.basicEvents.map((obj) =>
+            this.createOrKeep(BasicEvent, obj, keepRef),
+        );
+        this.colorBoostEvents = this.colorBoostEvents.map((obj) =>
+            this.createOrKeep(ColorBoostEvent, obj, keepRef),
+        );
+        this.rotationEvents = this.rotationEvents.map((obj) =>
+            this.createOrKeep(RotationEvent, obj, keepRef),
+        );
+        this.bpmEvents = this.bpmEvents.map((obj) => this.createOrKeep(BPMEvent, obj, keepRef));
+        this.waypoints = this.waypoints.map((obj) => this.createOrKeep(Waypoint, obj, keepRef));
+        this.eventTypesWithKeywords = new BasicEventTypesWithKeywords(this.eventTypesWithKeywords);
+    }
+
+    addBpmEvents(...data: Partial<IWrapBPMEventAttribute<IBPMEvent>>[]): void;
+    addBpmEvents(...data: Partial<IBPMEvent>[]): void;
+    addBpmEvents(
+        ...data: (Partial<IBPMEvent> & Partial<IWrapBPMEventAttribute<IBPMEvent>>)[]
     ): void;
-    addBPMEvents(
-        ...bpmEvents: (Partial<IBPMEvent> & Partial<IWrapBPMEventAttribute<Required<IBPMEvent>>>)[]
+    addBpmEvents(
+        ...data: (Partial<IBPMEvent> & Partial<IWrapBPMEventAttribute<IBPMEvent>>)[]
     ): void {
         this.bpmEvents.push(
-            ...bpmEvents.map((bpme) => {
-                return bpme instanceof BPMEvent ? bpme : BPMEvent.create(bpme)[0];
+            ...data.map((obj) => {
+                return obj instanceof BPMEvent ? obj : new BPMEvent(obj);
             }),
         );
     }
 
+    addRotationEvents(...data: Partial<IWrapRotationEventAttribute<IRotationEvent>>[]): void;
+    addRotationEvents(...data: Partial<IRotationEvent>[]): void;
     addRotationEvents(
-        ...rotationEvents: Partial<IWrapRotationEventAttribute<Required<IRotationEvent>>>[]
-    ): void;
-    addRotationEvents(...rotationEvents: Partial<IRotationEvent>[]): void;
-    addRotationEvents(
-        ...rotationEvents: (Partial<IRotationEvent> &
-            Partial<IWrapRotationEventAttribute<Required<IRotationEvent>>>)[]
+        ...data: (Partial<IRotationEvent> & Partial<IWrapRotationEventAttribute<IRotationEvent>>)[]
     ): void;
     addRotationEvents(
-        ...rotationEvents: (Partial<IRotationEvent> &
-            Partial<IWrapRotationEventAttribute<Required<IRotationEvent>>>)[]
+        ...data: (Partial<IRotationEvent> & Partial<IWrapRotationEventAttribute<IRotationEvent>>)[]
     ): void {
         this.rotationEvents.push(
-            ...rotationEvents.map((re) =>
-                re instanceof RotationEvent ? re : RotationEvent.create(re)[0],
-            ),
+            ...data.map((obj) => (obj instanceof RotationEvent ? obj : new RotationEvent(obj))),
         );
     }
 
-    addColorNotes(...colorNotes: Partial<IWrapColorNoteAttribute<Required<IColorNote>>>[]): void;
-    addColorNotes(...colorNotes: Partial<IColorNote>[]): void;
+    addColorNotes(...data: Partial<IWrapColorNoteAttribute<IColorNote>>[]): void;
+    addColorNotes(...data: Partial<IColorNote>[]): void;
     addColorNotes(
-        ...colorNotes: (Partial<IColorNote> &
-            Partial<IWrapColorNoteAttribute<Required<IColorNote>>>)[]
+        ...data: (Partial<IColorNote> & Partial<IWrapColorNoteAttribute<IColorNote>>)[]
     ): void;
     addColorNotes(
-        ...colorNotes: (Partial<IColorNote> &
-            Partial<IWrapColorNoteAttribute<Required<IColorNote>>>)[]
+        ...data: (Partial<IColorNote> & Partial<IWrapColorNoteAttribute<IColorNote>>)[]
     ): void {
         this.colorNotes.push(
-            ...colorNotes.map((cn) => (cn instanceof ColorNote ? cn : ColorNote.create(cn)[0])),
+            ...data.map((obj) => (obj instanceof ColorNote ? obj : new ColorNote(obj))),
         );
     }
 
-    addBombNotes(...bombNotes: Partial<IWrapBombNoteAttribute<Required<IBombNote>>>[]): void;
-    addBombNotes(...bombNotes: Partial<IBombNote>[]): void;
+    addBombNotes(...data: Partial<IWrapBombNoteAttribute<IBombNote>>[]): void;
+    addBombNotes(...data: Partial<IBombNote>[]): void;
     addBombNotes(
-        ...bombNotes: (Partial<IBombNote>[] &
-            Partial<IWrapBombNoteAttribute<Required<IBombNote>>>)[]
+        ...data: (Partial<IBombNote>[] & Partial<IWrapBombNoteAttribute<IBombNote>>)[]
     ): void;
     addBombNotes(
-        ...bombNotes: (Partial<IBombNote>[] &
-            Partial<IWrapBombNoteAttribute<Required<IBombNote>>>)[]
+        ...data: (Partial<IBombNote>[] & Partial<IWrapBombNoteAttribute<IBombNote>>)[]
     ): void {
         this.bombNotes.push(
-            ...bombNotes.map((bn) => (bn instanceof BombNote ? bn : BombNote.create(bn)[0])),
+            ...data.map((obj) => (obj instanceof BombNote ? obj : new BombNote(obj))),
         );
     }
 
-    addObstacles(...obstacles: Partial<IWrapObstacleAttribute<Required<IObstacle>>>[]): void;
-    addObstacles(...obstacles: Partial<IObstacle>[]): void;
+    addObstacles(...data: Partial<IWrapObstacleAttribute<IObstacle>>[]): void;
+    addObstacles(...data: Partial<IObstacle>[]): void;
     addObstacles(
-        ...obstacles: (Partial<IObstacle> & Partial<IWrapObstacleAttribute<Required<IObstacle>>>)[]
+        ...data: (Partial<IObstacle> & Partial<IWrapObstacleAttribute<IObstacle>>)[]
     ): void;
     addObstacles(
-        ...obstacles: (Partial<IObstacle> & Partial<IWrapObstacleAttribute<Required<IObstacle>>>)[]
+        ...data: (Partial<IObstacle> & Partial<IWrapObstacleAttribute<IObstacle>>)[]
     ): void {
         this.obstacles.push(
-            ...obstacles.map((o) => (o instanceof Obstacle ? o : Obstacle.create(o)[0])),
+            ...data.map((obj) => (obj instanceof Obstacle ? obj : new Obstacle(obj))),
         );
     }
 
-    addSliders(...sliders: Partial<IWrapSliderAttribute<Required<ISlider>>>[]): void;
-    addSliders(...sliders: Partial<ISlider>[]): void;
-    addSliders(
-        ...sliders: (Partial<ISlider> & Partial<IWrapSliderAttribute<Required<ISlider>>>)[]
-    ): void;
-    addSliders(
-        ...sliders: (Partial<ISlider> & Partial<IWrapSliderAttribute<Required<ISlider>>>)[]
-    ): void {
-        this.sliders.push(...sliders.map((s) => (s instanceof Slider ? s : Slider.create(s)[0])));
+    addArcs(...data: Partial<IWrapArcAttribute<IArc>>[]): void;
+    addArcs(...data: Partial<IArc>[]): void;
+    addArcs(...data: (Partial<IArc> & Partial<IWrapArcAttribute<IArc>>)[]): void;
+    addArcs(...data: (Partial<IArc> & Partial<IWrapArcAttribute<IArc>>)[]): void {
+        this.arcs.push(...data.map((obj) => (obj instanceof Arc ? obj : new Arc(obj))));
     }
 
-    addBurstSliders(
-        ...burstSliders: Partial<IWrapBurstSliderAttribute<Required<IBurstSlider>>>[]
-    ): void;
-    addBurstSliders(...burstSliders: Partial<IBurstSlider>[]): void;
-    addBurstSliders(
-        ...burstSliders: (Partial<IBurstSlider> &
-            Partial<IWrapBurstSliderAttribute<Required<IBurstSlider>>>)[]
-    ): void;
-    addBurstSliders(
-        ...burstSliders: (Partial<IBurstSlider> &
-            Partial<IWrapBurstSliderAttribute<Required<IBurstSlider>>>)[]
-    ): void {
-        this.burstSliders.push(
-            ...burstSliders.map((bs) =>
-                bs instanceof BurstSlider ? bs : BurstSlider.create(bs)[0],
-            ),
-        );
+    addChains(...data: Partial<IWrapChainAttribute<IChain>>[]): void;
+    addChains(...data: Partial<IChain>[]): void;
+    addChains(...data: (Partial<IChain> & Partial<IWrapChainAttribute<IChain>>)[]): void;
+    addChains(...data: (Partial<IChain> & Partial<IWrapChainAttribute<IChain>>)[]): void {
+        this.chains.push(...data.map((obj) => (obj instanceof Chain ? obj : new Chain(obj))));
     }
 
-    addWaypoints(...waypoints: Partial<IWrapWaypointAttribute<Required<IWaypoint>>>[]): void;
-    addWaypoints(...waypoints: Partial<IWaypoint>[]): void;
+    addWaypoints(...data: Partial<IWrapWaypointAttribute<IWaypoint>>[]): void;
+    addWaypoints(...data: Partial<IWaypoint>[]): void;
     addWaypoints(
-        ...waypoints: (Partial<IWaypoint> & Partial<IWrapWaypointAttribute<Required<IWaypoint>>>)[]
+        ...data: (Partial<IWaypoint> & Partial<IWrapWaypointAttribute<IWaypoint>>)[]
     ): void;
     addWaypoints(
-        ...waypoints: (Partial<IWaypoint> & Partial<IWrapWaypointAttribute<Required<IWaypoint>>>)[]
+        ...data: (Partial<IWaypoint> & Partial<IWrapWaypointAttribute<IWaypoint>>)[]
     ): void {
         this.waypoints.push(
-            ...waypoints.map((w) => (w instanceof Waypoint ? w : Waypoint.create(w)[0])),
+            ...data.map((obj) => (obj instanceof Waypoint ? obj : new Waypoint(obj))),
         );
     }
 
-    addBasicEvents(...basicEvents: Partial<IWrapEventAttribute<Required<IBasicEvent>>>[]): void;
-    addBasicEvents(...basicEvents: Partial<IBasicEvent>[]): void;
+    addBasicEvents(...data: Partial<IWrapEventAttribute<IBasicEvent>>[]): void;
+    addBasicEvents(...data: Partial<IBasicEvent>[]): void;
     addBasicEvents(
-        ...basicEvents: (Partial<IBasicEvent>[] &
-            Partial<IWrapEventAttribute<Required<IBasicEvent>>>)[]
+        ...data: (Partial<IBasicEvent>[] & Partial<IWrapEventAttribute<IBasicEvent>>)[]
     ): void;
     addBasicEvents(
-        ...basicEvents: (Partial<IBasicEvent>[] &
-            Partial<IWrapEventAttribute<Required<IBasicEvent>>>)[]
+        ...data: (Partial<IBasicEvent>[] & Partial<IWrapEventAttribute<IBasicEvent>>)[]
     ): void {
         this.basicEvents.push(
-            ...basicEvents.map((be) => (be instanceof BasicEvent ? be : BasicEvent.create(be)[0])),
+            ...data.map((obj) => (obj instanceof BasicEvent ? obj : new BasicEvent(obj))),
         );
     }
 
+    addColorBoostEvents(...data: Partial<IWrapColorBoostEventAttribute<IColorBoostEvent>>[]): void;
+    addColorBoostEvents(...data: Partial<IColorBoostEvent>[]): void;
     addColorBoostEvents(
-        ...colorBoostEvents: Partial<IWrapColorBoostEventAttribute<Required<IColorBoostEvent>>>[]
-    ): void;
-    addColorBoostEvents(...colorBoostEvents: Partial<IColorBoostEvent>[]): void;
-    addColorBoostEvents(
-        ...colorBoostEvents: (Partial<IColorBoostEvent> &
-            Partial<IWrapColorBoostEventAttribute<Required<IColorBoostEvent>>>)[]
+        ...data: (Partial<IColorBoostEvent> &
+            Partial<IWrapColorBoostEventAttribute<IColorBoostEvent>>)[]
     ): void;
     addColorBoostEvents(
-        ...colorBoostEvents: (Partial<IColorBoostEvent> &
-            Partial<IWrapColorBoostEventAttribute<Required<IColorBoostEvent>>>)[]
+        ...data: (Partial<IColorBoostEvent> &
+            Partial<IWrapColorBoostEventAttribute<IColorBoostEvent>>)[]
     ): void {
         this.colorBoostEvents.push(
-            ...colorBoostEvents.map((cbe) =>
-                cbe instanceof ColorBoostEvent ? cbe : ColorBoostEvent.create(cbe)[0],
-            ),
+            ...data.map((obj) => (obj instanceof ColorBoostEvent ? obj : new ColorBoostEvent(obj))),
         );
     }
 
     addLightColorEventBoxGroups(
-        ...lightColorEBGs: DeepPartial<
+        ...data: DeepPartial<
             IWrapLightColorEventBoxGroupAttribute<
-                Required<ILightColorEventBoxGroup>,
-                Required<ILightColorEventBox>,
-                Required<ILightColorBase>,
-                Required<IIndexFilter>
+                ILightColorEventBoxGroup,
+                ILightColorEventBox,
+                ILightColorBase,
+                IIndexFilter
             >
         >[]
     ): void;
-    addLightColorEventBoxGroups(...lightColorEBGs: DeepPartial<ILightColorEventBoxGroup>[]): void;
+    addLightColorEventBoxGroups(...data: DeepPartial<ILightColorEventBoxGroup>[]): void;
     addLightColorEventBoxGroups(
-        ...lightColorEBGs: (DeepPartial<ILightColorEventBoxGroup> &
+        ...data: (DeepPartial<ILightColorEventBoxGroup> &
             DeepPartial<
                 IWrapLightColorEventBoxGroupAttribute<
-                    Required<ILightColorEventBoxGroup>,
-                    Required<ILightColorEventBox>,
-                    Required<ILightColorBase>,
-                    Required<IIndexFilter>
+                    ILightColorEventBoxGroup,
+                    ILightColorEventBox,
+                    ILightColorBase,
+                    IIndexFilter
                 >
             >)[]
     ): void;
     addLightColorEventBoxGroups(
-        ...lightColorEBGs: (DeepPartial<ILightColorEventBoxGroup> &
+        ...data: (DeepPartial<ILightColorEventBoxGroup> &
             DeepPartial<
                 IWrapLightColorEventBoxGroupAttribute<
-                    Required<ILightColorEventBoxGroup>,
-                    Required<ILightColorEventBox>,
-                    Required<ILightColorBase>,
-                    Required<IIndexFilter>
+                    ILightColorEventBoxGroup,
+                    ILightColorEventBox,
+                    ILightColorBase,
+                    IIndexFilter
                 >
             >)[]
     ): void {
         this.lightColorEventBoxGroups.push(
-            ...lightColorEBGs.map((lcebg) =>
-                lcebg instanceof LightColorEventBoxGroup
-                    ? lcebg
-                    : LightColorEventBoxGroup.create(lcebg)[0],
+            ...data.map((obj) =>
+                obj instanceof LightColorEventBoxGroup ? obj : new LightColorEventBoxGroup(obj),
             ),
         );
     }
 
     addLightRotationEventBoxGroups(
-        ...lightRotationEBGs: DeepPartial<
+        ...data: DeepPartial<
             IWrapLightRotationEventBoxGroupAttribute<
-                Required<ILightRotationEventBoxGroup>,
-                Required<ILightRotationEventBox>,
-                Required<ILightRotationBase>,
-                Required<IIndexFilter>
+                ILightRotationEventBoxGroup,
+                ILightRotationEventBox,
+                ILightRotationBase,
+                IIndexFilter
             >
         >[]
     ): void;
+    addLightRotationEventBoxGroups(...data: DeepPartial<ILightRotationEventBoxGroup>[]): void;
     addLightRotationEventBoxGroups(
-        ...lightRotationEBGs: DeepPartial<ILightRotationEventBoxGroup>[]
-    ): void;
-    addLightRotationEventBoxGroups(
-        ...lightRotationEBGs: (DeepPartial<ILightRotationEventBoxGroup> &
+        ...data: (DeepPartial<ILightRotationEventBoxGroup> &
             DeepPartial<
                 IWrapLightRotationEventBoxGroupAttribute<
-                    Required<ILightRotationEventBoxGroup>,
-                    Required<ILightRotationEventBox>,
-                    Required<ILightRotationBase>,
-                    Required<IIndexFilter>
+                    ILightRotationEventBoxGroup,
+                    ILightRotationEventBox,
+                    ILightRotationBase,
+                    IIndexFilter
                 >
             >)[]
     ): void;
     addLightRotationEventBoxGroups(
-        ...lightRotationEBGs: (DeepPartial<ILightRotationEventBoxGroup> &
+        ...data: (DeepPartial<ILightRotationEventBoxGroup> &
             DeepPartial<
                 IWrapLightRotationEventBoxGroupAttribute<
-                    Required<ILightRotationEventBoxGroup>,
-                    Required<ILightRotationEventBox>,
-                    Required<ILightRotationBase>,
-                    Required<IIndexFilter>
+                    ILightRotationEventBoxGroup,
+                    ILightRotationEventBox,
+                    ILightRotationBase,
+                    IIndexFilter
                 >
             >)[]
     ): void {
         this.lightRotationEventBoxGroups.push(
-            ...lightRotationEBGs.map((lrebg) =>
-                lrebg instanceof LightRotationEventBoxGroup
-                    ? lrebg
-                    : LightRotationEventBoxGroup.create(lrebg)[0],
+            ...data.map((obj) =>
+                obj instanceof LightRotationEventBoxGroup
+                    ? obj
+                    : new LightRotationEventBoxGroup(obj),
             ),
         );
     }
 
     addLightTranslationEventBoxGroups(
-        ...lightTranslationEBGs: DeepPartial<
+        ...data: DeepPartial<
             IWrapLightTranslationEventBoxGroupAttribute<
-                Required<ILightTranslationEventBoxGroup>,
-                Required<ILightTranslationEventBox>,
-                Required<ILightTranslationBase>,
-                Required<IIndexFilter>
+                ILightTranslationEventBoxGroup,
+                ILightTranslationEventBox,
+                ILightTranslationBase,
+                IIndexFilter
             >
         >[]
     ): void;
+    addLightTranslationEventBoxGroups(...data: DeepPartial<ILightTranslationEventBoxGroup>[]): void;
     addLightTranslationEventBoxGroups(
-        ...lightTranslationEBGs: DeepPartial<ILightTranslationEventBoxGroup>[]
-    ): void;
-    addLightTranslationEventBoxGroups(
-        ...lightTranslationEBGs: (DeepPartial<ILightTranslationEventBoxGroup> &
+        ...data: (DeepPartial<ILightTranslationEventBoxGroup> &
             DeepPartial<
                 IWrapLightTranslationEventBoxGroupAttribute<
-                    Required<ILightTranslationEventBoxGroup>,
-                    Required<ILightTranslationEventBox>,
-                    Required<ILightTranslationBase>,
-                    Required<IIndexFilter>
+                    ILightTranslationEventBoxGroup,
+                    ILightTranslationEventBox,
+                    ILightTranslationBase,
+                    IIndexFilter
                 >
             >)[]
     ): void;
     addLightTranslationEventBoxGroups(
-        ...lightTranslationEBGs: (DeepPartial<ILightTranslationEventBoxGroup> &
+        ...data: (DeepPartial<ILightTranslationEventBoxGroup> &
             DeepPartial<
                 IWrapLightTranslationEventBoxGroupAttribute<
-                    Required<ILightTranslationEventBoxGroup>,
-                    Required<ILightTranslationEventBox>,
-                    Required<ILightTranslationBase>,
-                    Required<IIndexFilter>
+                    ILightTranslationEventBoxGroup,
+                    ILightTranslationEventBox,
+                    ILightTranslationBase,
+                    IIndexFilter
                 >
             >)[]
     ): void {
         this.lightTranslationEventBoxGroups.push(
-            ...lightTranslationEBGs.map((ltebg) =>
-                ltebg instanceof LightTranslationEventBoxGroup
-                    ? ltebg
-                    : LightTranslationEventBoxGroup.create(ltebg)[0],
+            ...data.map((obj) =>
+                obj instanceof LightTranslationEventBoxGroup
+                    ? obj
+                    : new LightTranslationEventBoxGroup(obj),
             ),
         );
     }
 
     isValid(): boolean {
-        throw new Error('Method not implemented.');
+        return (
+            this.colorNotes.every((obj) => this.checkClass(ColorNote, obj)) ||
+            this.bombNotes.every((obj) => this.checkClass(BombNote, obj)) ||
+            this.arcs.every((obj) => this.checkClass(Arc, obj)) ||
+            this.chains.every((obj) => this.checkClass(Chain, obj)) ||
+            this.obstacles.every((obj) => this.checkClass(Obstacle, obj)) ||
+            this.basicEvents.every((obj) => this.checkClass(BasicEvent, obj)) ||
+            this.colorBoostEvents.every((obj) => this.checkClass(ColorBoostEvent, obj)) ||
+            this.rotationEvents.every((obj) => this.checkClass(RotationEvent, obj)) ||
+            this.bpmEvents.every((obj) => this.checkClass(BPMEvent, obj)) ||
+            this.waypoints.every((obj) => this.checkClass(Waypoint, obj)) ||
+            this.lightColorEventBoxGroups.every((obj) =>
+                this.checkClass(LightColorEventBoxGroup, obj),
+            ) ||
+            this.lightRotationEventBoxGroups.every((obj) =>
+                this.checkClass(LightRotationEventBoxGroup, obj),
+            ) ||
+            this.lightTranslationEventBoxGroups.every((obj) =>
+                this.checkClass(LightTranslationEventBoxGroup, obj),
+            ) ||
+            this.eventTypesWithKeywords instanceof BasicEventTypesWithKeywords
+        );
     }
 }

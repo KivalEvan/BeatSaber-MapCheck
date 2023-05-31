@@ -5,8 +5,8 @@ import { prefix } from './constants';
 
 export function createNoteCountTable(mapInfo: IInfo, mapData: IBeatmapItem): HTMLTableElement {
     const noteCount = countNote(mapData.data.colorNotes);
-    const arcCount = countNote(mapData.data.sliders);
-    const chainCount = countNote(mapData.data.burstSliders);
+    const arcCount = countNote(mapData.data.arcs);
+    const chainCount = countNote(mapData.data.chains);
     const bombCount = countBomb(mapData.data.bombNotes);
 
     let htmlString = `<caption class="${prefix}table-caption">Note Count:</caption><tr><th class="${prefix}table-header"></th><th class="${prefix}table-header">Note</th><th class="${prefix}table-header">Arc</th><th class="${prefix}table-header">Chain</th><th class="${prefix}table-header">Bomb</th></tr><tr><th class="${prefix}table-header">Total</th><td class="${prefix}table-element">${

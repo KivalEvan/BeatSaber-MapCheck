@@ -1,9 +1,9 @@
 import { IWrapEvent } from './event';
 import { IWrapBombNote } from './bombNote';
-import { IWrapBurstSlider } from './burstSlider';
+import { IWrapChain } from './chain';
 import { IWrapColorBoostEvent } from './colorBoostEvent';
 import { IWrapColorNote } from './colorNote';
-import { IWrapSlider } from './slider';
+import { IWrapArc } from './arc';
 
 interface ContainerBase {
     type: string;
@@ -14,14 +14,14 @@ export interface NoteContainerNote extends ContainerBase {
     data: IWrapColorNote;
 }
 
-export interface NoteContainerSlider extends ContainerBase {
-    type: 'slider';
-    data: IWrapSlider;
+export interface NoteContainerArc extends ContainerBase {
+    type: 'arc';
+    data: IWrapArc;
 }
 
-export interface NoteContainerBurstSlider extends ContainerBase {
-    type: 'burstSlider';
-    data: IWrapBurstSlider;
+export interface NoteContainerChain extends ContainerBase {
+    type: 'chain';
+    data: IWrapChain;
 }
 
 export interface NoteContainerBomb extends ContainerBase {
@@ -31,8 +31,8 @@ export interface NoteContainerBomb extends ContainerBase {
 
 export type NoteContainer =
     | NoteContainerNote
-    | NoteContainerSlider
-    | NoteContainerBurstSlider
+    | NoteContainerArc
+    | NoteContainerChain
     | NoteContainerBomb;
 
 export interface EventContainerBasic {

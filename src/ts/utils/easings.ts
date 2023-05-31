@@ -1,6 +1,5 @@
 // taken from Aeroluna's Heck easing animation
-import { Easings } from '../types/easings';
-import { LooseAutocomplete } from '../types/utils';
+import { EasingFunction, Easings } from '../types/easings';
 
 const PI = Math.PI;
 const HALFPI = Math.PI / 2;
@@ -25,10 +24,11 @@ const easeInOutBounce = (x: number) =>
  * Define: method.name = (x) => x
  * ```
  */
-export const easings: {
-    [easing in LooseAutocomplete<Exclude<Easings, 'easeStep'>>]: (x: number) => number;
+export const EasingsFn: {
+    readonly [easing in Easings]: EasingFunction;
 } = {
     easeLinear: (x) => x,
+    easeStep: (x) => x,
     easeInQuad: (x) => Math.pow(x, 2),
     easeOutQuad: (x) => x * (2 - x),
     easeInOutQuad: (x) => (x < 0.5 ? 2 * x * x : -1 + (4 - 2 * x) * x),
@@ -89,4 +89,4 @@ export const easings: {
     easeInBounce,
     easeOutBounce,
     easeInOutBounce,
-};
+} as const;

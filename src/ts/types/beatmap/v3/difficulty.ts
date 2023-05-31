@@ -3,8 +3,8 @@ import { IRotationEvent } from './rotationEvent';
 import { IColorNote } from './colorNote';
 import { IBombNote } from './bombNote';
 import { IObstacle } from './obstacle';
-import { ISlider } from './slider';
-import { IBurstSlider } from './burstSlider';
+import { IArc } from './arc';
+import { IChain } from './chain';
 import { IWaypoint } from './waypoint';
 import { IBasicEvent } from './basicEvent';
 import { IColorBoostEvent } from './colorBoostEvent';
@@ -12,7 +12,7 @@ import { ILightColorEventBoxGroup } from './lightColorEventBoxGroup';
 import { ILightRotationEventBoxGroup } from './lightRotationEventBoxGroup';
 import { IBasicEventTypesWithKeywords } from './basicEventTypesWithKeywords';
 import { ILightTranslationEventBoxGroup } from './lightTranslationEventBoxGroup';
-import { ICustomDataDifficulty } from './custom/customData';
+import { ICustomDataDifficulty } from './custom/difficulty';
 import { IBaseItem } from './baseItem';
 
 export interface IDifficulty extends IBaseItem {
@@ -22,8 +22,8 @@ export interface IDifficulty extends IBaseItem {
     colorNotes: IColorNote[];
     bombNotes: IBombNote[];
     obstacles: IObstacle[];
-    sliders: ISlider[];
-    burstSliders: IBurstSlider[];
+    sliders: IArc[];
+    burstSliders: IChain[];
     waypoints: IWaypoint[];
     basicBeatmapEvents: IBasicEvent[];
     colorBoostBeatmapEvents: IColorBoostEvent[];

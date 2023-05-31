@@ -1,7 +1,7 @@
-import { Vector2, Vector3 } from '../../../vector';
 import { Nullable } from '../../../utils';
+import { Vector2, Vector3 } from '../../../vector';
 import { ICustomDataBase } from '../../shared/custom/customData';
-import { PercentPointDefinition, Vector3PointDefinition } from '../../shared/custom/heck';
+import { FloatPointDefinition, Vector3PointDefinition } from '../../shared/custom/heck';
 import { PlayerObject } from '../../shared/custom/noodleExtensions';
 import { IHeckBase } from './heck';
 
@@ -44,19 +44,19 @@ export interface INEEvent extends ICustomDataBase {
  * @extends Required<IHeckBase>
  */
 export interface INECustomEventDataAnimateTrack extends Required<IHeckBase> {
-    _dissolve?: string | number | PercentPointDefinition[];
-    _dissolveArrow?: string | number | PercentPointDefinition[];
-    _interactable?: string | number | PercentPointDefinition[];
-    _time?: string | number | PercentPointDefinition[];
+    _dissolve?: string | number | FloatPointDefinition[];
+    _dissolveArrow?: string | number | FloatPointDefinition[];
+    _interactable?: string | number | FloatPointDefinition[];
+    _time?: string | number | FloatPointDefinition[];
 }
 
 /** AssignPathAnimation interface for Noodle Extensions Custom Event.
  * @extends Required<IHeckBase>
  */
 export interface INECustomEventDataAssignPathAnimation extends Required<IHeckBase> {
-    _dissolve?: string | number | PercentPointDefinition[];
-    _dissolveArrow?: string | number | PercentPointDefinition[];
-    _interactable?: string | number | PercentPointDefinition[];
+    _dissolve?: string | number | FloatPointDefinition[];
+    _dissolveArrow?: string | number | FloatPointDefinition[];
+    _interactable?: string | number | FloatPointDefinition[];
     _definitePosition?: string | Vector3 | Vector3PointDefinition[];
 }
 
@@ -80,9 +80,9 @@ export interface INEAnimation {
     _rotation?: string | Vector3 | Vector3PointDefinition[];
     _localRotation?: string | Vector3 | Vector3PointDefinition[];
     _scale?: string | Vector3 | Vector3PointDefinition[];
-    _dissolve?: string | number | PercentPointDefinition[];
-    _dissolveArrow?: string | number | PercentPointDefinition[];
-    _interactable?: string | number | PercentPointDefinition[];
+    _dissolve?: string | number | FloatPointDefinition[];
+    _dissolveArrow?: string | number | FloatPointDefinition[];
+    _interactable?: string | number | FloatPointDefinition[];
     _definitePosition?: string | Vector3 | Vector3PointDefinition[];
-    _time?: string | number | PercentPointDefinition[];
+    _time?: string | number | FloatPointDefinition[];
 }

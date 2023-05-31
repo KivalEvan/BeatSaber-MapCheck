@@ -10,11 +10,11 @@ import { LightTranslationBase } from './lightTranslationBase';
 
 /** Light translation event box beatmap v3 class object. */
 export class LightTranslationEventBox extends WrapLightTranslationEventBox<
-    Required<ILightTranslationEventBox>,
-    Required<ILightTranslationBase>,
-    Required<IIndexFilter>
+    ILightTranslationEventBox,
+    ILightTranslationBase,
+    IIndexFilter
 > {
-    static default: ObjectReturnFn<Required<ILightTranslationEventBox>> = {
+    static default: ObjectReturnFn<ILightTranslationEventBox> = {
         f: () => {
             return {
                 f: IndexFilter.default.f,
@@ -42,92 +42,104 @@ export class LightTranslationEventBox extends WrapLightTranslationEventBox<
         },
     };
 
-    private _f: IndexFilter;
-    private _l: LightTranslationBase[];
-    protected constructor(lightTranslationEventBox: Required<ILightTranslationEventBox>) {
-        super(lightTranslationEventBox);
-        this._f = IndexFilter.create(lightTranslationEventBox.f);
-        this._l = lightTranslationEventBox.l.map((l) => LightTranslationBase.create(l)[0]);
+    constructor();
+    constructor(
+        data: DeepPartial<
+            IWrapLightTranslationEventBoxAttribute<
+                ILightTranslationEventBox,
+                ILightTranslationBase,
+                IIndexFilter
+            >
+        >,
+    );
+    constructor(data: DeepPartial<ILightTranslationEventBox>);
+    constructor(
+        data: DeepPartial<ILightTranslationEventBox> &
+            DeepPartial<
+                IWrapLightTranslationEventBoxAttribute<
+                    ILightTranslationEventBox,
+                    ILightTranslationBase,
+                    IIndexFilter
+                >
+            >,
+    );
+    constructor(
+        data: DeepPartial<ILightTranslationEventBox> &
+            DeepPartial<
+                IWrapLightTranslationEventBoxAttribute<
+                    ILightTranslationEventBox,
+                    ILightTranslationBase,
+                    IIndexFilter
+                >
+            > = {},
+    ) {
+        super();
+
+        this._filter = new IndexFilter(
+            (data.filter as IIndexFilter) ??
+                (data as ILightTranslationEventBox).f ??
+                LightTranslationEventBox.default.f(),
+        );
+        this._beatDistribution =
+            data.beatDistribution ?? data.w ?? LightTranslationEventBox.default.w;
+        this._beatDistributionType =
+            data.beatDistributionType ?? data.d ?? LightTranslationEventBox.default.d;
+        this._translationDistribution =
+            data.translationDistribution ?? data.s ?? LightTranslationEventBox.default.s;
+        this._translationDistributionType =
+            data.translationDistributionType ?? data.t ?? LightTranslationEventBox.default.t;
+        this._axis = data.axis ?? data.a ?? LightTranslationEventBox.default.a;
+        this._flip = data.flip ?? data.r ?? LightTranslationEventBox.default.r;
+        this._affectFirst = data.affectFirst ?? data.b ?? LightTranslationEventBox.default.b;
+        this._easing = data.easing ?? data.i ?? LightTranslationEventBox.default.i;
+        this._events = (
+            (data.events as ILightTranslationBase[]) ??
+            (data as ILightTranslationEventBox).l ??
+            LightTranslationEventBox.default.l()
+        ).map((obj) => new LightTranslationBase(obj));
+        this._customData = data.customData ?? LightTranslationEventBox.default.customData();
     }
 
     static create(): LightTranslationEventBox[];
     static create(
-        ...eventBoxes: DeepPartial<
+        ...data: DeepPartial<
             IWrapLightTranslationEventBoxAttribute<
-                Required<ILightTranslationEventBox>,
-                Required<ILightTranslationBase>,
-                Required<IIndexFilter>
+                ILightTranslationEventBox,
+                ILightTranslationBase,
+                IIndexFilter
             >
         >[]
     ): LightTranslationEventBox[];
+    static create(...data: DeepPartial<ILightTranslationEventBox>[]): LightTranslationEventBox[];
     static create(
-        ...eventBoxes: DeepPartial<ILightTranslationEventBox>[]
-    ): LightTranslationEventBox[];
-    static create(
-        ...eventBoxes: (DeepPartial<ILightTranslationEventBox> &
+        ...data: (DeepPartial<ILightTranslationEventBox> &
             DeepPartial<
                 IWrapLightTranslationEventBoxAttribute<
-                    Required<ILightTranslationEventBox>,
-                    Required<ILightTranslationBase>,
-                    Required<IIndexFilter>
+                    ILightTranslationEventBox,
+                    ILightTranslationBase,
+                    IIndexFilter
                 >
             >)[]
     ): LightTranslationEventBox[];
     static create(
-        ...eventBoxes: (DeepPartial<ILightTranslationEventBox> &
+        ...data: (DeepPartial<ILightTranslationEventBox> &
             DeepPartial<
                 IWrapLightTranslationEventBoxAttribute<
-                    Required<ILightTranslationEventBox>,
-                    Required<ILightTranslationBase>,
-                    Required<IIndexFilter>
+                    ILightTranslationEventBox,
+                    ILightTranslationBase,
+                    IIndexFilter
                 >
             >)[]
     ): LightTranslationEventBox[] {
         const result: LightTranslationEventBox[] = [];
-        eventBoxes?.forEach((eb) =>
-            result.push(
-                new this({
-                    f:
-                        (eb.filter as IIndexFilter) ??
-                        (eb as Required<ILightTranslationEventBox>).f ??
-                        LightTranslationEventBox.default.f(),
-                    w: eb.beatDistribution ?? eb.w ?? LightTranslationEventBox.default.w,
-                    d: eb.beatDistributionType ?? eb.d ?? LightTranslationEventBox.default.d,
-                    s: eb.translationDistribution ?? eb.s ?? LightTranslationEventBox.default.s,
-                    t: eb.translationDistributionType ?? eb.t ?? LightTranslationEventBox.default.t,
-                    a: eb.axis ?? eb.a ?? LightTranslationEventBox.default.a,
-                    r: eb.flip ?? eb.r ?? LightTranslationEventBox.default.r,
-                    b: eb.affectFirst ?? eb.b ?? LightTranslationEventBox.default.b,
-                    i: eb.easing ?? eb.i ?? LightTranslationEventBox.default.i,
-                    l:
-                        (eb.events as ILightTranslationBase[]) ??
-                        (eb as Required<ILightTranslationEventBox>).l ??
-                        LightTranslationEventBox.default.l(),
-                    customData: eb.customData ?? LightTranslationEventBox.default.customData(),
-                }),
-            ),
-        );
+        data.forEach((obj) => result.push(new this(obj)));
         if (result.length) {
             return result;
         }
-        return [
-            new this({
-                f: LightTranslationEventBox.default.f(),
-                w: LightTranslationEventBox.default.w,
-                d: LightTranslationEventBox.default.d,
-                s: LightTranslationEventBox.default.s,
-                t: LightTranslationEventBox.default.t,
-                a: LightTranslationEventBox.default.a,
-                r: LightTranslationEventBox.default.r,
-                b: LightTranslationEventBox.default.b,
-                i: LightTranslationEventBox.default.i,
-                l: LightTranslationEventBox.default.l(),
-                customData: LightTranslationEventBox.default.customData(),
-            }),
-        ];
+        return [new this()];
     }
 
-    toJSON(): Required<ILightTranslationEventBox> {
+    toJSON(): ILightTranslationEventBox {
         return {
             f: this.filter.toJSON(),
             w: this.beatDistribution,
@@ -144,80 +156,24 @@ export class LightTranslationEventBox extends WrapLightTranslationEventBox<
     }
 
     get filter() {
-        return this._f;
+        return this._filter as IndexFilter;
     }
     set filter(value: IndexFilter) {
-        this._f = value;
+        this._filter = value;
     }
 
-    get beatDistribution() {
-        return this.data.w;
-    }
-    set beatDistribution(value: ILightTranslationEventBox['w']) {
-        this.data.w = value;
-    }
-
-    get beatDistributionType() {
-        return this.data.d;
-    }
-    set beatDistributionType(value: ILightTranslationEventBox['d']) {
-        this.data.d = value;
-    }
-
-    get translationDistribution() {
-        return this.data.s;
-    }
-    set translationDistribution(value: ILightTranslationEventBox['s']) {
-        this.data.s = value;
-    }
-
-    get translationDistributionType() {
-        return this.data.t;
-    }
-    set translationDistributionType(value: ILightTranslationEventBox['t']) {
-        this.data.t = value;
-    }
-
-    get axis() {
-        return this.data.a;
-    }
-    set axis(value: ILightTranslationEventBox['a']) {
-        this.data.a = value;
-    }
-
-    get flip(): ILightTranslationEventBox['r'] {
-        return this.data.r;
-    }
-    set flip(value: ILightTranslationEventBox['r'] | boolean) {
-        this.data.r = value ? 1 : 0;
-    }
-
-    get affectFirst(): ILightTranslationEventBox['b'] {
-        return this.data.b;
-    }
-    set affectFirst(value: ILightTranslationEventBox['b'] | boolean) {
-        this.data.b = value ? 1 : 0;
-    }
-
-    get easing() {
-        return this.data.i;
-    }
-    set easing(value: ILightTranslationEventBox['i']) {
-        this.data.i = value;
-    }
-
-    get events(): LightTranslationBase[] {
-        return this._l;
+    get events() {
+        return this._events as LightTranslationBase[];
     }
     set events(value: LightTranslationBase[]) {
-        this._l = value;
+        this._events = value;
     }
 
     get customData(): NonNullable<ILightTranslationEventBox['customData']> {
-        return this.data.customData;
+        return this._customData;
     }
     set customData(value: NonNullable<ILightTranslationEventBox['customData']>) {
-        this.data.customData = value;
+        this._customData = value;
     }
 
     setEvents(value: LightTranslationBase[]): this {

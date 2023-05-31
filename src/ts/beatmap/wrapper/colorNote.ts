@@ -1,16 +1,28 @@
 import { NoteDirectionAngle } from '../shared/constants';
 import { IWrapColorNote } from '../../types/beatmap/wrapper/colorNote';
 import { WrapBaseNote } from './baseNote';
+import { ModType } from '../../types/beatmap/shared/modCheck';
 
 /** Color note beatmap class object. */
-export abstract class WrapColorNote<T extends Record<keyof T, unknown>>
+export abstract class WrapColorNote<T extends { [P in keyof T]: T[P] }>
     extends WrapBaseNote<T>
     implements IWrapColorNote<T>
 {
-    abstract get type(): IWrapColorNote['type'];
-    abstract set type(value: IWrapColorNote['type']);
-    abstract get angleOffset(): IWrapColorNote['angleOffset'];
-    abstract set angleOffset(value: IWrapColorNote['angleOffset']);
+    protected _type!: IWrapColorNote['type'];
+    protected _angleOffset!: IWrapColorNote['angleOffset'];
+
+    get type(): IWrapColorNote['type'] {
+        return this._type;
+    }
+    set type(value: IWrapColorNote['type']) {
+        this._type = value;
+    }
+    get angleOffset(): IWrapColorNote['angleOffset'] {
+        return this._angleOffset;
+    }
+    set angleOffset(value: IWrapColorNote['angleOffset']) {
+        this._angleOffset = value;
+    }
 
     setType(value: IWrapColorNote['type']) {
         this.type = value;
@@ -44,32 +56,11 @@ export abstract class WrapColorNote<T extends Record<keyof T, unknown>>
         return this;
     }
 
-    getAngle(type?: 'vanilla' | 'me' | 'ne') {
-        switch (type) {
-            case 'vanilla':
-                return (
-                    (NoteDirectionAngle[this.direction as keyof typeof NoteDirectionAngle] || 0) +
-                    this.angleOffset
-                );
-            case 'me':
-                if (this.direction >= 1000) {
-                    return Math.abs(((this.direction % 1000) % 360) - 360);
-                }
-            /* falls through */
-            case 'ne':
-                return (
-                    (NoteDirectionAngle[this.direction as keyof typeof NoteDirectionAngle] || 0) +
-                    this.angleOffset
-                );
-            default:
-                if (this.direction >= 1000) {
-                    return Math.abs(((this.direction % 1000) % 360) - 360);
-                }
-                return (
-                    (NoteDirectionAngle[this.direction as keyof typeof NoteDirectionAngle] || 0) +
-                    this.angleOffset
-                );
-        }
+    getAngle(_type?: ModType) {
+        return (
+            (NoteDirectionAngle[this.direction as keyof typeof NoteDirectionAngle] || 0) +
+            this.angleOffset
+        );
     }
 
     isMappingExtensions() {

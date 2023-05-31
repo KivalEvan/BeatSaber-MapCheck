@@ -2,18 +2,36 @@ import { LINE_COUNT, NoteDirectionAngle } from '../shared/constants';
 import { IWrapBaseSlider } from '../../types/beatmap/wrapper/baseSlider';
 import { IWrapGridObject } from '../../types/beatmap/wrapper/gridObject';
 import { WrapBaseNote } from './baseNote';
+import { ModType } from '../../types/beatmap/shared/modCheck';
+import { Vector2 } from '../../types/vector';
 
 /** Base slider beatmap class object. */
-export abstract class WrapBaseSlider<T extends Record<keyof T, unknown>>
+export abstract class WrapBaseSlider<T extends { [P in keyof T]: T[P] }>
     extends WrapBaseNote<T>
     implements IWrapBaseSlider<T>
 {
-    abstract get tailTime(): IWrapBaseSlider['tailTime'];
-    abstract set tailTime(value: IWrapBaseSlider['tailTime']);
-    abstract get tailPosX(): IWrapBaseSlider['tailPosX'];
-    abstract set tailPosX(value: IWrapBaseSlider['tailPosX']);
-    abstract get tailPosY(): IWrapBaseSlider['tailPosY'];
-    abstract set tailPosY(value: IWrapBaseSlider['tailPosY']);
+    protected _tailTime!: IWrapBaseSlider['tailTime'];
+    protected _tailPosX!: IWrapBaseSlider['tailPosX'];
+    protected _tailPosY!: IWrapBaseSlider['tailPosY'];
+
+    get tailTime(): IWrapBaseSlider['tailTime'] {
+        return this._tailTime;
+    }
+    set tailTime(value: IWrapBaseSlider['tailTime']) {
+        this._tailTime = value;
+    }
+    get tailPosX(): IWrapBaseSlider['tailPosX'] {
+        return this._tailPosX;
+    }
+    set tailPosX(value: IWrapBaseSlider['tailPosX']) {
+        this._tailPosX = value;
+    }
+    get tailPosY(): IWrapBaseSlider['tailPosY'] {
+        return this._tailPosY;
+    }
+    set tailPosY(value: IWrapBaseSlider['tailPosY']) {
+        this._tailPosY = value;
+    }
 
     setTailTime(value: IWrapBaseSlider['tailTime']) {
         this.tailTime = value;
@@ -33,39 +51,8 @@ export abstract class WrapBaseSlider<T extends Record<keyof T, unknown>>
         return super.mirror(flipColor);
     }
 
-    getTailPosition(type?: 'vanilla' | 'me' | 'ne'): [number, number] {
-        switch (type) {
-            case 'vanilla':
-                return [this.tailPosX, this.tailPosY];
-            case 'me':
-                return [
-                    (this.tailPosX <= -1000
-                        ? this.tailPosX / 1000
-                        : this.tailPosX >= 1000
-                        ? this.tailPosX / 1000
-                        : this.tailPosX) - 2,
-                    this.tailPosY <= -1000
-                        ? this.tailPosY / 1000
-                        : this.tailPosY >= 1000
-                        ? this.tailPosY / 1000
-                        : this.tailPosY,
-                ];
-            case 'ne':
-                return [this.tailPosX, this.tailPosY];
-            default:
-                return [
-                    (this.tailPosX <= -1000
-                        ? this.tailPosX / 1000
-                        : this.tailPosX >= 1000
-                        ? this.tailPosX / 1000
-                        : this.tailPosX) - 2,
-                    this.tailPosY <= -1000
-                        ? this.tailPosY / 1000
-                        : this.tailPosY >= 1000
-                        ? this.tailPosY / 1000
-                        : this.tailPosY,
-                ];
-        }
+    getTailPosition(_type?: ModType): Vector2 {
+        return [this.tailPosX - 2, this.tailPosY];
     }
 
     /** Get arc and return standardised note angle.
@@ -73,22 +60,7 @@ export abstract class WrapBaseSlider<T extends Record<keyof T, unknown>>
      * const arcAngle = arc.getAngle();
      * ```
      */
-    getAngle(type?: 'vanilla' | 'me' | 'ne') {
-        switch (type) {
-            case 'vanilla':
-                return NoteDirectionAngle[this.direction as keyof typeof NoteDirectionAngle] || 0;
-            case 'me':
-                if (this.direction >= 1000) {
-                    return Math.abs(((this.direction % 1000) % 360) - 360);
-                }
-            /* falls through */
-            case 'ne':
-                return NoteDirectionAngle[this.direction as keyof typeof NoteDirectionAngle] || 0;
-            default:
-        }
-        if (this.direction >= 1000) {
-            return Math.abs(((this.direction % 1000) % 360) - 360);
-        }
+    getAngle(_type?: ModType) {
         return NoteDirectionAngle[this.direction as keyof typeof NoteDirectionAngle] || 0;
     }
 

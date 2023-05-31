@@ -1,9 +1,10 @@
+// deno-lint-ignore-file no-explicit-any
 import { Vector2 } from '../../vector';
+import { ModType } from '../shared/modCheck';
 import { IWrapBaseObject, IWrapBaseObjectAttribute } from './baseObject';
 
-export interface IWrapGridObjectAttribute<
-    T extends Record<keyof T, unknown> = Record<string, unknown>,
-> extends IWrapBaseObjectAttribute<T> {
+export interface IWrapGridObjectAttribute<T extends { [P in keyof T]: T[P] } = Record<string, any>>
+    extends IWrapBaseObjectAttribute<T> {
     /** Position x `<int>` of base obj.
      * ```ts
      * 0 -> Outer Left
@@ -27,7 +28,7 @@ export interface IWrapGridObjectAttribute<
     posY: number;
 }
 
-export interface IWrapGridObject<T extends Record<keyof T, unknown> = Record<string, unknown>>
+export interface IWrapGridObject<T extends { [P in keyof T]: T[P] } = Record<string, any>>
     extends IWrapBaseObject<T>,
         IWrapGridObjectAttribute<T> {
     setPosX(value: number): this;
@@ -45,7 +46,7 @@ export interface IWrapGridObject<T extends Record<keyof T, unknown> = Record<str
      * const objPos = obj.getPosition();
      * ```
      */
-    getPosition(type?: 'vanilla' | 'me' | 'ne'): Vector2;
+    getPosition(type?: ModType): Vector2;
 
     /** Get two objects and return the distance between two objects.
      * ```ts

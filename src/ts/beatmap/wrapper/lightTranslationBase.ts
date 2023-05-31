@@ -2,16 +2,32 @@ import { IWrapLightTranslationBase } from '../../types/beatmap/wrapper/lightTran
 import { WrapBaseObject } from './baseObject';
 
 /** Light translation base beatmap class object. */
-export abstract class WrapLightTranslationBase<T extends Record<keyof T, unknown>>
+export abstract class WrapLightTranslationBase<T extends { [P in keyof T]: T[P] }>
     extends WrapBaseObject<T>
     implements IWrapLightTranslationBase<T>
 {
-    abstract get previous(): IWrapLightTranslationBase['previous'];
-    abstract set previous(value: IWrapLightTranslationBase['previous']);
-    abstract get easing(): IWrapLightTranslationBase['easing'];
-    abstract set easing(value: IWrapLightTranslationBase['easing']);
-    abstract get translation(): IWrapLightTranslationBase['translation'];
-    abstract set translation(value: IWrapLightTranslationBase['translation']);
+    protected _previous!: IWrapLightTranslationBase['previous'];
+    protected _easing!: IWrapLightTranslationBase['easing'];
+    protected _translation!: IWrapLightTranslationBase['translation'];
+
+    get previous(): IWrapLightTranslationBase['previous'] {
+        return this._previous;
+    }
+    set previous(value: IWrapLightTranslationBase['previous']) {
+        this._previous = value;
+    }
+    get easing(): IWrapLightTranslationBase['easing'] {
+        return this._easing;
+    }
+    set easing(value: IWrapLightTranslationBase['easing']) {
+        this._easing = value;
+    }
+    get translation(): IWrapLightTranslationBase['translation'] {
+        return this._translation;
+    }
+    set translation(value: IWrapLightTranslationBase['translation']) {
+        this._translation = value;
+    }
 
     setPrevious(value: IWrapLightTranslationBase['previous']) {
         this.previous = value;

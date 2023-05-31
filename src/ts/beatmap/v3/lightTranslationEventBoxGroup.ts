@@ -10,12 +10,12 @@ import { IWrapLightTranslationEventBoxGroupAttribute } from '../../types/beatmap
 
 /** Light translation event box group beatmap v3 class object. */
 export class LightTranslationEventBoxGroup extends WrapLightTranslationEventBoxGroup<
-    Required<ILightTranslationEventBoxGroup>,
-    Required<ILightTranslationEventBox>,
-    Required<ILightTranslationBase>,
-    Required<IIndexFilter>
+    ILightTranslationEventBoxGroup,
+    ILightTranslationEventBox,
+    ILightTranslationBase,
+    IIndexFilter
 > {
-    static default: ObjectReturnFn<Required<ILightTranslationEventBoxGroup>> = {
+    static default: ObjectReturnFn<ILightTranslationEventBoxGroup> = {
         b: 0,
         g: 0,
         e: () => [],
@@ -24,77 +24,97 @@ export class LightTranslationEventBoxGroup extends WrapLightTranslationEventBoxG
         },
     };
 
-    private _e: LightTranslationEventBox[];
-    protected constructor(eventBoxGroup: Required<ILightTranslationEventBoxGroup>) {
-        super(eventBoxGroup);
-        this._e = eventBoxGroup.e.map((e) => LightTranslationEventBox.create(e)[0]);
+    constructor();
+    constructor(
+        data: DeepPartial<
+            IWrapLightTranslationEventBoxGroupAttribute<
+                ILightTranslationEventBoxGroup,
+                ILightTranslationEventBox,
+                ILightTranslationBase,
+                IIndexFilter
+            >
+        >,
+    );
+    constructor(data: DeepPartial<ILightTranslationEventBoxGroup>);
+    constructor(
+        data: DeepPartial<ILightTranslationEventBoxGroup> &
+            DeepPartial<
+                IWrapLightTranslationEventBoxGroupAttribute<
+                    ILightTranslationEventBoxGroup,
+                    ILightTranslationEventBox,
+                    ILightTranslationBase,
+                    IIndexFilter
+                >
+            >,
+    );
+    constructor(
+        data: DeepPartial<ILightTranslationEventBoxGroup> &
+            DeepPartial<
+                IWrapLightTranslationEventBoxGroupAttribute<
+                    ILightTranslationEventBoxGroup,
+                    ILightTranslationEventBox,
+                    ILightTranslationBase,
+                    IIndexFilter
+                >
+            > = {},
+    ) {
+        super();
+
+        this._time = data.time ?? data.b ?? LightTranslationEventBoxGroup.default.b;
+        this._id = data.id ?? data.g ?? LightTranslationEventBoxGroup.default.g;
+        this._boxes = (
+            (data.boxes as ILightTranslationEventBox[]) ??
+            (data.e as unknown as ILightTranslationEventBox[]) ??
+            LightTranslationEventBoxGroup.default.e()
+        ).map((obj) => new LightTranslationEventBox(obj));
+        this._customData = data.customData ?? LightTranslationEventBoxGroup.default.customData();
     }
 
     static create(): LightTranslationEventBoxGroup[];
     static create(
-        ...eventBoxGroups: DeepPartial<
+        ...data: DeepPartial<
             IWrapLightTranslationEventBoxGroupAttribute<
-                Required<ILightTranslationEventBoxGroup>,
-                Required<ILightTranslationEventBox>,
-                Required<ILightTranslationBase>,
-                Required<IIndexFilter>
+                ILightTranslationEventBoxGroup,
+                ILightTranslationEventBox,
+                ILightTranslationBase,
+                IIndexFilter
             >
         >[]
     ): LightTranslationEventBoxGroup[];
     static create(
-        ...eventBoxGroups: DeepPartial<ILightTranslationEventBoxGroup>[]
+        ...data: DeepPartial<ILightTranslationEventBoxGroup>[]
     ): LightTranslationEventBoxGroup[];
     static create(
-        ...eventBoxGroups: (DeepPartial<ILightTranslationEventBoxGroup> &
+        ...data: (DeepPartial<ILightTranslationEventBoxGroup> &
             DeepPartial<
                 IWrapLightTranslationEventBoxGroupAttribute<
-                    Required<ILightTranslationEventBoxGroup>,
-                    Required<ILightTranslationEventBox>,
-                    Required<ILightTranslationBase>,
-                    Required<IIndexFilter>
+                    ILightTranslationEventBoxGroup,
+                    ILightTranslationEventBox,
+                    ILightTranslationBase,
+                    IIndexFilter
                 >
             >)[]
     ): LightTranslationEventBoxGroup[];
     static create(
-        ...eventBoxGroups: (DeepPartial<ILightTranslationEventBoxGroup> &
+        ...data: (DeepPartial<ILightTranslationEventBoxGroup> &
             DeepPartial<
                 IWrapLightTranslationEventBoxGroupAttribute<
-                    Required<ILightTranslationEventBoxGroup>,
-                    Required<ILightTranslationEventBox>,
-                    Required<ILightTranslationBase>,
-                    Required<IIndexFilter>
+                    ILightTranslationEventBoxGroup,
+                    ILightTranslationEventBox,
+                    ILightTranslationBase,
+                    IIndexFilter
                 >
             >)[]
     ): LightTranslationEventBoxGroup[] {
         const result: LightTranslationEventBoxGroup[] = [];
-        eventBoxGroups?.forEach((ebg) =>
-            result.push(
-                new this({
-                    b: ebg.time ?? ebg.b ?? LightTranslationEventBoxGroup.default.b,
-                    g: ebg.id ?? ebg.g ?? LightTranslationEventBoxGroup.default.g,
-                    e:
-                        (ebg.boxes as ILightTranslationEventBox[]) ??
-                        (ebg.e as unknown as ILightTranslationEventBox[]) ??
-                        LightTranslationEventBoxGroup.default.e(),
-                    customData:
-                        ebg.customData ?? LightTranslationEventBoxGroup.default.customData(),
-                }),
-            ),
-        );
+        data.forEach((obj) => result.push(new this(obj)));
         if (result.length) {
             return result;
         }
-        return [
-            new this({
-                b: LightTranslationEventBoxGroup.default.b,
-                g: LightTranslationEventBoxGroup.default.g,
-                e: LightTranslationEventBoxGroup.default.e(),
-                customData: LightTranslationEventBoxGroup.default.customData(),
-            }),
-        ];
+        return [new this()];
     }
 
-    toJSON(): Required<ILightTranslationEventBoxGroup> {
+    toJSON(): ILightTranslationEventBoxGroup {
         return {
             b: this.time,
             g: this.id,
@@ -103,32 +123,18 @@ export class LightTranslationEventBoxGroup extends WrapLightTranslationEventBoxG
         };
     }
 
-    get time() {
-        return this.data.b;
-    }
-    set time(value: ILightTranslationEventBoxGroup['b']) {
-        this.data.b = value;
-    }
-
-    get id() {
-        return this.data.g;
-    }
-    set id(value: ILightTranslationEventBoxGroup['g']) {
-        this.data.g = value;
-    }
-
-    get boxes(): LightTranslationEventBox[] {
-        return this._e;
+    get boxes() {
+        return this._boxes as LightTranslationEventBox[];
     }
     set boxes(value: LightTranslationEventBox[]) {
-        this._e = value;
+        this._boxes = value;
     }
 
     get customData(): NonNullable<ILightTranslationEventBoxGroup['customData']> {
-        return this.data.customData;
+        return this._customData;
     }
     set customData(value: NonNullable<ILightTranslationEventBoxGroup['customData']>) {
-        this.data.customData = value;
+        this._customData = value;
     }
 
     setCustomData(value: NonNullable<ILightTranslationEventBoxGroup['customData']>): this {

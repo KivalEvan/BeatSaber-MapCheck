@@ -5,8 +5,8 @@ import { deepCopy } from '../../utils/misc';
 import { WrapColorBoostEvent } from '../wrapper/colorBoostEvent';
 
 /** Boost event beatmap v3 class object. */
-export class ColorBoostEvent extends WrapColorBoostEvent<Required<IColorBoostEvent>> {
-    static default: ObjectReturnFn<Required<IColorBoostEvent>> = {
+export class ColorBoostEvent extends WrapColorBoostEvent<IColorBoostEvent> {
+    static default: ObjectReturnFn<IColorBoostEvent> = {
         b: 0,
         o: false,
         customData: () => {
@@ -14,46 +14,45 @@ export class ColorBoostEvent extends WrapColorBoostEvent<Required<IColorBoostEve
         },
     };
 
-    protected constructor(boostEvent: Required<IColorBoostEvent>) {
-        super(boostEvent);
+    constructor();
+    constructor(data: Partial<IWrapColorBoostEventAttribute<IColorBoostEvent>>);
+    constructor(data: Partial<IColorBoostEvent>);
+    constructor(
+        data: Partial<IColorBoostEvent> & Partial<IWrapColorBoostEventAttribute<IColorBoostEvent>>,
+    );
+    constructor(
+        data: Partial<IColorBoostEvent> &
+            Partial<IWrapColorBoostEventAttribute<IColorBoostEvent>> = {},
+    ) {
+        super();
+
+        this._time = data.time ?? data.b ?? ColorBoostEvent.default.b;
+        this._toggle = data.toggle ?? data.o ?? ColorBoostEvent.default.o;
+        this._customData = data.customData ?? ColorBoostEvent.default.customData();
     }
 
     static create(): ColorBoostEvent[];
     static create(
-        ...colorBoostEvents: Partial<IWrapColorBoostEventAttribute<Required<IColorBoostEvent>>>[]
+        ...data: Partial<IWrapColorBoostEventAttribute<IColorBoostEvent>>[]
     ): ColorBoostEvent[];
-    static create(...colorBoostEvents: Partial<IColorBoostEvent>[]): ColorBoostEvent[];
+    static create(...data: Partial<IColorBoostEvent>[]): ColorBoostEvent[];
     static create(
-        ...colorBoostEvents: (Partial<IColorBoostEvent> &
-            Partial<IWrapColorBoostEventAttribute<Required<IColorBoostEvent>>>)[]
+        ...data: (Partial<IColorBoostEvent> &
+            Partial<IWrapColorBoostEventAttribute<IColorBoostEvent>>)[]
     ): ColorBoostEvent[];
     static create(
-        ...colorBoostEvents: (Partial<IColorBoostEvent> &
-            Partial<IWrapColorBoostEventAttribute<Required<IColorBoostEvent>>>)[]
+        ...data: (Partial<IColorBoostEvent> &
+            Partial<IWrapColorBoostEventAttribute<IColorBoostEvent>>)[]
     ): ColorBoostEvent[] {
         const result: ColorBoostEvent[] = [];
-        colorBoostEvents?.forEach((be) =>
-            result.push(
-                new this({
-                    b: be.time ?? be.b ?? ColorBoostEvent.default.b,
-                    o: be.toggle ?? be.o ?? ColorBoostEvent.default.o,
-                    customData: be.customData ?? ColorBoostEvent.default.customData(),
-                }),
-            ),
-        );
+        data.forEach((obj) => result.push(new this(obj)));
         if (result.length) {
             return result;
         }
-        return [
-            new this({
-                b: ColorBoostEvent.default.b,
-                o: ColorBoostEvent.default.o,
-                customData: ColorBoostEvent.default.customData(),
-            }),
-        ];
+        return [new this()];
     }
 
-    toJSON(): Required<IColorBoostEvent> {
+    toJSON(): IColorBoostEvent {
         return {
             b: this.time,
             o: this.toggle,
@@ -61,25 +60,11 @@ export class ColorBoostEvent extends WrapColorBoostEvent<Required<IColorBoostEve
         };
     }
 
-    get time() {
-        return this.data.b;
-    }
-    set time(value: IColorBoostEvent['b']) {
-        this.data.b = value;
-    }
-
-    get toggle() {
-        return this.data.o;
-    }
-    set toggle(value: IColorBoostEvent['o']) {
-        this.data.o = value;
-    }
-
     get customData(): NonNullable<IColorBoostEvent['customData']> {
-        return this.data.customData;
+        return this._customData;
     }
     set customData(value: NonNullable<IColorBoostEvent['customData']>) {
-        this.data.customData = value;
+        this._customData = value;
     }
 
     isValid(): boolean {

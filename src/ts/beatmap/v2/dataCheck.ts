@@ -3,12 +3,12 @@ import { IDifficulty } from '../../types/beatmap/v2/difficulty';
 import { IEvent } from '../../types/beatmap/v2/event';
 import { INote } from '../../types/beatmap/v2/note';
 import { IObstacle } from '../../types/beatmap/v2/obstacle';
-import { ISlider } from '../../types/beatmap/v2/slider';
+import { IArc } from '../../types/beatmap/v2/arc';
 import { ISpecialEventsKeywordFilters } from '../../types/beatmap/v2/specialEventsKeywordFilters';
 import { ISpecialEventsKeywordFiltersKeywords } from '../../types/beatmap/v2/specialEventsKeywordFiltersKeywords';
 import { IWaypoint } from '../../types/beatmap/v2/waypoint';
 
-export const NoteDataCheck: Record<keyof INote, DataCheck> = {
+export const NoteDataCheck: { readonly [key in keyof INote]: DataCheck } = {
     _time: {
         type: 'number',
         version: '2.0.0',
@@ -43,7 +43,7 @@ export const NoteDataCheck: Record<keyof INote, DataCheck> = {
     },
 } as const;
 
-export const SliderDataCheck: Record<keyof ISlider, DataCheck> = {
+export const ArcDataCheck: { readonly [key in keyof IArc]: DataCheck } = {
     _colorType: {
         type: 'number',
         version: '2.0.0',
@@ -108,7 +108,7 @@ export const SliderDataCheck: Record<keyof ISlider, DataCheck> = {
     },
 } as const;
 
-export const ObstacleDataCheck: Record<keyof IObstacle, DataCheck> = {
+export const ObstacleDataCheck: { readonly [key in keyof IObstacle]: DataCheck } = {
     _time: {
         type: 'number',
         version: '2.0.0',
@@ -141,7 +141,7 @@ export const ObstacleDataCheck: Record<keyof IObstacle, DataCheck> = {
     },
 } as const;
 
-export const EventDataCheck: Record<keyof IEvent, DataCheck> = {
+export const EventDataCheck: { readonly [key in keyof IEvent]: DataCheck } = {
     _time: {
         type: 'number',
         version: '2.0.0',
@@ -169,7 +169,7 @@ export const EventDataCheck: Record<keyof IEvent, DataCheck> = {
     },
 } as const;
 
-export const WaypointDataCheck: Record<keyof IWaypoint, DataCheck> = {
+export const WaypointDataCheck: { readonly [key in keyof IWaypoint]: DataCheck } = {
     _time: {
         type: 'number',
         version: '2.2.0',
@@ -197,10 +197,9 @@ export const WaypointDataCheck: Record<keyof IWaypoint, DataCheck> = {
     },
 } as const;
 
-export const SpecialEventsKeywordFiltersKeywordsDataCheck: Record<
-    keyof ISpecialEventsKeywordFiltersKeywords,
-    DataCheck
-> = {
+export const SpecialEventsKeywordFiltersKeywordsDataCheck: {
+    readonly [key in keyof ISpecialEventsKeywordFiltersKeywords]: DataCheck;
+} = {
     _keyword: {
         type: 'string',
         version: '2.4.0',
@@ -213,10 +212,9 @@ export const SpecialEventsKeywordFiltersKeywordsDataCheck: Record<
     },
 } as const;
 
-export const SpecialEventsKeywordFiltersDataCheck: Record<
-    keyof ISpecialEventsKeywordFilters,
-    DataCheck
-> = {
+export const SpecialEventsKeywordFiltersDataCheck: {
+    readonly [key in keyof ISpecialEventsKeywordFilters]: DataCheck;
+} = {
     _keywords: {
         type: 'array',
         version: '2.4.0',
@@ -224,7 +222,7 @@ export const SpecialEventsKeywordFiltersDataCheck: Record<
     },
 } as const;
 
-export const DifficultyCheck: Record<keyof IDifficulty, DataCheck> = {
+export const DifficultyCheck: { readonly [key in keyof IDifficulty]: DataCheck } = {
     _version: {
         type: 'string',
         version: '2.0.0',
@@ -237,7 +235,7 @@ export const DifficultyCheck: Record<keyof IDifficulty, DataCheck> = {
     _sliders: {
         type: 'array',
         version: '2.6.0',
-        check: SliderDataCheck,
+        check: ArcDataCheck,
     },
     _obstacles: {
         type: 'array',

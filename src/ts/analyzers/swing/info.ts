@@ -51,7 +51,7 @@ export function count(
     return swingCount;
 }
 
-function calcMaxRollingSPS(swingArray: number[], x: number): number {
+function calcMaxRollingSps(swingArray: number[], x: number): number {
     if (!swingArray.length) {
         return 0;
     }
@@ -112,15 +112,15 @@ export function info(
 
     spsInfo.red.total = swing.left.reduce((a, b) => a + b);
     spsInfo.red.average = swing.left.reduce((a, b) => a + b) / duration;
-    spsInfo.red.peak = calcMaxRollingSPS(swing.left, interval);
+    spsInfo.red.peak = calcMaxRollingSps(swing.left, interval);
     spsInfo.red.median = median(swingIntervalRed);
     spsInfo.blue.total = swing.right.reduce((a, b) => a + b);
     spsInfo.blue.average = swing.right.reduce((a, b) => a + b) / duration;
-    spsInfo.blue.peak = calcMaxRollingSPS(swing.right, interval);
+    spsInfo.blue.peak = calcMaxRollingSps(swing.right, interval);
     spsInfo.blue.median = median(swingIntervalBlue);
     spsInfo.total.total = spsInfo.red.total + spsInfo.blue.total;
     spsInfo.total.average = swingTotal.reduce((a, b) => a + b) / duration;
-    spsInfo.total.peak = calcMaxRollingSPS(swingTotal, interval);
+    spsInfo.total.peak = calcMaxRollingSps(swingTotal, interval);
     spsInfo.total.median = median(swingIntervalTotal);
 
     return spsInfo;
@@ -130,19 +130,19 @@ export function getProgressionMax(
     spsArray: ISwingAnalysis[],
     minSPS: number,
 ): { result: ISwingAnalysis; comparedTo?: ISwingAnalysis } | null {
-    let dropPercent = 0;
-    let spsPrevious = 0;
-    let comparedToMap;
+    let spsPerc = 0;
+    let spsCurr = 0;
+    let comparedTo;
     for (const spsMap of spsArray) {
-        const toCompare = spsMap.total.average;
-        if (spsPrevious > 0 && toCompare > 0) {
-            dropPercent = (1 - toCompare / spsPrevious) * 100;
+        const overall = spsMap.total.average;
+        if (spsCurr > 0 && overall > 0) {
+            spsPerc = Math.abs(1 - spsCurr / overall) * 100;
         }
-        if (spsPrevious > minSPS && dropPercent > 40) {
-            return { result: spsMap, comparedTo: comparedToMap };
+        spsCurr = overall > 0 ? overall : spsCurr;
+        if (spsCurr > minSPS && spsPerc > 40) {
+            return { result: spsMap, comparedTo };
         }
-        spsPrevious = toCompare;
-        comparedToMap = spsMap;
+        comparedTo = spsMap;
     }
     return null;
 }
@@ -151,24 +151,24 @@ export function getProgressionMin(
     spsArray: ISwingAnalysis[],
     minSPS: number,
 ): { result: ISwingAnalysis; comparedTo?: ISwingAnalysis } | null {
-    let dropPercent = Number.MAX_SAFE_INTEGER;
-    let spsPrevious = 0;
-    let comparedToMap;
+    let spsPerc = Number.MAX_SAFE_INTEGER;
+    let spsCurr = 0;
+    let comparedTo;
     for (const spsMap of spsArray) {
-        const toCompare = spsMap.total.average;
-        if (spsPrevious > 0 && toCompare > 0) {
-            dropPercent = (1 - toCompare / spsPrevious) * 100;
+        const overall = spsMap.total.average;
+        if (spsCurr > 0 && overall > 0) {
+            spsPerc = Math.abs(1 - spsCurr / overall) * 100;
         }
-        spsPrevious = toCompare > 0 ? toCompare : spsPrevious;
-        if (spsPrevious > minSPS && dropPercent < 10) {
-            return { result: spsMap, comparedTo: comparedToMap };
+        spsCurr = overall > 0 ? overall : spsCurr;
+        if (spsCurr > minSPS && spsPerc < 10) {
+            return { result: spsMap, comparedTo };
         }
-        comparedToMap = spsMap;
+        comparedTo = spsMap;
     }
     return null;
 }
 
-export function calcSPSTotalPercDrop(spsArray: ISwingAnalysis[]): number {
+export function calcSpsTotalPercDrop(spsArray: ISwingAnalysis[]): number {
     let highest = 0;
     let lowest = Number.MAX_SAFE_INTEGER;
     spsArray.forEach((spsMap) => {
@@ -181,7 +181,7 @@ export function calcSPSTotalPercDrop(spsArray: ISwingAnalysis[]): number {
     return highest || (highest && lowest) ? (1 - lowest / highest) * 100 : 0;
 }
 
-export function getSPSLowest(spsArray: ISwingAnalysis[]): number {
+export function getSpsLowest(spsArray: ISwingAnalysis[]): number {
     let lowest = Number.MAX_SAFE_INTEGER;
     spsArray.forEach((spsMap) => {
         const overall = spsMap.total.average;
@@ -192,7 +192,7 @@ export function getSPSLowest(spsArray: ISwingAnalysis[]): number {
     return lowest;
 }
 
-export function getSPSHighest(spsArray: ISwingAnalysis[]): number {
+export function getSpsHighest(spsArray: ISwingAnalysis[]): number {
     let highest = 0;
     spsArray.forEach((spsMap) => {
         const overall = spsMap.total.average;

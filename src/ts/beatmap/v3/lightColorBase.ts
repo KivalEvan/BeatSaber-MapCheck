@@ -5,8 +5,8 @@ import { deepCopy } from '../../utils/misc';
 import { WrapLightColorBase } from '../wrapper/lightColorBase';
 
 /** Light color base beatmap v3 class object. */
-export class LightColorBase extends WrapLightColorBase<Required<ILightColorBase>> {
-    static default: ObjectReturnFn<Required<ILightColorBase>> = {
+export class LightColorBase extends WrapLightColorBase<ILightColorBase> {
+    static default: ObjectReturnFn<ILightColorBase> = {
         b: 0,
         i: 0,
         c: 0,
@@ -17,101 +17,62 @@ export class LightColorBase extends WrapLightColorBase<Required<ILightColorBase>
         },
     };
 
-    protected constructor(lightColorBase: Required<ILightColorBase>) {
-        super(lightColorBase);
+    constructor();
+    constructor(data: Partial<IWrapLightColorBaseAttribute<ILightColorBase>>);
+    constructor(data: Partial<ILightColorBase>);
+    constructor(
+        data: Partial<ILightColorBase> & Partial<IWrapLightColorBaseAttribute<ILightColorBase>>,
+    );
+    constructor(
+        data: Partial<ILightColorBase> &
+            Partial<IWrapLightColorBaseAttribute<ILightColorBase>> = {},
+    ) {
+        super();
+
+        this._time = data.time ?? data.b ?? LightColorBase.default.b;
+        this._transition = data.transition ?? data.i ?? LightColorBase.default.i;
+        this._color = data.color ?? data.c ?? LightColorBase.default.c;
+        this._brightness = data.brightness ?? data.s ?? LightColorBase.default.s;
+        this._frequency = data.frequency ?? data.f ?? LightColorBase.default.f;
+        this._customData = data.customData ?? LightColorBase.default.customData();
     }
 
     static create(): LightColorBase[];
     static create(
-        ...lightColors: Partial<IWrapLightColorBaseAttribute<Required<ILightColorBase>>>[]
+        ...data: Partial<IWrapLightColorBaseAttribute<ILightColorBase>>[]
     ): LightColorBase[];
-    static create(...lightColors: Partial<ILightColorBase>[]): LightColorBase[];
+    static create(...data: Partial<ILightColorBase>[]): LightColorBase[];
     static create(
-        ...lightColors: (Partial<ILightColorBase> &
-            Partial<IWrapLightColorBaseAttribute<Required<ILightColorBase>>>)[]
+        ...data: (Partial<ILightColorBase> &
+            Partial<IWrapLightColorBaseAttribute<ILightColorBase>>)[]
     ): LightColorBase[];
     static create(
-        ...lightColors: (Partial<ILightColorBase> &
-            Partial<IWrapLightColorBaseAttribute<Required<ILightColorBase>>>)[]
+        ...data: (Partial<ILightColorBase> &
+            Partial<IWrapLightColorBaseAttribute<ILightColorBase>>)[]
     ): LightColorBase[] {
         const result: LightColorBase[] = [];
-        lightColors?.forEach((lc) =>
-            result.push(
-                new this({
-                    b: lc.time ?? lc.b ?? LightColorBase.default.b,
-                    i: lc.transition ?? lc.i ?? LightColorBase.default.i,
-                    c: lc.color ?? lc.c ?? LightColorBase.default.c,
-                    s: lc.brightness ?? lc.s ?? LightColorBase.default.s,
-                    f: lc.frequency ?? lc.f ?? LightColorBase.default.f,
-                    customData: lc.customData ?? LightColorBase.default.customData(),
-                }),
-            ),
-        );
+        data.forEach((obj) => result.push(new this(obj)));
         if (result.length) {
             return result;
         }
-        return [
-            new this({
-                b: LightColorBase.default.b,
-                i: LightColorBase.default.i,
-                c: LightColorBase.default.c,
-                s: LightColorBase.default.s,
-                f: LightColorBase.default.f,
-                customData: LightColorBase.default.customData(),
-            }),
-        ];
+        return [new this()];
     }
 
-    toJSON(): Required<ILightColorBase> {
+    toJSON(): ILightColorBase {
         return {
             b: this.time,
             i: this.transition,
             c: this.color,
             s: this.brightness,
             f: this.frequency,
-            customData: deepCopy(this.data.customData),
+            customData: deepCopy(this.customData),
         };
     }
 
-    get time() {
-        return this.data.b;
-    }
-    set time(value: ILightColorBase['b']) {
-        this.data.b = value;
-    }
-
-    get transition() {
-        return this.data.i;
-    }
-    set transition(value: ILightColorBase['i']) {
-        this.data.i = value;
-    }
-
-    get color() {
-        return this.data.c;
-    }
-    set color(value: ILightColorBase['c']) {
-        this.data.c = value;
-    }
-
-    get brightness() {
-        return this.data.s;
-    }
-    set brightness(value: ILightColorBase['s']) {
-        this.data.s = value;
-    }
-
-    get frequency() {
-        return this.data.f;
-    }
-    set frequency(value: ILightColorBase['f']) {
-        this.data.f = value;
-    }
-
     get customData(): NonNullable<ILightColorBase['customData']> {
-        return this.data.customData;
+        return this._customData;
     }
     set customData(value: NonNullable<ILightColorBase['customData']>) {
-        this.data.customData = value;
+        this._customData = value;
     }
 }

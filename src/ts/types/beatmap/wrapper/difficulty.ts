@@ -1,35 +1,44 @@
-import { IWrapBPMEvent } from './bpmEvent';
-import { IWrapRotationEvent } from './rotationEvent';
-import { IWrapColorNote } from './colorNote';
-import { IWrapBombNote } from './bombNote';
-import { IWrapObstacle } from './obstacle';
-import { IWrapSlider } from './slider';
-import { IWrapBurstSlider } from './burstSlider';
-import { IWrapWaypoint } from './waypoint';
-import { IWrapEvent } from './event';
-import { IWrapColorBoostEvent } from './colorBoostEvent';
-import { IWrapLightColorEventBoxGroup } from './lightColorEventBoxGroup';
-import { IWrapLightRotationEventBoxGroup } from './lightRotationEventBoxGroup';
-import { IWrapLightTranslationEventBoxGroup } from './lightTranslationEventBoxGroup';
+// deno-lint-ignore-file no-explicit-any
+import { IWrapBPMEvent, IWrapBPMEventAttribute } from './bpmEvent';
+import { IWrapRotationEvent, IWrapRotationEventAttribute } from './rotationEvent';
+import { IWrapColorNote, IWrapColorNoteAttribute } from './colorNote';
+import { IWrapBombNote, IWrapBombNoteAttribute } from './bombNote';
+import { IWrapObstacle, IWrapObstacleAttribute } from './obstacle';
+import { IWrapArc, IWrapArcAttribute } from './arc';
+import { IWrapChain, IWrapChainAttribute } from './chain';
+import { IWrapWaypoint, IWrapWaypointAttribute } from './waypoint';
+import { IWrapEvent, IWrapEventAttribute } from './event';
+import { IWrapColorBoostEvent, IWrapColorBoostEventAttribute } from './colorBoostEvent';
+import {
+    IWrapLightColorEventBoxGroup,
+    IWrapLightColorEventBoxGroupAttribute,
+} from './lightColorEventBoxGroup';
+import {
+    IWrapLightRotationEventBoxGroup,
+    IWrapLightRotationEventBoxGroupAttribute,
+} from './lightRotationEventBoxGroup';
+import {
+    IWrapLightTranslationEventBoxGroup,
+    IWrapLightTranslationEventBoxGroupAttribute,
+} from './lightTranslationEventBoxGroup';
 import { IWrapEventTypesWithKeywords } from './eventTypesWithKeywords';
 import { IWrapBaseItem, IWrapBaseItemAttribute } from './baseItem';
 import { Version } from '../shared/version';
-import { DeepPartialWrapper, LooseAutocomplete, PartialWrapper } from '../../utils';
+import { DeepPartial, LooseAutocomplete } from '../../utils';
 import { GenericFileName } from '../shared/info';
 import { EventContainer, NoteContainer } from './container';
 import { BeatPerMinute } from '../../../beatmap/shared/bpm';
 
-export interface IWrapDifficultyAttribute<
-    T extends Record<keyof T, unknown> = Record<string, unknown>,
-> extends IWrapBaseItemAttribute<T> {
+export interface IWrapDifficultyAttribute<T extends { [P in keyof T]: T[P] } = Record<string, any>>
+    extends IWrapBaseItemAttribute<T> {
     version: Version;
     bpmEvents: IWrapBPMEvent[];
     rotationEvents: IWrapRotationEvent[];
     colorNotes: IWrapColorNote[];
     bombNotes: IWrapBombNote[];
     obstacles: IWrapObstacle[];
-    sliders: IWrapSlider[];
-    burstSliders: IWrapBurstSlider[];
+    arcs: IWrapArc[];
+    chains: IWrapChain[];
     waypoints: IWrapWaypoint[];
     basicEvents: IWrapEvent[];
     colorBoostEvents: IWrapColorBoostEvent[];
@@ -42,26 +51,40 @@ export interface IWrapDifficultyAttribute<
     fileName: string;
 }
 
-export interface IWrapDifficulty<T extends Record<keyof T, unknown> = Record<string, unknown>>
+export interface IWrapDifficulty<T extends { [P in keyof T]: T[P] } = Record<string, any>>
     extends IWrapBaseItem<T>,
         IWrapDifficultyAttribute<T> {
     setFileName(fileName: LooseAutocomplete<GenericFileName>): this;
 
-    /** Calculate note per second.
+    /** Reparse the beatmap to their respective schema class.
+     *
+     * Used to match the beatmap schema if wrapper mix-and-matched the class.
      * ```ts
-     * const nps = difficulty.nps(Difficulty, 10);
+     * if (!difficulty.isValid()) {
+     *     difficulty.reparse();
+     * }
      * ```
      * ---
-     * **NOTE:** Duration can be either in any time type.
+     * **NOTE:** This will create a new set of array,
+     * `keepRef` allows for already matched object to stay in new array instead of creating new object (this is faster and less memory but can cause reference issue)
+     */
+    reparse(keepRef?: boolean): void;
+
+    /** Calculate note per second.
+     * ```ts
+     * const nps = difficulty.nps(10);
+     * ```
+     * ---
+     * **NOTE:** Duration can be either in any time type (second, beat, etc).
      */
     nps(duration: number): number;
 
     /** Calculate the peak by rolling average.
      * ```ts
-     * const peakNPS = difficulty.peak(Difficulty, 10, BPM ?? 128);
+     * const peakNPS = difficulty.peak(10, BPM ?? 128);
      * ```
      */
-    peak(beat: number, bpm: BeatPerMinute | number): number;
+    peak(beats: number, bpm: BeatPerMinute | number): number;
 
     /** Get first interactible object beat time in beatmap.
      * ```ts
@@ -91,7 +114,7 @@ export interface IWrapDifficulty<T extends Record<keyof T, unknown> = Record<str
      */
     findLastInteractiveObstacleTime(): number;
 
-    /** Get container of color notes, sliders, burst sliders, and bombs (in order).
+    /** Get container of color notes, arcs, chains, and bombs (in order).
      * ```ts
      * const noteCountainer = getNoteContainer(Difficulty);
      * ```
@@ -105,23 +128,23 @@ export interface IWrapDifficulty<T extends Record<keyof T, unknown> = Record<str
      */
     getEventContainer(): EventContainer[];
 
-    addBPMEvents(...bpmEvents: Partial<IWrapBPMEvent>[]): void;
-    addRotationEvents(...rotationEvents: PartialWrapper<IWrapRotationEvent>[]): void;
-    addColorNotes(...colorNotes: PartialWrapper<IWrapColorNote>[]): void;
-    addBombNotes(...bombNotes: PartialWrapper<IWrapBombNote>[]): void;
-    addObstacles(...obstacles: PartialWrapper<IWrapObstacle>[]): void;
-    addSliders(...sliders: PartialWrapper<IWrapSlider>[]): void;
-    addBurstSliders(...burstSliders: PartialWrapper<IWrapBurstSlider>[]): void;
-    addWaypoints(...waypoints: PartialWrapper<IWrapWaypoint>[]): void;
-    addBasicEvents(...basicEvents: PartialWrapper<IWrapEvent>[]): void;
-    addColorBoostEvents(...colorBoostEvents: PartialWrapper<IWrapColorBoostEvent>[]): void;
+    addBpmEvents(...data: Partial<IWrapBPMEventAttribute>[]): void;
+    addRotationEvents(...data: Partial<IWrapRotationEventAttribute>[]): void;
+    addColorNotes(...data: Partial<IWrapColorNoteAttribute>[]): void;
+    addBombNotes(...data: Partial<IWrapBombNoteAttribute>[]): void;
+    addObstacles(...data: Partial<IWrapObstacleAttribute>[]): void;
+    addArcs(...data: Partial<IWrapArcAttribute>[]): void;
+    addChains(...data: Partial<IWrapChainAttribute>[]): void;
+    addWaypoints(...data: Partial<IWrapWaypointAttribute>[]): void;
+    addBasicEvents(...data: Partial<IWrapEventAttribute>[]): void;
+    addColorBoostEvents(...data: Partial<IWrapColorBoostEventAttribute>[]): void;
     addLightColorEventBoxGroups(
-        ...lightColorEBGs: DeepPartialWrapper<IWrapLightColorEventBoxGroup>[]
+        ...data: DeepPartial<IWrapLightColorEventBoxGroupAttribute>[]
     ): void;
     addLightRotationEventBoxGroups(
-        ...lightRotationEBGs: DeepPartialWrapper<IWrapLightRotationEventBoxGroup>[]
+        ...data: DeepPartial<IWrapLightRotationEventBoxGroupAttribute>[]
     ): void;
     addLightTranslationEventBoxGroups(
-        ...lightTranslationEBGs: DeepPartialWrapper<IWrapLightTranslationEventBoxGroup>[]
+        ...data: DeepPartial<IWrapLightTranslationEventBoxGroupAttribute>[]
     ): void;
 }

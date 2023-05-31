@@ -5,8 +5,8 @@ import { deepCopy } from '../../utils/misc';
 import { WrapRotationEvent } from '../wrapper/rotationEvent';
 
 /** Rotation event beatmap v3 class object. */
-export class RotationEvent extends WrapRotationEvent<Required<IRotationEvent>> {
-    static default: ObjectReturnFn<Required<IRotationEvent>> = {
+export class RotationEvent extends WrapRotationEvent<IRotationEvent> {
+    static default: ObjectReturnFn<IRotationEvent> = {
         b: 0,
         e: 0,
         r: 0,
@@ -15,48 +15,41 @@ export class RotationEvent extends WrapRotationEvent<Required<IRotationEvent>> {
         },
     };
 
-    protected constructor(rotationEvent: Required<IRotationEvent>) {
-        super(rotationEvent);
+    constructor();
+    constructor(data: Partial<IWrapRotationEventAttribute<IRotationEvent>>);
+    constructor(data: Partial<IRotationEvent>);
+    constructor(
+        data: Partial<IRotationEvent> & Partial<IWrapRotationEventAttribute<IRotationEvent>>,
+    );
+    constructor(
+        data: Partial<IRotationEvent> & Partial<IWrapRotationEventAttribute<IRotationEvent>> = {},
+    ) {
+        super();
+
+        this._time = data.time ?? data.b ?? RotationEvent.default.b;
+        this._executionTime = data.executionTime ?? data.e ?? RotationEvent.default.e;
+        this._rotation = data.rotation ?? data.r ?? RotationEvent.default.r;
+        this._customData = data.customData ?? RotationEvent.default.customData();
     }
 
     static create(): RotationEvent[];
+    static create(...data: Partial<IWrapRotationEventAttribute<IRotationEvent>>[]): RotationEvent[];
+    static create(...data: Partial<IRotationEvent>[]): RotationEvent[];
     static create(
-        ...rotationEvents: Partial<IWrapRotationEventAttribute<Required<IRotationEvent>>>[]
-    ): RotationEvent[];
-    static create(...rotationEvents: Partial<IRotationEvent>[]): RotationEvent[];
-    static create(
-        ...rotationEvents: (Partial<IRotationEvent> &
-            Partial<IWrapRotationEventAttribute<Required<IRotationEvent>>>)[]
+        ...data: (Partial<IRotationEvent> & Partial<IWrapRotationEventAttribute<IRotationEvent>>)[]
     ): RotationEvent[];
     static create(
-        ...rotationEvents: (Partial<IRotationEvent> &
-            Partial<IWrapRotationEventAttribute<Required<IRotationEvent>>>)[]
+        ...data: (Partial<IRotationEvent> & Partial<IWrapRotationEventAttribute<IRotationEvent>>)[]
     ): RotationEvent[] {
         const result: RotationEvent[] = [];
-        rotationEvents?.forEach((re) =>
-            result.push(
-                new this({
-                    b: re.time ?? re.b ?? RotationEvent.default.b,
-                    e: re.executionTime ?? re.e ?? RotationEvent.default.e,
-                    r: re.rotation ?? re.r ?? RotationEvent.default.r,
-                    customData: re.customData ?? RotationEvent.default.customData(),
-                }),
-            ),
-        );
+        data.forEach((obj) => result.push(new this(obj)));
         if (result.length) {
             return result;
         }
-        return [
-            new this({
-                b: RotationEvent.default.b,
-                e: RotationEvent.default.e,
-                r: RotationEvent.default.r,
-                customData: RotationEvent.default.customData(),
-            }),
-        ];
+        return [new this()];
     }
 
-    toJSON(): Required<IRotationEvent> {
+    toJSON(): IRotationEvent {
         return {
             b: this.time,
             e: this.executionTime,
@@ -65,31 +58,10 @@ export class RotationEvent extends WrapRotationEvent<Required<IRotationEvent>> {
         };
     }
 
-    get time() {
-        return this.data.b;
-    }
-    set time(value: IRotationEvent['b']) {
-        this.data.b = value;
-    }
-
-    get executionTime() {
-        return this.data.e;
-    }
-    set executionTime(value: IRotationEvent['e']) {
-        this.data.e = value;
-    }
-
-    get rotation() {
-        return this.data.r;
-    }
-    set rotation(value: IRotationEvent['r']) {
-        this.data.r = value;
-    }
-
     get customData(): NonNullable<IRotationEvent['customData']> {
-        return this.data.customData;
+        return this._customData;
     }
     set customData(value: NonNullable<IRotationEvent['customData']>) {
-        this.data.customData = value;
+        this._customData = value;
     }
 }

@@ -34,8 +34,7 @@ function run(map: ToolArgs) {
         return;
     }
     const { bpm, audioDuration: duration } = map.settings;
-    const { colorNotes, bombNotes, obstacles, basicEvents, sliders, burstSliders } =
-        map.difficulty.data;
+    const { colorNotes, bombNotes, obstacles, basicEvents, arcs, chains } = map.difficulty.data;
 
     const htmlResult: HTMLElement[] = [];
     if (duration) {
@@ -60,22 +59,20 @@ function run(map: ToolArgs) {
                 ),
             );
         }
-        if (sliders.length && sliders[0].time < 0) {
+        if (arcs.length && arcs[0].time < 0) {
             htmlResult.push(
                 printResult(
                     'Arc(s) before start time',
-                    `${round(sliders[0].time, 3)} (${toMmss(bpm.toRealTime(sliders[0].time))}`,
+                    `${round(arcs[0].time, 3)} (${toMmss(bpm.toRealTime(arcs[0].time))}`,
                     'error',
                 ),
             );
         }
-        if (burstSliders.length && burstSliders[0].time < 0) {
+        if (chains.length && chains[0].time < 0) {
             htmlResult.push(
                 printResult(
                     'Chain(s) before start time',
-                    `${round(burstSliders[0].time, 3)} (${toMmss(
-                        bpm.toRealTime(burstSliders[0].time),
-                    )}`,
+                    `${round(chains[0].time, 3)} (${toMmss(bpm.toRealTime(chains[0].time))}`,
                     'error',
                 ),
             );
@@ -122,23 +119,23 @@ function run(map: ToolArgs) {
                 ),
             );
         }
-        if (sliders.length && sliders[sliders.length - 1].time > endBeat) {
+        if (arcs.length && arcs[arcs.length - 1].time > endBeat) {
             htmlResult.push(
                 printResult(
                     'Arc(s) after end time',
-                    `${round(sliders[sliders.length - 1].time, 3)} (${toMmss(
-                        bpm.toRealTime(sliders[sliders.length - 1].time),
+                    `${round(arcs[arcs.length - 1].time, 3)} (${toMmss(
+                        bpm.toRealTime(arcs[arcs.length - 1].time),
                     )})`,
                     'error',
                 ),
             );
         }
-        if (burstSliders.length && burstSliders[burstSliders.length - 1].time > endBeat) {
+        if (chains.length && chains[chains.length - 1].time > endBeat) {
             htmlResult.push(
                 printResult(
                     'Chain(s) after end time',
-                    `${round(burstSliders[burstSliders.length - 1].time, 3)} (${toMmss(
-                        bpm.toRealTime(burstSliders[burstSliders.length - 1].time),
+                    `${round(chains[chains.length - 1].time, 3)} (${toMmss(
+                        bpm.toRealTime(chains[chains.length - 1].time),
                     )})`,
                     'error',
                 ),

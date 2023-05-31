@@ -1,5 +1,5 @@
 import UIPanel from '../helpers/panel';
-import { RgbaToHex } from '../../utils';
+import { colorToHex } from '../../utils';
 import { IColorScheme } from '../../types/beatmap/shared/colorScheme';
 import { EnvironmentName } from '../../types/beatmap/shared/environment';
 import {
@@ -44,19 +44,19 @@ export function setCustomColor(customColor?: IColorScheme, environment?: Environ
         _obstacleColor: ColorScheme[EnvironmentSchemeName[environment]]?._obstacleColor || null,
     };
     const hexColor: { [key: string]: string | null } = {
-        _colorLeft: existColor._colorLeft ? RgbaToHex(existColor._colorLeft) : null,
-        _colorRight: existColor._colorRight ? RgbaToHex(existColor._colorRight) : null,
-        _envColorLeft: existColor._envColorLeft ? RgbaToHex(existColor._envColorLeft) : null,
-        _envColorRight: existColor._envColorRight ? RgbaToHex(existColor._envColorRight) : null,
+        _colorLeft: existColor._colorLeft ? colorToHex(existColor._colorLeft) : null,
+        _colorRight: existColor._colorRight ? colorToHex(existColor._colorRight) : null,
+        _envColorLeft: existColor._envColorLeft ? colorToHex(existColor._envColorLeft) : null,
+        _envColorRight: existColor._envColorRight ? colorToHex(existColor._envColorRight) : null,
         _envColorWhite: null,
         _envColorLeftBoost: existColor._envColorLeftBoost
-            ? RgbaToHex(existColor._envColorLeftBoost)
+            ? colorToHex(existColor._envColorLeftBoost)
             : null,
         _envColorRightBoost: existColor._envColorRightBoost
-            ? RgbaToHex(existColor._envColorRightBoost)
+            ? colorToHex(existColor._envColorRightBoost)
             : null,
         _envColorWhiteBoost: null,
-        _obstacleColor: existColor._obstacleColor ? RgbaToHex(existColor._obstacleColor) : null,
+        _obstacleColor: existColor._obstacleColor ? colorToHex(existColor._obstacleColor) : null,
     };
     const hasComponent: { [key: string]: boolean } = {
         noteColor: !!(customColor._colorLeft || customColor._colorRight || false),
@@ -70,20 +70,20 @@ export function setCustomColor(customColor?: IColorScheme, environment?: Environ
     };
 
     if (customColor._colorLeft) {
-        hexColor._colorLeft = RgbaToHex(customColor._colorLeft);
+        hexColor._colorLeft = colorToHex(customColor._colorLeft);
     }
     if (customColor._colorRight) {
-        hexColor._colorRight = RgbaToHex(customColor._colorRight);
+        hexColor._colorRight = colorToHex(customColor._colorRight);
     }
     if (customColor._envColorLeft) {
-        hexColor._envColorLeft = RgbaToHex(customColor._envColorLeft);
+        hexColor._envColorLeft = colorToHex(customColor._envColorLeft);
     } else if (customColor._colorLeft) {
-        hexColor._envColorLeft = RgbaToHex(customColor._colorLeft);
+        hexColor._envColorLeft = colorToHex(customColor._colorLeft);
     }
     if (customColor._envColorRight) {
-        hexColor._envColorRight = RgbaToHex(customColor._envColorRight);
+        hexColor._envColorRight = colorToHex(customColor._envColorRight);
     } else if (customColor._colorRight) {
-        hexColor._envColorRight = RgbaToHex(customColor._colorRight);
+        hexColor._envColorRight = colorToHex(customColor._colorRight);
     }
 
     // tricky stuff
@@ -92,27 +92,27 @@ export function setCustomColor(customColor?: IColorScheme, environment?: Environ
         envBR!: string | null,
         envBoost = false;
     if (customColor._envColorLeftBoost) {
-        envBL = RgbaToHex(customColor._envColorLeftBoost);
+        envBL = colorToHex(customColor._envColorLeftBoost);
         envBoost = true;
     } else {
         envBL = existColor._envColorLeftBoost
-            ? RgbaToHex(existColor._envColorLeftBoost)
+            ? colorToHex(existColor._envColorLeftBoost)
             : hexColor._envColorLeft;
     }
     if (customColor._envColorRightBoost) {
-        envBR = RgbaToHex(customColor._envColorRightBoost);
+        envBR = colorToHex(customColor._envColorRightBoost);
         envBoost = true;
     } else {
         envBR = existColor._envColorRightBoost
-            ? RgbaToHex(existColor._envColorRightBoost)
+            ? colorToHex(existColor._envColorRightBoost)
             : hexColor._envColorRight;
     }
 
     if (customColor._envColorWhite) {
-        hexColor._envColorWhite = RgbaToHex(customColor._envColorWhite);
+        hexColor._envColorWhite = colorToHex(customColor._envColorWhite);
     }
     if (customColor._envColorWhiteBoost) {
-        hexColor._envColorWhiteBoost = RgbaToHex(customColor._envColorWhiteBoost);
+        hexColor._envColorWhiteBoost = colorToHex(customColor._envColorWhiteBoost);
     }
 
     if (envBoost) {
@@ -121,7 +121,7 @@ export function setCustomColor(customColor?: IColorScheme, environment?: Environ
     }
 
     if (customColor._obstacleColor) {
-        hexColor._obstacleColor = RgbaToHex(customColor._obstacleColor);
+        hexColor._obstacleColor = colorToHex(customColor._obstacleColor);
     }
 
     if (!hasComponent.noteColor) {

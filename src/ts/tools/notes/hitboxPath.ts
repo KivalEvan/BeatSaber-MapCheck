@@ -42,8 +42,8 @@ function check(map: ToolArgs) {
         const currentNote = noteContainer[i];
         if (
             currentNote.type === 'bomb' ||
-            currentNote.type === 'slider' ||
-            currentNote.type === 'burstSlider' ||
+            currentNote.type === 'arc' ||
+            currentNote.type === 'chain' ||
             bpm.toRealTime(currentNote.data.time) < lastTime + 0.01
         ) {
             continue;

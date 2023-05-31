@@ -1,9 +1,8 @@
-import { PercentPointDefinition } from '../../shared/custom/heck';
+import { FloatPointDefinition, Vector4PointDefinition } from '../../shared/custom/heck';
 import { Easings } from '../../../easings';
 import { ColorArray } from '../../../colors';
 import { ICustomDataBase } from '../../shared/custom/customData';
 import {
-    ColorPointDefinition,
     EnvironmentMaterial,
     GeometryType,
     LookupMethod,
@@ -51,7 +50,8 @@ export interface IChromaEnvironmentBase {
      *
      * This grabs every environment objects that match the string.
      * ```ts
-     * id: 'Environment.[0]GlowLine' || 'Environment\.\\[\\d+\\]GlowLine$' // Regex example
+     * id: 'Environment.[0]GlowLine' // Non-regex
+     * id: 'Environment\.\\[\\d+\\]GlowLine$' // Regex
      * ```
      */
     _id?: unknown;
@@ -103,7 +103,7 @@ export type IChromaEnvironment = IChromaEnvironmentID | IChromaEnvironmentGeomet
 
 /** Chroma interface for Beatmap Object Animation Custom Data. */
 export interface IChromaAnimation {
-    _color?: string | ColorArray | ColorPointDefinition[];
+    _color?: string | ColorArray | Vector4PointDefinition[];
 }
 
 /** Chroma interface for Beatmap Note Custom Data. */
@@ -165,21 +165,21 @@ export interface IChromaEventZoom extends ICustomDataBase {
 
 /** AnimateComponent interface for Chroma Custom Event. */
 export interface IChromaCustomEventDataAnimateTrack extends Required<IHeckBase> {
-    _color?: string | ColorArray | ColorPointDefinition[];
+    _color?: string | ColorArray | Vector4PointDefinition[];
 }
 
 /** AnimateComponent interface for Chroma Custom Event. */
 export interface IChromaCustomEventDataAssignPathAnimation extends Required<IHeckBase> {
-    _color?: string | ColorArray | ColorPointDefinition[];
+    _color?: string | ColorArray | Vector4PointDefinition[];
 }
 
 /** AssignFogTrack interface for Chroma Custom Event. */
 export interface IChromaCustomEventDataAssignFogTrack extends Required<IHeckBase> {
     _duration: number;
-    _attenuation?: string | number | PercentPointDefinition[];
-    _offset?: string | number | PercentPointDefinition[];
-    _startY?: string | number | PercentPointDefinition[];
-    _height?: string | number | PercentPointDefinition[];
+    _attenuation?: string | number | FloatPointDefinition[];
+    _offset?: string | number | FloatPointDefinition[];
+    _startY?: string | number | FloatPointDefinition[];
+    _height?: string | number | FloatPointDefinition[];
 }
 
 /** Chroma Custom Data interface for difficulty custom data. */

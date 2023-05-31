@@ -1,11 +1,12 @@
+// deno-lint-ignore-file no-explicit-any
 import { IWrapBaseItem, IWrapBaseItemAttribute } from './baseItem';
 import { IWrapBaseObject, IWrapBaseObjectAttribute } from './baseObject';
 import { IWrapIndexFilter, IWrapIndexFilterAttribute } from './indexFilter';
 
 export interface IWrapEventBoxAttribute<
-    TBox extends Record<keyof TBox, unknown> = Record<string, unknown>,
-    TBase extends Record<keyof TBase, unknown> = Record<string, unknown>,
-    TFilter extends Record<keyof TFilter, unknown> = Record<string, unknown>,
+    TBox extends { [P in keyof TBox]: TBox[P] } = Record<string, any>,
+    TBase extends { [P in keyof TBase]: TBase[P] } = Record<string, any>,
+    TFilter extends { [P in keyof TFilter]: TFilter[P] } = Record<string, any>,
 > extends IWrapBaseItemAttribute<TBox> {
     /** Index filter of event box. */
     filter: IWrapIndexFilterAttribute<TFilter>;
@@ -31,9 +32,9 @@ export interface IWrapEventBoxAttribute<
 }
 
 export interface IWrapEventBox<
-    TBox extends Record<keyof TBox, unknown> = Record<string, unknown>,
-    TBase extends Record<keyof TBase, unknown> = Record<string, unknown>,
-    TFilter extends Record<keyof TFilter, unknown> = Record<string, unknown>,
+    TBox extends { [P in keyof TBox]: TBox[P] } = Record<string, any>,
+    TBase extends { [P in keyof TBase]: TBase[P] } = Record<string, any>,
+    TFilter extends { [P in keyof TFilter]: TFilter[P] } = Record<string, any>,
 > extends IWrapBaseItem<TBox>,
         IWrapEventBoxAttribute<TBox, TBase, TFilter> {
     events: IWrapBaseObject<TBase>[];

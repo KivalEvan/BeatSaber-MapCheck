@@ -28,7 +28,7 @@ export function createSettingsTable(mapInfo: IInfo, mapData: IBeatmapItem): HTML
         njs.jd,
         3,
     )}</td></tr><tr><th class="${prefix}table-header" colspan="2">Reaction Time</th><td class="${prefix}table-element">${round(
-        njs.reactTime * 1000,
+        njs.reactionTime * 1000,
     )}ms</td></tr>`;
 
     return htmlTable;

@@ -1,4 +1,4 @@
-import { EnvironmentAllName } from '../mod';
+import { EnvironmentAllName } from '../shared/environment';
 
 interface IVector3Object {
     x: number;

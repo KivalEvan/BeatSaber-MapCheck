@@ -35,7 +35,7 @@ export default (function () {
                 UISettings.setOnLoadCheck(id, Settings.onLoad[id]);
             }
             UITheme.set(Settings.theme);
-            logger.info('User interface initialised');
+            logger.tInfo(['init'], 'User interface initialised');
         }
     };
 })();
