@@ -1,18 +1,36 @@
+import { ModType } from '../../types/beatmap/shared/modCheck';
 import { IWrapObstacle } from '../../types/beatmap/wrapper/obstacle';
+import { Vector2 } from '../../types/vector';
 import { LINE_COUNT } from '../shared/constants';
 import { WrapGridObject } from './gridObject';
 
 /** Obstacle beatmap class object. */
-export abstract class WrapObstacle<T extends Record<keyof T, unknown>>
+export abstract class WrapObstacle<T extends { [P in keyof T]: T[P] }>
     extends WrapGridObject<T>
     implements IWrapObstacle<T>
 {
-    abstract get duration(): IWrapObstacle['duration'];
-    abstract set duration(value: IWrapObstacle['duration']);
-    abstract get width(): IWrapObstacle['width'];
-    abstract set width(value: IWrapObstacle['width']);
-    abstract get height(): IWrapObstacle['height'];
-    abstract set height(value: IWrapObstacle['height']);
+    protected _duration!: IWrapObstacle['duration'];
+    protected _width!: IWrapObstacle['width'];
+    protected _height!: IWrapObstacle['height'];
+
+    get duration(): IWrapObstacle['duration'] {
+        return this._duration;
+    }
+    set duration(value: IWrapObstacle['duration']) {
+        this._duration = value;
+    }
+    get width(): IWrapObstacle['width'] {
+        return this._width;
+    }
+    set width(value: IWrapObstacle['width']) {
+        this._width = value;
+    }
+    get height(): IWrapObstacle['height'] {
+        return this._height;
+    }
+    set height(value: IWrapObstacle['height']) {
+        this._height = value;
+    }
 
     setDuration(value: IWrapObstacle['duration']) {
         this.duration = value;
@@ -32,19 +50,8 @@ export abstract class WrapObstacle<T extends Record<keyof T, unknown>>
         return this;
     }
 
-    getPosition(): [number, number] {
-        return [
-            (this.posX <= -1000
-                ? this.posX / 1000
-                : this.posX >= 1000
-                ? this.posX / 1000
-                : this.posX) - 2,
-            (this.posY <= -1000
-                ? this.posY / 1000
-                : this.posY >= 1000
-                ? this.posY / 1000
-                : this.posY) - 0.5,
-        ];
+    getPosition(_type?: ModType): Vector2 {
+        return [this.posX - 2, this.posY - 0.5];
     }
 
     // FIXME: there are a lot more other variables
@@ -67,10 +74,6 @@ export abstract class WrapObstacle<T extends Record<keyof T, unknown>>
 
     hasNegative() {
         return this.posY < 0 || this.duration < 0 || this.width < 0 || this.height < 0;
-    }
-
-    isMappingExtensions(): boolean {
-        return this.posY > 2 || this.posX <= -1000 || this.posX >= 1000;
     }
 
     isValid(): boolean {

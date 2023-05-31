@@ -1,1 +1,1 @@
-export * from './V2toV3';
+export * from './toV3';

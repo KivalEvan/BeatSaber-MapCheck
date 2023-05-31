@@ -1,10 +1,9 @@
 import { ColorArray } from '../../../colors';
 import { Vector2, Vector3 } from '../../../vector';
-import { ColorPointDefinition } from '../../shared/custom/chroma';
 import {
-    PercentPointDefinition,
-    Vector2PointDefinition,
+    FloatPointDefinition,
     Vector3PointDefinition,
+    Vector4PointDefinition,
 } from '../../shared/custom/heck';
 
 /** Point Definition interface. */
@@ -15,8 +14,7 @@ export interface IPointDefinition {
         | Vector2
         | Vector3
         | ColorArray
-        | PercentPointDefinition[]
-        | Vector2PointDefinition[]
+        | FloatPointDefinition[]
         | Vector3PointDefinition[]
-        | ColorPointDefinition[];
+        | Vector4PointDefinition[];
 }

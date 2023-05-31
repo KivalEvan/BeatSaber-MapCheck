@@ -14,10 +14,10 @@ export function createNoteInfoTable(mapInfo: IInfo, mapData: IBeatmapItem): HTML
     )}</td></tr><tr><th class="${prefix}table-header" colspan="2">Max Score</th><td class="${prefix}table-element">${formatNumber(
         score.calculate(mapData.noteContainer),
     )}</td></tr><tr><th class="${prefix}table-header" colspan="2">Effective BPM</th><td class="${prefix}table-element">${round(
-        swing.getMaxEffectiveBPM(mapData.swingAnalysis.container),
+        swing.getMaxEffectiveBpm(mapData.swingAnalysis.container),
         2,
     )}</td></tr><tr><th class="${prefix}table-header" colspan="2">Effective BPM (swing)</th><td class="${prefix}table-element">${round(
-        swing.getMaxEffectiveBPMSwing(mapData.swingAnalysis.container),
+        swing.getMaxEffectiveBpmSwing(mapData.swingAnalysis.container),
         2,
     )}</td></tr>`;
 

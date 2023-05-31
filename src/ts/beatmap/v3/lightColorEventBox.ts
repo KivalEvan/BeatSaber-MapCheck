@@ -10,11 +10,11 @@ import { LightColorBase } from './lightColorBase';
 
 /** Light color event box beatmap v3 class object. */
 export class LightColorEventBox extends WrapLightColorEventBox<
-    Required<ILightColorEventBox>,
-    Required<ILightColorBase>,
-    Required<IIndexFilter>
+    ILightColorEventBox,
+    ILightColorBase,
+    IIndexFilter
 > {
-    static default: ObjectReturnFn<Required<ILightColorEventBox>> = {
+    static default: ObjectReturnFn<ILightColorEventBox> = {
         f: () => {
             return {
                 f: IndexFilter.default.f,
@@ -40,86 +40,77 @@ export class LightColorEventBox extends WrapLightColorEventBox<
         },
     };
 
-    private _f: IndexFilter;
-    private _e: LightColorBase[];
-    protected constructor(lightColorEventBox: Required<ILightColorEventBox>) {
-        super(lightColorEventBox);
-        this._f = IndexFilter.create(lightColorEventBox.f);
-        this._e = lightColorEventBox.e.map((e) => LightColorBase.create(e)[0]);
+    constructor();
+    constructor(
+        data: DeepPartial<
+            IWrapLightColorEventBoxAttribute<ILightColorEventBox, ILightColorBase, IIndexFilter>
+        >,
+    );
+    constructor(data: DeepPartial<ILightColorEventBox>);
+    constructor(
+        data: DeepPartial<ILightColorEventBox> &
+            DeepPartial<
+                IWrapLightColorEventBoxAttribute<ILightColorEventBox, ILightColorBase, IIndexFilter>
+            >,
+    );
+    constructor(
+        data: DeepPartial<ILightColorEventBox> &
+            DeepPartial<
+                IWrapLightColorEventBoxAttribute<ILightColorEventBox, ILightColorBase, IIndexFilter>
+            > = {},
+    ) {
+        super();
+
+        this._filter = new IndexFilter(
+            (data.filter as IIndexFilter) ??
+                (data as ILightColorEventBox).f ??
+                LightColorEventBox.default.f(),
+        );
+        this._beatDistribution = data.beatDistribution ?? data.w ?? LightColorEventBox.default.w;
+        this._beatDistributionType =
+            data.beatDistributionType ?? data.d ?? LightColorEventBox.default.d;
+        this._brightnessDistribution =
+            data.brightnessDistribution ?? data.r ?? LightColorEventBox.default.r;
+        this._brightnessDistributionType =
+            data.brightnessDistributionType ?? data.t ?? LightColorEventBox.default.t;
+        this._affectFirst = data.affectFirst ?? data.b ?? LightColorEventBox.default.b;
+        this._easing = data.easing ?? data.i ?? LightColorEventBox.default.i;
+        this._events = (
+            (data.events as ILightColorBase[]) ??
+            (data as ILightColorEventBox).e ??
+            LightColorEventBox.default.e()
+        ).map((obj) => new LightColorBase(obj));
+        this._customData = data.customData ?? LightColorEventBox.default.customData();
     }
 
     static create(): LightColorEventBox[];
     static create(
-        ...eventBoxes: DeepPartial<
-            IWrapLightColorEventBoxAttribute<
-                Required<ILightColorEventBox>,
-                Required<ILightColorBase>,
-                Required<IIndexFilter>
-            >
+        ...data: DeepPartial<
+            IWrapLightColorEventBoxAttribute<ILightColorEventBox, ILightColorBase, IIndexFilter>
         >[]
     ): LightColorEventBox[];
-    static create(...eventBoxes: DeepPartial<ILightColorEventBox>[]): LightColorEventBox[];
+    static create(...data: DeepPartial<ILightColorEventBox>[]): LightColorEventBox[];
     static create(
-        ...eventBoxes: (DeepPartial<ILightColorEventBox> &
+        ...data: (DeepPartial<ILightColorEventBox> &
             DeepPartial<
-                IWrapLightColorEventBoxAttribute<
-                    Required<ILightColorEventBox>,
-                    Required<ILightColorBase>,
-                    Required<IIndexFilter>
-                >
+                IWrapLightColorEventBoxAttribute<ILightColorEventBox, ILightColorBase, IIndexFilter>
             >)[]
     ): LightColorEventBox[];
     static create(
-        ...eventBoxes: (DeepPartial<ILightColorEventBox> &
+        ...data: (DeepPartial<ILightColorEventBox> &
             DeepPartial<
-                IWrapLightColorEventBoxAttribute<
-                    Required<ILightColorEventBox>,
-                    Required<ILightColorBase>,
-                    Required<IIndexFilter>
-                >
+                IWrapLightColorEventBoxAttribute<ILightColorEventBox, ILightColorBase, IIndexFilter>
             >)[]
     ): LightColorEventBox[] {
         const result: LightColorEventBox[] = [];
-        eventBoxes?.forEach((eb) =>
-            result.push(
-                new this({
-                    f:
-                        (eb.filter as IIndexFilter) ??
-                        (eb as Required<ILightColorEventBox>).f ??
-                        LightColorEventBox.default.f(),
-                    w: eb.beatDistribution ?? eb.w ?? LightColorEventBox.default.w,
-                    d: eb.beatDistributionType ?? eb.d ?? LightColorEventBox.default.d,
-                    r: eb.brightnessDistribution ?? eb.r ?? LightColorEventBox.default.r,
-                    t: eb.brightnessDistributionType ?? eb.t ?? LightColorEventBox.default.t,
-                    b: eb.affectFirst ?? eb.b ?? LightColorEventBox.default.b,
-                    i: eb.easing ?? eb.i ?? LightColorEventBox.default.i,
-                    e:
-                        (eb.events as ILightColorBase[]) ??
-                        (eb as Required<ILightColorEventBox>).e ??
-                        LightColorEventBox.default.e(),
-                    customData: eb.customData ?? LightColorEventBox.default.customData(),
-                }),
-            ),
-        );
+        data.forEach((eb) => result.push(new this(eb)));
         if (result.length) {
             return result;
         }
-        return [
-            new this({
-                f: LightColorEventBox.default.f(),
-                w: LightColorEventBox.default.w,
-                d: LightColorEventBox.default.d,
-                r: LightColorEventBox.default.r,
-                t: LightColorEventBox.default.t,
-                b: LightColorEventBox.default.b,
-                i: LightColorEventBox.default.i,
-                e: LightColorEventBox.default.e(),
-                customData: LightColorEventBox.default.customData(),
-            }),
-        ];
+        return [new this()];
     }
 
-    toJSON(): Required<ILightColorEventBox> {
+    toJSON(): ILightColorEventBox {
         return {
             f: this.filter.toJSON(),
             w: this.beatDistribution,
@@ -134,66 +125,24 @@ export class LightColorEventBox extends WrapLightColorEventBox<
     }
 
     get filter() {
-        return this._f;
+        return this._filter as IndexFilter;
     }
     set filter(value: IndexFilter) {
-        this._f = value;
+        this._filter = value;
     }
 
-    get beatDistribution() {
-        return this.data.w;
-    }
-    set beatDistribution(value: ILightColorEventBox['w']) {
-        this.data.w = value;
-    }
-
-    get beatDistributionType() {
-        return this.data.d;
-    }
-    set beatDistributionType(value: ILightColorEventBox['d']) {
-        this.data.d = value;
-    }
-
-    get brightnessDistribution() {
-        return this.data.r;
-    }
-    set brightnessDistribution(value: ILightColorEventBox['r']) {
-        this.data.r = value;
-    }
-
-    get brightnessDistributionType() {
-        return this.data.t;
-    }
-    set brightnessDistributionType(value: ILightColorEventBox['t']) {
-        this.data.t = value;
-    }
-
-    get affectFirst(): ILightColorEventBox['b'] {
-        return this.data.b;
-    }
-    set affectFirst(value: ILightColorEventBox['b'] | boolean) {
-        this.data.b = value ? 1 : 0;
-    }
-
-    get easing() {
-        return this.data.i;
-    }
-    set easing(value: ILightColorEventBox['i']) {
-        this.data.i = value;
-    }
-
-    get events(): LightColorBase[] {
-        return this._e;
+    get events() {
+        return this._events as LightColorBase[];
     }
     set events(value: LightColorBase[]) {
-        this._e = value;
+        this._events = value;
     }
 
     get customData(): NonNullable<ILightColorEventBox['customData']> {
-        return this.data.customData;
+        return this._customData;
     }
     set customData(value: NonNullable<ILightColorEventBox['customData']>) {
-        this.data.customData = value;
+        this._customData = value;
     }
 
     setEvents(value: LightColorBase[]): this {

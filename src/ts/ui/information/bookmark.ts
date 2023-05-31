@@ -1,6 +1,6 @@
 import Settings from '../../settings';
 import UIPanel from '../helpers/panel';
-import { RgbaToHex, round, toMmss } from '../../utils';
+import { colorToHex, round, toMmss } from '../../utils';
 import { BeatPerMinute } from '../../beatmap/shared/bpm';
 import { IBookmark } from '../../types/beatmap/v3/custom/bookmark';
 import { htmlTableBookmarks } from './constants';
@@ -34,7 +34,7 @@ export function setBookmarks(arr?: IBookmark[], bpm?: BeatPerMinute | null): voi
             rt = bpm.toRealTime(time);
         }
         colorContainer.style.backgroundColor = elem.c
-            ? RgbaToHex({ r: elem.c[0], g: elem.c[1], b: elem.c[2] })
+            ? colorToHex({ r: elem.c[0], g: elem.c[1], b: elem.c[2] })
             : '#333333';
 
         textContainer.textContent = `${round(elem.b, Settings.rounding)}${

@@ -1,29 +1,59 @@
-import { ILightRotationEventBox } from '../../types/beatmap/v3/lightRotationEventBox';
 import { IWrapLightRotationBase } from '../../types/beatmap/wrapper/lightRotationBase';
 import { IWrapLightRotationEventBox } from '../../types/beatmap/wrapper/lightRotationEventBox';
 import { WrapEventBox } from './eventBox';
 
 /** Light rotation event box beatmap class object. */
 export abstract class WrapLightRotationEventBox<
-        TBox extends Record<keyof TBox, unknown>,
-        TBase extends Record<keyof TBase, unknown>,
-        TFilter extends Record<keyof TFilter, unknown>,
+        TBox extends { [P in keyof TBox]: TBox[P] },
+        TBase extends { [P in keyof TBase]: TBase[P] },
+        TFilter extends { [P in keyof TFilter]: TFilter[P] },
     >
     extends WrapEventBox<TBox, TBase, TFilter>
     implements IWrapLightRotationEventBox<TBox, TBase, TFilter>
 {
-    abstract get rotationDistribution(): ILightRotationEventBox['s'];
-    abstract set rotationDistribution(value: ILightRotationEventBox['s']);
-    abstract get rotationDistributionType(): ILightRotationEventBox['t'];
-    abstract set rotationDistributionType(value: ILightRotationEventBox['t']);
-    abstract get axis(): ILightRotationEventBox['a'];
-    abstract set axis(value: ILightRotationEventBox['a']);
-    abstract get flip(): ILightRotationEventBox['r'];
-    abstract set flip(value: ILightRotationEventBox['r']);
-    abstract get affectFirst(): ILightRotationEventBox['b'];
-    abstract set affectFirst(value: ILightRotationEventBox['b']);
-    abstract get events(): IWrapLightRotationBase<TBase>[];
-    abstract set events(value: IWrapLightRotationBase<TBase>[]);
+    protected _rotationDistribution!: IWrapLightRotationEventBox['rotationDistribution'];
+    protected _rotationDistributionType!: IWrapLightRotationEventBox['rotationDistributionType'];
+    protected _axis!: IWrapLightRotationEventBox['axis'];
+    protected _flip!: IWrapLightRotationEventBox['flip'];
+    protected _affectFirst!: IWrapLightRotationEventBox['affectFirst'];
+    protected declare _events: IWrapLightRotationBase<TBase>[];
+
+    get rotationDistribution(): IWrapLightRotationEventBox['rotationDistribution'] {
+        return this._rotationDistribution;
+    }
+    set rotationDistribution(value: IWrapLightRotationEventBox['rotationDistribution']) {
+        this._rotationDistribution = value;
+    }
+    get rotationDistributionType(): IWrapLightRotationEventBox['rotationDistributionType'] {
+        return this._rotationDistributionType;
+    }
+    set rotationDistributionType(value: IWrapLightRotationEventBox['rotationDistributionType']) {
+        this._rotationDistributionType = value;
+    }
+    get axis(): IWrapLightRotationEventBox['axis'] {
+        return this._axis;
+    }
+    set axis(value: IWrapLightRotationEventBox['axis']) {
+        this._axis = value;
+    }
+    get flip(): IWrapLightRotationEventBox['flip'] {
+        return this._flip;
+    }
+    set flip(value: IWrapLightRotationEventBox['flip']) {
+        this._flip = value;
+    }
+    get affectFirst(): IWrapLightRotationEventBox['affectFirst'] {
+        return this._affectFirst;
+    }
+    set affectFirst(value: IWrapLightRotationEventBox['affectFirst']) {
+        this._affectFirst = value;
+    }
+    get events(): IWrapLightRotationBase<TBase>[] {
+        return this._events;
+    }
+    set events(value: IWrapLightRotationBase<TBase>[]) {
+        this._events = value;
+    }
 
     setRotationDistribution(value: IWrapLightRotationEventBox['rotationDistribution']) {
         this.rotationDistribution = value;

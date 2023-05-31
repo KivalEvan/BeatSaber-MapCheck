@@ -30,16 +30,16 @@ const tool: Tool = {
 };
 
 function check(map: ToolArgs) {
-    // kinda slow but i need slider first
+    // kinda slow but i need arc first
     const noteContainer = [...map.difficulty!.noteContainer]
-        .sort((a, b) => (a.type !== 'slider' ? 1 : b.type !== 'slider' ? -1 : 0))
+        .sort((a, b) => (a.type !== 'arc' ? 1 : b.type !== 'arc' ? -1 : 0))
         .sort((a, b) => a.data.time - b.data.time);
 
     const arr: NoteContainer[] = [];
     for (let i = 0, potential = true, len = noteContainer.length; i < len; i++) {
         const arc = noteContainer[i];
         const lastTime = noteContainer.at(-1)!.data.time;
-        if (arc.type === 'slider') {
+        if (arc.type === 'arc') {
             potential = true;
             for (let j = i, sike = false; j < len; j++) {
                 const head = noteContainer[j];
@@ -102,7 +102,7 @@ function check(map: ToolArgs) {
                     break;
                 }
                 if (
-                    (head.type === 'slider' || head.type === 'burstSlider') &&
+                    (head.type === 'arc' || head.type === 'chain') &&
                     head.data.time + 0.001 > lastTime
                 ) {
                     potential = false;

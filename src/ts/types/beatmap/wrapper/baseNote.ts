@@ -1,8 +1,9 @@
+// deno-lint-ignore-file no-explicit-any
+import { ModType } from '../shared/modCheck';
 import { IWrapGridObject, IWrapGridObjectAttribute } from './gridObject';
 
-export interface IWrapBaseNoteAttribute<
-    T extends Record<keyof T, unknown> = Record<string, unknown>,
-> extends IWrapGridObjectAttribute<T> {
+export interface IWrapBaseNoteAttribute<T extends { [P in keyof T]: T[P] } = Record<string, any>>
+    extends IWrapGridObjectAttribute<T> {
     /** Color `<int>` of note.
      * ```ts
      * 0 -> Red
@@ -19,12 +20,12 @@ export interface IWrapBaseNoteAttribute<
      * ---
      * Grid represents cut direction from center.
      *
-     * **WARNING:** Dot-directional is not recommended with sliders, assumes down-directional.
+     * **WARNING:** Dot-directional is not recommended with arcs, assumes down-directional.
      */
     direction: number;
 }
 
-export interface IWrapBaseNote<T extends Record<keyof T, unknown> = Record<string, unknown>>
+export interface IWrapBaseNote<T extends { [P in keyof T]: T[P] } = Record<string, any>>
     extends IWrapGridObject<T>,
         IWrapBaseNoteAttribute<T> {
     setColor(value: 0 | 1): this;
@@ -42,7 +43,7 @@ export interface IWrapBaseNote<T extends Record<keyof T, unknown> = Record<strin
      * const noteAngle = note.getAngle();
      * ```
      */
-    getAngle(type?: 'vanilla' | 'me' | 'ne'): number;
+    getAngle(type?: ModType): number;
 
     /** Check if note is red note.
      * ```ts

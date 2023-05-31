@@ -63,13 +63,9 @@ export default class Swing implements ISwingContainer {
                     ebpmSwing = this.calcEBPMBetweenObject(
                         n.data,
                         firstNote[n.data.color].data,
-                        bpm.value,
+                        bpm,
                     );
-                    ebpm = this.calcEBPMBetweenObject(
-                        n.data,
-                        lastNote[n.data.color].data,
-                        bpm.value,
-                    );
+                    ebpm = this.calcEBPMBetweenObject(n.data, lastNote[n.data.color].data, bpm);
                     firstNote[n.data.color] = n;
                     swingNoteArray[n.data.color] = [];
                 }
@@ -145,9 +141,12 @@ export default class Swing implements ISwingContainer {
     static calcEBPMBetweenObject = (
         currObj: IWrapBaseObject,
         prevObj: IWrapBaseObject,
-        bpm: number,
+        bpm: BeatPerMinute,
     ): number => {
-        return bpm / ((currObj.time - prevObj.time) * 2);
+        return (
+            bpm.value /
+            (bpm.toBeatTime(bpm.toRealTime(currObj.time) - bpm.toRealTime(prevObj.time)) * 2)
+        );
     };
 
     private static calcMinSliderSpeed = (notes: NoteContainer[], bpm: BeatPerMinute): number => {

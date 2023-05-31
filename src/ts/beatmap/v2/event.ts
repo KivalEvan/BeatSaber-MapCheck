@@ -13,8 +13,8 @@ import { WrapEvent } from '../wrapper/event';
 import { IWrapEventAttribute } from '../../types/beatmap/wrapper/event';
 
 /** Event beatmap v2 class object. */
-export class Event extends WrapEvent<Required<IEvent>> {
-    static default: ObjectReturnFn<Required<IEvent>> = {
+export class Event extends WrapEvent<IEvent> {
+    static default: ObjectReturnFn<IEvent> = {
         _time: 0,
         _type: 0,
         _value: 0,
@@ -24,46 +24,34 @@ export class Event extends WrapEvent<Required<IEvent>> {
         },
     };
 
-    protected constructor(event: Required<IEvent>) {
-        super(event);
+    constructor();
+    constructor(data: Partial<IWrapEventAttribute<IEvent>>);
+    constructor(data: Partial<IEvent>);
+    constructor(data: Partial<IEvent> & Partial<IWrapEventAttribute<IEvent>>);
+    constructor(data: Partial<IEvent> & Partial<IWrapEventAttribute<IEvent>> = {}) {
+        super();
+
+        this._time = data.time ?? data._time ?? Event.default._time;
+        this._type = data.type ?? data._type ?? Event.default._type;
+        this._value = data.value ?? data._value ?? Event.default._value;
+        this._floatValue = data.floatValue ?? data._floatValue ?? Event.default._floatValue;
+        this._customData = data.customData ?? data._customData ?? Event.default._customData();
     }
 
     static create(): Event[];
-    static create(...basicEvents: Partial<IWrapEventAttribute<Required<IEvent>>>[]): Event[];
-    static create(...basicEvents: Partial<IEvent>[]): Event[];
-    static create(
-        ...basicEvents: (Partial<IEvent> & Partial<IWrapEventAttribute<Required<IEvent>>>)[]
-    ): Event[];
-    static create(
-        ...basicEvents: (Partial<IEvent> & Partial<IWrapEventAttribute<Required<IEvent>>>)[]
-    ): Event[] {
+    static create(...data: Partial<IWrapEventAttribute<IEvent>>[]): Event[];
+    static create(...data: Partial<IEvent>[]): Event[];
+    static create(...data: (Partial<IEvent> & Partial<IWrapEventAttribute<IEvent>>)[]): Event[];
+    static create(...data: (Partial<IEvent> & Partial<IWrapEventAttribute<IEvent>>)[]): Event[] {
         const result: Event[] = [];
-        basicEvents?.forEach((ev) =>
-            result.push(
-                new this({
-                    _time: ev.time ?? ev._time ?? Event.default._time,
-                    _type: ev.type ?? ev._type ?? Event.default._type,
-                    _value: ev.value ?? ev._value ?? Event.default._value,
-                    _floatValue: ev.floatValue ?? ev._floatValue ?? Event.default._floatValue,
-                    _customData: ev.customData ?? ev._customData ?? Event.default._customData(),
-                }),
-            ),
-        );
+        data.forEach((obj) => result.push(new this(obj)));
         if (result.length) {
             return result;
         }
-        return [
-            new this({
-                _time: Event.default._time,
-                _type: Event.default._type,
-                _value: Event.default._value,
-                _floatValue: Event.default._floatValue,
-                _customData: Event.default._customData(),
-            }),
-        ];
+        return [new this()];
     }
 
-    toJSON(): Required<IEvent> {
+    toJSON(): IEvent {
         return {
             _time: this.time,
             _type: this.type,
@@ -73,39 +61,11 @@ export class Event extends WrapEvent<Required<IEvent>> {
         };
     }
 
-    get time() {
-        return this.data._time;
-    }
-    set time(value: IEvent['_time']) {
-        this.data._time = value;
-    }
-
-    get type() {
-        return this.data._type;
-    }
-    set type(value: IEvent['_type']) {
-        this.data._type = value;
-    }
-
-    get value() {
-        return this.data._value;
-    }
-    set value(value: IEvent['_value']) {
-        this.data._value = value;
-    }
-
-    get floatValue() {
-        return this.data._floatValue;
-    }
-    set floatValue(value: IEvent['_floatValue']) {
-        this.data._floatValue = value;
-    }
-
     get customData(): NonNullable<IEvent['_customData']> {
-        return this.data._customData;
+        return this._customData;
     }
     set customData(value: NonNullable<IEvent['_customData']>) {
-        this.data._customData = value;
+        this._customData = value;
     }
 
     isLightEvent(environment?: EnvironmentAllName): this is EventLight {
@@ -124,7 +84,6 @@ export class Event extends WrapEvent<Required<IEvent>> {
         return super.isLaneRotationEvent(environment);
     }
 
-    // holy shit i hate type guard
     isChroma(): boolean {
         const ev = this as Event;
         if (ev.isLightEvent()) {
@@ -175,24 +134,24 @@ export class Event extends WrapEvent<Required<IEvent>> {
 
 abstract class EventLight extends Event {
     get customData(): IChromaEventLight {
-        return this.data._customData as IChromaEventLight;
+        return this._customData as IChromaEventLight;
     }
 }
 
 abstract class EventRing extends Event {
     get customData(): IChromaEventRing {
-        return this.data._customData as IChromaEventRing;
+        return this._customData as IChromaEventRing;
     }
 }
 
 abstract class EventLaser extends Event {
     get customData(): IChromaEventLaser {
-        return this.data._customData as IChromaEventLaser;
+        return this._customData as IChromaEventLaser;
     }
 }
 
 abstract class EventLaneRotation extends Event {
     get customData(): INEEvent {
-        return this.data._customData as INEEvent;
+        return this._customData as INEEvent;
     }
 }

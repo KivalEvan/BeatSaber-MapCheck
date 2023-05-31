@@ -3,34 +3,26 @@ import { BeatPerMinute } from './bpm';
 
 /** NJS class for various utility around jump distance, reaction time, etc. */
 export class NoteJumpSpeed {
+    static readonly HJD_START: number = 4;
+    static readonly HJD_MIN: number = 0.25;
+
     private _bpm: BeatPerMinute;
     private _njs: number;
     private _sdm: number;
-    private _hjd!: number;
-    static readonly HJD_START: number = 4;
-    static readonly HJD_MIN: number = 0.25;
-    private _jd!: number;
-    private _jdMin!: number;
-    private _reactionTime!: number;
 
-    protected constructor(bpm: BeatPerMinute, njs: number = 10, sdm: number = 0) {
-        this._bpm = bpm;
+    constructor(bpm: BeatPerMinute | number, njs = 10, sdm = 0) {
+        this._bpm = typeof bpm === 'number' ? new BeatPerMinute(bpm) : bpm;
         this._njs = njs;
         this._sdm = sdm;
-        this.update();
     }
 
     /** Create and return new instance of NJS class.
      * ```ts
-     * const NJS = NoteJumpSpeed.create(BPM ?? 128, 16, 0);
+     * const njs = NoteJumpSpeed.create(BPM ?? 128, 16, 0);
      * ```
      */
-    static create(bpm: BeatPerMinute | number, njs = 10, sdm = 0): NoteJumpSpeed {
-        return new NoteJumpSpeed(
-            typeof bpm === 'number' ? BeatPerMinute.create(bpm) : bpm,
-            njs,
-            sdm,
-        );
+    static create(bpm: BeatPerMinute | number, njs?: number, sdm?: number): NoteJumpSpeed {
+        return new NoteJumpSpeed(bpm, njs, sdm);
     }
 
     /** Fallback value used if NJS value is null or 0.
@@ -42,7 +34,7 @@ export class NoteJumpSpeed {
      * 'Easy' -> 10
      * ```
      */
-    static readonly FallbackNJS: Record<DifficultyName, number> = {
+    static readonly FallbackNJS: { readonly [key in DifficultyName]: number } = {
         ExpertPlus: 16,
         Expert: 12,
         Hard: 10,
@@ -55,7 +47,6 @@ export class NoteJumpSpeed {
     }
     set value(val: number) {
         this._njs = val;
-        this.update();
     }
 
     get offset(): number {
@@ -63,132 +54,100 @@ export class NoteJumpSpeed {
     }
     set offset(val: number) {
         this._sdm = val;
-        this.update();
     }
 
     get hjd(): number {
-        return this._hjd;
-    }
-    get hjdMin(): number {
-        return NoteJumpSpeed.HJD_MIN;
-    }
-    get reactTime(): number {
-        return this._reactionTime;
+        return this.calcHjd();
     }
     get jd(): number {
-        return this._jd;
+        return this.calcJd();
     }
-    get jdMin(): number {
-        return this._jdMin;
+    get reactionTime(): number {
+        return this.calcRtFromHjd();
     }
-
-    private update(): void {
-        this._hjd = this.calcHJD();
-        this._jd = this.calcJD();
-        this._jdMin = this.calcJD(NoteJumpSpeed.HJD_MIN);
-        this._reactionTime = this.calcRTFromHJD();
+    get bpm(): BeatPerMinute {
+        return this._bpm;
     }
 
-    /** Calculate raw half jump duration
+    /** Calculate half jump duration given NJS offset.
      * ```ts
-     * const rawHJD = NJS.calcHalfJumpDurationRaw();
+     * const hjd = njs.calcHjd();
+     * const hjdOffset = njs.calcHjd(0.5);
+     * const hjdNoOffset = njs.calcHjd(0);
      * ```
      */
-    calcHJDRaw(): number {
+    calcHjd(offset: number = this.offset): number {
         const maxHalfJump = 17.999; // Beat Games, this is not how you fix float inconsistencies
-        const noteJumpMovementSpeed = (this._njs * this._njs) / this._njs;
         const num = 60 / this._bpm.value;
         let hjd = NoteJumpSpeed.HJD_START;
-        while (noteJumpMovementSpeed * num * hjd > maxHalfJump) {
-            hjd /= 2;
-        }
-        if (hjd < 1) {
-            hjd = 1;
-        }
-        return hjd;
-    }
+        while (this._njs * num * hjd > maxHalfJump) hjd /= 2;
+        if (hjd < 1) hjd = 1;
 
-    /** Calculate half jump duration given NJS offset
-     * ```ts
-     * const HJD = NJS.calcHalfJumpDuration();
-     * const HJDOffset = NJS.calcHalfJumpDuration(0.5);
-     * ```
-     */
-    calcHJD(offset: number = this.offset): number {
-        return Math.max(this.calcHJDRaw() + offset, NoteJumpSpeed.HJD_MIN);
+        return Math.max(hjd + offset, NoteJumpSpeed.HJD_MIN);
     }
 
     /** Calculate half jump duration given jump distance.
      * ```ts
-     * const HJD = NJS.calcHalfJumpDurationFromJD();
-     * const HJDSpecified = NJS.calcHalfJumpDurationFromJD(21);
+     * const hjd = njs.calcHjdFromJd();
+     * const hjdSpecified = njs.calcHjdFromJd(21);
      * ```
      */
-    calcHJDFromJD(jd: number = this.calcJD()): number {
+    calcHjdFromJd(jd: number = this.calcJd()): number {
         return jd / ((60 / this._bpm.value) * this._njs * 2);
     }
 
     /** Calculate half jump duration given real time in second.
      * ```ts
-     * const HJD = NJS.calcHalfJumpDurationFromRT();
-     * const HJDSpecified = NJS.calcHalfJumpDurationFromRT(4.5);
+     * const hjd = njs.calcHjdFromRt();
+     * const hjdSpecified = njs.calcHjdFromRt(4.5);
      * ```
      */
-    calcHJDFromRT(rt: number = this.calcRTFromHJD()): number {
+    calcHjdFromRt(rt: number = this.calcRtFromHjd()): number {
         return rt / (60 / this._bpm.value);
     }
 
     /** Calculate jump distance given half jump duration.
      * ```ts
-     * const JD = NJS.calcJumpDistance();
-     * const JDSpecified = NJS.calcJumpDistance(1.5);
+     * const jd = njs.calcJd();
+     * const jdSpecified = njs.calcJd(1.5);
      * ```
      */
-    calcJD(hjd: number = this.calcHJD()): number {
+    calcJd(hjd: number = this.calcHjd()): number {
         return this._njs * (60 / this._bpm.value) * hjd * 2;
     }
 
-    /** Calculate highest optimal jump distance.
+    /** Calculate optimal jump distance.
      * ```ts
-     * const optimalHighJD = NJS.calcJumpDistanceOptimalHigh();
+     * const [lowJd, highJd] = njs.calcJdOptimal();
      * ```
      */
-    calcJDOptimalHigh(): number {
-        return 18 * (1 / 1.07) ** this._njs + 18;
-    }
-
-    /** Calculate lowest optimal jump distance.
-     * ```ts
-     * const optimalLowJD = NJS.calcJumpDistanceOptimalLow();
-     * ```
-     */
-    calcJDOptimalLow(): number {
-        return -(18 / (this._njs + 1)) + 18;
+    calcJdOptimal(): [low: number, high: number] {
+        return [-(18 / (this._njs + 1)) + 18, 18 * (1 / 1.07) ** this._njs + 18];
     }
 
     /** Calculate reaction time given jump distance.
      * ```ts
-     * const JD = NJS.calcReactionTimeFromJD();
-     * const JDSpecified = NJS.calcReactionTimeFromJD(21);
+     * const rt = njs.calcRtFromJd();
+     * const rtSpecified = njs.calcRtFromJd(21);
      * ```
      */
-    calcRTFromJD(jd: number = this.calcJD()): number {
+    calcRtFromJd(jd: number = this.calcJd()): number {
         return jd / (2 * this._njs);
     }
 
     /** Calculate reaction time given half jump duration.
      * ```ts
-     * const JD = NJS.calcReactionTimeFromHJD();
-     * const JDSpecified = NJS.calcReactionTimeFromHJD(1.5);
+     * const rt = njs.calcRtFromHjd();
+     * const rtSpecified = njs.calcRtFromHjd(1.5);
      * ```
      */
-    calcRTFromHJD(hjd: number = this.calcHJD()): number {
+    calcRtFromHjd(hjd: number = this.calcHjd()): number {
         return (60 / this._bpm.value) * hjd;
     }
 
-    /** Calculate distance given beat.
+    /** Calculate unity distance given beat.
      * ```ts
-     * const distance = NJS.calcDistance(1);
+     * const distance = njs.calcDistance(1);
      * ```
      */
     calcDistance(beat: number): number {

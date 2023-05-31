@@ -166,6 +166,10 @@ const environmentType: { [env in EnvironmentAllName]?: { [key: number]: string }
     Panic2Environment: {
         3: 'Ambient',
     },
+    QueenEnvironment: {
+        6: 'Ambient',
+        40: 'Silhouettes',
+    },
 };
 
 export function eventTypeRename(type: number, environment?: EnvironmentAllName): string {

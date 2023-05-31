@@ -1,21 +1,27 @@
 import { IWrapBaseItem } from '../../types/beatmap/wrapper/baseItem';
-import { ObtainCustomData } from '../../types/utils';
+import { _ObtainCustomData } from '../../types/utils';
 import { Serializable } from '../shared/serializable';
 
 /** Basic building block of beatmap object. */
-export abstract class WrapBaseItem<T extends Record<keyof T, unknown>>
+export abstract class WrapBaseItem<T extends { [P in keyof T]: T[P] }>
     extends Serializable<T>
     implements IWrapBaseItem<T>
 {
-    abstract get customData(): ObtainCustomData<T>;
-    abstract set customData(value: ObtainCustomData<T>);
+    protected _customData!: _ObtainCustomData<T>;
 
-    setCustomData(value: ObtainCustomData<T>): this {
+    get customData(): _ObtainCustomData<T> {
+        return this._customData;
+    }
+    set customData(value: _ObtainCustomData<T>) {
+        this._customData = value;
+    }
+
+    setCustomData(value: _ObtainCustomData<T>): this {
         this.customData = value;
         return this;
     }
     resetCustomData() {
-        this.customData = {} as ObtainCustomData<T>;
+        this.customData = {} as _ObtainCustomData<T>;
         return this;
     }
     removeCustomData(key: string | string[]) {
@@ -26,7 +32,7 @@ export abstract class WrapBaseItem<T extends Record<keyof T, unknown>>
         }
         return this;
     }
-    addCustomData(object: ObtainCustomData<T>): this {
+    addCustomData(object: _ObtainCustomData<T>): this {
         this.customData = { ...this.customData, object };
         return this;
     }

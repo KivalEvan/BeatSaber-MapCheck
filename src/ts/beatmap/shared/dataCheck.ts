@@ -3,15 +3,15 @@ import logger from '../../logger';
 import { Version } from '../../types/beatmap/shared/version';
 import { compareVersion } from './version';
 
-const tag = (name: string) => {
-    return `[shared::dataCheck::${name}]`;
-};
+function tag(name: string): string[] {
+    return ['shared', 'dataCheck', name];
+}
 
 function handleError(text: string, throwError: boolean, error: string[]) {
     if (throwError) {
         throw Error(text);
     } else {
-        logger.warn(tag('deepCheck'), text);
+        logger.tWarn(tag('deepCheck'), text);
         error.push(text);
     }
 }
@@ -25,7 +25,7 @@ export function deepCheck(
     throwError = true,
     error: string[] = [],
 ) {
-    logger.verbose(tag('deepCheck'), `Looking up ${name}`);
+    logger.tVerbose(tag('deepCheck'), `Looking up ${name}`);
     if (Array.isArray(data)) {
         data.forEach((d, i) => deepCheck(d, check, `${name}[${i}]`, version));
         return;
@@ -82,7 +82,6 @@ export function deepCheck(
                         ((check[key] as DataCheckNumber).unsigned ? data[key] < 0 : true)),
             )
         ) {
-            console.log(1, check[key]);
             handleError(`${key} is not ${check[key].type} in object ${name}!`, throwError, error);
         }
         if (

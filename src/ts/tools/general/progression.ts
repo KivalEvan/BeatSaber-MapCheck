@@ -66,7 +66,7 @@ function run(map: ToolArgs) {
         tool.output.html = null;
         return;
     }
-    const filteredSPS = SavedData.beatmapDifficulty
+    const filteredSps = SavedData.beatmapDifficulty
         .map((d) => d.swingAnalysis)
         .filter(
             (a) =>
@@ -76,30 +76,30 @@ function run(map: ToolArgs) {
         )
         .sort((a, b) => a.total.average - b.total.average)
         .reverse();
-    if (!filteredSPS.length) {
+    if (!filteredSps.length) {
         tool.output.html = null;
         return;
     }
-    const minSPS = Math.max(
+    const minSps = Math.max(
         audioDuration < 120 ? 3.2 : audioDuration < 240 ? 4.2 : 5.2,
-        round(swing.getSPSHighest(filteredSPS) * 0.4, 2),
+        round(swing.getSpsHighest(filteredSps) * 0.4, 2),
     );
 
     const htmlResult: HTMLElement[] = [];
-    if (audioDuration < 360 && swing.getSPSLowest(filteredSPS) > minSPS) {
+    if (audioDuration < 360 && swing.getSpsLowest(filteredSps) > minSps) {
         htmlResult.push(
             printResult(
-                `Minimum SPS not met (<${minSPS})`,
-                `lowest SPS is ${round(swing.getSPSLowest(filteredSPS), 2)}, ${round(
-                    swing.calcSPSTotalPercDrop(filteredSPS),
+                `Minimum Sps not met (<${minSps})`,
+                `lowest Sps is ${round(swing.getSpsLowest(filteredSps), 2)}, ${round(
+                    swing.calcSpsTotalPercDrop(filteredSps),
                     2,
-                )}% drop from highest SPS (${round(swing.getSPSHighest(filteredSPS), 2)})`,
+                )}% drop from highest Sps (${round(swing.getSpsHighest(filteredSps), 2)})`,
                 'rank',
             ),
         );
     }
-    const progMax = swing.getProgressionMax(filteredSPS, minSPS);
-    const progMin = swing.getProgressionMin(filteredSPS, minSPS);
+    const progMax = swing.getProgressionMax(filteredSps, minSps);
+    const progMin = swing.getProgressionMin(filteredSps, minSps);
     if (progMax && audioDuration < 360) {
         htmlResult.push(
             printResult(

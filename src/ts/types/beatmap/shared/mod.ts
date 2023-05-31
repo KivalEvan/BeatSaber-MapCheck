@@ -5,4 +5,5 @@ export * from './dataCheck';
 export * from './difficulty';
 export * from './environment';
 export * from './info';
+export * from './modCheck';
 export * from './version';

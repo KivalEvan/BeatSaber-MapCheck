@@ -2,12 +2,18 @@ import { WrapBaseObject } from './baseObject';
 import { IWrapBPMEvent } from '../../types/beatmap/wrapper/bpmEvent';
 
 /** BPM change event beatmap class object. */
-export abstract class WrapBPMEvent<T extends Record<keyof T, unknown>>
+export abstract class WrapBPMEvent<T extends { [P in keyof T]: T[P] }>
     extends WrapBaseObject<T>
     implements IWrapBPMEvent<T>
 {
-    abstract get bpm(): IWrapBPMEvent['bpm'];
-    abstract set bpm(value: IWrapBPMEvent['bpm']);
+    protected _bpm!: IWrapBPMEvent['bpm'];
+
+    get bpm(): IWrapBPMEvent['bpm'] {
+        return this._bpm;
+    }
+    set bpm(value: IWrapBPMEvent['bpm']) {
+        this._bpm = value;
+    }
 
     setBPM(value: IWrapBPMEvent['bpm']) {
         this.bpm = value;

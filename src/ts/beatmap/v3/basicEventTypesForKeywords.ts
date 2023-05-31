@@ -7,50 +7,46 @@ import { WrapEventTypesForKeywords } from '../wrapper/eventTypesForKeywords';
  *
  * Used in basic event types with keywords.
  */
-export class BasicEventTypesForKeywords extends WrapEventTypesForKeywords<
-    Required<IBasicEventTypesForKeywords>
-> {
-    static default: ObjectReturnFn<Required<IBasicEventTypesForKeywords>> = {
+export class BasicEventTypesForKeywords extends WrapEventTypesForKeywords<IBasicEventTypesForKeywords> {
+    static default: ObjectReturnFn<IBasicEventTypesForKeywords> = {
         k: '',
         e: () => [],
     };
 
-    protected constructor(basicEventTypesForKeywords: Required<IBasicEventTypesForKeywords>) {
-        super(basicEventTypesForKeywords);
+    constructor();
+    constructor(data: Partial<IWrapEventTypesForKeywordsAttribute<IBasicEventTypesForKeywords>>);
+    constructor(
+        data: Partial<IBasicEventTypesForKeywords> &
+            Partial<IWrapEventTypesForKeywordsAttribute<IBasicEventTypesForKeywords>>,
+    );
+    constructor(
+        data: Partial<IBasicEventTypesForKeywords> &
+            Partial<IWrapEventTypesForKeywordsAttribute<IBasicEventTypesForKeywords>> = {},
+    ) {
+        super();
+
+        this._keyword = data.keyword ?? data.k ?? BasicEventTypesForKeywords.default.k;
+        this._events = data.events ?? data.e ?? BasicEventTypesForKeywords.default.e();
     }
 
     static create(): BasicEventTypesForKeywords[];
     static create(
-        ...basicEventTypesForKeywords: Partial<
-            IWrapEventTypesForKeywordsAttribute<Required<IBasicEventTypesForKeywords>>
-        >[]
+        ...data: Partial<IWrapEventTypesForKeywordsAttribute<IBasicEventTypesForKeywords>>[]
     ): BasicEventTypesForKeywords[];
     static create(
-        ...basicEventTypesForKeywords: (Partial<IBasicEventTypesForKeywords> &
-            Partial<IWrapEventTypesForKeywordsAttribute<Required<IBasicEventTypesForKeywords>>>)[]
+        ...data: (Partial<IBasicEventTypesForKeywords> &
+            Partial<IWrapEventTypesForKeywordsAttribute<IBasicEventTypesForKeywords>>)[]
     ): BasicEventTypesForKeywords[];
     static create(
-        ...basicEventTypesForKeywords: (Partial<IBasicEventTypesForKeywords> &
-            Partial<IWrapEventTypesForKeywordsAttribute<Required<IBasicEventTypesForKeywords>>>)[]
+        ...data: (Partial<IBasicEventTypesForKeywords> &
+            Partial<IWrapEventTypesForKeywordsAttribute<IBasicEventTypesForKeywords>>)[]
     ): BasicEventTypesForKeywords[] {
         const result: BasicEventTypesForKeywords[] = [];
-        basicEventTypesForKeywords?.forEach((betfk) =>
-            result.push(
-                new this({
-                    k: betfk.keyword ?? betfk.k ?? BasicEventTypesForKeywords.default.k,
-                    e: betfk.events ?? betfk.e ?? BasicEventTypesForKeywords.default.e(),
-                }),
-            ),
-        );
+        data.forEach((obj) => result.push(new this(obj)));
         if (result.length) {
             return result;
         }
-        return [
-            new this({
-                k: BasicEventTypesForKeywords.default.k,
-                e: BasicEventTypesForKeywords.default.e(),
-            }),
-        ];
+        return [new this()];
     }
 
     toJSON(): IBasicEventTypesForKeywords {
@@ -58,19 +54,5 @@ export class BasicEventTypesForKeywords extends WrapEventTypesForKeywords<
             k: this.keyword,
             e: this.events,
         };
-    }
-
-    get keyword() {
-        return this.data.k;
-    }
-    set keyword(value: IBasicEventTypesForKeywords['k']) {
-        this.data.k = value;
-    }
-
-    get events() {
-        return this.data.e;
-    }
-    set events(value: IBasicEventTypesForKeywords['e']) {
-        this.data.e = value;
     }
 }

@@ -1,8 +1,8 @@
+// deno-lint-ignore-file no-explicit-any
 import { IWrapGridObject, IWrapGridObjectAttribute } from './gridObject';
 
-export interface IWrapWaypointAttribute<
-    T extends Record<keyof T, unknown> = Record<string, unknown>,
-> extends IWrapGridObjectAttribute<T> {
+export interface IWrapWaypointAttribute<T extends { [P in keyof T]: T[P] } = Record<string, any>>
+    extends IWrapGridObjectAttribute<T> {
     /** Offset direction `<int>` of waypoint.
      * ```ts
      * 4 | 0 | 5
@@ -15,7 +15,7 @@ export interface IWrapWaypointAttribute<
     direction: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 9;
 }
 
-export interface IWrapWaypoint<T extends Record<keyof T, unknown> = Record<string, unknown>>
+export interface IWrapWaypoint<T extends { [P in keyof T]: T[P] } = Record<string, any>>
     extends IWrapGridObject<T>,
         IWrapWaypointAttribute<T> {
     setDirection(value: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 9): this;

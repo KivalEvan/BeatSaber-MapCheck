@@ -1,6 +1,6 @@
 import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import { ColorArray } from '../../types/colors';
-import { deltaE00, colorObjToAry, round } from '../../utils';
+import { deltaE00, colorFrom, round } from '../../utils';
 import UICheckbox from '../../ui/helpers/checkbox';
 import { printResult } from '../helpers';
 import { ColorScheme, EnvironmentSchemeName } from '../../beatmap/shared/colorScheme';
@@ -61,7 +61,7 @@ function customColorSimilarity(map: ToolArgs) {
         map.difficulty?.info._customData?._colorRight ??
         ColorScheme[EnvironmentSchemeName[map.info._environmentName] ?? 'The First']._colorRight;
     if (checkColorLeft && checkColorRight) {
-        return deltaE00(colorObjToAry(checkColorLeft), colorObjToAry(checkColorRight));
+        return deltaE00(colorFrom(checkColorLeft), colorFrom(checkColorRight));
     }
     return 100;
 }
@@ -76,10 +76,10 @@ function customColorArrowSimilarity(map: ToolArgs) {
         map.difficulty?.info._customData?._colorRight ??
         ColorScheme[EnvironmentSchemeName[map.info._environmentName] ?? 'The First']._colorRight;
     if (checkColorLeft) {
-        deltaELeft = deltaE00(arrowColor, colorObjToAry(checkColorLeft));
+        deltaELeft = deltaE00(arrowColor, colorFrom(checkColorLeft));
     }
     if (checkColorRight) {
-        deltaERight = deltaE00(arrowColor, colorObjToAry(checkColorRight));
+        deltaERight = deltaE00(arrowColor, colorFrom(checkColorRight));
     }
     return Math.min(deltaELeft, deltaERight);
 }

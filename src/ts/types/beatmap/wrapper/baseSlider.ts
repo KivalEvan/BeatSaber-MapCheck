@@ -1,11 +1,11 @@
+// deno-lint-ignore-file no-explicit-any
 import { IWrapBaseNote, IWrapBaseNoteAttribute } from './baseNote';
 
-export interface IWrapBaseSliderAttribute<
-    T extends Record<keyof T, unknown> = Record<string, unknown>,
-> extends IWrapBaseNoteAttribute<T> {
-    /** Tail beat time `<float>` of base slider. */
+export interface IWrapBaseSliderAttribute<T extends { [P in keyof T]: T[P] } = Record<string, any>>
+    extends IWrapBaseNoteAttribute<T> {
+    /** Tail beat time `<float>` of base arc. */
     tailTime: number;
-    /** Tail position x `<int>` of base slider.
+    /** Tail position x `<int>` of base arc.
      * ```ts
      * 0 -> Outer Left
      * 1 -> Middle Left
@@ -16,7 +16,7 @@ export interface IWrapBaseSliderAttribute<
      * Range: `none`
      */
     tailPosX: number;
-    /** Tail position y `<int>` of base slider.
+    /** Tail position y `<int>` of base arc.
      * ```ts
      * 0 -> Bottom row
      * 1 -> Middle row
@@ -28,7 +28,7 @@ export interface IWrapBaseSliderAttribute<
     tailPosY: number;
 }
 
-export interface IWrapBaseSlider<T extends Record<keyof T, unknown> = Record<string, unknown>>
+export interface IWrapBaseSlider<T extends { [P in keyof T]: T[P] } = Record<string, any>>
     extends IWrapBaseNote<T>,
         IWrapBaseSliderAttribute<T> {
     setDirection(value: number): this;

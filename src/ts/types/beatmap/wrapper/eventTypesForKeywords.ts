@@ -1,7 +1,8 @@
+// deno-lint-ignore-file no-explicit-any
 import { ISerializable } from '../shared/serializable';
 
 export interface IWrapEventTypesForKeywordsAttribute<
-    T extends Record<keyof T, unknown> = Record<string, unknown>,
+    T extends { [P in keyof T]: T[P] } = Record<string, any>,
 > {
     /** Keyword `<string>` of event types for keywords. */
     keyword: string;
@@ -10,7 +11,7 @@ export interface IWrapEventTypesForKeywordsAttribute<
 }
 
 export interface IWrapEventTypesForKeywords<
-    T extends Record<keyof T, unknown> = Record<string, unknown>,
+    T extends { [P in keyof T]: T[P] } = Record<string, any>,
 > extends ISerializable<T>,
         IWrapEventTypesForKeywordsAttribute<T> {
     setKeyword(value: IWrapEventTypesForKeywords['keyword']): this;

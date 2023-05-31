@@ -1,16 +1,28 @@
 import { NoteDirectionAngle } from '../shared/constants';
 import { WrapGridObject } from './gridObject';
 import { IWrapBaseNote } from '../../types/beatmap/wrapper/baseNote';
+import { ModType } from '../../types/beatmap/shared/modCheck';
 
 /** Color note beatmap class object. */
-export abstract class WrapBaseNote<T extends Record<keyof T, unknown>>
+export abstract class WrapBaseNote<T extends { [P in keyof T]: T[P] }>
     extends WrapGridObject<T>
     implements IWrapBaseNote<T>
 {
-    abstract get color(): IWrapBaseNote['color'];
-    abstract set color(value: IWrapBaseNote['color']);
-    abstract get direction(): IWrapBaseNote['direction'];
-    abstract set direction(value: IWrapBaseNote['direction']);
+    protected _color!: IWrapBaseNote['color'];
+    protected _direction!: IWrapBaseNote['direction'];
+
+    get color(): IWrapBaseNote['color'] {
+        return this._color;
+    }
+    set color(value: IWrapBaseNote['color']) {
+        this._color = value;
+    }
+    get direction(): IWrapBaseNote['direction'] {
+        return this._direction;
+    }
+    set direction(value: IWrapBaseNote['direction']) {
+        this._direction = value;
+    }
 
     setColor(value: IWrapBaseNote['color']) {
         this.color = value;
@@ -63,23 +75,8 @@ export abstract class WrapBaseNote<T extends Record<keyof T, unknown>>
         return this;
     }
 
-    getAngle(type?: 'vanilla' | 'me' | 'ne') {
-        switch (type) {
-            case 'vanilla':
-                return NoteDirectionAngle[this.direction as keyof typeof NoteDirectionAngle] || 0;
-            case 'me':
-                if (this.direction >= 1000) {
-                    return Math.abs(((this.direction % 1000) % 360) - 360);
-                }
-            /* falls through */
-            case 'ne':
-                return NoteDirectionAngle[this.direction as keyof typeof NoteDirectionAngle] || 0;
-            default:
-                if (this.direction >= 1000) {
-                    return Math.abs(((this.direction % 1000) % 360) - 360);
-                }
-                return NoteDirectionAngle[this.direction as keyof typeof NoteDirectionAngle] || 0;
-        }
+    getAngle(_type?: ModType) {
+        return NoteDirectionAngle[this.direction as keyof typeof NoteDirectionAngle] || 0;
     }
 
     isDouble(compareTo: IWrapBaseNote, tolerance = 0.01) {

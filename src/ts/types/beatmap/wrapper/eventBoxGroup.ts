@@ -1,11 +1,12 @@
+// deno-lint-ignore-file no-explicit-any
 import { IWrapBaseObject, IWrapBaseObjectAttribute } from './baseObject';
 import { IWrapEventBox, IWrapEventBoxAttribute } from './eventBox';
 
 export interface IWrapEventBoxGroupAttribute<
-    TGroup extends Record<keyof TGroup, unknown> = Record<string, unknown>,
-    TBox extends Record<keyof TBox, unknown> = Record<string, unknown>,
-    TBase extends Record<keyof TBase, unknown> = Record<string, unknown>,
-    TFilter extends Record<keyof TFilter, unknown> = Record<string, unknown>,
+    TGroup extends { [P in keyof TGroup]: TGroup[P] } = Record<string, any>,
+    TBox extends { [P in keyof TBox]: TBox[P] } = Record<string, any>,
+    TBase extends { [P in keyof TBase]: TBase[P] } = Record<string, any>,
+    TFilter extends { [P in keyof TFilter]: TFilter[P] } = Record<string, any>,
 > extends IWrapBaseObjectAttribute<TGroup> {
     /** Group ID `<int>` of event box group */
     id: number;
@@ -13,10 +14,10 @@ export interface IWrapEventBoxGroupAttribute<
 }
 
 export interface IWrapEventBoxGroup<
-    TGroup extends Record<keyof TGroup, unknown> = Record<string, unknown>,
-    TBox extends Record<keyof TBox, unknown> = Record<string, unknown>,
-    TBase extends Record<keyof TBase, unknown> = Record<string, unknown>,
-    TFilter extends Record<keyof TFilter, unknown> = Record<string, unknown>,
+    TGroup extends { [P in keyof TGroup]: TGroup[P] } = Record<string, any>,
+    TBox extends { [P in keyof TBox]: TBox[P] } = Record<string, any>,
+    TBase extends { [P in keyof TBase]: TBase[P] } = Record<string, any>,
+    TFilter extends { [P in keyof TFilter]: TFilter[P] } = Record<string, any>,
 > extends IWrapBaseObject<TGroup>,
         IWrapEventBoxGroupAttribute<TGroup, TBox, TBase, TFilter> {
     boxes: IWrapEventBox<TBox, TBase, TFilter>[];

@@ -12,8 +12,8 @@ import { IWrapEventAttribute } from '../../types/beatmap/wrapper/event';
 import { WrapEvent } from '../wrapper/event';
 
 /** Basic event beatmap v3 class object. */
-export class BasicEvent extends WrapEvent<Required<IBasicEvent>> {
-    static default: ObjectReturnFn<Required<IBasicEvent>> = {
+export class BasicEvent extends WrapEvent<IBasicEvent> {
+    static default: ObjectReturnFn<IBasicEvent> = {
         b: 0,
         et: 0,
         i: 0,
@@ -23,35 +23,31 @@ export class BasicEvent extends WrapEvent<Required<IBasicEvent>> {
         },
     };
 
-    protected constructor(basicEvent: Required<IBasicEvent>) {
-        super(basicEvent);
+    constructor();
+    constructor(data: Partial<IWrapEventAttribute<IBasicEvent>>);
+    constructor(...data: Partial<IBasicEvent>[]);
+    constructor(data: Partial<IBasicEvent> & Partial<IWrapEventAttribute<IBasicEvent>>);
+    constructor(data: Partial<IBasicEvent> & Partial<IWrapEventAttribute<IBasicEvent>> = {}) {
+        super();
+
+        this._time = data.time ?? data.b ?? BasicEvent.default.b;
+        this._type = data.type ?? data.et ?? BasicEvent.default.et;
+        this._value = data.value ?? data.i ?? BasicEvent.default.i;
+        this._floatValue = data.floatValue ?? data.f ?? BasicEvent.default.f;
+        this._customData = data.customData ?? BasicEvent.default.customData();
     }
 
     static create(): BasicEvent[];
+    static create(...data: Partial<IWrapEventAttribute<IBasicEvent>>[]): BasicEvent[];
+    static create(...data: Partial<IBasicEvent>[]): BasicEvent[];
     static create(
-        ...basicEvents: Partial<IWrapEventAttribute<Required<IBasicEvent>>>[]
-    ): BasicEvent[];
-    static create(...basicEvents: Partial<IBasicEvent>[]): BasicEvent[];
-    static create(
-        ...basicEvents: (Partial<IBasicEvent> &
-            Partial<IWrapEventAttribute<Required<IBasicEvent>>>)[]
+        ...data: (Partial<IBasicEvent> & Partial<IWrapEventAttribute<IBasicEvent>>)[]
     ): BasicEvent[];
     static create(
-        ...basicEvents: (Partial<IBasicEvent> &
-            Partial<IWrapEventAttribute<Required<IBasicEvent>>>)[]
+        ...data: (Partial<IBasicEvent> & Partial<IWrapEventAttribute<IBasicEvent>>)[]
     ): BasicEvent[] {
         const result: BasicEvent[] = [];
-        basicEvents?.forEach((be) =>
-            result.push(
-                new this({
-                    b: be.time ?? be.b ?? BasicEvent.default.b,
-                    et: be.type ?? be.et ?? BasicEvent.default.et,
-                    i: be.value ?? be.i ?? BasicEvent.default.i,
-                    f: be.floatValue ?? be.f ?? BasicEvent.default.f,
-                    customData: be.customData ?? BasicEvent.default.customData(),
-                }),
-            ),
-        );
+        data.forEach((obj) => result.push(new this(obj)));
         if (result.length) {
             return result;
         }
@@ -66,7 +62,7 @@ export class BasicEvent extends WrapEvent<Required<IBasicEvent>> {
         ];
     }
 
-    toJSON(): Required<IBasicEvent> {
+    toJSON(): IBasicEvent {
         return {
             b: this.time,
             et: this.type,
@@ -76,39 +72,11 @@ export class BasicEvent extends WrapEvent<Required<IBasicEvent>> {
         };
     }
 
-    get time() {
-        return this.data.b;
-    }
-    set time(value: IBasicEvent['b']) {
-        this.data.b = value;
-    }
-
-    get type() {
-        return this.data.et;
-    }
-    set type(value: IBasicEvent['et']) {
-        this.data.et = value;
-    }
-
-    get value() {
-        return this.data.i;
-    }
-    set value(value: IBasicEvent['i']) {
-        this.data.i = value;
-    }
-
-    get floatValue() {
-        return this.data.f;
-    }
-    set floatValue(value: IBasicEvent['f']) {
-        this.data.f = value;
-    }
-
     get customData(): NonNullable<IBasicEvent['customData']> {
-        return this.data.customData;
+        return this._customData;
     }
     set customData(value: NonNullable<IBasicEvent['customData']>) {
-        this.data.customData = value;
+        this._customData = value;
     }
 
     isLightEvent(environment?: EnvironmentAllName): this is BasicEventLight {
@@ -127,7 +95,6 @@ export class BasicEvent extends WrapEvent<Required<IBasicEvent>> {
         return super.isLaneRotationEvent(environment);
     }
 
-    // holy shit i hate type guard
     isChroma(): boolean {
         const ev = this as BasicEvent;
         if (ev.isLightEvent()) {
@@ -162,19 +129,19 @@ export class BasicEvent extends WrapEvent<Required<IBasicEvent>> {
 
 abstract class BasicEventLight extends BasicEvent {
     get customData(): IChromaEventLight {
-        return this.data.customData as IChromaEventLight;
+        return this.customData as IChromaEventLight;
     }
 }
 
 abstract class BasicEventRing extends BasicEvent {
     get customData(): IChromaEventRing {
-        return this.data.customData as IChromaEventRing;
+        return this.customData as IChromaEventRing;
     }
 }
 
 abstract class BasicEventLaser extends BasicEvent {
     get customData(): IChromaEventLaser {
-        return this.data.customData as IChromaEventLaser;
+        return this.customData as IChromaEventLaser;
     }
 }
 

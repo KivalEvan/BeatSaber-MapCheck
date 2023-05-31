@@ -1,6 +1,6 @@
-import { Vector2, Vector3 } from '../../../vector';
 import { Nullable } from '../../../utils';
-import { PercentPointDefinition, Vector3PointDefinition } from '../../shared/custom/heck';
+import { Vector2, Vector3 } from '../../../vector';
+import { FloatPointDefinition, Vector3PointDefinition } from '../../shared/custom/heck';
 import { PlayerObject } from '../../shared/custom/noodleExtensions';
 import { IHeckBase } from './heck';
 
@@ -24,9 +24,10 @@ export interface INENote extends INEObject {
     disableBadCutDirection?: boolean;
     disableBadCutSpeed?: boolean;
     disableBadCutSaberType?: boolean;
+    link?: string;
 }
 
-/** Noodle Extensions Slider interface for Beatmap Slider.
+/** Noodle Extensions Slider interface for Beatmap Arc.
  * @extends INENote
  */
 export interface INESlider extends INENote {
@@ -44,19 +45,19 @@ export interface INEObstacle extends INEObject {
  * @extends Required<IHeckBase>
  */
 export interface INECustomEventDataAnimateTrack extends Required<IHeckBase> {
-    dissolve?: string | number | PercentPointDefinition[];
-    dissolveArrow?: string | number | PercentPointDefinition[];
-    interactable?: string | number | PercentPointDefinition[];
-    time?: string | number | PercentPointDefinition[];
+    dissolve?: string | number | FloatPointDefinition[];
+    dissolveArrow?: string | number | FloatPointDefinition[];
+    interactable?: string | number | FloatPointDefinition[];
+    time?: string | number | FloatPointDefinition[];
 }
 
 /** AssignPathAnimation interface for Noodle Extensions Custom Event.
  * @extends Required<IHeckBase>
  */
 export interface INECustomEventDataAssignPathAnimation extends Required<IHeckBase> {
-    dissolve?: string | number | PercentPointDefinition[];
-    dissolveArrow?: string | number | PercentPointDefinition[];
-    interactable?: string | number | PercentPointDefinition[];
+    dissolve?: string | number | FloatPointDefinition[];
+    dissolveArrow?: string | number | FloatPointDefinition[];
+    interactable?: string | number | FloatPointDefinition[];
     definitePosition?: string | Vector3 | Vector3PointDefinition[];
 }
 
@@ -80,9 +81,9 @@ export interface INEAnimation {
     offsetRotation?: string | Vector3 | Vector3PointDefinition[];
     localRotation?: string | Vector3 | Vector3PointDefinition[];
     scale?: string | Vector3 | Vector3PointDefinition[];
-    dissolve?: string | number | PercentPointDefinition[];
-    dissolveArrow?: string | number | PercentPointDefinition[];
-    interactable?: string | number | PercentPointDefinition[];
+    dissolve?: string | number | FloatPointDefinition[];
+    dissolveArrow?: string | number | FloatPointDefinition[];
+    interactable?: string | number | FloatPointDefinition[];
     definitePosition?: string | Vector3 | Vector3PointDefinition[];
-    time?: string | number | PercentPointDefinition[];
+    time?: string | number | FloatPointDefinition[];
 }

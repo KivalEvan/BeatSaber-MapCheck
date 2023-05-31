@@ -1,23 +1,22 @@
-import { ObtainCustomData } from '../../utils';
+// deno-lint-ignore-file no-explicit-any
+import { _ObtainCustomData } from '../../utils';
 import { ISerializable } from '../shared/serializable';
 
-export interface IWrapBaseItemAttribute<
-    T extends Record<keyof T, unknown> = Record<string, unknown>,
-> {
+export interface IWrapBaseItemAttribute<T extends { [P in keyof T]: T[P] } = Record<string, any>> {
     /** Custom data `<object>` of beatmap object.
      *
      * This has no type-safety for unsupported data.
      */
-    customData: ObtainCustomData<T>;
+    customData: _ObtainCustomData<T>;
 }
 
-export interface IWrapBaseItem<T extends Record<keyof T, unknown> = Record<string, unknown>>
+export interface IWrapBaseItem<T extends { [P in keyof T]: T[P] } = Record<string, any>>
     extends ISerializable<T>,
         IWrapBaseItemAttribute<T> {
-    setCustomData(value: ObtainCustomData<T>): this;
+    setCustomData(value: _ObtainCustomData<T>): this;
     resetCustomData(): this;
     removeCustomData(key: string): this;
-    addCustomData(object: ObtainCustomData<T>): this;
+    addCustomData(object: _ObtainCustomData<T>): this;
 
     /** Allow for advanced custom function. */
     func(fn: (object: this) => void): this;

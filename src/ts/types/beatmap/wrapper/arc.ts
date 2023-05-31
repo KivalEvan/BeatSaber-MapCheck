@@ -1,8 +1,10 @@
+// deno-lint-ignore-file no-explicit-any
+import { ModType } from '../shared/modCheck';
 import { IWrapBaseSlider, IWrapBaseSliderAttribute } from './baseSlider';
 
-export interface IWrapSliderAttribute<T extends Record<keyof T, unknown> = Record<string, unknown>>
+export interface IWrapArcAttribute<T extends { [P in keyof T]: T[P] } = Record<string, any>>
     extends IWrapBaseSliderAttribute<T> {
-    /** Head control point length multiplier `<float>` of slider.
+    /** Head control point length multiplier `<float>` of arc.
      * ```ts
      * 0 -> Flat Start
      * 1 -> Curved Start
@@ -11,7 +13,7 @@ export interface IWrapSliderAttribute<T extends Record<keyof T, unknown> = Recor
      * Range: `0-1`
      */
     lengthMultiplier: number;
-    /** Tail control point length multiplier `<float>` of slider.
+    /** Tail control point length multiplier `<float>` of arc.
      * ```ts
      * 0 -> Flat End
      * 1 -> Curved End
@@ -20,7 +22,7 @@ export interface IWrapSliderAttribute<T extends Record<keyof T, unknown> = Recor
      * Range: `0-1`
      */
     tailLengthMultiplier: number;
-    /** Tail cut direction `<int>` of slider.
+    /** Tail cut direction `<int>` of arc.
      * ```ts
      * 4 | 0 | 5
      * 2 | 8 | 3
@@ -32,7 +34,7 @@ export interface IWrapSliderAttribute<T extends Record<keyof T, unknown> = Recor
      * **WARNING:** Dot-directional is not recommended, assumes down-directional.
      */
     tailDirection: number;
-    /** Mid anchor mode `<int>` of slider.
+    /** Mid anchor mode `<int>` of arc.
      * ```ts
      * 0 -> Straight
      * 1 -> Clockwise
@@ -42,9 +44,9 @@ export interface IWrapSliderAttribute<T extends Record<keyof T, unknown> = Recor
     midAnchor: 0 | 1 | 2;
 }
 
-export interface IWrapSlider<T extends Record<keyof T, unknown> = Record<string, unknown>>
+export interface IWrapArc<T extends { [P in keyof T]: T[P] } = Record<string, any>>
     extends IWrapBaseSlider<T>,
-        IWrapSliderAttribute<T> {
+        IWrapArcAttribute<T> {
     setLengthMultiplier(value: number): this;
     setTailLengthMultiplier(value: number): this;
     setTailDirection(value: number): this;
@@ -55,5 +57,5 @@ export interface IWrapSlider<T extends Record<keyof T, unknown> = Record<string,
      * const arcTailAngle = arc.getTailAngle();
      * ```
      */
-    getTailAngle(type?: 'vanilla' | 'me' | 'ne'): number;
+    getTailAngle(type?: ModType): number;
 }

@@ -1,8 +1,8 @@
 import { IBaseSlider } from './baseSlider';
-import { ICustomDataSlider } from './custom/customData';
+import { ICustomDataSlider } from './custom/slider';
 
-export interface ISlider extends IBaseSlider {
-    /** Head control point length multiplier `<float>` of slider.
+export interface IArc extends IBaseSlider {
+    /** Head control point length multiplier `<float>` of arc.
      * ```ts
      * 0 -> Flat Start
      * 1 -> Curved Start
@@ -11,7 +11,7 @@ export interface ISlider extends IBaseSlider {
      * Range: `0-1`
      */
     mu: number;
-    /** Tail control point length multiplier `<float>` of slider.
+    /** Tail control point length multiplier `<float>` of arc.
      * ```ts
      * 0 -> Flat End
      * 1 -> Curved End
@@ -20,7 +20,7 @@ export interface ISlider extends IBaseSlider {
      * Range: `0-1`
      */
     tmu: number;
-    /** Tail cut direction `<int>` of slider.
+    /** Tail cut direction `<int>` of arc.
      * ```ts
      * 4 | 0 | 5
      * 2 | 8 | 3
@@ -32,7 +32,7 @@ export interface ISlider extends IBaseSlider {
      * **WARNING:** Dot-directional is not recommended, assumes down-directional.
      */
     tc: number;
-    /** Mid anchor mode `<int>` of slider.
+    /** Mid anchor mode `<int>` of arc.
      * ```ts
      * 0 -> Straight
      * 1 -> Clockwise

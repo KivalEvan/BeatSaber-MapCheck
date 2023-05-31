@@ -1,4 +1,7 @@
 // const enum is used regardless as this will never be compiled and reused by JS.
+
+import { Vector2 } from '../../types/vector';
+
 /** Also known as lane count. */
 export const LINE_COUNT = 4;
 
@@ -52,7 +55,7 @@ export const enum PositionY {
  * ```
  * **NOTE:** Rotation in counter-clockwise.
  */
-export const NoteDirectionAngle: { [d in NoteDirection]: number } = {
+export const NoteDirectionAngle: { readonly [d in NoteDirection]: number } = {
     [NoteDirection.UP]: 180,
     [NoteDirection.DOWN]: 0,
     [NoteDirection.LEFT]: 270,
@@ -77,7 +80,7 @@ export const NoteDirectionAngle: { [d in NoteDirection]: number } = {
  * 8 (ANY) -> 8 (ANY)
  * ```
  */
-export const NoteDirectionFlip: { [d in NoteDirection]: NoteDirection } = {
+export const NoteDirectionFlip: { readonly [d in NoteDirection]: NoteDirection } = {
     [NoteDirection.UP]: NoteDirection.DOWN,
     [NoteDirection.DOWN]: NoteDirection.UP,
     [NoteDirection.LEFT]: NoteDirection.RIGHT,
@@ -103,7 +106,7 @@ export const NoteDirectionFlip: { [d in NoteDirection]: NoteDirection } = {
  * ```
  */
 export const NoteDirectionSpace: {
-    [d in NoteDirection]: Readonly<[number, number]>;
+    readonly [d in NoteDirection]: Readonly<Vector2>;
 } = {
     [NoteDirection.UP]: [0, 1],
     [NoteDirection.DOWN]: [0, -1],
@@ -161,7 +164,7 @@ export const enum EventType {
 }
 
 /** Unused as of beatmap v3, useful for conversion reason. */
-export const EventLaneRotationValue: { [key: number]: number } = {
+export const EventLaneRotationValue: { readonly [key: number]: number } = {
     0: -60,
     1: -45,
     2: -30,
@@ -179,16 +182,16 @@ export const enum IndexFilterType {
 
 export const enum LimitAlsoAffectsType {
     NONE,
-    DURATION = 1 << 0,
-    DISTRIBUTION = 1 << 1,
-    ALL = ~(~0 << 2),
+    DURATION,
+    DISTRIBUTION,
+    ALL,
 }
 
 export const enum RandomType {
     NO_RANDOM,
-    KEEP_ORDER = 1 << 0,
-    RANDOM_ELEMENTS = 1 << 1,
-    ALL = ~(~0 << 2),
+    KEEP_ORDER,
+    RANDOM_ELEMENTS,
+    ALL,
 }
 
 export const enum EventBoxColor {

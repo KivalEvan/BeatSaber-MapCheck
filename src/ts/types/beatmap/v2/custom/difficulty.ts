@@ -1,12 +1,9 @@
 import { IBookmark } from './bookmark';
 import { IBPMChange, IBPMChangeOld } from './bpmChange';
-import { IChromaCustomData, IChromaNote, IChromaObstacle } from './chroma';
-import { INENote, INEObstacle } from './noodleExtensions';
+import { IChromaCustomData } from './chroma';
 import { ICustomDataBase } from '../../shared/custom/customData';
 import { IPointDefinition } from './pointDefinition';
 import { ICustomEvent } from './customEvent';
-import { IAnimation } from './animation';
-import { IHeckBase } from './heck';
 
 /** Custom Data interface for difficulty file.
  * @extends ICustomDataBase
@@ -20,10 +17,3 @@ export interface ICustomDataDifficulty extends ICustomDataBase, IChromaCustomDat
     _BPMChanges?: IBPMChange[];
     _bookmarks?: IBookmark[];
 }
-
-export type ICustomDataNote = ICustomDataBase & IHeckBase & IChromaNote & INENote & IAnimation;
-export type ICustomDataObstacle = ICustomDataBase &
-    IHeckBase &
-    IChromaObstacle &
-    INEObstacle &
-    IAnimation;

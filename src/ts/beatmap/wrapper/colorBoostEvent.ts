@@ -2,12 +2,18 @@ import { WrapBaseObject } from './baseObject';
 import { IWrapColorBoostEvent } from '../../types/beatmap/wrapper/colorBoostEvent';
 
 /** Boost event beatmap class object. */
-export abstract class WrapColorBoostEvent<T extends Record<keyof T, unknown>>
+export abstract class WrapColorBoostEvent<T extends { [P in keyof T]: T[P] }>
     extends WrapBaseObject<T>
     implements IWrapColorBoostEvent<T>
 {
-    abstract get toggle(): IWrapColorBoostEvent['toggle'];
-    abstract set toggle(value: IWrapColorBoostEvent['toggle']);
+    protected _toggle!: IWrapColorBoostEvent['toggle'];
+
+    get toggle(): IWrapColorBoostEvent['toggle'] {
+        return this._toggle;
+    }
+    set toggle(value: IWrapColorBoostEvent['toggle']) {
+        this._toggle = value;
+    }
 
     setToggle(value: boolean): this {
         this.toggle = value;

@@ -2,16 +2,28 @@ import { WrapBaseObject } from './baseObject';
 import { IWrapGridObject } from '../../types/beatmap/wrapper/gridObject';
 import { LINE_COUNT } from '../shared/constants';
 import { Vector2 } from '../../types/vector';
+import { ModType } from '../../types/beatmap/shared/modCheck';
 
 /** Beatmap grid class object. */
-export abstract class WrapGridObject<T extends Record<keyof T, unknown>>
+export abstract class WrapGridObject<T extends { [P in keyof T]: T[P] }>
     extends WrapBaseObject<T>
     implements IWrapGridObject<T>
 {
-    abstract get posX(): IWrapGridObject['posX'];
-    abstract set posX(value: IWrapGridObject['posX']);
-    abstract get posY(): IWrapGridObject['posY'];
-    abstract set posY(value: IWrapGridObject['posY']);
+    protected _posX!: IWrapGridObject['posX'];
+    protected _posY!: IWrapGridObject['posY'];
+
+    get posX(): IWrapGridObject['posX'] {
+        return this._posX;
+    }
+    set posX(value: IWrapGridObject['posX']) {
+        this._posX = value;
+    }
+    get posY(): IWrapGridObject['posY'] {
+        return this._posY;
+    }
+    set posY(value: IWrapGridObject['posY']) {
+        this._posY = value;
+    }
 
     setPosX(value: number) {
         this.posX = value;
@@ -37,39 +49,8 @@ export abstract class WrapGridObject<T extends Record<keyof T, unknown>>
         return this;
     }
 
-    getPosition(type?: 'vanilla' | 'me' | 'ne'): Vector2 {
-        switch (type) {
-            case 'vanilla':
-                return [this.posX - 2, this.posY];
-            case 'me':
-                return [
-                    (this.posX <= -1000
-                        ? this.posX / 1000
-                        : this.posX >= 1000
-                        ? this.posX / 1000
-                        : this.posX) - 2,
-                    this.posY <= -1000
-                        ? this.posY / 1000
-                        : this.posY >= 1000
-                        ? this.posY / 1000
-                        : this.posY,
-                ];
-            case 'ne':
-                return [this.posX - 2, this.posY];
-            default:
-                return [
-                    (this.posX <= -1000
-                        ? this.posX / 1000
-                        : this.posX >= 1000
-                        ? this.posX / 1000
-                        : this.posX) - 2,
-                    this.posY <= -1000
-                        ? this.posY / 1000
-                        : this.posY >= 1000
-                        ? this.posY / 1000
-                        : this.posY,
-                ];
-        }
+    getPosition(_type?: ModType): Vector2 {
+        return [this.posX - 2, this.posY];
     }
 
     getDistance(compareTo: IWrapGridObject) {

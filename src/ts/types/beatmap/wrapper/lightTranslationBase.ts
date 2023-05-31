@@ -1,7 +1,8 @@
+// deno-lint-ignore-file no-explicit-any
 import { IWrapBaseObject, IWrapBaseObjectAttribute } from './baseObject';
 
 export interface IWrapLightTranslationBaseAttribute<
-    T extends Record<keyof T, unknown> = Record<string, unknown>,
+    T extends { [P in keyof T]: T[P] } = Record<string, any>,
 > extends IWrapBaseObjectAttribute<T> {
     /** Relative beat time `<float>` to event box group. */
     time: number;
@@ -21,9 +22,8 @@ export interface IWrapLightTranslationBaseAttribute<
     translation: number;
 }
 
-export interface IWrapLightTranslationBase<
-    T extends Record<keyof T, unknown> = Record<string, unknown>,
-> extends IWrapBaseObject<T>,
+export interface IWrapLightTranslationBase<T extends { [P in keyof T]: T[P] } = Record<string, any>>
+    extends IWrapBaseObject<T>,
         IWrapLightTranslationBaseAttribute<T> {
     setTime(value: number): this;
     setPrevious(value: 0 | 1): this;

@@ -1,10 +1,11 @@
+// deno-lint-ignore-file no-explicit-any
 import { IWrapEventBox, IWrapEventBoxAttribute } from './eventBox';
 import { IWrapLightColorBase, IWrapLightColorBaseAttribute } from './lightColorBase';
 
 export interface IWrapLightColorEventBoxAttribute<
-    TBox extends Record<keyof TBox, unknown> = Record<string, unknown>,
-    TBase extends Record<keyof TBase, unknown> = Record<string, unknown>,
-    TFilter extends Record<keyof TFilter, unknown> = Record<string, unknown>,
+    TBox extends { [P in keyof TBox]: TBox[P] } = Record<string, any>,
+    TBase extends { [P in keyof TBase]: TBase[P] } = Record<string, any>,
+    TFilter extends { [P in keyof TFilter]: TFilter[P] } = Record<string, any>,
 > extends IWrapEventBoxAttribute<TBox, TBase, TFilter> {
     /** Brightness distribution `<float>` of light color event box.
      *
@@ -24,9 +25,9 @@ export interface IWrapLightColorEventBoxAttribute<
 }
 
 export interface IWrapLightColorEventBox<
-    TBox extends Record<keyof TBox, unknown> = Record<string, unknown>,
-    TBase extends Record<keyof TBase, unknown> = Record<string, unknown>,
-    TFilter extends Record<keyof TFilter, unknown> = Record<string, unknown>,
+    TBox extends { [P in keyof TBox]: TBox[P] } = Record<string, any>,
+    TBase extends { [P in keyof TBase]: TBase[P] } = Record<string, any>,
+    TFilter extends { [P in keyof TFilter]: TFilter[P] } = Record<string, any>,
 > extends IWrapEventBox<TBox, TBase, TFilter>,
         IWrapLightColorEventBoxAttribute<TBox, TBase, TFilter> {
     events: IWrapLightColorBase<TBase>[];

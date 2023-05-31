@@ -1,9 +1,10 @@
 import logger from '../logger';
 import { EasingFunction } from '../types/easings';
+import { Vector3 } from '../types/vector';
 
-const tag = (name: string) => {
-    return `[utils::math::${name}]`;
-};
+function tag(name: string): string[] {
+    return ['utils', 'math', name];
+}
 
 /** Return number in formatted number string.
  * ```ts
@@ -19,13 +20,13 @@ export function formatNumber(num: number): string {
 }
 
 // Randomly generate seed if not provided.
-const _internalSeed = { ref: hashCode(Math.random()) };
+const _seed = { ref: hashCode(Math.random()) };
 
 /** Mulberry32 algorithm.
  *
  * shamelessly taken from stackoverflow
  */
-function internalPRandom(seed: number | { ref: number }) {
+function _pRandom(seed: number | { ref: number }) {
     const _s = typeof seed === 'number' ? { ref: seed } : seed;
     return function () {
         let s = (_s.ref += 0x6d2b79f5);
@@ -34,9 +35,9 @@ function internalPRandom(seed: number | { ref: number }) {
         return ((s ^ (s >>> 14)) >>> 0) / 4294967296;
     };
 }
-const _instPRandom = internalPRandom(_internalSeed);
+const _instPRandom = _pRandom(_seed);
 
-function internalRandom(
+function _random(
     min?: number | boolean,
     max?: number | boolean,
     rounding: number | boolean = false,
@@ -80,7 +81,7 @@ export function pRandom(
     max?: number | boolean,
     rounding: number | boolean = false,
 ): number {
-    return internalRandom(min, max, rounding, _instPRandom);
+    return _random(min, max, rounding, _instPRandom);
 }
 
 /** Create instance of pseudorandom function.
@@ -92,13 +93,13 @@ export function pRandom(
  */
 export function pRandomFn(seed: string | number | bigint = Math.random()) {
     const _seed = hashCode(seed);
-    const _func = internalPRandom(_seed);
+    const _func = _pRandom(_seed);
     return function (
         min?: number | boolean,
         max?: number | boolean,
         rounding: number | boolean = false,
     ) {
-        return internalRandom(min, max, rounding, _func);
+        return _random(min, max, rounding, _func);
     };
 }
 
@@ -109,12 +110,12 @@ export function pRandomFn(seed: string | number | bigint = Math.random()) {
  * If this is never called, defaults to randomly generated seed.
  */
 export function pRandomSeed(seed: string | number | bigint): void {
-    _internalSeed.ref = hashCode(seed);
+    _seed.ref = hashCode(seed);
 }
 
 /** Generate 32-bit hash with Java implementation.
  *
- * Internally converts primitives to string.
+ * _ly converts primitives to string.
  */
 export function hashCode(str: string | number | bigint): number {
     str = str.toString();
@@ -137,7 +138,7 @@ export function random(
     max?: number | boolean,
     rounding: number | boolean = false,
 ): number {
-    return internalRandom(min, max, rounding, Math.random);
+    return _random(min, max, rounding, Math.random);
 }
 
 /** Return number tuple in order. */
@@ -164,11 +165,7 @@ export function degToRad(deg: number) {
 }
 
 /** Return [radius, theta, phi] */
-export function cartesianCoordToSphericalCoord(
-    x: number,
-    y: number,
-    z: number,
-): [number, number, number] {
+export function cartesianCoordToSphericalCoord(x: number, y: number, z: number): Vector3 {
     const radius = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2));
     return [radius, Math.acos(z / radius), (Math.atan2(y, x) + 2 * Math.PI) % (2 * Math.PI)];
 }
@@ -178,7 +175,7 @@ export function sphericalCoordToCartesianCoord(
     radius: number,
     theta: number,
     phi: number,
-): [number, number, number] {
+): Vector3 {
     return [
         radius * Math.sin(theta) * Math.cos(phi),
         radius * Math.sin(theta) * Math.sin(phi),
@@ -217,14 +214,14 @@ export function clamp(value: number, min: number, max: number): number {
 /** Normalize value to 0-1 from given min and max value. */
 export function normalize(value: number, min: number, max: number): number {
     if (min > max) {
-        logger.warn(tag('normalize'), 'Min value is more than max value, returning 1');
+        logger.tWarn(tag('normalize'), 'Min value is more than max value, returning 1');
         return 1;
     }
     if (min === max) {
         return 1;
     }
     const result = (value - min) / (max - min);
-    logger.verbose(tag('normalize'), `Obtained ${result}`);
+    logger.tVerbose(tag('normalize'), `Obtained ${result}`);
     return result;
 }
 
@@ -236,13 +233,13 @@ export function lerp(alpha: number, start: number, end: number, easing?: EasingF
         easing = (x) => x;
     }
     if (alpha > 1) {
-        logger.warn(tag('lerp'), 'Alpha value is larger than 1, may have unintended result');
+        logger.tWarn(tag('lerp'), 'Alpha value is larger than 1, may have unintended result');
     }
     if (alpha < 0) {
-        logger.warn(tag('lerp'), 'Alpha value is smaller than 0, may have unintended result');
+        logger.tWarn(tag('lerp'), 'Alpha value is smaller than 0, may have unintended result');
     }
     const result = start + (end - start) * easing(alpha);
-    logger.verbose(tag('lerp'), `Obtained ${result}`);
+    logger.tVerbose(tag('lerp'), `Obtained ${result}`);
     return result;
 }
 

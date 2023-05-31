@@ -1,17 +1,29 @@
 import { Easings } from '../../../easings';
-export type PercentPointDefinition = [number, number, Easings?];
-export type Vector2PointDefinition =
-    | [number, number, number, Easings?, 'splineCatmullRom'?]
-    | [number, number, number, 'splineCatmullRom'?, Easings?];
-export type Vector3PointDefinition =
-    | [number, number, number, number, Easings?, 'splineCatmullRom'?]
-    | [number, number, number, number, 'splineCatmullRom'?, Easings?];
+import { Vector3, Vector4 } from '../../../vector';
+export type FloatPointDefinition = [
+    percent: number,
+    time: number,
+    ...options: (Easings | PointFlag | PointModifier)[],
+];
+export type Vector3PointDefinition = [
+    ...vector3: Vector3,
+    time: number,
+    ...options: (Easings | PointFlag | PointModifier)[],
+];
+export type Vector4PointDefinition = [
+    ...vector4: Vector4,
+    time: number,
+    ...options: ('lerpHSV' | Easings | PointFlag | PointModifier)[],
+];
 
 export interface IInfoSettingsCustomData {
     _settings?: {
         [key: string]: { [key: string]: boolean | string | number | undefined } | undefined;
     };
 }
+
+export type PointModifier = `op${'None' | 'Add' | 'Sub' | 'Mul' | 'Div'}`;
+export type PointFlag = 'splineCatmullRom';
 
 /** Heck interface for difficulty info custom data.
  * Honestly, just look at heck wiki for this, it's too many.
@@ -29,6 +41,8 @@ export interface IHeckInfoCustomData extends IInfoSettingsCustomData {
             _advancedHud?: boolean;
             _autoRestart?: boolean;
             _saberTrailIntensity?: number;
+            _noteJumpDurationTypeSettings?: 'Dynamic' | 'Static';
+            _noteJumpFixedDuration?: number;
             _noteJumpStartBeatOffset?: number;
             _hideNoteSpawnEffect?: boolean;
             _adaptiveSfx?: number;
@@ -66,9 +80,6 @@ export interface IHeckInfoCustomData extends IInfoSettingsCustomData {
             _burnMarkTrailsEnabled?: boolean;
             _screenDisplacementEffectsEnabled?: boolean;
             _maxShockwaveParticles?: 0 | 1 | 2;
-        };
-        _noteJumpDurationTypeSettings?: {
-            _noteJumpFixedDuration?: number;
         };
     };
 }

@@ -4,12 +4,12 @@
  */
 
 export * from './custom/mod';
+export * from './arc';
 export * from './difficulty';
 export * from './event';
 export * from './note';
 export * from './object';
 export * from './obstacle';
-export * from './slider';
 export * from './specialEventsKeywordFilters';
 export * from './specialEventsKeywordFiltersKeywords';
 export * from './waypoint';

@@ -1,3 +1,4 @@
+// deno-lint-ignore-file no-explicit-any
 import { IWrapEventBox, IWrapEventBoxAttribute } from './eventBox';
 import {
     IWrapLightTranslationBase,
@@ -5,9 +6,9 @@ import {
 } from './lightTranslationBase';
 
 export interface IWrapLightTranslationEventBoxAttribute<
-    TBox extends Record<keyof TBox, unknown> = Record<string, unknown>,
-    TBase extends Record<keyof TBase, unknown> = Record<string, unknown>,
-    TFilter extends Record<keyof TFilter, unknown> = Record<string, unknown>,
+    TBox extends { [P in keyof TBox]: TBox[P] } = Record<string, any>,
+    TBase extends { [P in keyof TBase]: TBase[P] } = Record<string, any>,
+    TFilter extends { [P in keyof TFilter]: TFilter[P] } = Record<string, any>,
 > extends IWrapEventBoxAttribute<TBox, TBase, TFilter> {
     /** Translation distribution `<float>` of light translation event box. */
     translationDistribution: number;
@@ -34,9 +35,9 @@ export interface IWrapLightTranslationEventBoxAttribute<
 }
 
 export interface IWrapLightTranslationEventBox<
-    TBox extends Record<keyof TBox, unknown> = Record<string, unknown>,
-    TBase extends Record<keyof TBase, unknown> = Record<string, unknown>,
-    TFilter extends Record<keyof TFilter, unknown> = Record<string, unknown>,
+    TBox extends { [P in keyof TBox]: TBox[P] } = Record<string, any>,
+    TBase extends { [P in keyof TBase]: TBase[P] } = Record<string, any>,
+    TFilter extends { [P in keyof TFilter]: TFilter[P] } = Record<string, any>,
 > extends IWrapEventBox<TBox, TBase, TFilter>,
         IWrapLightTranslationEventBoxAttribute<TBox, TBase, TFilter> {
     events: IWrapLightTranslationBase<TBase>[];

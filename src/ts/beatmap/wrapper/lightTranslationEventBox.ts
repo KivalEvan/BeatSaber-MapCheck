@@ -1,29 +1,61 @@
-import { ILightTranslationEventBox } from '../../types/beatmap/v3/lightTranslationEventBox';
 import { IWrapLightTranslationBase } from '../../types/beatmap/wrapper/lightTranslationBase';
 import { IWrapLightTranslationEventBox } from '../../types/beatmap/wrapper/lightTranslationEventBox';
 import { WrapEventBox } from './eventBox';
 
 /** Light translation event box beatmap class object. */
 export abstract class WrapLightTranslationEventBox<
-        TBox extends Record<keyof TBox, unknown>,
-        TBase extends Record<keyof TBase, unknown>,
-        TFilter extends Record<keyof TFilter, unknown>,
+        TBox extends { [P in keyof TBox]: TBox[P] },
+        TBase extends { [P in keyof TBase]: TBase[P] },
+        TFilter extends { [P in keyof TFilter]: TFilter[P] },
     >
     extends WrapEventBox<TBox, TBase, TFilter>
     implements IWrapLightTranslationEventBox<TBox>
 {
-    abstract get translationDistribution(): ILightTranslationEventBox['s'];
-    abstract set translationDistribution(value: ILightTranslationEventBox['s']);
-    abstract get translationDistributionType(): ILightTranslationEventBox['t'];
-    abstract set translationDistributionType(value: ILightTranslationEventBox['t']);
-    abstract get axis(): ILightTranslationEventBox['a'];
-    abstract set axis(value: ILightTranslationEventBox['a']);
-    abstract get flip(): ILightTranslationEventBox['r'];
-    abstract set flip(value: ILightTranslationEventBox['r']);
-    abstract get affectFirst(): ILightTranslationEventBox['b'];
-    abstract set affectFirst(value: ILightTranslationEventBox['b']);
-    abstract get events(): IWrapLightTranslationBase<TBase>[];
-    abstract set events(value: IWrapLightTranslationBase<TBase>[]);
+    protected _translationDistribution!: IWrapLightTranslationEventBox['translationDistribution'];
+    protected _translationDistributionType!: IWrapLightTranslationEventBox['translationDistributionType'];
+    protected _axis!: IWrapLightTranslationEventBox['axis'];
+    protected _flip!: IWrapLightTranslationEventBox['flip'];
+    protected _affectFirst!: IWrapLightTranslationEventBox['affectFirst'];
+    protected declare _events: IWrapLightTranslationBase<TBase>[];
+
+    get translationDistribution(): IWrapLightTranslationEventBox['translationDistribution'] {
+        return this._translationDistribution;
+    }
+    set translationDistribution(value: IWrapLightTranslationEventBox['translationDistribution']) {
+        this._translationDistribution = value;
+    }
+    get translationDistributionType(): IWrapLightTranslationEventBox['translationDistributionType'] {
+        return this._translationDistributionType;
+    }
+    set translationDistributionType(
+        value: IWrapLightTranslationEventBox['translationDistributionType'],
+    ) {
+        this._translationDistributionType = value;
+    }
+    get axis(): IWrapLightTranslationEventBox['axis'] {
+        return this._axis;
+    }
+    set axis(value: IWrapLightTranslationEventBox['axis']) {
+        this._axis = value;
+    }
+    get flip(): IWrapLightTranslationEventBox['flip'] {
+        return this._flip;
+    }
+    set flip(value: IWrapLightTranslationEventBox['flip']) {
+        this._flip = value;
+    }
+    get affectFirst(): IWrapLightTranslationEventBox['affectFirst'] {
+        return this._affectFirst;
+    }
+    set affectFirst(value: IWrapLightTranslationEventBox['affectFirst']) {
+        this._affectFirst = value;
+    }
+    get events(): IWrapLightTranslationBase<TBase>[] {
+        return this._events;
+    }
+    set events(value: IWrapLightTranslationBase<TBase>[]) {
+        this._events = value;
+    }
 
     setTranslationDistribution(value: IWrapLightTranslationEventBox['translationDistribution']) {
         this.translationDistribution = value;

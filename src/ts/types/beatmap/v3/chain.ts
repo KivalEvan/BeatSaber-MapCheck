@@ -1,13 +1,13 @@
 import { IBaseSlider } from './baseSlider';
-import { ICustomDataSlider } from './custom/customData';
+import { ICustomDataSlider } from './custom/slider';
 
-export interface IBurstSlider extends IBaseSlider {
-    /** Slice count or element `<int>` in burst slider.
+export interface IChain extends IBaseSlider {
+    /** Slice count or element `<int>` in chain.
      *
      * **NOTE:** Must be more than `0`, the head counts as `1`.
      */
     sc: number;
-    /** Length multiplier `<float>` of element in burst slider.
+    /** Length multiplier `<float>` of element in chain.
      * ```ts
      * 1 -> Normal length
      * 0.5 -> Half length

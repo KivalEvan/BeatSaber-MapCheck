@@ -3,14 +3,14 @@ import { CharacteristicOrder } from './characteristic';
 import logger from '../../logger';
 import { DifficultyRanking } from './difficulty';
 
-const tag = (name: string) => {
-    return `[shared::parse::${name}]`;
-};
+function tag(name: string): string[] {
+    return ['shared', 'parse', name];
+}
 
 // TODO: more error check
 // TODO: contemplate whether to make pure function or keep as is
 export function info(infoData: IInfo): IInfo {
-    logger.info(tag('info'), 'Parsing beatmap info v2.x.x');
+    logger.tInfo(tag('info'), 'Parsing beatmap info v2.x.x');
     infoData._difficultyBeatmapSets.sort(
         (a, b) =>
             CharacteristicOrder[a._beatmapCharacteristicName] -
@@ -20,10 +20,10 @@ export function info(infoData: IInfo): IInfo {
         let num = 0;
         set._difficultyBeatmaps.forEach((a) => {
             if (a._difficultyRank - num <= 0) {
-                logger.warn(tag('info'), a._difficulty + ' is unordered');
+                logger.tWarn(tag('info'), a._difficulty + ' is unordered');
             }
             if (DifficultyRanking[a._difficulty] !== a._difficultyRank) {
-                logger.error(tag('info'), a._difficulty + ' has invalid rank');
+                logger.tError(tag('info'), a._difficulty + ' has invalid rank');
             }
             num = a._difficultyRank;
             if (

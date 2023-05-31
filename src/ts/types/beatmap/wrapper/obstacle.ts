@@ -1,8 +1,8 @@
+// deno-lint-ignore-file no-explicit-any
 import { IWrapGridObject, IWrapGridObjectAttribute } from './gridObject';
 
-export interface IWrapObstacleAttribute<
-    T extends Record<keyof T, unknown> = Record<string, unknown>,
-> extends IWrapGridObjectAttribute<T> {
+export interface IWrapObstacleAttribute<T extends { [P in keyof T]: T[P] } = Record<string, any>>
+    extends IWrapGridObjectAttribute<T> {
     /** Duration `<float>` of obstacle.*/
     duration: number;
     /** Width `<int>` of obstacle.
@@ -24,7 +24,7 @@ export interface IWrapObstacleAttribute<
     height: number;
 }
 
-export interface IWrapObstacle<T extends Record<keyof T, unknown> = Record<string, unknown>>
+export interface IWrapObstacle<T extends { [P in keyof T]: T[P] } = Record<string, any>>
     extends IWrapGridObject<T>,
         IWrapObstacleAttribute<T> {
     setDuration(value: number): this;

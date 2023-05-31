@@ -1,9 +1,4 @@
-import { Easings } from '../../../easings';
 import { IInfoSettingsCustomData } from './heck';
-
-export type ColorPointDefinition =
-    | [number, number, number, number, number, 'lerpHSV'?, Easings?]
-    | [number, number, number, number, number, Easings?, 'lerpHSV'?];
 
 export type LookupMethod = 'Regex' | 'Exact' | 'Contains' | 'StartsWith' | 'EndsWith';
 
@@ -42,9 +37,9 @@ export type ShaderKeywordsStandard =
     | '_EMISSION'
     | '_ENABLE_FOG_TINT'
     | '_RIMLIGHT_NONE'
-    | '_ZWRITE_ON' // possibly not needed
-    | 'REFLECTION_PROBE' // possibly not needed
-    | 'LIGHT_FALLOFF'; // possibly not needed
+    | '_ZWRITE_ON'
+    | 'REFLECTION_PROBE'
+    | 'LIGHT_FALLOFF';
 
 /** Default shader keywords used in opaque light. */
 export type ShaderKeywordsOpaque =
@@ -99,6 +94,7 @@ export interface IChromaInfoCustomData extends IInfoSettingsCustomData {
         _chroma?: {
             _disableChromaEvents?: boolean;
             _disableEnvironmentEnhancements?: boolean;
+            _disableNoteColoring?: boolean;
             _forceZenModeWall?: boolean;
         };
     };

@@ -1,8 +1,8 @@
+// deno-lint-ignore-file no-explicit-any
 import { IWrapBaseItem, IWrapBaseItemAttribute } from './baseItem';
 
-export interface IWrapIndexFilterAttribute<
-    T extends Record<keyof T, unknown> = Record<string, unknown>,
-> extends IWrapBaseItemAttribute<T> {
+export interface IWrapIndexFilterAttribute<T extends { [P in keyof T]: T[P] } = Record<string, any>>
+    extends IWrapBaseItemAttribute<T> {
     /** Type `<int>` of index filter.
      * ```ts
      * 1 -> Division
@@ -54,7 +54,7 @@ export interface IWrapIndexFilterAttribute<
     limitAffectsType: 0 | 1 | 2 | 3;
 }
 
-export interface IWrapIndexFilter<T extends Record<keyof T, unknown> = Record<string, unknown>>
+export interface IWrapIndexFilter<T extends { [P in keyof T]: T[P] } = Record<string, any>>
     extends IWrapBaseItem<T>,
         IWrapIndexFilterAttribute<T> {
     setType(value: 1 | 2): this;

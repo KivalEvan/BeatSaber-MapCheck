@@ -16,9 +16,9 @@ import { extractZip } from './extract';
 import logger from './logger';
 import { LoadType } from './types/mapcheck/main';
 
-const tag = () => {
-    return `[main]`;
-};
+function tag() {
+    return ['main'];
+}
 
 async function getFileInput(type: LoadType): Promise<ArrayBuffer | File> {
     if (type.file) {
@@ -47,33 +47,33 @@ export default async (type: LoadType) => {
 
         UIInput.enable(false);
         UILoading.status('info', 'Parsing map info...', 0);
-        logger.info(tag(), 'Parsing map info');
+        logger.tInfo(tag(), 'Parsing map info');
         const info = await loadInfo(mapZip);
         SavedData.beatmapInfo = info;
         UIInfo.setInfo(info);
 
         // load cover image
         UILoading.status('info', 'Loading image...', 10.4375);
-        logger.info(tag(), 'Loading cover image');
+        logger.tInfo(tag(), 'Loading cover image');
         let imageFile = mapZip.file(info._coverImageFilename);
         if (Settings.load.imageCover && imageFile) {
             let imgBase64 = await imageFile.async('base64');
             UIHeader.setCoverImage('data:image;base64,' + imgBase64);
             flag.loading.coverImage = true;
         } else {
-            logger.error(tag(), `${info._coverImageFilename} does not exists.`);
+            logger.tError(tag(), `${info._coverImageFilename} does not exists.`);
         }
 
         SavedData.contributors = [];
         if (info?._customData?._contributors) {
             for (const contr of info._customData._contributors) {
-                logger.info(tag(), 'Loading contributor image ' + contr._name);
+                logger.tInfo(tag(), 'Loading contributor image ' + contr._name);
                 imageFile = mapZip.file(contr._iconPath);
                 let _base64 = null;
                 if (Settings.load.imageContributor && imageFile) {
                     _base64 = await imageFile.async('base64');
                 } else {
-                    logger.error(tag(), `${contr._iconPath} does not exists.`);
+                    logger.tError(tag(), `${contr._iconPath} does not exists.`);
                 }
                 SavedData.contributors.push({ ...contr, _base64 });
             }
@@ -81,7 +81,7 @@ export default async (type: LoadType) => {
 
         // load audio
         UILoading.status('info', 'Loading audio...', 20.875);
-        logger.info(tag(), 'Loading audio');
+        logger.tInfo(tag(), 'Loading audio');
         let audioFile = mapZip.file(info._songFilename);
         if (Settings.load.audio && audioFile) {
             let loaded = false;
@@ -103,11 +103,11 @@ export default async (type: LoadType) => {
                 })
                 .catch(function (err) {
                     UIHeader.setSongDuration();
-                    logger.error(tag(), err);
+                    logger.tError(tag(), err);
                 });
         } else {
             UIHeader.setSongDuration();
-            logger.error(tag(), `${info._songFilename} does not exist.`);
+            logger.tError(tag(), `${info._songFilename} does not exist.`);
         }
 
         // load diff map
@@ -116,7 +116,7 @@ export default async (type: LoadType) => {
 
         UITools.adjustTime();
         UILoading.status('info', 'Adding map difficulty stats...', 80);
-        logger.info(tag(), 'Adding map stats');
+        logger.tInfo(tag(), 'Adding map stats');
         UIStats.populate();
         UIInfo.populateContributors(SavedData.contributors);
         let minBPM = info._beatsPerMinute;
@@ -132,7 +132,7 @@ export default async (type: LoadType) => {
         }
 
         UILoading.status('info', 'Analysing general...', 85);
-        logger.info(tag(), 'Analysing map');
+        logger.tInfo(tag(), 'Analysing map');
         Analyser.runGeneral();
         UITools.displayOutputGeneral();
 
@@ -143,12 +143,13 @@ export default async (type: LoadType) => {
 
         UIInput.enable(true);
         UILoading.status('info', 'Map successfully loaded!');
-        console.timeEnd('loading time');
     } catch (err) {
         UILoading.status('error', err, 100);
-        logger.error(tag(), err);
+        logger.tError(tag(), err);
         SavedData.clear();
         UIInput.enable(true);
         UIHeader.switchHeader(true);
+    } finally {
+        console.timeEnd('loading time');
     }
 };

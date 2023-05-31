@@ -1,30 +1,76 @@
 import { IWrapIndexFilter } from '../../types/beatmap/wrapper/indexFilter';
-import { LimitAlsoAffectsType, RandomType } from '../mod';
+import { LimitAlsoAffectsType, RandomType } from '../shared/constants';
 import { WrapBaseItem } from './baseItem';
 
 /** Index filter beatmap class object. */
-export abstract class WrapIndexFilter<T extends Record<keyof T, unknown>>
+export abstract class WrapIndexFilter<T extends { [P in keyof T]: T[P] }>
     extends WrapBaseItem<T>
     implements IWrapIndexFilter<T>
 {
-    abstract get type(): IWrapIndexFilter['type'];
-    abstract set type(value: IWrapIndexFilter['type']);
-    abstract get p0(): IWrapIndexFilter['p0'];
-    abstract set p0(value: IWrapIndexFilter['p0']);
-    abstract get p1(): IWrapIndexFilter['p1'];
-    abstract set p1(value: IWrapIndexFilter['p1']);
-    abstract get reverse(): IWrapIndexFilter['reverse'];
-    abstract set reverse(value: IWrapIndexFilter['reverse']);
-    abstract get chunks(): IWrapIndexFilter['chunks'];
-    abstract set chunks(value: IWrapIndexFilter['chunks']);
-    abstract get limit(): IWrapIndexFilter['limit'];
-    abstract set limit(value: IWrapIndexFilter['limit']);
-    abstract get limitAffectsType(): IWrapIndexFilter['limitAffectsType'];
-    abstract set limitAffectsType(value: IWrapIndexFilter['limitAffectsType']);
-    abstract get random(): IWrapIndexFilter['random'];
-    abstract set random(value: IWrapIndexFilter['random']);
-    abstract get seed(): IWrapIndexFilter['seed'];
-    abstract set seed(value: IWrapIndexFilter['seed']);
+    protected _type!: IWrapIndexFilter['type'];
+    protected _p0!: IWrapIndexFilter['p0'];
+    protected _p1!: IWrapIndexFilter['p1'];
+    protected _reverse!: IWrapIndexFilter['reverse'];
+    protected _chunks!: IWrapIndexFilter['chunks'];
+    protected _limit!: IWrapIndexFilter['limit'];
+    protected _limitAffectsType!: IWrapIndexFilter['limitAffectsType'];
+    protected _random!: IWrapIndexFilter['random'];
+    protected _seed!: IWrapIndexFilter['seed'];
+
+    get type(): IWrapIndexFilter['type'] {
+        return this._type;
+    }
+    set type(value: IWrapIndexFilter['type']) {
+        this._type = value;
+    }
+    get p0(): IWrapIndexFilter['p0'] {
+        return this._p0;
+    }
+    set p0(value: IWrapIndexFilter['p0']) {
+        this._p0 = value;
+    }
+    get p1(): IWrapIndexFilter['p1'] {
+        return this._p1;
+    }
+    set p1(value: IWrapIndexFilter['p1']) {
+        this._p1 = value;
+    }
+    get reverse(): IWrapIndexFilter['reverse'] {
+        return this._reverse;
+    }
+    set reverse(value: IWrapIndexFilter['reverse']) {
+        this._reverse = value;
+    }
+    get chunks(): IWrapIndexFilter['chunks'] {
+        return this._chunks;
+    }
+    set chunks(value: IWrapIndexFilter['chunks']) {
+        this._chunks = value;
+    }
+    get limit(): IWrapIndexFilter['limit'] {
+        return this._limit;
+    }
+    set limit(value: IWrapIndexFilter['limit']) {
+        this._limit = value;
+    }
+    get limitAffectsType(): IWrapIndexFilter['limitAffectsType'] {
+        return this._limitAffectsType;
+    }
+    set limitAffectsType(value: IWrapIndexFilter['limitAffectsType']) {
+        this._limitAffectsType = value;
+    }
+    get random(): IWrapIndexFilter['random'] {
+        return this._random;
+    }
+    set random(value: IWrapIndexFilter['random']) {
+        this._random = value;
+    }
+    get seed(): IWrapIndexFilter['seed'] {
+        return this._seed;
+    }
+    set seed(value: IWrapIndexFilter['seed']) {
+        this._seed = value;
+    }
 
     setType(value: IWrapIndexFilter['type']) {
         this.type = value;
