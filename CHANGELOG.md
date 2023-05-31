@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.5.12 [2023-06-01]
+
+### Added
+
+-   Queen environment and color scheme
+
+### Fixed
+
+-   Properly calculate effective BPM
+
 ## 2.5.11 [2023-04-15]
 
 ### Added
