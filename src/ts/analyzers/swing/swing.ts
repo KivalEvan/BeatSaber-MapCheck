@@ -50,6 +50,12 @@ export default class Swing implements ISwingContainer {
                         minSpeed = 0;
                         maxSpeed = 0;
                     }
+                    ebpmSwing = this.calcEBPMBetweenObject(
+                        n.data,
+                        firstNote[n.data.color].data,
+                        bpm,
+                    );
+                    ebpm = this.calcEBPMBetweenObject(n.data, lastNote[n.data.color].data, bpm);
                     sc.push({
                         time: firstNote[n.data.color].data.time,
                         duration:
@@ -60,12 +66,6 @@ export default class Swing implements ISwingContainer {
                         maxSpeed,
                         minSpeed,
                     });
-                    ebpmSwing = this.calcEBPMBetweenObject(
-                        n.data,
-                        firstNote[n.data.color].data,
-                        bpm,
-                    );
-                    ebpm = this.calcEBPMBetweenObject(n.data, lastNote[n.data.color].data, bpm);
                     firstNote[n.data.color] = n;
                     swingNoteArray[n.data.color] = [];
                 }
@@ -75,18 +75,18 @@ export default class Swing implements ISwingContainer {
             lastNote[n.data.color] = n;
             swingNoteArray[n.data.color].push(n);
         }
-        for (let i = 0; i < 2; i++) {
-            if (lastNote[i]) {
-                minSpeed = this.calcMinSliderSpeed(swingNoteArray[i], bpm);
-                maxSpeed = this.calcMaxSliderSpeed(swingNoteArray[i], bpm);
+        for (let color = 0; color < 2; color++) {
+            if (lastNote[color]) {
+                minSpeed = this.calcMinSliderSpeed(swingNoteArray[color], bpm);
+                maxSpeed = this.calcMaxSliderSpeed(swingNoteArray[color], bpm);
                 if (!(minSpeed > 0 && maxSpeed !== Infinity)) {
                     minSpeed = 0;
                     maxSpeed = 0;
                 }
                 sc.push({
-                    time: firstNote[i].data.time,
-                    duration: lastNote[i].data.time - firstNote[i].data.time,
-                    data: swingNoteArray[i],
+                    time: firstNote[color].data.time,
+                    duration: lastNote[color].data.time - firstNote[color].data.time,
+                    data: swingNoteArray[color],
                     ebpm,
                     ebpmSwing,
                     maxSpeed,
@@ -98,12 +98,12 @@ export default class Swing implements ISwingContainer {
     }
 
     // Thanks Qwasyx#3000 for improved swing detection
-    static next = (
+    static next(
         currNote: NoteContainer,
         prevNote: NoteContainer,
         bpm: BeatPerMinute,
         context?: NoteContainer[],
-    ): boolean => {
+    ): boolean {
         if (currNote.type === 'bomb' || prevNote.type === 'bomb') {
             throw new Error('Invalid type');
         }
@@ -136,20 +136,20 @@ export default class Swing implements ISwingContainer {
                 bpm.toRealTime(currNote.data.time - prevNote.data.time) > 0.08) ||
             bpm.toRealTime(currNote.data.time - prevNote.data.time) > 0.07
         );
-    };
+    }
 
-    static calcEBPMBetweenObject = (
+    static calcEBPMBetweenObject(
         currObj: IWrapBaseObject,
         prevObj: IWrapBaseObject,
         bpm: BeatPerMinute,
-    ): number => {
+    ): number {
         return (
             bpm.value /
             (bpm.toBeatTime(bpm.toRealTime(currObj.time) - bpm.toRealTime(prevObj.time)) * 2)
         );
-    };
+    }
 
-    private static calcMinSliderSpeed = (notes: NoteContainer[], bpm: BeatPerMinute): number => {
+    private static calcMinSliderSpeed(notes: NoteContainer[], bpm: BeatPerMinute): number {
         let hasStraight = false;
         let hasDiagonal = false;
         let curvedSpeed = 0;
@@ -184,9 +184,9 @@ export default class Swing implements ISwingContainer {
             return bpm.toRealTime(curvedSpeed);
         }
         return speed;
-    };
+    }
 
-    private static calcMaxSliderSpeed = (notes: NoteContainer[], bpm: BeatPerMinute): number => {
+    private static calcMaxSliderSpeed(notes: NoteContainer[], bpm: BeatPerMinute): number {
         let hasStraight = false;
         let hasDiagonal = false;
         let curvedSpeed = Number.MAX_SAFE_INTEGER;
@@ -221,5 +221,5 @@ export default class Swing implements ISwingContainer {
             return bpm.toRealTime(curvedSpeed);
         }
         return speed;
-    };
+    }
 }
