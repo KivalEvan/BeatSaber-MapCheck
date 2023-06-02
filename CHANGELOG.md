@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.5.13 [2023-06-02]
+
+### Fixed
+
+-   EBPM logic ordering error
+-   EBPM threshold should have float error tolerance
+
 ## 2.5.12 [2023-06-01]
 
 ### Added

@@ -89,7 +89,9 @@ function inputEBPMSHandler(this: HTMLInputElement) {
 
 function check(map: ToolArgs) {
     const { swingAnalysis } = map.difficulty!;
-    const { ebpmThres, ebpmsThres } = tool.input.params;
+    let { ebpmThres, ebpmsThres } = tool.input.params;
+    ebpmThres += 0.001;
+    ebpmsThres += 0.001;
 
     const noteEBPM = swingAnalysis.container.filter((s) => s.ebpm > ebpmThres).map((s) => s.time);
     const noteEBPMS = swingAnalysis.container
