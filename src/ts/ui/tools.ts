@@ -154,6 +154,8 @@ function populateSelect(mapInfo?: IWrapInfo): void {
          const optMode = document.createElement('option');
          optMode.value = mode.characteristic;
          optMode.textContent = CharacteristicRename[mode.characteristic];
+         if (mode.customData._characteristicLabel)
+            optMode.textContent += ` -- ${mode.customData._characteristicLabel}`;
          elem.add(optMode);
       });
       if (first) {

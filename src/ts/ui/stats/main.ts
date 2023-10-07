@@ -32,6 +32,8 @@ function populate(): void {
       const htmlTitle = document.createElement('div');
       htmlTitle.className = prefix + 'title';
       htmlTitle.textContent = CharacteristicRename[set.characteristic];
+      if (set.customData._characteristicLabel)
+         htmlTitle.textContent += ` -- ${set.customData._characteristicLabel}`;
       htmlContainer.appendChild(htmlTitle);
 
       for (let i = set.difficulties.length - 1; i >= 0; i--) {
