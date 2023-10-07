@@ -1,28 +1,28 @@
 .difficulty {
-    &__label {
-        display: block;
-        white-space: normal;
-        overflow: hidden;
-        text-align: center;
-        text-overflow: ellipsis;
-        text-transform: uppercase;
-        font-family: 'Teko';
-        font-size: 1.25rem;
-        font-weight: bold;
-    }
-    &--count-1 {
-        width: 20.79em;
-    }
-    &--count-2 {
-        width: 10.5em;
-    }
-    &--count-3 {
-        width: 6.9375em;
-    }
-    &--count-4 {
-        width: 5.25em;
-    }
-    &--count-5 {
-        width: 4.2em;
-    }
+   &__label {
+      display: block;
+      white-space: normal;
+      overflow: hidden;
+      text-align: center;
+      text-overflow: ellipsis;
+      text-transform: uppercase;
+      font-family: 'Teko';
+      font-size: 1.25rem;
+      font-weight: bold;
+   }
+   &--count-1 {
+      width: 20.79em;
+   }
+   &--count-2 {
+      width: 10.5em;
+   }
+   &--count-3 {
+      width: 6.9375em;
+   }
+   &--count-4 {
+      width: 5.25em;
+   }
+   &--count-5 {
+      width: 4.2em;
+   }
 }

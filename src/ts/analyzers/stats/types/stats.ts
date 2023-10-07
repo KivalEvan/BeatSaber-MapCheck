@@ -1,39 +1,40 @@
 interface ICountStatsBase {
-    total: number;
+   total: number;
 }
 
 export interface ICountStatsNote extends ICountStatsBase {
-    chroma: number;
-    noodleExtensions: number;
-    mappingExtensions: number;
+   chroma: number;
+   noodleExtensions: number;
+   mappingExtensions: number;
 }
 
 export interface ICountNote {
-    red: ICountStatsNote;
-    blue: ICountStatsNote;
+   red: ICountStatsNote;
+   blue: ICountStatsNote;
 }
 
 export interface IObstacleCount extends ICountStatsBase {
-    interactive: number;
-    chroma: number;
-    noodleExtensions: number;
-    mappingExtensions: number;
+   interactive: number;
+   chroma: number;
+   noodleExtensions: number;
+   mappingExtensions: number;
 }
 
 export interface ICountStatsEvent extends ICountStatsBase {
-    chroma: number;
-    chromaOld: number;
+   chroma: number;
+   chromaOld: number;
 }
 
 export interface ICountEvent {
-    [key: number]: ICountStatsEvent;
+   [key: number]: ICountStatsEvent;
 }
 
-export interface ICountStatsEventBoxGroup extends ICountStatsBase {
-    eventBox: number;
-    base: number;
+export interface ICountStatsEventBoxGroup {
+   groups: number;
+   boxes: number;
+   bases: number;
 }
 
 export interface ICountEventBoxGroup {
-    [key: number]: ICountStatsEventBoxGroup;
+   [key: number]: ICountStatsEventBoxGroup;
 }

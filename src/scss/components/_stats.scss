@@ -1,36 +1,36 @@
 // this makes me cri
 .stats {
-    &__title {
-        box-sizing: border-box;
-        padding: 0.25em 0.5em;
-        font-size: 1.75rem;
-        text-transform: uppercase;
-        font-weight: bold;
-    }
-    &__table {
-        width: 100%;
-        border-collapse: collapse;
-        table-layout: fixed;
-        &-caption {
-            text-align: left;
-            font-weight: 600;
-        }
-        &-header {
-            border: 1px solid var(--c-border-table);
-            border-collapse: collapse;
-            padding: 0 0.25em;
-            text-align: left;
-        }
-        &-element {
-            border: 1px solid var(--c-border-table);
-            border-collapse: collapse;
-            padding: 0 0.125em;
-            min-width: 2.75em;
-            vertical-align: top;
-            text-align: center;
-        }
-        &--no-border {
-            border: 0;
-        }
-    }
+   &__title {
+      box-sizing: border-box;
+      padding: 0.25em 0.5em;
+      font-size: 1.75rem;
+      text-transform: uppercase;
+      font-weight: bold;
+   }
+   &__table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      &-caption {
+         text-align: left;
+         font-weight: 600;
+      }
+      &-header {
+         border: 1px solid var(--c-border-table);
+         border-collapse: collapse;
+         padding: 0 0.25em;
+         text-align: left;
+      }
+      &-element {
+         border: 1px solid var(--c-border-table);
+         border-collapse: collapse;
+         padding: 0 0.125em;
+         min-width: 2.75em;
+         vertical-align: top;
+         text-align: center;
+      }
+      &--no-border {
+         border: 0;
+      }
+   }
 }

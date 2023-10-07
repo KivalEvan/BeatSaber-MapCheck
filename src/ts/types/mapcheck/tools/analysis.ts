@@ -2,15 +2,15 @@ import { CharacteristicName } from '../../beatmap/shared/characteristic';
 import { DifficultyName } from '../../beatmap/shared/difficulty';
 
 interface IAnalysisBase {
-    html: HTMLElement[] | null;
+   html: HTMLElement[] | null;
 }
 
 export interface IAnalysisMap extends IAnalysisBase {
-    mode: CharacteristicName;
-    difficulty: DifficultyName;
+   mode: CharacteristicName;
+   difficulty: DifficultyName;
 }
 
 export interface IAnalysis {
-    general: IAnalysisBase;
-    map: IAnalysisMap[];
+   general: IAnalysisBase;
+   map: IAnalysisMap[];
 }

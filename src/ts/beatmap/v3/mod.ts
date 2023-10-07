@@ -1,4 +1,5 @@
-/** Beatmap v3 classes.
+/**
+ * Beatmap v3 classes.
  *
  * @module
  */
@@ -10,10 +11,16 @@ export * from './basicEventTypesWithKeywords';
 export * from './bombNote';
 export * from './bpmEvent';
 export * from './chain';
+export * from './clean';
 export * from './colorBoostEvent';
 export * from './colorNote';
 export * from './difficulty';
 export * from './indexFilter';
+export * from './fxEventBox';
+export * from './fxEventBoxGroup';
+export * from './fxEventFloat';
+export * from './fxEventInt';
+export * from './fxEventsCollection';
 export * from './lightColorBase';
 export * from './lightColorEventBox';
 export * from './lightColorEventBoxGroup';
@@ -24,5 +31,6 @@ export * from './lightTranslationBase';
 export * from './lightTranslationEventBox';
 export * from './lightTranslationEventBoxGroup';
 export * from './obstacle';
+export * from './parse';
 export * from './rotationEvent';
 export * from './waypoint';

@@ -4,30 +4,30 @@
 const logPrefix = 'UI Footer: ';
 
 const htmlWatermark: NodeListOf<HTMLElement> =
-    document.querySelectorAll<HTMLElement>('.link__watermark');
+   document.querySelectorAll<HTMLElement>('.link__watermark');
 const htmlVersion: NodeListOf<HTMLElement> =
-    document.querySelectorAll<HTMLElement>('.link__version');
+   document.querySelectorAll<HTMLElement>('.link__version');
 
 if (!htmlWatermark.length || !htmlVersion.length) {
-    console.error(logPrefix + 'missing part');
+   console.error(logPrefix + 'missing part');
 }
 
 function isBirthday() {
-    const date = new Date();
-    return date.getMonth() == 5 && date.getDate() == 10;
+   const date = new Date();
+   return date.getMonth() == 5 && date.getDate() == 10;
 }
 
 export default {
-    setWatermark: (str: string): void => {
-        htmlWatermark.forEach((elem) => {
-            elem.textContent = (isBirthday() ? 'Happy Birthday, ' : '') + str;
-            if (isBirthday())
-                elem.title = `Happy ${
-                    new Date().getFullYear() - new Date('1999-06-10').getFullYear()
-                } Birthday, 10th June`;
-        });
-    },
-    setVersion: (str: string): void => {
-        htmlVersion.forEach((elem) => (elem.textContent = str));
-    },
+   setWatermark: (str: string): void => {
+      htmlWatermark.forEach((elem) => {
+         elem.textContent = (isBirthday() ? 'Happy Birthday, ' : '') + str;
+         if (isBirthday())
+            elem.title = `Happy ${
+               new Date().getFullYear() - new Date('1999-06-10').getFullYear()
+            } Birthday, 10th June`;
+      });
+   },
+   setVersion: (str: string): void => {
+      htmlVersion.forEach((elem) => (elem.textContent = str));
+   },
 };

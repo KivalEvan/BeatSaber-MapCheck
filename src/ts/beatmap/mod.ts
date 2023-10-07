@@ -1,4 +1,5 @@
-/** Beatmap definition, class implementation, parser and various beatmap related.
+/**
+ * Beatmap definition, class implementation, parser and various beatmap related.
  *
  * @module
  */

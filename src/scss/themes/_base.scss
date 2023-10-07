@@ -4,26 +4,26 @@
 @use 'template';
 
 @mixin themify($themes) {
-    @each $theme, $map in $themes {
-        .theme-#{$theme} {
-            @each $key, $submap in $map {
-                --#{$key}: #{$submap};
-            }
-        }
-    }
+   @each $theme, $map in $themes {
+      .theme-#{$theme} {
+         @each $key, $submap in $map {
+            --#{$key}: #{$submap};
+         }
+      }
+   }
 }
 
 $themes: (
-    dark: dark.$theme,
-    light: light.$theme,
-    monochrome: monochrome.$theme,
+   dark: dark.$theme,
+   light: light.$theme,
+   monochrome: monochrome.$theme,
 );
 
 // default fallback theme
 body {
-    @each $key, $submap in template.$theme {
-        --#{$key}: #{$submap};
-    }
+   @each $key, $submap in template.$theme {
+      --#{$key}: #{$submap};
+   }
 }
 
 @include themify($themes);

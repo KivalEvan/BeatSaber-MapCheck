@@ -11,30 +11,30 @@ export const htmlTableWarnings: HTMLElement = document.querySelector('.info__war
 export const htmlTableBookmarks: HTMLElement = document.querySelector('.info__bookmarks')!;
 export const htmlTableBPMChanges: HTMLElement = document.querySelector('.info__bpm-changes')!;
 export const htmlTableEnvironmentEnhancement: HTMLElement = document.querySelector(
-    '.info__environment-enhancement',
+   '.info__environment-enhancement',
 )!;
 export const htmlTablePointDefinitions: HTMLElement = document.querySelector(
-    '.info__point-definitions',
+   '.info__point-definitions',
 )!;
 export const htmlTableCustomEvents: HTMLElement = document.querySelector('.info__custom-events')!;
 export const htmlTableElements: NodeListOf<HTMLElement> =
-    document.querySelectorAll('.info__table-element')!;
+   document.querySelectorAll('.info__table-element')!;
 
 if (
-    !htmlTableVersion ||
-    !htmlTablePlayTime ||
-    !htmlTableTimeSpend ||
-    !htmlTableCustomColor ||
-    !htmlTableRequirements ||
-    !htmlTableSuggestions ||
-    !htmlTableInformation ||
-    !htmlTableWarnings ||
-    !htmlTableBookmarks ||
-    !htmlTableBPMChanges ||
-    !htmlTableEnvironmentEnhancement ||
-    !htmlTablePointDefinitions ||
-    !htmlTableCustomEvents ||
-    !htmlTableElements
+   !htmlTableVersion ||
+   !htmlTablePlayTime ||
+   !htmlTableTimeSpend ||
+   !htmlTableCustomColor ||
+   !htmlTableRequirements ||
+   !htmlTableSuggestions ||
+   !htmlTableInformation ||
+   !htmlTableWarnings ||
+   !htmlTableBookmarks ||
+   !htmlTableBPMChanges ||
+   !htmlTableEnvironmentEnhancement ||
+   !htmlTablePointDefinitions ||
+   !htmlTableCustomEvents ||
+   !htmlTableElements
 ) {
-    throw new Error(logPrefix + 'table info component is missing part');
+   throw new Error(logPrefix + 'table info component is missing part');
 }
