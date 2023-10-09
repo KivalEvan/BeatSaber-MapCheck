@@ -180,7 +180,7 @@ export const InfoDifficultyCheck: { readonly [key in keyof IInfoDifficulty]: Dat
       optional: true,
    },
    customColors: {
-      type: 'number',
+      type: 'boolean',
       version: '1.0.0',
       optional: true,
    },

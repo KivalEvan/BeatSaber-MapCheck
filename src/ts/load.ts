@@ -2,127 +2,203 @@ import JSZip from 'jszip';
 import * as swing from './analyzers/swing/mod';
 import { BeatPerMinute } from './beatmap/shared/bpm';
 import { toV3Difficulty, toV2Info } from './converter/mod';
-import { v3Difficulty, v2Difficulty, v1Difficulty, v2Info, v1Info } from './beatmap/parse';
+import * as parse from './beatmap/parse';
 import logger from './logger';
 import { IWrapInfo } from './types/beatmap/wrapper/info';
-import { IDifficulty as IDifficultyV2 } from './types/beatmap/v2/difficulty';
-import { IDifficulty as IDifficultyV3 } from './types/beatmap/v3/difficulty';
 import { IBeatmapItem } from './types/mapcheck/tools/beatmapItem';
-import { Either } from './types/utils';
+import { IWrapDifficulty } from './types/beatmap/wrapper/difficulty';
 
 function tag(name: string) {
    return ['load', name];
 }
 
+function _info(json: Record<string, unknown>) {
+   const jsonVerStr =
+      typeof json._version === 'string'
+         ? json._version.at(0)
+         : typeof json.version === 'string'
+         ? json.version.at(0)
+         : null;
+   let jsonVer: number;
+   if (jsonVerStr) {
+      jsonVer = parseInt(jsonVerStr);
+   } else {
+      logger.tWarn(
+         tag('_info'),
+         'Could not identify info version from JSON, assume implicit version',
+         1,
+      );
+      jsonVer = 1;
+   }
+
+   let data: IWrapInfo;
+   switch (jsonVer) {
+      case 1: {
+         data = parse.v1Info(json);
+         break;
+      }
+      case 2: {
+         data = parse.v2Info(json);
+         break;
+      }
+      default: {
+         throw new Error(
+            `Info version ${jsonVer} is not supported, this may be an error in JSON or is newer than currently supported.`,
+         );
+      }
+   }
+
+   return toV2Info(data);
+}
+
+function _difficulty(json: Record<string, unknown>) {
+   const jsonVerStr =
+      typeof json._version === 'string'
+         ? json._version.at(0)
+         : typeof json.version === 'string'
+         ? json.version.at(0)
+         : null;
+   let jsonVer: number;
+   if (jsonVerStr) {
+      jsonVer = parseInt(jsonVerStr);
+   } else {
+      jsonVer = json.songName ? 1 : 2;
+      logger.tWarn(
+         tag('_difficulty'),
+         'Could not identify beatmap version from JSON, assume implicit version',
+         jsonVer,
+      );
+   }
+
+   let data: IWrapDifficulty;
+   switch (jsonVer) {
+      case 1: {
+         data = parse.v1Difficulty(json);
+         break;
+      }
+      case 2: {
+         data = parse.v2Difficulty(json);
+         break;
+      }
+      case 3: {
+         data = parse.v3Difficulty(json);
+         break;
+      }
+      default: {
+         throw new Error(
+            `Beatmap version ${jsonVer} is not supported, this may be an error in JSON or is newer than currently supported.`,
+         );
+      }
+   }
+
+   return toV3Difficulty(data).sort();
+}
+
 export async function loadInfo(zip: JSZip) {
-   const infoFile = zip.file('Info.dat') || zip.file('info.dat');
+   const infoFile =
+      zip.file('Info.dat') ||
+      zip.file('info.dat') ||
+      zip.file('Info.json') ||
+      zip.file('info.json');
    if (!infoFile) {
       throw new Error("Couldn't find Info.dat");
    }
    logger.tInfo(tag('loadInfo'), `loading info`);
-   return v2Info(JSON.parse(await infoFile.async('string')));
+   return infoFile.async('string').then(JSON.parse).then(_info);
 }
 
 export async function loadDifficulty(info: IWrapInfo, zip: JSZip) {
    const beatmapItem: IBeatmapItem[] = [];
-   const mapSet = info.difficultySets;
-   for (let i = mapSet.length - 1; i >= 0; i--) {
-      const mapDiff = mapSet[i].difficulties;
-      if (mapDiff.length === 0 || !mapDiff) {
+   const set = info.difficultySets;
+   for (let i = set.length - 1; i >= 0; i--) {
+      const diff = set[i].difficulties;
+      if (diff.length === 0 || !diff) {
          logger.tError(tag('loadDifficulty'), 'Empty difficulty set, removing...');
-         mapSet.splice(i, 1);
+         set.splice(i, 1);
          continue;
       }
-      for (let j = 0; j < mapDiff.length; j++) {
-         const diffInfo = mapDiff[j];
+      for (let j = 0; j < diff.length; j++) {
+         const diffInfo = diff[j];
          const diffFile = zip.file(diffInfo.filename as string);
          if (diffFile) {
             logger.tInfo(
                tag('loadDifficulty'),
-               `Loading ${mapSet[i].characteristic} ${diffInfo.difficulty}`,
+               `Loading ${set[i].characteristic} ${diffInfo.difficulty}`,
             );
-            let diffJSON: Either<IDifficultyV2, IDifficultyV3>;
+            let json;
             try {
-               diffJSON = JSON.parse(await diffFile.async('string'));
+               json = await diffFile.async('string').then(JSON.parse);
             } catch (err) {
-               throw new Error(`${mapSet[i].characteristic} ${diffInfo.difficulty} ${err}`);
+               throw new Error(`${set[i].characteristic} ${diffInfo.difficulty} ${err}`);
+            }
+            const jsonVerStr =
+               typeof json._version === 'string'
+                  ? json._version.at(0)
+                  : typeof json.version === 'string'
+                  ? json.version.at(0)
+                  : null;
+            let jsonVer: number;
+            if (jsonVerStr) {
+               jsonVer = parseInt(jsonVerStr);
+            } else {
+               logger.tWarn(
+                  tag('_difficulty'),
+                  'Could not identify beatmap version from JSON, assume implicit version',
+                  2,
+               );
+               jsonVer = 2;
+            }
+
+            if (json._notes && json.version) {
+               logger.tError(
+                  tag('loadDifficulty'),
+                  `${set[i].characteristic} ${diffInfo.difficulty} contains 2 version of the map in the same file, attempting to load v3 instead`,
+               );
             }
             try {
-               // _notes in v2 and version in v3 is required, _version in v2 is patched via mod if does not exist
-               if (diffJSON._notes && diffJSON.version) {
-                  logger.tError(
-                     tag('loadDifficulty'),
-                     `${mapSet[i].characteristic} ${diffInfo.difficulty} contains 2 version of the map in the same file, attempting to load v3 instead`,
-                  );
-               }
-               if (diffJSON.version) {
-                  const data = v3Difficulty(diffJSON);
-                  const bpm = BeatPerMinute.create(
-                     info.beatsPerMinute,
-                     [
-                        ...(data.customData.BPMChanges ?? []),
-                        ...data.bpmEvents.map((be) => be.toJSON()),
-                     ],
-                     diffInfo.customData?._editorOffset,
-                  );
-                  beatmapItem.push({
-                     info: diffInfo,
-                     characteristic: mapSet[i].characteristic,
-                     difficulty: diffInfo.difficulty,
-                     bpm,
-                     data,
-                     noteContainer: data.getNoteContainer(),
-                     eventContainer: data.getEventContainer(),
-                     swingAnalysis: swing.info(
-                        data,
-                        bpm,
-                        mapSet[i].characteristic,
-                        diffInfo.difficulty,
-                     ),
-                     rawVersion: 3,
-                     rawData: diffJSON,
-                  });
-               } else {
-                  const data = toV3Difficulty(v2Difficulty(diffJSON));
-                  const bpm = BeatPerMinute.create(
-                     info.beatsPerMinute,
-                     data.customData._BPMChanges ?? data.customData._bpmChanges,
-                     diffInfo.customData?._editorOffset,
-                  );
-                  beatmapItem.push({
-                     info: diffInfo,
-                     characteristic: mapSet[i].characteristic,
-                     difficulty: diffInfo.difficulty,
-                     bpm,
-                     data,
-                     noteContainer: data.getNoteContainer(),
-                     eventContainer: data.getEventContainer(),
-                     swingAnalysis: swing.info(
-                        data,
-                        bpm,
-                        mapSet[i].characteristic,
-                        diffInfo.difficulty,
-                     ),
-                     rawVersion: 2,
-                     rawData: diffJSON,
-                  });
-               }
+               const data = _difficulty(json);
+               const bpm = BeatPerMinute.create(
+                  info.beatsPerMinute,
+                  jsonVer === 3
+                     ? [
+                          ...(data.customData.BPMChanges ?? []),
+                          ...data.bpmEvents.map((be) => be.toJSON()),
+                       ]
+                     : jsonVer === 2
+                     ? data.customData._BPMChanges ?? data.customData._bpmChanges
+                     : jsonVer === 1
+                     ? json.BPMChanges
+                     : [],
+                  diffInfo.customData?._editorOffset,
+               );
+               beatmapItem.push({
+                  info: diffInfo,
+                  characteristic: set[i].characteristic,
+                  difficulty: diffInfo.difficulty,
+                  bpm,
+                  data,
+                  noteContainer: data.getNoteContainer(),
+                  eventContainer: data.getEventContainer(),
+                  swingAnalysis: swing.info(data, bpm, set[i].characteristic, diffInfo.difficulty),
+                  rawVersion: jsonVer as 3,
+                  rawData: json,
+               });
             } catch (err) {
-               throw new Error(`${mapSet[i].characteristic} ${diffInfo.difficulty} ${err}`);
+               throw err;
             }
          } else {
             logger.tError(
                tag('loadDifficulty'),
-               `Missing ${diffInfo.filename} file for ${mapSet[i].characteristic} ${diffInfo.difficulty}, ignoring.`,
+               `Missing ${diffInfo.filename} file for ${set[i].characteristic} ${diffInfo.difficulty}, ignoring.`,
             );
-            mapSet[i].difficulties.splice(j, 1);
+            set[i].difficulties.splice(j, 1);
             j--;
-            if (mapSet[i].difficulties.length < 1) {
+            if (set[i].difficulties.length < 1) {
                logger.tError(
                   ['load'],
-                  `${mapSet[i].characteristic} difficulty set now empty, ignoring.`,
+                  `${set[i].characteristic} difficulty set now empty, ignoring.`,
                );
-               mapSet.splice(i, 1);
+               set.splice(i, 1);
                continue;
             }
          }

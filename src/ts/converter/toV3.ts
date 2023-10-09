@@ -45,7 +45,48 @@ export function toV3Difficulty(data: IWrapDifficulty): V3Difficulty {
    template.filename = data.filename;
 
    if (data instanceof V1Difficulty) {
-      template.colorNotes = data.colorNotes.map((obj) => new ColorNote(obj));
+      data.colorNotes.forEach((n) => {
+         if (n.isBomb()) {
+            if (n.customData._fake) {
+               template.customData.fakeBombNotes!.push(
+                  new BombNote({
+                     b: n.time,
+                     x: n.posX,
+                     y: n.posY,
+                  }).toJSON(),
+               );
+            } else {
+               template.bombNotes.push(
+                  new BombNote({
+                     b: n.time,
+                     x: n.posX,
+                     y: n.posY,
+                  }),
+               );
+            }
+         }
+         if (n.isNote()) {
+            let a = 0;
+            if (n.direction >= 1000) {
+               a = Math.abs(((n.direction % 1000) % 360) - 360);
+            }
+            template.colorNotes.push(
+               new ColorNote({
+                  b: n.time,
+                  c: n.type as 0 | 1,
+                  x: n.posX,
+                  y: n.posY,
+                  d:
+                     n.direction >= 1000 || typeof n.customData._cutDirection === 'number'
+                        ? n.direction === 8
+                           ? 8
+                           : 1
+                        : clamp(n.direction, 0, 8),
+                  a: a,
+               }),
+            );
+         }
+      });
       template.obstacles = data.obstacles.map((obj) => new Obstacle(obj));
       template.basicEvents = data.basicEvents.map((obj) => new BasicEvent(obj));
 

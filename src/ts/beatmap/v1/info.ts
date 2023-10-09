@@ -116,8 +116,7 @@ export class Info extends WrapInfo<IInfo> {
       if (!found) {
          found = new InfoSet({ mode, difficulties: [data] });
          this.difficultySets.push(found);
-      }
-      found.difficulties.push(new InfoDifficulty(data));
+      } else found.difficulties.push(new InfoDifficulty(data));
       return this;
    }
 
