@@ -131,6 +131,6 @@ export class Obstacle extends WrapObstacle<IObstacle> {
    }
 
    isMappingExtensions(): boolean {
-      return this.type > 2 || this.posX <= -1000 || this.posX >= 1000;
+      return this.type > 1 || this.posX < 0 || this.posX > 3 || this.width < 0 || this.width > 3;
    }
 }

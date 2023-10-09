@@ -73,9 +73,7 @@ export abstract class WrapObstacle<T extends { [P in keyof T]: T[P] }>
    }
 
    hasNegative() {
-      return (
-         this.posX < 0 || this.posY < 0 || this.duration < 0 || this.width < 0 || this.height < 0
-      );
+      return this.posY < 0 || this.duration < 0 || this.width < 0 || this.height < 0;
    }
 
    isValid(): boolean {
