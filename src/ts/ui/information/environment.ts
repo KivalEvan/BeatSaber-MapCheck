@@ -23,9 +23,9 @@ export function setEnvironmentEnhancement(arr?: IChromaEnvironment[]): void {
             keyArr.push(k);
          }
       }
-      return `${elem.lookupMethod} [${keyArr.join('')}]${elem.track ? `(${elem.track})` : ''} -> ${
-         elem.geometry ? elem.geometry.type : elem.id
-      }`;
+      return `${elem.geometry ? 'Geometry' : elem.lookupMethod} [${keyArr.join('')}]${
+         elem.track ? `(${elem.track})` : ''
+      } -> ${elem.geometry ? elem.geometry.type : elem.id}`;
    });
    displayTableRow(htmlTableEnvironmentEnhancement, envEnhance);
 }
