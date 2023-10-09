@@ -17,11 +17,11 @@ function addLabel(str: string, symbol?: Symbol): string {
          break;
       case 'warning':
          str =
-            '<span title="Warning: not necessarily needed to be fixed but worth considering."> ❗ </span>' +
+            '<span title="Warning: not necessarily needed to be fixed, worth considering."> ❗ </span>' +
             str;
          break;
       case 'info':
-         str = '<span title="Info: no action necessary and worth noting."> ⚠️ </span>' + str;
+         str = '<span title="Info: no action necessary, take note."> ⚠️ </span>' + str;
          break;
    }
    return str;
