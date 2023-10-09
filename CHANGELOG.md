@@ -16,6 +16,10 @@
 -  Loading Beatmap v3 can now infer missing attributes as given by 1.32 editor update
 -  The Weeknd and Panic 2.0 color scheme now shows white color value
 
+### Fixed
+
+-  Unknown characteristic no longer leave blank in stats page
+
 ## 2.5.13 [2023-06-02]
 
 ### Fixed
