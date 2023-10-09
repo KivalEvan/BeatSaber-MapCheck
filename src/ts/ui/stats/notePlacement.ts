@@ -22,11 +22,7 @@ function notePlacementSelectHandler(ev: Event) {
       return;
    }
    const filteredContainer = getFilteredContainer(noteContainer, target.value);
-   const htmlTableBody = document.querySelector(`#${prefix}table-placement-${mode}-${diff}`);
-   if (!htmlTableBody) {
-      console.error(logPrefix + 'table could not be found');
-      return;
-   }
+   const htmlTableBody = document.querySelector(`#${prefix}table-placement-${mode}-${diff}`)!;
    htmlTableBody.innerHTML = notePlacementTableString(filteredContainer);
 }
 

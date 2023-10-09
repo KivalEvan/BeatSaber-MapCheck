@@ -1,8 +1,6 @@
 import main from '../main';
 import UILoading from './loading';
 
-const logPrefix = 'UI Intro: ';
-
 const htmlInputURL: HTMLInputElement = document.querySelector('.input__intro-url')!;
 const htmlInputID: HTMLInputElement = document.querySelector('.input__intro-id')!;
 const htmlInputHash: HTMLInputElement = document.querySelector('.input__intro-hash')!;
@@ -10,37 +8,13 @@ const htmlInputSearchButton: HTMLInputElement = document.querySelector('.input__
 const htmlInputFile: HTMLInputElement = document.querySelector('.input__file')!;
 const htmlInputFileZone: HTMLInputElement = document.querySelector('.input__file-zone')!;
 
-if (htmlInputURL) {
-   htmlInputURL.addEventListener('keydown', introInputTextHandler);
-} else {
-   throw new Error(logPrefix + 'URL input is missing');
-}
-if (htmlInputID) {
-   htmlInputID.addEventListener('keydown', introInputTextHandler);
-} else {
-   throw new Error(logPrefix + 'ID input is missing');
-}
-if (htmlInputHash) {
-   htmlInputHash.addEventListener('keydown', introInputTextHandler);
-} else {
-   throw new Error(logPrefix + 'Hash input is missing');
-}
-if (htmlInputSearchButton) {
-   htmlInputSearchButton.addEventListener('click', introButtonTextHandler);
-} else {
-   throw new Error(logPrefix + 'search button is missing');
-}
-if (htmlInputFile) {
-   htmlInputFile.addEventListener('change', inputFileHandler);
-} else {
-   throw new Error(logPrefix + 'file input is missing');
-}
-if (htmlInputFileZone) {
-   htmlInputFileZone.addEventListener('drop', inputFileDropHandler);
-   htmlInputFileZone.addEventListener('dragover', dragOverHandler);
-} else {
-   throw new Error(logPrefix + 'file drop zone is missing');
-}
+htmlInputURL.addEventListener('keydown', introInputTextHandler);
+htmlInputID.addEventListener('keydown', introInputTextHandler);
+htmlInputHash.addEventListener('keydown', introInputTextHandler);
+htmlInputSearchButton.addEventListener('click', introButtonTextHandler);
+htmlInputFile.addEventListener('change', inputFileHandler);
+htmlInputFileZone.addEventListener('drop', inputFileDropHandler);
+htmlInputFileZone.addEventListener('dragover', dragOverHandler);
 
 function introInputTextHandler(ev: KeyboardEvent): void {
    const target = ev.target as HTMLInputElement;

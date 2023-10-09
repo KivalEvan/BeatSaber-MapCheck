@@ -54,11 +54,8 @@ function populate(): void {
             true,
          );
 
-         const htmlContent = htmlAccordion.querySelector('.accordion__collapsible-flex');
-         const htmlCheckbox = htmlAccordion.querySelector<HTMLInputElement>('.accordion__button');
-         if (!htmlContent || !htmlCheckbox) {
-            throw new Error(logPrefix + 'something went wrong!');
-         }
+         const htmlContent = htmlAccordion.querySelector('.accordion__collapsible-flex')!;
+         const htmlCheckbox = htmlAccordion.querySelector<HTMLInputElement>('.accordion__button')!;
          htmlCheckbox.checked = Settings.onLoad.stats;
 
          const htmlPanelL = UIPanel.create('small', 'half');

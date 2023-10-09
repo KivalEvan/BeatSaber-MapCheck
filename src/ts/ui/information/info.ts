@@ -4,7 +4,6 @@ import { EnvironmentName, EnvironmentV3Name } from '../../types/beatmap/shared/e
 import { IEditor, IEditorInfo } from '../../types/beatmap/v2/custom/editor';
 import { IContributorB64 } from '../../types/mapcheck';
 import { EnvironmentRename } from '../../beatmap/shared/environment';
-import { logPrefix } from './constants';
 
 const htmlInfoLevelAuthor: HTMLElement = document.querySelector('.info__level-author')!;
 const htmlInfoEnvironment: HTMLElement = document.querySelector('.info__environment')!;
@@ -19,17 +18,7 @@ const htmlInfoContributorsImage: HTMLImageElement = document.querySelector(
 const htmlInfoContributorsName: HTMLElement = document.querySelector('.info__contributors-name')!;
 const htmlInfoContributorsRole: HTMLElement = document.querySelector('.info__contributors-role')!;
 
-if (!htmlInfoLevelAuthor || !htmlInfoEnvironment || !htmlInfoEditors) {
-   throw new Error(logPrefix + 'info component is missing part');
-}
-if (!htmlInfoContributors || !htmlInfoContributorsName || !htmlInfoContributorsRole) {
-   throw new Error(logPrefix + 'contributors component is missing part');
-}
-if (htmlInfoContributorsSelect) {
-   htmlInfoContributorsSelect.addEventListener('change', contributorsSelectHandler);
-} else {
-   throw new Error(logPrefix + 'contributors select is missing');
-}
+htmlInfoContributorsSelect.addEventListener('change', contributorsSelectHandler);
 
 export function setLevelAuthor(str?: string): void {
    if (!str) {

@@ -5,8 +5,6 @@ import Settings from '../settings';
 import { BeatNumbering } from '../types/mapcheck/settings';
 import { setTableHeight } from './information/helpers';
 
-const logPrefix = 'UI Settings: ';
-
 const htmlSettingsTheme: HTMLSelectElement = document.querySelector('.settings__theme')!;
 const htmlSettingsBeatNumbering: HTMLSelectElement = document.querySelector(
    '.settings__beat-numbering',
@@ -22,64 +20,23 @@ const htmlSettingsOnLoad: NodeListOf<HTMLInputElement> =
    document.querySelectorAll('.settings__onload');
 const htmlSettingsClear: HTMLInputElement = document.querySelector('.settings__clear-button')!;
 
-if (htmlSettingsTheme) {
-   htmlSettingsTheme.addEventListener('change', themeChangeHandler);
-   UITheme.list.forEach((th) => {
-      const optTheme = document.createElement('option');
-      optTheme.value = th;
-      optTheme.textContent = th;
-      htmlSettingsTheme.add(optTheme);
-   });
-} else {
-   throw new Error(logPrefix + 'theme select is missing');
-}
-if (htmlSettingsBeatNumbering) {
-   htmlSettingsBeatNumbering.addEventListener('change', beatNumberingChangeHandler);
-} else {
-   throw new Error(logPrefix + 'missing settings');
-}
-if (htmlSettingsRounding) {
-   htmlSettingsRounding.addEventListener('change', roundingChangeHandler);
-} else {
-   throw new Error(logPrefix + 'missing settings');
-}
-if (htmlSettingsInfoHeight) {
-   htmlSettingsInfoHeight.addEventListener('change', infoHeightChangeHandler);
-} else {
-   throw new Error(logPrefix + 'missing settings');
-}
-if (htmlSettingsDataCheck) {
-   htmlSettingsDataCheck.addEventListener('change', dataCheckChangeHandler);
-} else {
-   throw new Error(logPrefix + 'missing settings');
-}
-if (htmlSettingsDataError) {
-   htmlSettingsDataError.addEventListener('change', dataErrorChangeHandler);
-} else {
-   throw new Error(logPrefix + 'missing settings');
-}
-if (!htmlSettingsLoad.length) {
-   console.error(logPrefix + 'empty load list, intentional or typo error?');
-}
+htmlSettingsTheme.addEventListener('change', themeChangeHandler);
+UITheme.list.forEach((th) => {
+   const optTheme = document.createElement('option');
+   optTheme.value = th;
+   optTheme.textContent = th;
+   htmlSettingsTheme.add(optTheme);
+});
+htmlSettingsBeatNumbering.addEventListener('change', beatNumberingChangeHandler);
+htmlSettingsRounding.addEventListener('change', roundingChangeHandler);
+htmlSettingsInfoHeight.addEventListener('change', infoHeightChangeHandler);
+htmlSettingsDataCheck.addEventListener('change', dataCheckChangeHandler);
+htmlSettingsDataError.addEventListener('change', dataErrorChangeHandler);
 htmlSettingsLoad.forEach((elem) => elem.addEventListener('change', loadCheckHandler));
-if (htmlSettingsSort) {
-   htmlSettingsSort.addEventListener('change', sortCheckHandler);
-} else {
-   throw new Error(logPrefix + 'sort check is missing');
-}
-if (!htmlSettingsOnLoad.length) {
-   console.error(logPrefix + 'empty onload list, intentional or typo error?');
-}
+htmlSettingsSort.addEventListener('change', sortCheckHandler);
 htmlSettingsOnLoad.forEach((elem) => elem.addEventListener('change', onLoadCheckHandler));
-if (!htmlSettingsShow.length) {
-   console.error(logPrefix + 'empty show list, intentional or typo error?');
-}
 htmlSettingsShow.forEach((elem) => elem.addEventListener('change', showCheckHandler));
-if (htmlSettingsClear) {
-   htmlSettingsClear.addEventListener('click', clear);
-} else {
-   throw new Error(logPrefix + 'clear button is missing');
-}
+htmlSettingsClear.addEventListener('click', clear);
 
 function themeChangeHandler(ev: Event): void {
    const target = ev.target as HTMLSelectElement;

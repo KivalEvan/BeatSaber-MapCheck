@@ -1,13 +1,8 @@
 import { UIBackgroundColorType, UIBackgroundColor } from '../../types/mapcheck/ui/accordion';
 
-const logPrefix = 'UI Accordion: ';
 const prefix = 'accordion__';
 const htmlAccordion: NodeListOf<HTMLInputElement> =
    document.querySelectorAll<HTMLInputElement>('.accordion__button');
-
-if (!htmlAccordion.length) {
-   console.error(logPrefix + 'empty accordion list, intentional or typo error?');
-}
 
 export default {
    create: (

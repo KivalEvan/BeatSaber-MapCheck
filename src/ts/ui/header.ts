@@ -1,7 +1,5 @@
 import { round, toMmssms } from '../utils';
 
-const logPrefix = 'UI Header: ';
-
 const htmlIntro: HTMLElement = document.querySelector('.intro')!;
 const htmlMetadata: HTMLElement = document.querySelector('.metadata')!;
 const htmlCoverLink: HTMLLinkElement = document.querySelector('.cover__link')!;
@@ -12,22 +10,6 @@ const htmlMetadataSongAuthor: HTMLElement = document.querySelector('.metadata__s
 const htmlMetadataSongBPM: HTMLElement = document.querySelector('.metadata__song-bpm')!;
 const htmlMetadataSongDuration: HTMLElement = document.querySelector('.metadata__song-duration')!;
 const htmlAudio: HTMLAudioElement = document.querySelector('.audio')!;
-
-if (!htmlIntro || !htmlMetadata) {
-   throw new Error(logPrefix + 'header component is missing one of the two section');
-}
-if (!htmlCoverLink || !htmlCoverImage) {
-   throw new Error(logPrefix + 'cover component is missing');
-}
-if (
-   !htmlMetadataSongName ||
-   !htmlMetadataSongSubname ||
-   !htmlMetadataSongAuthor ||
-   !htmlMetadataSongBPM ||
-   !htmlMetadataSongDuration
-) {
-   throw new Error(logPrefix + 'metadata component is missing one of the part');
-}
 
 function switchHeader(isIntro: boolean): void {
    if (isIntro) {

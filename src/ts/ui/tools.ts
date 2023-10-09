@@ -30,25 +30,9 @@ const htmlToolsApplyThis: HTMLInputElement = document.querySelector('.tools__app
 const htmlToolsApplyAll: HTMLInputElement = document.querySelector('.tools__apply-all')!;
 const htmlToolsApplyGeneral: HTMLInputElement = document.querySelector('.tools__apply-general')!;
 
-if (
-   !htmlToolsNote ||
-   !htmlToolsObstacle ||
-   !htmlToolsEvent ||
-   !htmlToolsOther ||
-   !htmlToolsGeneral
-) {
-   throw new Error(logPrefix + 'missing content element');
-}
-if (!htmlToolsOutputDifficulty || !htmlToolsOutputGeneral) {
-   throw new Error(logPrefix + 'missing output element');
-}
-if (htmlToolsApplyThis && htmlToolsApplyAll && htmlToolsApplyGeneral) {
-   htmlToolsApplyThis.addEventListener('click', applyThisHandler);
-   htmlToolsApplyAll.addEventListener('click', applyAllHandler);
-   htmlToolsApplyGeneral.addEventListener('click', applyGeneralHandler);
-} else {
-   throw new Error(logPrefix + 'missing apply element');
-}
+htmlToolsApplyThis.addEventListener('click', applyThisHandler);
+htmlToolsApplyAll.addEventListener('click', applyAllHandler);
+htmlToolsApplyGeneral.addEventListener('click', applyGeneralHandler);
 
 htmlToolsSelectMode.forEach((elem) => elem.addEventListener('change', selectModeHandler));
 htmlToolsSelectDifficulty.forEach((elem) =>
