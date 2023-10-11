@@ -47,7 +47,7 @@ export class Waypoint extends WrapWaypoint<IWaypoint> {
       return [new this()];
    }
 
-   toJSON(): IWaypoint {
+   toJSON(): Required<IWaypoint> {
       return {
          _time: this.time,
          _lineIndex: this.posX,

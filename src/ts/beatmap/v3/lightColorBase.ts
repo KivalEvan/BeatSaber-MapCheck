@@ -52,7 +52,7 @@ export class LightColorBase extends WrapLightColorBase<ILightColorBase> {
       return [new this()];
    }
 
-   toJSON(): ILightColorBase {
+   toJSON(): Required<ILightColorBase> {
       return {
          b: this.time,
          c: this.color,

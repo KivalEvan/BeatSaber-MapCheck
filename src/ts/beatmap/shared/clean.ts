@@ -6,6 +6,13 @@ function tag(name: string): string[] {
    return ['shared', name];
 }
 
+// deno-lint-ignore no-explicit-any
+export function purgeZeros(data: Record<string, any>) {
+   for (const k in data) {
+      if ((typeof data[k] === 'number' || typeof data[k] === 'boolean') && !data[k]) delete data[k];
+   }
+}
+
 export function deepClean(
    // deno-lint-ignore no-explicit-any
    obj: { [key: string | number]: any } | any[],

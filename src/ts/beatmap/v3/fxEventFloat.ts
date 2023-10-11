@@ -46,7 +46,7 @@ export class FxEventFloat extends WrapFxEventFloat<IFxEventFloat> {
       return [new this()];
    }
 
-   toJSON(): IFxEventFloat {
+   toJSON(): Required<IFxEventFloat> {
       return {
          b: this.time,
          i: this.easing,

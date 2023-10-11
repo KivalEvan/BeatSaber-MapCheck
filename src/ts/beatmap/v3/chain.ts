@@ -21,8 +21,8 @@ export class Chain extends WrapChain<IChain> {
       tb: 0,
       tx: 0,
       ty: 0,
-      sc: 1,
-      s: 1,
+      sc: 0,
+      s: 0,
       customData: {},
    };
 
@@ -59,7 +59,7 @@ export class Chain extends WrapChain<IChain> {
       return [new this()];
    }
 
-   toJSON(): IChain {
+   toJSON(): Required<IChain> {
       return {
          b: this.time,
          c: this.color,

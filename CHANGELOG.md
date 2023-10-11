@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.5.14 [2023-10-07]
+## 2.5.14 [2023-10-10]
 
 ### Added
 
@@ -10,10 +10,13 @@
 -  Linkin Park 2.0 environment & color scheme
 -  [New SongCore features](https://github.com/Kylemc1413/SongCore/pull/122) (tags, custom
    characteristic label, etc.)
+-  One Saber check
 
 ### Changed
 
--  Loading Beatmap v3 can now infer missing attributes as given by 1.32 editor update
+-  Improved loading logic
+   -  Can now load beatmap v1
+-  Loading beatmap v3 can now default missing attributes as given by 1.32 editor update
 -  The Weeknd and Panic 2.0 color scheme now shows white color value
 
 ### Fixed

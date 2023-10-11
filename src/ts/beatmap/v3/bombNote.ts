@@ -43,7 +43,7 @@ export class BombNote extends WrapBombNote<IBombNote> {
       return [new this()];
    }
 
-   toJSON(): IBombNote {
+   toJSON(): Required<IBombNote> {
       return {
          b: this.time,
          x: this.posX,

@@ -165,7 +165,7 @@ export class BeatPerMinute {
          .map((el) => {
             if ('scale' in el) return el;
             if ('bpm' in el) return { time: el.time, scale: this._bpm / el.bpm };
-            return { time: el.b, scale: this._bpm / el.m };
+            return { time: el.b || 0, scale: this._bpm / el.m! };
          });
    }
 

@@ -71,7 +71,7 @@ export class Difficulty extends WrapDifficulty<IDifficulty> {
       return new this(data);
    }
 
-   toJSON(): IDifficulty {
+   toJSON(): Required<IDifficulty> {
       return {
          _version: '1.5.0',
          _beatsPerMinute: this.beatsPerMinute,

@@ -487,6 +487,7 @@ export const LightColorEventBoxDataCheck: {
       type: 'object',
       version: '3.0.0',
       check: IndexFilterDataCheck,
+      optional: true,
    },
    w: {
       type: 'number',
@@ -514,6 +515,7 @@ export const LightColorEventBoxDataCheck: {
       type: 'array',
       version: '3.0.0',
       check: LightColorBaseDataCheck,
+      optional: true,
    },
    b: {
       type: 'number',
@@ -553,6 +555,7 @@ export const LightColorEventBoxGroupDataCheck: {
       type: 'array',
       version: '3.0.0',
       check: LightColorEventBoxDataCheck,
+      optional: true,
    },
    customData: {
       type: 'object',
@@ -613,6 +616,7 @@ export const LightRotationEventBoxDataCheck: {
       type: 'object',
       version: '3.0.0',
       check: IndexFilterDataCheck,
+      optional: true,
    },
    w: {
       type: 'number',
@@ -646,6 +650,7 @@ export const LightRotationEventBoxDataCheck: {
       type: 'array',
       version: '3.0.0',
       check: LightRotationBaseDataCheck,
+      optional: true,
    },
    r: {
       type: 'number',
@@ -691,6 +696,7 @@ export const LightRotationEventBoxGroupDataCheck: {
       type: 'array',
       version: '3.0.0',
       check: LightRotationEventBoxDataCheck,
+      optional: true,
    },
    customData: {
       type: 'object',
@@ -740,6 +746,7 @@ export const LightTranslationEventBoxDataCheck: {
       type: 'object',
       version: '3.2.0',
       check: IndexFilterDataCheck,
+      optional: true,
    },
    w: {
       type: 'number',
@@ -773,6 +780,7 @@ export const LightTranslationEventBoxDataCheck: {
       type: 'array',
       version: '3.2.0',
       check: LightTranslationBaseDataCheck,
+      optional: true,
    },
    r: {
       type: 'number',
@@ -818,6 +826,7 @@ export const LightTranslationEventBoxGroupDataCheck: {
       type: 'array',
       version: '3.2.0',
       check: LightTranslationEventBoxDataCheck,
+      optional: true,
    },
    customData: {
       type: 'object',
@@ -834,6 +843,7 @@ export const VfxEventBoxDataCheck: {
       type: 'object',
       version: '3.3.0',
       check: IndexFilterDataCheck,
+      optional: true,
    },
    w: {
       type: 'number',
@@ -862,6 +872,7 @@ export const VfxEventBoxDataCheck: {
       int: true,
       array: true,
       version: '3.3.0',
+      optional: true,
    },
    b: {
       type: 'number',
@@ -901,6 +912,7 @@ export const VfxEventBoxGroupDataCheck: {
       type: 'array',
       version: '3.3.0',
       check: VfxEventBoxDataCheck,
+      optional: true,
    },
    t: {
       type: 'number',
@@ -922,12 +934,14 @@ export const BasicEventTypesForKeywordsDataCheck: {
    k: {
       type: 'string',
       version: '3.0.0',
+      optional: true,
    },
    e: {
       type: 'number',
       int: true,
       array: true,
       version: '3.0.0',
+      optional: true,
    },
 } as const;
 
@@ -1010,11 +1024,13 @@ export const FxEventsCollectionDataCheck: {
       type: 'array',
       version: '3.3.0',
       check: FxEventFloatDataCheck,
+      optional: true,
    },
    _il: {
       type: 'array',
       version: '3.3.0',
       check: FxEventIntDataCheck,
+      optional: true,
    },
 } as const;
 
@@ -1054,6 +1070,7 @@ export const DifficultyCheck: { readonly [key in keyof IDifficulty]: DataCheck }
    version: {
       type: 'string',
       version: '3.0.0',
+      optional: true,
    },
    bpmEvents: {
       type: 'array',
@@ -1143,11 +1160,13 @@ export const DifficultyCheck: { readonly [key in keyof IDifficulty]: DataCheck }
       type: 'object',
       version: '3.0.0',
       check: BasicEventTypesWithKeywordsDataCheck,
+      optional: true,
    },
    _fxEventsCollection: {
       type: 'object',
       version: '3.3.0',
       check: FxEventsCollectionDataCheck,
+      optional: true,
    },
    useNormalEventsAsCompatibleEvents: {
       type: 'boolean',

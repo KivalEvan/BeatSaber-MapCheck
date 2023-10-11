@@ -46,7 +46,7 @@ export class Note extends WrapColorNote<INote> {
       return [new this()];
    }
 
-   toJSON(): INote {
+   toJSON(): Required<INote> {
       return {
          _time: this.time,
          _type: this.type,

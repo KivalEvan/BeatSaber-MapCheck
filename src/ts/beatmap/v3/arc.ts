@@ -18,12 +18,12 @@ export class Arc extends WrapArc<IArc> {
       x: 0,
       y: 0,
       d: 0,
-      mu: 1,
+      mu: 0,
       tb: 0,
       tx: 0,
       ty: 0,
       tc: 0,
-      tmu: 1,
+      tmu: 0,
       m: 0,
       customData: {},
    };
@@ -63,7 +63,7 @@ export class Arc extends WrapArc<IArc> {
       return [new this()];
    }
 
-   toJSON(): IArc {
+   toJSON(): Required<IArc> {
       return {
          b: this.time,
          c: this.color,

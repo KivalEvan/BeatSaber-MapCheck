@@ -81,7 +81,7 @@ export class FxEventBox extends WrapFxEventBox<IFxEventBox, IIndexFilter> {
       return [new this()];
    }
 
-   toJSON(): IFxEventBox {
+   toJSON(): Required<IFxEventBox> {
       return {
          f: this.filter.toJSON(),
          w: this.beatDistribution,

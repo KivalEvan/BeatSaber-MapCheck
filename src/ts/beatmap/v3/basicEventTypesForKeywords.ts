@@ -52,7 +52,7 @@ export class BasicEventTypesForKeywords extends WrapEventTypesForKeywords<IBasic
       return [new this()];
    }
 
-   toJSON(): IBasicEventTypesForKeywords {
+   toJSON(): Required<IBasicEventTypesForKeywords> {
       return {
          k: this.keyword,
          e: this.events,

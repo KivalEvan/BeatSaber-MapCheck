@@ -42,7 +42,7 @@ export class Info extends WrapInfo<IInfo> {
    colorSchemes: never[] = [];
 
    oneSaber: boolean;
-   contributors?: IContributor[];
+   contributors: IContributor[];
    customEnvironment?: string;
    customEnvironmentHash?: string;
 

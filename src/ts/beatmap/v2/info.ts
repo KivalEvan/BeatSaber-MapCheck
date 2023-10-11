@@ -57,70 +57,71 @@ export class Info extends WrapInfo<IInfo> {
       this.environmentNames = data._environmentNames?.map((e) => e) ?? [];
       this.colorSchemes =
          data._colorSchemes?.map((e) => {
-            return {
-               useOverride: e.useOverride || false,
+            const scheme: IWrapInfoColorScheme = {
+               useOverride: !!e.useOverride,
                colorScheme: {
                   name: e.colorScheme?.colorSchemeId || '',
                   saberLeftColor: {
-                     r: e.colorScheme?.saberAColor?.r ?? 0,
-                     g: e.colorScheme?.saberAColor?.g ?? 0,
-                     b: e.colorScheme?.saberAColor?.b ?? 0,
-                     a: e.colorScheme?.saberAColor?.a ?? 1,
+                     r: e.colorScheme?.saberAColor?.r || 0,
+                     g: e.colorScheme?.saberAColor?.g || 0,
+                     b: e.colorScheme?.saberAColor?.b || 0,
+                     a: e.colorScheme?.saberAColor?.a || 0,
                   },
                   saberRightColor: {
-                     r: e.colorScheme?.saberBColor?.r ?? 0,
-                     g: e.colorScheme?.saberBColor?.g ?? 0,
-                     b: e.colorScheme?.saberBColor?.b ?? 0,
-                     a: e.colorScheme?.saberBColor?.a ?? 1,
+                     r: e.colorScheme?.saberBColor?.r || 0,
+                     g: e.colorScheme?.saberBColor?.g || 0,
+                     b: e.colorScheme?.saberBColor?.b || 0,
+                     a: e.colorScheme?.saberBColor?.a || 0,
                   },
                   environment0Color: {
-                     r: e.colorScheme?.environmentColor0?.r ?? 0,
-                     g: e.colorScheme?.environmentColor0?.g ?? 0,
-                     b: e.colorScheme?.environmentColor0?.b ?? 0,
-                     a: e.colorScheme?.environmentColor0?.a ?? 1,
+                     r: e.colorScheme?.environmentColor0?.r || 0,
+                     g: e.colorScheme?.environmentColor0?.g || 0,
+                     b: e.colorScheme?.environmentColor0?.b || 0,
+                     a: e.colorScheme?.environmentColor0?.a || 0,
                   },
                   environment1Color: {
-                     r: e.colorScheme?.environmentColor1?.r ?? 0,
-                     g: e.colorScheme?.environmentColor1?.g ?? 0,
-                     b: e.colorScheme?.environmentColor1?.b ?? 0,
-                     a: e.colorScheme?.environmentColor1?.a ?? 1,
+                     r: e.colorScheme?.environmentColor1?.r || 0,
+                     g: e.colorScheme?.environmentColor1?.g || 0,
+                     b: e.colorScheme?.environmentColor1?.b || 0,
+                     a: e.colorScheme?.environmentColor1?.a || 0,
                   },
-                  environmentWColor: e.colorScheme?.environmentColorW
-                     ? {
-                          r: e.colorScheme?.environmentColorW?.r ?? 0,
-                          g: e.colorScheme?.environmentColorW?.g ?? 0,
-                          b: e.colorScheme?.environmentColorW?.b ?? 0,
-                          a: e.colorScheme?.environmentColorW?.a ?? 1,
-                       }
-                     : undefined,
                   obstaclesColor: {
-                     r: e.colorScheme?.obstaclesColor?.r ?? 0,
-                     g: e.colorScheme?.obstaclesColor?.g ?? 0,
-                     b: e.colorScheme?.obstaclesColor?.b ?? 0,
-                     a: e.colorScheme?.obstaclesColor?.a ?? 1,
+                     r: e.colorScheme?.obstaclesColor?.r || 0,
+                     g: e.colorScheme?.obstaclesColor?.g || 0,
+                     b: e.colorScheme?.obstaclesColor?.b || 0,
+                     a: e.colorScheme?.obstaclesColor?.a || 0,
                   },
                   environment0ColorBoost: {
-                     r: e.colorScheme?.environmentColor0Boost?.r ?? 0,
-                     g: e.colorScheme?.environmentColor0Boost?.g ?? 0,
-                     b: e.colorScheme?.environmentColor0Boost?.b ?? 0,
-                     a: e.colorScheme?.environmentColor0Boost?.a ?? 1,
+                     r: e.colorScheme?.environmentColor0Boost?.r || 0,
+                     g: e.colorScheme?.environmentColor0Boost?.g || 0,
+                     b: e.colorScheme?.environmentColor0Boost?.b || 0,
+                     a: e.colorScheme?.environmentColor0Boost?.a || 0,
                   },
                   environment1ColorBoost: {
-                     r: e.colorScheme?.environmentColor1Boost?.r ?? 0,
-                     g: e.colorScheme?.environmentColor1Boost?.g ?? 0,
-                     b: e.colorScheme?.environmentColor1Boost?.b ?? 0,
-                     a: e.colorScheme?.environmentColor1Boost?.a ?? 1,
+                     r: e.colorScheme?.environmentColor1Boost?.r || 0,
+                     g: e.colorScheme?.environmentColor1Boost?.g || 0,
+                     b: e.colorScheme?.environmentColor1Boost?.b || 0,
+                     a: e.colorScheme?.environmentColor1Boost?.a || 0,
                   },
-                  environmentWColorBoost: e.colorScheme?.environmentColorWBoost
-                     ? {
-                          r: e.colorScheme?.environmentColorWBoost?.r ?? 0,
-                          g: e.colorScheme?.environmentColorWBoost?.g ?? 0,
-                          b: e.colorScheme?.environmentColorWBoost?.b ?? 0,
-                          a: e.colorScheme?.environmentColorWBoost?.a ?? 1,
-                       }
-                     : undefined,
                },
             };
+            if (e.colorScheme?.environmentColorW) {
+               scheme.colorScheme.environmentWColor = {
+                  r: e.colorScheme?.environmentColorW?.r || 0,
+                  g: e.colorScheme?.environmentColorW?.g || 0,
+                  b: e.colorScheme?.environmentColorW?.b || 0,
+                  a: e.colorScheme?.environmentColorW?.a || 0,
+               };
+            }
+            if (e.colorScheme?.environmentColorWBoost) {
+               scheme.colorScheme.environmentWColorBoost = {
+                  r: e.colorScheme?.environmentColorWBoost?.r || 0,
+                  g: e.colorScheme?.environmentColorWBoost?.g || 0,
+                  b: e.colorScheme?.environmentColorWBoost?.b || 0,
+                  a: e.colorScheme?.environmentColorWBoost?.a || 0,
+               };
+            }
+            return scheme;
          }) ?? [];
       this.customData = deepCopy(data._customData ?? {});
 
@@ -133,7 +134,7 @@ export class Info extends WrapInfo<IInfo> {
       return new this(data);
    }
 
-   toJSON(): IInfo {
+   toJSON(): Required<IInfo> {
       return {
          _version: this.version,
          _songName: this.songName,
@@ -152,7 +153,7 @@ export class Info extends WrapInfo<IInfo> {
          _allDirectionsEnvironmentName: this.allDirectionsEnvironmentName,
          _environmentNames: this.environmentNames.map((e) => e),
          _colorSchemes: this.colorSchemes.map((e) => {
-            const cs: IInfo['_colorSchemes'][number] = {
+            const cs: Required<IInfo>['_colorSchemes'][number] = {
                useOverride: e.useOverride,
                colorScheme: {
                   colorSchemeId: e.colorScheme.name,
@@ -166,10 +167,10 @@ export class Info extends WrapInfo<IInfo> {
                },
             };
             if (e.colorScheme.environmentWColor) {
-               cs.colorScheme.environmentColorW = shallowCopy(e.colorScheme.environmentWColor);
+               cs.colorScheme!.environmentColorW = shallowCopy(e.colorScheme.environmentWColor);
             }
             if (e.colorScheme.environmentWColorBoost) {
-               cs.colorScheme.environmentColorWBoost = shallowCopy(
+               cs.colorScheme!.environmentColorWBoost = shallowCopy(
                   e.colorScheme.environmentWColorBoost,
                );
             }
@@ -231,7 +232,7 @@ export class InfoSet extends WrapInfoSet<IInfoSet> {
       return new this(data);
    }
 
-   toJSON(): IInfoSet {
+   toJSON(): Required<IInfoSet> {
       return {
          _beatmapCharacteristicName: this.characteristic,
          _difficultyBeatmaps: this.difficulties.map((d) => d.toJSON()),
@@ -254,7 +255,7 @@ export class InfoSet extends WrapInfoSet<IInfoSet> {
 export class InfoDifficulty extends WrapInfoDifficulty<IInfoDifficulty> {
    readonly characteristic?: CharacteristicName | undefined;
    difficulty: DifficultyName;
-   rank: IInfoDifficulty['_difficultyRank'];
+   rank: Required<IInfoDifficulty>['_difficultyRank'];
    filename: LooseAutocomplete<GenericFileName>;
    njs: number;
    njsOffset: number;
@@ -279,7 +280,7 @@ export class InfoDifficulty extends WrapInfoDifficulty<IInfoDifficulty> {
       return new this(data);
    }
 
-   toJSON(): IInfoDifficulty {
+   toJSON(): Required<IInfoDifficulty> {
       return {
          _difficulty: this.difficulty,
          _difficultyRank: this.rank,

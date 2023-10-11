@@ -54,7 +54,7 @@ export class ColorNote extends WrapColorNote<IColorNote> {
       return [new this()];
    }
 
-   toJSON(): IColorNote {
+   toJSON(): Required<IColorNote> {
       return {
          b: this.time,
          c: this.color,
@@ -66,10 +66,10 @@ export class ColorNote extends WrapColorNote<IColorNote> {
       };
    }
 
-   get type(): IColorNote['c'] {
+   get type(): Required<IColorNote>['c'] {
       return this._color;
    }
-   set type(value: IColorNote['c']) {
+   set type(value: Required<IColorNote>['c']) {
       this._color = value;
    }
 

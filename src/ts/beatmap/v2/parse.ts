@@ -4,10 +4,10 @@ import { IInfo } from '../../types/beatmap/v2/info';
 import { Info } from './info';
 import { deepCheck } from '../shared/dataCheck';
 import { DifficultyCheck, InfoCheck } from './dataCheck';
-import { CharacteristicOrder } from '../shared/characteristic';
 import { DifficultyRanking } from '../shared/difficulty';
 import logger from '../../logger';
 import { IDataCheckOption } from '../../types/beatmap/shared/dataCheck';
+import { compareVersion } from '../shared/version';
 
 function tag(name: string): string[] {
    return ['v2', 'parse', name];
@@ -26,6 +26,10 @@ export function parseDifficulty(
       deepCheck(data, DifficultyCheck, 'difficulty', data._version, checkData.throwError);
    }
 
+   if (compareVersion(data._version, '2.5.0') === 'old') {
+      data._events?.forEach((e) => (e._floatValue = 1));
+   }
+
    return new Difficulty(data);
 }
 
@@ -42,18 +46,25 @@ export function parseInfo(
    if (checkData.enabled) {
       deepCheck(data, InfoCheck, 'info', data._version, checkData.throwError);
    }
-   data._difficultyBeatmapSets?.sort(
-      (a, b) =>
-         CharacteristicOrder[a._beatmapCharacteristicName] -
-         CharacteristicOrder[b._beatmapCharacteristicName],
-   );
+
    data._difficultyBeatmapSets?.forEach((set) => {
       let num = 0;
-      set._difficultyBeatmaps.forEach((a) => {
-         if (a._difficultyRank - num <= 0) {
-            logger.tWarn(tag('info'), a._difficulty + ' is unordered');
+      set._difficultyBeatmaps?.forEach((a) => {
+         if (typeof a._difficultyRank === 'number') {
+            if (a._difficultyRank - num <= 0) {
+               logger.tWarn(tag('info'), a._difficulty + ' is unordered');
+            }
+         } else if (typeof a._difficulty === 'string') {
+            a._difficultyRank = DifficultyRanking[a._difficulty];
+            if (!a._difficultyRank) {
+               a._difficulty = 'Easy';
+               a._difficultyRank = 1;
+            }
+         } else {
+            a._difficulty = 'Easy';
+            a._difficultyRank = 1;
          }
-         if (DifficultyRanking[a._difficulty] !== a._difficultyRank) {
+         if (DifficultyRanking[a._difficulty!] !== a._difficultyRank) {
             logger.tError(tag('info'), a._difficulty + ' has invalid rank');
          }
          num = a._difficultyRank;
@@ -70,7 +81,6 @@ export function parseInfo(
             delete a._customData._editorOldOffset;
          }
       });
-      set._difficultyBeatmaps.sort((a, b) => a._difficultyRank - b._difficultyRank);
    });
 
    return new Info(data);

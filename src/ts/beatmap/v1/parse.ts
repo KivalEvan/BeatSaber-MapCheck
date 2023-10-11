@@ -4,7 +4,6 @@ import { IInfo } from '../../types/beatmap/v1/info';
 import { Info } from './info';
 import { deepCheck } from '../shared/dataCheck';
 import { DifficultyCheck, InfoCheck } from './dataCheck';
-import { CharacteristicOrder } from '../shared/characteristic';
 import logger from '../../logger';
 import { IDataCheckOption } from '../../types/beatmap/shared/dataCheck';
 
@@ -36,12 +35,6 @@ export function parseInfo(
    if (checkData.enabled) {
       deepCheck(data, InfoCheck, 'info', '1.0.0', checkData.throwError);
    }
-
-   data.difficultyLevels
-      ?.sort((a, b) => a.difficultyRank - b.difficultyRank)
-      .sort(
-         (a, b) => CharacteristicOrder[a.characteristic] - CharacteristicOrder[b.characteristic],
-      );
 
    return new Info(data);
 }

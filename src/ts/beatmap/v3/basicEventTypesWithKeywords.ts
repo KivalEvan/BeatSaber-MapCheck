@@ -32,7 +32,7 @@ export class BasicEventTypesWithKeywords extends WrapEventTypesWithKeywords<
       this._list = (data.d ?? data.list ?? BasicEventTypesWithKeywords.default.d)
          .map((d) => {
             if (d) return new BasicEventTypesForKeywords(d);
-            return null;
+            return;
          })
          .filter((d) => d) as BasicEventTypesForKeywords[];
    }
@@ -53,7 +53,7 @@ export class BasicEventTypesWithKeywords extends WrapEventTypesWithKeywords<
       return new this(data);
    }
 
-   toJSON(): IBasicEventTypesWithKeywords {
+   toJSON(): Required<IBasicEventTypesWithKeywords> {
       return {
          d: this.list.map((d) => d.toJSON()),
       };

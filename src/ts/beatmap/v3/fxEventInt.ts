@@ -42,7 +42,7 @@ export class FxEventInt extends WrapFxEventInt<IFxEventInt> {
       return [new this()];
    }
 
-   toJSON(): IFxEventInt {
+   toJSON(): Required<IFxEventInt> {
       return {
          b: this.time,
          p: this.previous,

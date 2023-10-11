@@ -167,7 +167,7 @@ export async function loadDifficulty(info: IWrapInfo, zip: JSZip) {
                      : jsonVer === 2
                      ? data.customData._BPMChanges ?? data.customData._bpmChanges
                      : jsonVer === 1
-                     ? json.BPMChanges
+                     ? json._BPMChanges
                      : [],
                   diffInfo.customData?._editorOffset,
                );

@@ -51,7 +51,7 @@ export class IndexFilter extends WrapIndexFilter<IIndexFilter> {
       return new IndexFilter(data);
    }
 
-   toJSON(): IIndexFilter {
+   toJSON(): Required<IIndexFilter> {
       return {
          f: this.type,
          p: this.p0,

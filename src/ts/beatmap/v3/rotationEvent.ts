@@ -46,7 +46,7 @@ export class RotationEvent extends WrapRotationEvent<IRotationEvent> {
       return [new this()];
    }
 
-   toJSON(): IRotationEvent {
+   toJSON(): Required<IRotationEvent> {
       return {
          b: this.time,
          e: this.executionTime,

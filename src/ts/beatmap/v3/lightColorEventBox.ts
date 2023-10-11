@@ -106,7 +106,7 @@ export class LightColorEventBox extends WrapLightColorEventBox<
       return [new this()];
    }
 
-   toJSON(): ILightColorEventBox {
+   toJSON(): Required<ILightColorEventBox> {
       return {
          f: this.filter.toJSON(),
          w: this.beatDistribution,

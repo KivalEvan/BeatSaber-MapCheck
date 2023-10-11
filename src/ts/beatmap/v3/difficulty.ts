@@ -57,7 +57,7 @@ import { FxEventsCollection } from './fxEventsCollection';
 
 /** Difficulty beatmap v3 class object. */
 export class Difficulty extends WrapDifficulty<IDifficulty> {
-   version: IDifficulty['version'];
+   version: Required<IDifficulty>['version'];
    bpmEvents: BPMEvent[];
    rotationEvents: RotationEvent[];
    colorNotes: ColorNote[];
@@ -121,7 +121,7 @@ export class Difficulty extends WrapDifficulty<IDifficulty> {
       return new this(data);
    }
 
-   toJSON(): IDifficulty {
+   toJSON(): Required<IDifficulty> {
       return {
          version: '3.3.0',
          bpmEvents: this.bpmEvents.map((obj) => obj.toJSON()),

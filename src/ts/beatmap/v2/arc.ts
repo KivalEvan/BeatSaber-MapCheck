@@ -11,12 +11,12 @@ export class Arc extends WrapArc<IArc> {
       _headLineIndex: 0,
       _headLineLayer: 0,
       _headCutDirection: 0,
-      _headControlPointLengthMultiplier: 1,
+      _headControlPointLengthMultiplier: 0,
       _tailTime: 0,
       _tailLineIndex: 0,
       _tailLineLayer: 0,
       _tailCutDirection: 0,
-      _tailControlPointLengthMultiplier: 1,
+      _tailControlPointLengthMultiplier: 0,
       _sliderMidAnchorMode: 0,
       _customData: {},
    };
@@ -65,7 +65,7 @@ export class Arc extends WrapArc<IArc> {
       return [new this()];
    }
 
-   toJSON(): IArc {
+   toJSON(): Required<IArc> {
       return {
          _colorType: this.color,
          _headTime: this.time,

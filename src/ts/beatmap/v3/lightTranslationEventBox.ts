@@ -135,7 +135,7 @@ export class LightTranslationEventBox extends WrapLightTranslationEventBox<
       return [new this()];
    }
 
-   toJSON(): ILightTranslationEventBox {
+   toJSON(): Required<ILightTranslationEventBox> {
       return {
          f: this.filter.toJSON(),
          w: this.beatDistribution,

@@ -29,21 +29,5 @@ export function parseDifficulty(
       deepCheck(data, DifficultyCheck, 'difficulty', data.version, checkData.throwError);
    }
 
-   data.sliders?.forEach((e) => {
-      e.mu ??= 0;
-      e.tmu ??= 0;
-   });
-   data.basicBeatmapEvents?.forEach((e) => {
-      e.f ??= 0;
-   });
-   data.burstSliders?.forEach((e) => {
-      e.s ??= 0;
-   });
-   data.obstacles?.forEach((e) => {
-      e.d ??= 0;
-      e.w ??= 0;
-      e.h ??= 0;
-   });
-
    return new Difficulty(data);
 }

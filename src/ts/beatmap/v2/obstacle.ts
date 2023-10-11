@@ -11,8 +11,8 @@ export class Obstacle extends WrapObstacle<IObstacle> {
       _time: 0,
       _lineIndex: 0,
       _type: 0,
-      _duration: 1,
-      _width: 1,
+      _duration: 0,
+      _width: 0,
       _customData: {},
    };
 
@@ -58,7 +58,7 @@ export class Obstacle extends WrapObstacle<IObstacle> {
       return [new this()];
    }
 
-   toJSON(): IObstacle {
+   toJSON(): Required<IObstacle> {
       return {
          _time: this.time,
          _type: this.type,
@@ -69,10 +69,10 @@ export class Obstacle extends WrapObstacle<IObstacle> {
       };
    }
 
-   get type(): IObstacle['_type'] {
+   get type(): Required<IObstacle>['_type'] {
       return this._type;
    }
-   set type(value: IObstacle['_type']) {
+   set type(value: Required<IObstacle>['_type']) {
       this._type = value;
    }
 

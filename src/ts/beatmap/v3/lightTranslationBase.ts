@@ -54,7 +54,7 @@ export class LightTranslationBase extends WrapLightTranslationBase<ILightTransla
       return [new this()];
    }
 
-   toJSON(): ILightTranslationBase {
+   toJSON(): Required<ILightTranslationBase> {
       return {
          b: this.time,
          e: this.easing,

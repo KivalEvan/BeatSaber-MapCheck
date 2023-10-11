@@ -15,8 +15,8 @@ export class Obstacle extends WrapObstacle<IObstacle> {
       _time: 0,
       _lineIndex: 0,
       _type: 0,
-      _duration: 1,
-      _width: 1,
+      _duration: 0,
+      _width: 0,
    };
 
    protected _type: number;
@@ -58,7 +58,7 @@ export class Obstacle extends WrapObstacle<IObstacle> {
       return [new this()];
    }
 
-   toJSON(): IObstacle {
+   toJSON(): Required<IObstacle> {
       return {
          _time: this.time,
          _type: this.type,

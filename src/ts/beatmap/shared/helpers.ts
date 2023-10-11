@@ -71,7 +71,7 @@ export function sortNoteFn(a: IWrapGridObjectAttribute, b: IWrapGridObjectAttrib
  * ```
  */
 export function sortV2ObjectFn(a: IV2BaseObject, b: IV2BaseObject): number {
-   return a._time - b._time;
+   return a._time! - b._time!;
 }
 
 /**
@@ -83,12 +83,12 @@ export function sortV2ObjectFn(a: IV2BaseObject, b: IV2BaseObject): number {
 export function sortV2NoteFn(a: INote, b: INote): number {
    if (Array.isArray(a._customData?._position) && Array.isArray(b._customData?._position)) {
       return (
-         a._time - b._time ||
+         a._time! - b._time! ||
          (a._customData!._position as Vector2)[0] - (b._customData!._position as Vector2)[0] ||
          (a._customData!._position as Vector2)[1] - (b._customData!._position as Vector2)[1]
       );
    }
-   return a._time - b._time || a._lineIndex - b._lineLayer || a._lineIndex - b._lineLayer;
+   return a._time! - b._time! || a._lineIndex! - b._lineLayer! || a._lineIndex! - b._lineLayer!;
 }
 
 /**
@@ -98,7 +98,7 @@ export function sortV2NoteFn(a: INote, b: INote): number {
  * ```
  */
 export function sortV3ObjectFn(a: IV3BaseObject, b: IV3BaseObject): number {
-   return a.b - b.b;
+   return a.b! - b.b!;
 }
 
 /**
@@ -110,10 +110,10 @@ export function sortV3ObjectFn(a: IV3BaseObject, b: IV3BaseObject): number {
 export function sortV3NoteFn(a: IBombNote, b: IBombNote): number {
    if (Array.isArray(a.customData?.coordinates) && Array.isArray(b.customData?.coordinates)) {
       return (
-         a.b - b.b ||
+         a.b! - b.b! ||
          (a.customData!.coordinates as Vector2)[0] - (b.customData!.coordinates as Vector2)[0] ||
          (a.customData!.coordinates as Vector2)[1] - (b.customData!.coordinates as Vector2)[1]
       );
    }
-   return a.b - b.b || a.x - b.x || a.y - b.y;
+   return a.b! - b.b! || a.x! - b.x! || a.y! - b.y!;
 }

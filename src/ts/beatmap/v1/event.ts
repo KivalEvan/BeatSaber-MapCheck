@@ -40,7 +40,7 @@ export class Event extends WrapEvent<IEvent> {
       return [new this()];
    }
 
-   toJSON(): IEvent {
+   toJSON(): Required<IEvent> {
       return {
          _time: this.time,
          _type: this.type,

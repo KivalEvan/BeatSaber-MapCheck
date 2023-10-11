@@ -20,28 +20,33 @@ export const NoteDataCheck: { readonly [key in keyof INote]: DataCheck } = {
    _time: {
       type: 'number',
       version: '2.0.0',
+      optional: true,
    },
    _type: {
       type: 'number',
       int: true,
       unsigned: true,
       version: '2.0.0',
+      optional: true,
    },
    _lineIndex: {
       type: 'number',
       int: true,
       version: '2.0.0',
+      optional: true,
    },
    _lineLayer: {
       type: 'number',
       int: true,
       version: '2.0.0',
+      optional: true,
    },
    _cutDirection: {
       type: 'number',
       int: true,
       unsigned: true,
       version: '2.0.0',
+      optional: true,
    },
    _customData: {
       type: 'object',
@@ -55,58 +60,70 @@ export const ArcDataCheck: { readonly [key in keyof IArc]: DataCheck } = {
    _colorType: {
       type: 'number',
       version: '2.0.0',
+      optional: true,
    },
    _headTime: {
       type: 'number',
       version: '2.0.0',
+      optional: true,
    },
    _headLineIndex: {
       type: 'number',
       int: true,
       version: '2.0.0',
+      optional: true,
    },
    _headLineLayer: {
       type: 'number',
       int: true,
       version: '2.0.0',
+      optional: true,
    },
    _headCutDirection: {
       type: 'number',
       int: true,
       unsigned: true,
       version: '2.0.0',
+      optional: true,
    },
    _headControlPointLengthMultiplier: {
       type: 'number',
       version: '2.0.0',
+      optional: true,
    },
    _tailTime: {
       type: 'number',
       version: '2.0.0',
+      optional: true,
    },
    _tailLineIndex: {
       type: 'number',
       int: true,
       version: '2.0.0',
+      optional: true,
    },
    _tailLineLayer: {
       type: 'number',
       int: true,
       version: '2.0.0',
+      optional: true,
    },
    _tailCutDirection: {
       type: 'number',
       int: true,
       unsigned: true,
       version: '2.0.0',
+      optional: true,
    },
    _tailControlPointLengthMultiplier: {
       type: 'number',
       version: '2.0.0',
+      optional: true,
    },
    _sliderMidAnchorMode: {
       type: 'number',
       version: '2.0.0',
+      optional: true,
    },
    _customData: {
       type: 'object',
@@ -120,26 +137,31 @@ export const ObstacleDataCheck: { readonly [key in keyof IObstacle]: DataCheck }
    _time: {
       type: 'number',
       version: '2.0.0',
+      optional: true,
    },
    _lineIndex: {
       type: 'number',
       int: true,
       version: '2.0.0',
+      optional: true,
    },
    _type: {
       type: 'number',
       int: true,
       unsigned: true,
       version: '2.0.0',
+      optional: true,
    },
    _duration: {
       type: 'number',
       version: '2.0.0',
+      optional: true,
    },
    _width: {
       type: 'number',
       int: true,
       version: '2.0.0',
+      optional: true,
    },
    _customData: {
       type: 'object',
@@ -153,16 +175,19 @@ export const EventDataCheck: { readonly [key in keyof IEvent]: DataCheck } = {
    _time: {
       type: 'number',
       version: '2.0.0',
+      optional: true,
    },
    _type: {
       type: 'number',
       int: true,
       version: '2.0.0',
+      optional: true,
    },
    _value: {
       type: 'number',
       int: true,
       version: '2.0.0',
+      optional: true,
    },
    _floatValue: {
       type: 'number',
@@ -181,21 +206,25 @@ export const WaypointDataCheck: { readonly [key in keyof IWaypoint]: DataCheck }
    _time: {
       type: 'number',
       version: '2.2.0',
+      optional: true,
    },
    _lineIndex: {
       type: 'number',
       int: true,
       version: '2.2.0',
+      optional: true,
    },
    _lineLayer: {
       type: 'number',
       int: true,
       version: '2.2.0',
+      optional: true,
    },
    _offsetDirection: {
       type: 'number',
       int: true,
       version: '2.2.0',
+      optional: true,
    },
    _customData: {
       type: 'object',
@@ -211,12 +240,14 @@ export const SpecialEventsKeywordFiltersKeywordsDataCheck: {
    _keyword: {
       type: 'string',
       version: '2.4.0',
+      optional: true,
    },
    _specialEvents: {
       type: 'number',
       int: true,
       array: true,
       version: '2.4.0',
+      optional: true,
    },
 } as const;
 
@@ -227,6 +258,7 @@ export const SpecialEventsKeywordFiltersDataCheck: {
       type: 'array',
       version: '2.4.0',
       check: SpecialEventsKeywordFiltersKeywordsDataCheck,
+      optional: true,
    },
 } as const;
 
@@ -234,26 +266,31 @@ export const DifficultyCheck: { readonly [key in keyof IDifficulty]: DataCheck }
    _version: {
       type: 'string',
       version: '2.0.0',
+      optional: true,
    },
    _notes: {
       type: 'array',
       version: '2.0.0',
       check: NoteDataCheck,
+      optional: true,
    },
    _sliders: {
       type: 'array',
       version: '2.6.0',
       check: ArcDataCheck,
+      optional: true,
    },
    _obstacles: {
       type: 'array',
       version: '2.0.0',
       check: ObstacleDataCheck,
+      optional: true,
    },
    _events: {
       type: 'array',
       version: '2.0.0',
       check: EventDataCheck,
+      optional: true,
    },
    _waypoints: {
       type: 'array',

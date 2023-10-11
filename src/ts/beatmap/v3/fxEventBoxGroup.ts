@@ -72,7 +72,7 @@ export class FxEventBoxGroup extends WrapFxEventBoxGroup<
       return [new this()];
    }
 
-   toJSON(): IFxEventBoxGroup {
+   toJSON(): Required<IFxEventBoxGroup> {
       return {
          b: this.time,
          g: this.id,
