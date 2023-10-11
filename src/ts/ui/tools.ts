@@ -9,6 +9,7 @@ import { DifficultyRename } from '../beatmap/shared/difficulty';
 import { CharacteristicName } from '../types/beatmap/shared/characteristic';
 import { DifficultyName } from '../types/beatmap/shared/difficulty';
 import { IWrapInfo, IWrapInfoSet } from '../types/beatmap/wrapper/info';
+import savedData from '../savedData';
 
 const logPrefix = 'UI Tools: ';
 
@@ -114,7 +115,7 @@ function populateSelectDiff(mapSet?: IWrapInfoSet): void {
             if (!diffData) {
                throw new Error('missing _mapSetData');
             }
-            UIInformation.setDiffInfoTable(diffData);
+            UIInformation.setDiffInfoTable(savedData.beatmapInfo!, diffData);
             setDifficultyLabel(
                diff.customData._difficultyLabel || DifficultyRename[diff.difficulty],
             );
@@ -235,7 +236,7 @@ function selectDifficultyHandler(ev: Event): void {
       (elem) => elem.difficulty === target.value && elem.characteristic === mode.characteristic,
    );
    if (diff) {
-      UIInformation.setDiffInfoTable(diff);
+      UIInformation.setDiffInfoTable(SavedData.beatmapInfo!, diff);
       setDifficultyLabel(
          diff.info.customData._difficultyLabel ||
             DifficultyRename[target.value as keyof typeof DifficultyRename],

@@ -17,6 +17,7 @@ import { setCustomEvents } from './customEvent';
 import { setEnvironmentEnhancement } from './environment';
 import {
    setVersion,
+   setEnvironmentId,
    setRequirements,
    setSuggestions,
    setInformation,
@@ -26,24 +27,22 @@ import {
 import { setPointDefinitions } from './pointDefinition';
 import { setTableHeight } from './helpers';
 import { setPlayTime } from './playTime';
+import { setColorScheme } from './colorScheme';
 
-function setInfo(mapInfo: IWrapInfo): void {
-   UIHeader.setSongName(mapInfo.songName);
-   UIHeader.setSongSubname(mapInfo.songSubName);
-   UIHeader.setSongAuthor(mapInfo.songAuthorName);
-   UIHeader.setSongBPM(mapInfo.beatsPerMinute);
-   setLevelAuthor(mapInfo.levelAuthorName);
-   setEnvironment(mapInfo.environmentName);
-   setEditors(mapInfo.customData._editors);
+function setInfo(info: IWrapInfo): void {
+   UIHeader.setSongName(info.songName);
+   UIHeader.setSongSubname(info.songSubName);
+   UIHeader.setSongAuthor(info.songAuthorName);
+   UIHeader.setSongBPM(info.beatsPerMinute);
+   setLevelAuthor(info.levelAuthorName);
+   setEnvironment(info.environmentName);
+   setEditors(info.customData._editors);
 }
 
-function setDiffInfoTable(mapData: IBeatmapItem): void {
-   if (mapData.rawVersion === 2) {
-      setVersion(mapData.rawData._version);
-   }
-   if (mapData.rawVersion === 3) {
-      setVersion(mapData.rawData.version);
-   }
+function setDiffInfoTable(info: IWrapInfo, mapData: IBeatmapItem): void {
+   setVersion((mapData.rawData as any)._version || (mapData.rawData as any).version || 'Unknown');
+   setEnvironmentId(info.environmentNames.at(mapData.info.environmentId));
+   setColorScheme(info.colorSchemes.at(mapData.info.colorSchemeId)?.colorScheme);
    if (mapData.info.customData) {
       setCustomColor(mapData.info.customData);
       setRequirements(mapData.info.customData._requirements as string[]);
@@ -79,8 +78,10 @@ function reset(): void {
    setEditors();
    populateContributors();
    setVersion();
+   setEnvironmentId();
    setPlayTime();
    setTimeSpend();
+   setColorScheme();
    setCustomColor();
    setRequirements();
    setSuggestions();
@@ -95,13 +96,14 @@ function reset(): void {
 
 export {
    setLevelAuthor,
-   setEnvironment,
+   setEnvironmentId,
    setEditors,
    setContributors,
    populateContributors,
    setVersion,
    setPlayTime,
    setTimeSpend,
+   setColorScheme,
    setCustomColor,
    setRequirements,
    setSuggestions,

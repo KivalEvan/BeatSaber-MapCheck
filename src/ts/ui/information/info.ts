@@ -34,6 +34,7 @@ export function setEnvironment(str?: EnvironmentName | EnvironmentV3Name): void 
       return;
    }
    htmlInfoEnvironment.textContent = (EnvironmentRename[str] || 'Unknown') + ' Environment';
+   if (!EnvironmentRename[str]) htmlInfoEnvironment.textContent += ` (${str})`;
 }
 
 export function setEditors(obj?: IEditor): void {
@@ -45,8 +46,8 @@ export function setEditors(obj?: IEditor): void {
    const lastEdited = obj._lastEditedBy || 'Undefined';
    let text = 'Last edited on ' + lastEdited;
    if (obj[lastEdited]) {
-      const mapper = obj[lastEdited] as IEditorInfo;
-      text += ' v' + mapper.version;
+      const editor = obj[lastEdited] as IEditorInfo;
+      text += ' v' + editor.version;
    }
    htmlInfoEditors.textContent = text;
 }

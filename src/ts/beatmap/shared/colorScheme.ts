@@ -1,6 +1,7 @@
 import { ColorSchemeName } from '../../types/beatmap/shared/colorScheme';
 import { EnvironmentAllName } from '../../types/beatmap/shared/environment';
 import { IColorScheme } from '../../types/beatmap/v2/custom/colorScheme';
+import { IWrapInfoColorSchemeData } from '../../types/beatmap/wrapper/info';
 
 /** Record of Environment Color to Color Scheme. */
 export const EnvironmentSchemeName: {
@@ -45,7 +46,7 @@ export const EnvironmentSchemeName: {
 } as const;
 
 /** Color Scheme property rename to human readable. */
-export const ColorSchemeRename: {
+export const CustomColorRename: {
    readonly [key in keyof Required<IColorScheme>]: string;
 } = {
    _colorLeft: 'Left Note Color',
@@ -57,6 +58,22 @@ export const ColorSchemeRename: {
    _envColorRightBoost: 'Right Environment Boost Color',
    _envColorWhiteBoost: 'White Environment Boost Color',
    _obstacleColor: 'Obstacle Color',
+} as const;
+
+/** Color Scheme property rename to human readable. */
+export const ColorSchemeRename: {
+   readonly [key in keyof IWrapInfoColorSchemeData]: string;
+} = {
+   name: 'Name',
+   saberLeftColor: 'Left Note Color',
+   saberRightColor: 'Right Note Color',
+   environment0Color: 'Left Environment Color',
+   environment1Color: 'Right Environment Color',
+   environmentWColor: 'White Environment Color',
+   environment0ColorBoost: 'Left Environment Boost Color',
+   environment1ColorBoost: 'Right Environment Boost Color',
+   environmentWColorBoost: 'White Environment Boost Color',
+   obstaclesColor: 'Obstacle Color',
 } as const;
 
 /** Color scheme definition. */

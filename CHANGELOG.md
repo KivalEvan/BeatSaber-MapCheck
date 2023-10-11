@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.5.14 [2023-10-10]
+## 2.5.14 [2023-10-11]
 
 ### Added
 
@@ -11,6 +11,7 @@
 -  [New SongCore features](https://github.com/Kylemc1413/SongCore/pull/122) (tags, custom
    characteristic label, etc.)
 -  One Saber check
+-  Official color scheme and environment per difficulty
 
 ### Changed
 

@@ -1,6 +1,8 @@
 export const htmlTableVersion: HTMLElement = document.querySelector('.info__version')!;
+export const htmlTableEnvironmentId: HTMLElement = document.querySelector('.info__environmentId')!;
 export const htmlTablePlayTime: HTMLElement = document.querySelector('.info__play-time')!;
 export const htmlTableTimeSpend: HTMLElement = document.querySelector('.info__time-spend')!;
+export const htmlTableColorScheme: HTMLElement = document.querySelector('.info__color-scheme')!;
 export const htmlTableCustomColor: HTMLElement = document.querySelector('.info__custom-color')!;
 export const htmlTableRequirements: HTMLElement = document.querySelector('.info__requirements')!;
 export const htmlTableSuggestions: HTMLElement = document.querySelector('.info__suggestions')!;
