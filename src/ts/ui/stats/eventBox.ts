@@ -4,6 +4,22 @@ import { countEbg } from '../../analyzers/stats/mod';
 import { eventGroupRename } from '../../analyzers/renamer/mod';
 import { prefix } from './constants';
 
+function allPopulate(...d: Record<string, any>[]) {
+   for (const r of d) {
+      for (const k in r) {
+         for (const n of d) {
+            if (!n[k]) {
+               n[k] = {
+                  groups: 0,
+                  boxes: 0,
+                  bases: 0,
+               };
+            }
+         }
+      }
+   }
+}
+
 export function createEBGCountTable(mapInfo: IWrapInfo, mapData: IBeatmapItem): HTMLDivElement {
    const environment =
       mapData.characteristic === '360Degree' || mapData.characteristic === '90Degree'
@@ -12,98 +28,69 @@ export function createEBGCountTable(mapInfo: IWrapInfo, mapData: IBeatmapItem): 
    const ebgColorCount = countEbg(mapData.data.lightColorEventBoxGroups, environment);
    const ebgRotationCount = countEbg(mapData.data.lightRotationEventBoxGroups, environment);
    const ebgTranslationCount = countEbg(mapData.data.lightTranslationEventBoxGroups, environment);
+   const ebgFxCount = countEbg(mapData.data.fxEventBoxGroups, environment);
 
-   for (const ebg in ebgColorCount) {
-      if (!ebgRotationCount[ebg]) {
-         ebgRotationCount[ebg] = {
-            groups: 0,
-            boxes: 0,
-            bases: 0,
-         };
-      }
-      if (!ebgTranslationCount[ebg]) {
-         ebgTranslationCount[ebg] = {
-            groups: 0,
-            boxes: 0,
-            bases: 0,
-         };
-      }
-   }
-   for (const ebg in ebgRotationCount) {
-      if (!ebgColorCount[ebg]) {
-         ebgColorCount[ebg] = {
-            groups: 0,
-            boxes: 0,
-            bases: 0,
-         };
-      }
-      if (!ebgTranslationCount[ebg]) {
-         ebgTranslationCount[ebg] = {
-            groups: 0,
-            boxes: 0,
-            bases: 0,
-         };
-      }
-   }
-   for (const ebg in ebgTranslationCount) {
-      if (!ebgRotationCount[ebg]) {
-         ebgRotationCount[ebg] = {
-            groups: 0,
-            boxes: 0,
-            bases: 0,
-         };
-      }
-      if (!ebgColorCount[ebg]) {
-         ebgColorCount[ebg] = {
-            groups: 0,
-            boxes: 0,
-            bases: 0,
-         };
-      }
-   }
+   allPopulate(ebgColorCount, ebgRotationCount, ebgTranslationCount, ebgFxCount);
 
    let htmlString = `<caption class="${prefix}table-caption">Event Box Group:</caption><tr><th class="${prefix}table-header"></th><th class="${prefix}table-header">Group</th><th class="${prefix}table-header">Box</th><th class="${prefix}table-header">Base</th><tr><th class="${prefix}table-header">Color</th><td class="${prefix}table-element">${Object.values(
       ebgColorCount,
-   ).reduce((t, { total }) => t + total, 0)}</td><td class="${prefix}table-element">${Object.values(
-      ebgColorCount,
    ).reduce(
-      (t, { eventBox }) => t + eventBox,
+      (t, { groups }) => t + groups,
       0,
    )}</td><td class="${prefix}table-element">${Object.values(ebgColorCount).reduce(
-      (t, { base }) => t + base,
+      (t, { boxes }) => t + boxes,
+      0,
+   )}</td><td class="${prefix}table-element">${Object.values(ebgColorCount).reduce(
+      (t, { bases }) => t + bases,
       0,
    )}</td></tr><tr><th class="${prefix}table-header">Rotate</th><td class="${prefix}table-element">${Object.values(
       ebgRotationCount,
-   ).reduce((t, { total }) => t + total, 0)}</td><td class="${prefix}table-element">${Object.values(
-      ebgRotationCount,
    ).reduce(
-      (t, { eventBox }) => t + eventBox,
+      (t, { groups }) => t + groups,
       0,
    )}</td><td class="${prefix}table-element">${Object.values(ebgRotationCount).reduce(
-      (t, { base }) => t + base,
+      (t, { boxes }) => t + boxes,
+      0,
+   )}</td><td class="${prefix}table-element">${Object.values(ebgRotationCount).reduce(
+      (t, { bases }) => t + bases,
       0,
    )}</td></tr><tr><th class="${prefix}table-header">Translate</th><td class="${prefix}table-element">${Object.values(
       ebgTranslationCount,
-   ).reduce((t, { total }) => t + total, 0)}</td><td class="${prefix}table-element">${Object.values(
-      ebgTranslationCount,
    ).reduce(
-      (t, { eventBox }) => t + eventBox,
+      (t, { groups }) => t + groups,
       0,
    )}</td><td class="${prefix}table-element">${Object.values(ebgTranslationCount).reduce(
-      (t, { base }) => t + base,
+      (t, { boxes }) => t + boxes,
+      0,
+   )}</td><td class="${prefix}table-element">${Object.values(ebgTranslationCount).reduce(
+      (t, { bases }) => t + bases,
+      0,
+   )}</td></tr><tr><th class="${prefix}table-header">FX</th><td class="${prefix}table-element">${Object.values(
+      ebgFxCount,
+   ).reduce(
+      (t, { groups }) => t + groups,
+      0,
+   )}</td><td class="${prefix}table-element">${Object.values(ebgFxCount).reduce(
+      (t, { boxes }) => t + boxes,
+      0,
+   )}</td><td class="${prefix}table-element">${Object.values(ebgFxCount).reduce(
+      (t, { bases }) => t + bases,
       0,
    )}</td></tr><tr><th class="${prefix}table-header">Total</th><td class="${prefix}table-element">${
-      Object.values(ebgColorCount).reduce((t, { total }) => t + total, 0) +
-      Object.values(ebgRotationCount).reduce((t, { total }) => t + total, 0) +
-      Object.values(ebgTranslationCount).reduce((t, { total }) => t + total, 0)
+      Object.values(ebgColorCount).reduce((t, { groups }) => t + groups, 0) +
+      Object.values(ebgRotationCount).reduce((t, { groups }) => t + groups, 0) +
+      Object.values(ebgTranslationCount).reduce((t, { groups }) => t + groups, 0) +
+      Object.values(ebgFxCount).reduce((t, { groups }) => t + groups, 0)
    }</td><td class="${prefix}table-element">${
-      Object.values(ebgColorCount).reduce((t, { eventBox }) => t + eventBox, 0) +
-      Object.values(ebgRotationCount).reduce((t, { eventBox }) => t + eventBox, 0) +
-      Object.values(ebgTranslationCount).reduce((t, { eventBox }) => t + eventBox, 0)
+      Object.values(ebgColorCount).reduce((t, { boxes }) => t + boxes, 0) +
+      Object.values(ebgRotationCount).reduce((t, { boxes }) => t + boxes, 0) +
+      Object.values(ebgTranslationCount).reduce((t, { boxes }) => t + boxes, 0) +
+      Object.values(ebgFxCount).reduce((t, { boxes }) => t + boxes, 0)
    }</td><td class="${prefix}table-element">${
-      Object.values(ebgColorCount).reduce((t, { base }) => t + base, 0) +
-      Object.values(ebgRotationCount).reduce((t, { base }) => t + base, 0) +
-      Object.values(ebgTranslationCount).reduce((t, { base }) => t + base, 0)
+      Object.values(ebgColorCount).reduce((t, { bases }) => t + bases, 0) +
+      Object.values(ebgRotationCount).reduce((t, { bases }) => t + bases, 0) +
+      Object.values(ebgTranslationCount).reduce((t, { bases }) => t + bases, 0) +
+      Object.values(ebgFxCount).reduce((t, { bases }) => t + bases, 0)
    }</td></tr>`;
 
    let htmlStringID = `<caption class="${prefix}table-caption">Event Box Group ID:</caption>`;
@@ -120,7 +107,9 @@ export function createEBGCountTable(mapInfo: IWrapInfo, mapData: IBeatmapItem): 
          ebgRotationCount[key].groups
       }</td><td class="${prefix}table-element" title="${ebgTranslationCount[key].boxes} Box (${
          ebgTranslationCount[key].bases
-      } Base)">${ebgTranslationCount[key].groups}</td></tr>`;
+      } Base)">${ebgTranslationCount[key].groups}</td><td class="${prefix}table-element" title="${
+         ebgFxCount[key].groups
+      } Box (${ebgFxCount[key].bases} Base)">${ebgFxCount[key].groups}</td></tr>`;
    }
 
    const htmlTable = document.createElement('table');
