@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.5.14 [2023-10-11]
+## 2.5.14 [2023-10-12]
 
 ### Added
 
@@ -17,12 +17,13 @@
 
 -  Improved loading logic
    -  Can now load beatmap v1
--  Loading beatmap v3 can now default missing attributes as given by 1.32 editor update
+-  Loading beatmap can now default missing attributes as given by 1.32 editor update
 -  The Weeknd and Panic 2.0 color scheme now shows white color value
 
 ### Fixed
 
 -  Unknown characteristic no longer leave blank in stats page
+-  Max score is now calculated
 
 ## 2.5.13 [2023-06-02]
 
