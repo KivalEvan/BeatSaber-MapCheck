@@ -61,43 +61,41 @@ const tool: Tool<{ [k in DifficultyName]: boolean }> = {
 };
 
 function run(map: ToolArgs) {
-   const { audioDuration: audioDuration } = map.settings;
+   const { audioDuration } = map.settings;
    if (!audioDuration) {
       tool.output.html = null;
       return;
    }
-   const filteredSps = SavedData.beatmapDifficulty
+   const standardSpsAry = SavedData.beatmapDifficulty
+      .filter((a) => a.characteristic === 'Standard')
       .map((d) => d.swingAnalysis)
-      .filter(
-         (a) =>
-            a.characteristic === 'Standard' && tool.input.params[a.difficulty] && a.total.total > 0,
-      )
-      .sort((a, b) => a.total.average - b.total.average)
-      .reverse();
-   if (!filteredSps.length) {
+      .filter((a) => tool.input.params[a.difficulty] && a.total.total > 0)
+      .sort((a, b) => b.total.average - a.total.average);
+   if (!standardSpsAry.length) {
       tool.output.html = null;
       return;
    }
-   const minSps = Math.max(
+   const targetMinSps = Math.max(
       audioDuration < 120 ? 3.2 : audioDuration < 240 ? 4.2 : 5.2,
-      round(swing.getSpsHighest(filteredSps) * 0.4, 2),
+      round(swing.getSpsHighest(standardSpsAry) * 0.4, 2),
    );
 
    const htmlResult: HTMLElement[] = [];
-   if (audioDuration < 360 && swing.getSpsLowest(filteredSps) > minSps) {
+   if (audioDuration < 360 && swing.getSpsLowest(standardSpsAry) > targetMinSps) {
+      standardSpsAry.forEach((e) => e.total.average);
       htmlResult.push(
          printResult(
-            `Minimum Sps not met (<${minSps})`,
-            `lowest Sps is ${round(swing.getSpsLowest(filteredSps), 2)}, ${round(
-               swing.calcSpsTotalPercDrop(filteredSps),
+            `Minimum SPS not met (<${targetMinSps})`,
+            `lowest SPS is ${round(swing.getSpsLowest(standardSpsAry), 2)}, ${round(
+               swing.calcSpsTotalPercDrop(standardSpsAry),
                2,
-            )}% drop from highest Sps (${round(swing.getSpsHighest(filteredSps), 2)})`,
+            )}% drop from highest SPS (${round(swing.getSpsHighest(standardSpsAry), 2)})`,
             'rank',
          ),
       );
    }
-   const progMax = swing.getProgressionMax(filteredSps, minSps);
-   const progMin = swing.getProgressionMin(filteredSps, minSps);
+   const progMax = swing.getProgressionMax(standardSpsAry, targetMinSps);
+   const progMin = swing.getProgressionMin(standardSpsAry, targetMinSps);
    if (progMax && audioDuration < 360) {
       htmlResult.push(
          printResult(

@@ -47,15 +47,46 @@ function run(map: ToolArgs) {
       console.error('Something went wrong!');
       return;
    }
-   const result = sufficientLight(
-      map.difficulty.data.basicEvents,
+   const env =
       map.difficulty.characteristic === '360Degree' || map.difficulty.characteristic === '90Degree'
          ? map.info.allDirectionsEnvironmentName
-         : map.info.environmentName,
-   );
+         : map.info.environmentName;
+   const result = sufficientLight(map.difficulty.data.basicEvents, env);
 
    if (!result) {
-      tool.output.html = printResult('Insufficient light event', '', 'rank');
+      if (
+         env === 'DefaultEnvironment' ||
+         env === 'OriginsEnvironment' ||
+         env === 'TriangleEnvironment' ||
+         env === 'NiceEnvironment' ||
+         env === 'BigMirrorEnvironment' ||
+         env === 'DragonsEnvironment' ||
+         env === 'KDAEnvironment' ||
+         env === 'MonstercatEnvironment' ||
+         env === 'CrabRaveEnvironment' ||
+         env === 'PanicEnvironment' ||
+         env === 'RocketEnvironment' ||
+         env === 'GreenDayEnvironment' ||
+         env === 'GreenDayGrenadeEnvironment' ||
+         env === 'TimbalandEnvironment' ||
+         env === 'FitBeatEnvironment' ||
+         env === 'LinkinParkEnvironment' ||
+         env === 'BTSEnvironment' ||
+         env === 'KaleidoscopeEnvironment' ||
+         env === 'InterscopeEnvironment' ||
+         env === 'SkrillexEnvironment' ||
+         env === 'BillieEnvironment' ||
+         env === 'HalloweenEnvironment' ||
+         env === 'GagaEnvironment' ||
+         env === 'GlassDesertEnvironment'
+      )
+         tool.output.html = printResult('Insufficient light event', '', 'rank');
+      else
+         tool.output.html = printResult(
+            'Unknown light event',
+            'v3 environment light should be manually checked',
+            'rank',
+         );
    } else {
       tool.output.html = null;
    }

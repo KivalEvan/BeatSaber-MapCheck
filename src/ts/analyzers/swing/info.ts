@@ -182,23 +182,9 @@ export function calcSpsTotalPercDrop(spsArray: ISwingAnalysis[]): number {
 }
 
 export function getSpsLowest(spsArray: ISwingAnalysis[]): number {
-   let lowest = Number.MAX_SAFE_INTEGER;
-   spsArray.forEach((spsMap) => {
-      const overall = spsMap.total.average;
-      if (overall > 0) {
-         lowest = Math.min(lowest, overall);
-      }
-   });
-   return lowest;
+   return Math.min(...spsArray.map((e) => e.total.average), Number.MAX_SAFE_INTEGER);
 }
 
 export function getSpsHighest(spsArray: ISwingAnalysis[]): number {
-   let highest = 0;
-   spsArray.forEach((spsMap) => {
-      const overall = spsMap.total.average;
-      if (overall > 0) {
-         highest = Math.max(highest, overall);
-      }
-   });
-   return highest;
+   return Math.max(...spsArray.map((e) => e.total.average), 0);
 }

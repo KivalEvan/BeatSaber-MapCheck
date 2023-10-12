@@ -19,11 +19,13 @@
    -  Can now load beatmap v1
 -  Loading beatmap can now default missing attributes as given by 1.32 editor update
 -  The Weeknd and Panic 2.0 color scheme now shows white color value
+-  New unknown environment now display environment string itself
+-  Different message for light event check in v3 environment
 
 ### Fixed
 
 -  Unknown characteristic no longer leave blank in stats page
--  Max score is now calculated
+-  Potential SPS progression check fix
 
 ## 2.5.13 [2023-06-02]
 
