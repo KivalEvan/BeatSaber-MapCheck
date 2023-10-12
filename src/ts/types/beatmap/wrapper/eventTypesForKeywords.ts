@@ -2,21 +2,21 @@
 import { ISerializable } from '../shared/serializable';
 
 export interface IWrapEventTypesForKeywordsAttribute<
-    T extends { [P in keyof T]: T[P] } = Record<string, any>,
+   T extends { [P in keyof T]: T[P] } = Record<string, any>,
 > {
-    /** Keyword `<string>` of event types for keywords. */
-    keyword: string;
-    /** Event type `<int[]>` of event types for keywords. */
-    events: number[];
+   /** Keyword `<string>` of event types for keywords. */
+   keyword: string;
+   /** Event type `<int[]>` of event types for keywords. */
+   events: number[];
 }
 
 export interface IWrapEventTypesForKeywords<
-    T extends { [P in keyof T]: T[P] } = Record<string, any>,
+   T extends { [P in keyof T]: T[P] } = Record<string, any>,
 > extends ISerializable<T>,
-        IWrapEventTypesForKeywordsAttribute<T> {
-    setKeyword(value: IWrapEventTypesForKeywords['keyword']): this;
-    setEvents(value: IWrapEventTypesForKeywords['events']): this;
+      IWrapEventTypesForKeywordsAttribute<T> {
+   setKeyword(value: IWrapEventTypesForKeywords['keyword']): this;
+   setEvents(value: IWrapEventTypesForKeywords['events']): this;
 
-    addEvent(value: number): this;
-    removeEvent(value: number): this;
+   addEvent(value: number): this;
+   removeEvent(value: number): this;
 }

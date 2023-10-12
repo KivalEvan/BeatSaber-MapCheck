@@ -1,4 +1,4 @@
 export interface IBaseObject {
-    /** Beat time `<float>` of beatmap object. */
-    _time: number;
+   /** Beat time `<float>` of beatmap object. */
+   _time: number;
 }

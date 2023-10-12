@@ -1,132 +1,132 @@
 .accordion {
-    position: relative;
-    width: 100%;
-    &__button {
-        position: absolute;
-        width: 0;
-        height: 0;
-        left: -9999px;
-        & {
-            + .accordion__label {
-                &::before {
-                    content: '\002B';
-                    font-weight: bold;
-                    float: left;
-                    padding: 0 0.75em 0 0.25em;
-                }
-                + .accordion__collapsible {
-                    display: none;
-                }
+   position: relative;
+   width: 100%;
+   &__button {
+      position: absolute;
+      width: 0;
+      height: 0;
+      left: -9999px;
+      & {
+         + .accordion__label {
+            &::before {
+               content: '\002B';
+               font-weight: bold;
+               float: left;
+               padding: 0 0.75em 0 0.25em;
             }
-        }
-        &:checked {
-            + .accordion__label {
-                filter: contrast(120%) brightness(1.1);
-                box-shadow: 0 0.125rem 0.25rem -0.125rem black;
-                &:hover {
-                    filter: contrast(130%) brightness(1.15);
-                }
-                &::before {
-                    content: '\2212';
-                }
-                + .accordion__collapsible {
-                    display: block;
-                    &-flex {
-                        display: flex;
-                    }
-                }
+            + .accordion__collapsible {
+               display: none;
             }
-        }
-        &:focus + .accordion__label {
-            outline: 1px dashed var(--c-outline-focus-accordion);
-            outline-offset: -1px;
-        }
-    }
-    &__label {
-        display: block;
-        cursor: pointer;
-        font-size: 1.125rem;
-        padding: 0.375em;
-        background-color: var(--bg-accordion-base);
-        color: var(--c-accordion-text);
-        transition: filter 0.125s ease;
-        font-weight: 600;
-        &--upper {
-            text-transform: uppercase;
-        }
-        &:hover {
-            filter: contrast(110%) brightness(1.05);
-        }
-        &--medium {
-            font-size: 1.25rem;
-        }
-        &--large {
-            font-size: 1.375rem;
-        }
-        &--bg-easy {
-            background: linear-gradient(to right, #0002, #0000 25%);
-            background-color: var(--bg-diff-easy);
-            color: white;
-            text-shadow: 0 0 0.125em black;
-        }
-        &--bg-normal {
-            background: linear-gradient(to right, #0002, #0000 25%);
-            background-color: var(--bg-diff-normal);
-            color: white;
-            text-shadow: 0 0 0.125em black;
-        }
-        &--bg-hard {
-            background: linear-gradient(to right, #0002, #0000 25%);
-            background-color: var(--bg-diff-hard);
-            color: white;
-            text-shadow: 0 0 0.125em black;
-        }
-        &--bg-expert {
-            background: linear-gradient(to right, #0002, #0000 25%);
-            background-color: var(--bg-diff-expert);
-            color: white;
-            text-shadow: 0 0 0.125em black;
-        }
-        &--bg-expertplus {
-            background: linear-gradient(to right, #0002, #0000 25%);
-            background-color: var(--bg-diff-expertplus);
-            color: white;
-            text-shadow: 0 0 0.125em black;
-        }
-    }
-    &__collapsible {
-        display: block;
-        align-items: stretch;
-        background-color: var(--bg-accordion-collapsible);
-        &-flex {
-            @extend .accordion__collapsible;
-            display: flex;
-        }
-    }
+         }
+      }
+      &:checked {
+         + .accordion__label {
+            filter: contrast(120%) brightness(1.1);
+            box-shadow: 0 0.125rem 0.25rem -0.125rem black;
+            &:hover {
+               filter: contrast(130%) brightness(1.15);
+            }
+            &::before {
+               content: '\2212';
+            }
+            + .accordion__collapsible {
+               display: block;
+               &-flex {
+                  display: flex;
+               }
+            }
+         }
+      }
+      &:focus + .accordion__label {
+         outline: 1px dashed var(--c-outline-focus-accordion);
+         outline-offset: -1px;
+      }
+   }
+   &__label {
+      display: block;
+      cursor: pointer;
+      font-size: 1.125rem;
+      padding: 0.375em;
+      background-color: var(--bg-accordion-base);
+      color: var(--c-accordion-text);
+      transition: filter 0.125s ease;
+      font-weight: 600;
+      &--upper {
+         text-transform: uppercase;
+      }
+      &:hover {
+         filter: contrast(110%) brightness(1.05);
+      }
+      &--medium {
+         font-size: 1.25rem;
+      }
+      &--large {
+         font-size: 1.375rem;
+      }
+      &--bg-easy {
+         background: linear-gradient(to right, #0002, #0000 25%);
+         background-color: var(--bg-diff-easy);
+         color: white;
+         text-shadow: 0 0 0.125em black;
+      }
+      &--bg-normal {
+         background: linear-gradient(to right, #0002, #0000 25%);
+         background-color: var(--bg-diff-normal);
+         color: white;
+         text-shadow: 0 0 0.125em black;
+      }
+      &--bg-hard {
+         background: linear-gradient(to right, #0002, #0000 25%);
+         background-color: var(--bg-diff-hard);
+         color: white;
+         text-shadow: 0 0 0.125em black;
+      }
+      &--bg-expert {
+         background: linear-gradient(to right, #0002, #0000 25%);
+         background-color: var(--bg-diff-expert);
+         color: white;
+         text-shadow: 0 0 0.125em black;
+      }
+      &--bg-expertplus {
+         background: linear-gradient(to right, #0002, #0000 25%);
+         background-color: var(--bg-diff-expertplus);
+         color: white;
+         text-shadow: 0 0 0.125em black;
+      }
+   }
+   &__collapsible {
+      display: block;
+      align-items: stretch;
+      background-color: var(--bg-accordion-collapsible);
+      &-flex {
+         @extend .accordion__collapsible;
+         display: flex;
+      }
+   }
 }
 
 @media (max-width: 800px) {
-    .accordion {
-        &__button {
-            &:checked {
-                + .accordion__label {
-                    + .accordion__collapsible {
-                        &-flex {
-                            display: block;
-                        }
-                    }
-                }
+   .accordion {
+      &__button {
+         &:checked {
+            + .accordion__label {
+               + .accordion__collapsible {
+                  &-flex {
+                     display: block;
+                  }
+               }
             }
-        }
-        &__label {
-            font-size: 1.5rem;
-            padding: 0.5em;
-        }
-        &__collapsible {
-            &-flex {
-                align-items: unset;
-                display: block;
-            }
-        }
-    }
+         }
+      }
+      &__label {
+         font-size: 1.5rem;
+         padding: 0.5em;
+      }
+      &__collapsible {
+         &-flex {
+            align-items: unset;
+            display: block;
+         }
+      }
+   }
 }

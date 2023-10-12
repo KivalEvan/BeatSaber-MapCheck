@@ -5,7 +5,7 @@ import { IHeckBase } from './heck';
 import { INEObstacle } from './noodleExtensions';
 
 export type ICustomDataObstacle = ICustomDataBase &
-    IHeckBase &
-    IChromaObstacle &
-    INEObstacle &
-    IAnimation;
+   IHeckBase &
+   IChromaObstacle &
+   INEObstacle &
+   IAnimation;

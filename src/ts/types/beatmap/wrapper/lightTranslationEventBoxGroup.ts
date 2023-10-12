@@ -1,25 +1,25 @@
 // deno-lint-ignore-file no-explicit-any
 import { IWrapEventBoxGroup, IWrapEventBoxGroupAttribute } from './eventBoxGroup';
 import {
-    IWrapLightTranslationEventBox,
-    IWrapLightTranslationEventBoxAttribute,
+   IWrapLightTranslationEventBox,
+   IWrapLightTranslationEventBoxAttribute,
 } from './lightTranslationEventBox';
 
 export interface IWrapLightTranslationEventBoxGroupAttribute<
-    TGroup extends { [P in keyof TGroup]: TGroup[P] } = Record<string, any>,
-    TBox extends { [P in keyof TBox]: TBox[P] } = Record<string, any>,
-    TBase extends { [P in keyof TBase]: TBase[P] } = Record<string, any>,
-    TFilter extends { [P in keyof TFilter]: TFilter[P] } = Record<string, any>,
+   TGroup extends { [P in keyof TGroup]: TGroup[P] } = Record<string, any>,
+   TBox extends { [P in keyof TBox]: TBox[P] } = Record<string, any>,
+   TBase extends { [P in keyof TBase]: TBase[P] } = Record<string, any>,
+   TFilter extends { [P in keyof TFilter]: TFilter[P] } = Record<string, any>,
 > extends IWrapEventBoxGroupAttribute<TGroup, TBox, TBase, TFilter> {
-    boxes: IWrapLightTranslationEventBoxAttribute<TBox, TBase, TFilter>[];
+   boxes: IWrapLightTranslationEventBoxAttribute<TBox, TBase, TFilter>[];
 }
 
 export interface IWrapLightTranslationEventBoxGroup<
-    TGroup extends { [P in keyof TGroup]: TGroup[P] } = Record<string, any>,
-    TBox extends { [P in keyof TBox]: TBox[P] } = Record<string, any>,
-    TBase extends { [P in keyof TBase]: TBase[P] } = Record<string, any>,
-    TFilter extends { [P in keyof TFilter]: TFilter[P] } = Record<string, any>,
+   TGroup extends { [P in keyof TGroup]: TGroup[P] } = Record<string, any>,
+   TBox extends { [P in keyof TBox]: TBox[P] } = Record<string, any>,
+   TBase extends { [P in keyof TBase]: TBase[P] } = Record<string, any>,
+   TFilter extends { [P in keyof TFilter]: TFilter[P] } = Record<string, any>,
 > extends IWrapEventBoxGroup<TGroup, TBox, TBase, TFilter>,
-        IWrapLightTranslationEventBoxGroupAttribute<TGroup, TBox, TBase, TFilter> {
-    boxes: IWrapLightTranslationEventBox<TBox, TBase, TFilter>[];
+      IWrapLightTranslationEventBoxGroupAttribute<TGroup, TBox, TBase, TFilter> {
+   boxes: IWrapLightTranslationEventBox<TBox, TBase, TFilter>[];
 }

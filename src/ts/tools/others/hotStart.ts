@@ -19,54 +19,54 @@ htmlInputTime.value = defaultTime.toString();
 htmlInputTime.addEventListener('change', inputTimeHandler);
 
 const htmlContainer = UICheckbox.create(
-    name + ' (s): ',
-    description,
-    enabled,
-    function (this: HTMLInputElement) {
-        tool.input.enabled = this.checked;
-    },
+   name + ' (s): ',
+   description,
+   enabled,
+   function (this: HTMLInputElement) {
+      tool.input.enabled = this.checked;
+   },
 );
 htmlContainer.appendChild(htmlInputTime);
 
 const tool: Tool<{ time: number }> = {
-    name,
-    description,
-    type: 'other',
-    order: {
-        input: ToolInputOrder.OTHERS_HOT_START,
-        output: ToolOutputOrder.OTHERS_HOT_START,
-    },
-    input: {
-        enabled,
-        params: {
-            time: defaultTime,
-        },
-        html: htmlContainer,
-    },
-    output: {
-        html: null,
-    },
-    run,
+   name,
+   description,
+   type: 'other',
+   order: {
+      input: ToolInputOrder.OTHERS_HOT_START,
+      output: ToolOutputOrder.OTHERS_HOT_START,
+   },
+   input: {
+      enabled,
+      params: {
+         time: defaultTime,
+      },
+      html: htmlContainer,
+   },
+   output: {
+      html: null,
+   },
+   run,
 };
 
 function inputTimeHandler(this: HTMLInputElement) {
-    tool.input.params.time = round(Math.abs(parseFloat(this.value)), 3);
-    this.value = tool.input.params.time.toString();
+   tool.input.params.time = round(Math.abs(parseFloat(this.value)), 3);
+   this.value = tool.input.params.time.toString();
 }
 
 function run(map: ToolArgs) {
-    if (!map.difficulty) {
-        console.error('Something went wrong!');
-        return;
-    }
-    const { time } = tool.input.params;
-    const result = map.settings.bpm.toRealTime(map.difficulty.data.getFirstInteractiveTime());
+   if (!map.difficulty) {
+      console.error('Something went wrong!');
+      return;
+   }
+   const { time } = tool.input.params;
+   const result = map.settings.bpm.toRealTime(map.difficulty.data.getFirstInteractiveTime());
 
-    if (result < time) {
-        tool.output.html = printResult('Hot start', `${round(result, 2)}s`, 'warning');
-    } else {
-        tool.output.html = null;
-    }
+   if (result < time) {
+      tool.output.html = printResult('Hot start', `${round(result, 2)}s`, 'warning');
+   } else {
+      tool.output.html = null;
+   }
 }
 
 export default tool;

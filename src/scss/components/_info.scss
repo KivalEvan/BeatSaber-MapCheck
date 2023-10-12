@@ -1,67 +1,67 @@
 .info {
-    &__contributors {
-        &-card {
-            display: block;
-            padding: 0.5em;
-        }
-        &-image {
-            display: inline-block;
-            width: 6em;
-            height: 6em;
-            box-shadow: 0.125rem 0.125rem 0.25rem -0.125rem black;
-        }
-        &-content {
-            display: inline-block;
-            vertical-align: top;
-            padding-left: 0.5em;
-        }
-        &-name {
-            font-size: 1.5rem;
-            line-height: 1.25rem;
-        }
-        &-role {
-            font-size: 1rem;
-        }
-    }
-    &__table {
-        width: 100%;
-        &-body,
-        &-row {
-            width: 100%;
-        }
-        &-header {
-            width: 8em;
-            text-align: right;
-            vertical-align: top;
-            &::after {
-                content: ':';
-            }
-        }
-        &-element {
-            display: block;
-            max-height: 4rem;
-            word-wrap: break-word;
-            word-break: break-all;
-            overflow: auto;
-        }
-    }
-    &__color {
-        &-dot {
-            display: inline-block;
-            box-sizing: border-box;
-            vertical-align: center;
-            width: 1em;
-            height: 1em;
-            border: 1px solid #000;
-            border-radius: 50%;
-        }
-        &-text {
-            display: inline-block;
-            box-sizing: border-box;
-            margin-left: 0.5em;
-            &--monospace {
-                font-family: var(--font-monospace);
-            }
-        }
-    }
+   &__contributors {
+      &-card {
+         display: block;
+         padding: 0.5em;
+      }
+      &-image {
+         display: inline-block;
+         width: 6em;
+         height: 6em;
+         box-shadow: 0.125rem 0.125rem 0.25rem -0.125rem black;
+      }
+      &-content {
+         display: inline-block;
+         vertical-align: top;
+         padding-left: 0.5em;
+      }
+      &-name {
+         font-size: 1.5rem;
+         line-height: 1.25rem;
+      }
+      &-role {
+         font-size: 1rem;
+      }
+   }
+   &__table {
+      width: 100%;
+      &-body,
+      &-row {
+         width: 100%;
+      }
+      &-header {
+         width: 8em;
+         text-align: right;
+         vertical-align: top;
+         &::after {
+            content: ':';
+         }
+      }
+      &-element {
+         display: block;
+         max-height: 4rem;
+         word-wrap: break-word;
+         word-break: break-all;
+         overflow: auto;
+      }
+   }
+   &__color {
+      &-dot {
+         display: inline-block;
+         box-sizing: border-box;
+         vertical-align: center;
+         width: 1em;
+         height: 1em;
+         border: 1px solid #000;
+         border-radius: 50%;
+      }
+      &-text {
+         display: inline-block;
+         box-sizing: border-box;
+         margin-left: 0.5em;
+         &--monospace {
+            font-family: var(--font-monospace);
+         }
+      }
+   }
 }

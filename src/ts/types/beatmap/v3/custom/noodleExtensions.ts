@@ -6,84 +6,94 @@ import { IHeckBase } from './heck';
 
 /** Noodle Extensions Object interface for Beatmap Object. */
 interface INEObject {
-    coordinates?: Vector2;
-    worldRotation?: number | Vector3;
-    localRotation?: Vector3;
-    noteJumpMovementSpeed?: number;
-    noteJumpStartBeatOffset?: number;
-    uninteractable?: boolean;
+   coordinates?: Vector2;
+   worldRotation?: number | Vector3;
+   localRotation?: Vector3;
+   noteJumpMovementSpeed?: number;
+   noteJumpStartBeatOffset?: number;
+   uninteractable?: boolean;
 }
 
-/** Noodle Extensions Note interface for Beatmap Note.
+/**
+ * Noodle Extensions Note interface for Beatmap Note.
  * @extends INEObject
  */
 export interface INENote extends INEObject {
-    flip?: Vector2;
-    disableNoteGravity?: boolean;
-    disableNoteLook?: boolean;
-    disableBadCutDirection?: boolean;
-    disableBadCutSpeed?: boolean;
-    disableBadCutSaberType?: boolean;
-    link?: string;
+   flip?: Vector2;
+   disableNoteGravity?: boolean;
+   disableNoteLook?: boolean;
+   disableBadCutDirection?: boolean;
+   disableBadCutSpeed?: boolean;
+   disableBadCutSaberType?: boolean;
+   link?: string;
 }
 
-/** Noodle Extensions Slider interface for Beatmap Arc.
+/**
+ * Noodle Extensions Slider interface for Beatmap Arc.
  * @extends INENote
  */
 export interface INESlider extends INENote {
-    tailCoordinates?: Vector2;
+   tailCoordinates?: Vector2;
 }
 
-/** Noodle Extensions Obstacle interface for Beatmap Obstacle.
+/**
+ * Noodle Extensions Obstacle interface for Beatmap Obstacle.
  * @extends INEObject
  */
 export interface INEObstacle extends INEObject {
-    size?: Nullable<Vector3>;
+   size?: Nullable<Vector3>;
 }
 
-/** AssignPathAnimation interface for Noodle Extensions Custom Event.
+/**
+ * AssignPathAnimation interface for Noodle Extensions Custom Event.
  * @extends Required<IHeckBase>
  */
 export interface INECustomEventDataAnimateTrack extends Required<IHeckBase> {
-    dissolve?: string | number | FloatPointDefinition[];
-    dissolveArrow?: string | number | FloatPointDefinition[];
-    interactable?: string | number | FloatPointDefinition[];
-    time?: string | number | FloatPointDefinition[];
+   offsetPosition?: string | Vector3 | Vector3PointDefinition[];
+   offsetWorldRotation?: string | Vector3 | Vector3PointDefinition[];
+   dissolve?: string | [number] | FloatPointDefinition[];
+   dissolveArrow?: string | [number] | FloatPointDefinition[];
+   interactable?: string | [number] | FloatPointDefinition[];
+   time?: string | [number] | FloatPointDefinition[];
 }
 
-/** AssignPathAnimation interface for Noodle Extensions Custom Event.
+/**
+ * AssignPathAnimation interface for Noodle Extensions Custom Event.
  * @extends Required<IHeckBase>
  */
 export interface INECustomEventDataAssignPathAnimation extends Required<IHeckBase> {
-    dissolve?: string | number | FloatPointDefinition[];
-    dissolveArrow?: string | number | FloatPointDefinition[];
-    interactable?: string | number | FloatPointDefinition[];
-    definitePosition?: string | Vector3 | Vector3PointDefinition[];
+   offsetPosition?: string | Vector3 | Vector3PointDefinition[];
+   offsetWorldRotation?: string | Vector3 | Vector3PointDefinition[];
+   dissolve?: string | [number] | FloatPointDefinition[];
+   dissolveArrow?: string | [number] | FloatPointDefinition[];
+   interactable?: string | [number] | FloatPointDefinition[];
+   definitePosition?: string | Vector3 | Vector3PointDefinition[];
 }
 
 /** AssignPathAnimation interface for Noodle Extensions Custom Event. */
 export interface INECustomEventDataAssignTrackParent {
-    childrenTracks: string | string[];
-    parentTrack: string;
-    worldPositionStays?: boolean;
+   childrenTracks: string | string[];
+   parentTrack: string;
+   worldPositionStays?: boolean;
 }
 
-/** AssignPlayerToTrack interface for Noodle Extensions Custom Event.
+/**
+ * AssignPlayerToTrack interface for Noodle Extensions Custom Event.
  * @extends Required<IHeckBase>
  */
 export interface INECustomEventDataAssignPlayerToTrack extends Required<IHeckBase> {
-    target?: PlayerObject;
+   target?: PlayerObject;
 }
 
 /** Noodle Extensions Animation interface for Noodle Extensions Object. */
 export interface INEAnimation {
-    offsetPosition?: string | Vector3 | Vector3PointDefinition[];
-    offsetRotation?: string | Vector3 | Vector3PointDefinition[];
-    localRotation?: string | Vector3 | Vector3PointDefinition[];
-    scale?: string | Vector3 | Vector3PointDefinition[];
-    dissolve?: string | number | FloatPointDefinition[];
-    dissolveArrow?: string | number | FloatPointDefinition[];
-    interactable?: string | number | FloatPointDefinition[];
-    definitePosition?: string | Vector3 | Vector3PointDefinition[];
-    time?: string | number | FloatPointDefinition[];
+   offsetPosition?: string | Vector3 | Vector3PointDefinition[];
+   offsetRotation?: string | Vector3 | Vector3PointDefinition[];
+   localRotation?: string | Vector3 | Vector3PointDefinition[];
+   scale?: string | Vector3 | Vector3PointDefinition[];
+   dissolve?: string | [number] | FloatPointDefinition[];
+   dissolveArrow?: string | [number] | FloatPointDefinition[];
+   interactable?: string | [number] | FloatPointDefinition[];
+   definitePosition?: string | Vector3 | Vector3PointDefinition[];
+   time?: string | [number] | FloatPointDefinition[];
 }

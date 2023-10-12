@@ -1,4 +1,5 @@
-/** Beatmap v3 JSON schema.
+/**
+ * Beatmap v3 JSON schema.
  *
  * @module
  */
@@ -18,6 +19,11 @@ export * from './colorNote';
 export * from './difficulty';
 export * from './eventBox';
 export * from './eventBoxGroup';
+export * from './fxEventBox';
+export * from './fxEventBoxGroup';
+export * from './fxEventFloat';
+export * from './fxEventInt';
+export * from './fxEventsCollection';
 export * from './gridObject';
 export * from './indexFilter';
 export * from './lightColorBase';
