@@ -36,7 +36,8 @@ export type EnvironmentV3Name =
    | 'Dragons2Environment'
    | 'Panic2Environment'
    | 'QueenEnvironment'
-   | 'LinkinPark2Environment';
+   | 'LinkinPark2Environment'
+   | 'TheRollingStonesEnvironment';
 
 /** List of available 360 environment in base game. */
 export type Environment360Name = 'GlassDesertEnvironment' | 'MultiplayerEnvironment';

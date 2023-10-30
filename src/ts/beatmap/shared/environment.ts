@@ -36,6 +36,7 @@ export const EnvironmentRename: { readonly [key in EnvironmentAllName]: string }
    Panic2Environment: 'Panic 2.0',
    QueenEnvironment: 'Queen',
    LinkinPark2Environment: 'Linkin Park 2.0',
+   TheRollingStonesEnvironment: 'The Rolling Stones',
    GlassDesertEnvironment: 'Glass Desert',
    MultiplayerEnvironment: 'Origins',
 } as const;
@@ -115,5 +116,12 @@ export const EventList: {
    LinkinPark2Environment: [
       [3, 40, 41],
       [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+   ],
+   TheRollingStonesEnvironment: [
+      [6, 40],
+      [
+         0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
+         25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45,
+      ],
    ],
 } as const;
