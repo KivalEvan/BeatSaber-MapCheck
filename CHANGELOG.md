@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.5.15 [2023-10-31]
+
+### Added
+
+-  The Rolling Stones environment & color scheme
+
 ## 2.5.14 [2023-10-12]
 
 ### Added

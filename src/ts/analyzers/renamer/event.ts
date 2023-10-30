@@ -175,6 +175,10 @@ const environmentType: { [env in EnvironmentAllName]?: { [key: number]: string }
       40: 'Logos',
       41: 'Floor Logos',
    },
+   TheRollingStonesEnvironment: {
+      6: 'Ambient',
+      40: 'Logo',
+   },
 };
 
 export function eventTypeRename(type: number, environment?: EnvironmentAllName): string {

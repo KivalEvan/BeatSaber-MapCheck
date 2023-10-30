@@ -29,4 +29,5 @@ export type ColorSchemeName =
    | 'Dragons 2.0'
    | 'Panic 2.0'
    | 'Queen'
-   | 'Linkin Park 2.0';
+   | 'Linkin Park 2.0'
+   | 'The Rolling Stones';
