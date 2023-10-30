@@ -4,7 +4,7 @@ import { IColorScheme } from '../../types/beatmap/v2/custom/colorScheme';
 import { EnvironmentName } from '../../types/beatmap/shared/environment';
 import {
    ColorScheme,
-   CustomColorRename,
+   ColorSchemeRename,
    EnvironmentSchemeName,
 } from '../../beatmap/shared/colorScheme';
 import { htmlTableCustomColor } from './constants';
@@ -157,7 +157,7 @@ export function setCustomColor(customColor?: IColorScheme, environment?: Environ
       textMonoContainer.textContent = `${hexColor[key]}`;
 
       textContainer.className = 'info__color-text';
-      textContainer.textContent = ` -- ${CustomColorRename[key as keyof typeof CustomColorRename]}`;
+      textContainer.textContent = ` -- ${ColorSchemeRename[key as keyof typeof ColorSchemeRename]}`;
 
       container.appendChild(colorContainer);
       container.appendChild(textMonoContainer);
