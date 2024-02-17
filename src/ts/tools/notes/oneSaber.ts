@@ -1,9 +1,9 @@
 import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
-import UICheckbox from '../../ui/helpers/checkbox';
-import { printResultTime } from '../helpers';
+import UIInput from '../../ui/helpers/input';
+import { printResult, printResultTime } from '../helpers';
 
-const name = 'Improper Chain';
-const description = 'Check for correct use of chain.';
+const name = 'One Saber';
+const description = 'Check for one saber.';
 const enabled = true;
 
 const tool: Tool = {
@@ -11,15 +11,22 @@ const tool: Tool = {
    description,
    type: 'note',
    order: {
-      input: ToolInputOrder.NOTES_IMPROPER_CHAIN,
-      output: ToolOutputOrder.NOTES_IMPROPER_CHAIN,
+      input: ToolInputOrder.NOTES_ONE_SABER,
+      output: ToolOutputOrder.NOTES_ONE_SABER,
    },
    input: {
       enabled,
       params: {},
-      html: UICheckbox.create(name, description, enabled, function (this: HTMLInputElement) {
-         tool.input.enabled = this.checked;
-      }),
+      html: UIInput.createBlock(
+         UIInput.createCheckbox(
+            function (this: HTMLInputElement) {
+               tool.input.enabled = this.checked;
+            },
+            name,
+            description,
+            enabled,
+         ),
+      ),
    },
    output: {
       html: null,
@@ -28,12 +35,31 @@ const tool: Tool = {
 };
 
 function run(map: ToolArgs) {
-   let result: number[] | undefined;
-   if (map.difficulty?.characteristic === 'OneSaber' || map.difficulty?.info.customData.oneSaber)
-      result = map.difficulty.data.colorNotes.filter((n) => n.isRed()).map((n) => n.time);
+   let notOneSaberNote: number[] | undefined;
+   let whyisthisonesaber = false;
+   let isOneSaber =
+      map.difficulty!.characteristic === 'OneSaber' || map.difficulty!.info.customData.oneSaber;
+   if (isOneSaber)
+      notOneSaberNote = map.difficulty!.data.colorNotes.filter((n) => n.isRed()).map((n) => n.time);
+   else {
+      const hasBlueNote = map.difficulty!.data.colorNotes.filter((n) => n.isBlue()).length > 0;
+      const hasRedNote = map.difficulty!.data.colorNotes.filter((n) => n.isRed()).length > 0;
+      whyisthisonesaber = hasBlueNote ? !hasRedNote : hasRedNote;
+   }
 
-   if (result?.length) {
-      tool.output.html = printResultTime('Wrong One Saber Note', result, map.settings.bpm, 'error');
+   if (notOneSaberNote?.length) {
+      tool.output.html = printResultTime(
+         'Wrong One Saber Note',
+         notOneSaberNote,
+         map.settings.bpm,
+         'error',
+      );
+   } else if (whyisthisonesaber) {
+      tool.output.html = printResult(
+         'Unintended One Saber',
+         'One Saber gameplay outside of One Saber characteristic',
+         'rank',
+      );
    } else {
       tool.output.html = null;
    }

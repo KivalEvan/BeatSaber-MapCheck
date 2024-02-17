@@ -1,11 +1,10 @@
 import { IndexFilterType } from '../../beatmap/mod';
 import { EventList } from '../../beatmap/shared/environment';
-import { Difficulty } from '../../beatmap/v3/difficulty';
 import { EnvironmentAllName, EnvironmentV3Name } from '../../types/beatmap/shared/environment';
 import { IWrapEventBoxGroup } from '../../types/beatmap/wrapper/eventBoxGroup';
 import { IWrapLightshow } from '../../types/beatmap/wrapper/lightshow';
 import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
-import UICheckbox from '../../ui/helpers/checkbox';
+import UIInput from '../../ui/helpers/input';
 import { printResultTime } from '../helpers';
 
 const name = 'Invalid Event Box';
@@ -23,9 +22,16 @@ const tool: Tool = {
    input: {
       enabled,
       params: {},
-      html: UICheckbox.create(name, description, enabled, function (this: HTMLInputElement) {
-         tool.input.enabled = this.checked;
-      }),
+      html: UIInput.createBlock(
+         UIInput.createCheckbox(
+            function (this: HTMLInputElement) {
+               tool.input.enabled = this.checked;
+            },
+            name,
+            description,
+            enabled,
+         ),
+      ),
    },
    output: {
       html: null,

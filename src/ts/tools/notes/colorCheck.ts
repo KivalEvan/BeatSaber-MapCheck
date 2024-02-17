@@ -1,7 +1,7 @@
 import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import { ColorArray } from '../../types/colors';
 import { deltaE00, colorFrom, round } from '../../utils';
-import UICheckbox from '../../ui/helpers/checkbox';
+import UIInput from '../../ui/helpers/input';
 import { printResult } from '../helpers';
 import { ColorScheme, EnvironmentSchemeName } from '../../beatmap/shared/colorScheme';
 
@@ -38,13 +38,15 @@ const tool: Tool = {
    input: {
       enabled,
       params: {},
-      html: UICheckbox.create(
-         name + ' (EXPERIMENTAL)',
-         description,
-         enabled,
-         function (this: HTMLInputElement) {
-            tool.input.enabled = this.checked;
-         },
+      html: UIInput.createBlock(
+         UIInput.createCheckbox(
+            function (this: HTMLInputElement) {
+               tool.input.enabled = this.checked;
+            },
+            name + ' (EXPERIMENTAL)',
+            description,
+            enabled,
+         ),
       ),
    },
    output: {

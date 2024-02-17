@@ -3,7 +3,7 @@ import { NoteContainer, NoteContainerNote } from '../../types/beatmap/wrapper/co
 import { isEnd } from '../../analyzers/placement/note';
 import swing from '../../analyzers/swing/swing';
 import { ColorNote } from '../../beatmap/v3/colorNote';
-import UICheckbox from '../../ui/helpers/checkbox';
+import UIInput from '../../ui/helpers/input';
 import { printResultTime } from '../helpers';
 import { NoteColor, NoteDirection, NoteDirectionSpace } from '../../beatmap/shared/constants';
 
@@ -22,9 +22,16 @@ const tool: Tool = {
    input: {
       enabled,
       params: {},
-      html: UICheckbox.create(name, description, enabled, function (this: HTMLInputElement) {
-         tool.input.enabled = this.checked;
-      }),
+      html: UIInput.createBlock(
+         UIInput.createCheckbox(
+            function (this: HTMLInputElement) {
+               tool.input.enabled = this.checked;
+            },
+            name,
+            description,
+            enabled,
+         ),
+      ),
    },
    output: {
       html: null,
@@ -63,8 +70,8 @@ function check(map: ToolArgs) {
       [NoteColor.BLUE]: [],
    };
    const noteOccupy: { [key: number]: ColorNote } = {
-      [NoteColor.RED]: ColorNote.create()[0],
-      [NoteColor.BLUE]: ColorNote.create({ color: 1 })[0],
+      [NoteColor.RED]: new ColorNote(),
+      [NoteColor.BLUE]: new ColorNote({ color: 1 }),
    };
 
    // FIXME: use new system

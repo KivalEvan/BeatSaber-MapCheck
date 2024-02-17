@@ -6,7 +6,7 @@ import {
    ToolInputOrder,
    ToolOutputOrder,
 } from '../../types/mapcheck';
-import UICheckbox from '../../ui/helpers/checkbox';
+import UIInput from '../../ui/helpers/input';
 import { printResultTime } from '../helpers';
 
 const name = 'Acceptable Beat Precision';
@@ -14,24 +14,6 @@ const description = 'Validate note timing placement is within timing precision.\
 const enabled = true;
 
 const defaultPrec = [8, 6];
-
-const htmlContainer = UICheckbox.create(
-   name + ': ',
-   description,
-   enabled,
-   function (this: HTMLInputElement) {
-      tool.input.enabled = this.checked;
-   },
-);
-const htmlInputPrec = document.createElement('input');
-
-htmlInputPrec.id = 'input__tools-prec';
-htmlInputPrec.className = 'input-toggle input--small';
-htmlInputPrec.type = 'text';
-htmlInputPrec.value = defaultPrec.join(' ');
-htmlInputPrec.addEventListener('change', inputPrecHandler);
-
-htmlContainer.appendChild(htmlInputPrec);
 
 const tool: Tool<{ prec: number[] }> = {
    name,
@@ -46,7 +28,28 @@ const tool: Tool<{ prec: number[] }> = {
       params: {
          prec: [...defaultPrec],
       },
-      html: htmlContainer,
+      html: UIInput.createBlock(
+         UIInput.createCheckbox(
+            function (this: HTMLInputElement) {
+               tool.input.enabled = this.checked;
+            },
+            name + ': ',
+            description,
+            enabled,
+         ),
+         UIInput.createText(
+            function (this: HTMLInputElement) {
+               tool.input.params.prec = this.value
+                  .trim()
+                  .split(' ')
+                  .map((x) => parseInt(x))
+                  .filter((x) => (x > 0 ? !Number.isNaN(x) : false));
+               this.value = tool.input.params.prec.join(' ');
+            },
+            '',
+            defaultPrec.join(' '),
+         ),
+      ),
    },
    output: {
       html: null,
@@ -54,19 +57,9 @@ const tool: Tool<{ prec: number[] }> = {
    run,
 };
 
-function inputPrecHandler(this: HTMLInputElement) {
-   tool.input.params.prec = this.value
-      .trim()
-      .split(' ')
-      .map((x) => parseInt(x))
-      .filter((x) => (x > 0 ? !Number.isNaN(x) : false));
-   this.value = tool.input.params.prec.join(' ');
-}
-
 function check(settings: IBeatmapSettings, difficulty: IBeatmapItem) {
    const { bpm } = settings;
    const swingContainer = difficulty.swingAnalysis.container;
-   // god this hurt me, but typescript sees this as number instead of number[]
    const { prec } = tool.input.params;
 
    return swingContainer

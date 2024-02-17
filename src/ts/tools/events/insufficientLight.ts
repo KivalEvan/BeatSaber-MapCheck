@@ -1,7 +1,7 @@
 import { BasicEvent } from '../../beatmap/v3/basicEvent';
 import { EnvironmentAllName } from '../../types/beatmap/shared/environment';
 import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
-import UICheckbox from '../../ui/helpers/checkbox';
+import UIInput from '../../ui/helpers/input';
 import { printResult } from '../helpers';
 
 const name = 'Insufficient Lighting Event';
@@ -19,9 +19,16 @@ const tool: Tool = {
    input: {
       enabled,
       params: {},
-      html: UICheckbox.create(name, description, enabled, function (this: HTMLInputElement) {
-         tool.input.enabled = this.checked;
-      }),
+      html: UIInput.createBlock(
+         UIInput.createCheckbox(
+            function (this: HTMLInputElement) {
+               tool.input.enabled = this.checked;
+            },
+            name,
+            description,
+            enabled,
+         ),
+      ),
    },
    output: {
       html: null,

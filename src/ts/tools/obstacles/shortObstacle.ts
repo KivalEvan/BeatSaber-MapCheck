@@ -1,5 +1,5 @@
 import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
-import UICheckbox from '../../ui/helpers/checkbox';
+import UIInput from '../../ui/helpers/input';
 import { printResultTime } from '../helpers';
 import { PosX, PosY } from '../../beatmap/shared/constants';
 import { Obstacle } from '../../beatmap/v4/obstacle';
@@ -23,9 +23,16 @@ const tool: Tool<{ minDur: number }> = {
       params: {
          minDur: 0.015,
       },
-      html: UICheckbox.create(name, description, enabled, function (this: HTMLInputElement) {
-         tool.input.enabled = this.checked;
-      }),
+      html: UIInput.createBlock(
+         UIInput.createCheckbox(
+            function (this: HTMLInputElement) {
+               tool.input.enabled = this.checked;
+            },
+            name,
+            description,
+            enabled,
+         ),
+      ),
    },
    output: {
       html: null,

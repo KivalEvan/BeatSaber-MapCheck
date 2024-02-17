@@ -4,7 +4,7 @@ import Parity from '../../analyzers/parity/parity';
 import swing from '../../analyzers/swing/swing';
 import { NoteContainer, NoteContainerBomb } from '../../types/beatmap/wrapper/container';
 import { printResultTime } from '../helpers';
-import UICheckbox from '../../ui/helpers/checkbox';
+import UIInput from '../../ui/helpers/input';
 import { NoteColor } from '../../beatmap/shared/constants';
 
 const name = 'Parity Check';
@@ -41,13 +41,15 @@ const htmlSelectParityRight = UISelect.create(
 );
 
 htmlContainer.appendChild(
-   UICheckbox.create(
-      name + ' (EXPERIMENTAL)',
-      description,
-      enabled,
-      function (this: HTMLInputElement) {
-         tool.input.enabled = this.checked;
-      },
+   UIInput.createBlock(
+      UIInput.createCheckbox(
+         function (this: HTMLInputElement) {
+            tool.input.enabled = this.checked;
+         },
+         name + ' (EXPERIMENTAL)',
+         description,
+         enabled,
+      ),
    ),
 );
 

@@ -1,7 +1,7 @@
 import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import { round } from '../../utils';
 import { printResultTime } from '../helpers';
-import UICheckbox from '../../ui/helpers/checkbox';
+import UIInput from '../../ui/helpers/input';
 import { BeatPerMinute } from '../../beatmap/shared/bpm';
 
 const name = 'Effective BPM';
@@ -11,41 +11,24 @@ const enabled = true;
 const defaultEBPM = 450;
 const defaultEBPMS = 350;
 
-const htmlContainer = UICheckbox.create(
-   name + ' threshold',
-   description,
-   enabled,
+const htmlEBPM = UIInput.createNumber(
    function (this: HTMLInputElement) {
-      tool.input.enabled = this.checked;
+      tool.input.params.ebpmThres = round(Math.abs(parseFloat(this.value)), 1);
+      this.value = tool.input.params.ebpmThres.toString();
    },
+   ': ',
+   defaultEBPM,
+   0,
 );
-const htmlInputEBPM = document.createElement('input');
-const htmlLabelEBPM = document.createElement('label');
-const htmlInputEBPMS = document.createElement('input');
-const htmlLabelEBPMS = document.createElement('label');
-
-htmlLabelEBPM.textContent = ': ';
-htmlLabelEBPM.htmlFor = 'input__tools-ebpm';
-htmlInputEBPM.id = 'input__tools-ebpm';
-htmlInputEBPM.className = 'input-toggle input--small';
-htmlInputEBPM.type = 'number';
-htmlInputEBPM.min = '0';
-htmlInputEBPM.value = defaultEBPM.toString();
-htmlInputEBPM.addEventListener('change', inputEBPMHandler);
-
-htmlLabelEBPMS.textContent = ' (swing): ';
-htmlLabelEBPMS.htmlFor = 'input__tools-ebpms';
-htmlInputEBPMS.id = 'input__tools-ebpms';
-htmlInputEBPMS.className = 'input-toggle input--small';
-htmlInputEBPMS.type = 'number';
-htmlInputEBPMS.min = '0';
-htmlInputEBPMS.value = defaultEBPMS.toString();
-htmlInputEBPMS.addEventListener('change', inputEBPMSHandler);
-
-htmlContainer.appendChild(htmlLabelEBPM);
-htmlContainer.appendChild(htmlInputEBPM);
-htmlContainer.appendChild(htmlLabelEBPMS);
-htmlContainer.appendChild(htmlInputEBPMS);
+const htmlEBPMS = UIInput.createNumber(
+   function (this: HTMLInputElement) {
+      tool.input.params.ebpmsThres = round(Math.abs(parseFloat(this.value)), 1);
+      this.value = tool.input.params.ebpmsThres.toString();
+   },
+   ' (swing): ',
+   defaultEBPMS,
+   0,
+);
 
 const tool: Tool<{ ebpmThres: number; ebpmsThres: number }> = {
    name,
@@ -61,7 +44,18 @@ const tool: Tool<{ ebpmThres: number; ebpmsThres: number }> = {
          ebpmThres: defaultEBPM,
          ebpmsThres: defaultEBPMS,
       },
-      html: htmlContainer,
+      html: UIInput.createBlock(
+         UIInput.createCheckbox(
+            function (this: HTMLInputElement) {
+               tool.input.enabled = this.checked;
+            },
+            name + ' threshold',
+            description,
+            enabled,
+         ),
+         htmlEBPM,
+         htmlEBPMS,
+      ),
       adjustTime: adjustTimeHandler,
    },
    output: {
@@ -73,18 +67,8 @@ const tool: Tool<{ ebpmThres: number; ebpmsThres: number }> = {
 function adjustTimeHandler(bpm: BeatPerMinute) {
    tool.input.params.ebpmThres = round(Math.min(defaultEBPM, bpm.value * 2 * 1.285714), 1);
    tool.input.params.ebpmsThres = round(Math.min(defaultEBPMS, bpm.value * 2), 1);
-   htmlInputEBPM.value = tool.input.params.ebpmThres.toString();
-   htmlInputEBPMS.value = tool.input.params.ebpmsThres.toString();
-}
-
-function inputEBPMHandler(this: HTMLInputElement) {
-   tool.input.params.ebpmThres = round(Math.abs(parseFloat(this.value)), 1);
-   this.value = tool.input.params.ebpmThres.toString();
-}
-
-function inputEBPMSHandler(this: HTMLInputElement) {
-   tool.input.params.ebpmsThres = round(Math.abs(parseFloat(this.value)), 1);
-   this.value = tool.input.params.ebpmsThres.toString();
+   htmlEBPM[1].value = tool.input.params.ebpmThres.toString();
+   htmlEBPMS[1].value = tool.input.params.ebpmsThres.toString();
 }
 
 function check(map: ToolArgs) {
