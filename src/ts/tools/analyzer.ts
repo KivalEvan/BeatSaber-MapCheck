@@ -96,7 +96,7 @@ function runDifficulty(characteristic: CharacteristicName, difficulty: Difficult
    }
 
    const analysisExist = SavedData.analysis?.map.find(
-      (set) => set.difficulty === difficulty && set.mode === characteristic,
+      (set) => set.difficulty === difficulty && set.characteristic === characteristic,
    );
 
    const njs = NoteJumpSpeed.create(
@@ -139,7 +139,7 @@ function runDifficulty(characteristic: CharacteristicName, difficulty: Difficult
       analysisExist.html = htmlArr;
    } else {
       SavedData.analysis?.map.push({
-         mode: characteristic,
+         characteristic: characteristic,
          difficulty: difficulty,
          html: htmlArr,
       });

@@ -122,7 +122,7 @@ function _lightshow(json: Record<string, unknown>) {
    return toV4Difficulty(data).sort();
 }
 
-export async function loadInfo(zip: JSZip) {
+export async function extractInfo(zip: JSZip) {
    const infoFile =
       zip.file('Info.dat') ||
       zip.file('info.dat') ||
@@ -135,7 +135,7 @@ export async function loadInfo(zip: JSZip) {
    return infoFile.async('string').then(JSON.parse).then(_info);
 }
 
-export async function loadDifficulties(info: IWrapInfo, zip: JSZip) {
+export async function extractDifficulties(info: IWrapInfo, zip: JSZip) {
    const beatmapItem: IBeatmapItem[] = [];
    for (let i = 0; i < info.difficulties.length; i++) {
       const diffInfo = info.difficulties[i];

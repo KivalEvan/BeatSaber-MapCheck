@@ -1,6 +1,6 @@
 import UIPanel from '../helpers/panel';
 import { colorToHex } from '../../utils';
-import { ColorSchemeRename } from '../../beatmap/shared/colorScheme';
+import { CustomColorRename } from '../../beatmap/shared/colorScheme';
 import { htmlTableColorScheme } from './constants';
 import { displayTableRow, hideTableRow } from './helpers';
 import { IWrapInfoColorScheme } from '../../types/beatmap/wrapper/info';
@@ -56,7 +56,7 @@ export function setColorScheme(colorSch?: IWrapInfoColorScheme): void {
       textMonoContainer.textContent = `${hexColor[key]}`;
 
       textContainer.className = 'info__color-text';
-      textContainer.textContent = ` -- ${ColorSchemeRename[key as keyof typeof ColorSchemeRename]}`;
+      textContainer.textContent = ` -- ${CustomColorRename[key as keyof typeof CustomColorRename]}`;
 
       container.appendChild(colorContainer);
       container.appendChild(textMonoContainer);

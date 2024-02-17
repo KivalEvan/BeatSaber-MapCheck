@@ -34,7 +34,7 @@ function populate(): void {
    }
    for (const set in diffSet) {
       const htmlContainer = document.createElement('div');
-      htmlContainer.className = prefix + 'mode-' + set;
+      htmlContainer.className = prefix + 'characteristic-' + set;
 
       const htmlTitle = document.createElement('div');
       htmlTitle.className = prefix + 'title';

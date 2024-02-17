@@ -13,8 +13,9 @@ import savedData from '../savedData';
 
 const logPrefix = 'UI Tools: ';
 
-const htmlToolsSelectCharacteristic: NodeListOf<HTMLSelectElement> =
-   document.querySelectorAll('.tools__select-mode');
+const htmlToolsSelectCharacteristic: NodeListOf<HTMLSelectElement> = document.querySelectorAll(
+   '.tools__select-characteristic',
+);
 const htmlToolsSelectDifficulty: NodeListOf<HTMLSelectElement> = document.querySelectorAll(
    '.tools__select-difficulty',
 );
@@ -35,7 +36,9 @@ htmlToolsApplyThis.addEventListener('click', applyThisHandler);
 htmlToolsApplyAll.addEventListener('click', applyAllHandler);
 htmlToolsApplyGeneral.addEventListener('click', applyGeneralHandler);
 
-htmlToolsSelectCharacteristic.forEach((elem) => elem.addEventListener('change', selectModeHandler));
+htmlToolsSelectCharacteristic.forEach((elem) =>
+   elem.addEventListener('change', selectCharacteristicHandler),
+);
 htmlToolsSelectDifficulty.forEach((elem) =>
    elem.addEventListener('change', selectDifficultyHandler),
 );
@@ -57,26 +60,29 @@ function displayOutputGeneral(): void {
    }
 }
 
-function displayOutputDifficulty(mode?: CharacteristicName, difficulty?: DifficultyName): void {
-   if (!mode && !difficulty) {
-      mode = htmlToolsSelectCharacteristic[0].value as CharacteristicName;
+function displayOutputDifficulty(
+   characteristic?: CharacteristicName,
+   difficulty?: DifficultyName,
+): void {
+   if (!characteristic && !difficulty) {
+      characteristic = htmlToolsSelectCharacteristic[0].value as CharacteristicName;
       difficulty = htmlToolsSelectDifficulty[0].value as DifficultyName;
    }
-   if (!mode || !difficulty) {
+   if (!characteristic || !difficulty) {
       throw new Error(logPrefix + 'something went wrong!');
    }
    htmlToolsOutputDifficulty.innerHTML = '';
    const analysis = SavedData.analysis?.map.find(
-      (set) => set.difficulty === difficulty && set.mode === mode,
+      (set) => set.difficulty === difficulty && set.characteristic === characteristic,
    );
    if (!analysis) {
       htmlToolsOutputDifficulty.textContent =
-         'ERROR: could not find analysis for ' + mode + ' ' + difficulty;
+         'ERROR: could not find analysis for ' + characteristic + ' ' + difficulty;
       return;
    }
    if (!analysis.html) {
       htmlToolsOutputDifficulty.textContent =
-         'ERROR: could not find HTML for ' + mode + ' ' + difficulty;
+         'ERROR: could not find HTML for ' + characteristic + ' ' + difficulty;
       return;
    }
    analysis.html.forEach((h) => htmlToolsOutputDifficulty.appendChild(h));
@@ -89,9 +95,9 @@ function setDifficultyLabel(str: string): void {
    htmlToolsDifficultyLabel.forEach((elem) => (elem.textContent = str));
 }
 
-function populateSelectDifficulty(mode?: CharacteristicName): void {
+function populateSelectDifficulty(characteristic?: CharacteristicName): void {
    const mapInfo = savedData.beatmapInfo;
-   if (!mode || !mapInfo) {
+   if (!characteristic || !mapInfo) {
       return;
    }
    htmlToolsSelectDifficulty.forEach((elem) => {
@@ -102,7 +108,7 @@ function populateSelectDifficulty(mode?: CharacteristicName): void {
    let first = true;
    for (let i = mapInfo.difficulties.length - 1; i >= 0; i--) {
       const diff = mapInfo.difficulties[i];
-      if (mode !== diff.characteristic) continue;
+      if (characteristic !== diff.characteristic) continue;
       htmlToolsSelectDifficulty.forEach((elem) => {
          const optDiff = document.createElement('option');
          optDiff.value = diff.difficulty;
@@ -137,17 +143,17 @@ function populateSelectCharacteristic(mapInfo?: IWrapInfo): void {
       return;
    }
    let first = true;
-   const addedMode = new Set();
+   const addedCharacteristic = new Set();
    mapInfo.difficulties.forEach((infoDiff) => {
-      if (addedMode.has(infoDiff.characteristic)) return;
-      addedMode.add(infoDiff.characteristic);
+      if (addedCharacteristic.has(infoDiff.characteristic)) return;
+      addedCharacteristic.add(infoDiff.characteristic);
       htmlToolsSelectCharacteristic.forEach((elem) => {
-         const optMode = document.createElement('option');
-         optMode.value = infoDiff.characteristic;
-         optMode.textContent = CharacteristicRename[infoDiff.characteristic];
+         const optCharacteristic = document.createElement('option');
+         optCharacteristic.value = infoDiff.characteristic;
+         optCharacteristic.textContent = CharacteristicRename[infoDiff.characteristic];
          if (infoDiff.customData._characteristicLabel)
-            optMode.textContent += ` -- ${infoDiff.customData._characteristicLabel}`;
-         elem.add(optMode);
+            optCharacteristic.textContent += ` -- ${infoDiff.customData._characteristicLabel}`;
+         elem.add(optCharacteristic);
       });
       if (first) {
          populateSelectDifficulty(infoDiff.characteristic);
@@ -212,7 +218,7 @@ function reset(): void {
    populateSelectCharacteristic();
 }
 
-function selectModeHandler(ev: Event): void {
+function selectCharacteristicHandler(ev: Event): void {
    const target = ev.target as HTMLSelectElement;
    htmlToolsSelectCharacteristic.forEach((elem) => {
       if (elem !== target) {
@@ -252,27 +258,27 @@ function selectDifficultyHandler(ev: Event): void {
 }
 
 function applyThisHandler(): void {
-   const mode = htmlToolsSelectCharacteristic[0].value as CharacteristicName;
+   const characteristic = htmlToolsSelectCharacteristic[0].value as CharacteristicName;
    const difficulty = htmlToolsSelectDifficulty[0].value as DifficultyName;
-   if (!mode || !difficulty) {
-      throw new Error(logPrefix + 'mode/difficulty does not exist');
+   if (!characteristic || !difficulty) {
+      throw new Error(logPrefix + 'characteristic/difficulty does not exist');
    }
-   UILoading.status('info', `Re-analysing ${mode} ${difficulty}`, 100);
-   Analyser.runDifficulty(mode, difficulty);
-   UILoading.status('info', `Re-analysed ${mode} ${difficulty}`, 100);
-   displayOutputDifficulty(mode, difficulty);
+   UILoading.status('info', `Re-analysing ${characteristic} ${difficulty}`, 100);
+   Analyser.runDifficulty(characteristic, difficulty);
+   UILoading.status('info', `Re-analysed ${characteristic} ${difficulty}`, 100);
+   displayOutputDifficulty(characteristic, difficulty);
 }
 
 function applyAllHandler(): void {
-   const mode = htmlToolsSelectCharacteristic[0].value as CharacteristicName;
+   const characteristic = htmlToolsSelectCharacteristic[0].value as CharacteristicName;
    const difficulty = htmlToolsSelectDifficulty[0].value as DifficultyName;
-   if (!mode || !difficulty) {
-      throw new Error(logPrefix + 'mode/difficulty does not exist');
+   if (!characteristic || !difficulty) {
+      throw new Error(logPrefix + 'characteristic/difficulty does not exist');
    }
    UILoading.status('info', `Re-analysing all difficulties`, 100);
    Analyser.applyAll();
    UILoading.status('info', `Re-analysed all difficulties`, 100);
-   displayOutputDifficulty(mode, difficulty);
+   displayOutputDifficulty(characteristic, difficulty);
 }
 
 function applyGeneralHandler(): void {

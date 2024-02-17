@@ -12,17 +12,19 @@ function notePlacementSelectHandler(ev: Event) {
    const target = ev.target as HTMLSelectElement;
    const id = target.id.replace(`${prefix}table-select-placement-`, '').split('-');
 
-   const mode = id[0];
-   const diff = id[1];
+   const characteristic = id[0];
+   const difficulty = id[1];
    const noteContainer = SavedData.beatmapDifficulty.find(
-      (set) => set.characteristic === mode && set.difficulty === diff,
+      (set) => set.characteristic === characteristic && set.difficulty === difficulty,
    )?.noteContainer;
    if (!noteContainer) {
       console.error(logPrefix + 'note could not be found');
       return;
    }
    const filteredContainer = getFilteredContainer(noteContainer, target.value);
-   const htmlTableBody = document.querySelector(`#${prefix}table-placement-${mode}-${diff}`)!;
+   const htmlTableBody = document.querySelector(
+      `#${prefix}table-placement-${characteristic}-${difficulty}`,
+   )!;
    htmlTableBody.innerHTML = notePlacementTableString(filteredContainer);
 }
 

@@ -386,9 +386,9 @@ export class Info extends WrapInfo<IInfo, IInfoDifficulty> {
    addMap(
       data: Partial<IWrapInfoDifficultyAttribute<IInfoDifficulty>> &
          Partial<IV2ExtraInfoDifficulty>,
-      mode?: CharacteristicName,
+      characteristic?: CharacteristicName,
    ): this {
-      this.difficulties.push(new InfoDifficulty(data, mode));
+      this.difficulties.push(new InfoDifficulty(data, characteristic));
       return this;
    }
 
@@ -433,11 +433,11 @@ export class InfoDifficulty extends WrapInfoDifficulty<IInfoDifficulty> {
    constructor(
       data: Partial<IWrapInfoDifficultyAttribute<IInfoDifficulty>> &
          Partial<IV2ExtraInfoDifficulty> = {},
-      mode: CharacteristicName = 'Standard',
+      characteristic: CharacteristicName = 'Standard',
    ) {
       super();
 
-      this.characteristic = mode;
+      this.characteristic = characteristic;
       this.difficulty = data.difficulty ?? InfoDifficulty.default._difficulty;
       this.rank = data.rank ?? InfoDifficulty.default.rank;
       this.filename = data.filename ?? InfoDifficulty.default._beatmapFilename;
@@ -457,10 +457,10 @@ export class InfoDifficulty extends WrapInfoDifficulty<IInfoDifficulty> {
 
    static fromJSON(
       data: Partial<IInfoDifficulty>,
-      mode: CharacteristicName = 'Standard',
+      characteristic: CharacteristicName = 'Standard',
    ): InfoDifficulty {
       const d = new this();
-      d.characteristic = mode;
+      d.characteristic = characteristic;
       d.difficulty = data._difficulty ?? InfoDifficulty.default._difficulty;
       d.rank = data._difficultyRank ?? InfoDifficulty.default._difficultyRank;
       d.filename = data._beatmapFilename ?? InfoDifficulty.default._beatmapFilename;

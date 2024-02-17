@@ -1,7 +1,7 @@
 import { ColorSchemeName } from '../../types/beatmap/shared/colorScheme';
 import { EnvironmentAllName } from '../../types/beatmap/shared/environment';
 import { IColorScheme } from '../../types/beatmap/v2/custom/colorScheme';
-import { IInfoColorScheme } from '../../types/beatmap/v4/info';
+import { IWrapInfoColorScheme } from '../../types/beatmap/wrapper/info';
 
 /** Record of Environment Color to Color Scheme. */
 export const EnvironmentSchemeName: {
@@ -47,21 +47,10 @@ export const EnvironmentSchemeName: {
    MultiplayerEnvironment: 'Origins',
 } as const;
 
-/** Color Scheme property rename to human readable. */
-export const ColorSchemeRename: {
-   readonly [key in keyof Required<
-      IColorScheme & Omit<IInfoColorScheme, 'colorSchemeName' | 'useOverride'>
-   >]: string;
+/** Custom Color property rename to human readable. */
+export const CustomColorRename: {
+   readonly [key in keyof Required<IColorScheme>]: string;
 } = {
-   saberAColor: 'Left Note Color',
-   saberBColor: 'Right Note Color',
-   environmentColor0: 'Left Environment Color',
-   environmentColor1: 'Right Environment Color',
-   environmentColorW: 'White Environment Color',
-   environmentColor0Boost: 'Left Environment Boost Color',
-   environmentColor1Boost: 'Right Environment Boost Color',
-   environmentColorWBoost: 'White Environment Boost Color',
-   obstaclesColor: 'Obstacle Color',
    _colorLeft: 'Left Note Color',
    _colorRight: 'Right Note Color',
    _envColorLeft: 'Left Environment Color',
@@ -71,6 +60,21 @@ export const ColorSchemeRename: {
    _envColorRightBoost: 'Right Environment Boost Color',
    _envColorWhiteBoost: 'White Environment Boost Color',
    _obstacleColor: 'Obstacle Color',
+} as const;
+
+/** Color Scheme property rename to human readable. */
+export const ColorSchemeRename: {
+   readonly [key in keyof Required<Omit<IWrapInfoColorScheme, 'name' | 'useOverride'>>]: string;
+} = {
+   saberLeftColor: 'Left Note Color',
+   saberRightColor: 'Right Note Color',
+   environment0Color: 'Left Environment Color',
+   environment1Color: 'Right Environment Color',
+   environmentWColor: 'White Environment Color',
+   environment0ColorBoost: 'Left Environment Boost Color',
+   environment1ColorBoost: 'Right Environment Boost Color',
+   environmentWColorBoost: 'White Environment Boost Color',
+   obstaclesColor: 'Obstacle Color',
 } as const;
 
 /** Color scheme definition. */

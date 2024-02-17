@@ -8,7 +8,7 @@ import Analyser from './tools/analyzer';
 import Settings from './settings';
 import flag from './flag';
 import SavedData from './savedData';
-import { loadDifficulties, loadInfo } from './load';
+import { extractDifficulties, extractInfo } from './load';
 import { downloadFromHash, downloadFromID, downloadFromURL } from './download';
 import { sanitizeBeatSaverID, sanitizeURL } from './utils/web';
 import { isHex } from './utils';
@@ -48,7 +48,7 @@ export default async (type: LoadType) => {
       UIInput.enable(false);
       UILoading.status('info', 'Parsing map info...', 0);
       logger.tInfo(tag(), 'Parsing map info');
-      const info = await loadInfo(mapZip);
+      const info = await extractInfo(mapZip);
       SavedData.beatmapInfo = info;
       UIInfo.setInfo(info);
 
@@ -112,7 +112,7 @@ export default async (type: LoadType) => {
 
       // load diff map
       UILoading.status('info', 'Parsing difficulty...', 70);
-      SavedData.beatmapDifficulty = await loadDifficulties(info, mapZip);
+      SavedData.beatmapDifficulty = await extractDifficulties(info, mapZip);
 
       UITools.adjustTime();
       UILoading.status('info', 'Adding map difficulty stats...', 80);
