@@ -1,8 +1,8 @@
-import { IDifficulty } from '../../types/beatmap/v3/difficulty';
-import { Difficulty } from './difficulty';
-import { DifficultyCheck } from './dataCheck';
-import { deepCheck } from '../shared/dataCheck';
 import logger from '../../logger';
+import { Difficulty } from './difficulty';
+import { Lightshow } from './lightshow';
+import { DifficultyDataCheck, LightshowDataCheck } from './dataCheck';
+import { deepCheck } from '../shared/dataCheck';
 import { IDataCheckOption } from '../../types/beatmap/shared/dataCheck';
 
 function tag(name: string): string[] {
@@ -10,7 +10,8 @@ function tag(name: string): string[] {
 }
 
 export function parseDifficulty(
-   data: Partial<IDifficulty>,
+   // deno-lint-ignore no-explicit-any
+   data: Record<string, any>,
    checkData: IDataCheckOption = { enabled: true, throwError: true },
 ): Difficulty {
    logger.tInfo(tag('difficulty'), 'Parsing beatmap difficulty v3.x.x');
@@ -23,11 +24,27 @@ export function parseDifficulty(
       )
    ) {
       logger.tWarn(tag('difficulty'), 'Unidentified beatmap version');
-      data.version = '3.0.0';
    }
    if (checkData.enabled) {
-      deepCheck(data, DifficultyCheck, 'difficulty', data.version, checkData.throwError);
+      deepCheck(data, DifficultyDataCheck, 'difficulty', data.version, checkData.throwError);
    }
 
-   return new Difficulty(data);
+   return Difficulty.fromJSON(data);
+}
+
+export function parseLightshow(
+   // deno-lint-ignore no-explicit-any
+   data: Record<string, any>,
+   checkData: IDataCheckOption = { enabled: true, throwError: true },
+): Lightshow {
+   logger.tInfo(tag('lightshow'), 'Parsing beatmap lightshow v3.x.x');
+   logger.tWarn(
+      tag('lightshow'),
+      'This beatmap does not have lightshow version and does not work in-game.',
+   );
+   if (checkData.enabled) {
+      deepCheck(data, LightshowDataCheck, 'lightshow', data.version, checkData.throwError);
+   }
+
+   return Lightshow.fromJSON(data);
 }

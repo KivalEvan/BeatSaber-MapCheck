@@ -21,10 +21,7 @@ function allPopulate(...d: Record<string, any>[]) {
 }
 
 export function createEBGCountTable(mapInfo: IWrapInfo, mapData: IBeatmapItem): HTMLDivElement {
-   const environment =
-      mapData.characteristic === '360Degree' || mapData.characteristic === '90Degree'
-         ? mapInfo.allDirectionsEnvironmentName
-         : mapInfo.environmentName;
+   const environment = mapData.environment;
    const ebgColorCount = countEbg(mapData.data.lightColorEventBoxGroups, environment);
    const ebgRotationCount = countEbg(mapData.data.lightRotationEventBoxGroups, environment);
    const ebgTranslationCount = countEbg(mapData.data.lightTranslationEventBoxGroups, environment);

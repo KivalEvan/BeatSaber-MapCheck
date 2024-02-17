@@ -30,19 +30,19 @@ import { setPlayTime } from './playTime';
 import { setColorScheme } from './colorScheme';
 
 function setInfo(info: IWrapInfo): void {
-   UIHeader.setSongName(info.songName);
-   UIHeader.setSongSubname(info.songSubName);
-   UIHeader.setSongAuthor(info.songAuthorName);
-   UIHeader.setSongBPM(info.beatsPerMinute);
-   setLevelAuthor(info.levelAuthorName);
-   setEnvironment(info.environmentName);
+   UIHeader.setSongName(info.song.title);
+   UIHeader.setSongSubname(info.song.subTitle);
+   UIHeader.setSongAuthor(info.song.author);
+   UIHeader.setSongBPM(info.audio.bpm);
    setEditors(info.customData._editors);
 }
 
 function setDiffInfoTable(info: IWrapInfo, mapData: IBeatmapItem): void {
    setVersion((mapData.rawData as any)._version || (mapData.rawData as any).version || 'Unknown');
+   setLevelAuthor(mapData.info.authors.mappers, mapData.info.authors.lighters);
+   setEnvironment(info.environmentNames.at(mapData.info.environmentId));
    setEnvironmentId(info.environmentNames.at(mapData.info.environmentId));
-   setColorScheme(info.colorSchemes.at(mapData.info.colorSchemeId)?.colorScheme);
+   setColorScheme(info.colorSchemes.at(mapData.info.colorSchemeId));
    if (mapData.info.customData) {
       setCustomColor(mapData.info.customData);
       setRequirements(mapData.info.customData._requirements as string[]);
@@ -51,9 +51,9 @@ function setDiffInfoTable(info: IWrapInfo, mapData: IBeatmapItem): void {
       setWarnings(mapData.info.customData._warnings);
    }
    if (mapData.data?.customData) {
-      const bpm = SavedData.beatmapInfo?.beatsPerMinute
+      const bpm = SavedData.beatmapInfo?.audio.bpm
          ? BeatPerMinute.create(
-              SavedData.beatmapInfo.beatsPerMinute,
+              SavedData.beatmapInfo.audio.bpm,
               mapData.data.customData._bpmChanges ||
                  mapData.data.customData._BPMChanges ||
                  mapData.data.customData.BPMChanges,

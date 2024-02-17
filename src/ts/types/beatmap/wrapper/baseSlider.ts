@@ -28,6 +28,8 @@ export interface IWrapBaseSliderAttribute<T extends { [P in keyof T]: T[P] } = R
     * **RANGE:** `0-2`
     */
    tailPosY: number;
+   /** V4 features only. */
+   tailLaneRotation: number;
 }
 
 export interface IWrapBaseSlider<T extends { [P in keyof T]: T[P] } = Record<string, any>>
@@ -37,4 +39,5 @@ export interface IWrapBaseSlider<T extends { [P in keyof T]: T[P] } = Record<str
    setTailTime(value: number): this;
    setTailPosX(value: number): this;
    setTailPosY(value: number): this;
+   setTailLaneRotation(value: number): this;
 }

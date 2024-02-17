@@ -1,6 +1,7 @@
 import { ColorSchemeName } from '../../types/beatmap/shared/colorScheme';
 import { EnvironmentAllName } from '../../types/beatmap/shared/environment';
 import { IColorScheme } from '../../types/beatmap/v2/custom/colorScheme';
+import { IInfoColorScheme } from '../../types/beatmap/v4/info';
 
 /** Record of Environment Color to Color Scheme. */
 export const EnvironmentSchemeName: {
@@ -41,14 +42,26 @@ export const EnvironmentSchemeName: {
    QueenEnvironment: 'Queen',
    LinkinPark2Environment: 'Linkin Park 2.0',
    TheRollingStonesEnvironment: 'The Rolling Stones',
+   LatticeEnvironment: 'Lattice',
    GlassDesertEnvironment: 'Glass Desert',
    MultiplayerEnvironment: 'Origins',
 } as const;
 
 /** Color Scheme property rename to human readable. */
 export const ColorSchemeRename: {
-   readonly [key in keyof Required<IColorScheme>]: string;
+   readonly [key in keyof Required<
+      IColorScheme & Omit<IInfoColorScheme, 'colorSchemeName' | 'useOverride'>
+   >]: string;
 } = {
+   saberAColor: 'Left Note Color',
+   saberBColor: 'Right Note Color',
+   environmentColor0: 'Left Environment Color',
+   environmentColor1: 'Right Environment Color',
+   environmentColorW: 'White Environment Color',
+   environmentColor0Boost: 'Left Environment Boost Color',
+   environmentColor1Boost: 'Right Environment Boost Color',
+   environmentColorWBoost: 'White Environment Boost Color',
+   obstaclesColor: 'Obstacle Color',
    _colorLeft: 'Left Note Color',
    _colorRight: 'Right Note Color',
    _envColorLeft: 'Left Environment Color',
@@ -318,6 +331,15 @@ export const ColorScheme: {
       _envColorLeftBoost: { r: 0.5647059, g: 0.4622677, b: 0 },
       _envColorRightBoost: { r: 0.003921554, g: 0.6383545, b: 0.6705883 },
       _obstacleColor: { r: 0.9529412, g: 0.01176471, b: 0.4039216 },
+   },
+   Lattice: {
+      _colorLeft: { r: 0.8392157, g: 0.172549, b: 0.5456773 },
+      _colorRight: { r: 0, g: 0.6717121, b: 0.9803922 },
+      _envColorLeft: { r: 0.8941177, g: 0.1607843, b: 0.7490196 },
+      _envColorRight: { r: 0.1960784, g: 0.5843138, b: 0.7960785 },
+      _envColorLeftBoost: { r: 0.5450981, g: 0.1333333, b: 0.8156863 },
+      _envColorRightBoost: { r: 0.4039216, g: 0.9176471, b: 0.9176471 },
+      _obstacleColor: { r: 0.4685534, g: 0.7095922, b: 1 },
    },
    'Glass Desert': {
       _colorLeft: { r: 0.6792453, g: 0.5712628, b: 0 },

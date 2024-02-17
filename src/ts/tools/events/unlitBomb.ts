@@ -2,10 +2,10 @@ import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/map
 import { EnvironmentAllName } from '../../types/beatmap/shared/environment';
 import UICheckbox from '../../ui/helpers/checkbox';
 import { printResultTime } from '../helpers';
-import { BombNote } from '../../beatmap/v3/bombNote';
-import { BasicEvent } from '../../beatmap/v3/basicEvent';
 import { BeatPerMinute } from '../../beatmap/shared/bpm';
 import { EventList } from '../../beatmap/shared/environment';
+import { IWrapEvent } from '../../types/beatmap/wrapper/event';
+import { IWrapBombNote } from '../../types/beatmap/wrapper/bombNote';
 
 const name = 'Unlit Bomb';
 const description = 'Check for lighting around bomb.';
@@ -34,19 +34,19 @@ const tool: Tool = {
 
 // omega scuffed clusterfuck help me pls im cryin rn
 const unlitBomb = (
-   bombs: BombNote[],
-   events: BasicEvent[],
+   bombs: IWrapBombNote[],
+   events: IWrapEvent[],
    bpm: BeatPerMinute,
    environment: EnvironmentAllName,
 ) => {
    if (!events.length) {
       return [];
    }
-   const arr: BombNote[] = [];
+   const arr: IWrapBombNote[] = [];
    const commonEvent = EventList[environment]?.[0] ?? EventList['DefaultEnvironment'][0];
    const eventsLight = events
       .filter((ev) => ev.isLightEvent(environment) && commonEvent.includes(ev.type))
-      .sort((a, b) => a.type - b.type) as BasicEvent[];
+      .sort((a, b) => a.type - b.type) as IWrapEvent[];
    const eventState: {
       [key: number]: {
          state: 'off' | 'fading' | 'on';
@@ -163,7 +163,7 @@ function run(map: ToolArgs) {
       map.difficulty.data.bombNotes,
       map.difficulty.data.basicEvents,
       map.settings.bpm,
-      map.info.environmentName,
+      map.difficulty.environment,
    );
 
    if (result.length) {

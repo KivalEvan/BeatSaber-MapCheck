@@ -1,3 +1,5 @@
+import { BeatPerMinute } from '../../beatmap/shared/bpm';
+import { IWrapBaseObject } from '../../types/beatmap/wrapper/baseObject';
 import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import UICheckbox from '../../ui/helpers/checkbox';
 import { round, toMmss } from '../../utils';
@@ -28,137 +30,116 @@ const tool: Tool = {
    run,
 };
 
+function objectBeforeTime(
+   tag: string,
+   objects: IWrapBaseObject[],
+   bpm: BeatPerMinute,
+   results: HTMLElement[],
+) {
+   if (objects.length && objects[0].time < 0) {
+      results.push(
+         printResult(
+            tag + '(s) before start time',
+            `${round(objects[0].time, 3)} (${toMmss(bpm.toRealTime(objects[0].time))}`,
+            'error',
+         ),
+      );
+   }
+}
+
+function objectAfterTime(
+   tag: string,
+   objects: IWrapBaseObject[],
+   bpm: BeatPerMinute,
+   endTime: number,
+   results: HTMLElement[],
+) {
+   if (objects.length && objects[objects.length - 1].time > endTime) {
+      results.push(
+         printResult(
+            tag + '(s) after end time',
+            `${round(objects[objects.length - 1].time, 3)} (${toMmss(
+               bpm.toRealTime(objects[objects.length - 1].time),
+            )})`,
+            'error',
+         ),
+      );
+   }
+}
+
 function run(map: ToolArgs) {
    if (!map.difficulty) {
       console.error('Something went wrong!');
       return;
    }
    const { bpm, audioDuration: duration } = map.settings;
-   const { colorNotes, bombNotes, obstacles, basicEvents, arcs, chains } = map.difficulty.data;
+   const { colorNotes, bombNotes, obstacles, arcs, chains } = map.difficulty.data;
+   const {
+      basicEvents,
+      colorBoostEvents,
+      waypoints,
+      lightColorEventBoxGroups,
+      lightRotationEventBoxGroups,
+      lightTranslationEventBoxGroups,
+      fxEventBoxGroups,
+   } = map.difficulty.lightshow;
 
    const htmlResult: HTMLElement[] = [];
    if (duration) {
       let endBeat = bpm.toBeatTime(duration, true);
-      if (colorNotes.length && colorNotes[0].time < 0) {
-         htmlResult.push(
-            printResult(
-               'Note(s) before start time',
-               `${round(colorNotes[0].time, 3)} (${toMmss(bpm.toRealTime(colorNotes[0].time))}`,
-               'error',
-            ),
-         );
-      }
-      if (bombNotes.length && bombNotes[0].time < 0) {
-         htmlResult.push(
-            printResult(
-               'Bomb(s) before start time',
-               `${round(bombNotes[0].time, 3)} (${toMmss(bpm.toRealTime(bombNotes[0].time))}`,
-               'error',
-            ),
-         );
-      }
-      if (arcs.length && arcs[0].time < 0) {
-         htmlResult.push(
-            printResult(
-               'Arc(s) before start time',
-               `${round(arcs[0].time, 3)} (${toMmss(bpm.toRealTime(arcs[0].time))}`,
-               'error',
-            ),
-         );
-      }
-      if (chains.length && chains[0].time < 0) {
-         htmlResult.push(
-            printResult(
-               'Chain(s) before start time',
-               `${round(chains[0].time, 3)} (${toMmss(bpm.toRealTime(chains[0].time))}`,
-               'error',
-            ),
-         );
-      }
-      if (obstacles.length && obstacles[0].time < 0) {
-         htmlResult.push(
-            printResult(
-               'Obstacle(s) before start time',
-               `${round(obstacles[0].time, 3)} (${toMmss(bpm.toRealTime(obstacles[0].time))}`,
-               'error',
-            ),
-         );
-      }
-      if (basicEvents.length && basicEvents[0].time < 0) {
-         htmlResult.push(
-            printResult(
-               'Event(s) before start time',
-               `${round(basicEvents[0].time, 3)} (${toMmss(bpm.toRealTime(basicEvents[0].time))}`,
-               'error',
-            ),
-         );
-      }
-      if (colorNotes.length && colorNotes[colorNotes.length - 1].time > endBeat) {
-         htmlResult.push(
-            printResult(
-               'Note(s) after end time',
-               `${round(colorNotes[colorNotes.length - 1].time, 3)} (${toMmss(
-                  bpm.toRealTime(colorNotes[colorNotes.length - 1].time),
-               )})`,
-               'error',
-            ),
-         );
-      }
-      if (bombNotes.length && bombNotes[bombNotes.length - 1].time > endBeat) {
-         htmlResult.push(
-            printResult(
-               'Bomb(s) after end time',
-               `${round(bombNotes[bombNotes.length - 1].time, 3)} (${toMmss(
-                  bpm.toRealTime(bombNotes[bombNotes.length - 1].time),
-               )})`,
-               'error',
-            ),
-         );
-      }
-      if (arcs.length && arcs[arcs.length - 1].time > endBeat) {
-         htmlResult.push(
-            printResult(
-               'Arc(s) after end time',
-               `${round(arcs[arcs.length - 1].time, 3)} (${toMmss(
-                  bpm.toRealTime(arcs[arcs.length - 1].time),
-               )})`,
-               'error',
-            ),
-         );
-      }
-      if (chains.length && chains[chains.length - 1].time > endBeat) {
-         htmlResult.push(
-            printResult(
-               'Chain(s) after end time',
-               `${round(chains[chains.length - 1].time, 3)} (${toMmss(
-                  bpm.toRealTime(chains[chains.length - 1].time),
-               )})`,
-               'error',
-            ),
-         );
-      }
-      if (obstacles.length && obstacles[obstacles.length - 1].time > endBeat) {
-         htmlResult.push(
-            printResult(
-               'Obstacle(s) after end time',
-               `${round(obstacles[obstacles.length - 1].time, 3)} (${toMmss(
-                  bpm.toRealTime(obstacles[obstacles.length - 1].time),
-               )})`,
-               'error',
-            ),
-         );
-      }
-      if (basicEvents.length && basicEvents[basicEvents.length - 1].time > endBeat) {
-         htmlResult.push(
-            printResult(
-               'Event(s) after end time',
-               `${round(basicEvents[basicEvents.length - 1].time, 3)} (${toMmss(
-                  bpm.toRealTime(basicEvents[basicEvents.length - 1].time),
-               )})`,
-               'error',
-            ),
-         );
-      }
+      objectBeforeTime('Note', colorNotes, bpm, htmlResult);
+      objectBeforeTime('Bomb', bombNotes, bpm, htmlResult);
+      objectBeforeTime('Obstacle', obstacles, bpm, htmlResult);
+      objectBeforeTime('Arc', arcs, bpm, htmlResult);
+      objectBeforeTime('Chain', chains, bpm, htmlResult);
+      objectBeforeTime('Event', basicEvents, bpm, htmlResult);
+      objectBeforeTime('Color Boost', colorBoostEvents, bpm, htmlResult);
+      objectBeforeTime('Waypoint', waypoints, bpm, htmlResult);
+      objectBeforeTime('Light Color Event Box Group', lightColorEventBoxGroups, bpm, htmlResult);
+      objectBeforeTime(
+         'Light Rotation Event Box Group',
+         lightRotationEventBoxGroups,
+         bpm,
+         htmlResult,
+      );
+      objectBeforeTime(
+         'Light Translation Event Box Group',
+         lightTranslationEventBoxGroups,
+         bpm,
+         htmlResult,
+      );
+      objectBeforeTime('FX Event Box Group', fxEventBoxGroups, bpm, htmlResult);
+
+      objectAfterTime('Note', colorNotes, bpm, endBeat, htmlResult);
+      objectAfterTime('Bomb', bombNotes, bpm, endBeat, htmlResult);
+      objectAfterTime('Obstacle', obstacles, bpm, endBeat, htmlResult);
+      objectAfterTime('Arc', arcs, bpm, endBeat, htmlResult);
+      objectAfterTime('Chain', chains, bpm, endBeat, htmlResult);
+      objectAfterTime('Event', basicEvents, bpm, endBeat, htmlResult);
+      objectAfterTime('Color Boost', colorBoostEvents, bpm, endBeat, htmlResult);
+      objectAfterTime('Waypoint', waypoints, bpm, endBeat, htmlResult);
+      objectAfterTime(
+         'Light Color Event Box Group',
+         lightColorEventBoxGroups,
+         bpm,
+         endBeat,
+         htmlResult,
+      );
+      objectAfterTime(
+         'Light Rotation Event Box Group',
+         lightRotationEventBoxGroups,
+         bpm,
+         endBeat,
+         htmlResult,
+      );
+      objectAfterTime(
+         'Light Translation Event Box Group',
+         lightTranslationEventBoxGroups,
+         bpm,
+         endBeat,
+         htmlResult,
+      );
+      objectAfterTime('FX Event Box Group', fxEventBoxGroups, bpm, endBeat, htmlResult);
    }
 
    if (htmlResult.length) {

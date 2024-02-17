@@ -179,6 +179,9 @@ const environmentType: { [env in EnvironmentAllName]?: { [key: number]: string }
       6: 'Ambient',
       40: 'Logo',
    },
+   LatticeEnvironment: {
+      6: 'Ambient',
+   },
 };
 
 export function eventTypeRename(type: number, environment?: EnvironmentAllName): string {

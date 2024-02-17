@@ -11,6 +11,7 @@ export abstract class WrapGridObject<T extends { [P in keyof T]: T[P] }>
 {
    protected _posX!: IWrapGridObject['posX'];
    protected _posY!: IWrapGridObject['posY'];
+   protected _laneRotation: IWrapGridObject['laneRotation'] = 0;
 
    get posX(): IWrapGridObject['posX'] {
       return this._posX;
@@ -24,6 +25,12 @@ export abstract class WrapGridObject<T extends { [P in keyof T]: T[P] }>
    set posY(value: IWrapGridObject['posY']) {
       this._posY = value;
    }
+   get laneRotation(): IWrapGridObject['laneRotation'] {
+      return this._laneRotation;
+   }
+   set laneRotation(value: IWrapGridObject['laneRotation']) {
+      this._laneRotation = value;
+   }
 
    setPosX(value: number) {
       this.posX = value;
@@ -31,6 +38,10 @@ export abstract class WrapGridObject<T extends { [P in keyof T]: T[P] }>
    }
    setPosY(value: number) {
       this.posY = value;
+      return this;
+   }
+   setLaneRotation(value: number) {
+      this.laneRotation = value;
       return this;
    }
 

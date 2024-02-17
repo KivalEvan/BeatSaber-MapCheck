@@ -3,6 +3,7 @@ import { EventList } from '../../beatmap/shared/environment';
 import { Difficulty } from '../../beatmap/v3/difficulty';
 import { EnvironmentAllName, EnvironmentV3Name } from '../../types/beatmap/shared/environment';
 import { IWrapEventBoxGroup } from '../../types/beatmap/wrapper/eventBoxGroup';
+import { IWrapLightshow } from '../../types/beatmap/wrapper/lightshow';
 import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import UICheckbox from '../../ui/helpers/checkbox';
 import { printResultTime } from '../helpers';
@@ -246,7 +247,7 @@ const envFilterID: { [key in EnvironmentV3Name]?: Record<number, number> } = {
 };
 
 // FIXME: EDMEnvironment special case 12 and 13 filter is 1 for rotation
-function check(map: Difficulty, environment: EnvironmentAllName) {
+function check(map: IWrapLightshow, environment: EnvironmentAllName) {
    const defectID: IWrapEventBoxGroup[] = [];
    const defectFilter: IWrapEventBoxGroup[] = [];
 
@@ -292,12 +293,7 @@ function run(map: ToolArgs) {
       console.error('Something went wrong!');
       return;
    }
-   const result = check(
-      map.difficulty.data,
-      map.difficulty.characteristic === '360Degree' || map.difficulty.characteristic === '90Degree'
-         ? map.info.allDirectionsEnvironmentName
-         : map.info.environmentName,
-   );
+   const result = check(map.difficulty.lightshow, map.difficulty.environment);
 
    const htmlResult: HTMLElement[] = [];
    if (result.defectID.length) {

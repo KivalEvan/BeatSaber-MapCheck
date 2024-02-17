@@ -13,35 +13,31 @@ export class Waypoint extends WrapWaypoint<IWaypoint> {
       customData: {},
    };
 
-   constructor();
-   constructor(data: Partial<IWrapWaypointAttribute<IWaypoint>>);
-   constructor(data: Partial<IWaypoint>);
-   constructor(data: Partial<IWaypoint> & Partial<IWrapWaypointAttribute<IWaypoint>>);
-   constructor(data: Partial<IWaypoint> & Partial<IWrapWaypointAttribute<IWaypoint>> = {}) {
-      super();
-
-      this._time = data.b ?? data.time ?? Waypoint.default.b;
-      this._posX = data.x ?? data.posX ?? Waypoint.default.x;
-      this._posY = data.y ?? data.posY ?? Waypoint.default.y;
-      this._direction = data.d ?? data.direction ?? Waypoint.default.d;
-      this._customData = deepCopy(data.customData ?? Waypoint.default.customData);
-   }
-
-   static create(): Waypoint[];
-   static create(...data: Partial<IWrapWaypointAttribute<IWaypoint>>[]): Waypoint[];
-   static create(...data: Partial<IWaypoint>[]): Waypoint[];
-   static create(
-      ...data: (Partial<IWaypoint> & Partial<IWrapWaypointAttribute<IWaypoint>>)[]
-   ): Waypoint[];
-   static create(
-      ...data: (Partial<IWaypoint> & Partial<IWrapWaypointAttribute<IWaypoint>>)[]
-   ): Waypoint[] {
-      const result: Waypoint[] = [];
-      data.forEach((obj) => result.push(new this(obj)));
+   static create(...data: Partial<IWrapWaypointAttribute<IWaypoint>>[]): Waypoint[] {
+      const result: Waypoint[] = data.map((obj) => new this(obj));
       if (result.length) {
          return result;
       }
       return [new this()];
+   }
+
+   constructor(data: Partial<IWrapWaypointAttribute<IWaypoint>> = {}) {
+      super();
+      this._time = data.time ?? Waypoint.default.b;
+      this._posX = data.posX ?? Waypoint.default.x;
+      this._posY = data.posY ?? Waypoint.default.y;
+      this._direction = data.direction ?? Waypoint.default.d;
+      this._customData = deepCopy(data.customData ?? Waypoint.default.customData);
+   }
+
+   static fromJSON(data: Partial<IWaypoint> = {}): Waypoint {
+      const d = new this();
+      d._time = data.b ?? Waypoint.default.b;
+      d._posX = data.x ?? Waypoint.default.x;
+      d._posY = data.y ?? Waypoint.default.y;
+      d._direction = data.d ?? Waypoint.default.d;
+      d._customData = deepCopy(data.customData ?? Waypoint.default.customData);
+      return d;
    }
 
    toJSON(): Required<IWaypoint> {

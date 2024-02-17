@@ -1,17 +1,19 @@
 import { IWrapFxEventBox } from '../../types/beatmap/wrapper/fxEventBox';
+import { IWrapFxEventFloat } from '../../types/beatmap/wrapper/fxEventFloat';
 import { WrapEventBox } from './eventBox';
 
 /** FX event box beatmap class object. */
 export abstract class WrapFxEventBox<
       TBox extends { [P in keyof TBox]: TBox[P] },
+      TBase extends { [P in keyof TBase]: TBase[P] },
       TFilter extends { [P in keyof TFilter]: TFilter[P] },
    >
-   extends WrapEventBox<TBox, number, TFilter>
-   implements IWrapFxEventBox<TBox, TFilter>
+   extends WrapEventBox<TBox, TBase, TFilter>
+   implements IWrapFxEventBox<TBox, TBase, TFilter>
 {
    protected _fxDistribution!: IWrapFxEventBox['fxDistribution'];
    protected _fxDistributionType!: IWrapFxEventBox['fxDistributionType'];
-   protected declare _events: number[];
+   protected declare _events: IWrapFxEventFloat<TBase>[];
 
    get fxDistribution(): IWrapFxEventBox['fxDistribution'] {
       return this._fxDistribution;
@@ -25,10 +27,10 @@ export abstract class WrapFxEventBox<
    set fxDistributionType(value: IWrapFxEventBox['fxDistributionType']) {
       this._fxDistributionType = value;
    }
-   get events(): number[] {
+   get events(): IWrapFxEventFloat<TBase>[] {
       return this._events;
    }
-   set events(value: number[]) {
+   set events(value: IWrapFxEventFloat<TBase>[]) {
       this._events = value;
    }
 
@@ -40,7 +42,7 @@ export abstract class WrapFxEventBox<
       this.fxDistributionType = value;
       return this;
    }
-   abstract setEvents(value: number[]): this;
+   abstract setEvents(value: IWrapFxEventFloat<TBase>[]): this;
 
    isValid(): boolean {
       return (

@@ -1,4 +1,4 @@
 export interface ISpecialEventsKeywordFiltersKeywords {
-   _keyword: string;
-   _specialEvents: number[];
+   _keyword?: string;
+   _specialEvents?: number[];
 }

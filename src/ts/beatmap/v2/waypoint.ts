@@ -13,38 +13,31 @@ export class Waypoint extends WrapWaypoint<IWaypoint> {
       _customData: {},
    };
 
-   constructor();
-   constructor(data: Partial<IWrapWaypointAttribute<IWaypoint>>);
-   constructor(data: Partial<IWaypoint>);
-   constructor(data: Partial<IWaypoint> & Partial<IWrapWaypointAttribute<IWaypoint>>);
-   constructor(data: Partial<IWaypoint> & Partial<IWrapWaypointAttribute<IWaypoint>> = {}) {
-      super();
-
-      this._time = data._time ?? data.time ?? Waypoint.default._time;
-      this._posX = data._lineIndex ?? data.posX ?? Waypoint.default._lineIndex;
-      this._posY = data._lineLayer ?? data.posY ?? Waypoint.default._lineLayer;
-      this._direction =
-         data._offsetDirection ?? data.direction ?? Waypoint.default._offsetDirection;
-      this._customData = deepCopy(
-         data._customData ?? data.customData ?? Waypoint.default._customData,
-      );
-   }
-
-   static create(): Waypoint[];
-   static create(...data: Partial<IWrapWaypointAttribute<IWaypoint>>[]): Waypoint[];
-   static create(...data: Partial<IWaypoint>[]): Waypoint[];
-   static create(
-      ...data: (Partial<IWaypoint> & Partial<IWrapWaypointAttribute<IWaypoint>>)[]
-   ): Waypoint[];
-   static create(
-      ...data: (Partial<IWaypoint> & Partial<IWrapWaypointAttribute<IWaypoint>>)[]
-   ): Waypoint[] {
-      const result: Waypoint[] = [];
-      data.forEach((obj) => result.push(new this(obj)));
+   static create(...data: Partial<IWrapWaypointAttribute<IWaypoint>>[]): Waypoint[] {
+      const result: Waypoint[] = data.map((obj) => new this(obj));
       if (result.length) {
          return result;
       }
       return [new this()];
+   }
+
+   constructor(data: Partial<IWrapWaypointAttribute<IWaypoint>> = {}) {
+      super();
+      this._time = data.time ?? Waypoint.default._time;
+      this._posX = data.posX ?? Waypoint.default._lineIndex;
+      this._posY = data.posY ?? Waypoint.default._lineLayer;
+      this._direction = data.direction ?? Waypoint.default._offsetDirection;
+      this._customData = deepCopy(data.customData ?? Waypoint.default._customData);
+   }
+
+   static fromJSON(data: Partial<IWaypoint> = {}): Waypoint {
+      const d = new this();
+      d._time = data._time ?? Waypoint.default._time;
+      d._posX = data._lineIndex ?? Waypoint.default._lineIndex;
+      d._posY = data._lineLayer ?? Waypoint.default._lineLayer;
+      d._direction = data._offsetDirection ?? Waypoint.default._offsetDirection;
+      d._customData = deepCopy(data._customData ?? Waypoint.default._customData);
+      return d;
    }
 
    toJSON(): Required<IWaypoint> {

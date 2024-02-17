@@ -9,7 +9,7 @@ function tag(name: string): string[] {
 
 function handleError(text: string, throwError: boolean, errors: string[]): void {
    if (throwError) {
-      throw Error(text);
+      throw new Error(text);
    } else {
       logger.tWarn(tag('deepCheck'), text);
       errors.push(text);
@@ -37,17 +37,17 @@ export function deepCheck(
    }
 
    // check for existing and/or unknown key
-   const dck = Object.keys(check);
-   if (dck.length) {
-      for (const key in data) {
-         if (!dck.includes(key)) {
-            handleError(`Unused key ${key} found in ${name}`, false, errors);
-            continue;
-         }
+   const checkKeys = Object.keys(check);
+   if (!checkKeys.length) return errors;
+
+   for (const key in data) {
+      if (!(key in check)) {
+         handleError(`Unused key ${key} found in ${name}`, false, errors);
       }
    }
 
-   for (const key in check) {
+   for (let i = 0; i < checkKeys.length; i++) {
+      const key = checkKeys[i];
       const ch = check[key];
       const d = data[key];
 
@@ -84,18 +84,22 @@ export function deepCheck(
          continue;
       }
 
-      if (
-         ch.array &&
-         Array.isArray(d) &&
-         !d.every(
-            (n: unknown) =>
-               typeof n === ch.type ||
-               (ch.type === 'number' &&
-                  typeof n === 'number' &&
-                  (isNaN(n) || ((ch.int ? n % 1 !== 0 : true) && (ch.unsigned ? n < 0 : true)))),
-         )
-      ) {
-         handleError(`${key} is not ${ch.type} in object ${name}!`, throwError, errors);
+      if (ch.array) {
+         if (!Array.isArray(d)) {
+            handleError(`${key} is not ${ch.type} in object ${name}!`, throwError, errors);
+            continue;
+         }
+         if (
+            !d.every(
+               (n: unknown) =>
+                  typeof n === ch.type ||
+                  (ch.type === 'number' &&
+                     typeof n === 'number' &&
+                     (isNaN(n) || ((ch.int ? n % 1 !== 0 : true) && (ch.unsigned ? n < 0 : true)))),
+            )
+         ) {
+            handleError(`${key} is not ${ch.type} in object ${name}!`, throwError, errors);
+         }
          continue;
       }
 

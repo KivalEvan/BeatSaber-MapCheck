@@ -4,7 +4,8 @@ import { printResultTime } from '../helpers';
 import UICheckbox from '../../ui/helpers/checkbox';
 import { BeatPerMinute } from '../../beatmap/shared/bpm';
 import { PosX, PosY } from '../../beatmap/shared/constants';
-import { Obstacle } from '../../beatmap/v3/obstacle';
+import { Obstacle } from '../../beatmap/v4/obstacle';
+import { IWrapObstacle } from '../../types/beatmap/wrapper/obstacle';
 
 const name = '2-wide Center Obstacle';
 const description =
@@ -97,9 +98,9 @@ function check(map: ToolArgs) {
    const { obstacles } = map.difficulty!.data;
    const { bpm } = map.settings;
    const { recovery } = tool.input.params;
-   const arr: Obstacle[] = [];
-   let obstacleLeftFull: Obstacle = Obstacle.create()[0];
-   let obstacleRightFull: Obstacle = Obstacle.create()[0];
+   const arr: IWrapObstacle[] = [];
+   let obstacleLeftFull: IWrapObstacle = new Obstacle();
+   let obstacleRightFull: IWrapObstacle = new Obstacle();
    obstacles.forEach((o) => {
       if (o.posY < PosY.TOP && o.height > 1) {
          if (o.width > 2) {

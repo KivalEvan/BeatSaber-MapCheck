@@ -1,4 +1,5 @@
 // deno-lint-ignore-file no-explicit-any
+import { SliderMidAnchorMode } from '../shared/constants';
 import { ModType } from '../shared/modCheck';
 import { IWrapBaseSlider, IWrapBaseSliderAttribute } from './baseSlider';
 
@@ -39,7 +40,7 @@ export interface IWrapArcAttribute<T extends { [P in keyof T]: T[P] } = Record<s
     *
     * **NOTE:** The visual will only be applied under specific condition.
     */
-   midAnchor: 0 | 1 | 2;
+   midAnchor: SliderMidAnchorMode;
 }
 
 export interface IWrapArc<T extends { [P in keyof T]: T[P] } = Record<string, any>>
@@ -48,7 +49,7 @@ export interface IWrapArc<T extends { [P in keyof T]: T[P] } = Record<string, an
    setLengthMultiplier(value: number): this;
    setTailLengthMultiplier(value: number): this;
    setTailDirection(value: number): this;
-   setMidAnchor(value: 0 | 1 | 2): this;
+   setMidAnchor(value: SliderMidAnchorMode): this;
 
    /**
     * Get arc and return standardised tail note angle.

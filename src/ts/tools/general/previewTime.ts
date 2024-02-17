@@ -28,7 +28,7 @@ const tool: Tool = {
 };
 
 function run(map: ToolArgs) {
-   const { previewStartTime, previewDuration } = map.info;
+   const { previewStartTime, previewDuration } = map.info.audio;
 
    if (previewStartTime === 12 && previewDuration === 10) {
       tool.output.html = printResult(

@@ -1,1 +1,1 @@
-export type Version = `${1 | 2 | 3}.${number}.0`;
+export type Version = `${1 | 2 | 3 | 4}.${number}.0`;

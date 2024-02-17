@@ -1,6 +1,10 @@
 import SavedData from '../../savedData';
 import { removeOptions } from '../../utils';
-import { EnvironmentName, EnvironmentV3Name } from '../../types/beatmap/shared/environment';
+import {
+   EnvironmentAllName,
+   EnvironmentName,
+   EnvironmentV3Name,
+} from '../../types/beatmap/shared/environment';
 import { IEditor, IEditorInfo } from '../../types/beatmap/v2/custom/editor';
 import { IContributorB64 } from '../../types/mapcheck';
 import { EnvironmentRename } from '../../beatmap/shared/environment';
@@ -20,15 +24,18 @@ const htmlInfoContributorsRole: HTMLElement = document.querySelector('.info__con
 
 htmlInfoContributorsSelect.addEventListener('change', contributorsSelectHandler);
 
-export function setLevelAuthor(str?: string): void {
-   if (!str) {
+export function setLevelAuthor(mappers?: string[], lighters?: string[]): void {
+   if (!mappers) {
       htmlInfoLevelAuthor.textContent = '';
       return;
    }
-   htmlInfoLevelAuthor.textContent = 'Mapped by ' + str;
+   if (!lighters?.length) htmlInfoLevelAuthor.textContent = 'Mapped by ' + mappers.join(', ');
+   else
+      htmlInfoLevelAuthor.textContent =
+         'Mapped by ' + mappers.join(', ') + ' and lit by ' + lighters.join(', ');
 }
 
-export function setEnvironment(str?: EnvironmentName | EnvironmentV3Name): void {
+export function setEnvironment(str?: EnvironmentAllName): void {
    if (!str) {
       htmlInfoEnvironment.textContent = '';
       return;

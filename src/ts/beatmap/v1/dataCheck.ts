@@ -78,7 +78,7 @@ export const EventDataCheck: { readonly [key in keyof IEvent]: DataCheck } = {
    },
 } as const;
 
-export const DifficultyCheck: { readonly [key in keyof IDifficulty]: DataCheck } = {
+export const DifficultyDataCheck: { readonly [key in keyof IDifficulty]: DataCheck } = {
    _version: {
       type: 'string',
       version: '1.5.0',
@@ -143,7 +143,7 @@ export const DifficultyCheck: { readonly [key in keyof IDifficulty]: DataCheck }
    },
 } as const;
 
-export const InfoDifficultyCheck: { readonly [key in keyof IInfoDifficulty]: DataCheck } = {
+export const InfoDifficultyDataCheck: { readonly [key in keyof IInfoDifficulty]: DataCheck } = {
    difficulty: {
       type: 'string',
       version: '1.0.0',
@@ -221,7 +221,7 @@ export const InfoDifficultyCheck: { readonly [key in keyof IInfoDifficulty]: Dat
    },
 };
 
-export const InfoCheck: { readonly [key in keyof IInfo]: DataCheck } = {
+export const InfoDataCheck: { readonly [key in keyof IInfo]: DataCheck } = {
    songName: {
       type: 'string',
       version: '1.0.0',
@@ -257,7 +257,7 @@ export const InfoCheck: { readonly [key in keyof IInfo]: DataCheck } = {
    difficultyLevels: {
       type: 'array',
       version: '1.0.0',
-      check: InfoDifficultyCheck,
+      check: InfoDifficultyDataCheck,
    },
    oneSaber: {
       type: 'boolean',

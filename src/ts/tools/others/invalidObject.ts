@@ -32,17 +32,16 @@ function run(map: ToolArgs) {
       console.error('Something went wrong!');
       return;
    }
+   const { colorNotes, bombNotes, obstacles, arcs, chains } = map.difficulty.data;
    const {
-      colorNotes,
-      bombNotes,
-      obstacles,
+      waypoints,
       basicEvents,
-      arcs,
-      chains,
+      colorBoostEvents,
       lightColorEventBoxGroups,
       lightRotationEventBoxGroups,
       lightTranslationEventBoxGroups,
-   } = map.difficulty.data;
+      fxEventBoxGroups,
+   } = map.difficulty.lightshow;
 
    let noteResult: number[] = [];
    let obstacleResult: number[] = [];
@@ -64,7 +63,9 @@ function run(map: ToolArgs) {
          chainResult = chains.filter((bs) => !bs.isValid()).map((bs) => bs.time);
       }
    }
+   const waypointResult = waypoints.filter((e) => !e.isValid()).map((e) => e.time);
    const eventResult = basicEvents.filter((e) => !e.isValid()).map((e) => e.time);
+   const colorBoostResult = colorBoostEvents.filter((e) => !e.isValid()).map((e) => e.time);
    const lightColorBoxResult = lightColorEventBoxGroups
       .filter((e) => !e.isValid())
       .map((e) => e.time);
@@ -74,6 +75,7 @@ function run(map: ToolArgs) {
    const lightTranslationBoxResult = lightTranslationEventBoxGroups
       .filter((e) => !e.isValid())
       .map((e) => e.time);
+   const fxEventBoxResult = fxEventBoxGroups.filter((e) => !e.isValid()).map((e) => e.time);
 
    const htmlResult: HTMLElement[] = [];
    if (noteResult.length) {
@@ -93,8 +95,18 @@ function run(map: ToolArgs) {
          printResultTime('Invalid obstacle', obstacleResult, map.settings.bpm, 'error'),
       );
    }
+   if (waypointResult.length) {
+      htmlResult.push(
+         printResultTime('Invalid waypoint', waypointResult, map.settings.bpm, 'error'),
+      );
+   }
    if (eventResult.length) {
       htmlResult.push(printResultTime('Invalid event', eventResult, map.settings.bpm, 'error'));
+   }
+   if (colorBoostResult.length) {
+      htmlResult.push(
+         printResultTime('Invalid color boost', colorBoostResult, map.settings.bpm, 'error'),
+      );
    }
    if (lightColorBoxResult.length) {
       htmlResult.push(
@@ -124,6 +136,11 @@ function run(map: ToolArgs) {
             map.settings.bpm,
             'error',
          ),
+      );
+   }
+   if (fxEventBoxResult.length) {
+      htmlResult.push(
+         printResultTime('Invalid FX event', fxEventBoxResult, map.settings.bpm, 'error'),
       );
    }
 

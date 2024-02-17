@@ -56,8 +56,8 @@ export function ogChromaToV2Chroma<T extends IWrapDifficulty>(
             ev.value >= 1 && ev.value <= 4
                ? defaultRightLight
                : ev.value >= 5 && ev.value <= 8
-               ? defaultLeftLight
-               : [1, 1, 1];
+                 ? defaultLeftLight
+                 : [1, 1, 1];
       }
       if (ev.value === 4) {
          ev.value = 0;

@@ -56,10 +56,10 @@ const tool: Tool = {
 function customColorSimilarity(map: ToolArgs) {
    const checkColorLeft =
       map.difficulty?.info.customData?._colorLeft ??
-      ColorScheme[EnvironmentSchemeName[map.info.environmentName] ?? 'The First']._colorLeft;
+      ColorScheme[EnvironmentSchemeName[map.difficulty!.environment] ?? 'The First']._colorLeft;
    const checkColorRight =
       map.difficulty?.info.customData?._colorRight ??
-      ColorScheme[EnvironmentSchemeName[map.info.environmentName] ?? 'The First']._colorRight;
+      ColorScheme[EnvironmentSchemeName[map.difficulty!.environment] ?? 'The First']._colorRight;
    if (checkColorLeft && checkColorRight) {
       return deltaE00(colorFrom(checkColorLeft), colorFrom(checkColorRight));
    }
@@ -71,10 +71,10 @@ function customColorArrowSimilarity(map: ToolArgs) {
       deltaERight = 100;
    const checkColorLeft =
       map.difficulty?.info.customData?._colorLeft ??
-      ColorScheme[EnvironmentSchemeName[map.info.environmentName] ?? 'The First']._colorLeft;
+      ColorScheme[EnvironmentSchemeName[map.difficulty!.environment] ?? 'The First']._colorLeft;
    const checkColorRight =
       map.difficulty?.info.customData?._colorRight ??
-      ColorScheme[EnvironmentSchemeName[map.info.environmentName] ?? 'The First']._colorRight;
+      ColorScheme[EnvironmentSchemeName[map.difficulty!.environment] ?? 'The First']._colorRight;
    if (checkColorLeft) {
       deltaELeft = deltaE00(arrowColor, colorFrom(checkColorLeft));
    }

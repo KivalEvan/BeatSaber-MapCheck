@@ -262,7 +262,7 @@ export const SpecialEventsKeywordFiltersDataCheck: {
    },
 } as const;
 
-export const DifficultyCheck: { readonly [key in keyof IDifficulty]: DataCheck } = {
+export const DifficultyDataCheck: { readonly [key in keyof IDifficulty]: DataCheck } = {
    _version: {
       type: 'string',
       version: '2.0.0',
@@ -312,7 +312,7 @@ export const DifficultyCheck: { readonly [key in keyof IDifficulty]: DataCheck }
    },
 } as const;
 
-export const InfoSetDifficultyCheck: { readonly [key in keyof IInfoDifficulty]: DataCheck } = {
+export const InfoSetDifficultyDataCheck: { readonly [key in keyof IInfoDifficulty]: DataCheck } = {
    _difficulty: {
       type: 'string',
       version: '2.0.0',
@@ -349,7 +349,7 @@ export const InfoSetDifficultyCheck: { readonly [key in keyof IInfoDifficulty]: 
    },
 };
 
-export const InfoSetCheck: { readonly [key in keyof IInfoSet]: DataCheck } = {
+export const InfoSetDataCheck: { readonly [key in keyof IInfoSet]: DataCheck } = {
    _beatmapCharacteristicName: {
       type: 'string',
       version: '2.0.0',
@@ -357,11 +357,11 @@ export const InfoSetCheck: { readonly [key in keyof IInfoSet]: DataCheck } = {
    _difficultyBeatmaps: {
       type: 'array',
       version: '2.0.0',
-      check: InfoSetDifficultyCheck,
+      check: InfoSetDifficultyDataCheck,
    },
 };
 
-export const ColorObjectCheck: { readonly [key in keyof IColor]: DataCheck } = {
+export const ColorObjectDataCheck: { readonly [key in keyof IColor]: DataCheck } = {
    r: {
       type: 'number',
       version: '2.1.0',
@@ -380,50 +380,51 @@ export const ColorObjectCheck: { readonly [key in keyof IColor]: DataCheck } = {
    },
 };
 
-export const InfoColorSchemeDataCheck: { readonly [key in keyof IInfoColorSchemeData]: DataCheck } =
-   {
-      colorSchemeId: {
-         type: 'string',
-         version: '2.1.0',
-      },
-      saberAColor: {
-         type: 'object',
-         version: '2.1.0',
-         check: ColorObjectCheck,
-      },
-      saberBColor: {
-         type: 'object',
-         version: '2.1.0',
-         check: ColorObjectCheck,
-      },
-      environmentColor0: {
-         type: 'object',
-         version: '2.1.0',
-         check: ColorObjectCheck,
-      },
-      environmentColor1: {
-         type: 'object',
-         version: '2.1.0',
-         check: ColorObjectCheck,
-      },
-      obstaclesColor: {
-         type: 'object',
-         version: '2.1.0',
-         check: ColorObjectCheck,
-      },
-      environmentColor0Boost: {
-         type: 'object',
-         version: '2.1.0',
-         check: ColorObjectCheck,
-      },
-      environmentColor1Boost: {
-         type: 'object',
-         version: '2.1.0',
-         check: ColorObjectCheck,
-      },
-   };
+export const InfoColorSchemeDataDataCheck: {
+   readonly [key in keyof IInfoColorSchemeData]: DataCheck;
+} = {
+   colorSchemeId: {
+      type: 'string',
+      version: '2.1.0',
+   },
+   saberAColor: {
+      type: 'object',
+      version: '2.1.0',
+      check: ColorObjectDataCheck,
+   },
+   saberBColor: {
+      type: 'object',
+      version: '2.1.0',
+      check: ColorObjectDataCheck,
+   },
+   environmentColor0: {
+      type: 'object',
+      version: '2.1.0',
+      check: ColorObjectDataCheck,
+   },
+   environmentColor1: {
+      type: 'object',
+      version: '2.1.0',
+      check: ColorObjectDataCheck,
+   },
+   obstaclesColor: {
+      type: 'object',
+      version: '2.1.0',
+      check: ColorObjectDataCheck,
+   },
+   environmentColor0Boost: {
+      type: 'object',
+      version: '2.1.0',
+      check: ColorObjectDataCheck,
+   },
+   environmentColor1Boost: {
+      type: 'object',
+      version: '2.1.0',
+      check: ColorObjectDataCheck,
+   },
+};
 
-export const InfoColorSchemeCheck: { readonly [key in keyof IInfoColorScheme]: DataCheck } = {
+export const InfoColorSchemeDataCheck: { readonly [key in keyof IInfoColorScheme]: DataCheck } = {
    useOverride: {
       type: 'boolean',
       version: '2.1.0',
@@ -431,11 +432,11 @@ export const InfoColorSchemeCheck: { readonly [key in keyof IInfoColorScheme]: D
    colorScheme: {
       type: 'object',
       version: '2.1.0',
-      check: InfoColorSchemeDataCheck,
+      check: InfoColorSchemeDataDataCheck,
    },
 };
 
-export const InfoCheck: { readonly [key in keyof IInfo]: DataCheck } = {
+export const InfoDataCheck: { readonly [key in keyof IInfo]: DataCheck } = {
    _version: {
       type: 'string',
       version: '2.0.0',
@@ -506,7 +507,7 @@ export const InfoCheck: { readonly [key in keyof IInfo]: DataCheck } = {
    _colorSchemes: {
       type: 'array',
       version: '2.1.0',
-      check: InfoColorSchemeCheck,
+      check: InfoColorSchemeDataCheck,
    },
    _customData: {
       type: 'object',
@@ -517,6 +518,6 @@ export const InfoCheck: { readonly [key in keyof IInfo]: DataCheck } = {
    _difficultyBeatmapSets: {
       type: 'array',
       version: '2.0.0',
-      check: InfoSetCheck,
+      check: InfoSetDataCheck,
    },
 };

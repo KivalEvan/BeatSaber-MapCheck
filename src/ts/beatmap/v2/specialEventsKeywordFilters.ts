@@ -14,41 +14,31 @@ export class SpecialEventsKeywordFilters extends WrapEventTypesWithKeywords<
       _keywords: [],
    };
 
-   constructor();
-   constructor(data: DeepPartial<IWrapEventTypesWithKeywordsAttribute>);
-   constructor(data: DeepPartial<ISpecialEventsKeywordFilters>);
-   constructor(
-      data: DeepPartial<ISpecialEventsKeywordFilters> &
-         DeepPartial<IWrapEventTypesWithKeywordsAttribute>,
-   );
-   constructor(
-      data: DeepPartial<ISpecialEventsKeywordFilters> &
-         DeepPartial<IWrapEventTypesWithKeywordsAttribute> = {},
-   ) {
-      super();
-
-      this._list = (data._keywords ?? data.list ?? SpecialEventsKeywordFilters.default._keywords)
-         .map((d) => {
-            if (d) return new SpecialEventsKeywordFiltersKeywords(d);
-            return;
-         })
-         .filter((d) => d) as SpecialEventsKeywordFiltersKeywords[];
-   }
-
-   static create(): SpecialEventsKeywordFilters;
    static create(
-      data: DeepPartial<IWrapEventTypesWithKeywordsAttribute>,
-   ): SpecialEventsKeywordFilters;
-   static create(data: DeepPartial<ISpecialEventsKeywordFilters>): SpecialEventsKeywordFilters;
-   static create(
-      data: DeepPartial<ISpecialEventsKeywordFilters> &
-         DeepPartial<IWrapEventTypesWithKeywordsAttribute>,
-   ): SpecialEventsKeywordFilters;
-   static create(
-      data: DeepPartial<ISpecialEventsKeywordFilters> &
-         DeepPartial<IWrapEventTypesWithKeywordsAttribute> = {},
+      data: DeepPartial<IWrapEventTypesWithKeywordsAttribute> = {},
    ): SpecialEventsKeywordFilters {
       return new this(data);
+   }
+
+   constructor(data: DeepPartial<IWrapEventTypesWithKeywordsAttribute> = {}) {
+      super();
+      if (data.list) {
+         this._list = data.list.map((d) => new SpecialEventsKeywordFiltersKeywords(d));
+      } else {
+         this._list = SpecialEventsKeywordFilters.default._keywords.map((json) =>
+            SpecialEventsKeywordFiltersKeywords.fromJSON(json),
+         );
+      }
+   }
+
+   static fromJSON(
+      data: DeepPartial<ISpecialEventsKeywordFilters> = {},
+   ): SpecialEventsKeywordFilters {
+      const d = new this();
+      d._list = (data._keywords ?? SpecialEventsKeywordFilters.default._keywords).map((json) =>
+         SpecialEventsKeywordFiltersKeywords.fromJSON(json),
+      );
+      return d;
    }
 
    toJSON(): Required<ISpecialEventsKeywordFilters> {

@@ -7,7 +7,7 @@ export interface IChain extends IBaseSlider {
     *
     * **NOTE:** Must be more than `0`, the head counts as `1`.
     */
-   sc: number;
+   sc?: number;
    /**
     * Length multiplier `<float>` of element in chain.
     * ```ts
@@ -18,6 +18,6 @@ export interface IChain extends IBaseSlider {
     *
     * **WARNING:** Value `0` will crash the game.
     */
-   s: number;
+   s?: number;
    customData?: ICustomDataSlider;
 }

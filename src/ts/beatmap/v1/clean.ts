@@ -4,20 +4,20 @@ import { IInfo } from '../../types/beatmap/v1/info';
 import { IDifficulty } from '../../types/beatmap/v1/difficulty';
 
 export function cleanDifficulty(data: IDifficulty, options: ICleanOptions) {
-   for (const i1 in data._notes) {
+   for (let i1 = 0; i1 < data._notes.length; i1++) {
       const o1 = data._notes[i1];
       if (options.floatTrim) {
          o1._time = round(o1._time, options.floatTrim);
       }
    }
-   for (const i1 in data._obstacles) {
+   for (let i1 = 0; i1 < data._obstacles.length; i1++) {
       const o1 = data._obstacles[i1];
       if (options.floatTrim) {
          o1._time = round(o1._time, options.floatTrim);
          o1._duration = round(o1._duration, options.floatTrim);
       }
    }
-   for (const i1 in data._events) {
+   for (let i1 = 0; i1 < data._events.length; i1++) {
       const o1 = data._events[i1];
       if (options.floatTrim) {
          o1._time = round(o1._time, options.floatTrim);

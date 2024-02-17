@@ -9,7 +9,7 @@ export abstract class WrapColorNote<T extends { [P in keyof T]: T[P] }>
    implements IWrapColorNote<T>
 {
    protected _type!: IWrapColorNote['type'];
-   protected _angleOffset!: IWrapColorNote['angleOffset'];
+   protected _angleOffset: IWrapColorNote['angleOffset'] = 0;
 
    get type(): IWrapColorNote['type'] {
       return this._type;

@@ -28,6 +28,9 @@ export interface IWrapGridObjectAttribute<T extends { [P in keyof T]: T[P] } = R
     * **RANGE:** `0-2`
     */
    posY: number;
+   /** V4 only features. */
+   // FIXME: warn non-v4
+   laneRotation: number;
 }
 
 export interface IWrapGridObject<T extends { [P in keyof T]: T[P] } = Record<string, any>>
@@ -35,6 +38,7 @@ export interface IWrapGridObject<T extends { [P in keyof T]: T[P] } = Record<str
       IWrapGridObjectAttribute<T> {
    setPosX(value: number): this;
    setPosY(value: number): this;
+   setLaneRotation(value: number): this;
 
    /**
     * Mirror a grid object, apply alternative flip and Noodle Extensions if available.

@@ -1,4 +1,7 @@
 // deno-lint-ignore-file no-explicit-any
+import { RandomType } from '../shared/constants';
+import { IndexFilterType } from '../shared/constants';
+import { LimitAlsoAffectsType } from '../shared/constants';
 import { IWrapBaseItem, IWrapBaseItemAttribute } from './baseItem';
 
 export interface IWrapIndexFilterAttribute<T extends { [P in keyof T]: T[P] } = Record<string, any>>
@@ -10,7 +13,7 @@ export interface IWrapIndexFilterAttribute<T extends { [P in keyof T]: T[P] } = 
     * 2 -> Step And Offset
     * ```
     */
-   type: 1 | 2;
+   type: IndexFilterType;
    /**
     * Parameter 0 `<int>` in index filter.
     * ```ts
@@ -48,7 +51,7 @@ export interface IWrapIndexFilterAttribute<T extends { [P in keyof T]: T[P] } = 
     * 3 -> All
     * ```
     */
-   random: 0 | 1 | 2 | 3;
+   random: RandomType;
    /** Random seed `<int>` in index filter. */
    seed: number;
    /**
@@ -70,19 +73,19 @@ export interface IWrapIndexFilterAttribute<T extends { [P in keyof T]: T[P] } = 
     *
     * Adjust to limited ID list and has no effect with `Step` type.
     */
-   limitAffectsType: 0 | 1 | 2 | 3;
+   limitAffectsType: LimitAlsoAffectsType;
 }
 
 export interface IWrapIndexFilter<T extends { [P in keyof T]: T[P] } = Record<string, any>>
    extends IWrapBaseItem<T>,
       IWrapIndexFilterAttribute<T> {
-   setType(value: 1 | 2): this;
+   setType(value: IndexFilterType): this;
    setP0(value: number): this;
    setP1(value: number): this;
    setReverse(value: 0 | 1): this;
    setChunks(value: number): this;
-   setRandom(value: 0 | 1 | 2): this;
+   setRandom(value: RandomType): this;
    setSeed(value: number): this;
    setLimit(value: number): this;
-   setLimitAffectsType(value: 0 | 1 | 2): this;
+   setLimitAffectsType(value: LimitAlsoAffectsType): this;
 }

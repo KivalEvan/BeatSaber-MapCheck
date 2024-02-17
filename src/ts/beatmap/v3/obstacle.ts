@@ -18,37 +18,35 @@ export class Obstacle extends WrapObstacle<IObstacle> {
       customData: {},
    };
 
-   constructor();
-   constructor(data: Partial<IWrapObstacleAttribute<IObstacle>>);
-   constructor(data: Partial<IObstacle>);
-   constructor(data: Partial<IObstacle> & Partial<IWrapObstacleAttribute<IObstacle>>);
-   constructor(data: Partial<IObstacle> & Partial<IWrapObstacleAttribute<IObstacle>> = {}) {
-      super();
-
-      this._time = data.b ?? data.time ?? Obstacle.default.b;
-      this._posX = data.x ?? data.posX ?? Obstacle.default.x;
-      this._posY = data.y ?? data.posY ?? Obstacle.default.y;
-      this._duration = data.d ?? data.duration ?? Obstacle.default.d;
-      this._width = data.w ?? data.width ?? Obstacle.default.w;
-      this._height = data.h ?? data.height ?? Obstacle.default.h;
-      this._customData = deepCopy(data.customData ?? Obstacle.default.customData);
-   }
-
-   static create(): Obstacle[];
-   static create(...data: Partial<IWrapObstacleAttribute<IObstacle>>[]): Obstacle[];
-   static create(...data: Partial<IObstacle>[]): Obstacle[];
-   static create(
-      ...data: (Partial<IObstacle> & Partial<IWrapObstacleAttribute<IObstacle>>)[]
-   ): Obstacle[];
-   static create(
-      ...data: (Partial<IObstacle> & Partial<IWrapObstacleAttribute<IObstacle>>)[]
-   ): Obstacle[] {
-      const result: Obstacle[] = [];
-      data.forEach((obj) => result.push(new this(obj)));
+   static create(...data: Partial<IWrapObstacleAttribute<IObstacle>>[]): Obstacle[] {
+      const result: Obstacle[] = data.map((obj) => new this(obj));
       if (result.length) {
          return result;
       }
       return [new this()];
+   }
+
+   constructor(data: Partial<IWrapObstacleAttribute<IObstacle>> = {}) {
+      super();
+      this._time = data.time ?? Obstacle.default.b;
+      this._posX = data.posX ?? Obstacle.default.x;
+      this._posY = data.posY ?? Obstacle.default.y;
+      this._duration = data.duration ?? Obstacle.default.d;
+      this._width = data.width ?? Obstacle.default.w;
+      this._height = data.height ?? Obstacle.default.h;
+      this._customData = deepCopy(data.customData ?? Obstacle.default.customData);
+   }
+
+   static fromJSON(data: Partial<IObstacle> = {}): Obstacle {
+      const d = new this();
+      d._time = data.b ?? Obstacle.default.b;
+      d._posX = data.x ?? Obstacle.default.x;
+      d._posY = data.y ?? Obstacle.default.y;
+      d._duration = data.d ?? Obstacle.default.d;
+      d._width = data.w ?? Obstacle.default.w;
+      d._height = data.h ?? Obstacle.default.h;
+      d._customData = deepCopy(data.customData ?? Obstacle.default.customData);
+      return d;
    }
 
    toJSON(): Required<IObstacle> {
@@ -117,13 +115,13 @@ export class Obstacle extends WrapObstacle<IObstacle> {
                (this.posX <= -1000
                   ? this.posX / 1000 + 1
                   : this.posX >= 1000
-                  ? this.posX / 1000 - 1
-                  : this.posX) - 2,
+                    ? this.posX / 1000 - 1
+                    : this.posX) - 2,
                (this.posY <= -1000
                   ? this.posY / 1000
                   : this.posY >= 1000
-                  ? this.posY / 1000
-                  : this.posY) - 0.5,
+                    ? this.posY / 1000
+                    : this.posY) - 0.5,
             ];
       }
    }

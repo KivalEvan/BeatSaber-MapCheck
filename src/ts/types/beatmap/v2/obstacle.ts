@@ -12,7 +12,7 @@ export interface IObstacle extends IBaseObject {
     * 3 -> Outer Right
     * ```
     */
-   _lineIndex: number;
+   _lineIndex?: number;
    /**
     * Type of obstacle.
     * ```ts
@@ -21,8 +21,8 @@ export interface IObstacle extends IBaseObject {
     * 2 -> Freeform Wall
     * ```
     */
-   _type: number;
-   _duration: number;
-   _width: number;
+   _type?: number;
+   _duration?: number;
+   _width?: number;
    _customData?: ICustomDataObstacle;
 }

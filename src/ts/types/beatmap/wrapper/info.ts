@@ -3,46 +3,45 @@ import { LooseAutocomplete } from '../../utils';
 import { Version } from '../shared/version';
 import { CharacteristicName } from '../shared/characteristic';
 import { DifficultyName } from '../shared/difficulty';
-import {
-   Environment360Name,
-   EnvironmentAllName,
-   EnvironmentName,
-   EnvironmentV3Name,
-} from '../shared/environment';
+import { EnvironmentAllName } from '../shared/environment';
 import { GenericFileName } from '../shared/filename';
 import { IWrapBaseItem } from './baseItem';
 import { IColor } from '../../colors';
 
-export interface IWrapInfoAttribute<T extends { [P in keyof T]: T[P] } = Record<string, any>>
-   extends IWrapBaseItem<T> {
-   version: Version;
-   songName: string;
-   songSubName: string;
-   songAuthorName: string;
-   levelAuthorName: string;
-   beatsPerMinute: number;
-   shuffle: number;
-   shufflePeriod: number;
-   previewStartTime: number;
-   previewDuration: number;
-   songFilename: string;
+export interface IWrapInfoAttribute<
+   T extends { [P in keyof T]: T[P] } = Record<string, any>,
+   TDifficulty extends { [P in keyof TDifficulty]: TDifficulty[P] } = Record<string, any>,
+> extends IWrapBaseItem<T> {
+   readonly version: Version;
+   song: IWrapInfoSong;
+   audio: IWrapInfoAudio;
+   songPreviewFilename: string;
    coverImageFilename: string;
-   environmentName: EnvironmentName | EnvironmentV3Name;
-   allDirectionsEnvironmentName: Environment360Name;
    environmentNames: EnvironmentAllName[];
    colorSchemes: IWrapInfoColorScheme[];
-   songTimeOffset: number;
-   readonly difficultySets: IWrapInfoSet[];
+   difficulties: IWrapInfoDifficultyAttribute<TDifficulty>[];
 
    filename: string;
 }
 
-export interface IWrapInfoColorScheme {
-   useOverride: boolean;
-   colorScheme: IWrapInfoColorSchemeData;
+export interface IWrapInfoSong {
+   title: string;
+   subTitle: string;
+   author: string;
 }
 
-export interface IWrapInfoColorSchemeData {
+export interface IWrapInfoAudio {
+   filename: string;
+   duration: number; // float
+   audioDataFilename: string;
+   bpm: number; // float
+   lufs: number; // float
+   previewStartTime: number; // float
+   previewDuration: number; // float
+}
+
+export interface IWrapInfoColorScheme {
+   useOverride: boolean;
    name: string;
    saberLeftColor: Required<IColor>;
    saberRightColor: Required<IColor>;
@@ -55,34 +54,35 @@ export interface IWrapInfoColorSchemeData {
    environmentWColorBoost?: Required<IColor>;
 }
 
-export interface IWrapInfo<T extends { [P in keyof T]: T[P] } = Record<string, any>>
-   extends IWrapBaseItem<T>,
-      IWrapInfoAttribute<T> {
-   setFileName(filename: LooseAutocomplete<GenericFileName>): this;
+export interface IWrapInfoBeatmapAuthors {
+   mappers: string[];
+   lighters: string[];
+}
+
+export interface IWrapInfo<
+   T extends { [P in keyof T]: T[P] } = Record<string, any>,
+   TDifficulty extends { [P in keyof TDifficulty]: TDifficulty[P] } = Record<string, any>,
+> extends IWrapBaseItem<T>,
+      IWrapInfoAttribute<T, TDifficulty> {
+   difficulties: IWrapInfoDifficulty<TDifficulty>[];
+   setFilename(filename: LooseAutocomplete<GenericFileName>): this;
+
+   /** Sort beatmap object(s) accordingly. */
+   sort(): this;
 
    /** Show entries of map inside info. */
    addMap(data: Partial<IWrapInfoDifficultyAttribute>): this;
    listMap(): [CharacteristicName, IWrapInfoDifficulty][];
 }
 
-export interface IWrapInfoSetAttribute<T extends { [P in keyof T]: T[P] } = Record<string, any>>
-   extends IWrapBaseItem<T> {
-   characteristic: CharacteristicName;
-   difficulties: IWrapInfoDifficulty[];
-}
-
-export interface IWrapInfoSet<T extends { [P in keyof T]: T[P] } = Record<string, any>>
-   extends IWrapBaseItem<T>,
-      IWrapInfoSetAttribute<T> {}
-
 export interface IWrapInfoDifficultyAttribute<
    T extends { [P in keyof T]: T[P] } = Record<string, any>,
 > extends IWrapBaseItem<T> {
-   /** Loose string to parent characteristic name, cannot be up-to-date when moved */
-   readonly characteristic?: CharacteristicName;
+   characteristic: CharacteristicName;
    difficulty: DifficultyName;
-   rank: number;
    filename: LooseAutocomplete<GenericFileName>;
+   lightshowFilename: LooseAutocomplete<GenericFileName>;
+   authors: IWrapInfoBeatmapAuthors;
    njs: number;
    njsOffset: number;
    colorSchemeId: number;
@@ -92,6 +92,6 @@ export interface IWrapInfoDifficultyAttribute<
 export interface IWrapInfoDifficulty<T extends { [P in keyof T]: T[P] } = Record<string, any>>
    extends IWrapBaseItem<T>,
       IWrapInfoDifficultyAttribute<T> {
-   copyColorScheme(colorScheme: IWrapInfoColorSchemeData): this;
+   copyColorScheme(colorScheme: IWrapInfoColorScheme): this;
    copyColorScheme(id: number, info: IWrapInfo): this;
 }

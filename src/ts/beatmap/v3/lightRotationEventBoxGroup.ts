@@ -5,14 +5,14 @@ import { WrapLightRotationEventBoxGroup } from '../wrapper/lightRotationEventBox
 import { deepCopy } from '../../utils/misc';
 import { ILightRotationEventBox } from '../../types/beatmap/v3/lightRotationEventBox';
 import { IIndexFilter } from '../../types/beatmap/v3/indexFilter';
-import { ILightRotationBase } from '../../types/beatmap/v3/lightRotationBase';
+import { ILightRotationEvent } from '../../types/beatmap/v3/lightRotationEvent';
 import { IWrapLightRotationEventBoxGroupAttribute } from '../../types/beatmap/wrapper/lightRotationEventBoxGroup';
 
 /** Light Rotation event box group beatmap v3 class object. */
 export class LightRotationEventBoxGroup extends WrapLightRotationEventBoxGroup<
    ILightRotationEventBoxGroup,
    ILightRotationEventBox,
-   ILightRotationBase,
+   ILightRotationEvent,
    IIndexFilter
 > {
    static default: Required<ILightRotationEventBoxGroup> = {
@@ -22,92 +22,57 @@ export class LightRotationEventBoxGroup extends WrapLightRotationEventBoxGroup<
       customData: {},
    };
 
-   constructor();
-   constructor(
-      data: DeepPartial<
-         IWrapLightRotationEventBoxGroupAttribute<
-            ILightRotationEventBoxGroup,
-            ILightRotationEventBox,
-            ILightRotationBase,
-            IIndexFilter
-         >
-      >,
-   );
-   constructor(data: DeepPartial<ILightRotationEventBoxGroup>);
-   constructor(
-      data: DeepPartial<ILightRotationEventBoxGroup> &
-         DeepPartial<
-            IWrapLightRotationEventBoxGroupAttribute<
-               ILightRotationEventBoxGroup,
-               ILightRotationEventBox,
-               ILightRotationBase,
-               IIndexFilter
-            >
-         >,
-   );
-   constructor(
-      data: DeepPartial<ILightRotationEventBoxGroup> &
-         DeepPartial<
-            IWrapLightRotationEventBoxGroupAttribute<
-               ILightRotationEventBoxGroup,
-               ILightRotationEventBox,
-               ILightRotationBase,
-               IIndexFilter
-            >
-         > = {},
-   ) {
-      super();
-
-      this._time = data.b ?? data.time ?? LightRotationEventBoxGroup.default.b;
-      this._id = data.g ?? data.id ?? LightRotationEventBoxGroup.default.g;
-      this._boxes = (
-         (data.e as unknown as ILightRotationEventBox[]) ??
-         (data.boxes as ILightRotationEventBox[]) ??
-         LightRotationEventBoxGroup.default.e
-      ).map((obj) => new LightRotationEventBox(obj));
-      this._customData = deepCopy(data.customData ?? LightRotationEventBoxGroup.default.customData);
-   }
-
-   static create(): LightRotationEventBoxGroup[];
    static create(
       ...data: DeepPartial<
          IWrapLightRotationEventBoxGroupAttribute<
             ILightRotationEventBoxGroup,
             ILightRotationEventBox,
-            ILightRotationBase,
+            ILightRotationEvent,
             IIndexFilter
          >
       >[]
-   ): LightRotationEventBoxGroup[];
-   static create(...data: DeepPartial<ILightRotationEventBoxGroup>[]): LightRotationEventBoxGroup[];
-   static create(
-      ...data: (DeepPartial<ILightRotationEventBoxGroup> &
-         DeepPartial<
-            IWrapLightRotationEventBoxGroupAttribute<
-               ILightRotationEventBoxGroup,
-               ILightRotationEventBox,
-               ILightRotationBase,
-               IIndexFilter
-            >
-         >)[]
-   ): LightRotationEventBoxGroup[];
-   static create(
-      ...data: (DeepPartial<ILightRotationEventBoxGroup> &
-         DeepPartial<
-            IWrapLightRotationEventBoxGroupAttribute<
-               ILightRotationEventBoxGroup,
-               ILightRotationEventBox,
-               ILightRotationBase,
-               IIndexFilter
-            >
-         >)[]
    ): LightRotationEventBoxGroup[] {
-      const result: LightRotationEventBoxGroup[] = [];
-      data.forEach((obj) => result.push(new this(obj)));
+      const result: LightRotationEventBoxGroup[] = data.map((obj) => new this(obj));
       if (result.length) {
          return result;
       }
       return [new this()];
+   }
+
+   constructor(
+      data: DeepPartial<
+         IWrapLightRotationEventBoxGroupAttribute<
+            ILightRotationEventBoxGroup,
+            ILightRotationEventBox,
+            ILightRotationEvent,
+            IIndexFilter
+         >
+      > = {},
+   ) {
+      super();
+      this._time = data.time ?? LightRotationEventBoxGroup.default.b;
+      this._id = data.id ?? LightRotationEventBoxGroup.default.g;
+      if (data.boxes) {
+         this._boxes = data.boxes.map((obj) => new LightRotationEventBox(obj));
+      } else {
+         this._boxes = LightRotationEventBoxGroup.default.e.map((obj) =>
+            LightRotationEventBox.fromJSON(obj),
+         );
+      }
+      this._customData = deepCopy(data.customData ?? LightRotationEventBoxGroup.default.customData);
+   }
+
+   static fromJSON(
+      data: DeepPartial<ILightRotationEventBoxGroup> = {},
+   ): LightRotationEventBoxGroup {
+      const d = new this();
+      d._time = data.b ?? LightRotationEventBoxGroup.default.b;
+      d._id = data.g ?? LightRotationEventBoxGroup.default.g;
+      d._boxes = (data.e ?? LightRotationEventBoxGroup.default.e).map((obj) =>
+         LightRotationEventBox.fromJSON(obj),
+      );
+      d._customData = deepCopy(data.customData ?? LightRotationEventBoxGroup.default.customData);
+      return d;
    }
 
    toJSON(): Required<ILightRotationEventBoxGroup> {

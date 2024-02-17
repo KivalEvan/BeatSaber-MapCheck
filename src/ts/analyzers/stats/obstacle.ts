@@ -1,5 +1,5 @@
 import { IObstacleCount } from './types/stats';
-import { Obstacle } from '../../beatmap/v3/obstacle';
+import { IWrapObstacle } from '../../types/beatmap/wrapper/obstacle';
 
 /**
  * Count number of type of obstacles with their properties in given array and return a obstacle count object.
@@ -8,7 +8,7 @@ import { Obstacle } from '../../beatmap/v3/obstacle';
  * console.log(list);
  * ```
  */
-export function countObstacle(obstacles: Obstacle[]): IObstacleCount {
+export function countObstacle(obstacles: IWrapObstacle[]): IObstacleCount {
    const obstacleCount: IObstacleCount = {
       total: 0,
       interactive: 0,

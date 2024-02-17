@@ -6,7 +6,7 @@ import { deepClean, purgeZeros } from '../shared/clean';
 
 // deno-lint-ignore no-explicit-any
 export function cleanDifficulty(data: Record<string, any> | IDifficulty, options: ICleanOptions) {
-   for (const i1 in data._notes) {
+   for (let i1 = 0; i1 < data._notes!.length; i1++) {
       const o1 = data._notes[i1];
       if (options.floatTrim) {
          o1._time = round(o1._time, options.floatTrim);
@@ -17,7 +17,7 @@ export function cleanDifficulty(data: Record<string, any> | IDifficulty, options
       }
       if (options.purgeZeros) purgeZeros(o1);
    }
-   for (const i1 in data._obstacles) {
+   for (let i1 = 0; i1 < data._obstacles!.length; i1++) {
       const o1 = data._obstacles[i1];
       if (options.floatTrim) {
          o1._time = round(o1._time, options.floatTrim);
@@ -29,7 +29,7 @@ export function cleanDifficulty(data: Record<string, any> | IDifficulty, options
       }
       if (options.purgeZeros) purgeZeros(o1);
    }
-   for (const i1 in data._sliders) {
+   for (let i1 = 0; i1 < data._sliders!.length; i1++) {
       const o1 = data._sliders[i1];
       if (options.floatTrim) {
          o1._headTime = round(o1._headTime, options.floatTrim);
@@ -49,7 +49,7 @@ export function cleanDifficulty(data: Record<string, any> | IDifficulty, options
       }
       if (options.purgeZeros) purgeZeros(o1);
    }
-   for (const i1 in data._waypoints) {
+   for (let i1 = 0; i1 < data._waypoints!.length; i1++) {
       const o1 = data._waypoints[i1];
       if (options.floatTrim) {
          o1._time = round(o1._time, options.floatTrim);
@@ -60,7 +60,7 @@ export function cleanDifficulty(data: Record<string, any> | IDifficulty, options
       }
       if (options.purgeZeros) purgeZeros(o1);
    }
-   for (const i1 in data._events) {
+   for (let i1 = 0; i1 < data._events!.length; i1++) {
       const o1 = data._events[i1];
       if (options.floatTrim && o1._type !== 100) {
          o1._time = round(o1._time, options.floatTrim);
@@ -96,14 +96,14 @@ export function cleanInfo(data: Record<string, any> | IInfo, options: ICleanOpti
       data._songSubName = data._songSubName.trim();
    }
 
-   for (const it in data._colorSchemes) {
+   for (let it = 0; it < data._colorSchemes!.length; it++) {
       const cs = data._colorSchemes[it];
       deepClean(cs.colorScheme, `info._colorSchemes[${it}].colorScheme`, options);
    }
 
-   for (const i1 in data._difficultyBeatmapSets) {
+   for (let i1 = 0; i1 < data._difficultyBeatmapSets!.length; i1++) {
       const set = data._difficultyBeatmapSets[i1];
-      for (const i2 in set._difficultyBeatmaps) {
+      for (let i2 = 0; i2 < set._difficultyBeatmaps!.length; i2++) {
          const diff = set._difficultyBeatmaps[i2];
          if (options.floatTrim) {
             diff._noteJumpMovementSpeed = round(diff._noteJumpMovementSpeed, options.floatTrim);
@@ -118,9 +118,11 @@ export function cleanInfo(data: Record<string, any> | IInfo, options: ICleanOpti
             delete diff._customData;
          }
       }
-      deepClean(set._customData!, `info._difficultyBeatmapSets[${i1}]._customData`, options);
-      if (!Object.keys(set._customData!).length) {
-         delete set._customData;
+      if (set._customData) {
+         deepClean(set._customData!, `info._difficultyBeatmapSets[${i1}]._customData`, options);
+         if (!Object.keys(set._customData!).length) {
+            delete set._customData;
+         }
       }
    }
 

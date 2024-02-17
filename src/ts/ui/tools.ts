@@ -8,7 +8,7 @@ import { CharacteristicRename } from '../beatmap/shared/characteristic';
 import { DifficultyRename } from '../beatmap/shared/difficulty';
 import { CharacteristicName } from '../types/beatmap/shared/characteristic';
 import { DifficultyName } from '../types/beatmap/shared/difficulty';
-import { IWrapInfo, IWrapInfoSet } from '../types/beatmap/wrapper/info';
+import { IWrapInfo } from '../types/beatmap/wrapper/info';
 import savedData from '../savedData';
 
 const logPrefix = 'UI Tools: ';
@@ -89,8 +89,9 @@ function setDifficultyLabel(str: string): void {
    htmlToolsDifficultyLabel.forEach((elem) => (elem.textContent = str));
 }
 
-function populateSelectDiff(mapSet?: IWrapInfoSet): void {
-   if (!mapSet) {
+function populateSelectDiff(mode?: CharacteristicName): void {
+   const mapInfo = savedData.beatmapInfo;
+   if (!mode || !mapInfo) {
       return;
    }
    htmlToolsSelectDifficulty.forEach((elem) => {
@@ -99,8 +100,8 @@ function populateSelectDiff(mapSet?: IWrapInfoSet): void {
       }
    });
    let first = true;
-   for (let i = mapSet.difficulties.length - 1; i >= 0; i--) {
-      const diff = mapSet.difficulties[i];
+   for (let i = mapInfo.difficulties.length - 1; i >= 0; i--) {
+      const diff = mapInfo.difficulties[i];
       htmlToolsSelectDifficulty.forEach((elem) => {
          const optDiff = document.createElement('option');
          optDiff.value = diff.difficulty;
@@ -110,7 +111,8 @@ function populateSelectDiff(mapSet?: IWrapInfoSet): void {
          if (first) {
             const diffData = SavedData.beatmapDifficulty.find(
                (el) =>
-                  el.difficulty === diff.difficulty && el.characteristic === mapSet.characteristic,
+                  el.difficulty === diff.difficulty &&
+                  el.characteristic === mapInfo.difficulties[i].characteristic,
             );
             if (!diffData) {
                throw new Error('missing _mapSetData');
@@ -119,7 +121,7 @@ function populateSelectDiff(mapSet?: IWrapInfoSet): void {
             setDifficultyLabel(
                diff.customData._difficultyLabel || DifficultyRename[diff.difficulty],
             );
-            displayOutputDifficulty(mapSet.characteristic, diff.difficulty);
+            displayOutputDifficulty(diff.characteristic, diff.difficulty);
          }
          first = false;
          elem.add(optDiff);
@@ -134,17 +136,20 @@ function populateSelect(mapInfo?: IWrapInfo): void {
       return;
    }
    let first = true;
-   mapInfo.difficultySets.forEach((mode) => {
+   const addedMode = new Set();
+   mapInfo.difficulties.forEach((infoDiff) => {
+      if (addedMode.has(infoDiff)) return;
+      addedMode.add(infoDiff);
       htmlToolsSelectMode.forEach((elem) => {
          const optMode = document.createElement('option');
-         optMode.value = mode.characteristic;
-         optMode.textContent = CharacteristicRename[mode.characteristic];
-         if (mode.customData._characteristicLabel)
-            optMode.textContent += ` -- ${mode.customData._characteristicLabel}`;
+         optMode.value = infoDiff.characteristic;
+         optMode.textContent = CharacteristicRename[infoDiff.characteristic];
+         if (infoDiff.customData._characteristicLabel)
+            optMode.textContent += ` -- ${infoDiff.customData._characteristicLabel}`;
          elem.add(optMode);
       });
       if (first) {
-         populateSelectDiff(mode);
+         populateSelectDiff(infoDiff.characteristic);
       }
       first = false;
    });
@@ -155,7 +160,7 @@ function adjustTime(): void {
    if (!mapInfo) {
       throw new Error(logPrefix + 'could not find map info');
    }
-   const bpm = BeatPerMinute.create(mapInfo.beatsPerMinute);
+   const bpm = BeatPerMinute.create(mapInfo.audio.bpm);
    Analyser.adjustTime(bpm);
 }
 
@@ -213,10 +218,10 @@ function selectModeHandler(ev: Event): void {
          elem.value = target.value;
       }
    });
-   const mode = SavedData.beatmapInfo?.difficultySets.find(
+   const infoDiff = SavedData.beatmapInfo?.difficulties.find(
       (elem) => elem.characteristic === target.value,
    );
-   populateSelectDiff(mode);
+   populateSelectDiff(infoDiff?.characteristic);
 }
 
 function selectDifficultyHandler(ev: Event): void {
@@ -226,14 +231,14 @@ function selectDifficultyHandler(ev: Event): void {
          elem.value = target.value;
       }
    });
-   const mode = SavedData.beatmapInfo?.difficultySets.find(
+   const infoDiff = SavedData.beatmapInfo?.difficulties.find(
       (elem) => elem.characteristic === htmlToolsSelectMode.item(0).value,
    );
-   if (!mode) {
+   if (!infoDiff) {
       throw new Error('aaaaaaaaaaaaaaaaaaa');
    }
    const diff = SavedData.beatmapDifficulty?.find(
-      (elem) => elem.difficulty === target.value && elem.characteristic === mode.characteristic,
+      (elem) => elem.difficulty === target.value && elem.characteristic === infoDiff.characteristic,
    );
    if (diff) {
       UIInformation.setDiffInfoTable(SavedData.beatmapInfo!, diff);

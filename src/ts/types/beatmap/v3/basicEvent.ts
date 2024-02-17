@@ -33,20 +33,20 @@ export interface IBasicEventBase extends IBaseObject {
     * 100 -> BPM Change
     * ```
     */
-   et: number;
+   et?: number;
    /** Value `<int>` of basic event. */
-   i: number;
+   i?: number;
    /** Float value `<float>` of basic event. */
-   f: number;
+   f?: number;
    customData?: ICustomDataBase;
 }
 
 export interface IBasicEventGeneric extends IBasicEventBase {
-   et: number;
+   et?: number;
 }
 
 export interface IBasicEventLight extends IBasicEventBase {
-   et: 0 | 1 | 2 | 3 | 4 | 6 | 7 | 10 | 11;
+   et?: 0 | 1 | 2 | 3 | 4 | 6 | 7 | 10 | 11;
    /**
     * State of light event. ( Blue | Red | White )
     * ```ts
@@ -57,40 +57,40 @@ export interface IBasicEventLight extends IBasicEventBase {
     * 4 | 8 | 12 -> Transition
     * ```
     */
-   i: number;
+   i?: number;
    /**
     * Controls the brightness of the light.
     *
     * **RANGE:** `0-1` (0% to 100%), can be more than 1.
     */
-   f: number;
+   f?: number;
    customData?: IChromaEventLight;
 }
 
 /**  @deprecated use `colorBoostEvents` to apply boost event. */
 export interface IBasicEventBoost extends IBasicEventBase {
    /**  @deprecated use `colorBoostEvents` to apply boost event. */
-   et: 5;
+   et?: 5;
    /**  @deprecated use `colorBoostEvents` to apply boost event. */
-   i: 0 | 1;
+   i?: 0 | 1;
 }
 
 export interface IBasicEventRing extends IBasicEventBase {
-   et: 8 | 9;
+   et?: 8 | 9;
    customData?: IChromaEventRing;
 }
 
 export interface IBasicEventLaserRotation extends IBasicEventBase {
-   et: 12 | 13;
+   et?: 12 | 13;
    /** Laser rotation speed in degree per second multiplied by 20. */
-   i: number;
+   i?: number;
    customData?: IChromaEventLaser;
 }
 
 /** @deprecated use `rotationEvents` to apply lane rotation event. */
 export interface IBasicEventLaneRotation extends IBasicEventBase {
    /** @deprecated use `rotationEvents` to apply lane rotation event. */
-   et: 14 | 15;
+   et?: 14 | 15;
    /**
     * Amount of angle changed clockwise.
     * ```ts
@@ -105,27 +105,27 @@ export interface IBasicEventLaneRotation extends IBasicEventBase {
     * ```
     * @deprecated use `rotationEvents` to apply lane rotation event.
     */
-   i: number;
+   i?: number;
 }
 
 export interface IBasicEventExtra extends IBasicEventBase {
-   et: 16 | 17 | 18 | 19;
+   et?: 16 | 17 | 18 | 19;
 }
 
 /** but why? */
 export interface IBasicEventSpecial extends IBasicEventBase {
-   et: 40 | 41 | 42 | 43;
+   et?: 40 | 41 | 42 | 43;
 }
 
 /** @deprecated use `bpmEvents` to apply BPM change. */
 export interface IBasicEventBPMChange extends IBasicEventBase {
-   et: 100;
+   et?: 100;
    /**
     * Changes the BPM to event value.
     *
     * @deprecated use `bpmEvents` to apply BPM change.
     */
-   f: number;
+   f?: number;
 }
 
 export type IBasicEvent =

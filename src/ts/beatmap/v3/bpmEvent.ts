@@ -11,33 +11,27 @@ export class BPMEvent extends WrapBPMEvent<IBPMEvent> {
       customData: {},
    };
 
-   constructor();
-   constructor(data: Partial<IWrapBPMEventAttribute<IBPMEvent>>);
-   constructor(data: Partial<IBPMEvent>);
-   constructor(data: Partial<IBPMEvent> & Partial<IWrapBPMEventAttribute<IBPMEvent>>);
-   constructor(data: Partial<IBPMEvent> & Partial<IWrapBPMEventAttribute<IBPMEvent>> = {}) {
-      super();
-
-      this._time = data.b ?? data.time ?? BPMEvent.default.b;
-      this._bpm = data.m ?? data.bpm ?? BPMEvent.default.m;
-      this._customData = deepCopy(data.customData ?? BPMEvent.default.customData);
-   }
-
-   static create(): BPMEvent[];
-   static create(...data: Partial<IWrapBPMEventAttribute<IBPMEvent>>[]): BPMEvent[];
-   static create(...data: Partial<IBPMEvent>[]): BPMEvent[];
-   static create(
-      ...data: (Partial<IBPMEvent> & Partial<IWrapBPMEventAttribute<IBPMEvent>>)[]
-   ): BPMEvent[];
-   static create(
-      ...data: (Partial<IBPMEvent> & Partial<IWrapBPMEventAttribute<IBPMEvent>>)[]
-   ): BPMEvent[] {
-      const result: BPMEvent[] = [];
-      data.forEach((obj) => result.push(new this(obj)));
+   static create(...data: Partial<IWrapBPMEventAttribute<IBPMEvent>>[]): BPMEvent[] {
+      const result: BPMEvent[] = data.map((obj) => new this(obj));
       if (result.length) {
          return result;
       }
       return [new this()];
+   }
+
+   constructor(data: Partial<IWrapBPMEventAttribute<IBPMEvent>> = {}) {
+      super();
+      this._time = data.time ?? BPMEvent.default.b;
+      this._bpm = data.bpm ?? BPMEvent.default.m;
+      this._customData = deepCopy(data.customData ?? BPMEvent.default.customData);
+   }
+
+   static fromJSON(data: Partial<IBPMEvent> = {}): BPMEvent {
+      const d = new this();
+      d._time = data.b ?? BPMEvent.default.b;
+      d._bpm = data.m ?? BPMEvent.default.m;
+      d._customData = deepCopy(data.customData ?? BPMEvent.default.customData);
+      return d;
    }
 
    toJSON(): Required<IBPMEvent> {

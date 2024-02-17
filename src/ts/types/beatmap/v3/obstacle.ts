@@ -3,13 +3,13 @@ import { ICustomDataObstacle } from './custom/obstacle';
 
 export interface IObstacle extends IGridObject {
    /** Duration `<float>` of obstacle.*/
-   d: number;
+   d?: number;
    /**
     * Width `<int>` of obstacle.
     *
     * **RANGE:** `none`
     */
-   w: number;
+   w?: number;
    /**
     * Height `<int>` of obstacle.
     * ```ts
@@ -22,6 +22,6 @@ export interface IObstacle extends IGridObject {
     *
     * **RANGE:** `1-5`
     */
-   h: number;
+   h?: number;
    customData?: ICustomDataObstacle;
 }

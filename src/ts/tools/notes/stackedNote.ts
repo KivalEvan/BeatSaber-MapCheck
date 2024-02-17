@@ -8,8 +8,7 @@ import {
 } from '../../types/mapcheck';
 import UICheckbox from '../../ui/helpers/checkbox';
 import { printResultTime } from '../helpers';
-import { BombNote } from '../../beatmap/v3/bombNote';
-import { ColorNote } from '../../beatmap/v3/colorNote';
+import { IWrapGridObject } from '../../types/beatmap/wrapper/gridObject';
 
 const name = 'Stacked Note';
 const description = 'Look for stacked note.';
@@ -40,7 +39,7 @@ function checkNote(settings: IBeatmapSettings, map: IBeatmapItem) {
    const { bpm } = settings;
    const { colorNotes } = map.data;
 
-   const arr: ColorNote[] = [];
+   const ary: IWrapGridObject[] = [];
    // to avoid multiple of stack popping up, ignore anything within this time
    let lastTime: number = 0;
    for (let i = 0, len = colorNotes.length; i < len; i++) {
@@ -52,12 +51,12 @@ function checkNote(settings: IBeatmapSettings, map: IBeatmapItem) {
             break;
          }
          if (colorNotes[j].isInline(colorNotes[i])) {
-            arr.push(colorNotes[i]);
+            ary.push(colorNotes[i]);
             lastTime = bpm.toRealTime(colorNotes[i].time);
          }
       }
    }
-   return arr
+   return ary
       .map((n) => n.time)
       .filter(function (x, i, ary) {
          return !i || x !== ary[i - 1];
@@ -68,7 +67,7 @@ function checkBomb(settings: IBeatmapSettings, map: IBeatmapItem) {
    const { bpm, njs } = settings;
    const { bombNotes } = map.data;
 
-   const arr: BombNote[] = [];
+   const ary: IWrapGridObject[] = [];
    for (let i = 0, len = bombNotes.length; i < len; i++) {
       for (let j = i + 1; j < len; j++) {
          // arbitrary break after 1s to not loop too much often
@@ -80,11 +79,11 @@ function checkBomb(settings: IBeatmapSettings, map: IBeatmapItem) {
             (njs.value < bpm.value / (120 * (bombNotes[j].time - bombNotes[i].time)) ||
                bpm.toRealTime(bombNotes[j].time) < bpm.toRealTime(bombNotes[i].time) + 0.02)
          ) {
-            arr.push(bombNotes[i]);
+            ary.push(bombNotes[i]);
          }
       }
    }
-   return arr
+   return ary
       .map((n) => n.time)
       .filter(function (x, i, ary) {
          return !i || x !== ary[i - 1];

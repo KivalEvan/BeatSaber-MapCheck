@@ -64,7 +64,7 @@ function check(map: ToolArgs) {
    };
    const noteOccupy: { [key: number]: ColorNote } = {
       [NoteColor.RED]: ColorNote.create()[0],
-      [NoteColor.BLUE]: ColorNote.create({ c: 1 })[0],
+      [NoteColor.BLUE]: ColorNote.create({ color: 1 })[0],
    };
 
    // FIXME: use new system

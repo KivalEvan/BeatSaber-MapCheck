@@ -12,6 +12,7 @@ export abstract class WrapBaseSlider<T extends { [P in keyof T]: T[P] }>
    protected _tailTime!: IWrapBaseSlider['tailTime'];
    protected _tailPosX!: IWrapBaseSlider['tailPosX'];
    protected _tailPosY!: IWrapBaseSlider['tailPosY'];
+   protected _tailLaneRotation: IWrapBaseSlider['tailLaneRotation'] = 0;
 
    get tailTime(): IWrapBaseSlider['tailTime'] {
       return this._tailTime;
@@ -31,6 +32,12 @@ export abstract class WrapBaseSlider<T extends { [P in keyof T]: T[P] }>
    set tailPosY(value: IWrapBaseSlider['tailPosY']) {
       this._tailPosY = value;
    }
+   get tailLaneRotation(): IWrapBaseSlider['tailLaneRotation'] {
+      return this._tailLaneRotation;
+   }
+   set tailLaneRotation(value: IWrapBaseSlider['tailLaneRotation']) {
+      this._tailLaneRotation = value;
+   }
 
    setTailTime(value: IWrapBaseSlider['tailTime']) {
       this.tailTime = value;
@@ -42,6 +49,10 @@ export abstract class WrapBaseSlider<T extends { [P in keyof T]: T[P] }>
    }
    setTailPosY(value: IWrapBaseSlider['tailPosY']) {
       this.tailPosY = value;
+      return this;
+   }
+   setTailLaneRotation(value: IWrapBaseSlider['tailLaneRotation']) {
+      this.tailLaneRotation = value;
       return this;
    }
 

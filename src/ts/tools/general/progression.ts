@@ -5,7 +5,7 @@ import * as swing from '../../analyzers/swing/mod';
 import { printResult } from '../helpers';
 import UICheckbox from '../../ui/helpers/checkbox';
 import { DifficultyRename } from '../../beatmap/shared/difficulty';
-import { DifficultyName } from '../../types';
+import { DifficultyName } from '../../types/beatmap/shared/difficulty';
 
 const name = 'Difficulty Progression';
 const description = 'For ranking purpose, check difficuly progression to fit rankability criteria.';

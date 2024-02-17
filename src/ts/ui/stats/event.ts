@@ -5,10 +5,7 @@ import { eventTypeRename } from '../../analyzers/renamer/mod';
 import { prefix } from './constants';
 
 export function createEventCountTable(mapInfo: IWrapInfo, mapData: IBeatmapItem): HTMLTableElement {
-   const environment =
-      mapData.characteristic === '360Degree' || mapData.characteristic === '90Degree'
-         ? mapInfo.allDirectionsEnvironmentName
-         : mapInfo.environmentName;
+   const environment = mapData.environment;
    const eventCount = countEvent(
       mapData.data.basicEvents,
       mapData.data.colorBoostEvents,

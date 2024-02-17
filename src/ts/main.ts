@@ -8,7 +8,7 @@ import Analyser from './tools/analyzer';
 import Settings from './settings';
 import flag from './flag';
 import SavedData from './savedData';
-import { loadDifficulty, loadInfo } from './load';
+import { loadDifficulties, loadInfo } from './load';
 import { downloadFromHash, downloadFromID, downloadFromURL } from './download';
 import { sanitizeBeatSaverID, sanitizeURL } from './utils/web';
 import { isHex } from './utils';
@@ -82,7 +82,7 @@ export default async (type: LoadType) => {
       // load audio
       UILoading.status('info', 'Loading audio...', 20.875);
       logger.tInfo(tag(), 'Loading audio');
-      let audioFile = mapZip.file(info.songFilename);
+      let audioFile = mapZip.file(info.audio.filename);
       if (Settings.load.audio && audioFile) {
          let loaded = false;
          setTimeout(() => {
@@ -107,20 +107,20 @@ export default async (type: LoadType) => {
             });
       } else {
          UIHeader.setSongDuration();
-         logger.tError(tag(), `${info.songFilename} does not exist.`);
+         logger.tError(tag(), `${info.audio.filename} does not exist.`);
       }
 
       // load diff map
       UILoading.status('info', 'Parsing difficulty...', 70);
-      SavedData.beatmapDifficulty = await loadDifficulty(info, mapZip);
+      SavedData.beatmapDifficulty = await loadDifficulties(info, mapZip);
 
       UITools.adjustTime();
       UILoading.status('info', 'Adding map difficulty stats...', 80);
       logger.tInfo(tag(), 'Adding map stats');
       UIStats.populate();
       UIInfo.populateContributors(SavedData.contributors);
-      let minBPM = info.beatsPerMinute;
-      let maxBPM = info.beatsPerMinute;
+      let minBPM = info.audio.bpm;
+      let maxBPM = info.audio.bpm;
       SavedData.beatmapDifficulty.forEach((d) => {
          const bpm = d.bpm.change.map((b) => b.BPM);
          const bpme = d.data.bpmEvents.map((b) => b.bpm);
@@ -128,7 +128,7 @@ export default async (type: LoadType) => {
          maxBPM = Math.max(maxBPM, ...bpm, ...bpme);
       });
       if (minBPM !== maxBPM) {
-         UIHeader.setSongBPM(info.beatsPerMinute, minBPM, maxBPM);
+         UIHeader.setSongBPM(info.audio.bpm, minBPM, maxBPM);
       }
 
       UILoading.status('info', 'Analysing general...', 85);

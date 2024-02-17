@@ -25,8 +25,8 @@ export default function (
    renameKey(cd, '_lockPosition', 'lockRotation');
 
    // special case
-   const speed = cd._preciseSpeed ?? cd._speed;
-   cd.speed ??= speed;
+   if (typeof cd._preciseSpeed === 'number') cd.speed = cd._preciseSpeed;
+   else cd.speed ??= cd._speed;
    delete cd._speed;
    delete cd._preciseSpeed;
 

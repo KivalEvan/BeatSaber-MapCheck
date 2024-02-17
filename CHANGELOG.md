@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.5.16 [2024-02-##]
+
+### Added
+
+- Lattice environment & color scheme
+- Beatmap v4.0.0
+
+### Fixed
+
+- Data check not working properly
+
 ## 2.5.15 [2023-10-31]
 
 ### Added

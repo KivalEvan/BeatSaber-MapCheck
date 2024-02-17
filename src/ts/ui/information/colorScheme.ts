@@ -3,9 +3,9 @@ import { colorToHex } from '../../utils';
 import { ColorSchemeRename } from '../../beatmap/shared/colorScheme';
 import { htmlTableColorScheme } from './constants';
 import { displayTableRow, hideTableRow } from './helpers';
-import { IWrapInfoColorSchemeData } from '../../types/beatmap/wrapper/info';
+import { IWrapInfoColorScheme } from '../../types/beatmap/wrapper/info';
 
-export function setColorScheme(colorSch?: IWrapInfoColorSchemeData): void {
+export function setColorScheme(colorSch?: IWrapInfoColorScheme): void {
    if (
       !colorSch ||
       (!colorSch.saberLeftColor &&

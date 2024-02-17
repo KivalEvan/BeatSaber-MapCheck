@@ -1,5 +1,5 @@
 import { IWrapIndexFilter } from '../../types/beatmap/wrapper/indexFilter';
-import { LimitAlsoAffectsType, RandomType } from '../shared/constants';
+import { LimitAlsoAffectsType, RandomType } from '../../types/beatmap/shared/constants';
 import { WrapBaseItem } from './baseItem';
 
 /** Index filter beatmap class object. */

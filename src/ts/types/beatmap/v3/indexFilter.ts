@@ -1,3 +1,6 @@
+import { RandomType } from '../shared/constants';
+import { LimitAlsoAffectsType } from '../shared/constants';
+import { IndexFilterType } from '../shared/constants';
 import { IBaseItem } from './baseItem';
 
 interface IIndexFilterBase extends IBaseItem {
@@ -8,23 +11,23 @@ interface IIndexFilterBase extends IBaseItem {
     * 2 -> Step And Offset
     * ```
     */
-   f: 1 | 2;
+   f?: IndexFilterType;
    /** Parameter 0 `<int>` in index filter. */
-   p: number;
+   p?: number;
    /** Parameter 1 `<int>` in index filter. */
-   t: number;
+   t?: number;
    /**
     * Reversed `<int>` in index filter.
     *
     * Reverse the order for distribution, does not reverse selection.
     */
-   r: 0 | 1;
+   r?: 0 | 1;
    /**
     * Chunks `<int>` of index filter.
     *
     * Pairs next ID by available denominator.
     */
-   c: number;
+   c?: number;
    /**
     * Random type `<bitmask>` of index filter.
     * ```ts
@@ -34,9 +37,9 @@ interface IIndexFilterBase extends IBaseItem {
     * 3 -> All
     * ```
     */
-   n: 0 | 1 | 2 | 3;
+   n?: RandomType;
    /** Random seed `<int>` in index filter. */
-   s: number;
+   s?: number;
    /**
     * Limit (percentage) `<float>` of index filter.
     *
@@ -44,7 +47,7 @@ interface IIndexFilterBase extends IBaseItem {
     *
     * **RANGE:** `0-1` (0% to 100%) strict.
     */
-   l: number;
+   l?: number;
    /**
     * Limit also affects type `<bitmask>` in index filter.
     * ```ts
@@ -56,35 +59,35 @@ interface IIndexFilterBase extends IBaseItem {
     *
     * Adjust to limited ID list and has no effect with `Step` type.
     */
-   d: 0 | 1 | 2 | 3;
+   d?: LimitAlsoAffectsType;
 }
 
 interface IIndexFilterSection extends IIndexFilterBase {
-   f: 1;
+   f?: IndexFilterType.DIVISION;
    /** Divide into sections `<int>` in index filter. */
-   p: number;
+   p?: number;
    /**
     * Get section by ID `<int>` in index filter.
     *
     * Similar to typical array index starting from `0`.
     */
-   t: number;
+   t?: number;
 }
 
 interface IIndexFilterStepOffset extends IIndexFilterBase {
-   f: 2;
+   f?: IndexFilterType.STEP_AND_OFFSET;
    /**
     * Light ID `<int>` in index filter.
     *
     * Select the start ID in group event starting from `0`.
     */
-   p: number;
+   p?: number;
    /**
     * Skip step `<int>` in index filter.
     *
     * Jump by amount of step starting from start light ID.
     */
-   t: number;
+   t?: number;
 }
 
 export type IIndexFilter = IIndexFilterSection | IIndexFilterStepOffset;
