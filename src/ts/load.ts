@@ -265,8 +265,12 @@ export function extractBeatmaps(info: IWrapInfo, zip: JSZip): Promise<IBeatmapIt
                    : [],
             diffInfo.customData?._editorOffset,
          );
-         data = toV4Difficulty(data).sort();
-         lightshow = lightshow.sort();
+         data = toV4Difficulty(data);
+         lightshow = lightshow;
+         if (settings.sorting) {
+            data.sort();
+            lightshow.sort();
+         }
          return {
             info: diffInfo,
             characteristic: diffInfo.characteristic,
