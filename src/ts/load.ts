@@ -13,6 +13,7 @@ import { IWrapLightshow } from './types/beatmap/wrapper/lightshow';
 import { IBPMInfo } from './types/beatmap/external/bpmInfo';
 import { IAudio } from './types/beatmap/v4/audio';
 import { IBPMEvent } from './types/beatmap/v3/bpmEvent';
+import settings from './settings';
 
 function tag(name: string) {
    return ['load', name];
@@ -55,8 +56,12 @@ function _info(json: Record<string, unknown>) {
 
    let data: IWrapInfo;
    const parser = parseInfoMap[jsonVer];
-   if (parser) data = parser(json);
-   else {
+   if (parser) {
+      data = parser(json, {
+         enabled: settings.dataCheck,
+         throwError: settings.dataError,
+      });
+   } else {
       throw new Error(
          `Info version ${jsonVer} is not supported, this may be an error in JSON or is newer than currently supported.`,
       );
@@ -86,8 +91,12 @@ function _difficulty(json: Record<string, unknown>) {
 
    let data: IWrapDifficulty;
    const parser = parseDiffMap[jsonVer];
-   if (parser) data = parser(json);
-   else {
+   if (parser) {
+      data = parser(json, {
+         enabled: settings.dataCheck,
+         throwError: settings.dataError,
+      });
+   } else {
       throw new Error(
          `Beatmap version ${jsonVer} is not supported, this may be an error in JSON or is newer than currently supported.`,
       );
@@ -112,8 +121,12 @@ function _lightshow(json: Record<string, unknown>) {
 
    let data: IWrapLightshow;
    const parser = parseLightshowMap[jsonVer];
-   if (parser) data = parser(json);
-   else {
+   if (parser) {
+      data = parser(json, {
+         enabled: settings.dataCheck,
+         throwError: settings.dataError,
+      });
+   } else {
       throw new Error(
          `Beatmap version ${jsonVer} is not supported, this may be an error in JSON or is newer than currently supported.`,
       );
