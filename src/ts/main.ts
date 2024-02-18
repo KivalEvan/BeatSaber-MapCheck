@@ -136,7 +136,7 @@ export default async (type: LoadType) => {
             const audioInfo = await extractBPMInfo(info, beatmapZip);
             itemDone++;
             if (audioInfo) {
-               SavedData.duration = audioInfo.duration;
+               if (!flag.loading.audio) SavedData.duration = audioInfo.duration;
                UIHeader.setSongDuration(audioInfo.duration);
                UILoading.status('info', 'Loaded audio info', lerp(itemDone / maxItem, 15, 80));
             }
