@@ -6,7 +6,7 @@ import { IBeatmapItem } from '../../types/mapcheck';
 import { prefix } from './constants';
 
 export function createSettingsTable(mapInfo: IWrapInfo, mapData: IBeatmapItem): HTMLTableElement {
-   const bpm = BeatPerMinute.create(mapInfo.beatsPerMinute);
+   const bpm = BeatPerMinute.create(mapInfo.audio.bpm);
    const njs = NoteJumpSpeed.create(
       bpm,
       mapData.info.njs || NoteJumpSpeed.FallbackNJS[mapData.difficulty],

@@ -2,7 +2,7 @@ import AnalysisComponents from './components';
 import SavedData from '../savedData';
 import { BeatPerMinute } from '../beatmap/shared/bpm';
 import { NoteJumpSpeed } from '../beatmap/shared/njs';
-import { CharacteristicName, DifficultyName } from '../types';
+import { CharacteristicName, DifficultyName } from '../types/beatmap/shared/mod';
 import { IBeatmapSettings } from '../types/mapcheck/tools/tool';
 import { Tool } from '../types/mapcheck';
 import logger from '../logger';
@@ -41,7 +41,7 @@ function runGeneral(): void {
 
    const analysisExist = SavedData.analysis?.general;
 
-   const bpm = BeatPerMinute.create(mapInfo.beatsPerMinute);
+   const bpm = BeatPerMinute.create(mapInfo.audio.bpm);
    const njs = NoteJumpSpeed.create(bpm);
 
    const mapSettings: IBeatmapSettings = {
@@ -96,7 +96,7 @@ function runDifficulty(characteristic: CharacteristicName, difficulty: Difficult
    }
 
    const analysisExist = SavedData.analysis?.map.find(
-      (set) => set.difficulty === difficulty && set.mode === characteristic,
+      (set) => set.difficulty === difficulty && set.characteristic === characteristic,
    );
 
    const njs = NoteJumpSpeed.create(
@@ -139,7 +139,7 @@ function runDifficulty(characteristic: CharacteristicName, difficulty: Difficult
       analysisExist.html = htmlArr;
    } else {
       SavedData.analysis?.map.push({
-         mode: characteristic,
+         characteristic: characteristic,
          difficulty: difficulty,
          html: htmlArr,
       });

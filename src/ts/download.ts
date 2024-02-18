@@ -1,5 +1,5 @@
-import { round, isHex, sanitizeBeatSaverID, sanitizeURL } from './utils';
-import { getZipIdURL, getZipHashURL } from './beatsaver';
+import { isHex, round, sanitizeBeatSaverID, sanitizeURL } from './utils';
+import { getZipHashURL, getZipIdURL } from './beatsaver';
 import UILoading from './ui/loading';
 import UIHeader from './ui/header';
 import logger from './logger';

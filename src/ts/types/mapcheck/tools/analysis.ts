@@ -6,7 +6,7 @@ interface IAnalysisBase {
 }
 
 export interface IAnalysisMap extends IAnalysisBase {
-   mode: CharacteristicName;
+   characteristic: CharacteristicName;
    difficulty: DifficultyName;
 }
 

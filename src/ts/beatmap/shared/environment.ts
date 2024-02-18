@@ -1,7 +1,9 @@
 import { EnvironmentAllName } from '../../types/beatmap/shared/environment';
 
 /** Environment rename to human readable. */
-export const EnvironmentRename: { readonly [key in EnvironmentAllName]: string } = {
+export const EnvironmentRename: {
+   readonly [key in EnvironmentAllName]: string;
+} = {
    DefaultEnvironment: 'The First',
    OriginsEnvironment: 'Origins',
    TriangleEnvironment: 'Triangle',
@@ -37,6 +39,7 @@ export const EnvironmentRename: { readonly [key in EnvironmentAllName]: string }
    QueenEnvironment: 'Queen',
    LinkinPark2Environment: 'Linkin Park 2.0',
    TheRollingStonesEnvironment: 'The Rolling Stones',
+   LatticeEnvironment: 'Lattice',
    GlassDesertEnvironment: 'Glass Desert',
    MultiplayerEnvironment: 'Origins',
 } as const;
@@ -122,6 +125,13 @@ export const EventList: {
       [
          0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
          25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45,
+      ],
+   ],
+   LatticeEnvironment: [
+      [6],
+      [
+         0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
+         25, 26, 27, 28, 29, 30,
       ],
    ],
 } as const;

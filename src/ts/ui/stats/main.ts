@@ -16,6 +16,8 @@ import { createNoteInfoTable } from './noteInfo';
 import { createNoteCountTable } from './note';
 import { createNotePlacementTable } from './notePlacement';
 import { createObstacleCountTable } from './obstacle';
+import { CharacteristicName } from '../../types/beatmap/shared/characteristic';
+import { IWrapInfoDifficulty } from '../../types/beatmap/wrapper/info';
 
 const htmlStats: HTMLElement = document.querySelector('#stats .accordion__collapsible')!;
 
@@ -25,30 +27,35 @@ function populate(): void {
    }
    const mapInfo = SavedData.beatmapInfo;
 
-   mapInfo.difficultySets.forEach((set) => {
+   const diffSet: Partial<Record<CharacteristicName, IWrapInfoDifficulty[]>> = {};
+   for (const difficulty of mapInfo.difficulties) {
+      diffSet[difficulty.characteristic] ||= [];
+      diffSet[difficulty.characteristic]!.push(difficulty);
+   }
+   for (const set in diffSet) {
       const htmlContainer = document.createElement('div');
-      htmlContainer.className = prefix + 'mode-' + set.characteristic;
+      htmlContainer.className = prefix + 'characteristic-' + set;
 
       const htmlTitle = document.createElement('div');
       htmlTitle.className = prefix + 'title';
-      htmlTitle.textContent = CharacteristicRename[set.characteristic] || set.characteristic;
-      if (set.customData._characteristicLabel)
-         htmlTitle.textContent += ` -- ${set.customData._characteristicLabel}`;
+      htmlTitle.textContent = CharacteristicRename[set as CharacteristicName] || set;
+      // if (set.customData._characteristicLabel)
+      //    htmlTitle.textContent += ` -- ${set.customData._characteristicLabel}`;
       htmlContainer.appendChild(htmlTitle);
 
-      for (let i = set.difficulties.length - 1; i >= 0; i--) {
-         const diff = set.difficulties[i];
+      const diffList = diffSet[set as CharacteristicName]!;
+      for (let i = diffList.length - 1; i >= 0; i--) {
+         const diff = diffList[i];
          const mapData = SavedData.beatmapDifficulty.find(
-            (data) =>
-               data.characteristic === set.characteristic && data.difficulty === diff.difficulty,
+            (data) => data.characteristic === set && data.difficulty === diff.difficulty,
          );
          if (!mapData) {
             throw new Error(logPrefix + 'Could not find map data');
          }
 
          const htmlAccordion = UIAccordion.create(
-            `${prefix}${set.characteristic}-${diff.difficulty}`,
-            DifficultyRename[diff.difficulty] +
+            `${prefix}${set}-${diff.difficulty}`,
+            DifficultyRename[diff.difficulty as 'Easy'] +
                (diff.customData._difficultyLabel ? ' -- ' + diff.customData._difficultyLabel : ''),
             diff.difficulty,
             true,
@@ -89,7 +96,7 @@ function populate(): void {
       }
 
       htmlStats.appendChild(htmlContainer);
-   });
+   }
 }
 
 function reset(): void {
@@ -99,15 +106,15 @@ function reset(): void {
 }
 
 export {
-   createSettingsTable,
-   createNPSTable,
-   createSPSTable,
-   createNoteCountTable,
-   createNotePlacementTable,
-   createNoteAngleTable,
-   createNoteInfoTable as createInfoTable,
    createEventCountTable,
+   createNoteAngleTable,
+   createNoteCountTable,
+   createNoteInfoTable as createInfoTable,
+   createNotePlacementTable,
+   createNPSTable,
    createObstacleCountTable,
+   createSettingsTable,
+   createSPSTable,
    populate,
    reset,
 };

@@ -1,7 +1,7 @@
 import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import { round } from '../../utils';
 import { printResultTime } from '../helpers';
-import UICheckbox from '../../ui/helpers/checkbox';
+import UIInput from '../../ui/helpers/input';
 import { BeatPerMinute } from '../../beatmap/shared/bpm';
 
 const name = 'Slow Slider';
@@ -9,40 +9,38 @@ const description = 'Look for slider that require slow swing.';
 const enabled = true;
 const defaultSpeed = 0.025;
 
-const htmlContainer = document.createElement('div');
-const htmlInputMinTime = document.createElement('input');
-const htmlLabelMinTime = document.createElement('label');
-const htmlInputMinPrec = document.createElement('input');
-const htmlLabelMinPrec = document.createElement('label');
-
 let localBPM!: BeatPerMinute;
 
-htmlLabelMinTime.textContent = 'min speed (ms): ';
-htmlLabelMinTime.htmlFor = 'input__tools-slow-slider-time';
-htmlInputMinTime.id = 'input__tools-slow-slider-time';
-htmlInputMinTime.className = 'input-toggle input--small';
-htmlInputMinTime.type = 'number';
-htmlInputMinTime.min = '0';
-htmlInputMinTime.value = round(defaultSpeed * 1000, 1).toString();
-htmlInputMinTime.addEventListener('change', inputTimeHandler);
-
-htmlLabelMinPrec.textContent = ' (prec): ';
-htmlLabelMinPrec.htmlFor = 'input__tools-slow-slider-prec';
-htmlInputMinPrec.id = 'input__tools-slow-slider-prec';
-htmlInputMinPrec.className = 'input-toggle input--small';
-htmlInputMinPrec.type = 'number';
-htmlInputMinPrec.min = '0';
-htmlInputMinPrec.addEventListener('change', inputPrecHandler);
-
-htmlContainer.appendChild(
-   UICheckbox.create(name, description, enabled, function (this: HTMLInputElement) {
-      tool.input.enabled = this.checked;
-   }),
+const [htmlLabelMinTime, htmlInputMinTime] = UIInput.createNumber(
+   function (this: HTMLInputElement) {
+      tool.input.params.minSpeed = Math.abs(parseFloat(this.value)) / 1000;
+      this.value = round(tool.input.params.minSpeed * 1000, 1).toString();
+      if (localBPM) {
+         htmlInputMinPrec.value = round(
+            1 / localBPM.toBeatTime(tool.input.params.minSpeed),
+            2,
+         ).toString();
+      }
+   },
+   'min speed (ms): ',
+   round(defaultSpeed * 1000, 1),
+   0,
 );
-htmlContainer.appendChild(htmlLabelMinTime);
-htmlContainer.appendChild(htmlInputMinTime);
-htmlContainer.appendChild(htmlLabelMinPrec);
-htmlContainer.appendChild(htmlInputMinPrec);
+const [htmlLabelMinPrec, htmlInputMinPrec] = UIInput.createNumber(
+   function (this: HTMLInputElement) {
+      if (!localBPM) {
+         this.value = '0';
+         return;
+      }
+      let val = round(Math.abs(parseFloat(this.value)), 2) || 1;
+      tool.input.params.minSpeed = localBPM.toRealTime(1 / val);
+      htmlInputMinTime.value = round(tool.input.params.minSpeed * 1000, 1).toString();
+      this.value = val.toString();
+   },
+   ' (prec): ',
+   0,
+   0,
+);
 
 const tool: Tool<{ minSpeed: number }> = {
    name,
@@ -57,7 +55,21 @@ const tool: Tool<{ minSpeed: number }> = {
       params: {
          minSpeed: defaultSpeed,
       },
-      html: htmlContainer,
+      html: UIInput.createBlock(
+         UIInput.createCheckbox(
+            function (this: HTMLInputElement) {
+               tool.input.enabled = this.checked;
+            },
+            name,
+            description,
+            enabled,
+         ),
+         document.createElement('br'),
+         htmlLabelMinTime,
+         htmlInputMinTime,
+         htmlLabelMinPrec,
+         htmlInputMinPrec,
+      ),
       adjustTime: adjustTimeHandler,
    },
    output: {
@@ -72,28 +84,6 @@ function adjustTimeHandler(bpm: BeatPerMinute) {
       1 / localBPM.toBeatTime(tool.input.params.minSpeed),
       2,
    ).toString();
-}
-
-function inputTimeHandler(this: HTMLInputElement) {
-   tool.input.params.minSpeed = Math.abs(parseFloat(this.value)) / 1000;
-   this.value = round(tool.input.params.minSpeed * 1000, 1).toString();
-   if (localBPM) {
-      htmlInputMinPrec.value = round(
-         1 / localBPM.toBeatTime(tool.input.params.minSpeed),
-         2,
-      ).toString();
-   }
-}
-
-function inputPrecHandler(this: HTMLInputElement) {
-   if (!localBPM) {
-      this.value = '0';
-      return;
-   }
-   let val = round(Math.abs(parseFloat(this.value)), 2) || 1;
-   tool.input.params.minSpeed = localBPM.toRealTime(1 / val);
-   htmlInputMinTime.value = round(tool.input.params.minSpeed * 1000, 1).toString();
-   this.value = val.toString();
 }
 
 function check(map: ToolArgs) {

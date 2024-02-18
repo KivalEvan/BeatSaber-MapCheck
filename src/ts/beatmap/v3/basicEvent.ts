@@ -20,43 +20,31 @@ export class BasicEvent extends WrapEvent<IBasicEvent> {
       customData: {},
    };
 
-   constructor();
-   constructor(data: Partial<IWrapEventAttribute<IBasicEvent>>);
-   constructor(...data: Partial<IBasicEvent>[]);
-   constructor(data: Partial<IBasicEvent> & Partial<IWrapEventAttribute<IBasicEvent>>);
-   constructor(data: Partial<IBasicEvent> & Partial<IWrapEventAttribute<IBasicEvent>> = {}) {
-      super();
-
-      this._time = data.b ?? data.time ?? BasicEvent.default.b;
-      this._type = data.et ?? data.type ?? BasicEvent.default.et;
-      this._value = data.i ?? data.value ?? BasicEvent.default.i;
-      this._floatValue = data.f ?? data.floatValue ?? BasicEvent.default.f;
-      this._customData = deepCopy(data.customData ?? BasicEvent.default.customData);
-   }
-
-   static create(): BasicEvent[];
-   static create(...data: Partial<IWrapEventAttribute<IBasicEvent>>[]): BasicEvent[];
-   static create(...data: Partial<IBasicEvent>[]): BasicEvent[];
-   static create(
-      ...data: (Partial<IBasicEvent> & Partial<IWrapEventAttribute<IBasicEvent>>)[]
-   ): BasicEvent[];
-   static create(
-      ...data: (Partial<IBasicEvent> & Partial<IWrapEventAttribute<IBasicEvent>>)[]
-   ): BasicEvent[] {
-      const result: BasicEvent[] = [];
-      data.forEach((obj) => result.push(new this(obj)));
+   static create(...data: Partial<IWrapEventAttribute<IBasicEvent>>[]): BasicEvent[] {
+      const result: BasicEvent[] = data.map((obj) => new this(obj));
       if (result.length) {
          return result;
       }
-      return [
-         new this({
-            b: BasicEvent.default.b,
-            et: BasicEvent.default.et,
-            i: BasicEvent.default.i,
-            f: BasicEvent.default.f,
-            customData: BasicEvent.default.customData,
-         }),
-      ];
+      return [new this()];
+   }
+
+   constructor(data: Partial<IWrapEventAttribute<IBasicEvent>> = {}) {
+      super();
+      this._time = data.time ?? BasicEvent.default.b;
+      this._type = data.type ?? BasicEvent.default.et;
+      this._value = data.value ?? BasicEvent.default.i;
+      this._floatValue = data.floatValue ?? BasicEvent.default.f;
+      this._customData = deepCopy(data.customData ?? BasicEvent.default.customData);
+   }
+
+   static fromJSON(data: Partial<IBasicEvent> = {}): BasicEvent {
+      const d = new this();
+      d._time = data.b ?? BasicEvent.default.b;
+      d._type = data.et ?? BasicEvent.default.et;
+      d._value = data.i ?? BasicEvent.default.i;
+      d._floatValue = data.f ?? BasicEvent.default.f;
+      d._customData = deepCopy(data.customData ?? BasicEvent.default.customData);
+      return d;
    }
 
    toJSON(): Required<IBasicEvent> {

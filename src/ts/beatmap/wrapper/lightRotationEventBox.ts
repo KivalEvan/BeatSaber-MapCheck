@@ -1,4 +1,4 @@
-import { IWrapLightRotationBase } from '../../types/beatmap/wrapper/lightRotationBase';
+import { IWrapLightRotationEvent } from '../../types/beatmap/wrapper/lightRotationEvent';
 import { IWrapLightRotationEventBox } from '../../types/beatmap/wrapper/lightRotationEventBox';
 import { WrapEventBox } from './eventBox';
 
@@ -15,7 +15,7 @@ export abstract class WrapLightRotationEventBox<
    protected _rotationDistributionType!: IWrapLightRotationEventBox['rotationDistributionType'];
    protected _axis!: IWrapLightRotationEventBox['axis'];
    protected _flip!: IWrapLightRotationEventBox['flip'];
-   protected declare _events: IWrapLightRotationBase<TBase>[];
+   protected declare _events: IWrapLightRotationEvent<TBase>[];
 
    get rotationDistribution(): IWrapLightRotationEventBox['rotationDistribution'] {
       return this._rotationDistribution;
@@ -41,10 +41,10 @@ export abstract class WrapLightRotationEventBox<
    set flip(value: IWrapLightRotationEventBox['flip']) {
       this._flip = value;
    }
-   get events(): IWrapLightRotationBase<TBase>[] {
+   get events(): IWrapLightRotationEvent<TBase>[] {
       return this._events;
    }
-   set events(value: IWrapLightRotationBase<TBase>[]) {
+   set events(value: IWrapLightRotationEvent<TBase>[]) {
       this._events = value;
    }
 

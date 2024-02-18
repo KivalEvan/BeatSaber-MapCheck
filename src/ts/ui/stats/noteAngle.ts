@@ -12,17 +12,19 @@ function noteAngleSelectHandler(ev: Event) {
    const target = ev.target as HTMLSelectElement;
    const id = target.id.replace(`${prefix}table-select-angle-`, '').split('-');
 
-   const mode = id[0];
-   const diff = id[1];
+   const characteristic = id[0];
+   const difficulty = id[1];
    const noteContainer = SavedData.beatmapDifficulty.find(
-      (set) => set.characteristic === mode && set.difficulty === diff,
+      (set) => set.characteristic === characteristic && set.difficulty === difficulty,
    )?.noteContainer;
    if (!noteContainer) {
       console.error(logPrefix + 'note could not be found');
       return;
    }
    const filteredContainer = getFilteredContainer(noteContainer, target.value);
-   const htmlTableBody = document.querySelector(`#${prefix}table-angle-${mode}-${diff}`)!;
+   const htmlTableBody = document.querySelector(
+      `#${prefix}table-angle-${characteristic}-${difficulty}`,
+   )!;
    htmlTableBody.innerHTML = noteAngleTableString(filteredContainer);
 }
 
@@ -66,9 +68,9 @@ export function createNoteAngleTable(mapInfo: IWrapInfo, mapData: IBeatmapItem):
       .querySelector<HTMLSelectElement>('select')
       ?.addEventListener('change', noteAngleSelectHandler);
 
-   let htmlString = `<tbody id="${prefix}table-angle-${mapData.characteristic}-${
-      mapData.difficulty
-   }">${noteAngleTableString(mapData.noteContainer)}</tbody>`;
+   let htmlString = `<tbody id="${prefix}table-angle-${mapData.characteristic}-${mapData.difficulty}">${noteAngleTableString(
+      mapData.noteContainer,
+   )}</tbody>`;
 
    const htmlTable = document.createElement('table');
    htmlTable.className = prefix + 'table';

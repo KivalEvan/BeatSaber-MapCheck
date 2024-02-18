@@ -1,4 +1,5 @@
 // deno-lint-ignore-file no-explicit-any
+import { ExecutionTime } from '../shared/constants';
 import { IWrapBaseObject, IWrapBaseObjectAttribute } from './baseObject';
 
 export interface IWrapRotationEventAttribute<
@@ -11,7 +12,7 @@ export interface IWrapRotationEventAttribute<
     * 1 -> Late
     * ```
     */
-   executionTime: 0 | 1;
+   executionTime: ExecutionTime;
    /** Clockwise rotation value `<float>` of rotation event. */
    rotation: number;
 }
@@ -19,6 +20,6 @@ export interface IWrapRotationEventAttribute<
 export interface IWrapRotationEvent<T extends { [P in keyof T]: T[P] } = Record<string, any>>
    extends IWrapBaseObject<T>,
       IWrapRotationEventAttribute<T> {
-   setExecutionTime(value: 0 | 1): this;
+   setExecutionTime(value: ExecutionTime): this;
    setRotation(value: number): this;
 }

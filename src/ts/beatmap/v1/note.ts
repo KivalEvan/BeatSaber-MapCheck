@@ -19,31 +19,31 @@ export class Note extends WrapColorNote<INote> {
       _cutDirection: 0,
    };
 
-   constructor();
-   constructor(data: Partial<IWrapColorNoteAttribute<INote>>);
-   constructor(data: Partial<INote>);
-   constructor(data: Partial<INote> & Partial<IWrapColorNoteAttribute<INote>>);
-   constructor(data: Partial<INote> & Partial<IWrapColorNoteAttribute<INote>> = {}) {
-      super();
-
-      this._time = data._time ?? data.time ?? Note.default._time;
-      this._posX = data._lineIndex ?? data.posX ?? Note.default._lineIndex;
-      this._posY = data._lineLayer ?? data.posY ?? Note.default._lineLayer;
-      this._type = data.color ?? data.type ?? data._type ?? Note.default._type;
-      this._direction = data._cutDirection ?? data.direction ?? Note.default._cutDirection;
-   }
-
-   static create(): Note[];
-   static create(...data: Partial<IWrapColorNoteAttribute<INote>>[]): Note[];
-   static create(...data: Partial<INote>[]): Note[];
-   static create(...data: (Partial<INote> & Partial<IWrapColorNoteAttribute<INote>>)[]): Note[];
-   static create(...data: (Partial<INote> & Partial<IWrapColorNoteAttribute<INote>>)[]): Note[] {
-      const result: Note[] = [];
-      data.forEach((obj) => result.push(new this(obj)));
+   static create(...data: Partial<IWrapColorNoteAttribute<INote>>[]): Note[] {
+      const result: Note[] = data.map((obj) => new this(obj));
       if (result.length) {
          return result;
       }
       return [new this()];
+   }
+
+   constructor(data: Partial<IWrapColorNoteAttribute<INote>> = {}) {
+      super();
+      this._time = data.time ?? Note.default._time;
+      this._posX = data.posX ?? Note.default._lineIndex;
+      this._posY = data.posY ?? Note.default._lineLayer;
+      this._type = data.type ?? data.color ?? Note.default._type;
+      this._direction = data.direction ?? Note.default._cutDirection;
+   }
+
+   static fromJSON(data: Partial<INote> = {}): Note {
+      const d = new this();
+      d._time = data._time ?? Note.default._time;
+      d._posX = data._lineIndex ?? Note.default._lineIndex;
+      d._posY = data._lineLayer ?? Note.default._lineLayer;
+      d._type = data._type ?? Note.default._type;
+      d._direction = data._cutDirection ?? Note.default._cutDirection;
+      return d;
    }
 
    toJSON(): Required<INote> {
@@ -90,13 +90,13 @@ export class Note extends WrapColorNote<INote> {
                (this.posX <= -1000
                   ? this.posX / 1000 + 1
                   : this.posX >= 1000
-                  ? this.posX / 1000 - 1
-                  : this.posX) - 2,
+                    ? this.posX / 1000 - 1
+                    : this.posX) - 2,
                this.posY <= -1000
                   ? this.posY / 1000
                   : this.posY >= 1000
-                  ? this.posY / 1000
-                  : this.posY,
+                    ? this.posY / 1000
+                    : this.posY,
             ];
       }
    }

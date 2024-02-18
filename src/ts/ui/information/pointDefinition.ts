@@ -13,7 +13,9 @@ export function setPointDefinitions(obj?: IPointDefinition): void {
          pointDef.push(`Error parsing pointDefinitions[${elem}]`);
       }
       const el = obj[elem];
-      if (!Array.isArray(el)) pointDef.push(`Error parsing pointDefinitions[${elem}]`);
+      if (!Array.isArray(el)) {
+         pointDef.push(`Error parsing pointDefinitions[${elem}]`);
+      }
       pointDef.push(
          `${elem} -- ${(el as number[]).length} point${(el as number[]).length > 1 ? 's' : ''}`,
       );

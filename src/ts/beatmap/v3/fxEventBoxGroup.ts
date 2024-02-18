@@ -6,79 +6,93 @@ import { deepCopy } from '../../utils/misc';
 import { IFxEventBox } from '../../types/beatmap/v3/fxEventBox';
 import { IIndexFilter } from '../../types/beatmap/v3/indexFilter';
 import { IWrapFxEventBoxGroupAttribute } from '../../types/beatmap/wrapper/fxEventBoxGroup';
+import {
+   IEventBoxGroupContainer,
+   IFxEventFloatBoxContainer,
+} from '../../types/beatmap/container/v3';
+import { DeepRequiredIgnore } from '../../types/utils';
+import { IFxEventFloat } from '../../types/beatmap/v3/fxEventFloat';
+import { FxType } from '../../types/beatmap/shared/constants';
 
 /** FX event box group beatmap v3 class object. */
 export class FxEventBoxGroup extends WrapFxEventBoxGroup<
-   IFxEventBoxGroup,
-   IFxEventBox,
+   IEventBoxGroupContainer<IFxEventBox, IFxEventFloatBoxContainer>,
+   IFxEventFloatBoxContainer,
+   IFxEventFloat,
    IIndexFilter
 > {
-   static default: Required<IFxEventBoxGroup> = {
-      b: 0,
-      g: 0,
-      e: [],
-      t: 0,
-      customData: {},
+   static default: DeepRequiredIgnore<
+      IEventBoxGroupContainer<IFxEventBox, IFxEventFloatBoxContainer>,
+      'customData'
+   > = {
+      object: { t: FxType.FLOAT, b: 0, g: 0, e: [], customData: {} },
+      boxData: [],
    };
 
-   constructor();
-   constructor(
-      data: DeepPartial<IWrapFxEventBoxGroupAttribute<IFxEventBoxGroup, IFxEventBox, IIndexFilter>>,
-   );
-   constructor(data: DeepPartial<IFxEventBoxGroup>);
-   constructor(
-      data: DeepPartial<IFxEventBoxGroup> &
-         DeepPartial<IWrapFxEventBoxGroupAttribute<IFxEventBoxGroup, IFxEventBox, IIndexFilter>>,
-   );
-   constructor(
-      data: DeepPartial<IFxEventBoxGroup> &
+   static create(
+      ...data: (DeepPartial<IFxEventBoxGroup> &
          DeepPartial<
-            IWrapFxEventBoxGroupAttribute<IFxEventBoxGroup, IFxEventBox, IIndexFilter>
-         > = {},
-   ) {
-      super();
-
-      this._time = data.b ?? data.time ?? FxEventBoxGroup.default.b;
-      this._id = data.g ?? data.id ?? FxEventBoxGroup.default.g;
-      this._boxes = (
-         (data.e as unknown as IFxEventBox[]) ??
-         (data.boxes as IFxEventBox[]) ??
-         FxEventBoxGroup.default.e
-      ).map((obj) => new FxEventBox(obj));
-      this._type = data.t ?? data.type ?? FxEventBoxGroup.default.t;
-      this._customData = deepCopy(data.customData ?? FxEventBoxGroup.default.customData);
-   }
-
-   static create(): FxEventBoxGroup[];
-   static create(
-      ...data: DeepPartial<
-         IWrapFxEventBoxGroupAttribute<IFxEventBoxGroup, IFxEventBox, IIndexFilter>
-      >[]
-   ): FxEventBoxGroup[];
-   static create(...data: DeepPartial<IFxEventBoxGroup>[]): FxEventBoxGroup[];
-   static create(
-      ...data: (DeepPartial<IFxEventBoxGroup> &
-         DeepPartial<IWrapFxEventBoxGroupAttribute<IFxEventBoxGroup, IFxEventBox, IIndexFilter>>)[]
-   ): FxEventBoxGroup[];
-   static create(
-      ...data: (DeepPartial<IFxEventBoxGroup> &
-         DeepPartial<IWrapFxEventBoxGroupAttribute<IFxEventBoxGroup, IFxEventBox, IIndexFilter>>)[]
+            IWrapFxEventBoxGroupAttribute<
+               IFxEventBoxGroup,
+               IFxEventBox,
+               IFxEventFloat,
+               IIndexFilter
+            >
+         >)[]
    ): FxEventBoxGroup[] {
-      const result: FxEventBoxGroup[] = [];
-      data.forEach((obj) => result.push(new this(obj)));
+      const result: FxEventBoxGroup[] = data.map((obj) => new this(obj));
       if (result.length) {
          return result;
       }
       return [new this()];
    }
 
-   toJSON(): Required<IFxEventBoxGroup> {
+   constructor(
+      data: DeepPartial<
+         IWrapFxEventBoxGroupAttribute<IFxEventBoxGroup, IFxEventBox, IFxEventFloat, IIndexFilter>
+      > = {},
+   ) {
+      super();
+      this._time = data.time ?? FxEventBoxGroup.default.object.b;
+      this._id = data.id ?? FxEventBoxGroup.default.object.g;
+      if (data.boxes) {
+         this._boxes = data.boxes.map((obj) => new FxEventBox(obj));
+      } else {
+         this._boxes = FxEventBoxGroup.default.boxData.map((obj) =>
+            FxEventBox.fromJSON(obj.data, obj.eventData),
+         );
+      }
+      this._customData = deepCopy(data.customData ?? FxEventBoxGroup.default.object.customData);
+   }
+
+   static fromJSON(
+      data: DeepPartial<IFxEventBoxGroup> = {},
+      events?: Partial<IFxEventFloat>[],
+   ): FxEventBoxGroup {
+      const d = new this();
+      d._time = data.b ?? FxEventBoxGroup.default.object.b;
+      d._id = data.g ?? FxEventBoxGroup.default.object.g;
+      if (data.e) {
+         d._boxes = data.e.map((obj) => FxEventBox.fromJSON(obj, events));
+      } else {
+         d._boxes = FxEventBoxGroup.default.boxData.map((obj) =>
+            FxEventBox.fromJSON(obj.data, events ?? obj.eventData),
+         );
+      }
+      d._customData = deepCopy(data.customData ?? FxEventBoxGroup.default.object.customData);
+      return d;
+   }
+
+   toJSON(): Required<IEventBoxGroupContainer<IFxEventBox, IFxEventFloatBoxContainer>> {
       return {
-         b: this.time,
-         g: this.id,
-         e: this.boxes.map((e) => e.toJSON()),
-         t: this.type,
-         customData: deepCopy(this.customData),
+         object: {
+            t: FxType.FLOAT,
+            b: this.time,
+            g: this.id,
+            e: [],
+            customData: deepCopy(this.customData),
+         },
+         boxData: this.boxes.map((e) => e.toJSON()),
       };
    }
 
@@ -94,15 +108,6 @@ export class FxEventBoxGroup extends WrapFxEventBoxGroup<
    }
    set customData(value: NonNullable<IFxEventBoxGroup['customData']>) {
       this._customData = value;
-   }
-
-   setCustomData(value: NonNullable<IFxEventBoxGroup['customData']>): this {
-      this.customData = value;
-      return this;
-   }
-   addCustomData(object: IFxEventBoxGroup['customData']): this {
-      this.customData = { ...this.customData, object };
-      return this;
    }
 
    isValid(): boolean {

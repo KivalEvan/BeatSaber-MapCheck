@@ -1,4 +1,6 @@
 export const htmlTableVersion: HTMLElement = document.querySelector('.info__version')!;
+export const htmlTableMappers: HTMLElement = document.querySelector('.info__mappers')!;
+export const htmlTableLighters: HTMLElement = document.querySelector('.info__lighters')!;
 export const htmlTableEnvironmentId: HTMLElement = document.querySelector('.info__environmentId')!;
 export const htmlTablePlayTime: HTMLElement = document.querySelector('.info__play-time')!;
 export const htmlTableTimeSpend: HTMLElement = document.querySelector('.info__time-spend')!;

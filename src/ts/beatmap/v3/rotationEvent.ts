@@ -12,38 +12,29 @@ export class RotationEvent extends WrapRotationEvent<IRotationEvent> {
       customData: {},
    };
 
-   constructor();
-   constructor(data: Partial<IWrapRotationEventAttribute<IRotationEvent>>);
-   constructor(data: Partial<IRotationEvent>);
-   constructor(
-      data: Partial<IRotationEvent> & Partial<IWrapRotationEventAttribute<IRotationEvent>>,
-   );
-   constructor(
-      data: Partial<IRotationEvent> & Partial<IWrapRotationEventAttribute<IRotationEvent>> = {},
-   ) {
-      super();
-
-      this._time = data.b ?? data.time ?? RotationEvent.default.b;
-      this._executionTime = data.e ?? data.executionTime ?? RotationEvent.default.e;
-      this._rotation = data.r ?? data.rotation ?? RotationEvent.default.r;
-      this._customData = deepCopy(data.customData ?? RotationEvent.default.customData);
-   }
-
-   static create(): RotationEvent[];
-   static create(...data: Partial<IWrapRotationEventAttribute<IRotationEvent>>[]): RotationEvent[];
-   static create(...data: Partial<IRotationEvent>[]): RotationEvent[];
-   static create(
-      ...data: (Partial<IRotationEvent> & Partial<IWrapRotationEventAttribute<IRotationEvent>>)[]
-   ): RotationEvent[];
-   static create(
-      ...data: (Partial<IRotationEvent> & Partial<IWrapRotationEventAttribute<IRotationEvent>>)[]
-   ): RotationEvent[] {
-      const result: RotationEvent[] = [];
-      data.forEach((obj) => result.push(new this(obj)));
+   static create(...data: Partial<IWrapRotationEventAttribute<IRotationEvent>>[]): RotationEvent[] {
+      const result: RotationEvent[] = data.map((obj) => new this(obj));
       if (result.length) {
          return result;
       }
       return [new this()];
+   }
+
+   constructor(data: Partial<IWrapRotationEventAttribute<IRotationEvent>> = {}) {
+      super();
+      this._time = data.time ?? RotationEvent.default.b;
+      this._executionTime = data.executionTime ?? RotationEvent.default.e;
+      this._rotation = data.rotation ?? RotationEvent.default.r;
+      this._customData = deepCopy(data.customData ?? RotationEvent.default.customData);
+   }
+
+   static fromJSON(data: Partial<IRotationEvent> = {}): RotationEvent {
+      const d = new this();
+      d._time = data.b ?? RotationEvent.default.b;
+      d._executionTime = data.e ?? RotationEvent.default.e;
+      d._rotation = data.r ?? RotationEvent.default.r;
+      d._customData = deepCopy(data.customData ?? RotationEvent.default.customData);
+      return d;
    }
 
    toJSON(): Required<IRotationEvent> {

@@ -24,7 +24,6 @@ export default function (
    renameKey(cd, 'speed', '_speed');
    renameKey(cd, 'direction', '_direction');
    renameKey(cd, 'lockRotation', '_lockPosition');
-   renameKey(cd, 'speed', '_preciseSpeed');
 
    return cd;
 }

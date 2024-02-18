@@ -1,5 +1,37 @@
 # Changelog
 
+## 2.6.0 [2024-02-##]
+
+### Added
+
+-  v4 beatmap support
+-  Lattice environment & color scheme
+
+### Changed
+
+-  Now uses v4 beatmap as internal
+-  Improved loading bar
+-  Updated many checks
+-  Rework asynchronous process
+   -  Should be noticeably faster
+-  Minor UI tweaks
+-  Various tweaks and fixes
+
+### Fixed
+
+-  One saber check being missing
+-  Data check not working properly
+-  Data check settings not being applied
+
+### Deprecated
+
+-  Beatmap v3.x.x is now unsupported
+   -  Beatmap v3 can still be used by map check, but will not gain any feature updated around it.
+
+### Removed
+
+-  Loading bar smoothing
+
 ## 2.5.15 [2023-10-31]
 
 ### Added
@@ -59,7 +91,8 @@
 ### Changed
 
 -  Arc no longer count towards interactive time
-   -  While arc can affect scoring, visibility and haptic can be disabled and mostly served as cosmetic
+   -  While arc can affect scoring, visibility and haptic can be disabled and mostly served as
+      cosmetic
 -  Bomb should now count towards interactive time (idk why this was filtered in the first place)
 
 ### Fixed
@@ -278,7 +311,8 @@
    -  This allows NE/ME map to use the error check functionality
    -  This also allows for more advanced checking in the future
    -  Updated check and threshold to better fit with the system
-   -  Because of the change, some functionality may not work as intended (please report if you find them)
+   -  Because of the change, some functionality may not work as intended (please report if you find
+      them)
 -  Unlit bomb check
 
 ### Changed
@@ -356,7 +390,8 @@
 ### Changed
 
 -  NJS HJD minimum limit reduced to 0.25 to accomodate v1.18.1 update
--  Mapping Extensions and Noodle Extensions now have basic check for valid (and negative) notes and obstacles
+-  Mapping Extensions and Noodle Extensions now have basic check for valid (and negative) notes and
+   obstacles
 -  Plenty of code clean-up
 
 ### Fixed

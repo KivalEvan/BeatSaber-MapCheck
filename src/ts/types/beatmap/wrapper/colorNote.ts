@@ -1,4 +1,5 @@
 // deno-lint-ignore-file no-explicit-any
+import { NoteColor } from '../shared/constants';
 import { IWrapBaseNote, IWrapBaseNoteAttribute } from './baseNote';
 
 export interface IWrapColorNoteAttribute<T extends { [P in keyof T]: T[P] } = Record<string, any>>
@@ -11,7 +12,7 @@ export interface IWrapColorNoteAttribute<T extends { [P in keyof T]: T[P] } = Re
     * 3 -> Bomb
     * ```
     */
-   type: 0 | 1 | 3;
+   type: NoteColor | 3;
    /** Angle offset in degree counter-clockwise `<int>` of note.*/
    angleOffset: number;
 }
@@ -19,7 +20,7 @@ export interface IWrapColorNoteAttribute<T extends { [P in keyof T]: T[P] } = Re
 export interface IWrapColorNote<T extends { [P in keyof T]: T[P] } = Record<string, any>>
    extends IWrapBaseNote<T>,
       IWrapColorNoteAttribute<T> {
-   setType(value: 0 | 1 | 3): this;
+   setType(value: NoteColor | 3): this;
    setAngleOffset(value: number): this;
 
    /**

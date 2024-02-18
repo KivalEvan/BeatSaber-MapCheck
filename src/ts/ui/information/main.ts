@@ -4,11 +4,11 @@ import { IWrapInfo } from '../../types/beatmap/wrapper/info';
 import { IBeatmapItem } from '../../types/mapcheck';
 import { BeatPerMinute } from '../../beatmap/shared/bpm';
 import {
-   setLevelAuthor,
-   setEnvironment,
-   setEditors,
    populateContributors,
    setContributors,
+   setEditors,
+   setEnvironment,
+   setLevelAuthor,
 } from './info';
 import { setBookmarks } from './bookmark';
 import { setBPMChanges } from './bpmChange';
@@ -16,33 +16,46 @@ import { setCustomColor } from './customColor';
 import { setCustomEvents } from './customEvent';
 import { setEnvironmentEnhancement } from './environment';
 import {
-   setVersion,
    setEnvironmentId,
+   setInformation,
+   setLighters,
+   setMappers,
    setRequirements,
    setSuggestions,
-   setInformation,
-   setWarnings,
    setTimeSpend,
+   setVersion,
+   setWarnings,
 } from './misc';
 import { setPointDefinitions } from './pointDefinition';
 import { setTableHeight } from './helpers';
 import { setPlayTime } from './playTime';
 import { setColorScheme } from './colorScheme';
+import { EnvironmentAllName } from '../../types/beatmap/shared/environment';
 
 function setInfo(info: IWrapInfo): void {
-   UIHeader.setSongName(info.songName);
-   UIHeader.setSongSubname(info.songSubName);
-   UIHeader.setSongAuthor(info.songAuthorName);
-   UIHeader.setSongBPM(info.beatsPerMinute);
-   setLevelAuthor(info.levelAuthorName);
-   setEnvironment(info.environmentName);
+   UIHeader.setSongName(info.song.title);
+   UIHeader.setSongSubname(info.song.subTitle);
+   UIHeader.setSongAuthor(info.song.author);
+   UIHeader.setSongBPM(info.audio.bpm);
+   const mapperSet = new Set<string>();
+   const lighterSet = new Set<string>();
+   const envSet = new Set<EnvironmentAllName>();
+   info.difficulties.forEach((d) => {
+      d.authors.mappers.forEach((m) => mapperSet.add(m));
+      d.authors.lighters.forEach((l) => lighterSet.add(l));
+      envSet.add(info.environmentNames.at(d.environmentId)!);
+   });
+   setLevelAuthor([...mapperSet], [...lighterSet]);
+   setEnvironment([...envSet].filter((e) => e) as EnvironmentAllName[]);
    setEditors(info.customData._editors);
 }
 
 function setDiffInfoTable(info: IWrapInfo, mapData: IBeatmapItem): void {
    setVersion((mapData.rawData as any)._version || (mapData.rawData as any).version || 'Unknown');
+   setMappers(mapData.info.authors.mappers);
+   setLighters(mapData.info.authors.lighters);
    setEnvironmentId(info.environmentNames.at(mapData.info.environmentId));
-   setColorScheme(info.colorSchemes.at(mapData.info.colorSchemeId)?.colorScheme);
+   setColorScheme(info.colorSchemes.at(mapData.info.colorSchemeId));
    if (mapData.info.customData) {
       setCustomColor(mapData.info.customData);
       setRequirements(mapData.info.customData._requirements as string[]);
@@ -51,9 +64,9 @@ function setDiffInfoTable(info: IWrapInfo, mapData: IBeatmapItem): void {
       setWarnings(mapData.info.customData._warnings);
    }
    if (mapData.data?.customData) {
-      const bpm = SavedData.beatmapInfo?.beatsPerMinute
+      const bpm = SavedData.beatmapInfo?.audio.bpm
          ? BeatPerMinute.create(
-              SavedData.beatmapInfo.beatsPerMinute,
+              SavedData.beatmapInfo.audio.bpm,
               mapData.data.customData._bpmChanges ||
                  mapData.data.customData._BPMChanges ||
                  mapData.data.customData.BPMChanges,
@@ -95,27 +108,27 @@ function reset(): void {
 }
 
 export {
-   setLevelAuthor,
-   setEnvironmentId,
-   setEditors,
-   setContributors,
    populateContributors,
-   setVersion,
-   setPlayTime,
-   setTimeSpend,
-   setColorScheme,
-   setCustomColor,
-   setRequirements,
-   setSuggestions,
-   setInformation,
-   setWarnings,
+   reset,
    setBookmarks,
    setBPMChanges,
-   setEnvironmentEnhancement,
-   setPointDefinitions,
+   setColorScheme,
+   setContributors,
+   setCustomColor,
    setCustomEvents,
-   setInfo,
    setDiffInfoTable,
+   setEditors,
+   setEnvironmentEnhancement,
+   setEnvironmentId,
+   setInfo,
+   setInformation,
+   setLevelAuthor,
+   setPlayTime,
+   setPointDefinitions,
+   setRequirements,
+   setSuggestions,
    setTableHeight,
-   reset,
+   setTimeSpend,
+   setVersion,
+   setWarnings,
 };

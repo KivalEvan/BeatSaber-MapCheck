@@ -1,3 +1,4 @@
+import { ExecutionTime } from '../shared/constants';
 import { IBaseObject } from './baseObject';
 
 export interface IRotationEvent extends IBaseObject {
@@ -8,7 +9,7 @@ export interface IRotationEvent extends IBaseObject {
     * 1 -> Late
     * ```
     */
-   e: 0 | 1;
+   e?: ExecutionTime;
    /** Clockwise rotation value `<float>` of rotation event. */
-   r: number;
+   r?: number;
 }

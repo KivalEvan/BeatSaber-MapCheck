@@ -39,7 +39,6 @@ import { EventContainer, NoteContainer } from '../../types/beatmap/wrapper/conta
 import { Version } from '../../types/beatmap/shared/version';
 import { WrapBaseItem } from './baseItem';
 import { IWrapDifficulty } from '../../types/beatmap/wrapper/difficulty';
-import { IWrapFxEventsCollection } from '../../types/beatmap/wrapper/fxEventsCollection';
 import {
    IWrapFxEventBoxGroup,
    IWrapFxEventBoxGroupAttribute,
@@ -53,7 +52,7 @@ export abstract class WrapDifficulty<T extends { [P in keyof T]: T[P] }>
 {
    private _filename = 'UnnamedDifficulty.dat';
 
-   abstract version: Version;
+   abstract readonly version: Version;
    abstract bpmEvents: IWrapBPMEvent[];
    abstract rotationEvents: IWrapRotationEvent[];
    abstract colorNotes: IWrapColorNote[];
@@ -69,11 +68,10 @@ export abstract class WrapDifficulty<T extends { [P in keyof T]: T[P] }>
    abstract lightTranslationEventBoxGroups: IWrapLightTranslationEventBoxGroup[];
    abstract fxEventBoxGroups: IWrapFxEventBoxGroup[];
    abstract eventTypesWithKeywords: IWrapEventTypesWithKeywords;
-   abstract fxEventsCollection: IWrapFxEventsCollection;
    abstract useNormalEventsAsCompatibleEvents: boolean;
 
    clone<U extends this>(): U {
-      return super.clone().setFileName(this.filename) as U;
+      return super.clone().setFilename(this.filename) as U;
    }
 
    set filename(name: LooseAutocomplete<GenericFileName>) {
@@ -83,7 +81,7 @@ export abstract class WrapDifficulty<T extends { [P in keyof T]: T[P] }>
       return this._filename;
    }
 
-   setFileName(filename: LooseAutocomplete<GenericFileName>) {
+   setFilename(filename: LooseAutocomplete<GenericFileName>) {
       this.filename = filename;
       return this;
    }
@@ -103,8 +101,10 @@ export abstract class WrapDifficulty<T extends { [P in keyof T]: T[P] }>
       this.lightRotationEventBoxGroups.sort(sortObjectFn);
       this.lightTranslationEventBoxGroups.sort(sortObjectFn);
       this.fxEventBoxGroups.sort(sortObjectFn);
-      this.fxEventsCollection.intList.sort(sortObjectFn);
-      this.fxEventsCollection.floatList.sort(sortObjectFn);
+      // sorting these will affect the fx event box groups, i think i get what they are doing here
+      // but best to do it as post-process and after light completion
+      // this.fxEventsCollection.intList.sort(sortObjectFn);
+      // this.fxEventsCollection.floatList.sort(sortObjectFn);
 
       this.lightColorEventBoxGroups.forEach((gr) =>
          gr.boxes.forEach((bx) => bx.events.sort(sortObjectFn)),
@@ -208,24 +208,24 @@ export abstract class WrapDifficulty<T extends { [P in keyof T]: T[P] }>
       return ec.sort((a, b) => a.data.time - b.data.time);
    }
 
-   abstract addBpmEvents(...data: PartialWrapper<IWrapBPMEventAttribute>[]): void;
-   abstract addRotationEvents(...data: PartialWrapper<IWrapRotationEventAttribute>[]): void;
-   abstract addColorNotes(...data: PartialWrapper<IWrapColorNoteAttribute>[]): void;
-   abstract addBombNotes(...data: PartialWrapper<IWrapBombNoteAttribute>[]): void;
-   abstract addObstacles(...data: PartialWrapper<IWrapObstacleAttribute>[]): void;
-   abstract addArcs(...data: PartialWrapper<IWrapArcAttribute>[]): void;
-   abstract addChains(...data: PartialWrapper<IWrapChainAttribute>[]): void;
-   abstract addWaypoints(...data: PartialWrapper<IWrapWaypointAttribute>[]): void;
-   abstract addBasicEvents(...data: PartialWrapper<IWrapEventAttribute>[]): void;
-   abstract addColorBoostEvents(...data: PartialWrapper<IWrapColorBoostEventAttribute>[]): void;
+   abstract addBpmEvents(...data: PartialWrapper<IWrapBPMEventAttribute>[]): this;
+   abstract addRotationEvents(...data: PartialWrapper<IWrapRotationEventAttribute>[]): this;
+   abstract addColorNotes(...data: PartialWrapper<IWrapColorNoteAttribute>[]): this;
+   abstract addBombNotes(...data: PartialWrapper<IWrapBombNoteAttribute>[]): this;
+   abstract addObstacles(...data: PartialWrapper<IWrapObstacleAttribute>[]): this;
+   abstract addArcs(...data: PartialWrapper<IWrapArcAttribute>[]): this;
+   abstract addChains(...data: PartialWrapper<IWrapChainAttribute>[]): this;
+   abstract addWaypoints(...data: PartialWrapper<IWrapWaypointAttribute>[]): this;
+   abstract addBasicEvents(...data: PartialWrapper<IWrapEventAttribute>[]): this;
+   abstract addColorBoostEvents(...data: PartialWrapper<IWrapColorBoostEventAttribute>[]): this;
    abstract addLightColorEventBoxGroups(
       ...data: DeepPartialWrapper<IWrapLightColorEventBoxGroupAttribute>[]
-   ): void;
+   ): this;
    abstract addLightRotationEventBoxGroups(
       ...data: DeepPartialWrapper<IWrapLightRotationEventBoxGroupAttribute>[]
-   ): void;
+   ): this;
    abstract addLightTranslationEventBoxGroups(
       ...data: DeepPartialWrapper<IWrapLightTranslationEventBoxGroupAttribute>[]
-   ): void;
-   abstract addFxEventBoxGroups(...data: DeepPartialWrapper<IWrapFxEventBoxGroupAttribute>[]): void;
+   ): this;
+   abstract addFxEventBoxGroups(...data: DeepPartialWrapper<IWrapFxEventBoxGroupAttribute>[]): this;
 }

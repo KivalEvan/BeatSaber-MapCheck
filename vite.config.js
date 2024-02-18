@@ -1,4 +1,4 @@
 export default {
-    css: { preprocessorOptions: { scss: { charset: false } } },
-    base: '/BeatSaber-MapCheck/',
+   css: { preprocessorOptions: { scss: { charset: false } } },
+   base: '/BeatSaber-MapCheck/',
 };

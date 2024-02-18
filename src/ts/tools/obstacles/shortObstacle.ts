@@ -1,8 +1,9 @@
 import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
-import UICheckbox from '../../ui/helpers/checkbox';
+import UIInput from '../../ui/helpers/input';
 import { printResultTime } from '../helpers';
 import { PosX, PosY } from '../../beatmap/shared/constants';
-import { Obstacle } from '../../beatmap/v3/obstacle';
+import { Obstacle } from '../../beatmap/v4/obstacle';
+import { IWrapObstacle } from '../../types/beatmap/wrapper/obstacle';
 
 const name = '<15ms Obstacle';
 const description =
@@ -22,9 +23,16 @@ const tool: Tool<{ minDur: number }> = {
       params: {
          minDur: 0.015,
       },
-      html: UICheckbox.create(name, description, enabled, function (this: HTMLInputElement) {
-         tool.input.enabled = this.checked;
-      }),
+      html: UIInput.createBlock(
+         UIInput.createCheckbox(
+            function (this: HTMLInputElement) {
+               tool.input.enabled = this.checked;
+            },
+            name,
+            description,
+            enabled,
+         ),
+      ),
    },
    output: {
       html: null,
@@ -37,23 +45,23 @@ function check(map: ToolArgs) {
    const { bpm } = map.settings;
    const { minDur: temp } = tool.input.params;
    const minDur = bpm.toBeatTime(temp);
-   const arr: Obstacle[] = [];
-   let obstacleLFull: Obstacle = Obstacle.create()[0];
-   let obstacleRFull: Obstacle = Obstacle.create()[0];
-   let obstacleLHalf: Obstacle = Obstacle.create()[0];
-   let obstacleRHalf: Obstacle = Obstacle.create()[0];
+   const ary: IWrapObstacle[] = [];
+   let obstacleLFull: IWrapObstacle = new Obstacle();
+   let obstacleRFull: IWrapObstacle = new Obstacle();
+   let obstacleLHalf: IWrapObstacle = new Obstacle();
+   let obstacleRHalf: IWrapObstacle = new Obstacle();
    obstacles.forEach((o) => {
       if (o.posY === PosY.BOTTOM && o.height > 2 && o.duration > 0) {
          if (o.width > 2 || (o.width > 1 && o.posX === 1)) {
             if (o.isLonger(obstacleLFull)) {
                if (o.duration < minDur) {
-                  arr.push(o);
+                  ary.push(o);
                }
                obstacleLFull = o;
             }
             if (o.isLonger(obstacleRFull)) {
                if (o.duration < minDur) {
-                  arr.push(o);
+                  ary.push(o);
                }
                obstacleRFull = o;
             }
@@ -61,14 +69,14 @@ function check(map: ToolArgs) {
             if (o.posX === PosX.LEFT) {
                if (o.isLonger(obstacleLFull)) {
                   if (o.duration < minDur) {
-                     arr.push(o);
+                     ary.push(o);
                   }
                   obstacleLFull = o;
                }
             } else if (o.posX === PosX.MIDDLE_RIGHT) {
                if (o.isLonger(obstacleRFull)) {
                   if (o.duration < minDur) {
-                     arr.push(o);
+                     ary.push(o);
                   }
                   obstacleRFull = o;
                }
@@ -77,14 +85,14 @@ function check(map: ToolArgs) {
             if (o.posX === PosX.MIDDLE_LEFT) {
                if (o.isLonger(obstacleLFull)) {
                   if (o.duration < minDur) {
-                     arr.push(o);
+                     ary.push(o);
                   }
                   obstacleLFull = o;
                }
             } else if (o.posX === PosX.MIDDLE_RIGHT) {
                if (o.isLonger(obstacleRFull)) {
                   if (o.duration < minDur) {
-                     arr.push(o);
+                     ary.push(o);
                   }
                   obstacleRFull = o;
                }
@@ -98,7 +106,7 @@ function check(map: ToolArgs) {
                   o.isLonger(obstacleLFull, minDur) &&
                   o.isLonger(obstacleLHalf, minDur)
                ) {
-                  arr.push(o);
+                  ary.push(o);
                }
                obstacleLHalf = o;
             }
@@ -108,7 +116,7 @@ function check(map: ToolArgs) {
                   o.isLonger(obstacleRFull, minDur) &&
                   o.isLonger(obstacleRHalf, minDur)
                ) {
-                  arr.push(o);
+                  ary.push(o);
                }
                obstacleRHalf = o;
             }
@@ -120,7 +128,7 @@ function check(map: ToolArgs) {
                      o.isLonger(obstacleLFull, minDur) &&
                      o.isLonger(obstacleLHalf, minDur)
                   ) {
-                     arr.push(o);
+                     ary.push(o);
                   }
                   obstacleLHalf = o;
                }
@@ -131,7 +139,7 @@ function check(map: ToolArgs) {
                      o.isLonger(obstacleRFull, minDur) &&
                      o.isLonger(obstacleRHalf, minDur)
                   ) {
-                     arr.push(o);
+                     ary.push(o);
                   }
                   obstacleRHalf = o;
                }
@@ -144,7 +152,7 @@ function check(map: ToolArgs) {
                      o.isLonger(obstacleLFull, minDur) &&
                      o.isLonger(obstacleLHalf, minDur)
                   ) {
-                     arr.push(o);
+                     ary.push(o);
                   }
                   obstacleLHalf = o;
                }
@@ -155,7 +163,7 @@ function check(map: ToolArgs) {
                      o.isLonger(obstacleRFull, minDur) &&
                      o.isLonger(obstacleRHalf, minDur)
                   ) {
-                     arr.push(o);
+                     ary.push(o);
                   }
                   obstacleRHalf = o;
                }
@@ -163,7 +171,7 @@ function check(map: ToolArgs) {
          }
       }
    });
-   return arr
+   return ary
       .map((o) => o.time)
       .filter(function (x, i, ary) {
          return !i || x !== ary[i - 1];

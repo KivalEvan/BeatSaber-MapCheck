@@ -12,7 +12,7 @@ export interface IGridObject extends IBaseObject {
     *
     * **RANGE:** `0-3`
     */
-   x: number;
+   x?: number;
    /**
     * Position y `<int>` of base note.
     * ```ts
@@ -23,5 +23,5 @@ export interface IGridObject extends IBaseObject {
     *
     * **RANGE:** `0-2`
     */
-   y: number;
+   y?: number;
 }

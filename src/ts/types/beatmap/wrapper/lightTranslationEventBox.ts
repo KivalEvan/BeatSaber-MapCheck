@@ -1,9 +1,11 @@
 // deno-lint-ignore-file no-explicit-any
+import { Axis } from '../shared/constants';
+import { DistributionType } from '../shared/constants';
 import { IWrapEventBox, IWrapEventBoxAttribute } from './eventBox';
 import {
-   IWrapLightTranslationBase,
-   IWrapLightTranslationBaseAttribute,
-} from './lightTranslationBase';
+   IWrapLightTranslationEvent,
+   IWrapLightTranslationEventAttribute,
+} from './lightTranslationEvent';
 
 export interface IWrapLightTranslationEventBoxAttribute<
    TBox extends { [P in keyof TBox]: TBox[P] } = Record<string, any>,
@@ -19,7 +21,7 @@ export interface IWrapLightTranslationEventBoxAttribute<
     * 2 -> Step // adds to consequent ID.
     * ```
     */
-   gapDistributionType: 1 | 2;
+   gapDistributionType: DistributionType;
    /**
     * Axis `<int>` of light translation event box.
     * ```ts
@@ -28,10 +30,10 @@ export interface IWrapLightTranslationEventBoxAttribute<
     * 2 -> Z
     * ```
     */
-   axis: 0 | 1 | 2;
+   axis: Axis;
    /** Flip translation `<int>` in light translation event box. */
    flip: 0 | 1;
-   events: IWrapLightTranslationBaseAttribute<TBase>[];
+   events: IWrapLightTranslationEventAttribute<TBase>[];
 }
 
 export interface IWrapLightTranslationEventBox<
@@ -40,12 +42,12 @@ export interface IWrapLightTranslationEventBox<
    TFilter extends { [P in keyof TFilter]: TFilter[P] } = Record<string, any>,
 > extends IWrapEventBox<TBox, TBase, TFilter>,
       IWrapLightTranslationEventBoxAttribute<TBox, TBase, TFilter> {
-   events: IWrapLightTranslationBase<TBase>[];
+   events: IWrapLightTranslationEvent<TBase>[];
 
    setGapDistribution(value: IWrapLightTranslationEventBox['gapDistribution']): this;
    setGapDistributionType(value: IWrapLightTranslationEventBox['gapDistributionType']): this;
    setAxis(value: IWrapLightTranslationEventBox['axis']): this;
    setFlip(value: IWrapLightTranslationEventBox['flip']): this;
    setAffectFirst(value: IWrapLightTranslationEventBox['affectFirst']): this;
-   setEvents(value: IWrapLightTranslationBase<TBase>[]): this;
+   setEvents(value: IWrapLightTranslationEvent<TBase>[]): this;
 }

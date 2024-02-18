@@ -1,16 +1,16 @@
-import { UIBackgroundColorType, UIBackgroundColor } from '../../types/mapcheck/ui/accordion';
+import { UIBackgroundColor, UIBackgroundColorType } from '../../types/mapcheck/ui/accordion';
 
 const prefix = 'accordion__';
 const htmlAccordion: NodeListOf<HTMLInputElement> =
    document.querySelectorAll<HTMLInputElement>('.accordion__button');
 
 export default {
-   create: (
+   create: function (
       id: string,
       title: string,
       bg: UIBackgroundColorType,
       isFlex: boolean = false,
-   ): HTMLElement => {
+   ): HTMLElement {
       const accBase = document.createElement('div');
       accBase.className = 'accordion';
 
@@ -39,7 +39,7 @@ export default {
    },
 
    // FIXME: htmlAccordion should be redefined as create exist, but that doesn't matter because there's no use case for it as of yet
-   show: (id: string, check: boolean): void => {
+   show: function (id: string, check: boolean): void {
       htmlAccordion.forEach((elem) => {
          if (elem.id.endsWith(id)) {
             elem.checked = check;

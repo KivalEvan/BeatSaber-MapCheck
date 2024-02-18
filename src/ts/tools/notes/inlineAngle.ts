@@ -5,12 +5,12 @@ import { checkDirection } from '../../analyzers/placement/note';
 import swing from '../../analyzers/swing/swing';
 import { ColorNote } from '../../beatmap/v3/colorNote';
 import { printResultTime } from '../helpers';
-import UICheckbox from '../../ui/helpers/checkbox';
+import UIInput from '../../ui/helpers/input';
 import { BeatPerMinute } from '../../beatmap/shared/bpm';
 import {
    NoteColor,
-   NoteDirectionAngle,
    NoteDirection,
+   NoteDirectionAngle,
    PosX,
    PosY,
 } from '../../beatmap/shared/constants';
@@ -22,39 +22,38 @@ const enabled = true;
 const defaultMaxTime = 0.15;
 let localBPM!: BeatPerMinute;
 
-const htmlContainer = document.createElement('div');
-const htmlInputMaxTime = document.createElement('input');
-const htmlLabelMaxTime = document.createElement('label');
-const htmlInputMaxBeat = document.createElement('input');
-const htmlLabelMaxBeat = document.createElement('label');
-
-htmlLabelMaxTime.textContent = 'max time (ms): ';
-htmlLabelMaxTime.htmlFor = 'input__tools-inline-angle-time';
-htmlInputMaxTime.id = 'input__tools-inline-angle-time';
-htmlInputMaxTime.className = 'input-toggle input--small';
-htmlInputMaxTime.type = 'number';
-htmlInputMaxTime.min = '0';
-htmlInputMaxTime.value = round(defaultMaxTime * 1000, 1).toString();
-htmlInputMaxTime.addEventListener('change', inputTimeHandler);
-
-htmlLabelMaxBeat.textContent = ' (beat): ';
-htmlLabelMaxBeat.htmlFor = 'input__tools-inline-angle-beat';
-htmlInputMaxBeat.id = 'input__tools-inline-angle-beat';
-htmlInputMaxBeat.className = 'input-toggle input--small';
-htmlInputMaxBeat.type = 'number';
-htmlInputMaxBeat.min = '0';
-htmlInputMaxBeat.step = '0.1';
-htmlInputMaxBeat.addEventListener('change', inputBeatHandler);
-
-htmlContainer.appendChild(
-   UICheckbox.create(name, description, enabled, function (this: HTMLInputElement) {
-      tool.input.enabled = this.checked;
-   }),
+const [htmlLabelMaxTime, htmlInputMaxTime] = UIInput.createNumber(
+   function (this: HTMLInputElement) {
+      tool.input.params.maxTime = Math.abs(parseFloat(this.value)) / 1000;
+      this.value = round(tool.input.params.maxTime * 1000, 1).toString();
+      if (localBPM) {
+         htmlInputMaxBeat.value = round(
+            localBPM.toBeatTime(tool.input.params.maxTime),
+            2,
+         ).toString();
+      }
+   },
+   'max time (ms): ',
+   round(defaultMaxTime * 1000, 1),
+   0,
 );
-htmlContainer.appendChild(htmlLabelMaxTime);
-htmlContainer.appendChild(htmlInputMaxTime);
-htmlContainer.appendChild(htmlLabelMaxBeat);
-htmlContainer.appendChild(htmlInputMaxBeat);
+const [htmlLabelMaxBeat, htmlInputMaxBeat] = UIInput.createNumber(
+   function (this: HTMLInputElement) {
+      if (!localBPM) {
+         this.value = '0';
+         return;
+      }
+      let val = round(Math.abs(parseFloat(this.value)), 2) || 1;
+      tool.input.params.maxTime = localBPM.toRealTime(val);
+      htmlInputMaxTime.value = round(tool.input.params.maxTime * 1000, 1).toString();
+      this.value = val.toString();
+   },
+   ' (beat): ',
+   0,
+   0,
+   null,
+   0.1,
+);
 
 const tool: Tool<{ maxTime: number }> = {
    name,
@@ -69,7 +68,21 @@ const tool: Tool<{ maxTime: number }> = {
       params: {
          maxTime: defaultMaxTime,
       },
-      html: htmlContainer,
+      html: UIInput.createBlock(
+         UIInput.createCheckbox(
+            function (this: HTMLInputElement) {
+               tool.input.enabled = this.checked;
+            },
+            name,
+            description,
+            enabled,
+         ),
+         document.createElement('br'),
+         htmlLabelMaxTime,
+         htmlInputMaxTime,
+         htmlLabelMaxBeat,
+         htmlInputMaxBeat,
+      ),
       adjustTime: adjustTimeHandler,
    },
    output: {
@@ -81,25 +94,6 @@ const tool: Tool<{ maxTime: number }> = {
 function adjustTimeHandler(bpm: BeatPerMinute) {
    localBPM = bpm;
    htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.maxTime), 2).toString();
-}
-
-function inputTimeHandler(this: HTMLInputElement) {
-   tool.input.params.maxTime = Math.abs(parseFloat(this.value)) / 1000;
-   this.value = round(tool.input.params.maxTime * 1000, 1).toString();
-   if (localBPM) {
-      htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.maxTime), 2).toString();
-   }
-}
-
-function inputBeatHandler(this: HTMLInputElement) {
-   if (!localBPM) {
-      this.value = '0';
-      return;
-   }
-   let val = round(Math.abs(parseFloat(this.value)), 2) || 1;
-   tool.input.params.maxTime = localBPM.toRealTime(val);
-   htmlInputMaxTime.value = round(tool.input.params.maxTime * 1000, 1).toString();
-   this.value = val.toString();
 }
 
 function check(map: ToolArgs) {

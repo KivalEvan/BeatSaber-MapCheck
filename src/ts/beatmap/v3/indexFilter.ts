@@ -18,37 +18,38 @@ export class IndexFilter extends WrapIndexFilter<IIndexFilter> {
       customData: {},
    };
 
-   constructor();
-   constructor(data: Partial<IWrapIndexFilterAttribute<IIndexFilter>>);
-   constructor(data: Partial<IIndexFilter>);
-   constructor(data: Partial<IIndexFilter> & Partial<IWrapIndexFilterAttribute<IIndexFilter>>);
-   constructor(
-      data: Partial<IIndexFilter> & Partial<IWrapIndexFilterAttribute<IIndexFilter>> = {},
-   ) {
+   static create(data: Partial<IWrapIndexFilterAttribute<IIndexFilter>> = {}): IndexFilter {
+      return new IndexFilter(data);
+   }
+
+   constructor(data: Partial<IWrapIndexFilterAttribute<IIndexFilter>> = {}) {
       super();
 
-      this._type = data.f ?? data.type ?? IndexFilter.default.f;
-      this._p0 = data.p ?? data.p0 ?? IndexFilter.default.p;
-      this._p1 = data.t ?? data.p1 ?? IndexFilter.default.t;
-      this._reverse = data.r ?? data.reverse ?? IndexFilter.default.r;
-      this._chunks = data.c ?? data.chunks ?? IndexFilter.default.c;
-      this._random = data.n ?? data.random ?? IndexFilter.default.n;
-      this._seed = data.s ?? data.seed ?? IndexFilter.default.s;
-      this._limit = data.l ?? data.limit ?? IndexFilter.default.l;
-      this._limitAffectsType = data.d ?? data.limitAffectsType ?? IndexFilter.default.d;
+      this._type = data.type ?? IndexFilter.default.f;
+      this._p0 = data.p0 ?? IndexFilter.default.p;
+      this._p1 = data.p1 ?? IndexFilter.default.t;
+      this._reverse = data.reverse ?? IndexFilter.default.r;
+      this._chunks = data.chunks ?? IndexFilter.default.c;
+      this._random = data.random ?? IndexFilter.default.n;
+      this._seed = data.seed ?? IndexFilter.default.s;
+      this._limit = data.limit ?? IndexFilter.default.l;
+      this._limitAffectsType = data.limitAffectsType ?? IndexFilter.default.d;
       this._customData = deepCopy(data.customData ?? IndexFilter.default.customData);
    }
 
-   static create(): IndexFilter;
-   static create(data: Partial<IWrapIndexFilterAttribute<IIndexFilter>>): IndexFilter;
-   static create(data: Partial<IIndexFilter>): IndexFilter;
-   static create(
-      data: Partial<IIndexFilter> & Partial<IWrapIndexFilterAttribute<IIndexFilter>>,
-   ): IndexFilter;
-   static create(
-      data: Partial<IIndexFilter> & Partial<IWrapIndexFilterAttribute<IIndexFilter>> = {},
-   ): IndexFilter {
-      return new IndexFilter(data);
+   static fromJSON(data: Partial<IIndexFilter> = {}): IndexFilter {
+      const d = new this();
+      d._type = data.f ?? IndexFilter.default.f;
+      d._p0 = data.p ?? IndexFilter.default.p;
+      d._p1 = data.t ?? IndexFilter.default.t;
+      d._reverse = data.r ?? IndexFilter.default.r;
+      d._chunks = data.c ?? IndexFilter.default.c;
+      d._random = data.n ?? IndexFilter.default.n;
+      d._seed = data.s ?? IndexFilter.default.s;
+      d._limit = data.l ?? IndexFilter.default.l;
+      d._limitAffectsType = data.d ?? IndexFilter.default.d;
+      d._customData = deepCopy(data.customData ?? IndexFilter.default.customData);
+      return d;
    }
 
    toJSON(): Required<IIndexFilter> {

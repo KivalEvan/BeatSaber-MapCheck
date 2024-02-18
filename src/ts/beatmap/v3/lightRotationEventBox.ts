@@ -1,5 +1,5 @@
 import { IIndexFilter } from '../../types/beatmap/v3/indexFilter';
-import { ILightRotationBase } from '../../types/beatmap/v3/lightRotationBase';
+import { ILightRotationEvent } from '../../types/beatmap/v3/lightRotationEvent';
 import { ILightRotationEventBox } from '../../types/beatmap/v3/lightRotationEventBox';
 import { IWrapLightRotationEventBoxAttribute } from '../../types/beatmap/wrapper/lightRotationEventBox';
 import { DeepPartial } from '../../types/utils';
@@ -11,21 +11,11 @@ import { LightRotationBase } from './lightRotationBase';
 /** Light rotation event box beatmap v3 class object. */
 export class LightRotationEventBox extends WrapLightRotationEventBox<
    ILightRotationEventBox,
-   ILightRotationBase,
+   ILightRotationEvent,
    IIndexFilter
 > {
    static default: Required<ILightRotationEventBox> = {
-      f: {
-         f: IndexFilter.default.f,
-         p: IndexFilter.default.p,
-         t: IndexFilter.default.t,
-         r: IndexFilter.default.r,
-         c: IndexFilter.default.c,
-         n: IndexFilter.default.n,
-         s: IndexFilter.default.s,
-         l: IndexFilter.default.l,
-         d: IndexFilter.default.d,
-      },
+      f: { ...IndexFilter.default },
       w: 0,
       d: 1,
       s: 0,
@@ -38,100 +28,69 @@ export class LightRotationEventBox extends WrapLightRotationEventBox<
       customData: {},
    };
 
-   constructor();
-   constructor(
-      data: DeepPartial<
-         IWrapLightRotationEventBoxAttribute<
-            ILightRotationEventBox,
-            ILightRotationBase,
-            IIndexFilter
-         >
-      >,
-   );
-   constructor(data: DeepPartial<ILightRotationEventBox>);
-   constructor(
-      data: DeepPartial<ILightRotationEventBox> &
-         DeepPartial<
-            IWrapLightRotationEventBoxAttribute<
-               ILightRotationEventBox,
-               ILightRotationBase,
-               IIndexFilter
-            >
-         >,
-   );
-   constructor(
-      data: DeepPartial<ILightRotationEventBox> &
-         DeepPartial<
-            IWrapLightRotationEventBoxAttribute<
-               ILightRotationEventBox,
-               ILightRotationBase,
-               IIndexFilter
-            >
-         > = {},
-   ) {
-      super();
-
-      this._filter = new IndexFilter(
-         (data as ILightRotationEventBox).f ??
-            (data.filter as IIndexFilter) ??
-            LightRotationEventBox.default.f,
-      );
-      this._beatDistribution = data.w ?? data.beatDistribution ?? LightRotationEventBox.default.w;
-      this._beatDistributionType =
-         data.d ?? data.beatDistributionType ?? LightRotationEventBox.default.d;
-      this._rotationDistribution =
-         data.s ?? data.rotationDistribution ?? LightRotationEventBox.default.s;
-      this._rotationDistributionType =
-         data.t ?? data.rotationDistributionType ?? LightRotationEventBox.default.t;
-      this._axis = data.a ?? data.axis ?? LightRotationEventBox.default.a;
-      this._flip = data.r ?? data.flip ?? LightRotationEventBox.default.r;
-      this._affectFirst = data.b ?? data.affectFirst ?? LightRotationEventBox.default.b;
-      this._easing = data.i ?? data.easing ?? LightRotationEventBox.default.i;
-      this._events = (
-         (data as ILightRotationEventBox).l ??
-         (data.events as ILightRotationBase[]) ??
-         LightRotationEventBox.default.l
-      ).map((obj) => new LightRotationBase(obj));
-      this._customData = deepCopy(data.customData ?? LightRotationEventBox.default.customData);
-   }
-
-   static create(): LightRotationEventBox[];
    static create(
       ...data: DeepPartial<
          IWrapLightRotationEventBoxAttribute<
             ILightRotationEventBox,
-            ILightRotationBase,
+            ILightRotationEvent,
             IIndexFilter
          >
       >[]
-   ): LightRotationEventBox[];
-   static create(...data: DeepPartial<ILightRotationEventBox>[]): LightRotationEventBox[];
-   static create(
-      ...data: (DeepPartial<ILightRotationEventBox> &
-         DeepPartial<
-            IWrapLightRotationEventBoxAttribute<
-               ILightRotationEventBox,
-               ILightRotationBase,
-               IIndexFilter
-            >
-         >)[]
-   ): LightRotationEventBox[];
-   static create(
-      ...data: (DeepPartial<ILightRotationEventBox> &
-         DeepPartial<
-            IWrapLightRotationEventBoxAttribute<
-               ILightRotationEventBox,
-               ILightRotationBase,
-               IIndexFilter
-            >
-         >)[]
    ): LightRotationEventBox[] {
-      const result: LightRotationEventBox[] = [];
-      data.forEach((obj) => result.push(new this(obj)));
+      const result: LightRotationEventBox[] = data.map((obj) => new this(obj));
       if (result.length) {
          return result;
       }
       return [new this()];
+   }
+
+   constructor(
+      data: DeepPartial<
+         IWrapLightRotationEventBoxAttribute<
+            ILightRotationEventBox,
+            ILightRotationEvent,
+            IIndexFilter
+         >
+      > = {},
+   ) {
+      super();
+      if (data.filter) this._filter = new IndexFilter(data.filter);
+      else this._filter = IndexFilter.fromJSON(LightRotationEventBox.default.f);
+      this._beatDistribution = data.beatDistribution ?? LightRotationEventBox.default.w;
+      this._beatDistributionType = data.beatDistributionType ?? LightRotationEventBox.default.d;
+      this._rotationDistribution = data.rotationDistribution ?? LightRotationEventBox.default.s;
+      this._rotationDistributionType =
+         data.rotationDistributionType ?? LightRotationEventBox.default.t;
+      this._axis = data.axis ?? LightRotationEventBox.default.a;
+      this._flip = data.flip ?? LightRotationEventBox.default.r;
+      this._affectFirst = data.affectFirst ?? LightRotationEventBox.default.b;
+      this._easing = data.easing ?? LightRotationEventBox.default.i;
+      if (data.events) {
+         this._events = data.events.map((obj) => new LightRotationBase(obj));
+      } else {
+         this._events = LightRotationEventBox.default.l.map((json) =>
+            LightRotationBase.fromJSON(json),
+         );
+      }
+      this._customData = deepCopy(data.customData ?? LightRotationEventBox.default.customData);
+   }
+
+   static fromJSON(data: DeepPartial<ILightRotationEventBox> = {}): LightRotationEventBox {
+      const d = new this();
+      d._filter = IndexFilter.fromJSON(data.f ?? LightRotationEventBox.default.f);
+      d._beatDistribution = data.w ?? LightRotationEventBox.default.w;
+      d._beatDistributionType = data.d ?? LightRotationEventBox.default.d;
+      d._rotationDistribution = data.s ?? LightRotationEventBox.default.s;
+      d._rotationDistributionType = data.t ?? LightRotationEventBox.default.t;
+      d._axis = data.a ?? LightRotationEventBox.default.a;
+      d._flip = data.r ?? LightRotationEventBox.default.r;
+      d._affectFirst = data.b ?? LightRotationEventBox.default.b;
+      d._easing = data.i ?? LightRotationEventBox.default.i;
+      d._events = (data.l ?? LightRotationEventBox.default.l).map((json) =>
+         LightRotationBase.fromJSON(json),
+      );
+      d._customData = deepCopy(data.customData ?? LightRotationEventBox.default.customData);
+      return d;
    }
 
    toJSON(): Required<ILightRotationEventBox> {

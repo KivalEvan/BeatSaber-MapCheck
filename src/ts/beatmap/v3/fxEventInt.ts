@@ -12,34 +12,29 @@ export class FxEventInt extends WrapFxEventInt<IFxEventInt> {
       customData: {},
    };
 
-   constructor();
-   constructor(data: Partial<IWrapFxEventIntAttribute<IFxEventInt>>);
-   constructor(data: Partial<IFxEventInt>);
-   constructor(data: Partial<IFxEventInt> & Partial<IWrapFxEventIntAttribute<IFxEventInt>>);
-   constructor(data: Partial<IFxEventInt> & Partial<IWrapFxEventIntAttribute<IFxEventInt>> = {}) {
-      super();
-
-      this._time = data.b ?? data.time ?? FxEventInt.default.b;
-      this._previous = data.p ?? data.previous ?? FxEventInt.default.p;
-      this._value = data.v ?? data.value ?? FxEventInt.default.v;
-      this._customData = deepCopy(data.customData ?? FxEventInt.default.customData);
-   }
-
-   static create(): FxEventInt[];
-   static create(...data: Partial<IWrapFxEventIntAttribute<IFxEventInt>>[]): FxEventInt[];
-   static create(...data: Partial<IFxEventInt>[]): FxEventInt[];
-   static create(
-      ...data: (Partial<IFxEventInt> & Partial<IWrapFxEventIntAttribute<IFxEventInt>>)[]
-   ): FxEventInt[];
-   static create(
-      ...data: (Partial<IFxEventInt> & Partial<IWrapFxEventIntAttribute<IFxEventInt>>)[]
-   ): FxEventInt[] {
-      const result: FxEventInt[] = [];
-      data.forEach((obj) => result.push(new this(obj)));
+   static create(...data: Partial<IWrapFxEventIntAttribute<IFxEventInt>>[]): FxEventInt[] {
+      const result: FxEventInt[] = data.map((obj) => new this(obj));
       if (result.length) {
          return result;
       }
       return [new this()];
+   }
+
+   constructor(data: Partial<IWrapFxEventIntAttribute<IFxEventInt>> = {}) {
+      super();
+      this._time = data.time ?? FxEventInt.default.b;
+      this._previous = data.previous ?? FxEventInt.default.p;
+      this._value = data.value ?? FxEventInt.default.v;
+      this._customData = deepCopy(data.customData ?? FxEventInt.default.customData);
+   }
+
+   static fromJSON(data: Partial<IFxEventInt> = {}): FxEventInt {
+      const d = new this();
+      d._time = data.b ?? FxEventInt.default.b;
+      d._previous = data.p ?? FxEventInt.default.p;
+      d._value = data.v ?? FxEventInt.default.v;
+      d._customData = deepCopy(data.customData ?? FxEventInt.default.customData);
+      return d;
    }
 
    toJSON(): Required<IFxEventInt> {

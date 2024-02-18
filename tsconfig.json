@@ -1,22 +1,23 @@
 {
-    "compilerOptions": {
-        "target": "es6",
-        "module": "es6",
-        "lib": ["ESNext", "DOM"],
-        "moduleResolution": "node",
-        "strict": true,
-        "sourceMap": true,
-        "esModuleInterop": true,
-        "noEmit": true,
-        "noImplicitAny": true,
-        "noImplicitThis": true,
-        "noImplicitReturns": true,
-        "strictNullChecks": true,
-        "strictFunctionTypes": true,
-        "strictPropertyInitialization": true,
-        "useUnknownInCatchVariables": false,
-        "allowSyntheticDefaultImports": true
-    },
-    "include": ["./src"],
-    "exclude": ["node_modules"]
+   "compilerOptions": {
+      "target": "es6",
+      "module": "es6",
+      "lib": ["ESNext", "DOM"],
+      "moduleResolution": "node",
+      "strict": true,
+      "sourceMap": true,
+      "esModuleInterop": true,
+      "noEmit": true,
+      "noImplicitAny": true,
+      "noImplicitThis": true,
+      "noImplicitReturns": true,
+      "strictNullChecks": true,
+      "strictFunctionTypes": true,
+      "strictPropertyInitialization": true,
+      "useUnknownInCatchVariables": false,
+      "allowImportingTsExtensions": true,
+      "allowSyntheticDefaultImports": true
+   },
+   "include": ["./src"],
+   "exclude": ["node_modules"]
 }

@@ -27,6 +27,10 @@ import { IWrapObstacleAttribute } from '../../types/beatmap/wrapper/obstacle';
 import { IWrapRotationEventAttribute } from '../../types/beatmap/wrapper/rotationEvent';
 import { IWrapArcAttribute } from '../../types/beatmap/wrapper/arc';
 import { IWrapWaypointAttribute } from '../../types/beatmap/wrapper/waypoint';
+import { mod } from '../../utils/math';
+import { EventValueLaneRotation } from '../shared/constants';
+import { IWrapDifficultyAttribute } from '../../types/beatmap/wrapper/difficulty';
+import { DeepPartial } from '../../types/utils';
 
 function tag(name: string): string[] {
    return ['beatmap', 'v2', 'difficulty', name];
@@ -34,7 +38,18 @@ function tag(name: string): string[] {
 
 /** Difficulty beatmap v2 class object. */
 export class Difficulty extends WrapDifficulty<IDifficulty> {
-   version: `2.${0 | 2 | 4 | 5 | 6}.0`;
+   static default: Required<IDifficulty> = {
+      _version: '2.6.0',
+      _notes: [],
+      _sliders: [],
+      _obstacles: [],
+      _events: [],
+      _waypoints: [],
+      _specialEventsKeywordFilters: {},
+      _customData: {},
+   };
+
+   readonly version = '2.6.0';
    bpmEvents: never[] = [];
    rotationEvents: never[] = [];
    colorNotes: Note[];
@@ -50,33 +65,72 @@ export class Difficulty extends WrapDifficulty<IDifficulty> {
    lightTranslationEventBoxGroups: never[] = [];
    fxEventBoxGroups: never[] = [];
    eventTypesWithKeywords: SpecialEventsKeywordFilters;
-   fxEventsCollection!: never;
    useNormalEventsAsCompatibleEvents = true;
 
-   constructor(data: Partial<IDifficulty> = {}) {
-      super();
-
-      this.version = '2.6.0';
-      this.colorNotes = (data._notes ?? []).map((obj) => new Note(obj));
-      this.arcs = (data._sliders ?? []).map((obj) => new Arc(obj));
-      this.obstacles = (data._obstacles ?? []).map((obj) => new Obstacle(obj));
-      this.basicEvents = (data._events ?? []).map((obj) => new Event(obj));
-      this.waypoints = (data._waypoints ?? []).map((obj) => new Waypoint(obj));
-      this.eventTypesWithKeywords = new SpecialEventsKeywordFilters(
-         data._specialEventsKeywordFilters ?? {
-            _keywords: [],
-         },
-      );
-      this.customData = deepCopy(data._customData ?? {});
+   static create(data: DeepPartial<IWrapDifficultyAttribute<IDifficulty>> = {}): Difficulty {
+      return new this(data);
    }
 
-   static create(data: Partial<IDifficulty> = {}): Difficulty {
-      return new this(data);
+   constructor(data: DeepPartial<IWrapDifficultyAttribute<IDifficulty>> = {}) {
+      super();
+      this.filename = data.filename ?? this.filename;
+      if (data.colorNotes) {
+         this.colorNotes = data.colorNotes.map((obj) => new Note(obj));
+      } else {
+         this.colorNotes = Difficulty.default._notes.map((json) => Note.fromJSON(json));
+      }
+      if (data.arcs) this.arcs = data.arcs.map((obj) => new Arc(obj));
+      else {
+         this.arcs = Difficulty.default._sliders.map((json) => Arc.fromJSON(json));
+      }
+      if (data.obstacles) {
+         this.obstacles = data.obstacles.map((obj) => new Obstacle(obj));
+      } else {
+         this.obstacles = Difficulty.default._obstacles.map((json) => Obstacle.fromJSON(json));
+      }
+      if (data.basicEvents) {
+         this.basicEvents = data.basicEvents.map((obj) => new Event(obj));
+      } else {
+         this.basicEvents = Difficulty.default._events.map((json) => Event.fromJSON(json));
+      }
+      if (data.waypoints) {
+         this.waypoints = data.waypoints.map((obj) => new Waypoint(obj));
+      } else {
+         this.waypoints = Difficulty.default._waypoints.map((json) => Waypoint.fromJSON(json));
+      }
+      if (data.eventTypesWithKeywords) {
+         this.eventTypesWithKeywords = new SpecialEventsKeywordFilters(data.eventTypesWithKeywords);
+      } else {
+         this.eventTypesWithKeywords = SpecialEventsKeywordFilters.fromJSON(
+            Difficulty.default._specialEventsKeywordFilters,
+         );
+      }
+      this.customData = deepCopy(data.customData ?? Difficulty.default._customData ?? {});
+   }
+
+   static fromJSON(data: DeepPartial<IDifficulty> = {}): Difficulty {
+      const d = new this();
+      d.colorNotes = (data._notes ?? Difficulty.default._notes).map((json) => Note.fromJSON(json));
+      d.arcs = (data._sliders ?? Difficulty.default._sliders).map((json) => Arc.fromJSON(json));
+      d.obstacles = (data._obstacles ?? Difficulty.default._obstacles).map((json) =>
+         Obstacle.fromJSON(json),
+      );
+      d.basicEvents = (data._events ?? Difficulty.default._events).map((json) =>
+         Event.fromJSON(json),
+      );
+      d.waypoints = (data._waypoints ?? Difficulty.default._waypoints).map((json) =>
+         Waypoint.fromJSON(json),
+      );
+      d.eventTypesWithKeywords = SpecialEventsKeywordFilters.fromJSON(
+         data._specialEventsKeywordFilters ?? Difficulty.default._specialEventsKeywordFilters,
+      );
+      d.customData = deepCopy(data._customData ?? Difficulty.default._customData);
+      return d;
    }
 
    toJSON(): Required<IDifficulty> {
       return {
-         _version: '2.6.0',
+         _version: this.version,
          _notes: this.colorNotes.map((obj) => obj.toJSON()),
          _sliders: this.arcs.map((obj) => obj.toJSON()),
          _obstacles: this.obstacles.map((obj) => obj.toJSON()),
@@ -105,140 +159,111 @@ export class Difficulty extends WrapDifficulty<IDifficulty> {
       return this;
    }
 
-   addBpmEvents(...data: Partial<IWrapBPMEventAttribute>[]): void;
-   addBpmEvents(...data: Partial<IEventBPMChange>[]): void;
    addBpmEvents(
       ...data: (Partial<IEventBPMChange> & Partial<IWrapBPMEventAttribute<IEventBPMChange>>)[]
-   ): void;
-   addBpmEvents(
-      ...data: (Partial<IEventBPMChange> & Partial<IWrapBPMEventAttribute<IEventBPMChange>>)[]
-   ): void {
+   ): this {
       for (const obj of data) {
          this.basicEvents.push(new Event({ ...obj, type: 100, value: obj.bpm }));
       }
+      return this;
    }
 
-   addRotationEvents(...data: Partial<IWrapRotationEventAttribute>[]): void;
-   addRotationEvents(...data: Partial<IEventLaneRotation>[]): void;
-   addRotationEvents(
-      ...data: (Partial<IEventLaneRotation> &
-         Partial<IWrapRotationEventAttribute<IEventLaneRotation>>)[]
-   ): void;
-   addRotationEvents(
-      ...data: (Partial<IEventLaneRotation> &
-         Partial<IWrapRotationEventAttribute<IEventLaneRotation>>)[]
-   ): void {
+   addRotationEvents(...data: Partial<IWrapRotationEventAttribute<IEventLaneRotation>>[]): this {
       for (const obj of data) {
          this.basicEvents.push(
             new Event({
                ...obj,
-               type:
-                  typeof obj.executionTime === 'number'
-                     ? obj.executionTime === 0
-                        ? 14
-                        : 15
-                     : obj._type,
+               type: obj.executionTime === 0 ? 14 : 15,
+               value:
+                  EventValueLaneRotation[(obj.rotation || 0) % 360] ??
+                  mod(obj.rotation || 0, 360) + 1000,
             }),
          );
       }
       logger.tWarn(tag('addRotationEvents'), 'This may not work correctly');
+      return this;
    }
 
-   addColorNotes(...data: Partial<IWrapColorNoteAttribute<INote>>[]): void;
-   addColorNotes(...data: Partial<INote>[]): void;
-   addColorNotes(...data: (Partial<INote> & Partial<IWrapColorNoteAttribute<INote>>)[]): void;
-   addColorNotes(...data: (Partial<INote> & Partial<IWrapColorNoteAttribute<INote>>)[]): void {
+   addColorNotes(...data: Partial<IWrapColorNoteAttribute<INote>>[]): this {
       for (const obj of data) this.colorNotes.push(new Note(obj));
+      return this;
    }
 
-   addBombNotes(...data: Partial<IWrapBombNoteAttribute<INote>>[]): void;
-   addBombNotes(...data: Partial<INote>[]): void;
-   addBombNotes(...data: (Partial<INote> & Partial<IWrapBombNoteAttribute<INote>>)[]): void;
-   addBombNotes(...data: (Partial<INote> & Partial<IWrapBombNoteAttribute<INote>>)[]): void {
-      for (const obj of data) this.colorNotes.push(new Note({ ...obj, type: 3 }));
-   }
-
-   addObstacles(...data: Partial<IWrapObstacleAttribute<IObstacle>>[]): void;
-   addObstacles(...data: Partial<IObstacle>[]): void;
-   addObstacles(...data: (Partial<IObstacle> & Partial<IWrapObstacleAttribute<IObstacle>>)[]): void;
-   addObstacles(
-      ...data: (Partial<IObstacle> & Partial<IWrapObstacleAttribute<IObstacle>>)[]
-   ): void {
-      for (const obj of data) this.obstacles.push(new Obstacle(obj));
-   }
-
-   addArcs(...data: Partial<IWrapArcAttribute<IArc>>[]): void;
-   addArcs(...data: Partial<IArc>[]): void;
-   addArcs(...data: (Partial<IArc> & Partial<IWrapArcAttribute<IArc>>)[]): void;
-   addArcs(...data: (Partial<IArc> & Partial<IWrapArcAttribute<IArc>>)[]): void {
-      for (const obj of data) this.arcs.push(new Arc(obj));
-   }
-
-   addChains(..._: never[]): void {
-      logger.tWarn(tag('addChains'), 'Chain does not exist in beatmap V2');
-   }
-
-   addWaypoints(...data: Partial<IWrapWaypointAttribute<IWaypoint>>[]): void;
-   addWaypoints(...data: Partial<IWaypoint>[]): void;
-   addWaypoints(...data: (Partial<IWaypoint> & Partial<IWrapWaypointAttribute<IWaypoint>>)[]): void;
-   addWaypoints(
-      ...data: (Partial<IWaypoint> & Partial<IWrapWaypointAttribute<IWaypoint>>)[]
-   ): void {
-      for (const obj of data) this.waypoints.push(new Waypoint(obj));
-   }
-
-   addBasicEvents(...data: Partial<IWrapEventAttribute<IEvent>>[]): void;
-   addBasicEvents(...data: Partial<IEvent>[]): void;
-   addBasicEvents(...data: (Partial<IEvent> & Partial<IWrapEventAttribute<IEvent>>)[]): void;
-   addBasicEvents(...data: (Partial<IEvent> & Partial<IWrapEventAttribute<IEvent>>)[]): void {
-      for (const obj of data) this.basicEvents.push(new Event(obj));
-   }
-
-   addColorBoostEvents(...data: Partial<IWrapColorBoostEventAttribute<IEventBoost>>[]): void;
-   addColorBoostEvents(...data: Partial<IEventBoost>[]): void;
-   addColorBoostEvents(
-      ...data: (Partial<IEventBoost> & Partial<IWrapColorBoostEventAttribute<IEventBoost>>)[]
-   ): void;
-   addColorBoostEvents(
-      ...data: (Partial<IEventBoost> & Partial<IWrapColorBoostEventAttribute<IEventBoost>>)[]
-   ): void {
+   addBombNotes(...data: Partial<IWrapBombNoteAttribute<INote>>[]): this {
       for (const obj of data) {
-         this.basicEvents.push(new Event({ ...obj, value: obj.toggle ? 1 : obj._value }));
+         this.colorNotes.push(new Note({ ...obj, type: 3 }));
       }
+      return this;
    }
 
-   addLightColorEventBoxGroups(..._: never[]): void {
+   addObstacles(...data: Partial<IWrapObstacleAttribute<IObstacle>>[]): this {
+      for (const obj of data) this.obstacles.push(new Obstacle(obj));
+      return this;
+   }
+
+   addArcs(...data: Partial<IWrapArcAttribute<IArc>>[]): this {
+      for (const obj of data) this.arcs.push(new Arc(obj));
+      return this;
+   }
+
+   addChains(..._: never[]): this {
+      logger.tWarn(tag('addChains'), 'Chain does not exist in beatmap V2');
+      return this;
+   }
+
+   addWaypoints(...data: Partial<IWrapWaypointAttribute<IWaypoint>>[]): this {
+      for (const obj of data) this.waypoints.push(new Waypoint(obj));
+      return this;
+   }
+
+   addBasicEvents(...data: Partial<IWrapEventAttribute<IEvent>>[]): this {
+      for (const obj of data) this.basicEvents.push(new Event(obj));
+      return this;
+   }
+
+   addColorBoostEvents(...data: Partial<IWrapColorBoostEventAttribute<IEventBoost>>[]): this {
+      for (const obj of data) {
+         this.basicEvents.push(new Event({ ...obj, value: obj.toggle ? 1 : 0 }));
+      }
+      return this;
+   }
+
+   addLightColorEventBoxGroups(..._: never[]): this {
       logger.tWarn(
          tag('addLightColorEventBoxGroups'),
          'Light Color Event Box Group does not exist in beatmap V2',
       );
+      return this;
    }
 
-   addLightRotationEventBoxGroups(..._: never[]): void {
+   addLightRotationEventBoxGroups(..._: never[]): this {
       logger.tWarn(
          tag('addLightRotationEventBoxGroups'),
          'Light Rotation Event Box Group does not exist in beatmap V2',
       );
+      return this;
    }
 
-   addLightTranslationEventBoxGroups(..._: never[]): void {
+   addLightTranslationEventBoxGroups(..._: never[]): this {
       logger.tWarn(
          tag('addLightTranslationEventBoxGroups'),
          'Light Translation Event Box Group does not exist in beatmap V2',
       );
+      return this;
    }
 
-   addFxEventBoxGroups(..._: never[]): void {
+   addFxEventBoxGroups(..._: never[]): this {
       logger.tWarn(tag('addFxEventBoxGroups'), 'FX Event Box Group does not exist in beatmap V2');
+      return this;
    }
 
    isValid(): boolean {
       return (
-         this.colorNotes.every((obj) => this.checkClass(Note, obj)) ||
-         this.obstacles.every((obj) => this.checkClass(Obstacle, obj)) ||
-         this.basicEvents.every((obj) => this.checkClass(Event, obj)) ||
-         this.waypoints.every((obj) => this.checkClass(Waypoint, obj)) ||
-         this.arcs.every((obj) => this.checkClass(Arc, obj)) ||
+         this.colorNotes.every((obj) => this.checkClass(Note, obj)) &&
+         this.obstacles.every((obj) => this.checkClass(Obstacle, obj)) &&
+         this.basicEvents.every((obj) => this.checkClass(Event, obj)) &&
+         this.waypoints.every((obj) => this.checkClass(Waypoint, obj)) &&
+         this.arcs.every((obj) => this.checkClass(Arc, obj)) &&
          this.eventTypesWithKeywords instanceof SpecialEventsKeywordFilters
       );
    }

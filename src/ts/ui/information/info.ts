@@ -1,6 +1,10 @@
 import SavedData from '../../savedData';
 import { removeOptions } from '../../utils';
-import { EnvironmentName, EnvironmentV3Name } from '../../types/beatmap/shared/environment';
+import {
+   EnvironmentAllName,
+   EnvironmentName,
+   EnvironmentV3Name,
+} from '../../types/beatmap/shared/environment';
 import { IEditor, IEditorInfo } from '../../types/beatmap/v2/custom/editor';
 import { IContributorB64 } from '../../types/mapcheck';
 import { EnvironmentRename } from '../../beatmap/shared/environment';
@@ -20,21 +24,27 @@ const htmlInfoContributorsRole: HTMLElement = document.querySelector('.info__con
 
 htmlInfoContributorsSelect.addEventListener('change', contributorsSelectHandler);
 
-export function setLevelAuthor(str?: string): void {
-   if (!str) {
+export function setLevelAuthor(mappers?: string[], lighters?: string[]): void {
+   if (!mappers) {
       htmlInfoLevelAuthor.textContent = '';
       return;
    }
-   htmlInfoLevelAuthor.textContent = 'Mapped by ' + str;
+   if (!lighters?.length) {
+      htmlInfoLevelAuthor.textContent = 'Mapped by ' + mappers.join(', ');
+   } else {
+      htmlInfoLevelAuthor.textContent =
+         'Mapped by ' + mappers.join(', ') + ' and lit by ' + lighters.join(', ');
+   }
 }
 
-export function setEnvironment(str?: EnvironmentName | EnvironmentV3Name): void {
-   if (!str) {
+export function setEnvironment(envs?: EnvironmentAllName[]): void {
+   if (!envs) {
       htmlInfoEnvironment.textContent = '';
       return;
    }
-   htmlInfoEnvironment.textContent = (EnvironmentRename[str] || 'Unknown') + ' Environment';
-   if (!EnvironmentRename[str]) htmlInfoEnvironment.textContent += ` (${str})`;
+   htmlInfoEnvironment.textContent = envs
+      .map((v) => (EnvironmentRename[v] || `Unknown (${v})`) + ' Environment')
+      .join(', ');
 }
 
 export function setEditors(obj?: IEditor): void {
@@ -71,25 +81,23 @@ export function setContributors(obj: IContributorB64): void {
 }
 
 export function populateContributors(arr?: IContributorB64[]): void {
-   if (htmlInfoContributors && (!arr || !arr.length)) {
+   if (!arr || !arr.length) {
       htmlInfoContributors.classList.add('hidden');
       removeOptions(htmlInfoContributorsSelect);
       return;
    }
-   if (arr) {
-      htmlInfoContributors.classList.remove('hidden');
-      let first = true;
-      arr.forEach((el, index) => {
-         if (first) {
-            first = false;
-            setContributors(el);
-         }
-         const optCont = document.createElement('option');
-         optCont.value = index.toString();
-         optCont.text = el._name + ' -- ' + el._role;
-         htmlInfoContributorsSelect.add(optCont);
-      });
-   }
+   htmlInfoContributors.classList.remove('hidden');
+   let first = true;
+   arr.forEach((el, index) => {
+      if (first) {
+         first = false;
+         setContributors(el);
+      }
+      const optCont = document.createElement('option');
+      optCont.value = index.toString();
+      optCont.text = el._name + ' -- ' + el._role;
+      htmlInfoContributorsSelect.add(optCont);
+   });
 }
 
 function contributorsSelectHandler(ev: Event): void {

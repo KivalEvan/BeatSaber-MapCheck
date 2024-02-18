@@ -2,10 +2,10 @@ import { ICustomDataBase } from '../shared/custom/customData';
 
 export interface IFxEventInt {
    /** Relative beat time `<float>` to event box group. */
-   b: number;
+   b?: number;
    /** Use previous event value `<int>` in FX event. */
-   p: 0 | 1;
+   p?: 0 | 1;
    /** Value `<int>` of FX event. */
-   v: number;
+   v?: number;
    customData?: ICustomDataBase;
 }

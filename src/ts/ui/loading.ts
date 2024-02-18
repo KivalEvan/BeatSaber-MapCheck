@@ -5,17 +5,13 @@ const htmlLoadingBarError = 'loading__bar--error';
 const htmlLoadingBarDownload = 'loading__bar--download';
 const htmlLoadingText: HTMLElement = document.querySelector('.loading__text')!;
 
-function status(
-   statusType: UILoadingStatusType,
-   statusString: string,
-   percentage: number = 100,
-): void {
-   htmlLoadingText.textContent = statusString;
+function status(type: UILoadingStatusType, text: string, percentage: number = 100): void {
+   htmlLoadingText.textContent = text;
    htmlLoadingBar.style.width = `${percentage}%`;
-   statusType === 'error'
+   type === 'error'
       ? htmlLoadingBar.classList.add(htmlLoadingBarError)
       : htmlLoadingBar.classList.remove(htmlLoadingBarError);
-   statusType === 'download'
+   type === 'download'
       ? htmlLoadingBar.classList.add(htmlLoadingBarDownload)
       : htmlLoadingBar.classList.remove(htmlLoadingBarDownload);
 }

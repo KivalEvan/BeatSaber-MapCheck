@@ -1,7 +1,7 @@
 import { EventList } from '../../beatmap/shared/environment';
-import { BasicEvent } from '../../beatmap/v3/basicEvent';
-import { ColorBoostEvent } from '../../beatmap/v3/colorBoostEvent';
 import { EnvironmentAllName } from '../../types/beatmap/shared/environment';
+import { IWrapColorBoostEvent } from '../../types/beatmap/wrapper/colorBoostEvent';
+import { IWrapEvent } from '../../types/beatmap/wrapper/event';
 import { ICountEvent } from './types/stats';
 
 /**
@@ -12,8 +12,8 @@ import { ICountEvent } from './types/stats';
  * ```
  */
 export function countEvent(
-   events: BasicEvent[],
-   boost: ColorBoostEvent[],
+   events: IWrapEvent[],
+   boost: IWrapColorBoostEvent[],
    environment: EnvironmentAllName = 'DefaultEnvironment',
 ): ICountEvent {
    const commonEvent = EventList[environment]?.[0] ?? EventList['DefaultEnvironment'][0];

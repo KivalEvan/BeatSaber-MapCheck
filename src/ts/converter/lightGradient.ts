@@ -70,8 +70,8 @@ export function chromaLightGradientToVanillaGradient<T extends IWrapDifficulty>(
                            ev.value >= 1 && ev.value <= 4
                               ? 4
                               : ev.value >= 5 && ev.value <= 8
-                              ? 8
-                              : 12,
+                                ? 8
+                                : 12,
                         floatValue: 1,
                         customData: {
                            _color: ev.customData._lightGradient._endColor,
@@ -83,13 +83,13 @@ export function chromaLightGradientToVanillaGradient<T extends IWrapDifficulty>(
                      ? eig.value >= 1 && eig.value <= 4
                         ? 1
                         : eig.value >= 5 && eig.value <= 8
-                        ? 5
-                        : 9
+                          ? 5
+                          : 9
                      : eig.value >= 1 && eig.value <= 4
-                     ? 4
-                     : eig.value >= 5 && eig.value <= 8
-                     ? 8
-                     : 12;
+                       ? 4
+                       : eig.value >= 5 && eig.value <= 8
+                         ? 8
+                         : 12;
                   eig.customData!._color = lerpColor(
                      ev.customData._lightGradient._startColor,
                      ev.customData._lightGradient._endColor,
@@ -108,8 +108,8 @@ export function chromaLightGradientToVanillaGradient<T extends IWrapDifficulty>(
                                  previousEvent.value >= 1 && previousEvent.value <= 4
                                     ? 4
                                     : previousEvent.value >= 5 && previousEvent.value <= 8
-                                    ? 8
-                                    : 12,
+                                      ? 8
+                                      : 12,
                               floatValue: 1,
                               customData: {
                                  _color: lerpColor(

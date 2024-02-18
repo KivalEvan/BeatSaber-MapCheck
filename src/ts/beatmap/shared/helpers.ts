@@ -20,15 +20,15 @@ export function unityToGridUnit(value: number): number {
    return value / LANE_SIZE;
 }
 
-export function currentEnvironment(
-   info: IWrapInfo,
-   characteristic?: CharacteristicName,
-): EnvironmentAllName {
-   if (characteristic === '360Degree' || characteristic === '90Degree') {
-      return info.allDirectionsEnvironmentName;
-   }
-   return info.environmentName;
-}
+// export function currentEnvironment(
+//    info: IWrapInfo,
+//    characteristic?: CharacteristicName,
+// ): EnvironmentAllName {
+//    if (characteristic === '360Degree' || characteristic === '90Degree') {
+//       return info.allDirectionsEnvironmentName;
+//    }
+//    return info.environmentName;
+// }
 
 /**
  * Pass this to wrapper object array `sort` function as an argument.

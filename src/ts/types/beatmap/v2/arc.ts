@@ -1,3 +1,4 @@
+import { SliderMidAnchorMode } from '../shared/constants';
 import { ICustomDataBase } from '../shared/custom/customData';
 
 /** not a chain. */
@@ -9,12 +10,12 @@ export interface IArc {
     * 1 -> Blue
     * ```
     */
-   _colorType: 0 | 1;
-   _headTime: number;
-   _headLineIndex: number;
-   _headLineLayer: number;
+   _colorType?: 0 | 1;
+   _headTime?: number;
+   _headLineIndex?: number;
+   _headLineLayer?: number;
    /** Head control point length multiplier `<float>` of arc. */
-   _headControlPointLengthMultiplier: number;
+   _headControlPointLengthMultiplier?: number;
    /**
     * Head cut direction `<int>` of arc.
     * ```ts
@@ -25,12 +26,12 @@ export interface IArc {
     *
     * Grid represents cut direction from center.
     */
-   _headCutDirection: number;
-   _tailTime: number;
-   _tailLineIndex: number;
-   _tailLineLayer: number;
+   _headCutDirection?: number;
+   _tailTime?: number;
+   _tailLineIndex?: number;
+   _tailLineLayer?: number;
    /** Tail control point length multiplier `<float>` of arc. */
-   _tailControlPointLengthMultiplier: number;
+   _tailControlPointLengthMultiplier?: number;
    /**
     * Tail cut direction `<int>` of arc.
     * ```ts
@@ -41,7 +42,7 @@ export interface IArc {
     *
     * Grid represents cut direction from center.
     */
-   _tailCutDirection: number;
+   _tailCutDirection?: number;
    /**
     * Mid anchor mode `<int>` of arc.
     * ```ts
@@ -50,6 +51,6 @@ export interface IArc {
     * 2 -> Counter-Clockwise
     * ```
     */
-   _sliderMidAnchorMode: 0 | 1 | 2;
+   _sliderMidAnchorMode?: SliderMidAnchorMode;
    _customData?: ICustomDataBase;
 }

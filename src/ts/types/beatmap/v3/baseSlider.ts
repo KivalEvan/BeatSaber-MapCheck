@@ -1,3 +1,4 @@
+import { NoteColor } from '../shared/constants';
 import { IGridObject } from './gridObject';
 
 export interface IBaseSlider extends IGridObject {
@@ -8,7 +9,7 @@ export interface IBaseSlider extends IGridObject {
     * 1 -> Blue
     * ```
     */
-   c: 0 | 1;
+   c?: NoteColor;
    /**
     * Head cut direction `<int>` of base arc.
     * ```ts
@@ -21,9 +22,9 @@ export interface IBaseSlider extends IGridObject {
     *
     * **WARNING:** Dot-directional is not recommended, assumes down-directional.
     */
-   d: number;
+   d?: number;
    /** Tail beat time `<float>` of base arc. */
-   tb: number;
+   tb?: number;
    /**
     * Tail position x `<int>` of base arc.
     * ```ts
@@ -35,7 +36,7 @@ export interface IBaseSlider extends IGridObject {
     *
     * **RANGE:** `none`
     */
-   tx: number;
+   tx?: number;
    /**
     * Tail position y `<int>` of base arc.
     * ```ts
@@ -46,5 +47,5 @@ export interface IBaseSlider extends IGridObject {
     *
     * **RANGE:** `0-2`
     */
-   ty: number;
+   ty?: number;
 }

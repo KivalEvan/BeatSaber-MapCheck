@@ -15,10 +15,11 @@ export default {
    setWatermark: (str: string): void => {
       htmlWatermark.forEach((elem) => {
          elem.textContent = (isBirthday() ? 'Happy Birthday, ' : '') + str;
-         if (isBirthday())
+         if (isBirthday()) {
             elem.title = `Happy ${
                new Date().getFullYear() - new Date('1999-06-10').getFullYear()
             } Birthday, 10th June`;
+         }
       });
    },
    setVersion: (str: string): void => {

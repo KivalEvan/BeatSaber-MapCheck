@@ -13,6 +13,14 @@ export type DeepPartial<T> = {
    [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P];
 };
 
+export type DeepRequiredIgnore<T, Ignore extends string = ''> = {
+   [P in keyof T]-?: T[P] extends object
+      ? P extends Ignore
+         ? T[P]
+         : DeepRequiredIgnore<T[P], Ignore>
+      : T[P];
+};
+
 export type LooseAutocomplete<T extends string | number> = T extends string
    ? T | (string & {})
    : T | (number & {});
@@ -33,8 +41,8 @@ export type DeepOmit<T, K> = T extends Primitive
            ? TP extends Primitive
               ? TP // leave primitives and functions alone
               : TP extends any[]
-              ? DeepOmitArray<TP, K> // Array special handling
-              : DeepOmit<TP, K>
+                ? DeepOmitArray<TP, K> // Array special handling
+                : DeepOmit<TP, K>
            : never;
      }>;
 
@@ -51,8 +59,8 @@ export type PartialDeepOmit<T, K> = T extends Primitive
            ? TP extends Primitive
               ? TP // leave primitives and functions alone
               : TP extends any[]
-              ? PartialDeepOmitArray<TP, K> // Array special handling
-              : Partial<PartialDeepOmit<TP, K>>
+                ? PartialDeepOmitArray<TP, K> // Array special handling
+                : Partial<PartialDeepOmit<TP, K>>
            : never;
      }>;
 
@@ -72,10 +80,10 @@ export type DeepExcludeMethod<T> = T extends Primitive
            ? TP extends Exclude<Primitive, Function>
               ? TP // leave primitives
               : TP extends Function
-              ? never
-              : TP extends any[]
-              ? DeepExcludeMethodArray<TP> // Array special handling
-              : DeepExcludeMethod<TP>
+                ? never
+                : TP extends any[]
+                  ? DeepExcludeMethodArray<TP> // Array special handling
+                  : DeepExcludeMethod<TP>
            : never;
      };
 
@@ -90,11 +98,9 @@ export type Nullable<T> = T extends Primitive
      };
 
 /** INTERNAL USE ONLY */
-export type _ObtainCustomData<T extends Record<string, unknown>> = T['customData'] extends Record<
-   string,
-   unknown
->
-   ? T['customData']
-   : T['_customData'] extends Record<string, unknown>
-   ? T['_customData']
-   : Record<string, unknown>;
+export type _ObtainCustomData<T extends Record<string, unknown>> =
+   T['customData'] extends Record<string, unknown>
+      ? T['customData']
+      : T['_customData'] extends Record<string, unknown>
+        ? T['_customData']
+        : Record<string, unknown>;

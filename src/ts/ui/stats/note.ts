@@ -15,21 +15,7 @@ export function createNoteCountTable(mapInfo: IWrapInfo, mapData: IBeatmapItem):
       arcCount.red.total + arcCount.blue.total
    }</td><td class="${prefix}table-element">${
       chainCount.red.total + chainCount.blue.total
-   }</td><td class="${prefix}table-element">${
-      bombCount.total
-   }</td></tr><tr><th class="${prefix}table-header">Red</th><td class="${prefix}table-element">${
-      noteCount.red.total
-   }</td><td class="${prefix}table-element">${
-      arcCount.red.total
-   }</td><td class="${prefix}table-element">${
-      chainCount.red.total
-   }</td><td class="${prefix}table-element">0</td></tr><tr><th class="${prefix}table-header">Blue</th><td class="${prefix}table-element">${
-      noteCount.blue.total
-   }</td><td class="${prefix}table-element">${
-      arcCount.blue.total
-   }</td><td class="${prefix}table-element">${
-      chainCount.blue.total
-   }</td><td class="${prefix}table-element">0</td></tr>`;
+   }</td><td class="${prefix}table-element">${bombCount.total}</td></tr><tr><th class="${prefix}table-header">Red</th><td class="${prefix}table-element">${noteCount.red.total}</td><td class="${prefix}table-element">${arcCount.red.total}</td><td class="${prefix}table-element">${chainCount.red.total}</td><td class="${prefix}table-element">0</td></tr><tr><th class="${prefix}table-header">Blue</th><td class="${prefix}table-element">${noteCount.blue.total}</td><td class="${prefix}table-element">${arcCount.blue.total}</td><td class="${prefix}table-element">${chainCount.blue.total}</td><td class="${prefix}table-element">0</td></tr>`;
    if (
       noteCount.red.chroma ||
       noteCount.blue.chroma ||

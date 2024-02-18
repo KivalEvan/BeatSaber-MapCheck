@@ -1,5 +1,6 @@
+import { DistributionType } from '../shared/constants';
 import { IEventBox } from './eventBox';
-import { ILightColorBase } from './lightColorBase';
+import { ILightColorEvent } from './lightColorEvent';
 
 export interface ILightColorEventBox extends IEventBox {
    /**
@@ -7,7 +8,7 @@ export interface ILightColorEventBox extends IEventBox {
     *
     * Percentage value `0-1` (0% to 100%), can be more than 1.
     */
-   r: number;
+   r?: number;
    /**
     * Brightness distribution type `<int>` of light color event box.
     * ```ts
@@ -15,9 +16,9 @@ export interface ILightColorEventBox extends IEventBox {
     * 2 -> Step // adds to consequent ID.
     * ```
     */
-   t: 1 | 2;
+   t?: DistributionType;
    /** Brightness distribution should affect first event `<int>` of light color event box. */
-   b: 0 | 1;
+   b?: 0 | 1;
    /** Light color base data list. */
-   e: ILightColorBase[];
+   e?: ILightColorEvent[];
 }

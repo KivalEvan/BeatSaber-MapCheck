@@ -35,11 +35,7 @@ export function createSPSTable(mapInfo: IWrapInfo, mapData: IBeatmapItem): HTMLT
    )}</td><td class="${prefix}table-element">${round(
       swingInfo.blue.peak,
       2,
-   )}</td></tr><tr><th class="${prefix}table-header">Total</th><td class="${prefix}table-element">${
-      swingInfo.total.total
-   }</td><td class="${prefix}table-element">${
-      swingInfo.red.total
-   }</td><td class="${prefix}table-element">${swingInfo.blue.total}</td></tr>`;
+   )}</td></tr><tr><th class="${prefix}table-header">Total</th><td class="${prefix}table-element">${swingInfo.total.total}</td><td class="${prefix}table-element">${swingInfo.red.total}</td><td class="${prefix}table-element">${swingInfo.blue.total}</td></tr>`;
 
    return htmlTable;
 }

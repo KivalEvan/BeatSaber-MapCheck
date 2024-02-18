@@ -14,42 +14,33 @@ export class BasicEventTypesForKeywords extends WrapEventTypesForKeywords<IBasic
       e: [],
    };
 
-   constructor();
-   constructor(data: DeepPartial<IWrapEventTypesForKeywordsAttribute<IBasicEventTypesForKeywords>>);
-   constructor(
-      data: DeepPartial<IBasicEventTypesForKeywords> &
-         DeepPartial<IWrapEventTypesForKeywordsAttribute<IBasicEventTypesForKeywords>>,
-   );
-   constructor(
-      data: DeepPartial<IBasicEventTypesForKeywords> &
-         DeepPartial<IWrapEventTypesForKeywordsAttribute<IBasicEventTypesForKeywords>> = {},
-   ) {
-      super();
-
-      this._keyword = data.k ?? data.keyword ?? BasicEventTypesForKeywords.default.k;
-      this._events = (data.e ?? data.events ?? BasicEventTypesForKeywords.default.e).filter(
-         (n) => typeof n === 'number',
-      ) as number[];
-   }
-
-   static create(): BasicEventTypesForKeywords[];
    static create(
       ...data: Partial<IWrapEventTypesForKeywordsAttribute<IBasicEventTypesForKeywords>>[]
-   ): BasicEventTypesForKeywords[];
-   static create(
-      ...data: (Partial<IBasicEventTypesForKeywords> &
-         Partial<IWrapEventTypesForKeywordsAttribute<IBasicEventTypesForKeywords>>)[]
-   ): BasicEventTypesForKeywords[];
-   static create(
-      ...data: (Partial<IBasicEventTypesForKeywords> &
-         Partial<IWrapEventTypesForKeywordsAttribute<IBasicEventTypesForKeywords>>)[]
    ): BasicEventTypesForKeywords[] {
-      const result: BasicEventTypesForKeywords[] = [];
-      data.forEach((obj) => result.push(new this(obj)));
+      const result: BasicEventTypesForKeywords[] = data.map((obj) => new this(obj));
       if (result.length) {
          return result;
       }
       return [new this()];
+   }
+
+   constructor(
+      data: DeepPartial<IWrapEventTypesForKeywordsAttribute<IBasicEventTypesForKeywords>> = {},
+   ) {
+      super();
+      this._keyword = data.keyword ?? BasicEventTypesForKeywords.default.k;
+      this._events = (data.events ?? BasicEventTypesForKeywords.default.e).filter(
+         (n) => typeof n === 'number',
+      ) as number[];
+   }
+
+   static fromJSON(data: DeepPartial<IBasicEventTypesForKeywords>): BasicEventTypesForKeywords {
+      const d = new this();
+      d._keyword = data.k ?? BasicEventTypesForKeywords.default.k;
+      d._events = (data.e ?? BasicEventTypesForKeywords.default.e).filter(
+         (n) => typeof n === 'number',
+      ) as number[];
+      return d;
    }
 
    toJSON(): Required<IBasicEventTypesForKeywords> {

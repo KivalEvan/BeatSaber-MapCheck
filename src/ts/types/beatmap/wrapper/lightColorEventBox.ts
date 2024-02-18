@@ -1,6 +1,7 @@
 // deno-lint-ignore-file no-explicit-any
+import { DistributionType } from '../shared/constants';
 import { IWrapEventBox, IWrapEventBoxAttribute } from './eventBox';
-import { IWrapLightColorBase, IWrapLightColorBaseAttribute } from './lightColorBase';
+import { IWrapLightColorEvent, IWrapLightColorEventAttribute } from './lightColorEvent';
 
 export interface IWrapLightColorEventBoxAttribute<
    TBox extends { [P in keyof TBox]: TBox[P] } = Record<string, any>,
@@ -20,8 +21,8 @@ export interface IWrapLightColorEventBoxAttribute<
     * 2 -> Step // adds to consequent ID.
     * ```
     */
-   brightnessDistributionType: 1 | 2;
-   events: IWrapLightColorBaseAttribute<TBase>[];
+   brightnessDistributionType: DistributionType;
+   events: IWrapLightColorEventAttribute<TBase>[];
 }
 
 export interface IWrapLightColorEventBox<
@@ -30,12 +31,12 @@ export interface IWrapLightColorEventBox<
    TFilter extends { [P in keyof TFilter]: TFilter[P] } = Record<string, any>,
 > extends IWrapEventBox<TBox, TBase, TFilter>,
       IWrapLightColorEventBoxAttribute<TBox, TBase, TFilter> {
-   events: IWrapLightColorBase<TBase>[];
+   events: IWrapLightColorEvent<TBase>[];
 
    setBrightnessDistribution(value: IWrapLightColorEventBox['brightnessDistribution']): this;
    setBrightnessDistributionType(
       value: IWrapLightColorEventBox['brightnessDistributionType'],
    ): this;
    setAffectFirst(value: IWrapLightColorEventBox['affectFirst']): this;
-   setEvents(value: IWrapLightColorBase<TBase>[]): this;
+   setEvents(value: IWrapLightColorEvent<TBase>[]): this;
 }

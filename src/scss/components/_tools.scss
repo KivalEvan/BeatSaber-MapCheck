@@ -65,10 +65,11 @@
       display: none;
       box-sizing: border-box;
       margin: 0.25em;
-      max-height: 20em;
+      height: 20em;
       overflow: auto;
    }
    &__apply {
+      text-align: center;
       margin-top: auto;
    }
    &__select {

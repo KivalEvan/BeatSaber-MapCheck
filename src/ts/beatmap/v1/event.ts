@@ -15,29 +15,27 @@ export class Event extends WrapEvent<IEvent> {
       _value: 0,
    };
 
-   constructor();
-   constructor(data: Partial<IWrapEventAttribute<IEvent>>);
-   constructor(data: Partial<IEvent>);
-   constructor(data: Partial<IEvent> & Partial<IWrapEventAttribute<IEvent>>);
-   constructor(data: Partial<IEvent> & Partial<IWrapEventAttribute<IEvent>> = {}) {
-      super();
-
-      this._time = data._time ?? data.time ?? Event.default._time;
-      this._type = data._type ?? data.type ?? Event.default._type;
-      this._value = data._value ?? data.value ?? Event.default._value;
-   }
-
-   static create(): Event[];
-   static create(...data: Partial<IWrapEventAttribute<IEvent>>[]): Event[];
-   static create(...data: Partial<IEvent>[]): Event[];
-   static create(...data: (Partial<IEvent> & Partial<IWrapEventAttribute<IEvent>>)[]): Event[];
-   static create(...data: (Partial<IEvent> & Partial<IWrapEventAttribute<IEvent>>)[]): Event[] {
-      const result: Event[] = [];
-      data.forEach((obj) => result.push(new this(obj)));
+   static create(...data: Partial<IWrapEventAttribute<IEvent>>[]): Event[] {
+      const result: Event[] = data.map((obj) => new this(obj));
       if (result.length) {
          return result;
       }
       return [new this()];
+   }
+
+   constructor(data: Partial<IWrapEventAttribute<IEvent>> = {}) {
+      super();
+      this._time = data.time ?? Event.default._time;
+      this._type = data.type ?? Event.default._type;
+      this._value = data.value ?? Event.default._value;
+   }
+
+   static fromJSON(data: Partial<IEvent> = {}): Event {
+      const d = new this();
+      d._time = data._time ?? Event.default._time;
+      d._type = data._type ?? Event.default._type;
+      d._value = data._value ?? Event.default._value;
+      return d;
    }
 
    toJSON(): Required<IEvent> {

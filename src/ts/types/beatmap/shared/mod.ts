@@ -2,6 +2,7 @@ export * from './custom/mod';
 export * from './characteristic';
 export * from './clean';
 export * from './colorScheme';
+export * from './constants';
 export * from './dataCheck';
 export * from './difficulty';
 export * from './environment';

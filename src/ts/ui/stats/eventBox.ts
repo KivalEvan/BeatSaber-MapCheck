@@ -21,14 +21,14 @@ function allPopulate(...d: Record<string, any>[]) {
 }
 
 export function createEBGCountTable(mapInfo: IWrapInfo, mapData: IBeatmapItem): HTMLDivElement {
-   const environment =
-      mapData.characteristic === '360Degree' || mapData.characteristic === '90Degree'
-         ? mapInfo.allDirectionsEnvironmentName
-         : mapInfo.environmentName;
-   const ebgColorCount = countEbg(mapData.data.lightColorEventBoxGroups, environment);
-   const ebgRotationCount = countEbg(mapData.data.lightRotationEventBoxGroups, environment);
-   const ebgTranslationCount = countEbg(mapData.data.lightTranslationEventBoxGroups, environment);
-   const ebgFxCount = countEbg(mapData.data.fxEventBoxGroups, environment);
+   const environment = mapData.environment;
+   const ebgColorCount = countEbg(mapData.lightshow.lightColorEventBoxGroups, environment);
+   const ebgRotationCount = countEbg(mapData.lightshow.lightRotationEventBoxGroups, environment);
+   const ebgTranslationCount = countEbg(
+      mapData.lightshow.lightTranslationEventBoxGroups,
+      environment,
+   );
+   const ebgFxCount = countEbg(mapData.lightshow.fxEventBoxGroups, environment);
 
    allPopulate(ebgColorCount, ebgRotationCount, ebgTranslationCount, ebgFxCount);
 
@@ -107,9 +107,11 @@ export function createEBGCountTable(mapInfo: IWrapInfo, mapData: IBeatmapItem): 
          ebgRotationCount[key].groups
       }</td><td class="${prefix}table-element" title="${ebgTranslationCount[key].boxes} Box (${
          ebgTranslationCount[key].bases
-      } Base)">${ebgTranslationCount[key].groups}</td><td class="${prefix}table-element" title="${
-         ebgFxCount[key].groups
-      } Box (${ebgFxCount[key].bases} Base)">${ebgFxCount[key].groups}</td></tr>`;
+      } Base)">${
+         ebgTranslationCount[key].groups
+      }</td><td class="${prefix}table-element" title="${ebgFxCount[key].groups} Box (${
+         ebgFxCount[key].bases
+      } Base)">${ebgFxCount[key].groups}</td></tr>`;
    }
 
    const htmlTable = document.createElement('table');

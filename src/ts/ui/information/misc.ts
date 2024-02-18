@@ -1,13 +1,15 @@
 import { EnvironmentRename } from '../../beatmap/shared/environment';
 import { toHhmmss } from '../../utils';
 import {
-   htmlTableTimeSpend,
+   htmlTableMappers,
+   htmlTableLighters,
+   htmlTableEnvironmentId,
    htmlTableInformation,
    htmlTableRequirements,
    htmlTableSuggestions,
+   htmlTableTimeSpend,
    htmlTableVersion,
    htmlTableWarnings,
-   htmlTableEnvironmentId,
 } from './constants';
 import { displayTableRow, hideTableRow } from './helpers';
 
@@ -19,6 +21,24 @@ export function setVersion(ver?: string): void {
    displayTableRow(htmlTableVersion, ver);
 }
 
+export function setMappers(mappers?: string[]): void {
+   if (mappers == null || !mappers.length) {
+      hideTableRow(htmlTableMappers);
+      return;
+   }
+   let textContent = mappers.join(', ');
+   displayTableRow(htmlTableMappers, textContent);
+}
+
+export function setLighters(lighters?: string[]): void {
+   if (lighters == null || !lighters.length) {
+      hideTableRow(htmlTableLighters);
+      return;
+   }
+   let textContent = lighters.join(', ');
+   displayTableRow(htmlTableLighters, textContent);
+}
+
 export function setEnvironmentId(env?: string): void {
    if (env == null) {
       hideTableRow(htmlTableEnvironmentId);
@@ -26,7 +46,9 @@ export function setEnvironmentId(env?: string): void {
    }
    let textContent =
       (EnvironmentRename[env as keyof typeof EnvironmentRename] || 'Unknown') + ' Environment';
-   if (!EnvironmentRename[env as keyof typeof EnvironmentRename]) textContent += ` (${env})`;
+   if (!EnvironmentRename[env as keyof typeof EnvironmentRename]) {
+      textContent += ` (${env})`;
+   }
    displayTableRow(htmlTableEnvironmentId, textContent);
 }
 

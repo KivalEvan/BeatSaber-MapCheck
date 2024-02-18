@@ -3,7 +3,7 @@ import { round } from '../../utils';
 import { NoteContainer, NoteContainerNote } from '../../types/beatmap/wrapper/container';
 import swing from '../../analyzers/swing/swing';
 import { printResultTime } from '../helpers';
-import UICheckbox from '../../ui/helpers/checkbox';
+import UIInput from '../../ui/helpers/input';
 import { BeatPerMinute } from '../../beatmap/shared/bpm';
 import { NoteColor, NoteDirection, NoteDirectionFlip } from '../../beatmap/shared/constants';
 
@@ -14,53 +14,38 @@ const defaultMaxTime = 0.15;
 const defaultDistance = 1;
 let localBPM!: BeatPerMinute;
 
-const htmlContainer = document.createElement('div');
-const htmlInputDistance = document.createElement('input');
-const htmlLabelDistance = document.createElement('label');
-const htmlInputMaxTime = document.createElement('input');
-const htmlLabelMaxTime = document.createElement('label');
-const htmlInputMaxBeat = document.createElement('input');
-const htmlLabelMaxBeat = document.createElement('label');
-
-htmlLabelDistance.textContent = 'min distance: ';
-htmlLabelDistance.htmlFor = 'input__tools-shrado-angle-distance';
-htmlInputDistance.id = 'input__tools-shrado-angle-distance';
-htmlInputDistance.className = 'input-toggle input--small';
-htmlInputDistance.type = 'number';
-htmlInputDistance.min = '0';
-htmlInputDistance.value = defaultDistance.toString();
-htmlInputDistance.addEventListener('change', inputDistanceHandler);
-
-htmlLabelMaxTime.textContent = 'max time (ms): ';
-htmlLabelMaxTime.htmlFor = 'input__tools-shrado-angle-time';
-htmlInputMaxTime.id = 'input__tools-shrado-angle-time';
-htmlInputMaxTime.className = 'input-toggle input--small';
-htmlInputMaxTime.type = 'number';
-htmlInputMaxTime.min = '0';
-htmlInputMaxTime.value = round(defaultMaxTime * 1000, 1).toString();
-htmlInputMaxTime.addEventListener('change', inputTimeHandler);
-
-htmlLabelMaxBeat.textContent = ' (beat): ';
-htmlLabelMaxBeat.htmlFor = 'input__tools-shrado-angle-beat';
-htmlInputMaxBeat.id = 'input__tools-shrado-angle-beat';
-htmlInputMaxBeat.className = 'input-toggle input--small';
-htmlInputMaxBeat.type = 'number';
-htmlInputMaxBeat.min = '0';
-htmlInputMaxBeat.step = '0.1';
-htmlInputMaxBeat.addEventListener('change', inputBeatHandler);
-
-htmlContainer.appendChild(
-   UICheckbox.create(name, description, enabled, function (this: HTMLInputElement) {
-      tool.input.enabled = this.checked;
-   }),
+const [htmlLabelMaxTime, htmlInputMaxTime] = UIInput.createNumber(
+   function (this: HTMLInputElement) {
+      tool.input.params.maxTime = Math.abs(parseFloat(this.value)) / 1000;
+      this.value = round(tool.input.params.maxTime * 1000, 1).toString();
+      if (localBPM) {
+         htmlInputMaxBeat.value = round(
+            localBPM.toBeatTime(tool.input.params.maxTime),
+            2,
+         ).toString();
+      }
+   },
+   'max time (ms): ',
+   round(defaultMaxTime * 1000, 1),
+   0,
 );
-htmlContainer.appendChild(htmlLabelDistance);
-htmlContainer.appendChild(htmlInputDistance);
-htmlContainer.appendChild(document.createElement('br'));
-htmlContainer.appendChild(htmlLabelMaxTime);
-htmlContainer.appendChild(htmlInputMaxTime);
-htmlContainer.appendChild(htmlLabelMaxBeat);
-htmlContainer.appendChild(htmlInputMaxBeat);
+const [htmlLabelMaxBeat, htmlInputMaxBeat] = UIInput.createNumber(
+   function (this: HTMLInputElement) {
+      if (!localBPM) {
+         this.value = '0';
+         return;
+      }
+      let val = round(Math.abs(parseFloat(this.value)), 2) || 1;
+      tool.input.params.maxTime = localBPM.toRealTime(val);
+      htmlInputMaxTime.value = round(tool.input.params.maxTime * 1000, 1).toString();
+      this.value = val.toString();
+   },
+   ' (beat): ',
+   0,
+   0,
+   null,
+   0.1,
+);
 
 const tool: Tool<{ distance: number; maxTime: number }> = {
    name,
@@ -76,7 +61,31 @@ const tool: Tool<{ distance: number; maxTime: number }> = {
          distance: defaultDistance,
          maxTime: defaultMaxTime,
       },
-      html: htmlContainer,
+      html: UIInput.createBlock(
+         UIInput.createCheckbox(
+            function (this: HTMLInputElement) {
+               tool.input.enabled = this.checked;
+            },
+            name,
+            description,
+            enabled,
+         ),
+         document.createElement('br'),
+         UIInput.createNumber(
+            function (this: HTMLInputElement) {
+               tool.input.params.distance = Math.max(parseInt(this.value), 0);
+               this.value = tool.input.params.distance.toString();
+            },
+            'min distance: ',
+            0,
+            0,
+         ),
+         document.createElement('br'),
+         htmlLabelMaxTime,
+         htmlInputMaxTime,
+         htmlLabelMaxBeat,
+         htmlInputMaxBeat,
+      ),
       adjustTime: adjustTimeHandler,
    },
    output: {
@@ -88,30 +97,6 @@ const tool: Tool<{ distance: number; maxTime: number }> = {
 function adjustTimeHandler(bpm: BeatPerMinute) {
    localBPM = bpm;
    htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.maxTime), 2).toString();
-}
-
-function inputDistanceHandler(this: HTMLInputElement) {
-   tool.input.params.distance = Math.max(parseInt(this.value), 0);
-   this.value = tool.input.params.distance.toString();
-}
-
-function inputTimeHandler(this: HTMLInputElement) {
-   tool.input.params.maxTime = Math.abs(parseFloat(this.value)) / 1000;
-   this.value = round(tool.input.params.maxTime * 1000, 1).toString();
-   if (localBPM) {
-      htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.maxTime), 2).toString();
-   }
-}
-
-function inputBeatHandler(this: HTMLInputElement) {
-   if (!localBPM) {
-      this.value = '0';
-      return;
-   }
-   let val = round(Math.abs(parseFloat(this.value)), 2) || 1;
-   tool.input.params.maxTime = localBPM.toRealTime(val);
-   htmlInputMaxTime.value = round(tool.input.params.maxTime * 1000, 1).toString();
-   this.value = val.toString();
 }
 
 function check(map: ToolArgs) {

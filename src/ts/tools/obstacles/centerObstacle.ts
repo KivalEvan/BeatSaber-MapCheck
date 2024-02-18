@@ -1,10 +1,11 @@
 import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import { round } from '../../utils';
 import { printResultTime } from '../helpers';
-import UICheckbox from '../../ui/helpers/checkbox';
+import UIInput from '../../ui/helpers/input';
 import { BeatPerMinute } from '../../beatmap/shared/bpm';
 import { PosX, PosY } from '../../beatmap/shared/constants';
-import { Obstacle } from '../../beatmap/v3/obstacle';
+import { Obstacle } from '../../beatmap/v4/obstacle';
+import { IWrapObstacle } from '../../types/beatmap/wrapper/obstacle';
 
 const name = '2-wide Center Obstacle';
 const description =
@@ -13,39 +14,37 @@ const enabled = true;
 const defaultMaxTime = 0.25;
 let localBPM!: BeatPerMinute;
 
-const htmlContainer = document.createElement('div');
-const htmlInputMaxTime = document.createElement('input');
-const htmlLabelMaxTime = document.createElement('label');
-const htmlInputMaxBeat = document.createElement('input');
-const htmlLabelMaxBeat = document.createElement('label');
-
-htmlLabelMaxTime.textContent = 'recovery time (ms): ';
-htmlLabelMaxTime.htmlFor = 'input__tools-2wide-wall-time';
-htmlInputMaxTime.id = 'input__tools-2wide-wall-time';
-htmlInputMaxTime.className = 'input-toggle input--small';
-htmlInputMaxTime.type = 'number';
-htmlInputMaxTime.min = '0';
-htmlInputMaxTime.value = round(defaultMaxTime * 1000, 1).toString();
-htmlInputMaxTime.addEventListener('change', inputTimeHandler);
-
-htmlLabelMaxBeat.textContent = ' (beat): ';
-htmlLabelMaxBeat.htmlFor = 'input__tools-2wide-wall-beat';
-htmlInputMaxBeat.id = 'input__tools-2wide-wall-beat';
-htmlInputMaxBeat.className = 'input-toggle input--small';
-htmlInputMaxBeat.type = 'number';
-htmlInputMaxBeat.min = '0';
-htmlInputMaxBeat.step = '0.1';
-htmlInputMaxBeat.addEventListener('change', inputBeatHandler);
-
-htmlContainer.appendChild(
-   UICheckbox.create(name, description, enabled, function (this: HTMLInputElement) {
-      tool.input.enabled = this.checked;
-   }),
+const [htmlLabelMaxTime, htmlInputMaxTime] = UIInput.createNumber(
+   function (this: HTMLInputElement) {
+      tool.input.params.recovery = Math.abs(parseFloat(this.value)) / 1000;
+      this.value = round(tool.input.params.recovery * 1000, 1).toString();
+      if (localBPM) {
+         htmlInputMaxBeat.value = round(
+            localBPM.toBeatTime(tool.input.params.recovery),
+            2,
+         ).toString();
+      }
+   },
+   'recovery time (ms): ',
+   round(defaultMaxTime * 1000, 1),
+   0,
 );
-htmlContainer.appendChild(htmlLabelMaxTime);
-htmlContainer.appendChild(htmlInputMaxTime);
-htmlContainer.appendChild(htmlLabelMaxBeat);
-htmlContainer.appendChild(htmlInputMaxBeat);
+const [htmlLabelMaxBeat, htmlInputMaxBeat] = UIInput.createNumber(
+   function (this: HTMLInputElement) {
+      if (!localBPM) {
+         this.value = '0';
+         return;
+      }
+      let val = round(Math.abs(parseFloat(this.value)), 2) || 1;
+      tool.input.params.recovery = localBPM.toRealTime(val);
+      htmlInputMaxTime.value = round(tool.input.params.recovery * 1000, 1).toString();
+      this.value = val.toString();
+   },
+   ' (beat): ',
+   0,
+   0,
+   0.1,
+);
 
 const tool: Tool<{ recovery: number }> = {
    name,
@@ -60,7 +59,21 @@ const tool: Tool<{ recovery: number }> = {
       params: {
          recovery: defaultMaxTime,
       },
-      html: htmlContainer,
+      html: UIInput.createBlock(
+         UIInput.createCheckbox(
+            function (this: HTMLInputElement) {
+               tool.input.enabled = this.checked;
+            },
+            name,
+            description,
+            enabled,
+         ),
+         document.createElement('br'),
+         htmlLabelMaxTime,
+         htmlInputMaxTime,
+         htmlLabelMaxBeat,
+         htmlInputMaxBeat,
+      ),
       adjustTime: adjustTimeHandler,
    },
    output: {
@@ -74,32 +87,13 @@ function adjustTimeHandler(bpm: BeatPerMinute) {
    htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.recovery), 2).toString();
 }
 
-function inputTimeHandler(this: HTMLInputElement) {
-   tool.input.params.recovery = Math.abs(parseFloat(this.value)) / 1000;
-   this.value = round(tool.input.params.recovery * 1000, 1).toString();
-   if (localBPM) {
-      htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.recovery), 2).toString();
-   }
-}
-
-function inputBeatHandler(this: HTMLInputElement) {
-   if (!localBPM) {
-      this.value = '0';
-      return;
-   }
-   let val = round(Math.abs(parseFloat(this.value)), 2) || 1;
-   tool.input.params.recovery = localBPM.toRealTime(val);
-   htmlInputMaxTime.value = round(tool.input.params.recovery * 1000, 1).toString();
-   this.value = val.toString();
-}
-
 function check(map: ToolArgs) {
    const { obstacles } = map.difficulty!.data;
    const { bpm } = map.settings;
    const { recovery } = tool.input.params;
-   const arr: Obstacle[] = [];
-   let obstacleLeftFull: Obstacle = Obstacle.create()[0];
-   let obstacleRightFull: Obstacle = Obstacle.create()[0];
+   const arr: IWrapObstacle[] = [];
+   let obstacleLeftFull: IWrapObstacle = new Obstacle();
+   let obstacleRightFull: IWrapObstacle = new Obstacle();
    obstacles.forEach((o) => {
       if (o.posY < PosY.TOP && o.height > 1) {
          if (o.width > 2) {

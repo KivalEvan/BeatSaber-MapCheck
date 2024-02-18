@@ -41,15 +41,15 @@ export interface IEventBase extends IBaseObject {
     * 100 -> BPM Change
     * ```
     */
-   _type: number;
+   _type?: number;
    /** Value of event. */
-   _value: number;
-   _floatValue: number;
+   _value?: number;
+   _floatValue?: number;
    _customData?: ICustomDataBase;
 }
 
 export interface IEventLight extends IEventBase {
-   _type: 0 | 1 | 2 | 3 | 4 | 6 | 7 | 10 | 11;
+   _type?: 0 | 1 | 2 | 3 | 4 | 6 | 7 | 10 | 11;
    /**
     * State of light event. ( Blue | Red | White )
     * ```ts
@@ -60,46 +60,46 @@ export interface IEventLight extends IEventBase {
     * 4 | 8 | 12 -> Transition
     * ```
     */
-   _value: number;
+   _value?: number;
    /**
     * Controls the brightness of the light.
     * ```ts
     * **RANGE:** 0-1 // (0% to 100%), can be more than 1.
     * ```
     */
-   _floatValue: number;
+   _floatValue?: number;
    _customData?: IChromaEventLight;
 }
 
 export interface IEventGeneric extends IEventBase {
-   _type: number;
+   _type?: number;
 }
 
 export interface IEventBoost extends IEventBase {
-   _type: 5;
+   _type?: 5;
    /** Toggle between boost event. */
-   _value: 0 | 1;
+   _value?: 0 | 1;
 }
 
 export interface IEventRing extends IEventBase {
-   _type: 8;
+   _type?: 8;
    _customData?: IChromaEventRing;
 }
 
 export interface IEventZoom extends IEventBase {
-   _type: 9;
+   _type?: 9;
    _customData?: IChromaEventRing & IChromaEventZoom;
 }
 
 export interface IEventLaser extends IEventBase {
-   _type: 12 | 13;
+   _type?: 12 | 13;
    /** Laser rotation speed in degree per second multiplied by 20. */
-   _value: number;
+   _value?: number;
    _customData?: IChromaEventLaser;
 }
 
 export interface IEventLaneRotation extends IEventBase {
-   _type: 14 | 15;
+   _type?: 14 | 15;
    /**
     * Amount of angle changed clockwise.
     * ```ts
@@ -113,22 +113,22 @@ export interface IEventLaneRotation extends IEventBase {
     * 7 -> 60 Degree
     * ```
     */
-   _value: number;
+   _value?: number;
    _customData?: INEEvent;
 }
 
 export interface IEventExtra extends IEventBase {
-   _type: 16 | 17 | 18 | 19;
+   _type?: 16 | 17 | 18 | 19;
 }
 
 export interface IEventSpecial extends IEventBase {
-   _type: 40 | 41 | 42 | 43;
+   _type?: 40 | 41 | 42 | 43;
 }
 
 export interface IEventBPMChange extends IEventBase {
-   _type: 100;
+   _type?: 100;
    /** Changes the BPM to this value. */
-   _floatValue: number;
+   _floatValue?: number;
 }
 
 export type IEvent =

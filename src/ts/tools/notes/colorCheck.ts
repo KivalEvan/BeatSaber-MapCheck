@@ -1,7 +1,7 @@
 import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import { ColorArray } from '../../types/colors';
-import { deltaE00, colorFrom, round } from '../../utils';
-import UICheckbox from '../../ui/helpers/checkbox';
+import { colorFrom, deltaE00, round } from '../../utils';
+import UIInput from '../../ui/helpers/input';
 import { printResult } from '../helpers';
 import { ColorScheme, EnvironmentSchemeName } from '../../beatmap/shared/colorScheme';
 
@@ -38,13 +38,15 @@ const tool: Tool = {
    input: {
       enabled,
       params: {},
-      html: UICheckbox.create(
-         name + ' (EXPERIMENTAL)',
-         description,
-         enabled,
-         function (this: HTMLInputElement) {
-            tool.input.enabled = this.checked;
-         },
+      html: UIInput.createBlock(
+         UIInput.createCheckbox(
+            function (this: HTMLInputElement) {
+               tool.input.enabled = this.checked;
+            },
+            name + ' (EXPERIMENTAL)',
+            description,
+            enabled,
+         ),
       ),
    },
    output: {
@@ -56,10 +58,10 @@ const tool: Tool = {
 function customColorSimilarity(map: ToolArgs) {
    const checkColorLeft =
       map.difficulty?.info.customData?._colorLeft ??
-      ColorScheme[EnvironmentSchemeName[map.info.environmentName] ?? 'The First']._colorLeft;
+      ColorScheme[EnvironmentSchemeName[map.difficulty!.environment] ?? 'The First']._colorLeft;
    const checkColorRight =
       map.difficulty?.info.customData?._colorRight ??
-      ColorScheme[EnvironmentSchemeName[map.info.environmentName] ?? 'The First']._colorRight;
+      ColorScheme[EnvironmentSchemeName[map.difficulty!.environment] ?? 'The First']._colorRight;
    if (checkColorLeft && checkColorRight) {
       return deltaE00(colorFrom(checkColorLeft), colorFrom(checkColorRight));
    }
@@ -71,10 +73,10 @@ function customColorArrowSimilarity(map: ToolArgs) {
       deltaERight = 100;
    const checkColorLeft =
       map.difficulty?.info.customData?._colorLeft ??
-      ColorScheme[EnvironmentSchemeName[map.info.environmentName] ?? 'The First']._colorLeft;
+      ColorScheme[EnvironmentSchemeName[map.difficulty!.environment] ?? 'The First']._colorLeft;
    const checkColorRight =
       map.difficulty?.info.customData?._colorRight ??
-      ColorScheme[EnvironmentSchemeName[map.info.environmentName] ?? 'The First']._colorRight;
+      ColorScheme[EnvironmentSchemeName[map.difficulty!.environment] ?? 'The First']._colorRight;
    if (checkColorLeft) {
       deltaELeft = deltaE00(arrowColor, colorFrom(checkColorLeft));
    }

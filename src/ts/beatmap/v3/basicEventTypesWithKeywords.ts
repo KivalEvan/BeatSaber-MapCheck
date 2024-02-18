@@ -14,43 +14,33 @@ export class BasicEventTypesWithKeywords extends WrapEventTypesWithKeywords<
       d: [],
    };
 
-   constructor();
-   constructor(
-      data: DeepPartial<IWrapEventTypesWithKeywordsAttribute<IBasicEventTypesWithKeywords>>,
-   );
-   constructor(data: DeepPartial<IBasicEventTypesWithKeywords>);
-   constructor(
-      data: DeepPartial<IBasicEventTypesWithKeywords> &
-         DeepPartial<IWrapEventTypesWithKeywordsAttribute<IBasicEventTypesWithKeywords>>,
-   );
-   constructor(
-      data: DeepPartial<IBasicEventTypesWithKeywords> &
-         DeepPartial<IWrapEventTypesWithKeywordsAttribute<IBasicEventTypesWithKeywords>> = {},
-   ) {
-      super();
-
-      this._list = (data.d ?? data.list ?? BasicEventTypesWithKeywords.default.d)
-         .map((d) => {
-            if (d) return new BasicEventTypesForKeywords(d);
-            return;
-         })
-         .filter((d) => d) as BasicEventTypesForKeywords[];
-   }
-
-   static create(): BasicEventTypesWithKeywords;
    static create(
-      data: DeepPartial<IWrapEventTypesWithKeywordsAttribute<IBasicEventTypesWithKeywords>>,
-   ): BasicEventTypesWithKeywords;
-   static create(data: DeepPartial<IBasicEventTypesWithKeywords>): BasicEventTypesWithKeywords;
-   static create(
-      data: DeepPartial<IBasicEventTypesWithKeywords> &
-         DeepPartial<IWrapEventTypesWithKeywordsAttribute<IBasicEventTypesWithKeywords>>,
-   ): BasicEventTypesWithKeywords;
-   static create(
-      data: DeepPartial<IBasicEventTypesWithKeywords> &
-         DeepPartial<IWrapEventTypesWithKeywordsAttribute<IBasicEventTypesWithKeywords>> = {},
+      data: DeepPartial<IWrapEventTypesWithKeywordsAttribute<IBasicEventTypesWithKeywords>> = {},
    ): BasicEventTypesWithKeywords {
       return new this(data);
+   }
+
+   constructor(
+      data: DeepPartial<IWrapEventTypesWithKeywordsAttribute<IBasicEventTypesWithKeywords>> = {},
+   ) {
+      super();
+      if (data.list) {
+         this._list = data.list.map((d) => new BasicEventTypesForKeywords(d));
+      } else {
+         this.list = BasicEventTypesWithKeywords.default.d.map((d) =>
+            BasicEventTypesForKeywords.fromJSON(d),
+         );
+      }
+   }
+
+   static fromJSON(
+      data: DeepPartial<IBasicEventTypesWithKeywords> = {},
+   ): BasicEventTypesWithKeywords {
+      const d = new this();
+      d._list = (data.d ?? BasicEventTypesWithKeywords.default.d).map((d) =>
+         BasicEventTypesForKeywords.fromJSON(d),
+      );
+      return d;
    }
 
    toJSON(): Required<IBasicEventTypesWithKeywords> {
