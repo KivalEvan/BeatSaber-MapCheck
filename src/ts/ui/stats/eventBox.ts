@@ -22,10 +22,13 @@ function allPopulate(...d: Record<string, any>[]) {
 
 export function createEBGCountTable(mapInfo: IWrapInfo, mapData: IBeatmapItem): HTMLDivElement {
    const environment = mapData.environment;
-   const ebgColorCount = countEbg(mapData.data.lightColorEventBoxGroups, environment);
-   const ebgRotationCount = countEbg(mapData.data.lightRotationEventBoxGroups, environment);
-   const ebgTranslationCount = countEbg(mapData.data.lightTranslationEventBoxGroups, environment);
-   const ebgFxCount = countEbg(mapData.data.fxEventBoxGroups, environment);
+   const ebgColorCount = countEbg(mapData.lightshow.lightColorEventBoxGroups, environment);
+   const ebgRotationCount = countEbg(mapData.lightshow.lightRotationEventBoxGroups, environment);
+   const ebgTranslationCount = countEbg(
+      mapData.lightshow.lightTranslationEventBoxGroups,
+      environment,
+   );
+   const ebgFxCount = countEbg(mapData.lightshow.fxEventBoxGroups, environment);
 
    allPopulate(ebgColorCount, ebgRotationCount, ebgTranslationCount, ebgFxCount);
 

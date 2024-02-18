@@ -1,5 +1,5 @@
-import { BasicEvent } from '../../beatmap/v3/basicEvent';
 import { EnvironmentAllName } from '../../types/beatmap/shared/environment';
+import { IWrapEvent } from '../../types/beatmap/wrapper/event';
 import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import UIInput from '../../ui/helpers/input';
 import { printResult } from '../helpers';
@@ -36,7 +36,7 @@ const tool: Tool = {
    run,
 };
 
-function sufficientLight(events: BasicEvent[], environment: EnvironmentAllName): boolean {
+function sufficientLight(events: IWrapEvent[], environment: EnvironmentAllName): boolean {
    let count = 0;
    for (let i = events.length - 1; i >= 0; i--) {
       if (events[i].isLightEvent(environment) && !events[i].isOff()) {
@@ -55,7 +55,7 @@ function run(map: ToolArgs) {
       return;
    }
    const env = map.difficulty.environment;
-   const result = sufficientLight(map.difficulty.data.basicEvents, env);
+   const result = sufficientLight(map.difficulty.lightshow.basicEvents, env);
 
    if (!result) {
       switch (env) {

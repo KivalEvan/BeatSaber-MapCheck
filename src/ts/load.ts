@@ -12,6 +12,7 @@ import { Difficulty } from './beatmap/v4/difficulty';
 import { IWrapLightshow } from './types/beatmap/wrapper/lightshow';
 import { IBPMInfo } from './types/beatmap/external/bpmInfo';
 import { IAudio } from './types/beatmap/v4/audio';
+import { IBPMEvent } from './types/beatmap/v3/bpmEvent';
 
 function tag(name: string) {
    return ['load', name];
@@ -92,16 +93,11 @@ function _difficulty(json: Record<string, unknown>) {
       );
    }
 
-   return data instanceof Difficulty ? data : toV4Difficulty(data).sort();
+   return data;
 }
 
 function _lightshow(json: Record<string, unknown>) {
-   const jsonVerStr =
-      typeof json._version === 'string'
-         ? json._version.at(0)
-         : typeof json.version === 'string'
-           ? json.version.at(0)
-           : null;
+   const jsonVerStr = typeof json.version === 'string' ? json.version.at(0) : null;
    let jsonVer: number;
    if (jsonVerStr) {
       jsonVer = parseInt(jsonVerStr);
@@ -109,9 +105,9 @@ function _lightshow(json: Record<string, unknown>) {
       logger.tWarn(
          tag('_lightshow'),
          'Could not identify beatmap version from JSON, assume implicit version',
-         2,
+         3,
       );
-      jsonVer = 2;
+      jsonVer = 3;
    }
 
    let data: IWrapLightshow;
@@ -123,7 +119,7 @@ function _lightshow(json: Record<string, unknown>) {
       );
    }
 
-   return data instanceof Lightshow ? data : toV4Lightshow(data).sort();
+   return data;
 }
 
 export async function extractBPMInfo(info: IWrapInfo, zip: JSZip): Promise<IBeatmapAudio | null> {
@@ -174,8 +170,8 @@ export async function extractInfo(zip: JSZip) {
 export function extractBeatmaps(info: IWrapInfo, zip: JSZip): Promise<IBeatmapItem | null>[] {
    return info.difficulties.map(async (d, i) => {
       const diffInfo = d;
-      const diffFile = zip.file(diffInfo.filename);
-      if (!diffFile) {
+      const difficultyFile = zip.file(diffInfo.filename);
+      if (!difficultyFile) {
          logger.tError(
             tag('extractBeatmaps'),
             `Missing ${diffInfo.filename} file for ${diffInfo.characteristic} ${diffInfo.difficulty}, ignoring.`,
@@ -186,62 +182,91 @@ export function extractBeatmaps(info: IWrapInfo, zip: JSZip): Promise<IBeatmapIt
          tag('extractBeatmaps'),
          `Loading ${diffInfo.characteristic} ${diffInfo.difficulty}`,
       );
-      let json;
+      let jsonDifficulty;
       try {
-         json = await diffFile!.async('string').then(JSON.parse);
+         jsonDifficulty = await difficultyFile!.async('string').then(JSON.parse);
       } catch (err) {
          throw new Error(`${diffInfo.characteristic} ${diffInfo.difficulty} ${err}`);
       }
       let jsonVerStr =
-         typeof json._version === 'string'
-            ? json._version.at(0)
-            : typeof json.version === 'string'
-              ? json.version.at(0)
+         typeof jsonDifficulty._version === 'string'
+            ? jsonDifficulty._version.at(0)
+            : typeof jsonDifficulty.version === 'string'
+              ? jsonDifficulty.version.at(0)
               : null;
-      let jsonVer: number;
+      let jsonDifficultyVer: number;
       if (jsonVerStr) {
-         jsonVer = parseInt(jsonVerStr);
+         jsonDifficultyVer = parseInt(jsonVerStr);
       } else {
          logger.tWarn(
             tag('extractBeatmaps'),
             'Could not identify beatmap version from JSON, assume implicit version',
             2,
          );
-         jsonVer = 2;
+         jsonDifficultyVer = 2;
       }
 
-      if (json._notes && json.version) {
+      if (jsonDifficulty._notes && jsonDifficulty.version) {
          logger.tError(
             tag('extractBeatmaps'),
             `${diffInfo.characteristic} ${diffInfo.difficulty} contains 2 version of the map in the same file, attempting to load v3 instead`,
          );
       }
       try {
-         const data = _difficulty(json);
+         let data = _difficulty(jsonDifficulty);
+         let lightshow = jsonDifficultyVer === 4 ? new Lightshow() : toV4Lightshow(data);
+         if (jsonDifficultyVer === 4) {
+            const lightshowFile = zip.file(diffInfo.lightshowFilename);
+            if (!lightshowFile) {
+               logger.tError(
+                  tag('extractBeatmaps'),
+                  `Missing ${diffInfo.lightshowFilename} lightshow file for ${diffInfo.characteristic} ${diffInfo.difficulty}, ignoring.`,
+               );
+            }
+            logger.tInfo(
+               tag('extractBeatmaps'),
+               `Loading ${diffInfo.characteristic} ${diffInfo.difficulty} lightshow`,
+            );
+            let jsonLightshow;
+            try {
+               jsonLightshow = await lightshowFile!.async('string').then(JSON.parse);
+               lightshow = toV4Lightshow(_lightshow(jsonLightshow));
+            } catch (err) {
+               logger.tError(
+                  tag('extractBeatmaps'),
+                  `Could not load ${diffInfo.lightshowFilename} lightshow file; ${err}`,
+               );
+            }
+         }
          const bpm = BeatPerMinute.create(
             info.audio.bpm,
-            jsonVer === 3
-               ? [...(data.customData.BPMChanges ?? []), ...(json.bpmEvents ?? []).map((be) => be)]
-               : jsonVer === 2
+            jsonDifficultyVer === 3
+               ? [
+                    ...(data.customData.BPMChanges ?? []),
+                    ...(jsonDifficulty.bpmEvents ?? []).map((be: IBPMEvent) => be),
+                 ]
+               : jsonDifficultyVer === 2
                  ? data.customData._BPMChanges ?? data.customData._bpmChanges
-                 : jsonVer === 1
-                   ? json._BPMChanges
+                 : jsonDifficultyVer === 1
+                   ? jsonDifficulty._BPMChanges
                    : [],
             diffInfo.customData?._editorOffset,
          );
+         data = toV4Difficulty(data).sort();
+         lightshow = lightshow.sort();
          return {
             info: diffInfo,
             characteristic: diffInfo.characteristic,
             difficulty: diffInfo.difficulty,
             environment: info.environmentNames.at(diffInfo.environmentId)!,
             bpm,
-            data,
-            lightshow: new Lightshow(),
+            data: data as Difficulty,
+            lightshow,
             noteContainer: data.getNoteContainer(),
             eventContainer: data.getEventContainer(),
             swingAnalysis: swing.info(data, bpm, diffInfo.characteristic, diffInfo.difficulty),
-            rawVersion: jsonVer as 3,
-            rawData: json,
+            rawVersion: jsonDifficultyVer as 4,
+            rawData: jsonDifficulty,
          };
       } catch (err) {
          throw err;
