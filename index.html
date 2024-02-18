@@ -186,7 +186,7 @@
         <span>Tools</span>
       </label>
       <div class="accordion__collapsible-flex">
-        <div class="panel panel--medium panel--flex-column panel--offset-half">
+        <div class="panel panel--medium panel--offset-half">
           <input type="radio" class="tools__radio tools__note" id="tools__note" name="tools__radio" value="note"
             checked>
           <input type="radio" class="tools__radio tools__obstacle" id="tools__obstacle" name="tools__radio"
@@ -195,6 +195,12 @@
           <input type="radio" class="tools__radio tools__other" id="tools__other" name="tools__radio" value="other">
           <input type="radio" class="tools__radio tools__general" id="tools__general" name="tools__radio"
             value="general">
+          <div class="tools__apply">
+            <span>Apply changes to:</span>
+            <input type="button" class="tools__apply-this input-toggle" value="Selected">
+            <input type="button" class="tools__apply-all input-toggle" value="All">
+            <input type="button" class="tools__apply-general input-toggle" value="General">
+          </div>
           <div class="tools__nav">
             <label class="tools__label tools__label-tab tools__label-note unselectable" for="tools__note">Note</label>
             <label class="tools__label tools__label-tab tools__label-obstacle unselectable"
@@ -211,13 +217,6 @@
           <div class="tools__tab tools__event-content"></div>
           <div class="tools__tab tools__other-content"></div>
           <div class="tools__tab tools__general-content"></div>
-          <div class="tools__apply">
-            <hr>
-            <span>Apply changes to:</span>
-            <input type="button" class="tools__apply-this input-toggle" value="This difficulty">
-            <input type="button" class="tools__apply-all input-toggle" value="All difficulties">
-            <input type="button" class="tools__apply-general input-toggle" value="General">
-          </div>
         </div>
         <div class="panel panel--medium panel--offset-half">
           <div class="panel panel--max panel--flex">
@@ -225,7 +224,8 @@
               <label class="tools__label tools__label-select" for="tools__select-characteristic-2">
                 <span>Characteristic:</span>
               </label>
-              <select class="tools__select tools__select-characteristic input-toggle" id="tools__select-characteristic-2">
+              <select class="tools__select tools__select-characteristic input-toggle"
+                id="tools__select-characteristic-2">
               </select>
             </div>
             <div class="panel panel--medium panel--flex">
