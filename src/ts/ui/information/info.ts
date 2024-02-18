@@ -37,13 +37,14 @@ export function setLevelAuthor(mappers?: string[], lighters?: string[]): void {
    }
 }
 
-export function setEnvironment(str?: EnvironmentAllName): void {
-   if (!str) {
+export function setEnvironment(envs?: EnvironmentAllName[]): void {
+   if (!envs) {
       htmlInfoEnvironment.textContent = '';
       return;
    }
-   htmlInfoEnvironment.textContent = (EnvironmentRename[str] || 'Unknown') + ' Environment';
-   if (!EnvironmentRename[str]) htmlInfoEnvironment.textContent += ` (${str})`;
+   htmlInfoEnvironment.textContent = envs
+      .map((v) => (EnvironmentRename[v] || `Unknown (${v})`) + ' Environment')
+      .join(', ');
 }
 
 export function setEditors(obj?: IEditor): void {

@@ -67,6 +67,13 @@ export default async (type: LoadType) => {
          'audio',
          'audio/BPM data',
       ]);
+      function updateStatus() {
+         UILoading.status(
+            'info',
+            `Loading ${[...itemSet].join(', ')}... [${itemDone}/${maxItem - 2}]`,
+            lerp(itemDone / maxItem, 15, 80),
+         );
+      }
       const toPromise = [
          new Promise(async (resolve) => {
             logger.tInfo(tag(), 'Loading cover image');
@@ -80,11 +87,7 @@ export default async (type: LoadType) => {
             }
             itemDone++;
             itemSet.delete('cover image');
-            UILoading.status(
-               'info',
-               `Loading ${[...itemSet].join(', ')}... [${itemDone}/${maxItem - 2}]`,
-               lerp(itemDone / maxItem, 15, 80),
-            );
+            updateStatus();
             resolve(null);
          }),
          new Promise(async (resolve) => {
@@ -105,11 +108,7 @@ export default async (type: LoadType) => {
             UIInfo.populateContributors(SavedData.contributors);
             itemDone++;
             itemSet.delete('contributors image');
-            UILoading.status(
-               'info',
-               `Loading ${[...itemSet].join(', ')}... [${itemDone}/${maxItem - 2}]`,
-               lerp(itemDone / maxItem, 15, 80),
-            );
+            updateStatus();
             resolve(null);
          }),
          new Promise(async (resolve) => {
@@ -148,11 +147,7 @@ export default async (type: LoadType) => {
             }
             itemDone += 3;
             itemSet.delete('Audio');
-            UILoading.status(
-               'info',
-               `Loading ${[...itemSet].join(', ')}... [${itemDone}/${maxItem - 2}]`,
-               lerp(itemDone / maxItem, 15, 80),
-            );
+            updateStatus();
             resolve(null);
          }),
          new Promise<IBeatmapAudio | null>(async (resolve) => {
@@ -162,11 +157,7 @@ export default async (type: LoadType) => {
             if (audioInfo) {
                if (!flag.loading.audio) SavedData.duration = audioInfo.duration;
                UIHeader.setSongDuration(audioInfo.duration);
-               UILoading.status(
-                  'info',
-                  `Loading ${[...itemSet].join(', ')}... [${itemDone}/${maxItem - 2}]`,
-                  lerp(itemDone / maxItem, 15, 80),
-               );
+               updateStatus();
             }
             resolve(audioInfo);
          }),
@@ -178,20 +169,12 @@ export default async (type: LoadType) => {
                return null;
             }
             if (ary.length === diffCount) itemSet.delete('map');
-            UILoading.status(
-               'info',
-               `Loading ${[...itemSet].join(', ')}... [${itemDone}/${maxItem - 2}]`,
-               lerp(itemDone / maxItem, 15, 80),
-            );
+            updateStatus();
             return res;
          }),
       ] as const;
       maxItem = toPromise.length + 2;
-      UILoading.status(
-         'info',
-         `Loading ${[...itemSet].join(', ')}... [${itemDone}/${maxItem - 2}]`,
-         lerp(itemDone / maxItem, 15, 80),
-      );
+      updateStatus();
       const promises = await Promise.allSettled(toPromise);
       SavedData.beatmapDifficulty = promises
          .slice(4)

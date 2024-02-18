@@ -1,6 +1,8 @@
 import { EnvironmentRename } from '../../beatmap/shared/environment';
 import { toHhmmss } from '../../utils';
 import {
+   htmlTableMappers,
+   htmlTableLighters,
    htmlTableEnvironmentId,
    htmlTableInformation,
    htmlTableRequirements,
@@ -17,6 +19,24 @@ export function setVersion(ver?: string): void {
       return;
    }
    displayTableRow(htmlTableVersion, ver);
+}
+
+export function setMappers(mappers?: string[]): void {
+   if (mappers == null || !mappers.length) {
+      hideTableRow(htmlTableMappers);
+      return;
+   }
+   let textContent = mappers.join(', ');
+   displayTableRow(htmlTableMappers, textContent);
+}
+
+export function setLighters(lighters?: string[]): void {
+   if (lighters == null || !lighters.length) {
+      hideTableRow(htmlTableLighters);
+      return;
+   }
+   let textContent = lighters.join(', ');
+   displayTableRow(htmlTableLighters, textContent);
 }
 
 export function setEnvironmentId(env?: string): void {

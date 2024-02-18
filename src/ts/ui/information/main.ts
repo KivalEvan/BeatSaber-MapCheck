@@ -18,6 +18,8 @@ import { setEnvironmentEnhancement } from './environment';
 import {
    setEnvironmentId,
    setInformation,
+   setLighters,
+   setMappers,
    setRequirements,
    setSuggestions,
    setTimeSpend,
@@ -28,19 +30,30 @@ import { setPointDefinitions } from './pointDefinition';
 import { setTableHeight } from './helpers';
 import { setPlayTime } from './playTime';
 import { setColorScheme } from './colorScheme';
+import { EnvironmentAllName } from '../../types/beatmap/shared/environment';
 
 function setInfo(info: IWrapInfo): void {
    UIHeader.setSongName(info.song.title);
    UIHeader.setSongSubname(info.song.subTitle);
    UIHeader.setSongAuthor(info.song.author);
    UIHeader.setSongBPM(info.audio.bpm);
+   const mapperSet = new Set<string>();
+   const lighterSet = new Set<string>();
+   const envSet = new Set<EnvironmentAllName>();
+   info.difficulties.forEach((d) => {
+      d.authors.mappers.forEach((m) => mapperSet.add(m));
+      d.authors.lighters.forEach((l) => lighterSet.add(l));
+      envSet.add(info.environmentNames.at(d.environmentId)!);
+   });
+   setLevelAuthor([...mapperSet], [...lighterSet]);
+   setEnvironment([...envSet].filter((e) => e) as EnvironmentAllName[]);
    setEditors(info.customData._editors);
 }
 
 function setDiffInfoTable(info: IWrapInfo, mapData: IBeatmapItem): void {
    setVersion((mapData.rawData as any)._version || (mapData.rawData as any).version || 'Unknown');
-   setLevelAuthor(mapData.info.authors.mappers, mapData.info.authors.lighters);
-   setEnvironment(info.environmentNames.at(mapData.info.environmentId));
+   setMappers(mapData.info.authors.mappers);
+   setLighters(mapData.info.authors.lighters);
    setEnvironmentId(info.environmentNames.at(mapData.info.environmentId));
    setColorScheme(info.colorSchemes.at(mapData.info.colorSchemeId));
    if (mapData.info.customData) {
