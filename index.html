@@ -8,8 +8,8 @@
   <meta name="theme-color" content="#dd0000">
   <link rel="shortcut icon" type="image/png" href="/BeatSaber-MapCheck/img/favicon.png">
   <title>BS Map Check</title>
-  <script type="module" crossorigin src="/BeatSaber-MapCheck/assets/index-22350aee.js"></script>
-  <link rel="stylesheet" href="/BeatSaber-MapCheck/assets/index-6e2b6ab9.css">
+  <script type="module" crossorigin src="/BeatSaber-MapCheck/assets/index-ByZpPB1k.js"></script>
+  <link rel="stylesheet" crossorigin href="/BeatSaber-MapCheck/assets/index-lq8fYQ7F.css">
 </head>
 
 <body>
@@ -95,10 +95,10 @@
         <div class="panel panel--large panel--offset-half">
           <div class="panel panel--max panel--flex">
             <div class="panel panel--medium panel--flex">
-              <label class="tools__label tools__label-select input-toggle" for="tools__select-mode-1">
+              <label class="tools__label tools__label-select input-toggle" for="tools__select-characteristic-1">
                 <span>Characteristic:</span>
               </label>
-              <select class="tools__select tools__select-mode" id="tools__select-mode-1">
+              <select class="tools__select tools__select-characteristic" id="tools__select-characteristic-1">
               </select>
             </div>
             <div class="panel panel--medium panel--flex">
@@ -117,6 +117,14 @@
               <tbody>
                 <tr class="info__table-row info__version hidden">
                   <th class="info__table-header">Version</th>
+                  <td class="info__table-element"></td>
+                </tr>
+                <tr class="info__table-row info__mappers hidden">
+                  <th class="info__table-header">Mappers</th>
+                  <td class="info__table-element"></td>
+                </tr>
+                <tr class="info__table-row info__lighters hidden">
+                  <th class="info__table-header">Lighters</th>
                   <td class="info__table-element"></td>
                 </tr>
                 <tr class="info__table-row info__environmentId hidden">
@@ -188,7 +196,7 @@
         <span>Tools</span>
       </label>
       <div class="accordion__collapsible-flex">
-        <div class="panel panel--medium panel--flex-column panel--offset-half">
+        <div class="panel panel--medium panel--offset-half">
           <input type="radio" class="tools__radio tools__note" id="tools__note" name="tools__radio" value="note"
             checked>
           <input type="radio" class="tools__radio tools__obstacle" id="tools__obstacle" name="tools__radio"
@@ -213,21 +221,22 @@
           <div class="tools__tab tools__event-content"></div>
           <div class="tools__tab tools__other-content"></div>
           <div class="tools__tab tools__general-content"></div>
-          <div class="tools__apply">
-            <hr>
+          <hr>
+          <div class="tools__apply panel">
             <span>Apply changes to:</span>
-            <input type="button" class="tools__apply-this input-toggle" value="This difficulty">
-            <input type="button" class="tools__apply-all input-toggle" value="All difficulties">
+            <input type="button" class="tools__apply-this input-toggle" value="Selected">
+            <input type="button" class="tools__apply-all input-toggle" value="All">
             <input type="button" class="tools__apply-general input-toggle" value="General">
           </div>
         </div>
         <div class="panel panel--medium panel--offset-half">
           <div class="panel panel--max panel--flex">
             <div class="panel panel--medium panel--flex">
-              <label class="tools__label tools__label-select" for="tools__select-mode-2">
+              <label class="tools__label tools__label-select" for="tools__select-characteristic-2">
                 <span>Characteristic:</span>
               </label>
-              <select class="tools__select tools__select-mode input-toggle" id="tools__select-mode-2">
+              <select class="tools__select tools__select-characteristic input-toggle"
+                id="tools__select-characteristic-2">
               </select>
             </div>
             <div class="panel panel--medium panel--flex">
@@ -372,7 +381,6 @@
       </div>
     </footer>
   </div>
-  
 </body>
 
 </html>
