@@ -59,6 +59,14 @@ export default async (type: LoadType) => {
       // load audio, image, etc
       let itemDone = 0;
       let maxItem = 0;
+      let diffCount = 0;
+      const itemSet = new Set([
+         'map',
+         'cover image',
+         'contributors image',
+         'audio',
+         'audio/BPM data',
+      ]);
       const toPromise = [
          new Promise(async (resolve) => {
             logger.tInfo(tag(), 'Loading cover image');
@@ -71,7 +79,12 @@ export default async (type: LoadType) => {
                logger.tError(tag(), `${info.coverImageFilename} does not exists.`);
             }
             itemDone++;
-            UILoading.status('info', 'Loaded cover image', lerp(itemDone / maxItem, 15, 80));
+            itemSet.delete('cover image');
+            UILoading.status(
+               'info',
+               `Loading ${[...itemSet].join(', ')}... [${itemDone}/${maxItem - 2}]`,
+               lerp(itemDone / maxItem, 15, 80),
+            );
             resolve(null);
          }),
          new Promise(async (resolve) => {
@@ -91,7 +104,12 @@ export default async (type: LoadType) => {
             }
             UIInfo.populateContributors(SavedData.contributors);
             itemDone++;
-            UILoading.status('info', 'Loaded contributor image', lerp(itemDone / maxItem, 15, 80));
+            itemSet.delete('contributors image');
+            UILoading.status(
+               'info',
+               `Loading ${[...itemSet].join(', ')}... [${itemDone}/${maxItem - 2}]`,
+               lerp(itemDone / maxItem, 15, 80),
+            );
             resolve(null);
          }),
          new Promise(async (resolve) => {
@@ -129,35 +147,51 @@ export default async (type: LoadType) => {
                logger.tError(tag(), `${info.audio.filename} does not exist.`);
             }
             itemDone += 3;
-            UILoading.status('info', 'Loaded audio', lerp(itemDone / maxItem, 15, 80));
+            itemSet.delete('Audio');
+            UILoading.status(
+               'info',
+               `Loading ${[...itemSet].join(', ')}... [${itemDone}/${maxItem - 2}]`,
+               lerp(itemDone / maxItem, 15, 80),
+            );
             resolve(null);
          }),
          new Promise<IBeatmapAudio | null>(async (resolve) => {
             const audioInfo = await extractBPMInfo(info, beatmapZip);
             itemDone++;
+            itemSet.delete('audio/BPM data');
             if (audioInfo) {
                if (!flag.loading.audio) SavedData.duration = audioInfo.duration;
                UIHeader.setSongDuration(audioInfo.duration);
-               UILoading.status('info', 'Loaded audio info', lerp(itemDone / maxItem, 15, 80));
+               UILoading.status(
+                  'info',
+                  `Loading ${[...itemSet].join(', ')}... [${itemDone}/${maxItem - 2}]`,
+                  lerp(itemDone / maxItem, 15, 80),
+               );
             }
             resolve(audioInfo);
          }),
-         ...extractBeatmaps(info, beatmapZip).map(async (d) => {
+         ...extractBeatmaps(info, beatmapZip).map(async (d, _, ary) => {
             const res = await d;
             itemDone++;
+            diffCount++;
             if (res === null) {
                return null;
             }
+            if (ary.length === diffCount) itemSet.delete('map');
             UILoading.status(
                'info',
-               `Loaded ${res.characteristic} ${res.difficulty}`,
+               `Loading ${[...itemSet].join(', ')}... [${itemDone}/${maxItem - 2}]`,
                lerp(itemDone / maxItem, 15, 80),
             );
             return res;
          }),
       ] as const;
       maxItem = toPromise.length + 2;
-      UILoading.status('info', 'Loading assets...', lerp(itemDone / maxItem, 15, 80));
+      UILoading.status(
+         'info',
+         `Loading ${[...itemSet].join(', ')}... [${itemDone}/${maxItem - 2}]`,
+         lerp(itemDone / maxItem, 15, 80),
+      );
       const promises = await Promise.allSettled(toPromise);
       SavedData.beatmapDifficulty = promises
          .slice(4)

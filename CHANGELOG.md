@@ -10,6 +10,7 @@
 ### Changed
 
 -  Now uses v4 beatmap as internal
+-  Improved loading bar
 -  Rework asynchronous process
    -  Should be noticeably faster
 -  Minor UI tweaks
