@@ -162,7 +162,7 @@ function populateSelectCharacteristic(mapInfo?: IWrapInfo): void {
    });
 }
 
-function adjustTime(): void {
+function adjustBeatTime(): void {
    const mapInfo = SavedData.beatmapInfo;
    if (!mapInfo) {
       throw new Error(logPrefix + 'could not find map info');
@@ -263,9 +263,9 @@ function applyThisHandler(): void {
    if (!characteristic || !difficulty) {
       throw new Error(logPrefix + 'characteristic/difficulty does not exist');
    }
-   UILoading.status('info', `Re-analysing ${characteristic} ${difficulty}`, 100);
+   UILoading.status('info', `Re-analysing ${characteristic} ${difficulty}`);
    Analyser.runDifficulty(characteristic, difficulty);
-   UILoading.status('info', `Re-analysed ${characteristic} ${difficulty}`, 100);
+   UILoading.status('info', `Re-analysed ${characteristic} ${difficulty}`);
    displayOutputDifficulty(characteristic, difficulty);
 }
 
@@ -275,16 +275,16 @@ function applyAllHandler(): void {
    if (!characteristic || !difficulty) {
       throw new Error(logPrefix + 'characteristic/difficulty does not exist');
    }
-   UILoading.status('info', `Re-analysing all difficulties`, 100);
+   UILoading.status('info', `Re-analysing all difficulties`);
    Analyser.applyAll();
-   UILoading.status('info', `Re-analysed all difficulties`, 100);
+   UILoading.status('info', `Re-analysed all difficulties`);
    displayOutputDifficulty(characteristic, difficulty);
 }
 
 function applyGeneralHandler(): void {
-   UILoading.status('info', `Re-analysing all difficulties`, 100);
+   UILoading.status('info', `Re-analysing general`);
    Analyser.runGeneral();
-   UILoading.status('info', `Re-analysed all difficulties`, 100);
+   UILoading.status('info', `Re-analysed general`);
    displayOutputGeneral();
 }
 
@@ -292,7 +292,7 @@ export default {
    displayOutputGeneral,
    displayOutputDifficulty,
    setDifficultyLabel,
-   adjustTime,
+   adjustBeatTime,
    populateSelect: populateSelectCharacteristic,
    populateTool,
    reset,

@@ -8,14 +8,14 @@ import Analyser from './tools/analyzer';
 import Settings from './settings';
 import flag from './flag';
 import SavedData from './savedData';
-import { extractBeatmaps, extractInfo } from './load';
+import { extractBPMInfo, extractBeatmaps, extractInfo } from './load';
 import { downloadFromHash, downloadFromID, downloadFromURL } from './download';
 import { sanitizeBeatSaverID, sanitizeURL } from './utils/web';
 import { isHex, lerp } from './utils';
 import { extractZip } from './extract';
 import logger from './logger';
 import { LoadType } from './types/mapcheck/main';
-import { IBeatmapItem } from './types/mapcheck';
+import { IBeatmapAudio, IBeatmapItem } from './types/mapcheck';
 
 function tag() {
    return ['main'];
@@ -52,6 +52,11 @@ export default async (type: LoadType) => {
       const info = await extractInfo(beatmapZip);
       SavedData.beatmapInfo = info;
       UIInfo.setInfo(info);
+
+      if (info.audio.duration) {
+         SavedData.duration = info.audio.duration;
+         UIHeader.setSongDuration(info.audio.duration);
+      }
 
       // load audio, image, etc
       let itemDone = 0;
@@ -104,7 +109,6 @@ export default async (type: LoadType) => {
                         lerp(itemDone / maxItem, 15, 80),
                      );
                }, 10000);
-               UIHeader.setSongDuration('Obtaining audio duration...');
                let arrayBuffer = await audioFile.async('arraybuffer');
                UIHeader.setAudio(arrayBuffer);
                let audioContext = new AudioContext();
@@ -122,14 +126,24 @@ export default async (type: LoadType) => {
                      logger.tError(tag(), err);
                   });
             } else {
-               UIHeader.setSongDuration();
+               if (!SavedData.duration) UIHeader.setSongDuration();
                logger.tError(tag(), `${info.audio.filename} does not exist.`);
             }
             itemDone += 3;
             UILoading.status('info', 'Loaded audio', lerp(itemDone / maxItem, 15, 80));
             resolve(null);
          }),
-         ...(await extractBeatmaps(info, beatmapZip)).map(async (d) => {
+         new Promise<IBeatmapAudio | null>(async (resolve) => {
+            const audioInfo = await extractBPMInfo(info, beatmapZip);
+            itemDone++;
+            if (audioInfo) {
+               SavedData.duration = audioInfo.duration;
+               UIHeader.setSongDuration(audioInfo.duration);
+               UILoading.status('info', 'Loaded audio info', lerp(itemDone / maxItem, 15, 80));
+            }
+            resolve(audioInfo);
+         }),
+         ...extractBeatmaps(info, beatmapZip).map(async (d) => {
             const res = await d;
             itemDone++;
             if (res === null) {
@@ -147,43 +161,49 @@ export default async (type: LoadType) => {
       UILoading.status('info', 'Loading assets...', lerp(itemDone / maxItem, 15, 80));
       const promises = await Promise.allSettled(toPromise);
       SavedData.beatmapDifficulty = promises
-         .slice(3)
+         .slice(4)
          .map((v) => (v.status === 'fulfilled' ? v.value : null))
          .filter((v) => v) as IBeatmapItem[];
 
-      UITools.adjustTime();
-      UILoading.status('info', 'Analysing general...', 85);
-      logger.tInfo(tag(), 'Analysing map');
-      Analyser.runGeneral();
-      UITools.displayOutputGeneral();
-      await new Promise((r) => setTimeout(r, 5));
-
-      UILoading.status('info', 'Analysing difficulty...', 90);
-      Analyser.applyAll();
-      UITools.populateSelect(info);
-      UITools.displayOutputDifficulty();
-      await new Promise((r) => setTimeout(r, 5));
-
-      UILoading.status('info', 'Adding map difficulty stats...', 95);
-      logger.tInfo(tag(), 'Adding map stats');
-      UIStats.populate();
-      let minBPM = info.audio.bpm;
-      let maxBPM = info.audio.bpm;
+      const audioData = promises[3].status === 'fulfilled' ? promises[3].value : null;
+      let minBPM = Math.min(info.audio.bpm, ...(audioData?.bpm ?? []).map((b) => b.bpm));
+      let maxBPM = Math.max(info.audio.bpm, ...(audioData?.bpm ?? []).map((b) => b.bpm));
       SavedData.beatmapDifficulty.forEach((d) => {
+         if (d.rawVersion === 4) {
+            d.bpm.timescale = audioData!.bpm;
+         }
          const bpm = d.bpm.change.map((b) => b.BPM);
-         const bpme = d.data.bpmEvents.map((b) => b.bpm);
+         const bpme = d.bpm.timescale.map((b) => d.bpm.value / b.scale);
          minBPM = Math.min(minBPM, ...bpm, ...bpme);
          maxBPM = Math.max(maxBPM, ...bpm, ...bpme);
       });
       if (minBPM !== maxBPM) {
          UIHeader.setSongBPM(info.audio.bpm, minBPM, maxBPM);
       }
+
+      UITools.adjustBeatTime();
+      UITools.populateSelect(info);
+
+      logger.tInfo(tag(), 'Analysing map');
+      UILoading.status('info', 'Analysing general...', 85);
+      Analyser.runGeneral();
+      UITools.displayOutputGeneral();
+      await new Promise((r) => setTimeout(r, 5));
+
+      UILoading.status('info', 'Analysing difficulty...', 90);
+      Analyser.applyAll();
+      UITools.displayOutputDifficulty();
+      await new Promise((r) => setTimeout(r, 5));
+
+      UILoading.status('info', 'Populating stats...', 95);
+      logger.tInfo(tag(), 'Populating stats');
+      UIStats.populate();
       await new Promise((r) => setTimeout(r, 5));
 
       UIInput.enable(true);
-      UILoading.status('info', 'Map successfully loaded!');
+      UILoading.status('info', 'Successfully loaded!');
    } catch (err) {
-      UILoading.status('error', err, 100);
+      UILoading.status('error', err);
       logger.tError(tag(), err);
       SavedData.clear();
       UIInput.enable(true);

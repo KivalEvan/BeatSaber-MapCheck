@@ -11,6 +11,12 @@ import { ISwingAnalysis } from '../../../analyzers/swing/types/mod';
 import { EnvironmentAllName } from '../../beatmap/shared/environment';
 import { Difficulty } from '../../../beatmap/v4/difficulty';
 import { Lightshow } from '../../../beatmap/v4/lightshow';
+import { IWrapBPMEventAttribute } from '../../beatmap/wrapper/bpmEvent';
+
+export interface IBeatmapAudio {
+   readonly duration: number;
+   readonly bpm: Pick<IWrapBPMEventAttribute, 'time' | 'bpm'>[];
+}
 
 interface IBeatmapItemBase {
    readonly info: IWrapInfoDifficulty;
