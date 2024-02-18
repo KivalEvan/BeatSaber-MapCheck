@@ -35,8 +35,6 @@ async function getFileInput(type: LoadType): Promise<ArrayBuffer | File> {
    }
 }
 
-// TODO: break these to smaller functions, and probably slap in async while at it
-// TODO: possibly do more accurate & predictive loading bar based on the amount of file available (may be farfetched and likely not be implemented)
 export default async (type: LoadType) => {
    try {
       console.time('loading time');
