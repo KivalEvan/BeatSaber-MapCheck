@@ -78,25 +78,23 @@ export function setContributors(obj: IContributorB64): void {
 }
 
 export function populateContributors(arr?: IContributorB64[]): void {
-   if (htmlInfoContributors && (!arr || !arr.length)) {
+   if (!arr || !arr.length) {
       htmlInfoContributors.classList.add('hidden');
       removeOptions(htmlInfoContributorsSelect);
       return;
    }
-   if (arr) {
-      htmlInfoContributors.classList.remove('hidden');
-      let first = true;
-      arr.forEach((el, index) => {
-         if (first) {
-            first = false;
-            setContributors(el);
-         }
-         const optCont = document.createElement('option');
-         optCont.value = index.toString();
-         optCont.text = el._name + ' -- ' + el._role;
-         htmlInfoContributorsSelect.add(optCont);
-      });
-   }
+   htmlInfoContributors.classList.remove('hidden');
+   let first = true;
+   arr.forEach((el, index) => {
+      if (first) {
+         first = false;
+         setContributors(el);
+      }
+      const optCont = document.createElement('option');
+      optCont.value = index.toString();
+      optCont.text = el._name + ' -- ' + el._role;
+      htmlInfoContributorsSelect.add(optCont);
+   });
 }
 
 function contributorsSelectHandler(ev: Event): void {

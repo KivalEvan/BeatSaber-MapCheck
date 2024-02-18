@@ -70,9 +70,11 @@ function setSongBPM(num: number, minBPM?: number, maxBPM?: number): void {
    htmlMetadataSongBPM.textContent = text;
 }
 
-function setSongDuration(num?: number): void {
-   if (num) {
+function setSongDuration(num?: string | number): void {
+   if (typeof num === 'number') {
       htmlMetadataSongDuration.textContent = toMmssms(num);
+   } else if (typeof num === 'string') {
+      htmlMetadataSongDuration.textContent = num;
    } else {
       htmlMetadataSongDuration.textContent = 'No audio';
    }

@@ -5,7 +5,12 @@
 ### Added
 
 - Lattice environment & color scheme
-- Beatmap v4.0.0
+- v4 beatmap support
+
+### Changed
+
+- Rework asynchronous process
+  - Should be noticeably faster
 
 ### Fixed
 
