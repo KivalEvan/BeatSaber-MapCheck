@@ -9,8 +9,8 @@ import UIInput from '../../ui/helpers/input';
 import { BeatPerMinute } from '../../beatmap/shared/bpm';
 import {
    NoteColor,
-   NoteDirectionAngle,
    NoteDirection,
+   NoteDirectionAngle,
    PosX,
    PosY,
 } from '../../beatmap/shared/constants';

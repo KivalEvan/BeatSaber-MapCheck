@@ -217,8 +217,7 @@ function check(map: ToolArgs) {
             if (note.data.posX < PosX.MIDDLE_RIGHT) {
                arr.push(note);
             }
-         }
-         // yeet the last note if nothing else found so we dont have to perform check every note
+         } // yeet the last note if nothing else found so we dont have to perform check every note
          else if (note.data.time - lastMidL.data.time > maxTime) {
             lastMidL = null;
          }

@@ -13,8 +13,8 @@ import UIInput from '../../ui/helpers/input';
 import { printResultTime } from '../helpers';
 import {
    NoteColor,
-   NoteDirectionAngle,
    NoteDirection,
+   NoteDirectionAngle,
    PosX,
    PosY,
 } from '../../beatmap/shared/constants';

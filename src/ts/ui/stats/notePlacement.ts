@@ -83,9 +83,9 @@ export function createNotePlacementTable(
       .querySelector<HTMLSelectElement>('select')
       ?.addEventListener('change', notePlacementSelectHandler);
 
-   let htmlString = `<tbody id="${prefix}table-placement-${mapData.characteristic}-${
-      mapData.difficulty
-   }">${notePlacementTableString(mapData.noteContainer)}</tbody>`;
+   let htmlString = `<tbody id="${prefix}table-placement-${mapData.characteristic}-${mapData.difficulty}">${notePlacementTableString(
+      mapData.noteContainer,
+   )}</tbody>`;
 
    const htmlTable = document.createElement('table');
    htmlTable.className = prefix + 'table';

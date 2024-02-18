@@ -29,10 +29,12 @@ export function setLevelAuthor(mappers?: string[], lighters?: string[]): void {
       htmlInfoLevelAuthor.textContent = '';
       return;
    }
-   if (!lighters?.length) htmlInfoLevelAuthor.textContent = 'Mapped by ' + mappers.join(', ');
-   else
+   if (!lighters?.length) {
+      htmlInfoLevelAuthor.textContent = 'Mapped by ' + mappers.join(', ');
+   } else {
       htmlInfoLevelAuthor.textContent =
          'Mapped by ' + mappers.join(', ') + ' and lit by ' + lighters.join(', ');
+   }
 }
 
 export function setEnvironment(str?: EnvironmentAllName): void {

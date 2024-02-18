@@ -1,13 +1,13 @@
 import { EnvironmentRename } from '../../beatmap/shared/environment';
 import { toHhmmss } from '../../utils';
 import {
-   htmlTableTimeSpend,
+   htmlTableEnvironmentId,
    htmlTableInformation,
    htmlTableRequirements,
    htmlTableSuggestions,
+   htmlTableTimeSpend,
    htmlTableVersion,
    htmlTableWarnings,
-   htmlTableEnvironmentId,
 } from './constants';
 import { displayTableRow, hideTableRow } from './helpers';
 
@@ -26,7 +26,9 @@ export function setEnvironmentId(env?: string): void {
    }
    let textContent =
       (EnvironmentRename[env as keyof typeof EnvironmentRename] || 'Unknown') + ' Environment';
-   if (!EnvironmentRename[env as keyof typeof EnvironmentRename]) textContent += ` (${env})`;
+   if (!EnvironmentRename[env as keyof typeof EnvironmentRename]) {
+      textContent += ` (${env})`;
+   }
    displayTableRow(htmlTableEnvironmentId, textContent);
 }
 

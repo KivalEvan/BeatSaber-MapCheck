@@ -1,7 +1,9 @@
 import { EnvironmentAllName } from '../../types/beatmap/shared/environment';
 
 /** Environment rename to human readable. */
-export const EnvironmentRename: { readonly [key in EnvironmentAllName]: string } = {
+export const EnvironmentRename: {
+   readonly [key in EnvironmentAllName]: string;
+} = {
    DefaultEnvironment: 'The First',
    OriginsEnvironment: 'Origins',
    TriangleEnvironment: 'Triangle',

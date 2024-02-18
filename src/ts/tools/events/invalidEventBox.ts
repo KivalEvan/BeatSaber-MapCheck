@@ -257,7 +257,9 @@ function check(map: IWrapLightshow, environment: EnvironmentAllName) {
    const defectID: IWrapEventBoxGroup[] = [];
    const defectFilter: IWrapEventBoxGroup[] = [];
 
-   if (!envFilterID[environment as EnvironmentV3Name]) return { defectID: [], defectFilter: [] };
+   if (!envFilterID[environment as EnvironmentV3Name]) {
+      return { defectID: [], defectFilter: [] };
+   }
    const envV3 = environment as EnvironmentV3Name;
    const eventListEBG = EventList[envV3][1];
 

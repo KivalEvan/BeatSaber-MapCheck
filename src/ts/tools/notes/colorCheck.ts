@@ -1,6 +1,6 @@
 import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
 import { ColorArray } from '../../types/colors';
-import { deltaE00, colorFrom, round } from '../../utils';
+import { colorFrom, deltaE00, round } from '../../utils';
 import UIInput from '../../ui/helpers/input';
 import { printResult } from '../helpers';
 import { ColorScheme, EnvironmentSchemeName } from '../../beatmap/shared/colorScheme';

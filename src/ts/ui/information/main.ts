@@ -4,11 +4,11 @@ import { IWrapInfo } from '../../types/beatmap/wrapper/info';
 import { IBeatmapItem } from '../../types/mapcheck';
 import { BeatPerMinute } from '../../beatmap/shared/bpm';
 import {
-   setLevelAuthor,
-   setEnvironment,
-   setEditors,
    populateContributors,
    setContributors,
+   setEditors,
+   setEnvironment,
+   setLevelAuthor,
 } from './info';
 import { setBookmarks } from './bookmark';
 import { setBPMChanges } from './bpmChange';
@@ -16,13 +16,13 @@ import { setCustomColor } from './customColor';
 import { setCustomEvents } from './customEvent';
 import { setEnvironmentEnhancement } from './environment';
 import {
-   setVersion,
    setEnvironmentId,
+   setInformation,
    setRequirements,
    setSuggestions,
-   setInformation,
-   setWarnings,
    setTimeSpend,
+   setVersion,
+   setWarnings,
 } from './misc';
 import { setPointDefinitions } from './pointDefinition';
 import { setTableHeight } from './helpers';
@@ -95,27 +95,27 @@ function reset(): void {
 }
 
 export {
-   setLevelAuthor,
-   setEnvironmentId,
-   setEditors,
-   setContributors,
    populateContributors,
-   setVersion,
-   setPlayTime,
-   setTimeSpend,
-   setColorScheme,
-   setCustomColor,
-   setRequirements,
-   setSuggestions,
-   setInformation,
-   setWarnings,
+   reset,
    setBookmarks,
    setBPMChanges,
-   setEnvironmentEnhancement,
-   setPointDefinitions,
+   setColorScheme,
+   setContributors,
+   setCustomColor,
    setCustomEvents,
-   setInfo,
    setDiffInfoTable,
+   setEditors,
+   setEnvironmentEnhancement,
+   setEnvironmentId,
+   setInfo,
+   setInformation,
+   setLevelAuthor,
+   setPlayTime,
+   setPointDefinitions,
+   setRequirements,
+   setSuggestions,
    setTableHeight,
-   reset,
+   setTimeSpend,
+   setVersion,
+   setWarnings,
 };

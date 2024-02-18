@@ -1,6 +1,8 @@
 import { EnvironmentAllName } from '../../types/beatmap/shared/environment';
 
-const environmentGroup: { [env in EnvironmentAllName]?: { [key: number]: string } } = {
+const environmentGroup: {
+   [env in EnvironmentAllName]?: { [key: number]: string };
+} = {
    WeaveEnvironment: {
       0: 'Outer Square Bottom Left Laser',
       1: 'Outer Square Bottom Right Laser',

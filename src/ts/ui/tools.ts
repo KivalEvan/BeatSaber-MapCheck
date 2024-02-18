@@ -151,8 +151,9 @@ function populateSelectCharacteristic(mapInfo?: IWrapInfo): void {
          const optCharacteristic = document.createElement('option');
          optCharacteristic.value = infoDiff.characteristic;
          optCharacteristic.textContent = CharacteristicRename[infoDiff.characteristic];
-         if (infoDiff.customData._characteristicLabel)
+         if (infoDiff.customData._characteristicLabel) {
             optCharacteristic.textContent += ` -- ${infoDiff.customData._characteristicLabel}`;
+         }
          elem.add(optCharacteristic);
       });
       if (first) {

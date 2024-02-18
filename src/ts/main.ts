@@ -8,7 +8,7 @@ import Analyser from './tools/analyzer';
 import Settings from './settings';
 import flag from './flag';
 import SavedData from './savedData';
-import { extractBPMInfo, extractBeatmaps, extractInfo } from './load';
+import { extractBeatmaps, extractBPMInfo, extractInfo } from './load';
 import { downloadFromHash, downloadFromID, downloadFromURL } from './download';
 import { sanitizeBeatSaverID, sanitizeURL } from './utils/web';
 import { isHex, lerp } from './utils';
@@ -102,12 +102,13 @@ export default async (type: LoadType) => {
             if (Settings.load.audio && audioFile) {
                let loaded = false;
                setTimeout(() => {
-                  if (!loaded && !flag.loading.finished)
+                  if (!loaded && !flag.loading.finished) {
                      UILoading.status(
                         'info',
                         'Loading audio... (this may take a while)',
                         lerp(itemDone / maxItem, 15, 80),
                      );
+                  }
                }, 10000);
                let arrayBuffer = await audioFile.async('arraybuffer');
                UIHeader.setAudio(arrayBuffer);

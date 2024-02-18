@@ -106,15 +106,15 @@ function reset(): void {
 }
 
 export {
-   createSettingsTable,
-   createNPSTable,
-   createSPSTable,
-   createNoteCountTable,
-   createNotePlacementTable,
-   createNoteAngleTable,
-   createNoteInfoTable as createInfoTable,
    createEventCountTable,
+   createNoteAngleTable,
+   createNoteCountTable,
+   createNoteInfoTable as createInfoTable,
+   createNotePlacementTable,
+   createNPSTable,
    createObstacleCountTable,
+   createSettingsTable,
+   createSPSTable,
    populate,
    reset,
 };

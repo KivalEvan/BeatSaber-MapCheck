@@ -107,9 +107,11 @@ export function createEBGCountTable(mapInfo: IWrapInfo, mapData: IBeatmapItem): 
          ebgRotationCount[key].groups
       }</td><td class="${prefix}table-element" title="${ebgTranslationCount[key].boxes} Box (${
          ebgTranslationCount[key].bases
-      } Base)">${ebgTranslationCount[key].groups}</td><td class="${prefix}table-element" title="${
-         ebgFxCount[key].groups
-      } Box (${ebgFxCount[key].bases} Base)">${ebgFxCount[key].groups}</td></tr>`;
+      } Base)">${
+         ebgTranslationCount[key].groups
+      }</td><td class="${prefix}table-element" title="${ebgFxCount[key].groups} Box (${
+         ebgFxCount[key].bases
+      } Base)">${ebgFxCount[key].groups}</td></tr>`;
    }
 
    const htmlTable = document.createElement('table');

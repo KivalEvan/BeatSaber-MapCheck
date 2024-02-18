@@ -68,9 +68,9 @@ export function createNoteAngleTable(mapInfo: IWrapInfo, mapData: IBeatmapItem):
       .querySelector<HTMLSelectElement>('select')
       ?.addEventListener('change', noteAngleSelectHandler);
 
-   let htmlString = `<tbody id="${prefix}table-angle-${mapData.characteristic}-${
-      mapData.difficulty
-   }">${noteAngleTableString(mapData.noteContainer)}</tbody>`;
+   let htmlString = `<tbody id="${prefix}table-angle-${mapData.characteristic}-${mapData.difficulty}">${noteAngleTableString(
+      mapData.noteContainer,
+   )}</tbody>`;
 
    const htmlTable = document.createElement('table');
    htmlTable.className = prefix + 'table';

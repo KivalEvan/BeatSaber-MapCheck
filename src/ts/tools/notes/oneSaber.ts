@@ -39,9 +39,9 @@ function run(map: ToolArgs) {
    let whyisthisonesaber = false;
    let isOneSaber =
       map.difficulty!.characteristic === 'OneSaber' || map.difficulty!.info.customData.oneSaber;
-   if (isOneSaber)
+   if (isOneSaber) {
       notOneSaberNote = map.difficulty!.data.colorNotes.filter((n) => n.isRed()).map((n) => n.time);
-   else {
+   } else {
       const hasBlueNote = map.difficulty!.data.colorNotes.filter((n) => n.isBlue()).length > 0;
       const hasRedNote = map.difficulty!.data.colorNotes.filter((n) => n.isRed()).length > 0;
       whyisthisonesaber = hasBlueNote ? !hasRedNote : hasRedNote;

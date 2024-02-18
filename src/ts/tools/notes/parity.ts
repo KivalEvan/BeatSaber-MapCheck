@@ -83,7 +83,11 @@ function check(map: ToolArgs) {
    const { bpm } = map.settings;
    const { noteContainer } = map.difficulty!;
    const { warningThres, errorThres, allowedRot } = <
-      { warningThres: number; errorThres: number; allowedRot: number }
+      {
+         warningThres: number;
+         errorThres: number;
+         allowedRot: number;
+      }
    >tool.input.params;
 
    const lastNote: { [key: number]: NoteContainer } = {};
