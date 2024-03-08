@@ -4,14 +4,15 @@ import { Version } from '../shared/version';
 import { CharacteristicName } from '../shared/characteristic';
 import { DifficultyName } from '../shared/difficulty';
 import { EnvironmentAllName } from '../shared/environment';
-import { GenericFileName } from '../shared/filename';
+import { GenericFilename, IFileInfo } from '../shared/filename';
 import { IWrapBaseItem } from './baseItem';
 import { IColor } from '../../colors';
 
 export interface IWrapInfoAttribute<
    T extends { [P in keyof T]: T[P] } = Record<string, any>,
    TDifficulty extends { [P in keyof TDifficulty]: TDifficulty[P] } = Record<string, any>,
-> extends IWrapBaseItem<T> {
+> extends IWrapBaseItem<T>,
+      IFileInfo {
    readonly version: Version;
    song: IWrapInfoSong;
    audio: IWrapInfoAudio;
@@ -20,8 +21,6 @@ export interface IWrapInfoAttribute<
    environmentNames: EnvironmentAllName[];
    colorSchemes: IWrapInfoColorScheme[];
    difficulties: IWrapInfoDifficultyAttribute<TDifficulty>[];
-
-   filename: string;
 }
 
 export interface IWrapInfoSong {
@@ -65,7 +64,7 @@ export interface IWrapInfo<
 > extends IWrapBaseItem<T>,
       IWrapInfoAttribute<T, TDifficulty> {
    difficulties: IWrapInfoDifficulty<TDifficulty>[];
-   setFilename(filename: LooseAutocomplete<GenericFileName>): this;
+   setFilename(filename: LooseAutocomplete<GenericFilename>): this;
 
    /** Sort beatmap object(s) accordingly. */
    sort(): this;
@@ -80,8 +79,8 @@ export interface IWrapInfoDifficultyAttribute<
 > extends IWrapBaseItem<T> {
    characteristic: CharacteristicName;
    difficulty: DifficultyName;
-   filename: LooseAutocomplete<GenericFileName>;
-   lightshowFilename: LooseAutocomplete<GenericFileName>;
+   filename: LooseAutocomplete<GenericFilename>;
+   lightshowFilename: LooseAutocomplete<GenericFilename>;
    authors: IWrapInfoBeatmapAuthors;
    njs: number;
    njsOffset: number;

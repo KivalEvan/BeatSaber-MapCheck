@@ -16,12 +16,12 @@ export abstract class WrapWaypoint<T extends { [P in keyof T]: T[P] }>
       this._direction = value;
    }
 
-   setDirection(value: IWrapWaypoint['direction']) {
+   setDirection(value: IWrapWaypoint['direction']): this {
       this.direction = value;
       return this;
    }
 
-   mirror(_flipAlt?: boolean, _flipNoodle?: boolean) {
+   mirror(_flipAlt?: boolean, _flipNoodle?: boolean): this {
       this.posX = LINE_COUNT - 1 - this.posX;
       switch (this.direction) {
          case 2:

@@ -15,7 +15,7 @@ import {
 } from './lightTranslationEventBoxGroup';
 import { IWrapBaseItem, IWrapBaseItemAttribute } from './baseItem';
 import { DeepPartial, LooseAutocomplete } from '../../utils';
-import { GenericFileName } from '../shared/filename';
+import { GenericFilename, IFileInfo } from '../shared/filename';
 import { EventContainer } from './container';
 import { IWrapFxEventBoxGroup, IWrapFxEventBoxGroupAttribute } from './fxEventBoxGroup';
 import { IWrapWaypoint } from './waypoint';
@@ -27,7 +27,8 @@ import {
 } from './eventTypesWithKeywords';
 
 export interface IWrapLightshowAttribute<T extends { [P in keyof T]: T[P] } = Record<string, any>>
-   extends IWrapBaseItemAttribute<T> {
+   extends IWrapBaseItemAttribute<T>,
+      IFileInfo {
    readonly version: Version;
    waypoints: IWrapWaypointAttribute[];
    basicEvents: IWrapEventAttribute[];
@@ -38,8 +39,6 @@ export interface IWrapLightshowAttribute<T extends { [P in keyof T]: T[P] } = Re
    fxEventBoxGroups: IWrapFxEventBoxGroupAttribute[];
    eventTypesWithKeywords: IWrapEventTypesWithKeywordsAttribute;
    useNormalEventsAsCompatibleEvents: boolean;
-
-   filename: string;
 }
 
 export interface IWrapLightshow<T extends { [P in keyof T]: T[P] } = Record<string, any>>
@@ -54,7 +53,7 @@ export interface IWrapLightshow<T extends { [P in keyof T]: T[P] } = Record<stri
    fxEventBoxGroups: IWrapFxEventBoxGroup[];
    eventTypesWithKeywords: IWrapEventTypesWithKeywords;
 
-   setFilename(filename: LooseAutocomplete<GenericFileName>): this;
+   setFilename(filename: LooseAutocomplete<GenericFilename>): this;
 
    /** Sort beatmap object(s) accordingly. */
    sort(): this;

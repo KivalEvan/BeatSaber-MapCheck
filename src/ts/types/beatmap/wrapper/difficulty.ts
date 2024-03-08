@@ -28,13 +28,15 @@ import {
 import { IWrapBaseItem, IWrapBaseItemAttribute } from './baseItem';
 import { Version } from '../shared/version';
 import { DeepPartial, LooseAutocomplete } from '../../utils';
-import { GenericFileName } from '../shared/filename';
+import { GenericFilename } from '../shared/filename';
 import { EventContainer, NoteContainer } from './container';
 import { BeatPerMinute } from '../../../beatmap/shared/bpm';
 import { IWrapFxEventBoxGroup, IWrapFxEventBoxGroupAttribute } from './fxEventBoxGroup';
+import { IFileInfo } from '../shared/filename';
 
 export interface IWrapDifficultyAttribute<T extends { [P in keyof T]: T[P] } = Record<string, any>>
-   extends IWrapBaseItemAttribute<T> {
+   extends IWrapBaseItemAttribute<T>,
+      IFileInfo {
    readonly version: Version;
    bpmEvents: IWrapBPMEventAttribute[];
    rotationEvents: IWrapRotationEventAttribute[];
@@ -52,8 +54,6 @@ export interface IWrapDifficultyAttribute<T extends { [P in keyof T]: T[P] } = R
    fxEventBoxGroups: IWrapFxEventBoxGroupAttribute[];
    eventTypesWithKeywords: IWrapEventTypesWithKeywordsAttribute;
    useNormalEventsAsCompatibleEvents: boolean;
-
-   filename: string;
 }
 
 export interface IWrapDifficulty<T extends { [P in keyof T]: T[P] } = Record<string, any>>
@@ -75,7 +75,7 @@ export interface IWrapDifficulty<T extends { [P in keyof T]: T[P] } = Record<str
    fxEventBoxGroups: IWrapFxEventBoxGroup[];
    eventTypesWithKeywords: IWrapEventTypesWithKeywords;
 
-   setFilename(filename: LooseAutocomplete<GenericFileName>): this;
+   setFilename(filename: LooseAutocomplete<GenericFilename>): this;
 
    /** Sort beatmap object(s) accordingly. */
    sort(): this;

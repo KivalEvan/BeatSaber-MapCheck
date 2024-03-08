@@ -43,23 +43,23 @@ export abstract class WrapLightRotationEvent<T extends { [P in keyof T]: T[P] }>
       this._direction = value;
    }
 
-   setPrevious(value: IWrapLightRotationEvent['previous']) {
+   setPrevious(value: IWrapLightRotationEvent['previous']): this {
       this.previous = value;
       return this;
    }
-   setEasing(value: IWrapLightRotationEvent['easing']) {
+   setEasing(value: IWrapLightRotationEvent['easing']): this {
       this.easing = value;
       return this;
    }
-   setLoop(value: IWrapLightRotationEvent['loop']) {
+   setLoop(value: IWrapLightRotationEvent['loop']): this {
       this.loop = value;
       return this;
    }
-   setRotation(value: IWrapLightRotationEvent['rotation']) {
+   setRotation(value: IWrapLightRotationEvent['rotation']): this {
       this.rotation = value;
       return this;
    }
-   setDirection(value: IWrapLightRotationEvent['direction']) {
+   setDirection(value: IWrapLightRotationEvent['direction']): this {
       this.direction = value;
       return this;
    }

@@ -4,8 +4,11 @@ import { IInfo } from '../../types/beatmap/v2/info';
 import { IDifficulty } from '../../types/beatmap/v2/difficulty';
 import { deepClean, purgeZeros } from '../shared/clean';
 
-// deno-lint-ignore no-explicit-any
-export function cleanDifficulty(data: Record<string, any> | IDifficulty, options: ICleanOptions) {
+export function cleanDifficulty(
+   // deno-lint-ignore no-explicit-any
+   data: Record<string, any> | IDifficulty,
+   options: ICleanOptions,
+) {
    for (let i1 = 0; i1 < data._notes!.length; i1++) {
       const o1 = data._notes[i1];
       if (options.floatTrim) {
@@ -78,8 +81,11 @@ export function cleanDifficulty(data: Record<string, any> | IDifficulty, options
    }
 }
 
-// deno-lint-ignore no-explicit-any
-export function cleanInfo(data: Record<string, any> | IInfo, options: ICleanOptions) {
+export function cleanInfo(
+   // deno-lint-ignore no-explicit-any
+   data: Record<string, any> | IInfo,
+   options: ICleanOptions,
+) {
    if (options.floatTrim) {
       data._beatsPerMinute = round(data._beatsPerMinute, options.floatTrim);
       data._previewDuration = round(data._previewDuration, options.floatTrim);

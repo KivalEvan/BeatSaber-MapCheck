@@ -96,7 +96,7 @@ export class Difficulty extends WrapDifficulty<IDifficulty> {
    lightTranslationEventBoxGroups: LightTranslationEventBoxGroup[];
    fxEventBoxGroups: FxEventBoxGroup[];
    eventTypesWithKeywords: BasicEventTypesWithKeywords;
-   useNormalEventsAsCompatibleEvents;
+   useNormalEventsAsCompatibleEvents: boolean;
 
    static create(data: DeepPartial<IWrapDifficultyAttribute<IDifficulty>> = {}): Difficulty {
       return new this(data);

@@ -26,20 +26,20 @@ export abstract class WrapEventTypesForKeywords<T extends { [P in keyof T]: T[P]
       this._events = value;
    }
 
-   setKeyword(value: IWrapEventTypesForKeywords['keyword']) {
+   setKeyword(value: IWrapEventTypesForKeywords['keyword']): this {
       this.keyword = value;
       return this;
    }
-   setEvents(value: IWrapEventTypesForKeywords['events']) {
+   setEvents(value: IWrapEventTypesForKeywords['events']): this {
       this.events = value;
       return this;
    }
 
-   addEvent(value: number) {
+   addEvent(value: number): this {
       this.events.push(value);
       return this;
    }
-   removeEvent(value: number) {
+   removeEvent(value: number): this {
       const index = this.events.indexOf(value, 0);
       if (index > -1) {
          this.events.splice(index, 1);

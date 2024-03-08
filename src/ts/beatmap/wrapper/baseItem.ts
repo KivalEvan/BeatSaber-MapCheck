@@ -20,11 +20,11 @@ export abstract class WrapBaseItem<T extends { [P in keyof T]: T[P] }>
       this.customData = value;
       return this;
    }
-   resetCustomData() {
+   resetCustomData(): this {
       this.customData = {} as _ObtainCustomData<T>;
       return this;
    }
-   removeCustomData(key: string | string[]) {
+   removeCustomData(key: string | string[]): this {
       if (typeof key === 'string') {
          delete this.customData[key];
       } else {
@@ -40,7 +40,7 @@ export abstract class WrapBaseItem<T extends { [P in keyof T]: T[P] }>
    }
 
    // deno-lint-ignore no-explicit-any
-   func(fn: (object: this, ...args: any[]) => void, ...args: any[]) {
+   func(fn: (object: this, ...args: any[]) => void, ...args: any[]): this {
       fn(this, ...args);
       return this;
    }

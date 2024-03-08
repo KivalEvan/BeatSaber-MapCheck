@@ -118,7 +118,7 @@ export class Lightshow extends WrapLightshow<ILightshow> {
       this.customData = deepCopy(data.customData ?? Lightshow.default.customData);
    }
 
-   static fromJSON(data: DeepPartial<ILightshow> = {}) {
+   static fromJSON(data: DeepPartial<ILightshow> = {}): Lightshow {
       const d = new this();
       d.basicEvents = (data.basicBeatmapEvents ?? Lightshow.default.basicBeatmapEvents).map((obj) =>
          BasicEvent.fromJSON(obj),

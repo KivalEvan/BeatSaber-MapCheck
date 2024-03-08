@@ -24,16 +24,16 @@ export abstract class WrapBaseNote<T extends { [P in keyof T]: T[P] }>
       this._direction = value;
    }
 
-   setColor(value: IWrapBaseNote['color']) {
+   setColor(value: IWrapBaseNote['color']): this {
       this.color = value;
       return this;
    }
-   setDirection(value: IWrapBaseNote['direction']) {
+   setDirection(value: IWrapBaseNote['direction']): this {
       this.direction = value;
       return this;
    }
 
-   mirror(flipColor = true, _flipNoodle?: boolean) {
+   mirror(flipColor = true, _flipNoodle?: boolean): this {
       if (flipColor) {
          this.color = ((1 + this.color) % 2) as typeof this.color;
       }
@@ -60,19 +60,19 @@ export abstract class WrapBaseNote<T extends { [P in keyof T]: T[P] }>
       return super.mirror(flipColor);
    }
 
-   isRed() {
+   isRed(): boolean {
       return this.color === 0;
    }
 
-   isBlue() {
+   isBlue(): boolean {
       return this.color === 1;
    }
 
-   getAngle(_type?: ModType) {
+   getAngle(_type?: ModType): number {
       return NoteDirectionAngle[this.direction as keyof typeof NoteDirectionAngle] || 0;
    }
 
-   isDouble(compareTo: IWrapBaseNote, tolerance = 0.01) {
+   isDouble(compareTo: IWrapBaseNote, tolerance = 0.01): boolean {
       return (
          compareTo.time > this.time - tolerance &&
          compareTo.time < this.time + tolerance &&
@@ -80,11 +80,11 @@ export abstract class WrapBaseNote<T extends { [P in keyof T]: T[P] }>
       );
    }
 
-   isValidDirection() {
+   isValidDirection(): boolean {
       return this.direction >= 0 && this.direction <= 8;
    }
 
-   isValid() {
+   isValid(): boolean {
       return !this.isMappingExtensions() && this.isValidDirection();
    }
 }

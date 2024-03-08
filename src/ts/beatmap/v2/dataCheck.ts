@@ -133,9 +133,7 @@ export const ArcDataCheck: { readonly [key in keyof IArc]: DataCheck } = {
    },
 } as const;
 
-export const ObstacleDataCheck: {
-   readonly [key in keyof IObstacle]: DataCheck;
-} = {
+export const ObstacleDataCheck: { readonly [key in keyof IObstacle]: DataCheck } = {
    _time: {
       type: 'number',
       version: '2.0.0',
@@ -204,9 +202,7 @@ export const EventDataCheck: { readonly [key in keyof IEvent]: DataCheck } = {
    },
 } as const;
 
-export const WaypointDataCheck: {
-   readonly [key in keyof IWaypoint]: DataCheck;
-} = {
+export const WaypointDataCheck: { readonly [key in keyof IWaypoint]: DataCheck } = {
    _time: {
       type: 'number',
       version: '2.2.0',
@@ -266,9 +262,7 @@ export const SpecialEventsKeywordFiltersDataCheck: {
    },
 } as const;
 
-export const DifficultyDataCheck: {
-   readonly [key in keyof IDifficulty]: DataCheck;
-} = {
+export const DifficultyDataCheck: { readonly [key in keyof IDifficulty]: DataCheck } = {
    _version: {
       type: 'string',
       version: '2.0.0',
@@ -318,9 +312,7 @@ export const DifficultyDataCheck: {
    },
 } as const;
 
-export const InfoSetDifficultyDataCheck: {
-   readonly [key in keyof IInfoDifficulty]: DataCheck;
-} = {
+export const InfoSetDifficultyDataCheck: { readonly [key in keyof IInfoDifficulty]: DataCheck } = {
    _difficulty: {
       type: 'string',
       version: '2.0.0',
@@ -369,9 +361,7 @@ export const InfoSetDataCheck: { readonly [key in keyof IInfoSet]: DataCheck } =
    },
 };
 
-export const ColorObjectDataCheck: {
-   readonly [key in keyof IColor]: DataCheck;
-} = {
+export const ColorObjectDataCheck: { readonly [key in keyof IColor]: DataCheck } = {
    r: {
       type: 'number',
       version: '2.1.0',
@@ -434,9 +424,7 @@ export const InfoColorSchemeDataDataCheck: {
    },
 };
 
-export const InfoColorSchemeDataCheck: {
-   readonly [key in keyof IInfoColorScheme]: DataCheck;
-} = {
+export const InfoColorSchemeDataCheck: { readonly [key in keyof IInfoColorScheme]: DataCheck } = {
    useOverride: {
       type: 'boolean',
       version: '2.1.0',

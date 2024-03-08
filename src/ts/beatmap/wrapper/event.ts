@@ -31,15 +31,15 @@ export abstract class WrapEvent<T extends { [P in keyof T]: T[P] }>
       this._floatValue = value;
    }
 
-   setType(value: IWrapEvent['type']) {
+   setType(value: IWrapEvent['type']): this {
       this.type = value;
       return this;
    }
-   setValue(value: IWrapEvent['value']) {
+   setValue(value: IWrapEvent['value']): this {
       this.value = value;
       return this;
    }
-   setFloatValue(value: IWrapEvent['floatValue']) {
+   setFloatValue(value: IWrapEvent['floatValue']): this {
       this.floatValue = value;
       return this;
    }

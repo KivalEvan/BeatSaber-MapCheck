@@ -4,7 +4,7 @@ import { CharacteristicName } from '../../types/beatmap/shared/characteristic';
 import { WrapInfo, WrapInfoDifficulty } from '../wrapper/info';
 import { DifficultyName } from '../../types/beatmap/shared/difficulty';
 import { DeepRequiredIgnore, LooseAutocomplete } from '../../types/utils';
-import { GenericFileName } from '../../types/beatmap/shared/filename';
+import { GenericFilename } from '../../types/beatmap/shared/filename';
 import { deepCopy, shallowCopy } from '../../utils/misc';
 import {
    IWrapInfo,
@@ -314,8 +314,8 @@ export class InfoDifficulty extends WrapInfoDifficulty<IInfoDifficulty> {
 
    characteristic: CharacteristicName;
    difficulty: DifficultyName;
-   filename: LooseAutocomplete<GenericFileName>;
-   lightshowFilename: LooseAutocomplete<GenericFileName>;
+   filename: LooseAutocomplete<GenericFilename>;
+   lightshowFilename: LooseAutocomplete<GenericFilename>;
    authors: { mappers: string[]; lighters: string[] } = {
       mappers: [],
       lighters: [],
@@ -325,7 +325,7 @@ export class InfoDifficulty extends WrapInfoDifficulty<IInfoDifficulty> {
    colorSchemeId: number;
    environmentId: number;
 
-   static create(data: Partial<IWrapInfoDifficultyAttribute<IInfoDifficulty>>) {
+   static create(data: Partial<IWrapInfoDifficultyAttribute<IInfoDifficulty>>): InfoDifficulty {
       return new this(data);
    }
 

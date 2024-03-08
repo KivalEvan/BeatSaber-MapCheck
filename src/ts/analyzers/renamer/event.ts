@@ -27,9 +27,7 @@ const genericType: { [key: number]: string } = {
    43: 'Special Event 4',
 };
 
-const environmentType: {
-   [env in EnvironmentAllName]?: { [key: number]: string };
-} = {
+const environmentType: { [env in EnvironmentAllName]?: { [key: number]: string } } = {
    LinkinParkEnvironment: {
       0: 'Lane Light',
       1: 'Ceiling Lights',
@@ -183,6 +181,13 @@ const environmentType: {
    },
    LatticeEnvironment: {
       6: 'Ambient',
+   },
+   DaftPunkEnvironment: {
+      6: 'Ambient',
+      40: 'Helmet 01 Switch',
+      41: 'Helmet 02 Switch',
+      42: 'Helmet 01 Text',
+      43: 'Helmet 02 Text',
    },
 };
 

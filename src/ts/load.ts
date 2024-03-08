@@ -10,7 +10,7 @@ import { IWrapDifficulty } from './types/beatmap/wrapper/difficulty';
 import { Lightshow } from './beatmap/v4/lightshow';
 import { Difficulty } from './beatmap/v4/difficulty';
 import { IWrapLightshow } from './types/beatmap/wrapper/lightshow';
-import { IBPMInfo } from './types/beatmap/external/bpmInfo';
+import { IBPMInfo } from './types/beatmap/v2/bpmInfo';
 import { IAudio } from './types/beatmap/v4/audio';
 import { IBPMEvent } from './types/beatmap/v3/bpmEvent';
 import settings from './settings';
@@ -135,7 +135,7 @@ function _lightshow(json: Record<string, unknown>) {
    return data;
 }
 
-export async function extractBPMInfo(info: IWrapInfo, zip: JSZip): Promise<IBeatmapAudio | null> {
+export async function extractBpmInfo(info: IWrapInfo, zip: JSZip): Promise<IBeatmapAudio | null> {
    const bpmFile = zip.file('BPMInfo.dat');
    logger.tInfo(tag('extractBPMInfo'), `loading BPMInfo.dat`);
    if (bpmFile) {

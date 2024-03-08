@@ -34,7 +34,7 @@ import {
    LooseAutocomplete,
    PartialWrapper,
 } from '../../types/utils';
-import { GenericFileName } from '../../types/beatmap/shared/filename';
+import { GenericFilename } from '../../types/beatmap/shared/filename';
 import { EventContainer, NoteContainer } from '../../types/beatmap/wrapper/container';
 import { Version } from '../../types/beatmap/shared/version';
 import { WrapBaseItem } from './baseItem';
@@ -74,14 +74,14 @@ export abstract class WrapDifficulty<T extends { [P in keyof T]: T[P] }>
       return super.clone().setFilename(this.filename) as U;
    }
 
-   set filename(name: LooseAutocomplete<GenericFileName>) {
+   set filename(name: LooseAutocomplete<GenericFilename>) {
       this._filename = name.trim();
    }
    get filename(): string {
       return this._filename;
    }
 
-   setFilename(filename: LooseAutocomplete<GenericFileName>) {
+   setFilename(filename: LooseAutocomplete<GenericFilename>): this {
       this.filename = filename;
       return this;
    }
@@ -101,10 +101,6 @@ export abstract class WrapDifficulty<T extends { [P in keyof T]: T[P] }>
       this.lightRotationEventBoxGroups.sort(sortObjectFn);
       this.lightTranslationEventBoxGroups.sort(sortObjectFn);
       this.fxEventBoxGroups.sort(sortObjectFn);
-      // sorting these will affect the fx event box groups, i think i get what they are doing here
-      // but best to do it as post-process and after light completion
-      // this.fxEventsCollection.intList.sort(sortObjectFn);
-      // this.fxEventsCollection.floatList.sort(sortObjectFn);
 
       this.lightColorEventBoxGroups.forEach((gr) =>
          gr.boxes.forEach((bx) => bx.events.sort(sortObjectFn)),

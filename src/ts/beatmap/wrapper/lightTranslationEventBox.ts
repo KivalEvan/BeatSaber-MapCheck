@@ -48,19 +48,19 @@ export abstract class WrapLightTranslationEventBox<
       this._events = value;
    }
 
-   setGapDistribution(value: IWrapLightTranslationEventBox['gapDistribution']) {
+   setGapDistribution(value: IWrapLightTranslationEventBox['gapDistribution']): this {
       this.gapDistribution = value;
       return this;
    }
-   setGapDistributionType(value: IWrapLightTranslationEventBox['gapDistributionType']) {
+   setGapDistributionType(value: IWrapLightTranslationEventBox['gapDistributionType']): this {
       this.gapDistributionType = value;
       return this;
    }
-   setAxis(value: IWrapLightTranslationEventBox['axis']) {
+   setAxis(value: IWrapLightTranslationEventBox['axis']): this {
       this.axis = value;
       return this;
    }
-   setFlip(value: IWrapLightTranslationEventBox['flip']) {
+   setFlip(value: IWrapLightTranslationEventBox['flip']): this {
       this.flip = value;
       return this;
    }

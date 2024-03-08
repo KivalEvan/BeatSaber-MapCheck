@@ -43,6 +43,7 @@ export const EnvironmentSchemeName: {
    LinkinPark2Environment: 'Linkin Park 2.0',
    TheRollingStonesEnvironment: 'The Rolling Stones',
    LatticeEnvironment: 'Lattice',
+   DaftPunkEnvironment: 'Daft Punk',
    GlassDesertEnvironment: 'Glass Desert',
    MultiplayerEnvironment: 'Origins',
 } as const;
@@ -344,6 +345,17 @@ export const ColorScheme: {
       _envColorLeftBoost: { r: 0.5450981, g: 0.1333333, b: 0.8156863 },
       _envColorRightBoost: { r: 0.4039216, g: 0.9176471, b: 0.9176471 },
       _obstacleColor: { r: 0.4685534, g: 0.7095922, b: 1 },
+   },
+   'Daft Punk': {
+      _colorLeft: { r: 0.7215686, g: 0.2254902, b: 0.1803922 },
+      _colorRight: { r: 0.1215686, g: 0.6980392, b: 0.6901961 },
+      _envColorLeft: { r: 1, g: 0.7017543, b: 0.2515723 },
+      _envColorRight: { r: 0.5215687, g: 0.3294118, b: 0.8196079 },
+      _envColorWhite: { r: 0.4784314, g: 0.8117647, b: 1 },
+      _envColorLeftBoost: { r: 0.8588235, g: 0, b: 0.4784314 },
+      _envColorRightBoost: { r: 0, g: 0.8196079, b: 0.8039216 },
+      _envColorWhiteBoost: { r: 1, g: 0.834256, b: 0.4874213 },
+      _obstacleColor: { r: 0.6068091, g: 0, b: 1 },
    },
    'Glass Desert': {
       _colorLeft: { r: 0.6792453, g: 0.5712628, b: 0 },

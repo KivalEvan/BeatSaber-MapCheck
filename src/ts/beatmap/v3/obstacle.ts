@@ -68,7 +68,7 @@ export class Obstacle extends WrapObstacle<IObstacle> {
       this._customData = value;
    }
 
-   mirror(_?: boolean, flipNoodle?: boolean) {
+   mirror(_?: boolean, flipNoodle?: boolean): this {
       if (flipNoodle) {
          const width = this.customData.size?.[0] ?? this.width;
          if (this.customData.coordinates) {

@@ -1,4 +1,4 @@
-import { isHex, round, sanitizeBeatSaverID, sanitizeURL } from './utils';
+import { isHex, round, sanitizeBeatSaverId, sanitizeUrl } from './utils';
 import { getZipHashURL, getZipIdURL } from './beatsaver';
 import UILoading from './ui/loading';
 import UIHeader from './ui/header';
@@ -53,9 +53,9 @@ export async function downloadMap(url: string): Promise<ArrayBuffer> {
    });
 }
 
-export async function downloadFromID(input: string): Promise<ArrayBuffer> {
+export async function downloadFromId(input: string): Promise<ArrayBuffer> {
    // sanitize & validate id
-   const id = sanitizeBeatSaverID(input);
+   const id = sanitizeBeatSaverId(input);
 
    logger.tInfo(tag('downloadFromID'), `fetching download URL from BeatSaver for map ID ${id}`);
    UILoading.status('info', 'Fetching download URL from BeatSaver', 0);
@@ -67,13 +67,13 @@ export async function downloadFromID(input: string): Promise<ArrayBuffer> {
    return res;
 }
 
-export async function downloadFromURL(input: string): Promise<ArrayBuffer> {
+export async function downloadFromUrl(input: string): Promise<ArrayBuffer> {
    // sanitize & validate url
-   const url = sanitizeURL(input);
+   const url = sanitizeUrl(input);
 
    // check if URL is BeatSaver map URL
    if (url.match(/^(https?:\/\/)?(www\.)?beatsaver\.com\/maps\//)) {
-      return downloadFromID(
+      return downloadFromId(
          url.replace(/^https?:\/\/(www\.)?beatsaver\.com\/maps\//, '').match(/[a-fA-F0-9]*/)![0],
       );
    }

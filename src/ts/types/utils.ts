@@ -9,6 +9,12 @@ export type Only<T, U> = {
 
 export type Either<T, U> = Only<T, U> | Only<U, T>;
 
+export type Writable<T> = { -readonly [P in keyof T]: T[P] };
+
+export type DeepWritable<T> = {
+   -readonly [P in keyof T]: T[P] extends object ? DeepWritable<T[P]> : T[P];
+};
+
 export type DeepPartial<T> = {
    [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P];
 };

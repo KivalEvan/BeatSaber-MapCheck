@@ -15,7 +15,7 @@ export abstract class WrapBPMEvent<T extends { [P in keyof T]: T[P] }>
       this._bpm = value;
    }
 
-   setBPM(value: IWrapBPMEvent['bpm']) {
+   setBPM(value: IWrapBPMEvent['bpm']): this {
       this.bpm = value;
       return this;
    }

@@ -42,7 +42,7 @@ export class DummySpecialEventsKeywordFilters extends WrapEventTypesWithKeywords
       this._list = value;
    }
 
-   addList(value: never) {
+   addList(value: never): this {
       this._list.push(value);
       return this;
    }

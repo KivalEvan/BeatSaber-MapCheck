@@ -56,23 +56,23 @@ export abstract class WrapEventBox<
       this._events = value;
    }
 
-   setFilter(value: IWrapIndexFilter<TFilter>) {
+   setFilter(value: IWrapIndexFilter<TFilter>): this {
       this.filter = value;
       return this;
    }
-   setBeatDistribution(value: IWrapEventBox<TBase>['beatDistribution']) {
+   setBeatDistribution(value: IWrapEventBox<TBase>['beatDistribution']): this {
       this.beatDistribution = value;
       return this;
    }
-   setBeatDistributionType(value: IWrapEventBox<TBase>['beatDistributionType']) {
+   setBeatDistributionType(value: IWrapEventBox<TBase>['beatDistributionType']): this {
       this.beatDistributionType = value;
       return this;
    }
-   setEasing(value: IWrapEventBox<TBase>['easing']) {
+   setEasing(value: IWrapEventBox<TBase>['easing']): this {
       this.easing = value;
       return this;
    }
-   setAffectFirst(value: IWrapEventBox<TBase>['affectFirst']) {
+   setAffectFirst(value: IWrapEventBox<TBase>['affectFirst']): this {
       this.affectFirst = value;
       return this;
    }

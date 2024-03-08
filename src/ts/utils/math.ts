@@ -53,7 +53,7 @@ function _random(
       }
       return result;
    }
-   [min, max] = fixRange(min, max);
+   [min, max] = rearrangeTuple(min, max);
    const result = fn() * (max - min) + min;
    return rounding
       ? round(result, typeof rounding === 'number' && rounding > 0 ? rounding : 0)
@@ -93,14 +93,16 @@ export function pRandom(
  *
  * **NOTE:** Seed cannot be reset.
  */
-export function pRandomFn(seed: string | number | bigint = Math.random()) {
+export function pRandomFn(
+   seed: string | number | bigint = Math.random(),
+): (min?: number | boolean, max?: number | boolean, rounding?: number | boolean) => number {
    const _seed = hashCode(seed);
    const _func = _pRandom(_seed);
    return function (
       min?: number | boolean,
       max?: number | boolean,
       rounding: number | boolean = false,
-   ) {
+   ): number {
       return _random(min, max, rounding, _func);
    };
 }
@@ -142,7 +144,7 @@ export function random(
 }
 
 /** Return number tuple in order. */
-export function fixRange(min: number, max: number, inverse?: boolean): [number, number] {
+export function rearrangeTuple(min: number, max: number, inverse?: boolean): [number, number] {
    if (!inverse && min > max) {
       return [max, min];
    }
@@ -157,11 +159,55 @@ export function round(num: number, d = 0): number {
    return Math.round(num * r) / r;
 }
 
-export function radToDeg(rad: number) {
+/**
+ * Return array of numbers given arguments.
+ * ```ts
+ * range(5); // [0, 1, 2, 3, 4]
+ * range(5, true); // [0, 1, 2, 3, 4, 5]
+ * range(5, 10); // [5, 6, 7, 8, 9]
+ * range(5, 10, true); // [5, 6, 7, 8, 9, 10]
+ * range(5, 10, 2); // [5, 7, 9]
+ * ```
+ */
+export function range(n: number, inclusive?: boolean): number[];
+export function range(start: number, end: number, inclusive?: boolean): number[];
+export function range(start: number, end: number, step: number, inclusive?: boolean): number[];
+export function range(
+   arg0: number,
+   arg1?: number | boolean,
+   arg2?: number | boolean,
+   arg3?: boolean,
+): number[] {
+   let start = arg0;
+   let inc = arg3;
+   let end!: number;
+   let step!: number;
+   if (typeof arg1 === 'boolean') {
+      inc = arg1;
+   } else if (typeof arg1 === 'number') {
+      end = arg1;
+   } else {
+      end = start;
+      start = 0;
+   }
+   if (typeof arg2 === 'boolean') {
+      inc = arg2;
+   } else {
+      step = arg2!;
+   }
+   if (!step) step = start > end ? -1 : 1;
+   const ary = new Array(Math.abs(Math.ceil((end - start) / step)) + (inc ? 1 : 0));
+   for (let i = 0; i < ary.length; i++) {
+      ary[i] = start + i * step;
+   }
+   return ary;
+}
+
+export function radToDeg(rad: number): number {
    return rad * (180 / Math.PI);
 }
 
-export function degToRad(deg: number) {
+export function degToRad(deg: number): number {
    return deg * (Math.PI / 180);
 }
 
@@ -196,16 +242,16 @@ export function shortRotDistance(a: number, b: number, m: number): number {
    return Math.min(mod(a - b, m), mod(b - a, m));
 }
 
-export function median(numArr: number[]): number {
-   if (numArr.length === 0) {
+export function median(nums: number[]): number {
+   if (nums.length === 0) {
       return 0;
    }
-   numArr.sort((a: number, b: number) => a - b);
-   const mid = Math.floor(numArr.length / 2);
-   if (numArr.length % 2) {
-      return numArr[mid];
+   const ary = nums.map((n: number) => n).sort((a: number, b: number) => a - b);
+   const mid = Math.floor(ary.length / 2);
+   if (ary.length % 2) {
+      return ary[mid];
    }
-   return (numArr[mid - 1] + numArr[mid]) / 2;
+   return (ary[mid - 1] + ary[mid]) / 2;
 }
 
 export function clamp(value: number, min: number, max: number): number {
@@ -215,7 +261,7 @@ export function clamp(value: number, min: number, max: number): number {
 /**
  * Normalize value to 0-1 from given min and max value.
  *
- * Returns 1 if `max - min === 0`.
+ * Returns 1 if `max - min === 0`, values beyond will be extrapolated.
  */
 export function normalize(value: number, min: number, max: number): number {
    if (max - min === 0) return 1;
@@ -257,11 +303,12 @@ export function remap(
    origTo: number,
    targetFrom: number,
    targetTo: number,
-) {
+): number {
    const alpha = invLerp(value, origFrom, origTo);
    return lerp(alpha, targetFrom, targetTo);
 }
 
-export function equalNear(value: number, compareTo: number, tolerance = Number.EPSILON): boolean {
-   return Math.abs(value - compareTo) <= tolerance;
+/** Returns true if both value are approximately equal within given tolerance. */
+export function nearEqual(n1: number, n2: number, tolerance = Number.EPSILON): boolean {
+   return Math.abs(n1 - n2) <= tolerance;
 }

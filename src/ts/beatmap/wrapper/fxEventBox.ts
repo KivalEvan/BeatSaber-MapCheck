@@ -34,11 +34,11 @@ export abstract class WrapFxEventBox<
       this._events = value;
    }
 
-   setFxDistribution(value: IWrapFxEventBox['fxDistribution']) {
+   setFxDistribution(value: IWrapFxEventBox['fxDistribution']): this {
       this.fxDistribution = value;
       return this;
    }
-   setFxDistributionType(value: IWrapFxEventBox['fxDistributionType']) {
+   setFxDistributionType(value: IWrapFxEventBox['fxDistributionType']): this {
       this.fxDistributionType = value;
       return this;
    }

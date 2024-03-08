@@ -15,7 +15,7 @@ export abstract class WrapBaseObject<T extends { [P in keyof T]: T[P] }>
       this._time = value;
    }
 
-   setTime(value: number) {
+   setTime(value: number): this {
       this.time = value;
       return this;
    }

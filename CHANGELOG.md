@@ -1,11 +1,12 @@
 # Changelog
 
-## 2.6.0 [2024-02-##]
+## 2.6.0 [2024-03-07]
 
 ### Added
 
 -  v4 beatmap support
--  Lattice environment & color scheme
+-  Lattice and Daft Punk environment & color scheme
+-  Audio duration inferring from BPMInfo.dat and Audio Data
 
 ### Changed
 

@@ -9,6 +9,7 @@
 
 export * from './custom/mod';
 export * from './arc';
+export * from './bpmInfo';
 export * from './difficulty';
 export * from './event';
 export * from './info';

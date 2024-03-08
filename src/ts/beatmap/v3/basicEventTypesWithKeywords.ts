@@ -56,7 +56,7 @@ export class BasicEventTypesWithKeywords extends WrapEventTypesWithKeywords<
       this._list = value;
    }
 
-   addList(value: BasicEventTypesForKeywords) {
+   addList(value: BasicEventTypesForKeywords): this {
       this.list.push(value);
       return this;
    }

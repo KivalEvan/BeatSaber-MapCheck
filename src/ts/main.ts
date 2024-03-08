@@ -8,9 +8,9 @@ import Analyser from './tools/analyzer';
 import Settings from './settings';
 import flag from './flag';
 import SavedData from './savedData';
-import { extractBeatmaps, extractBPMInfo, extractInfo } from './load';
-import { downloadFromHash, downloadFromID, downloadFromURL } from './download';
-import { sanitizeBeatSaverID, sanitizeURL } from './utils/web';
+import { extractBeatmaps, extractBpmInfo, extractInfo } from './load';
+import { downloadFromHash, downloadFromId, downloadFromUrl } from './download';
+import { sanitizeBeatSaverId, sanitizeUrl } from './utils/web';
 import { isHex, lerp } from './utils';
 import { extractZip } from './extract';
 import logger from './logger';
@@ -25,9 +25,9 @@ async function getFileInput(type: LoadType): Promise<ArrayBuffer | File> {
    if (type.file) {
       return type.file;
    } else if (type.link) {
-      return downloadFromURL(sanitizeURL(decodeURI(type.link)));
+      return downloadFromUrl(sanitizeUrl(decodeURI(type.link)));
    } else if (type.id) {
-      return downloadFromID(sanitizeBeatSaverID(decodeURI(type.id)));
+      return downloadFromId(sanitizeBeatSaverId(decodeURI(type.id)));
    } else if (type.hash && isHex(decodeURI(type.hash).trim())) {
       return downloadFromHash(decodeURI(type.hash).trim());
    } else {
@@ -151,7 +151,7 @@ export default async (type: LoadType) => {
             resolve(null);
          }),
          new Promise<IBeatmapAudio | null>(async (resolve) => {
-            const audioInfo = await extractBPMInfo(info, beatmapZip);
+            const audioInfo = await extractBpmInfo(info, beatmapZip);
             itemDone++;
             itemSet.delete('audio/BPM data');
             if (audioInfo) {

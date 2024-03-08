@@ -7,4 +7,5 @@ export * from './difficulty';
 export * from './environment';
 export * from './helpers';
 export * from './njs';
+export * from './serializable';
 export * from './version';

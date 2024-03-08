@@ -48,19 +48,21 @@ export abstract class WrapLightRotationEventBox<
       this._events = value;
    }
 
-   setRotationDistribution(value: IWrapLightRotationEventBox['rotationDistribution']) {
+   setRotationDistribution(value: IWrapLightRotationEventBox['rotationDistribution']): this {
       this.rotationDistribution = value;
       return this;
    }
-   setRotationDistributionType(value: IWrapLightRotationEventBox['rotationDistributionType']) {
+   setRotationDistributionType(
+      value: IWrapLightRotationEventBox['rotationDistributionType'],
+   ): this {
       this.rotationDistributionType = value;
       return this;
    }
-   setAxis(value: IWrapLightRotationEventBox['axis']) {
+   setAxis(value: IWrapLightRotationEventBox['axis']): this {
       this.axis = value;
       return this;
    }
-   setFlip(value: IWrapLightRotationEventBox['flip']) {
+   setFlip(value: IWrapLightRotationEventBox['flip']): this {
       this.flip = value;
       return this;
    }

@@ -29,15 +29,15 @@ export abstract class WrapLightTranslationEvent<T extends { [P in keyof T]: T[P]
       this._translation = value;
    }
 
-   setPrevious(value: IWrapLightTranslationEvent['previous']) {
+   setPrevious(value: IWrapLightTranslationEvent['previous']): this {
       this.previous = value;
       return this;
    }
-   setEasing(value: IWrapLightTranslationEvent['easing']) {
+   setEasing(value: IWrapLightTranslationEvent['easing']): this {
       this.easing = value;
       return this;
    }
-   setTranslation(value: IWrapLightTranslationEvent['translation']) {
+   setTranslation(value: IWrapLightTranslationEvent['translation']): this {
       this.translation = value;
       return this;
    }

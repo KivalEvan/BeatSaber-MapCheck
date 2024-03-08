@@ -1,3 +1,5 @@
+import { Vector3, Vector4 } from './vector';
+
 /** Standard color object. */
 export interface IColor {
    r: number;
@@ -12,7 +14,7 @@ export interface IColor {
  * const color = [red, green, blue] || [red, green, blue, alpha];
  * ```
  */
-export type ColorArray = [r: number, g: number, b: number, a?: number];
+export type ColorArray = Vector3 | Vector4;
 
 export type ColorType = 'rgba' | 'rgba255' | 'hsva';
 

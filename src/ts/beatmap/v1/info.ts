@@ -6,7 +6,7 @@ import { EnvironmentV3Name } from '../../types/beatmap/shared/environment';
 import { WrapInfo, WrapInfoDifficulty } from '../wrapper/info';
 import { DifficultyName } from '../../types/beatmap/shared/difficulty';
 import { DeepPartial, LooseAutocomplete } from '../../types/utils';
-import { GenericFileName } from '../../types/beatmap/shared/filename';
+import { GenericFilename } from '../../types/beatmap/shared/filename';
 import { IColor } from '../../types/colors';
 import { IContributor } from '../../types/beatmap/shared/custom/contributor';
 import { deepCopy, shallowCopy } from '../../utils/misc';
@@ -253,7 +253,7 @@ export interface IV1ExtraInfoDifficulty {
 export class InfoDifficulty extends WrapInfoDifficulty<IInfoDifficulty> {
    characteristic: CharacteristicName;
    difficulty: DifficultyName;
-   filename: LooseAutocomplete<GenericFileName>;
+   filename: LooseAutocomplete<GenericFilename>;
    lightshowFilename = '';
    authors = { mappers: [], lighters: [] };
    njs: number;
@@ -307,7 +307,7 @@ export class InfoDifficulty extends WrapInfoDifficulty<IInfoDifficulty> {
          Partial<IV1ExtraInfoDifficulty> = {},
       songFileName?: string,
       characteristic?: CharacteristicName,
-   ) {
+   ): InfoDifficulty {
       return new this(data, songFileName, characteristic);
    }
 

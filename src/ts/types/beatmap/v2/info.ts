@@ -9,7 +9,7 @@ import {
    EnvironmentName,
    EnvironmentV3Name,
 } from '../shared/environment';
-import { GenericFileName } from '../shared/filename';
+import { GenericFilename } from '../shared/filename';
 
 export interface IInfo {
    _version?: `2.${0 | 1}.0`;
@@ -60,7 +60,7 @@ export interface IInfoSet {
 export interface IInfoDifficulty {
    _difficulty?: DifficultyName;
    _difficultyRank?: DifficultyRank;
-   _beatmapFilename?: LooseAutocomplete<GenericFileName>;
+   _beatmapFilename?: LooseAutocomplete<GenericFilename>;
    _noteJumpMovementSpeed?: number;
    _noteJumpStartBeatOffset?: number;
    _beatmapColorSchemeIdx?: number;

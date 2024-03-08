@@ -22,11 +22,11 @@ export abstract class WrapRotationEvent<T extends { [P in keyof T]: T[P] }>
       this._rotation = value;
    }
 
-   setExecutionTime(value: IWrapRotationEvent['executionTime']) {
+   setExecutionTime(value: IWrapRotationEvent['executionTime']): this {
       this.executionTime = value;
       return this;
    }
-   setRotation(value: IWrapRotationEvent['rotation']) {
+   setRotation(value: IWrapRotationEvent['rotation']): this {
       this.rotation = value;
       return this;
    }

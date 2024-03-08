@@ -72,39 +72,39 @@ export abstract class WrapIndexFilter<T extends { [P in keyof T]: T[P] }>
       this._seed = value;
    }
 
-   setType(value: IWrapIndexFilter['type']) {
+   setType(value: IWrapIndexFilter['type']): this {
       this.type = value;
       return this;
    }
-   setP0(value: IWrapIndexFilter['p0']) {
+   setP0(value: IWrapIndexFilter['p0']): this {
       this.p0 = value;
       return this;
    }
-   setP1(value: IWrapIndexFilter['p1']) {
+   setP1(value: IWrapIndexFilter['p1']): this {
       this.p1 = value;
       return this;
    }
-   setReverse(value: IWrapIndexFilter['reverse']) {
+   setReverse(value: IWrapIndexFilter['reverse']): this {
       this.reverse = value;
       return this;
    }
-   setChunks(value: IWrapIndexFilter['chunks']) {
+   setChunks(value: IWrapIndexFilter['chunks']): this {
       this.chunks = value;
       return this;
    }
-   setRandom(value: IWrapIndexFilter['random']) {
+   setRandom(value: IWrapIndexFilter['random']): this {
       this.random = value;
       return this;
    }
-   setSeed(value: IWrapIndexFilter['seed']) {
+   setSeed(value: IWrapIndexFilter['seed']): this {
       this.seed = value;
       return this;
    }
-   setLimit(value: IWrapIndexFilter['limit']) {
+   setLimit(value: IWrapIndexFilter['limit']): this {
       this.limit = value;
       return this;
    }
-   setLimitAffectsType(value: IWrapIndexFilter['limitAffectsType']) {
+   setLimitAffectsType(value: IWrapIndexFilter['limitAffectsType']): this {
       this.limitAffectsType = value;
       return this;
    }

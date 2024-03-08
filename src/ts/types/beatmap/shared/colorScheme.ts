@@ -31,4 +31,5 @@ export type ColorSchemeName =
    | 'Queen'
    | 'Linkin Park 2.0'
    | 'The Rolling Stones'
-   | 'Lattice';
+   | 'Lattice'
+   | 'Daft Punk';

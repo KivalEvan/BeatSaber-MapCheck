@@ -42,24 +42,24 @@ export abstract class WrapArc<T extends { [P in keyof T]: T[P] }>
       this._midAnchor = value;
    }
 
-   setLengthMultiplier(value: IWrapArc['lengthMultiplier']) {
+   setLengthMultiplier(value: IWrapArc['lengthMultiplier']): this {
       this.lengthMultiplier = value;
       return this;
    }
-   setTailLengthMultiplier(value: IWrapArc['tailLengthMultiplier']) {
+   setTailLengthMultiplier(value: IWrapArc['tailLengthMultiplier']): this {
       this.tailLengthMultiplier = value;
       return this;
    }
-   setTailDirection(value: IWrapArc['tailDirection']) {
+   setTailDirection(value: IWrapArc['tailDirection']): this {
       this.tailDirection = value;
       return this;
    }
-   setMidAnchor(value: IWrapArc['midAnchor']) {
+   setMidAnchor(value: IWrapArc['midAnchor']): this {
       this.midAnchor = value;
       return this;
    }
 
-   mirror(flipColor = true, _flipNoodle?: boolean) {
+   mirror(flipColor = true, _flipNoodle?: boolean): this {
       switch (this.tailDirection) {
          case 2:
             this.tailDirection = 3;
@@ -86,11 +86,11 @@ export abstract class WrapArc<T extends { [P in keyof T]: T[P] }>
       return super.mirror(flipColor);
    }
 
-   getTailAngle(_type?: ModType) {
+   getTailAngle(_type?: ModType): number {
       return NoteDirectionAngle[this.tailDirection as keyof typeof NoteDirectionAngle] || 0;
    }
 
-   isMappingExtensions() {
+   isMappingExtensions(): boolean {
       return (
          this.posY > 2 ||
          this.posY < 0 ||
@@ -101,7 +101,7 @@ export abstract class WrapArc<T extends { [P in keyof T]: T[P] }>
       );
    }
 
-   isValid() {
+   isValid(): boolean {
       return !(
          this.isMappingExtensions() ||
          this.isInverse() ||

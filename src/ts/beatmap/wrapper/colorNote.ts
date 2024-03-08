@@ -24,16 +24,16 @@ export abstract class WrapColorNote<T extends { [P in keyof T]: T[P] }>
       this._angleOffset = value;
    }
 
-   setType(value: IWrapColorNote['type']) {
+   setType(value: IWrapColorNote['type']): this {
       this.type = value;
       return this;
    }
-   setAngleOffset(value: IWrapColorNote['angleOffset']) {
+   setAngleOffset(value: IWrapColorNote['angleOffset']): this {
       this.angleOffset = value;
       return this;
    }
 
-   mirror(flipColor = true, _flipNoodle?: boolean) {
+   mirror(flipColor = true, _flipNoodle?: boolean): this {
       return super.mirror(flipColor);
    }
 
@@ -45,14 +45,14 @@ export abstract class WrapColorNote<T extends { [P in keyof T]: T[P] }>
       return this.type === 3;
    }
 
-   getAngle(_type?: ModType) {
+   getAngle(_type?: ModType): number {
       return (
          (NoteDirectionAngle[this.direction as keyof typeof NoteDirectionAngle] || 0) +
          this.angleOffset
       );
    }
 
-   isMappingExtensions() {
+   isMappingExtensions(): boolean {
       return (
          this.posX > 3 ||
          this.posX < 0 ||
