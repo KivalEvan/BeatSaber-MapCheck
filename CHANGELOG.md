@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.6.1 [2024-03-27]
+
+### Fixed
+
+-  Potential error when dealing with beatmap of different version
+
 ## 2.6.0 [2024-03-07]
 
 ### Added
@@ -27,7 +33,8 @@
 ### Deprecated
 
 -  Beatmap v3.x.x is now unsupported
-   -  Beatmap v3 can still be used by map check, but will not gain any feature updated around it.
+   -  Beatmap v3 can still be used by map check, but will not gain any feature
+      updated around it.
 
 ### Removed
 
@@ -47,8 +54,8 @@
    -  FX Event Box Group
    -  FX Events Collection
 -  Linkin Park 2.0 environment & color scheme
--  [New SongCore features](https://github.com/Kylemc1413/SongCore/pull/122) (tags, custom
-   characteristic label, etc.)
+-  [New SongCore features](https://github.com/Kylemc1413/SongCore/pull/122)
+   (tags, custom characteristic label, etc.)
 -  One Saber check
 -  Official color scheme and environment per difficulty
 
@@ -56,7 +63,8 @@
 
 -  Improved loading logic
    -  Can now load beatmap v1
--  Loading beatmap can now default missing attributes as given by 1.32 editor update
+-  Loading beatmap can now default missing attributes as given by 1.32 editor
+   update
 -  The Weeknd and Panic 2.0 color scheme now shows white color value
 -  New unknown environment now display environment string itself
 -  Different message for light event check in v3 environment
@@ -92,9 +100,10 @@
 ### Changed
 
 -  Arc no longer count towards interactive time
-   -  While arc can affect scoring, visibility and haptic can be disabled and mostly served as
-      cosmetic
--  Bomb should now count towards interactive time (idk why this was filtered in the first place)
+   -  While arc can affect scoring, visibility and haptic can be disabled and
+      mostly served as cosmetic
+-  Bomb should now count towards interactive time (idk why this was filtered in
+   the first place)
 
 ### Fixed
 
@@ -236,7 +245,8 @@
 
 -  v3 beatmap support
 -  v2 to v3 beatmap internal conversion
-   -  This may be inaccurate for modded v2 map as it internally convert modded to v3
+   -  This may be inaccurate for modded v2 map as it internally convert modded to
+      v3
 -  Weave, Pyro and EDM environment
 -  Basic slider and burst slider check
 -  More tool check including general
@@ -259,7 +269,8 @@
 ### Deprecated
 
 -  Beatmap v2.x.x is now unsupported
-   -  Beatmap v2 can still be used by map check, but will not gain any feature updated around it.
+   -  Beatmap v2 can still be used by map check, but will not gain any feature
+      updated around it.
 
 ### Removed
 
@@ -272,7 +283,8 @@
 ### Changed
 
 -  Major structure change (for better development)
--  Download from URL changes to download from ID if it detects valid BeatSaver map link
+-  Download from URL changes to download from ID if it detects valid BeatSaver
+   map link
 -  Time spent now shows HH:MM:SS instead of HH:MM
 -  Actually added Gaga color scheme
 -  Restructured custom mod stuff
@@ -312,8 +324,8 @@
    -  This allows NE/ME map to use the error check functionality
    -  This also allows for more advanced checking in the future
    -  Updated check and threshold to better fit with the system
-   -  Because of the change, some functionality may not work as intended (please report if you find
-      them)
+   -  Because of the change, some functionality may not work as intended (please
+      report if you find them)
 -  Unlit bomb check
 
 ### Changed
@@ -391,13 +403,14 @@
 ### Changed
 
 -  NJS HJD minimum limit reduced to 0.25 to accomodate v1.18.1 update
--  Mapping Extensions and Noodle Extensions now have basic check for valid (and negative) notes and
-   obstacles
+-  Mapping Extensions and Noodle Extensions now have basic check for valid (and
+   negative) notes and obstacles
 -  Plenty of code clean-up
 
 ### Fixed
 
--  NJS dependent check corrected formula (this affects inline, reverse stair, and stacked bomb)
+-  NJS dependent check corrected formula (this affects inline, reverse stair, and
+   stacked bomb)
 
 ### Deprecated
 

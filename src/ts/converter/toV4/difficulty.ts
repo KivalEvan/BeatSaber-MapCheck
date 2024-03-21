@@ -20,13 +20,13 @@ export function toV4Difficulty(data: IWrapDifficulty): V4Difficulty {
    let template = new V4Difficulty();
    switch (true) {
       case data instanceof V1Difficulty:
-         fromV1Difficulty(template, data);
+         fromV1Difficulty(template, data as V1Difficulty);
          break;
       case data instanceof V2Difficulty:
-         fromV2Difficulty(template, data);
+         fromV2Difficulty(template, data as V2Difficulty);
          break;
       case data instanceof V3Difficulty:
-         fromV3Difficulty(template, data);
+         fromV3Difficulty(template, data as V3Difficulty);
          break;
       case data instanceof V4Difficulty:
          template = new V4Difficulty(data.toJSON());

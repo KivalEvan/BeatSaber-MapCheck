@@ -36,22 +36,22 @@ export function toV2Difficulty(data: IWrapDifficulty | IWrapLightshow): V2Diffic
    let template = new V2Difficulty();
    switch (true) {
       case data instanceof V1Difficulty:
-         fromV1Difficulty(template, data);
+         fromV1Difficulty(template, data as V1Difficulty);
          break;
       case data instanceof V2Difficulty:
          template = new V2Difficulty(data);
          break;
       case data instanceof V3Difficulty:
-         fromV3Difficulty(template, data);
+         fromV3Difficulty(template, data as V3Difficulty);
          break;
       case data instanceof V4Difficulty:
-         fromV4Difficulty(template, data);
+         fromV4Difficulty(template, data as V4Difficulty);
          break;
       case data instanceof V3Lightshow:
-         fromV3Lightshow(template, data);
+         fromV3Lightshow(template, data as V3Lightshow);
          break;
       case data instanceof V4Lightshow:
-         fromV4Lightshow(template, data);
+         fromV4Lightshow(template, data as V4Lightshow);
          break;
       default:
          logger.tWarn(tag('main'), 'Unknown beatmap data, returning empty template');
@@ -495,9 +495,7 @@ function fromV3Lightshow(template: V2Difficulty, data: V3Lightshow) {
          floatValue: 1,
       }),
    );
-   template.eventTypesWithKeywords = template.eventTypesWithKeywords.constructor(
-      data.eventTypesWithKeywords,
-   );
+   template.eventTypesWithKeywords = new SpecialEventsKeywordFilters(data.eventTypesWithKeywords);
    template.customData = deepCopy(data.customData);
 }
 
@@ -526,8 +524,6 @@ function fromV4Lightshow(template: V2Difficulty, data: V4Lightshow) {
          floatValue: 1,
       }),
    );
-   template.eventTypesWithKeywords = template.eventTypesWithKeywords.constructor(
-      data.eventTypesWithKeywords,
-   );
+   template.eventTypesWithKeywords = new SpecialEventsKeywordFilters(data.eventTypesWithKeywords);
    template.customData = deepCopy(data.customData);
 }

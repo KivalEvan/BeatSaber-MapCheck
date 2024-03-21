@@ -17,13 +17,13 @@ export function toV2Info(data: IWrapInfo): V2Info {
    let template = new V2Info();
    switch (true) {
       case data instanceof V1Info:
-         fromV1Info(template, data);
+         fromV1Info(template, data as V1Info);
          break;
       case data instanceof V2Info:
          template = new V2Info(data);
          break;
       case data instanceof V4Info:
-         fromV4Info(template, data);
+         fromV4Info(template, data as V4Info);
          break;
       default:
          logger.tWarn(tag('main'), 'Unknown beatmap data, returning empty template');
@@ -52,7 +52,7 @@ function fromV1Info(template: V2Info, data: V1Info) {
    template.customData.customEnvironment = data.customEnvironment;
    template.customData.customEnvironmentHash = data.customEnvironmentHash;
 
-   data.listMap().forEach(([mode, beatmap]) => {
+   data.listMap().forEach(([characteristic, beatmap]) => {
       template.addMap(
          {
             difficulty: beatmap.difficulty,
@@ -71,7 +71,7 @@ function fromV1Info(template: V2Info, data: V1Info) {
                _obstacleColor: shallowCopy(beatmap.obstacleColor),
             },
          },
-         mode,
+         characteristic,
       );
    });
 }
@@ -108,8 +108,8 @@ function fromV4Info(template: V2Info, data: V4Info) {
          },
          beatmap.characteristic,
       );
-      template.levelAuthorName = [...beatmap.authors.mappers, ...beatmap.authors.lighters].join(
-         ', ',
-      );
+      template.levelAuthorName = [
+         ...new Set([...beatmap.authors.mappers, ...beatmap.authors.lighters]),
+      ].join(', ');
    });
 }

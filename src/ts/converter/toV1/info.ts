@@ -19,10 +19,10 @@ export function toV1Info(data: IWrapInfo): V1Info {
          template = new V1Info(data.toJSON());
          break;
       case data instanceof V2Info:
-         fromV2Info(template, data);
+         fromV2Info(template, data as V2Info);
          break;
       case data instanceof V4Info:
-         fromV4Info(template, data);
+         fromV4Info(template, data as V4Info);
          break;
       default:
          logger.tWarn(tag('main'), 'Unknown beatmap data, returning empty template');
@@ -41,14 +41,14 @@ function fromV2Info(template: V1Info, data: V2Info) {
    template.previewDuration = data.previewDuration;
    template.coverImageFilename = data.coverImageFilename;
    template.environmentName = data.environmentName;
-   data.listMap().forEach(([mode, m]) => {
+   data.listMap().forEach(([characteristic, m]) => {
       template.addMap(
          {
             difficulty: m.difficulty,
             difficultyRank: m.rank as 1,
             audioPath: data.songFilename,
             jsonPath: m.filename,
-            characteristic: mode,
+            characteristic: characteristic,
             offset: m.customData?._editorOffset,
             oldOffset: m.customData?._editorOldOffset,
             chromaToggle: 'Off',
@@ -66,7 +66,7 @@ function fromV2Info(template: V1Info, data: V2Info) {
             envColorRight: shallowCopy(m.customData._envColorRight),
             obstacleColor: shallowCopy(m.customData._obstacleColor),
          },
-         mode,
+         characteristic,
       );
    });
    template.oneSaber = !!data.difficulties.find((m) => m.characteristic === 'OneSaber');

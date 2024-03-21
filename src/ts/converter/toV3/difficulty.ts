@@ -45,22 +45,22 @@ export function toV3Difficulty(data: IWrapDifficulty | IWrapLightshow): V3Diffic
    let template = new V3Difficulty();
    switch (true) {
       case data instanceof V1Difficulty:
-         fromV1Difficulty(template, data);
+         fromV1Difficulty(template, data as V1Difficulty);
          break;
       case data instanceof V2Difficulty:
-         fromV2Difficulty(template, data);
+         fromV2Difficulty(template, data as V2Difficulty);
          break;
       case data instanceof V3Difficulty:
          template = new V3Difficulty(data);
          break;
       case data instanceof V4Difficulty:
-         fromV4Difficulty(template, data);
+         fromV4Difficulty(template, data as V4Difficulty);
          break;
       case data instanceof V3Lightshow:
-         fromV3Lightshow(template, data);
+         fromV3Lightshow(template, data as V3Lightshow);
          break;
       case data instanceof V4Lightshow:
-         fromV4Lightshow(template, data);
+         fromV4Lightshow(template, data as V4Lightshow);
          break;
       default:
          logger.tWarn(tag('main'), 'Unknown beatmap data, returning empty template');
@@ -638,9 +638,7 @@ function fromV4Lightshow(template: V3Difficulty, data: V4Lightshow) {
    template.addLightRotationEventBoxGroups(...data.lightRotationEventBoxGroups);
    template.addLightTranslationEventBoxGroups(...data.lightTranslationEventBoxGroups);
    template.addFxEventBoxGroups(...data.fxEventBoxGroups);
-   template.eventTypesWithKeywords = template.eventTypesWithKeywords.constructor(
-      data.eventTypesWithKeywords,
-   );
+   template.eventTypesWithKeywords = data.eventTypesWithKeywords.clone();
    template.useNormalEventsAsCompatibleEvents = data.useNormalEventsAsCompatibleEvents;
    template.customData = deepCopy(data.customData);
 }

@@ -38,7 +38,9 @@ export function setCustomEvents(arr?: ICustomEvent[], bpm?: BeatPerMinute | null
             keyArr.push(k);
          }
       }
-      return `${round(elem.b, Settings.rounding)}${rt ? ' | ' + toMmss(rt) : ''} -- ${elem.t} -> [${keyArr.join(
+      return `${round(elem.b, Settings.rounding)}${
+         rt ? ' | ' + toMmss(rt) : ''
+      } -- ${elem.t} -> [${keyArr.join(
          '',
       )}]${elem.t !== 'AssignTrackParent' ? `(${elem.d.track})` : ''}`;
    });

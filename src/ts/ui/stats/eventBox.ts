@@ -99,19 +99,21 @@ export function createEBGCountTable(mapInfo: IWrapInfo, mapData: IBeatmapItem): 
       htmlStringID += `<tr><th class="${prefix}table-header">${key}</th><th class="${prefix}table-header" colspan="5">${eventGroupRename(
          parseInt(key),
          environment,
-      )}</th><td class="${prefix}table-element" title="${ebgColorCount[key].groups} Box (${
-         ebgColorCount[key].bases
-      } Base)">${ebgColorCount[key].groups}</td><td class="${prefix}table-element" title="${
+      )}</th><td class="${prefix}table-element" title="${
+         ebgColorCount[key].groups
+      } Box (${ebgColorCount[key].bases} Base)">${
+         ebgColorCount[key].groups
+      }</td><td class="${prefix}table-element" title="${
          ebgRotationCount[key].boxes
       } Box (${ebgRotationCount[key].bases} Base)">${
          ebgRotationCount[key].groups
-      }</td><td class="${prefix}table-element" title="${ebgTranslationCount[key].boxes} Box (${
-         ebgTranslationCount[key].bases
-      } Base)">${
+      }</td><td class="${prefix}table-element" title="${
+         ebgTranslationCount[key].boxes
+      } Box (${ebgTranslationCount[key].bases} Base)">${
          ebgTranslationCount[key].groups
-      }</td><td class="${prefix}table-element" title="${ebgFxCount[key].groups} Box (${
-         ebgFxCount[key].bases
-      } Base)">${ebgFxCount[key].groups}</td></tr>`;
+      }</td><td class="${prefix}table-element" title="${
+         ebgFxCount[key].groups
+      } Box (${ebgFxCount[key].bases} Base)">${ebgFxCount[key].groups}</td></tr>`;
    }
 
    const htmlTable = document.createElement('table');

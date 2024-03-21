@@ -1,10 +1,10 @@
 import { EnvironmentRename } from '../../beatmap/shared/environment';
 import { toHhmmss } from '../../utils';
 import {
-   htmlTableMappers,
-   htmlTableLighters,
    htmlTableEnvironmentId,
    htmlTableInformation,
+   htmlTableLighters,
+   htmlTableMappers,
    htmlTableRequirements,
    htmlTableSuggestions,
    htmlTableTimeSpend,

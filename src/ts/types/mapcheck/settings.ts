@@ -33,4 +33,5 @@ export interface ISettings {
    theme: UIThemeName;
    onLoad: ISettingsOnLoad;
    show: ISettingsShow;
+   aprilFooled: boolean;
 }

@@ -2,7 +2,7 @@ import { ISettings } from './types/mapcheck/settings';
 import { deepCopy } from './utils';
 
 const settingsDefault: ISettings = {
-   version: 3,
+   version: 4,
    load: {
       audio: true,
       imageCover: true,
@@ -22,6 +22,7 @@ const settingsDefault: ISettings = {
       stats: false,
       settings: false,
    },
+   aprilFooled: false,
 };
 
 // TODO: validate settings
@@ -85,6 +86,12 @@ export default new (class Settings implements ISettings {
    }
    get show(): ISettings['show'] {
       return this.property.show;
+   }
+   get aprilFooled() {
+      return this.property.aprilFooled;
+   }
+   set aprilFooled(value: boolean) {
+      this.property.aprilFooled = value;
    }
 
    private stringify = (): string => {

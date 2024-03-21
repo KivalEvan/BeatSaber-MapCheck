@@ -9,6 +9,7 @@ import { IWrapDifficulty } from '../../types/beatmap/wrapper/difficulty';
 import { IWrapLightshow } from '../../types/beatmap/wrapper/lightshow';
 import { deepCopy } from '../../utils/misc';
 import eventToV3 from '../customData/eventToV3';
+import { BasicEventTypesWithKeywords } from '../../beatmap/v3/basicEventTypesWithKeywords';
 
 function tag(name: string): string[] {
    return ['convert', 'toV3Lightshow', name];
@@ -22,13 +23,13 @@ export function toV3Lightshow(data: IWrapLightshow | IWrapDifficulty): V3Lightsh
 
    switch (true) {
       case data instanceof V1Difficulty:
-         fromV1Difficulty(template, data);
+         fromV1Difficulty(template, data as V1Difficulty);
          break;
       case data instanceof V2Difficulty:
-         fromV2Difficulty(template, data);
+         fromV2Difficulty(template, data as V2Difficulty);
          break;
       case data instanceof V3Difficulty:
-         fromV3Difficulty(template, data);
+         fromV3Difficulty(template, data as V3Difficulty);
          break;
       case data instanceof V4Difficulty:
          // it really doesnt have anything to do with lightshow
@@ -38,7 +39,7 @@ export function toV3Lightshow(data: IWrapLightshow | IWrapDifficulty): V3Lightsh
          template = new V3Lightshow(data);
          break;
       case data instanceof V4Lightshow:
-         fromV4Lightshow(template, data);
+         fromV4Lightshow(template, data as V4Lightshow);
          break;
       default:
          logger.tWarn(tag('main'), 'Unknown beatmap data, returning empty template');
@@ -112,9 +113,7 @@ function fromV2Difficulty(template: V3Lightshow, data: V2Difficulty) {
          });
       }
    });
-   template.eventTypesWithKeywords = template.eventTypesWithKeywords.constructor(
-      data.eventTypesWithKeywords,
-   );
+   template.eventTypesWithKeywords = new BasicEventTypesWithKeywords(data.eventTypesWithKeywords);
    template.customData = deepCopy(data.customData);
 }
 
@@ -136,8 +135,6 @@ function fromV4Lightshow(template: V3Lightshow, data: V4Lightshow) {
    template.addLightRotationEventBoxGroups(...data.lightRotationEventBoxGroups);
    template.addLightTranslationEventBoxGroups(...data.lightTranslationEventBoxGroups);
    template.addFxEventBoxGroups(...data.fxEventBoxGroups);
-   template.eventTypesWithKeywords = template.eventTypesWithKeywords.constructor(
-      data.eventTypesWithKeywords,
-   );
+   template.eventTypesWithKeywords = new BasicEventTypesWithKeywords(data.eventTypesWithKeywords);
    template.customData = deepCopy(data.customData);
 }

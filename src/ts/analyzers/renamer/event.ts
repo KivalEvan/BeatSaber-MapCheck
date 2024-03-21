@@ -27,7 +27,9 @@ const genericType: { [key: number]: string } = {
    43: 'Special Event 4',
 };
 
-const environmentType: { [env in EnvironmentAllName]?: { [key: number]: string } } = {
+const environmentType: {
+   [env in EnvironmentAllName]?: { [key: number]: string };
+} = {
    LinkinParkEnvironment: {
       0: 'Lane Light',
       1: 'Ceiling Lights',
