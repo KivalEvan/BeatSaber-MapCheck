@@ -183,6 +183,7 @@ export function range(
    let end!: number;
    let step!: number;
    if (typeof arg1 === 'boolean') {
+      end = 0;
       inc = arg1;
    } else if (typeof arg1 === 'number') {
       end = arg1;
@@ -242,8 +243,30 @@ export function shortRotDistance(a: number, b: number, m: number): number {
    return Math.min(mod(a - b, m), mod(b - a, m));
 }
 
+export function sumAry(nums: number[]): number {
+   let sum = 0;
+   for (const n of nums) sum += n;
+   return sum;
+}
+
+export function productAry(nums: number[]): number {
+   if (!nums.length) {
+      return 0;
+   }
+   let prod = 1;
+   for (const n of nums) prod *= n;
+   return prod;
+}
+
+export function mean(nums: number[]): number {
+   if (!nums.length) {
+      return 0;
+   }
+   return sumAry(nums) / nums.length;
+}
+
 export function median(nums: number[]): number {
-   if (nums.length === 0) {
+   if (!nums.length) {
       return 0;
    }
    const ary = nums.map((n: number) => n).sort((a: number, b: number) => a - b);

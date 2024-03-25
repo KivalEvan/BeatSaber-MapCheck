@@ -8,7 +8,7 @@
  */
 
 export * from './arc';
-export * from './audio';
+export * from './audioData';
 export * from './bombNote';
 export * from './chain';
 export * from './colorNote';

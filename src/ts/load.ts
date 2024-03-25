@@ -11,7 +11,7 @@ import { Lightshow } from './beatmap/v4/lightshow';
 import { Difficulty } from './beatmap/v4/difficulty';
 import { IWrapLightshow } from './types/beatmap/wrapper/lightshow';
 import { IBPMInfo } from './types/beatmap/v2/bpmInfo';
-import { IAudio } from './types/beatmap/v4/audio';
+import { IAudio } from './types/beatmap/v4/audioData';
 import { IBPMEvent } from './types/beatmap/v3/bpmEvent';
 import settings from './settings';
 

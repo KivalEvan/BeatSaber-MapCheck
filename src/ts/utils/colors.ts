@@ -180,9 +180,7 @@ export function toColorObject(color: ColorInput | IColor, ensureAlpha?: boolean)
       }
       return result;
    }
-   if (typeof color === 'string') {
-      return toColorObject(colorFrom(color), ensureAlpha);
-   }
+   if (typeof color === 'string') return toColorObject(colorFrom(color), ensureAlpha);
    if ('type' in color) {
       return toColorObject(colorFrom(color), ensureAlpha);
    }

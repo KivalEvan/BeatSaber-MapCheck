@@ -5,6 +5,7 @@
  */
 
 export * from './arc';
+export * from './audioData';
 export * from './baseItem';
 export * from './baseNote';
 export * from './baseObject';

@@ -5,6 +5,7 @@
  */
 
 export * from './arc';
+export * from './audioData';
 export * from './basicEvent';
 export * from './bombNote';
 export * from './chain';

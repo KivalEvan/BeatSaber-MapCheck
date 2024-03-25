@@ -1,4 +1,5 @@
 export * from './arc';
+export * from './bpmInfo';
 export * from './clean';
 export * from './difficulty';
 export * from './event';
