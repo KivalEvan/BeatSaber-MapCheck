@@ -1,6 +1,6 @@
 const vMajor: number = 2;
 const vMinor: number = 6;
-const vPatch: number = 0;
+const vPatch: number = 1;
 const watermark: string = 'Kival Evan#5480';
 
 export default new (class Version {
