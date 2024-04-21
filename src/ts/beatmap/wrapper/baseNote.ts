@@ -1,7 +1,7 @@
-import { NoteDirectionAngle } from '../shared/constants';
-import { WrapGridObject } from './gridObject';
-import { IWrapBaseNote } from '../../types/beatmap/wrapper/baseNote';
-import { ModType } from '../../types/beatmap/shared/modCheck';
+import { NoteDirectionAngle } from '../shared/constants.ts';
+import { WrapGridObject } from './gridObject.ts';
+import type { IWrapBaseNote } from '../../types/beatmap/wrapper/baseNote.ts';
+import type { ModType } from '../../types/beatmap/shared/modCheck.ts';
 
 /** Color note beatmap class object. */
 export abstract class WrapBaseNote<T extends { [P in keyof T]: T[P] }>

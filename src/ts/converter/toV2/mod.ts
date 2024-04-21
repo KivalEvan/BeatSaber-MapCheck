@@ -1,3 +1,3 @@
-export * from './audioData';
-export * from './difficulty';
-export * from './info';
+export * from './audioData.ts';
+export * from './difficulty.ts';
+export * from './info.ts';

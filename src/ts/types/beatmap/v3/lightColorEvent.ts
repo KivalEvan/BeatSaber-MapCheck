@@ -1,6 +1,6 @@
-import { TransitionType } from '../shared/constants';
-import { EventBoxColor } from '../shared/constants';
-import { ICustomDataBase } from '../shared/custom/customData';
+import type { TransitionType } from '../shared/constants.ts';
+import type { EventBoxColor } from '../shared/constants.ts';
+import type { ICustomDataBase } from '../shared/custom/customData.ts';
 
 export interface ILightColorEvent {
    /** Relative beat time `<float>` to event box group. */

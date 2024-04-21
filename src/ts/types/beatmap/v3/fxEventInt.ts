@@ -1,4 +1,4 @@
-import { ICustomDataBase } from '../shared/custom/customData';
+import type { ICustomDataBase } from '../shared/custom/customData.ts';
 
 export interface IFxEventInt {
    /** Relative beat time `<float>` to event box group. */

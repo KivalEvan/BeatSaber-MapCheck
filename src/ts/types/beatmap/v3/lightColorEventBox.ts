@@ -1,6 +1,6 @@
-import { DistributionType } from '../shared/constants';
-import { IEventBox } from './eventBox';
-import { ILightColorEvent } from './lightColorEvent';
+import type { DistributionType } from '../shared/constants.ts';
+import type { IEventBox } from './eventBox.ts';
+import type { ILightColorEvent } from './lightColorEvent.ts';
 
 export interface ILightColorEventBox extends IEventBox {
    /**

@@ -1,6 +1,6 @@
-import { LINE_COUNT } from '../shared/constants';
-import { IWrapWaypoint } from '../../types/beatmap/wrapper/waypoint';
-import { WrapGridObject } from './gridObject';
+import { LINE_COUNT } from '../shared/constants.ts';
+import type { IWrapWaypoint } from '../../types/beatmap/wrapper/waypoint.ts';
+import { WrapGridObject } from './gridObject.ts';
 
 /** Waypoint beatmap class object. */
 export abstract class WrapWaypoint<T extends { [P in keyof T]: T[P] }>

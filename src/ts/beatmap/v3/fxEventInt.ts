@@ -1,7 +1,7 @@
-import { IFxEventInt } from '../../types/beatmap/v3/fxEventInt';
-import { IWrapFxEventIntAttribute } from '../../types/beatmap/wrapper/fxEventInt';
-import { deepCopy } from '../../utils/misc';
-import { WrapFxEventInt } from '../wrapper/fxEventInt';
+import type { IFxEventInt } from '../../types/beatmap/v3/fxEventInt.ts';
+import type { IWrapFxEventIntAttribute } from '../../types/beatmap/wrapper/fxEventInt.ts';
+import { deepCopy } from '../../utils/misc.ts';
+import { WrapFxEventInt } from '../wrapper/fxEventInt.ts';
 
 /** FX int base beatmap v3 class object. */
 export class FxEventInt extends WrapFxEventInt<IFxEventInt> {

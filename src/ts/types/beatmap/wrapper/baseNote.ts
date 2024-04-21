@@ -1,7 +1,7 @@
 // deno-lint-ignore-file no-explicit-any
-import { NoteColor } from '../shared/constants';
-import { ModType } from '../shared/modCheck';
-import { IWrapGridObject, IWrapGridObjectAttribute } from './gridObject';
+import type { NoteColor } from '../shared/constants.ts';
+import type { ModType } from '../shared/modCheck.ts';
+import type { IWrapGridObject, IWrapGridObjectAttribute } from './gridObject.ts';
 
 export interface IWrapBaseNoteAttribute<T extends { [P in keyof T]: T[P] } = Record<string, any>>
    extends IWrapGridObjectAttribute<T> {

@@ -1,6 +1,6 @@
-import { Vector2 } from '../../types/vector';
-import { NoteDirection } from '../../types/beatmap/shared/constants';
-export * from '../../types/beatmap/shared/constants';
+import type { Vector2 } from '../../types/vector.ts';
+import { NoteDirection } from '../../types/beatmap/shared/constants.ts';
+export * from '../../types/beatmap/shared/constants.ts';
 
 /** Also known as lane count. */
 export const LINE_COUNT = 4;

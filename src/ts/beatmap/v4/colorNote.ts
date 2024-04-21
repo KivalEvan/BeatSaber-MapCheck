@@ -1,13 +1,13 @@
-import { IColorNote } from '../../types/beatmap/v4/colorNote';
-import { deepCopy } from '../../utils/misc';
-import { WrapColorNote } from '../wrapper/colorNote';
-import { IWrapColorNoteAttribute } from '../../types/beatmap/wrapper/colorNote';
-import { isVector3 } from '../../utils/vector';
-import { Vector2 } from '../../types/vector';
-import { ModType } from '../../types/beatmap/shared/modCheck';
-import { IObjectLane } from '../../types/beatmap/v4/object';
-import { IColorNoteContainer } from '../../types/beatmap/container/v4';
-import { DeepRequiredIgnore } from '../../types/utils';
+import type { IColorNote } from '../../types/beatmap/v4/colorNote.ts';
+import { deepCopy } from '../../utils/misc.ts';
+import { WrapColorNote } from '../wrapper/colorNote.ts';
+import type { IWrapColorNoteAttribute } from '../../types/beatmap/wrapper/colorNote.ts';
+import { isVector3 } from '../../utils/vector.ts';
+import type { Vector2 } from '../../types/vector.ts';
+import type { ModType } from '../../types/beatmap/shared/modCheck.ts';
+import type { IObjectLane } from '../../types/beatmap/v4/object.ts';
+import type { IColorNoteContainer } from '../../types/beatmap/container/v4.ts';
+import type { DeepRequiredIgnore } from '../../types/utils.ts';
 
 /** Color note beatmap v4 class object. */
 export class ColorNote extends WrapColorNote<IColorNoteContainer> {
@@ -111,7 +111,7 @@ export class ColorNote extends WrapColorNote<IColorNoteContainer> {
                      -this.customData.animation.definitePosition[0];
                } else {
                   this.customData.animation.definitePosition.forEach((dp) => {
-                     dp[0] = -dp[0];
+                     if (Array.isArray(dp)) dp[0] = -dp[0];
                   });
                }
             }
@@ -121,7 +121,7 @@ export class ColorNote extends WrapColorNote<IColorNoteContainer> {
                      -this.customData.animation.offsetPosition[0];
                } else {
                   this.customData.animation.offsetPosition.forEach((op) => {
-                     op[0] = -op[0];
+                     if (Array.isArray(op)) op[0] = -op[0];
                   });
                }
             }

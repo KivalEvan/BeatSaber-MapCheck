@@ -1,36 +1,36 @@
-import { IDifficulty } from '../../types/beatmap/v2/difficulty';
-import { Note } from './note';
-import { Arc } from './arc';
-import { Obstacle } from './obstacle';
-import { Event } from './event';
-import { Waypoint } from './waypoint';
-import { SpecialEventsKeywordFilters } from './specialEventsKeywordFilters';
-import { deepCopy } from '../../utils/misc';
-import { INote } from '../../types/beatmap/v2/note';
-import { IObstacle } from '../../types/beatmap/v2/obstacle';
-import {
+import type { IDifficulty } from '../../types/beatmap/v2/difficulty.ts';
+import { Note } from './note.ts';
+import { Arc } from './arc.ts';
+import { Obstacle } from './obstacle.ts';
+import { Event } from './event.ts';
+import { Waypoint } from './waypoint.ts';
+import { SpecialEventsKeywordFilters } from './specialEventsKeywordFilters.ts';
+import { deepCopy } from '../../utils/misc.ts';
+import type { INote } from '../../types/beatmap/v2/note.ts';
+import type { IObstacle } from '../../types/beatmap/v2/obstacle.ts';
+import type {
    IEvent,
    IEventBoost,
    IEventBPMChange,
    IEventLaneRotation,
-} from '../../types/beatmap/v2/event';
-import { IWaypoint } from '../../types/beatmap/v2/waypoint';
-import { IArc } from '../../types/beatmap/v2/arc';
-import { WrapDifficulty } from '../wrapper/difficulty';
-import logger from '../../logger';
-import { IWrapColorBoostEventAttribute } from '../../types/beatmap/wrapper/colorBoostEvent';
-import { IWrapBombNoteAttribute } from '../../types/beatmap/wrapper/bombNote';
-import { IWrapBPMEventAttribute } from '../../types/beatmap/wrapper/bpmEvent';
-import { IWrapColorNoteAttribute } from '../../types/beatmap/wrapper/colorNote';
-import { IWrapEventAttribute } from '../../types/beatmap/wrapper/event';
-import { IWrapObstacleAttribute } from '../../types/beatmap/wrapper/obstacle';
-import { IWrapRotationEventAttribute } from '../../types/beatmap/wrapper/rotationEvent';
-import { IWrapArcAttribute } from '../../types/beatmap/wrapper/arc';
-import { IWrapWaypointAttribute } from '../../types/beatmap/wrapper/waypoint';
-import { mod } from '../../utils/math';
-import { EventValueLaneRotation } from '../shared/constants';
-import { IWrapDifficultyAttribute } from '../../types/beatmap/wrapper/difficulty';
-import { DeepPartial } from '../../types/utils';
+} from '../../types/beatmap/v2/event.ts';
+import type { IWaypoint } from '../../types/beatmap/v2/waypoint.ts';
+import type { IArc } from '../../types/beatmap/v2/arc.ts';
+import { WrapDifficulty } from '../wrapper/difficulty.ts';
+import logger from '../../logger.ts';
+import type { IWrapColorBoostEventAttribute } from '../../types/beatmap/wrapper/colorBoostEvent.ts';
+import type { IWrapBombNoteAttribute } from '../../types/beatmap/wrapper/bombNote.ts';
+import type { IWrapBPMEventAttribute } from '../../types/beatmap/wrapper/bpmEvent.ts';
+import type { IWrapColorNoteAttribute } from '../../types/beatmap/wrapper/colorNote.ts';
+import type { IWrapEventAttribute } from '../../types/beatmap/wrapper/event.ts';
+import type { IWrapObstacleAttribute } from '../../types/beatmap/wrapper/obstacle.ts';
+import type { IWrapRotationEventAttribute } from '../../types/beatmap/wrapper/rotationEvent.ts';
+import type { IWrapArcAttribute } from '../../types/beatmap/wrapper/arc.ts';
+import type { IWrapWaypointAttribute } from '../../types/beatmap/wrapper/waypoint.ts';
+import { mod } from '../../utils/math.ts';
+import { EventValueLaneRotation } from '../shared/constants.ts';
+import type { IWrapDifficultyAttribute } from '../../types/beatmap/wrapper/difficulty.ts';
+import type { DeepPartial } from '../../types/utils.ts';
 
 function tag(name: string): string[] {
    return ['beatmap', 'v2', 'difficulty', name];

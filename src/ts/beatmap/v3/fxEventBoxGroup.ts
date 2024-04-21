@@ -1,18 +1,18 @@
-import { IFxEventBoxGroup } from '../../types/beatmap/v3/fxEventBoxGroup';
-import { DeepPartial } from '../../types/utils';
-import { FxEventBox } from './fxEventBox';
-import { WrapFxEventBoxGroup } from '../wrapper/fxEventBoxGroup';
-import { deepCopy } from '../../utils/misc';
-import { IFxEventBox } from '../../types/beatmap/v3/fxEventBox';
-import { IIndexFilter } from '../../types/beatmap/v3/indexFilter';
-import { IWrapFxEventBoxGroupAttribute } from '../../types/beatmap/wrapper/fxEventBoxGroup';
-import {
+import type { IFxEventBoxGroup } from '../../types/beatmap/v3/fxEventBoxGroup.ts';
+import type { DeepPartial } from '../../types/utils.ts';
+import { FxEventBox } from './fxEventBox.ts';
+import { WrapFxEventBoxGroup } from '../wrapper/fxEventBoxGroup.ts';
+import { deepCopy } from '../../utils/misc.ts';
+import type { IFxEventBox } from '../../types/beatmap/v3/fxEventBox.ts';
+import type { IIndexFilter } from '../../types/beatmap/v3/indexFilter.ts';
+import type { IWrapFxEventBoxGroupAttribute } from '../../types/beatmap/wrapper/fxEventBoxGroup.ts';
+import type {
    IEventBoxGroupContainer,
    IFxEventFloatBoxContainer,
-} from '../../types/beatmap/container/v3';
-import { DeepRequiredIgnore } from '../../types/utils';
-import { IFxEventFloat } from '../../types/beatmap/v3/fxEventFloat';
-import { FxType } from '../../types/beatmap/shared/constants';
+} from '../../types/beatmap/container/v3.ts';
+import type { DeepRequiredIgnore } from '../../types/utils.ts';
+import type { IFxEventFloat } from '../../types/beatmap/v3/fxEventFloat.ts';
+import { FxType } from '../../types/beatmap/shared/constants.ts';
 
 /** FX event box group beatmap v3 class object. */
 export class FxEventBoxGroup extends WrapFxEventBoxGroup<

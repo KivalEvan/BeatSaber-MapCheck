@@ -1,4 +1,4 @@
-import { DifficultyName, DifficultyRank } from '../../types/beatmap/shared/difficulty';
+import type { DifficultyName, DifficultyRank } from '../../types/beatmap/shared/difficulty.ts';
 
 /** Difficulty ordering enum. */
 export const DifficultyRanking: { [key in DifficultyName]: DifficultyRank } = {

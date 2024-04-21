@@ -1,12 +1,12 @@
-import { IIndexFilter } from '../../types/beatmap/v3/indexFilter';
-import { ILightTranslationEvent } from '../../types/beatmap/v3/lightTranslationEvent';
-import { ILightTranslationEventBox } from '../../types/beatmap/v3/lightTranslationEventBox';
-import { IWrapLightTranslationEventBoxAttribute } from '../../types/beatmap/wrapper/lightTranslationEventBox';
-import { DeepPartial } from '../../types/utils';
-import { deepCopy } from '../../utils/misc';
-import { WrapLightTranslationEventBox } from '../wrapper/lightTranslationEventBox';
-import { IndexFilter } from './indexFilter';
-import { LightTranslationBase } from './lightTranslationBase';
+import type { IIndexFilter } from '../../types/beatmap/v3/indexFilter.ts';
+import type { ILightTranslationEvent } from '../../types/beatmap/v3/lightTranslationEvent.ts';
+import type { ILightTranslationEventBox } from '../../types/beatmap/v3/lightTranslationEventBox.ts';
+import type { IWrapLightTranslationEventBoxAttribute } from '../../types/beatmap/wrapper/lightTranslationEventBox.ts';
+import type { DeepPartial } from '../../types/utils.ts';
+import { deepCopy } from '../../utils/misc.ts';
+import { WrapLightTranslationEventBox } from '../wrapper/lightTranslationEventBox.ts';
+import { IndexFilter } from './indexFilter.ts';
+import { LightTranslationBase } from './lightTranslationBase.ts';
 
 /** Light translation event box beatmap v3 class object. */
 export class LightTranslationEventBox extends WrapLightTranslationEventBox<

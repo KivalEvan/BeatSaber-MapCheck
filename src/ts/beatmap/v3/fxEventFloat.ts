@@ -1,7 +1,7 @@
-import { IFxEventFloat } from '../../types/beatmap/v3/fxEventFloat';
-import { IWrapFxEventFloatAttribute } from '../../types/beatmap/wrapper/fxEventFloat';
-import { deepCopy } from '../../utils/misc';
-import { WrapFxEventFloat } from '../wrapper/fxEventFloat';
+import type { IFxEventFloat } from '../../types/beatmap/v3/fxEventFloat.ts';
+import type { IWrapFxEventFloatAttribute } from '../../types/beatmap/wrapper/fxEventFloat.ts';
+import { deepCopy } from '../../utils/misc.ts';
+import { WrapFxEventFloat } from '../wrapper/fxEventFloat.ts';
 
 /** FX float base beatmap v3 class object. */
 export class FxEventFloat extends WrapFxEventFloat<IFxEventFloat> {

@@ -1,9 +1,9 @@
-import { ILightTranslationEventContainer } from '../../types/beatmap/container/v4';
-import { ILightTranslationEvent } from '../../types/beatmap/v4/lightTranslationEvent';
-import { IWrapLightTranslationEventAttribute } from '../../types/beatmap/wrapper/lightTranslationEvent';
-import { DeepRequiredIgnore } from '../../types/utils';
-import { deepCopy } from '../../utils/misc';
-import { WrapLightTranslationEvent } from '../wrapper/lightTranslationEvent';
+import type { ILightTranslationEventContainer } from '../../types/beatmap/container/v4.ts';
+import type { ILightTranslationEvent } from '../../types/beatmap/v4/lightTranslationEvent.ts';
+import type { IWrapLightTranslationEventAttribute } from '../../types/beatmap/wrapper/lightTranslationEvent.ts';
+import type { DeepRequiredIgnore } from '../../types/utils.ts';
+import { deepCopy } from '../../utils/misc.ts';
+import { WrapLightTranslationEvent } from '../wrapper/lightTranslationEvent.ts';
 
 /** Light translation event beatmap v4 class object. */
 export class LightTranslationEvent extends WrapLightTranslationEvent<ILightTranslationEventContainer> {

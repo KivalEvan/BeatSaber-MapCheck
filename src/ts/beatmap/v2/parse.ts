@@ -1,15 +1,15 @@
-import { Difficulty } from './difficulty';
-import { IInfoSet } from '../../types/beatmap/v2/info';
-import { Info } from './info';
-import { deepCheck } from '../shared/dataCheck';
-import { BPMInfoDataCheck, DifficultyDataCheck, InfoDataCheck } from './dataCheck';
-import { DifficultyRanking } from '../shared/difficulty';
-import logger from '../../logger';
-import { IDataCheckOption } from '../../types/beatmap/shared/dataCheck';
-import { compareVersion } from '../shared/version';
-import { IEvent } from '../../types/beatmap/v2/event';
-import { shallowCopy } from '../../utils/misc';
-import { BPMInfo } from './bpmInfo';
+import { Difficulty } from './difficulty.ts';
+import type { IInfoSet } from '../../types/beatmap/v2/info.ts';
+import { Info } from './info.ts';
+import { deepCheck } from '../shared/dataCheck.ts';
+import { BPMInfoDataCheck, DifficultyDataCheck, InfoDataCheck } from './dataCheck.ts';
+import { DifficultyRanking } from '../shared/difficulty.ts';
+import logger from '../../logger.ts';
+import type { IDataCheckOption } from '../../types/beatmap/shared/dataCheck.ts';
+import { compareVersion } from '../shared/version.ts';
+import type { IEvent } from '../../types/beatmap/v2/event.ts';
+import { shallowCopy } from '../../utils/misc.ts';
+import { BPMInfo } from './bpmInfo.ts';
 
 function tag(name: string): string[] {
    return ['v2', 'parse', name];

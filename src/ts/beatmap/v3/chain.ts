@@ -1,10 +1,10 @@
-import { ModType } from '../../types/beatmap/shared/modCheck';
-import { IChain } from '../../types/beatmap/v3/chain';
-import { IWrapChainAttribute } from '../../types/beatmap/wrapper/chain';
-import { Vector2 } from '../../types/vector';
-import { deepCopy } from '../../utils/misc';
-import { isVector3 } from '../../utils/vector';
-import { WrapChain } from '../wrapper/chain';
+import type { ModType } from '../../types/beatmap/shared/modCheck.ts';
+import type { IChain } from '../../types/beatmap/v3/chain.ts';
+import type { IWrapChainAttribute } from '../../types/beatmap/wrapper/chain.ts';
+import type { Vector2 } from '../../types/vector.ts';
+import { deepCopy } from '../../utils/misc.ts';
+import { isVector3 } from '../../utils/vector.ts';
+import { WrapChain } from '../wrapper/chain.ts';
 
 /**
  * Chain beatmap v3 class object.
@@ -103,7 +103,7 @@ export class Chain extends WrapChain<IChain> {
                      -this.customData.animation.definitePosition[0];
                } else {
                   this.customData.animation.definitePosition.forEach((dp) => {
-                     dp[0] = -dp[0];
+                     if (Array.isArray(dp)) dp[0] = -dp[0];
                   });
                }
             }
@@ -113,7 +113,7 @@ export class Chain extends WrapChain<IChain> {
                      -this.customData.animation.offsetPosition[0];
                } else {
                   this.customData.animation.offsetPosition.forEach((op) => {
-                     op[0] = -op[0];
+                     if (Array.isArray(op)) op[0] = -op[0];
                   });
                }
             }

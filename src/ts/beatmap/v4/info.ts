@@ -1,22 +1,22 @@
-import { EnvironmentAllName } from '../../types/beatmap/shared/environment';
-import { IInfo, IInfoDifficulty } from '../../types/beatmap/v4/info';
-import { CharacteristicName } from '../../types/beatmap/shared/characteristic';
-import { WrapInfo, WrapInfoDifficulty } from '../wrapper/info';
-import { DifficultyName } from '../../types/beatmap/shared/difficulty';
-import { DeepRequiredIgnore, LooseAutocomplete } from '../../types/utils';
-import { GenericFilename } from '../../types/beatmap/shared/filename';
-import { deepCopy, shallowCopy } from '../../utils/misc';
-import {
+import type { EnvironmentAllName } from '../../types/beatmap/shared/environment.ts';
+import type { IInfo, IInfoDifficulty } from '../../types/beatmap/v4/info.ts';
+import type { CharacteristicName } from '../../types/beatmap/shared/characteristic.ts';
+import { WrapInfo, WrapInfoDifficulty } from '../wrapper/info.ts';
+import type { DifficultyName } from '../../types/beatmap/shared/difficulty.ts';
+import type { DeepRequiredIgnore, LooseAutocomplete } from '../../types/utils.ts';
+import type { GenericFilename } from '../../types/beatmap/shared/filename.ts';
+import { deepCopy, shallowCopy } from '../../utils/misc.ts';
+import type {
    IWrapInfo,
    IWrapInfoAttribute,
    IWrapInfoAudio,
    IWrapInfoColorScheme,
    IWrapInfoDifficultyAttribute,
    IWrapInfoSong,
-} from '../../types/beatmap/wrapper/info';
-import { hexToRgba, toColorObject } from '../../utils/colors';
-import { colorToHex } from '../../utils/colors';
-import { DeepPartial } from '../../types/utils';
+} from '../../types/beatmap/wrapper/info.ts';
+import { hexToRgba, toColorObject } from '../../utils/colors.ts';
+import { colorToHex } from '../../utils/colors.ts';
+import type { DeepPartial } from '../../types/utils.ts';
 
 /** Difficulty beatmap class object. */
 export class Info extends WrapInfo<IInfo, IInfoDifficulty> {

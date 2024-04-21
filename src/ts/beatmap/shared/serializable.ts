@@ -1,4 +1,4 @@
-import { ISerializable } from '../../types/beatmap/shared/serializable';
+import type { ISerializable } from '../../types/beatmap/shared/serializable.ts';
 
 export abstract class Serializable<T extends { [P in keyof T]: T[P] }> implements ISerializable<T> {
    abstract toJSON(): T;

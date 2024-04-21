@@ -1,6 +1,6 @@
-import { IWrapFxEventBox } from '../../types/beatmap/wrapper/fxEventBox';
-import { IWrapFxEventFloat } from '../../types/beatmap/wrapper/fxEventFloat';
-import { WrapEventBox } from './eventBox';
+import type { IWrapFxEventBox } from '../../types/beatmap/wrapper/fxEventBox.ts';
+import type { IWrapFxEventFloat } from '../../types/beatmap/wrapper/fxEventFloat.ts';
+import { WrapEventBox } from './eventBox.ts';
 
 /** FX event box beatmap class object. */
 export abstract class WrapFxEventBox<

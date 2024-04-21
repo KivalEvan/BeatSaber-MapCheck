@@ -1,10 +1,9 @@
-const vMajor: number = 2;
-const vMinor: number = 6;
-const vPatch: number = 1;
+import { version } from '../../package.json';
+
 const watermark: string = 'Kival Evan#5480';
 
 export default new (class Version {
-   private _version: string = `${vMajor}.${vMinor}.${vPatch}`;
+   private _version: string = version;
    private _wm: string = watermark;
 
    get value(): string {

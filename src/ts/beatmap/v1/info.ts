@@ -1,23 +1,26 @@
-import logger from '../../logger';
-import { Environment360Name, EnvironmentName } from '../../types/beatmap/shared/environment';
-import { IInfo, IInfoDifficulty } from '../../types/beatmap/v1/info';
-import { CharacteristicName } from '../../types/beatmap/shared/characteristic';
-import { EnvironmentV3Name } from '../../types/beatmap/shared/environment';
-import { WrapInfo, WrapInfoDifficulty } from '../wrapper/info';
-import { DifficultyName } from '../../types/beatmap/shared/difficulty';
-import { DeepPartial, LooseAutocomplete } from '../../types/utils';
-import { GenericFilename } from '../../types/beatmap/shared/filename';
-import { IColor } from '../../types/colors';
-import { IContributor } from '../../types/beatmap/shared/custom/contributor';
-import { deepCopy, shallowCopy } from '../../utils/misc';
-import {
+import logger from '../../logger.ts';
+import type {
+   Environment360Name,
+   EnvironmentName,
+} from '../../types/beatmap/shared/environment.ts';
+import type { IInfo, IInfoDifficulty } from '../../types/beatmap/v1/info.ts';
+import type { CharacteristicName } from '../../types/beatmap/shared/characteristic.ts';
+import type { EnvironmentV3Name } from '../../types/beatmap/shared/environment.ts';
+import { WrapInfo, WrapInfoDifficulty } from '../wrapper/info.ts';
+import type { DifficultyName } from '../../types/beatmap/shared/difficulty.ts';
+import type { DeepPartial, LooseAutocomplete } from '../../types/utils.ts';
+import type { GenericFilename } from '../../types/beatmap/shared/filename.ts';
+import type { IColor } from '../../types/colors.ts';
+import type { IContributor } from '../../types/beatmap/shared/custom/contributor.ts';
+import { deepCopy, shallowCopy } from '../../utils/misc.ts';
+import type {
    IWrapInfo,
    IWrapInfoAttribute,
    IWrapInfoAudio,
    IWrapInfoColorScheme,
    IWrapInfoDifficultyAttribute,
    IWrapInfoSong,
-} from '../../types/beatmap/wrapper/info';
+} from '../../types/beatmap/wrapper/info.ts';
 
 function tag(name: string): string[] {
    return ['beatmap', 'v1', 'info', name];

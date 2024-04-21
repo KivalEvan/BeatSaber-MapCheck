@@ -1,16 +1,16 @@
-import {
+import type {
    ILightTranslationBoxContainer,
    ILightTranslationEventContainer,
-} from '../../types/beatmap/container/v4';
-import { IIndexFilter } from '../../types/beatmap/v4/indexFilter';
-import { ILightTranslationEvent } from '../../types/beatmap/v4/lightTranslationEvent';
-import { ILightTranslationEventBox } from '../../types/beatmap/v4/lightTranslationEventBox';
-import { IWrapLightTranslationEventBoxAttribute } from '../../types/beatmap/wrapper/lightTranslationEventBox';
-import { DeepPartial, DeepRequiredIgnore } from '../../types/utils';
-import { deepCopy } from '../../utils/misc';
-import { WrapLightTranslationEventBox } from '../wrapper/lightTranslationEventBox';
-import { IndexFilter } from './indexFilter';
-import { LightTranslationEvent } from './lightTranslationEvent';
+} from '../../types/beatmap/container/v4.ts';
+import type { IIndexFilter } from '../../types/beatmap/v4/indexFilter.ts';
+import type { ILightTranslationEvent } from '../../types/beatmap/v4/lightTranslationEvent.ts';
+import type { ILightTranslationEventBox } from '../../types/beatmap/v4/lightTranslationEventBox.ts';
+import type { IWrapLightTranslationEventBoxAttribute } from '../../types/beatmap/wrapper/lightTranslationEventBox.ts';
+import type { DeepPartial, DeepRequiredIgnore } from '../../types/utils.ts';
+import { deepCopy } from '../../utils/misc.ts';
+import { WrapLightTranslationEventBox } from '../wrapper/lightTranslationEventBox.ts';
+import { IndexFilter } from './indexFilter.ts';
+import { LightTranslationEvent } from './lightTranslationEvent.ts';
 
 /** Light translation event box beatmap v4 class object. */
 export class LightTranslationEventBox extends WrapLightTranslationEventBox<

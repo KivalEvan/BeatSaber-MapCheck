@@ -1,5 +1,5 @@
-import { EaseType } from '../shared/constants';
-import { ICustomDataBase } from '../shared/custom/customData';
+import type { EaseType } from '../shared/constants.ts';
+import type { ICustomDataBase } from '../shared/custom/customData.ts';
 
 export interface ILightTranslationEvent {
    /** Relative beat time `<float>` to event box group. */

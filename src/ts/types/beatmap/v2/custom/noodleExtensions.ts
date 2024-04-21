@@ -1,9 +1,9 @@
-import { Nullable } from '../../../utils';
-import { Vector2, Vector3 } from '../../../vector';
-import { ICustomDataBase } from '../../shared/custom/customData';
-import { FloatPointDefinition, Vector3PointDefinition } from '../../shared/custom/heck';
-import { PlayerObject } from '../../shared/custom/noodleExtensions';
-import { IHeckBase } from './heck';
+import type { Nullable } from '../../../utils.ts';
+import type { Vector2, Vector3 } from '../../../vector.ts';
+import type { ICustomDataBase } from '../../shared/custom/customData.ts';
+import type { FloatPointDefinition, Vector3PointDefinition } from '../../shared/custom/heck.ts';
+import type { PlayerObject } from '../../shared/custom/noodleExtensions.ts';
+import type { IHeckBase } from './heck.ts';
 
 /** Noodle Extensions Object interface for Beatmap Object. */
 interface INEObject {

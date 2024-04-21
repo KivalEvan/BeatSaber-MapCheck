@@ -1,8 +1,8 @@
-import { ICustomDataBase } from '../../shared/custom/customData';
-import { IAnimation } from './animation';
-import { IChromaObstacle } from './chroma';
-import { IHeckBase } from './heck';
-import { INEObstacle } from './noodleExtensions';
+import type { ICustomDataBase } from '../../shared/custom/customData.ts';
+import type { IAnimation } from './animation.ts';
+import type { IChromaObstacle } from './chroma.ts';
+import type { IHeckBase } from './heck.ts';
+import type { INEObstacle } from './noodleExtensions.ts';
 
 export type ICustomDataObstacle = ICustomDataBase &
    IHeckBase &

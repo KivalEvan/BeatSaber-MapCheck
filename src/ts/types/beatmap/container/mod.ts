@@ -8,5 +8,5 @@
  * @module
  */
 
-export * as v4 from './v4';
-export * as v3 from './v3';
+export * as v4 from './v4.ts';
+export * as v3 from './v3.ts';

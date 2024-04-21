@@ -1,10 +1,10 @@
-import { ModType } from '../../types/beatmap/shared/modCheck';
-import { IObstacle } from '../../types/beatmap/v3/obstacle';
-import { IWrapObstacleAttribute } from '../../types/beatmap/wrapper/obstacle';
-import { Vector2 } from '../../types/vector';
-import { deepCopy } from '../../utils/misc';
-import { isVector3 } from '../../utils/vector';
-import { WrapObstacle } from '../wrapper/obstacle';
+import type { ModType } from '../../types/beatmap/shared/modCheck.ts';
+import type { IObstacle } from '../../types/beatmap/v3/obstacle.ts';
+import type { IWrapObstacleAttribute } from '../../types/beatmap/wrapper/obstacle.ts';
+import type { Vector2 } from '../../types/vector.ts';
+import { deepCopy } from '../../utils/misc.ts';
+import { isVector3 } from '../../utils/vector.ts';
+import { WrapObstacle } from '../wrapper/obstacle.ts';
 
 /** Obstacle beatmap v3 class object. */
 export class Obstacle extends WrapObstacle<IObstacle> {
@@ -81,7 +81,9 @@ export class Obstacle extends WrapObstacle<IObstacle> {
                      -this.customData.animation.definitePosition[0] - (this.posX + width - 1);
                } else {
                   this.customData.animation.definitePosition.forEach((dp) => {
-                     dp[0] = -dp[0] - (this.posX + width - 1);
+                     if (Array.isArray(dp)) {
+                        dp[0] = -dp[0] - (this.posX + width - 1);
+                     }
                   });
                }
             }
@@ -91,7 +93,9 @@ export class Obstacle extends WrapObstacle<IObstacle> {
                      -this.customData.animation.offsetPosition[0] - (this.posX + width - 1);
                } else {
                   this.customData.animation.offsetPosition.forEach((op) => {
-                     op[0] = -op[0] - (this.posX + width - 1);
+                     if (Array.isArray(op)) {
+                        op[0] = -op[0] - (this.posX + width - 1);
+                     }
                   });
                }
             }

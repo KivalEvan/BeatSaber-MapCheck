@@ -1,4 +1,4 @@
-import { CharacteristicName } from '../../types/beatmap/shared/characteristic';
+import type { CharacteristicName } from '../../types/beatmap/shared/characteristic.ts';
 
 /** Rename characteristic to human readable. */
 export const CharacteristicRename: { readonly [key in CharacteristicName]: string } = {

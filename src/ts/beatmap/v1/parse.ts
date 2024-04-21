@@ -1,10 +1,10 @@
-import { Difficulty } from './difficulty';
-import { Info } from './info';
-import { deepCheck } from '../shared/dataCheck';
-import { DifficultyDataCheck, InfoDataCheck } from './dataCheck';
-import logger from '../../logger';
-import { IDataCheckOption } from '../../types/beatmap/shared/dataCheck';
-import { shallowCopy } from '../../utils/misc';
+import { Difficulty } from './difficulty.ts';
+import { Info } from './info.ts';
+import { deepCheck } from '../shared/dataCheck.ts';
+import { DifficultyDataCheck, InfoDataCheck } from './dataCheck.ts';
+import logger from '../../logger.ts';
+import type { IDataCheckOption } from '../../types/beatmap/shared/dataCheck.ts';
+import { shallowCopy } from '../../utils/misc.ts';
 
 function tag(name: string): string[] {
    return ['v1', 'parse', name];

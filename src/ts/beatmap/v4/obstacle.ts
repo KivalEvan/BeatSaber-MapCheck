@@ -1,13 +1,13 @@
-import { ModType } from '../../types/beatmap/shared/modCheck';
-import { IObstacle } from '../../types/beatmap/v4/obstacle';
-import { IObstacleContainer } from '../../types/beatmap/container/v4';
-import { IObjectLane } from '../../types/beatmap/v4/object';
-import { IWrapObstacleAttribute } from '../../types/beatmap/wrapper/obstacle';
-import { DeepRequiredIgnore } from '../../types/utils';
-import { Vector2 } from '../../types/vector';
-import { deepCopy } from '../../utils/misc';
-import { isVector3 } from '../../utils/vector';
-import { WrapObstacle } from '../wrapper/obstacle';
+import type { ModType } from '../../types/beatmap/shared/modCheck.ts';
+import type { IObstacle } from '../../types/beatmap/v4/obstacle.ts';
+import type { IObstacleContainer } from '../../types/beatmap/container/v4.ts';
+import type { IObjectLane } from '../../types/beatmap/v4/object.ts';
+import type { IWrapObstacleAttribute } from '../../types/beatmap/wrapper/obstacle.ts';
+import type { DeepRequiredIgnore } from '../../types/utils.ts';
+import type { Vector2 } from '../../types/vector.ts';
+import { deepCopy } from '../../utils/misc.ts';
+import { isVector3 } from '../../utils/vector.ts';
+import { WrapObstacle } from '../wrapper/obstacle.ts';
 
 /** Obstacle beatmap v4 class object. */
 export class Obstacle extends WrapObstacle<IObstacleContainer> {
@@ -100,7 +100,7 @@ export class Obstacle extends WrapObstacle<IObstacleContainer> {
                      -this.customData.animation.definitePosition[0] - (this.posX + width - 1);
                } else {
                   this.customData.animation.definitePosition.forEach((dp) => {
-                     dp[0] = -dp[0] - (this.posX + width - 1);
+                     if (Array.isArray(dp)) dp[0] = -dp[0] - (this.posX + width - 1);
                   });
                }
             }
@@ -110,7 +110,7 @@ export class Obstacle extends WrapObstacle<IObstacleContainer> {
                      -this.customData.animation.offsetPosition[0] - (this.posX + width - 1);
                } else {
                   this.customData.animation.offsetPosition.forEach((op) => {
-                     op[0] = -op[0] - (this.posX + width - 1);
+                     if (Array.isArray(op)) op[0] = -op[0] - (this.posX + width - 1);
                   });
                }
             }

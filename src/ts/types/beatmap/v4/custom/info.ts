@@ -1,11 +1,12 @@
 import type { IContributor } from '../../shared/custom/contributor.ts';
-import type { IEditor } from './editor.ts';
-import type { IColorScheme } from './colorScheme.ts';
-import type { IHeckInfoCustomData, IInfoSettingsCustomData } from './heck.ts';
-import type { IChromaInfoCustomData } from './chroma.ts';
+import type { IEditor } from '../../v2/custom/editor.ts';
+import type { IColorScheme } from '../../v2/custom/colorScheme.ts';
+import type { IHeckInfoCustomData, IInfoSettingsCustomData } from '../../v2/custom/heck.ts';
+import type { IChromaInfoCustomData } from '../../v2/custom/chroma.ts';
 import type { LooseAutocomplete } from '../../../utils.ts';
 import type { ICustomDataBase } from '../../shared/custom/customData.ts';
 import type { ModRequirements, ModSuggestions } from '../../shared/modCheck.ts';
+import type { CharacteristicName } from '../../shared/characteristic.ts';
 
 /**
  * Custom Data interface for info.
@@ -16,11 +17,13 @@ export interface ICustomDataInfo extends ICustomDataBase {
    _contributors?: IContributor[];
    _customEnvironment?: string;
    _customEnvironmentHash?: string;
+   _characteristics?: ICustomCharacteristic[];
 }
 
-export interface ICustomDataInfoSet extends ICustomDataBase {
-   _characteristicLabel?: string;
-   _characteristicIconImageFilename?: string;
+export interface ICustomCharacteristic {
+   characteristic: CharacteristicName;
+   label: string;
+   iconPath?: string;
 }
 
 type IInfoSettings = IInfoSettingsCustomData & IHeckInfoCustomData & IChromaInfoCustomData;
@@ -31,10 +34,8 @@ type IInfoSettings = IInfoSettingsCustomData & IHeckInfoCustomData & IChromaInfo
  * @extends IColorScheme
  * @extends IInfoSettings
  */
-export interface ICustomDataInfoDifficulty extends ICustomDataBase, IColorScheme, IInfoSettings {
+export interface ICustomDataInfoBeatmap extends ICustomDataBase, IColorScheme, IInfoSettings {
    _difficultyLabel?: string;
-   _editorOffset?: number;
-   _editorOldOffset?: number;
    _warnings?: string[];
    _information?: string[];
    _suggestions?: LooseAutocomplete<ModSuggestions>[];

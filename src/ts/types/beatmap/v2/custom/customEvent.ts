@@ -1,18 +1,18 @@
-import {
+import type {
    IChromaCustomEventDataAnimateTrack,
    IChromaCustomEventDataAssignFogTrack,
    IChromaCustomEventDataAssignPathAnimation,
-} from './chroma';
-import {
+} from './chroma.ts';
+import type {
    IHeckCustomEventDataAnimateTrack,
    IHeckCustomEventDataAssignPathAnimation,
-} from './heck';
-import {
+} from './heck.ts';
+import type {
    INECustomEventDataAnimateTrack,
    INECustomEventDataAssignPathAnimation,
    INECustomEventDataAssignPlayerToTrack,
    INECustomEventDataAssignTrackParent,
-} from './noodleExtensions';
+} from './noodleExtensions.ts';
 
 export type ICustomEventDataAnimateTrack = IHeckCustomEventDataAnimateTrack &
    IChromaCustomEventDataAnimateTrack &

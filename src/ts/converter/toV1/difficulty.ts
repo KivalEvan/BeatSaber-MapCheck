@@ -1,14 +1,14 @@
-import logger from '../../logger';
-import { Difficulty as V1Difficulty } from '../../beatmap/v1/difficulty';
-import { Difficulty as V2Difficulty } from '../../beatmap/v2/difficulty';
-import { Difficulty as V3Difficulty } from '../../beatmap/v3/difficulty';
-import { Difficulty as V4Difficulty } from '../../beatmap/v4/difficulty';
-import { Lightshow as V3Lightshow } from '../../beatmap/v3/lightshow';
-import { Lightshow as V4Lightshow } from '../../beatmap/v4/lightshow';
-import { IWrapDifficulty } from '../../types/beatmap/wrapper/difficulty';
-import { IWrapInfo, IWrapInfoDifficulty } from '../../types/beatmap/wrapper/info';
-import { Info as V2Info } from '../../beatmap/v2/info';
-import { IWrapLightshow } from '../../types/beatmap/wrapper/lightshow';
+import logger from '../../logger.ts';
+import { Difficulty as V1Difficulty } from '../../beatmap/v1/difficulty.ts';
+import { Difficulty as V2Difficulty } from '../../beatmap/v2/difficulty.ts';
+import { Difficulty as V3Difficulty } from '../../beatmap/v3/difficulty.ts';
+import { Difficulty as V4Difficulty } from '../../beatmap/v4/difficulty.ts';
+import { Lightshow as V3Lightshow } from '../../beatmap/v3/lightshow.ts';
+import { Lightshow as V4Lightshow } from '../../beatmap/v4/lightshow.ts';
+import type { IWrapDifficulty } from '../../types/beatmap/wrapper/difficulty.ts';
+import type { IWrapInfo, IWrapInfoDifficulty } from '../../types/beatmap/wrapper/info.ts';
+import { Info as V2Info } from '../../beatmap/v2/info.ts';
+import type { IWrapLightshow } from '../../types/beatmap/wrapper/lightshow.ts';
 
 function tag(name: string): string[] {
    return ['convert', 'toV1Difficulty', name];

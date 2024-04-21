@@ -1,21 +1,21 @@
-import { CharacteristicName } from '../../types/beatmap/shared/characteristic';
-import { DifficultyName } from '../../types/beatmap/shared/difficulty';
-import { EnvironmentAllName } from '../../types/beatmap/shared/environment';
-import { GenericFilename } from '../../types/beatmap/shared/filename';
-import { Version } from '../../types/beatmap/shared/version';
-import { IInfoBeatmapAuthors } from '../../types/beatmap/v4/info';
-import {
+import type { CharacteristicName } from '../../types/beatmap/shared/characteristic.ts';
+import type { DifficultyName } from '../../types/beatmap/shared/difficulty.ts';
+import type { EnvironmentAllName } from '../../types/beatmap/shared/environment.ts';
+import type { GenericFilename } from '../../types/beatmap/shared/filename.ts';
+import type { Version } from '../../types/beatmap/shared/version.ts';
+import type { IInfoBeatmapAuthors } from '../../types/beatmap/v4/info.ts';
+import type {
    IWrapInfo,
    IWrapInfoAudio,
    IWrapInfoColorScheme,
    IWrapInfoDifficulty,
    IWrapInfoDifficultyAttribute,
    IWrapInfoSong,
-} from '../../types/beatmap/wrapper/info';
-import { LooseAutocomplete } from '../../types/utils';
-import { CharacteristicOrder } from '../shared/characteristic';
-import { DifficultyRanking } from '../shared/difficulty';
-import { WrapBaseItem } from './baseItem';
+} from '../../types/beatmap/wrapper/info.ts';
+import type { LooseAutocomplete } from '../../types/utils.ts';
+import { CharacteristicOrder } from '../shared/characteristic.ts';
+import { DifficultyRanking } from '../shared/difficulty.ts';
+import { WrapBaseItem } from './baseItem.ts';
 
 /** Difficulty beatmap class object. */
 export abstract class WrapInfo<

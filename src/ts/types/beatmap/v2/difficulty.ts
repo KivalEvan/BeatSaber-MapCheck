@@ -1,10 +1,10 @@
-import { INote } from './note';
-import { IArc } from './arc';
-import { IObstacle } from './obstacle';
-import { IEvent } from './event';
-import { IWaypoint } from './waypoint';
-import { ICustomDataDifficulty } from './custom/difficulty';
-import { ISpecialEventsKeywordFilters } from './specialEventsKeywordFilters';
+import type { INote } from './note.ts';
+import type { IArc } from './arc.ts';
+import type { IObstacle } from './obstacle.ts';
+import type { IEvent } from './event.ts';
+import type { IWaypoint } from './waypoint.ts';
+import type { ICustomDataDifficulty } from './custom/difficulty.ts';
+import type { ISpecialEventsKeywordFilters } from './specialEventsKeywordFilters.ts';
 
 /** Difficulty interface for difficulty file. */
 export interface IDifficulty {

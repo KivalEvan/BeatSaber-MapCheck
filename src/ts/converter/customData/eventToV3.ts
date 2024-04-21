@@ -1,6 +1,6 @@
-import { IEvent } from '../../types/beatmap/v2/event';
-import { IBasicEvent } from '../../types/beatmap/v3/basicEvent';
-import { renameKey } from './_helpers';
+import type { IEvent } from '../../types/beatmap/v2/event.ts';
+import type { IBasicEvent } from '../../types/beatmap/v3/basicEvent.ts';
+import { renameKey } from './_helpers.ts';
 
 export default function (
    customData?: IEvent['_customData'],

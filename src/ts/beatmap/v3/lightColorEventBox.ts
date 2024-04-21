@@ -1,12 +1,12 @@
-import { IIndexFilter } from '../../types/beatmap/v3/indexFilter';
-import { ILightColorEvent } from '../../types/beatmap/v3/lightColorEvent';
-import { ILightColorEventBox } from '../../types/beatmap/v3/lightColorEventBox';
-import { IWrapLightColorEventBoxAttribute } from '../../types/beatmap/wrapper/lightColorEventBox';
-import { DeepPartial } from '../../types/utils';
-import { deepCopy } from '../../utils/misc';
-import { WrapLightColorEventBox } from '../wrapper/lightColorEventBox';
-import { IndexFilter } from './indexFilter';
-import { LightColorBase } from './lightColorBase';
+import type { IIndexFilter } from '../../types/beatmap/v3/indexFilter.ts';
+import type { ILightColorEvent } from '../../types/beatmap/v3/lightColorEvent.ts';
+import type { ILightColorEventBox } from '../../types/beatmap/v3/lightColorEventBox.ts';
+import type { IWrapLightColorEventBoxAttribute } from '../../types/beatmap/wrapper/lightColorEventBox.ts';
+import type { DeepPartial } from '../../types/utils.ts';
+import { deepCopy } from '../../utils/misc.ts';
+import { WrapLightColorEventBox } from '../wrapper/lightColorEventBox.ts';
+import { IndexFilter } from './indexFilter.ts';
+import { LightColorBase } from './lightColorBase.ts';
 
 /** Light color event box beatmap v3 class object. */
 export class LightColorEventBox extends WrapLightColorEventBox<

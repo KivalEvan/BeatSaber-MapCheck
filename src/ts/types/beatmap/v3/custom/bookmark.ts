@@ -1,4 +1,4 @@
-import { ColorArray } from '../../../colors';
+import type { ColorArray } from '../../../colors.ts';
 
 /** Bookmark custom data for difficulty. */
 export interface IBookmark {

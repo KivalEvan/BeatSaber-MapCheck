@@ -1,9 +1,9 @@
-import logger from '../../logger';
-import { Difficulty } from './difficulty';
-import { Lightshow } from './lightshow';
-import { DifficultyDataCheck, LightshowDataCheck } from './dataCheck';
-import { deepCheck } from '../shared/dataCheck';
-import { IDataCheckOption } from '../../types/beatmap/shared/dataCheck';
+import logger from '../../logger.ts';
+import { Difficulty } from './difficulty.ts';
+import { Lightshow } from './lightshow.ts';
+import { DifficultyDataCheck, LightshowDataCheck } from './dataCheck.ts';
+import { deepCheck } from '../shared/dataCheck.ts';
+import type { IDataCheckOption } from '../../types/beatmap/shared/dataCheck.ts';
 
 function tag(name: string): string[] {
    return ['v3', 'parse', name];

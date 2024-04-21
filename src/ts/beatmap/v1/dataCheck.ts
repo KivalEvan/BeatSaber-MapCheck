@@ -1,9 +1,9 @@
-import { DataCheck } from '../../types/beatmap/shared/dataCheck';
-import { IDifficulty } from '../../types/beatmap/v1/difficulty';
-import { IEvent } from '../../types/beatmap/v1/event';
-import { IInfo, IInfoDifficulty } from '../../types/beatmap/v1/info';
-import { INote } from '../../types/beatmap/v1/note';
-import { IObstacle } from '../../types/beatmap/v1/obstacle';
+import type { DataCheck } from '../../types/beatmap/shared/dataCheck.ts';
+import type { IDifficulty } from '../../types/beatmap/v1/difficulty.ts';
+import type { IEvent } from '../../types/beatmap/v1/event.ts';
+import type { IInfo, IInfoDifficulty } from '../../types/beatmap/v1/info.ts';
+import type { INote } from '../../types/beatmap/v1/note.ts';
+import type { IObstacle } from '../../types/beatmap/v1/obstacle.ts';
 
 export const NoteDataCheck: { readonly [key in keyof INote]: DataCheck } = {
    _time: {

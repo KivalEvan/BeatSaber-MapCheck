@@ -1,30 +1,30 @@
 // deno-lint-ignore-file no-explicit-any
-import { IWrapEvent, IWrapEventAttribute } from './event';
-import { IWrapColorBoostEvent, IWrapColorBoostEventAttribute } from './colorBoostEvent';
-import {
+import type { IWrapEvent, IWrapEventAttribute } from './event.ts';
+import type { IWrapColorBoostEvent, IWrapColorBoostEventAttribute } from './colorBoostEvent.ts';
+import type {
    IWrapLightColorEventBoxGroup,
    IWrapLightColorEventBoxGroupAttribute,
-} from './lightColorEventBoxGroup';
-import {
+} from './lightColorEventBoxGroup.ts';
+import type {
    IWrapLightRotationEventBoxGroup,
    IWrapLightRotationEventBoxGroupAttribute,
-} from './lightRotationEventBoxGroup';
-import {
+} from './lightRotationEventBoxGroup.ts';
+import type {
    IWrapLightTranslationEventBoxGroup,
    IWrapLightTranslationEventBoxGroupAttribute,
-} from './lightTranslationEventBoxGroup';
-import { IWrapBaseItem, IWrapBaseItemAttribute } from './baseItem';
-import { DeepPartial, LooseAutocomplete } from '../../utils';
-import { GenericFilename, IFileInfo } from '../shared/filename';
-import { EventContainer } from './container';
-import { IWrapFxEventBoxGroup, IWrapFxEventBoxGroupAttribute } from './fxEventBoxGroup';
-import { IWrapWaypoint } from './waypoint';
-import { IWrapWaypointAttribute } from './waypoint';
-import { Version } from '../shared/version';
-import {
+} from './lightTranslationEventBoxGroup.ts';
+import type { IWrapBaseItem, IWrapBaseItemAttribute } from './baseItem.ts';
+import type { DeepPartial, LooseAutocomplete } from '../../utils.ts';
+import type { GenericFilename, IFileInfo } from '../shared/filename.ts';
+import type { EventContainer } from './container.ts';
+import type { IWrapFxEventBoxGroup, IWrapFxEventBoxGroupAttribute } from './fxEventBoxGroup.ts';
+import type { IWrapWaypoint } from './waypoint.ts';
+import type { IWrapWaypointAttribute } from './waypoint.ts';
+import type { Version } from '../shared/version.ts';
+import type {
    IWrapEventTypesWithKeywords,
    IWrapEventTypesWithKeywordsAttribute,
-} from './eventTypesWithKeywords';
+} from './eventTypesWithKeywords.ts';
 
 export interface IWrapLightshowAttribute<T extends { [P in keyof T]: T[P] } = Record<string, any>>
    extends IWrapBaseItemAttribute<T>,

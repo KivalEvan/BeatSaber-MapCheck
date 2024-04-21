@@ -1,40 +1,40 @@
-import { ILightshow } from '../../types/beatmap/v4/lightshow';
-import { Waypoint } from './waypoint';
-import { BasicEvent } from './basicEvent';
-import { ColorBoostEvent } from './colorBoostEvent';
-import { LightColorEventBoxGroup } from './lightColorEventBoxGroup';
-import { LightRotationEventBoxGroup } from './lightRotationEventBoxGroup';
-import { LightTranslationEventBoxGroup } from './lightTranslationEventBoxGroup';
-import { FxEventBoxGroup } from './fxEventBoxGroup';
-import { DeepPartial, DeepRequiredIgnore } from '../../types/utils';
-import { deepCopy } from '../../utils/misc';
-import { WrapLightshow } from '../wrapper/lightshow';
-import { IWrapLightTranslationEventBoxGroupAttribute } from '../../types/beatmap/wrapper/lightTranslationEventBoxGroup';
-import { IWrapColorBoostEventAttribute } from '../../types/beatmap/wrapper/colorBoostEvent';
-import { IWrapEventAttribute } from '../../types/beatmap/wrapper/event';
-import { IWrapLightColorEventBoxGroupAttribute } from '../../types/beatmap/wrapper/lightColorEventBoxGroup';
-import { IWrapLightRotationEventBoxGroupAttribute } from '../../types/beatmap/wrapper/lightRotationEventBoxGroup';
-import { IIndexFilter } from '../../types/beatmap/v4/indexFilter';
-import { ILightColorEventBox } from '../../types/beatmap/v4/lightColorEventBox';
-import { ILightRotationEventBox } from '../../types/beatmap/v4/lightRotationEventBox';
-import { ILightTranslationEventBox } from '../../types/beatmap/v4/lightTranslationEventBox';
-import { IWrapFxEventBoxGroupAttribute } from '../../types/beatmap/wrapper/fxEventBoxGroup';
-import { IFxEventBox } from '../../types/beatmap/v4/fxEventBox';
-import { IWrapWaypointAttribute } from '../../types/beatmap/wrapper/waypoint';
-import { BasicEventTypesWithKeywords } from '../v3/basicEventTypesWithKeywords';
-import { ILightColorEvent } from '../../types/beatmap/v4/lightColorEvent';
-import { ILightRotationEvent } from '../../types/beatmap/v4/lightRotationEvent';
-import { ILightTranslationEvent } from '../../types/beatmap/v4/lightTranslationEvent';
-import { IEventBoxGroup } from '../../types/beatmap/v4/eventBoxGroup';
-import {
+import type { ILightshow } from '../../types/beatmap/v4/lightshow.ts';
+import { Waypoint } from './waypoint.ts';
+import { BasicEvent } from './basicEvent.ts';
+import { ColorBoostEvent } from './colorBoostEvent.ts';
+import { LightColorEventBoxGroup } from './lightColorEventBoxGroup.ts';
+import { LightRotationEventBoxGroup } from './lightRotationEventBoxGroup.ts';
+import { LightTranslationEventBoxGroup } from './lightTranslationEventBoxGroup.ts';
+import { FxEventBoxGroup } from './fxEventBoxGroup.ts';
+import type { DeepPartial, DeepRequiredIgnore } from '../../types/utils.ts';
+import { deepCopy } from '../../utils/misc.ts';
+import { WrapLightshow } from '../wrapper/lightshow.ts';
+import type { IWrapLightTranslationEventBoxGroupAttribute } from '../../types/beatmap/wrapper/lightTranslationEventBoxGroup.ts';
+import type { IWrapColorBoostEventAttribute } from '../../types/beatmap/wrapper/colorBoostEvent.ts';
+import type { IWrapEventAttribute } from '../../types/beatmap/wrapper/event.ts';
+import type { IWrapLightColorEventBoxGroupAttribute } from '../../types/beatmap/wrapper/lightColorEventBoxGroup.ts';
+import type { IWrapLightRotationEventBoxGroupAttribute } from '../../types/beatmap/wrapper/lightRotationEventBoxGroup.ts';
+import type { IIndexFilter } from '../../types/beatmap/v4/indexFilter.ts';
+import type { ILightColorEventBox } from '../../types/beatmap/v4/lightColorEventBox.ts';
+import type { ILightRotationEventBox } from '../../types/beatmap/v4/lightRotationEventBox.ts';
+import type { ILightTranslationEventBox } from '../../types/beatmap/v4/lightTranslationEventBox.ts';
+import type { IWrapFxEventBoxGroupAttribute } from '../../types/beatmap/wrapper/fxEventBoxGroup.ts';
+import type { IFxEventBox } from '../../types/beatmap/v4/fxEventBox.ts';
+import type { IWrapWaypointAttribute } from '../../types/beatmap/wrapper/waypoint.ts';
+import { BasicEventTypesWithKeywords } from '../v3/basicEventTypesWithKeywords.ts';
+import type { ILightColorEvent } from '../../types/beatmap/v4/lightColorEvent.ts';
+import type { ILightRotationEvent } from '../../types/beatmap/v4/lightRotationEvent.ts';
+import type { ILightTranslationEvent } from '../../types/beatmap/v4/lightTranslationEvent.ts';
+import type { IEventBoxGroup } from '../../types/beatmap/v4/eventBoxGroup.ts';
+import type {
    IBasicEventContainer,
    IColorBoostEventContainer,
    IWaypointContainer,
-} from '../../types/beatmap/container/v4';
-import { EventBoxType } from '../../types/beatmap/shared/constants';
-import { IObject } from '../../types/beatmap/v4/object';
-import { IWrapLightshowAttribute } from '../../types/beatmap/wrapper/lightshow';
-import { IFxEventFloat } from '../../types/beatmap/v4/fxEventFloat';
+} from '../../types/beatmap/container/v4.ts';
+import { EventBoxType } from '../../types/beatmap/shared/constants.ts';
+import type { IObject } from '../../types/beatmap/v4/object.ts';
+import type { IWrapLightshowAttribute } from '../../types/beatmap/wrapper/lightshow.ts';
+import type { IFxEventFloat } from '../../types/beatmap/v4/fxEventFloat.ts';
 
 /** Lightshow beatmap v4 class object. */
 export class Lightshow extends WrapLightshow<ILightshow> {

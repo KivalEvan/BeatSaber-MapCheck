@@ -1,7 +1,7 @@
-import { INote } from './note';
-import { IObstacle } from './obstacle';
-import { IEvent } from './event';
-import { ICustomDifficulty } from './custom/difficulty';
+import type { INote } from './note.ts';
+import type { IObstacle } from './obstacle.ts';
+import type { IEvent } from './event.ts';
+import type { ICustomDifficulty } from './custom/difficulty.ts';
 
 /** Difficulty interface for difficulty file. */
 export interface IDifficulty extends ICustomDifficulty {

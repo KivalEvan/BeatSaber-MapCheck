@@ -1,2 +1,2 @@
-export * from './difficulty';
-export * from './lightshow';
+export * from './difficulty.ts';
+export * from './lightshow.ts';

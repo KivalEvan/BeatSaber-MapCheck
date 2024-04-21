@@ -1,7 +1,7 @@
-import { ILightRotationEvent } from '../../types/beatmap/v3/lightRotationEvent';
-import { IWrapLightRotationEventAttribute } from '../../types/beatmap/wrapper/lightRotationEvent';
-import { deepCopy } from '../../utils/misc';
-import { WrapLightRotationEvent } from '../wrapper/lightRotationEvent';
+import type { ILightRotationEvent } from '../../types/beatmap/v3/lightRotationEvent.ts';
+import type { IWrapLightRotationEventAttribute } from '../../types/beatmap/wrapper/lightRotationEvent.ts';
+import { deepCopy } from '../../utils/misc.ts';
+import { WrapLightRotationEvent } from '../wrapper/lightRotationEvent.ts';
 
 /** Light rotation base beatmap v3 class object. */
 export class LightRotationBase extends WrapLightRotationEvent<ILightRotationEvent> {

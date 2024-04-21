@@ -1,4 +1,4 @@
-import { ICustomDataBase } from '../shared/custom/customData';
+import type { ICustomDataBase } from '../shared/custom/customData.ts';
 
 export interface IBaseObject {
    /** Beat time `<float>` of beatmap object. */

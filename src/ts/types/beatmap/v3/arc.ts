@@ -1,6 +1,6 @@
-import { SliderMidAnchorMode } from '../shared/constants';
-import { IBaseSlider } from './baseSlider';
-import { ICustomDataSlider } from './custom/slider';
+import type { SliderMidAnchorMode } from '../shared/constants.ts';
+import type { IBaseSlider } from './baseSlider.ts';
+import type { ICustomDataSlider } from './custom/slider.ts';
 
 export interface IArc extends IBaseSlider {
    /**

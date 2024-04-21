@@ -1,5 +1,5 @@
-import { IWrapFxEventFloat } from '../../types/beatmap/wrapper/fxEventFloat';
-import { WrapBaseObject } from './baseObject';
+import type { IWrapFxEventFloat } from '../../types/beatmap/wrapper/fxEventFloat.ts';
+import { WrapBaseObject } from './baseObject.ts';
 
 /** FX float base beatmap class object. */
 export abstract class WrapFxEventFloat<T extends { [P in keyof T]: T[P] }>

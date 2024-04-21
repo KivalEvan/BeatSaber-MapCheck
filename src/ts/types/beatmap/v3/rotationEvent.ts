@@ -1,5 +1,5 @@
-import { ExecutionTime } from '../shared/constants';
-import { IBaseObject } from './baseObject';
+import type { ExecutionTime } from '../shared/constants.ts';
+import type { IBaseObject } from './baseObject.ts';
 
 export interface IRotationEvent extends IBaseObject {
    /**

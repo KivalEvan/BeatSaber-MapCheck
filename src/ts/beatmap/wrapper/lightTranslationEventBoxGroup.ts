@@ -1,6 +1,6 @@
-import { WrapEventBoxGroup } from './eventBoxGroup';
-import { IWrapLightTranslationEventBoxGroup } from '../../types/beatmap/wrapper/lightTranslationEventBoxGroup';
-import { IWrapLightTranslationEventBox } from '../../types/beatmap/wrapper/lightTranslationEventBox';
+import { WrapEventBoxGroup } from './eventBoxGroup.ts';
+import type { IWrapLightTranslationEventBoxGroup } from '../../types/beatmap/wrapper/lightTranslationEventBoxGroup.ts';
+import type { IWrapLightTranslationEventBox } from '../../types/beatmap/wrapper/lightTranslationEventBox.ts';
 
 /** Light translation event box group beatmap class object. */
 export abstract class WrapLightTranslationEventBoxGroup<

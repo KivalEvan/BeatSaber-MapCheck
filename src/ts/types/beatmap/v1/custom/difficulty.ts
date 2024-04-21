@@ -1,5 +1,5 @@
-import { IBookmark } from '../../v2/custom/bookmark';
-import { IBPMChangeOld } from '../../v2/custom/bpmChange';
+import type { IBookmark } from '../../v2/custom/bookmark.ts';
+import type { IBPMChangeOld } from '../../v2/custom/bpmChange.ts';
 
 /** Difficulty interface for difficulty file. */
 export interface ICustomDifficulty {

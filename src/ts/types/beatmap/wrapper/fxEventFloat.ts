@@ -1,6 +1,6 @@
 // deno-lint-ignore-file no-explicit-any
-import { EaseType } from '../../../beatmap/shared/constants';
-import { IWrapBaseObject, IWrapBaseObjectAttribute } from './baseObject';
+import type { EaseType } from '../../../beatmap/shared/constants.ts';
+import type { IWrapBaseObject, IWrapBaseObjectAttribute } from './baseObject.ts';
 
 export interface IWrapFxEventFloatAttribute<
    T extends { [P in keyof T]: T[P] } = Record<string, any>,

@@ -1,10 +1,10 @@
-import { IColorNote } from '../../types/beatmap/v3/colorNote';
-import { deepCopy } from '../../utils/misc';
-import { WrapColorNote } from '../wrapper/colorNote';
-import { IWrapColorNoteAttribute } from '../../types/beatmap/wrapper/colorNote';
-import { isVector3 } from '../../utils/vector';
-import { Vector2 } from '../../types/vector';
-import { ModType } from '../../types/beatmap/shared/modCheck';
+import type { IColorNote } from '../../types/beatmap/v3/colorNote.ts';
+import { deepCopy } from '../../utils/misc.ts';
+import { WrapColorNote } from '../wrapper/colorNote.ts';
+import type { IWrapColorNoteAttribute } from '../../types/beatmap/wrapper/colorNote.ts';
+import { isVector3 } from '../../utils/vector.ts';
+import type { Vector2 } from '../../types/vector.ts';
+import type { ModType } from '../../types/beatmap/shared/modCheck.ts';
 
 /** Color note beatmap v3 class object. */
 export class ColorNote extends WrapColorNote<IColorNote> {
@@ -92,7 +92,7 @@ export class ColorNote extends WrapColorNote<IColorNote> {
                      -this.customData.animation.definitePosition[0];
                } else {
                   this.customData.animation.definitePosition.forEach((dp) => {
-                     dp[0] = -dp[0];
+                     if (Array.isArray(dp)) dp[0] = -dp[0];
                   });
                }
             }
@@ -102,7 +102,7 @@ export class ColorNote extends WrapColorNote<IColorNote> {
                      -this.customData.animation.offsetPosition[0];
                } else {
                   this.customData.animation.offsetPosition.forEach((op) => {
-                     op[0] = -op[0];
+                     if (Array.isArray(op)) op[0] = -op[0];
                   });
                }
             }

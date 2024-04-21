@@ -1,5 +1,5 @@
-import { IGrid } from './grid';
-import { ICustomDataObstacle } from '../v3/custom/obstacle';
+import type { IGrid } from './grid.ts';
+import type { ICustomDataObstacle } from '../v3/custom/obstacle.ts';
 
 export interface IObstacle extends IGrid {
    /** Duration `<float>` of obstacle.*/

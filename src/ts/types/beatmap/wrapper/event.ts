@@ -1,6 +1,6 @@
 // deno-lint-ignore-file no-explicit-any
-import { IWrapBaseObject, IWrapBaseObjectAttribute } from './baseObject';
-import { EnvironmentAllName } from '../shared/environment';
+import type { IWrapBaseObject, IWrapBaseObjectAttribute } from './baseObject.ts';
+import type { EnvironmentAllName } from '../shared/environment.ts';
 
 export interface IWrapEventAttribute<T extends { [P in keyof T]: T[P] } = Record<string, any>>
    extends IWrapBaseObjectAttribute<T> {

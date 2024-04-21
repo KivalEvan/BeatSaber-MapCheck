@@ -1,19 +1,19 @@
-import { IBasicEventTypesWithKeywords } from '../v3/basicEventTypesWithKeywords';
-import { IBasicEvent } from './basicEvent';
-import { IColorBoostEvent } from './colorBoostEvent';
-import { IEventBoxGroup } from './eventBoxGroup';
-import { IFxEventBox } from './fxEventBox';
-import { IFxEventFloat } from './fxEventFloat';
-import { IIndexFilter } from './indexFilter';
-import { IItem } from './item';
-import { ILightColorEvent } from './lightColorEvent';
-import { ILightColorEventBox } from './lightColorEventBox';
-import { ILightRotationEvent } from './lightRotationEvent';
-import { ILightRotationEventBox } from './lightRotationEventBox';
-import { ILightTranslationEvent } from './lightTranslationEvent';
-import { ILightTranslationEventBox } from './lightTranslationEventBox';
-import { IObject, IObjectLane } from './object';
-import { IWaypoint } from './waypoint';
+import type { IBasicEventTypesWithKeywords } from '../v3/basicEventTypesWithKeywords.ts';
+import type { IBasicEvent } from './basicEvent.ts';
+import type { IColorBoostEvent } from './colorBoostEvent.ts';
+import type { IEventBoxGroup } from './eventBoxGroup.ts';
+import type { IFxEventBox } from './fxEventBox.ts';
+import type { IFxEventFloat } from './fxEventFloat.ts';
+import type { IIndexFilter } from './indexFilter.ts';
+import type { IItem } from './item.ts';
+import type { ILightColorEvent } from './lightColorEvent.ts';
+import type { ILightColorEventBox } from './lightColorEventBox.ts';
+import type { ILightRotationEvent } from './lightRotationEvent.ts';
+import type { ILightRotationEventBox } from './lightRotationEventBox.ts';
+import type { ILightTranslationEvent } from './lightTranslationEvent.ts';
+import type { ILightTranslationEventBox } from './lightTranslationEventBox.ts';
+import type { IObject, IObjectLane } from './object.ts';
+import type { IWaypoint } from './waypoint.ts';
 
 export interface ILightshow extends IItem {
    version: '4.0.0';

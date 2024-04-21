@@ -14,11 +14,11 @@
  * @module
  */
 
-export * from './shared/mod';
-export * as external from './external/mod';
-export * as v1 from './v1/mod';
-export * as v2 from './v2/mod';
-export * as v3 from './v3/mod';
-export * as v4 from './v4/mod';
-export * as wrapper from './wrapper/mod';
-export * as container from './container/mod';
+export * from './shared/mod.ts';
+export * as external from './external/mod.ts';
+export * as v1 from './v1/mod.ts';
+export * as v2 from './v2/mod.ts';
+export * as v3 from './v3/mod.ts';
+export * as v4 from './v4/mod.ts';
+export * as wrapper from './wrapper/mod.ts';
+export * as container from './container/mod.ts';

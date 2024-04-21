@@ -1,9 +1,9 @@
-import { ILightRotationEventContainer } from '../../types/beatmap/container/v4';
-import { ILightRotationEvent } from '../../types/beatmap/v4/lightRotationEvent';
-import { IWrapLightRotationEventAttribute } from '../../types/beatmap/wrapper/lightRotationEvent';
-import { DeepRequiredIgnore } from '../../types/utils';
-import { deepCopy } from '../../utils/misc';
-import { WrapLightRotationEvent } from '../wrapper/lightRotationEvent';
+import type { ILightRotationEventContainer } from '../../types/beatmap/container/v4.ts';
+import type { ILightRotationEvent } from '../../types/beatmap/v4/lightRotationEvent.ts';
+import type { IWrapLightRotationEventAttribute } from '../../types/beatmap/wrapper/lightRotationEvent.ts';
+import type { DeepRequiredIgnore } from '../../types/utils.ts';
+import { deepCopy } from '../../utils/misc.ts';
+import { WrapLightRotationEvent } from '../wrapper/lightRotationEvent.ts';
 
 /** Light rotation event beatmap v4 class object. */
 export class LightRotationEvent extends WrapLightRotationEvent<ILightRotationEventContainer> {

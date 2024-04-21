@@ -1,5 +1,5 @@
 // deno-lint-ignore-file no-explicit-any
-import { ISerializable } from '../shared/serializable';
+import type { ISerializable } from '../shared/serializable.ts';
 
 export interface IWrapEventTypesForKeywordsAttribute<
    T extends { [P in keyof T]: T[P] } = Record<string, any>,

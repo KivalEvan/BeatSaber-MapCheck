@@ -1,5 +1,5 @@
 // deno-lint-ignore-file no-explicit-any
-import { IWrapGridObject, IWrapGridObjectAttribute } from './gridObject';
+import type { IWrapGridObject, IWrapGridObjectAttribute } from './gridObject.ts';
 
 export interface IWrapWaypointAttribute<T extends { [P in keyof T]: T[P] } = Record<string, any>>
    extends IWrapGridObjectAttribute<T> {

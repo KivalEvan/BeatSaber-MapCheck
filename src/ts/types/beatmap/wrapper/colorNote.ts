@@ -1,6 +1,6 @@
 // deno-lint-ignore-file no-explicit-any
-import { NoteColor } from '../shared/constants';
-import { IWrapBaseNote, IWrapBaseNoteAttribute } from './baseNote';
+import type { NoteColor } from '../shared/constants.ts';
+import type { IWrapBaseNote, IWrapBaseNoteAttribute } from './baseNote.ts';
 
 export interface IWrapColorNoteAttribute<T extends { [P in keyof T]: T[P] } = Record<string, any>>
    extends IWrapBaseNoteAttribute<T> {

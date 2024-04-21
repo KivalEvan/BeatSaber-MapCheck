@@ -1,8 +1,8 @@
-import { IBombNote } from '../../types/beatmap/v3/bombNote';
-import { deepCopy } from '../../utils/misc';
-import { WrapBombNote } from '../wrapper/bombNote';
-import { IWrapBombNoteAttribute } from '../../types/beatmap/wrapper/bombNote';
-import { isVector3 } from '../../utils/vector';
+import type { IBombNote } from '../../types/beatmap/v3/bombNote.ts';
+import { deepCopy } from '../../utils/misc.ts';
+import { WrapBombNote } from '../wrapper/bombNote.ts';
+import type { IWrapBombNoteAttribute } from '../../types/beatmap/wrapper/bombNote.ts';
+import { isVector3 } from '../../utils/vector.ts';
 
 /** Bomb note beatmap v3 class object. */
 export class BombNote extends WrapBombNote<IBombNote> {
@@ -71,7 +71,7 @@ export class BombNote extends WrapBombNote<IBombNote> {
                      -this.customData.animation.definitePosition[0];
                } else {
                   this.customData.animation.definitePosition.forEach((dp) => {
-                     dp[0] = -dp[0];
+                     if (Array.isArray(dp)) dp[0] = -dp[0];
                   });
                }
             }
@@ -81,7 +81,7 @@ export class BombNote extends WrapBombNote<IBombNote> {
                      -this.customData.animation.offsetPosition[0];
                } else {
                   this.customData.animation.offsetPosition.forEach((op) => {
-                     op[0] = -op[0];
+                     if (Array.isArray(op)) op[0] = -op[0];
                   });
                }
             }

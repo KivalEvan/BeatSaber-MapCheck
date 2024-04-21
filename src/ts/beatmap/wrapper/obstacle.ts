@@ -1,8 +1,8 @@
-import { ModType } from '../../types/beatmap/shared/modCheck';
-import { IWrapObstacle } from '../../types/beatmap/wrapper/obstacle';
-import { Vector2 } from '../../types/vector';
-import { LINE_COUNT } from '../shared/constants';
-import { WrapGridObject } from './gridObject';
+import type { ModType } from '../../types/beatmap/shared/modCheck.ts';
+import type { IWrapObstacle } from '../../types/beatmap/wrapper/obstacle.ts';
+import type { Vector2 } from '../../types/vector.ts';
+import { LINE_COUNT } from '../shared/constants.ts';
+import { WrapGridObject } from './gridObject.ts';
 
 /** Obstacle beatmap class object. */
 export abstract class WrapObstacle<T extends { [P in keyof T]: T[P] }>

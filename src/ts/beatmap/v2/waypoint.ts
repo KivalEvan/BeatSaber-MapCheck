@@ -1,7 +1,7 @@
-import { IWaypoint } from '../../types/beatmap/v2/waypoint';
-import { IWrapWaypointAttribute } from '../../types/beatmap/wrapper/waypoint';
-import { deepCopy } from '../../utils/misc';
-import { WrapWaypoint } from '../wrapper/waypoint';
+import type { IWaypoint } from '../../types/beatmap/v2/waypoint.ts';
+import type { IWrapWaypointAttribute } from '../../types/beatmap/wrapper/waypoint.ts';
+import { deepCopy } from '../../utils/misc.ts';
+import { WrapWaypoint } from '../wrapper/waypoint.ts';
 
 /** Waypoint beatmap v2 class object. */
 export class Waypoint extends WrapWaypoint<IWaypoint> {

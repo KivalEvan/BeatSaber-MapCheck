@@ -1,6 +1,6 @@
 // deno-lint-ignore-file no-explicit-any
-import { _ObtainCustomData } from '../../utils';
-import { ISerializable } from '../shared/serializable';
+import type { _ObtainCustomData } from '../../utils.ts';
+import type { ISerializable } from '../shared/serializable.ts';
 
 export interface IWrapBaseItemAttribute<T extends { [P in keyof T]: T[P] } = Record<string, any>> {
    /**

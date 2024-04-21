@@ -1,7 +1,7 @@
-import { WrapAudioData } from '../wrapper/audioData';
-import { IBPMInfo } from '../../types/beatmap/v2/bpmInfo';
-import { IWrapAudioAttribute } from '../../types/beatmap/wrapper/audioData';
-import { DeepPartial } from '../../types/utils';
+import { WrapAudioData } from '../wrapper/audioData.ts';
+import type { IBPMInfo } from '../../types/beatmap/v2/bpmInfo.ts';
+import type { IWrapAudioAttribute } from '../../types/beatmap/wrapper/audioData.ts';
+import type { DeepPartial } from '../../types/utils.ts';
 
 export class BPMInfo extends WrapAudioData<IBPMInfo> {
    readonly version = '2.0.0';

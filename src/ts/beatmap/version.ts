@@ -1,10 +1,10 @@
 // deno-lint-ignore-file no-explicit-any
-import { IWrapDifficulty } from '../types/beatmap/wrapper/difficulty';
-import { Difficulty as V1Difficulty } from './v1/difficulty';
-import { Difficulty as V2Difficulty } from './v2/difficulty';
-import { Difficulty as V3Difficulty } from './v3/difficulty';
-import { Difficulty as V4Difficulty } from './v4/difficulty';
-import { WrapDifficulty } from './wrapper/difficulty';
+import type { IWrapDifficulty } from '../types/beatmap/wrapper/difficulty.ts';
+import { Difficulty as V1Difficulty } from './v1/difficulty.ts';
+import { Difficulty as V2Difficulty } from './v2/difficulty.ts';
+import { Difficulty as V3Difficulty } from './v3/difficulty.ts';
+import { Difficulty as V4Difficulty } from './v4/difficulty.ts';
+import type { WrapDifficulty } from './wrapper/difficulty.ts';
 
 export function isV1(data: IWrapDifficulty): data is V1Difficulty;
 export function isV1(data: WrapDifficulty<Record<string, any>>): data is V1Difficulty;

@@ -1,7 +1,7 @@
-import { RandomType } from '../shared/constants';
-import { LimitAlsoAffectsType } from '../shared/constants';
-import { IndexFilterType } from '../shared/constants';
-import { IItem } from './item';
+import type { RandomType } from '../shared/constants.ts';
+import type { LimitAlsoAffectsType } from '../shared/constants.ts';
+import type { IndexFilterType } from '../shared/constants.ts';
+import type { IItem } from './item.ts';
 
 interface IIndexFilterBase extends IItem {
    /**

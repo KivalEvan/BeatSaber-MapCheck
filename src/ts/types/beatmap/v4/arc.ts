@@ -1,6 +1,6 @@
-import { SliderMidAnchorMode } from '../shared/constants';
-import { ICustomDataSlider } from '../v3/custom/slider';
-import { IItem } from './item';
+import type { SliderMidAnchorMode } from '../shared/constants.ts';
+import type { ICustomDataSlider } from '../v3/custom/slider.ts';
+import type { IItem } from './item.ts';
 
 export interface IArc extends IItem {
    /**

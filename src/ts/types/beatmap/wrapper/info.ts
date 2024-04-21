@@ -1,12 +1,12 @@
 // deno-lint-ignore-file no-explicit-any
-import { LooseAutocomplete } from '../../utils';
-import { Version } from '../shared/version';
-import { CharacteristicName } from '../shared/characteristic';
-import { DifficultyName } from '../shared/difficulty';
-import { EnvironmentAllName } from '../shared/environment';
-import { GenericFilename, IFileInfo } from '../shared/filename';
-import { IWrapBaseItem } from './baseItem';
-import { IColor } from '../../colors';
+import type { LooseAutocomplete } from '../../utils.ts';
+import type { Version } from '../shared/version.ts';
+import type { CharacteristicName } from '../shared/characteristic.ts';
+import type { DifficultyName } from '../shared/difficulty.ts';
+import type { EnvironmentAllName } from '../shared/environment.ts';
+import type { GenericFilename, IFileInfo } from '../shared/filename.ts';
+import type { IWrapBaseItem } from './baseItem.ts';
+import type { IColor } from '../../colors.ts';
 
 export interface IWrapInfoAttribute<
    T extends { [P in keyof T]: T[P] } = Record<string, any>,

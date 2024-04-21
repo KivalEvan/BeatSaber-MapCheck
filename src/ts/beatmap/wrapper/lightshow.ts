@@ -1,38 +1,41 @@
-import { IWrapEvent, IWrapEventAttribute } from '../../types/beatmap/wrapper/event';
-import {
+import type { IWrapEvent, IWrapEventAttribute } from '../../types/beatmap/wrapper/event.ts';
+import type {
    IWrapColorBoostEvent,
    IWrapColorBoostEventAttribute,
-} from '../../types/beatmap/wrapper/colorBoostEvent';
-import {
+} from '../../types/beatmap/wrapper/colorBoostEvent.ts';
+import type {
    IWrapLightColorEventBoxGroup,
    IWrapLightColorEventBoxGroupAttribute,
-} from '../../types/beatmap/wrapper/lightColorEventBoxGroup';
-import {
+} from '../../types/beatmap/wrapper/lightColorEventBoxGroup.ts';
+import type {
    IWrapLightRotationEventBoxGroup,
    IWrapLightRotationEventBoxGroupAttribute,
-} from '../../types/beatmap/wrapper/lightRotationEventBoxGroup';
-import {
+} from '../../types/beatmap/wrapper/lightRotationEventBoxGroup.ts';
+import type {
    IWrapLightTranslationEventBoxGroup,
    IWrapLightTranslationEventBoxGroupAttribute,
-} from '../../types/beatmap/wrapper/lightTranslationEventBoxGroup';
-import {
+} from '../../types/beatmap/wrapper/lightTranslationEventBoxGroup.ts';
+import type {
    _ObtainCustomData,
    DeepPartialWrapper,
    LooseAutocomplete,
    PartialWrapper,
-} from '../../types/utils';
-import { GenericFilename } from '../../types/beatmap/shared/filename';
-import { EventContainer } from '../../types/beatmap/wrapper/container';
-import { WrapBaseItem } from './baseItem';
-import { IWrapLightshow } from '../../types/beatmap/wrapper/lightshow';
-import {
+} from '../../types/utils.ts';
+import type { GenericFilename } from '../../types/beatmap/shared/filename.ts';
+import type { EventContainer } from '../../types/beatmap/wrapper/container.ts';
+import { WrapBaseItem } from './baseItem.ts';
+import type { IWrapLightshow } from '../../types/beatmap/wrapper/lightshow.ts';
+import type {
    IWrapFxEventBoxGroup,
    IWrapFxEventBoxGroupAttribute,
-} from '../../types/beatmap/wrapper/fxEventBoxGroup';
-import { sortObjectFn } from '../shared/helpers';
-import { IWrapWaypoint, IWrapWaypointAttribute } from '../../types/beatmap/wrapper/waypoint';
-import { IWrapEventTypesWithKeywords } from '../../types/beatmap/wrapper/eventTypesWithKeywords';
-import { Version } from '../../types/beatmap/shared/version';
+} from '../../types/beatmap/wrapper/fxEventBoxGroup.ts';
+import { sortObjectFn } from '../shared/helpers.ts';
+import type {
+   IWrapWaypoint,
+   IWrapWaypointAttribute,
+} from '../../types/beatmap/wrapper/waypoint.ts';
+import type { IWrapEventTypesWithKeywords } from '../../types/beatmap/wrapper/eventTypesWithKeywords.ts';
+import type { Version } from '../../types/beatmap/shared/version.ts';
 
 /** Lightshow beatmap class object. */
 export abstract class WrapLightshow<T extends { [P in keyof T]: T[P] }>

@@ -1,5 +1,5 @@
-import { SliderMidAnchorMode } from '../shared/constants';
-import { ICustomDataBase } from '../shared/custom/customData';
+import type { SliderMidAnchorMode } from '../shared/constants.ts';
+import type { ICustomDataBase } from '../shared/custom/customData.ts';
 
 /** not a chain. */
 export interface IArc {

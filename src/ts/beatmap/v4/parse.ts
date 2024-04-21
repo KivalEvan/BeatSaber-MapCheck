@@ -1,13 +1,13 @@
-import { Info } from './info';
-import { deepCheck } from '../shared/dataCheck';
-import logger from '../../logger';
-import { IDataCheckOption } from '../../types/beatmap/shared/dataCheck';
-import { shallowCopy } from '../../utils/misc';
-import { AudioDataCheck, InfoDataCheck, LightshowDataCheck } from './dataCheck';
-import { DifficultyDataCheck } from './dataCheck';
-import { Difficulty } from './difficulty';
-import { Lightshow } from './lightshow';
-import { AudioData } from './audioData';
+import { Info } from './info.ts';
+import { deepCheck } from '../shared/dataCheck.ts';
+import logger from '../../logger.ts';
+import type { IDataCheckOption } from '../../types/beatmap/shared/dataCheck.ts';
+import { shallowCopy } from '../../utils/misc.ts';
+import { AudioDataCheck, InfoDataCheck, LightshowDataCheck } from './dataCheck.ts';
+import { DifficultyDataCheck } from './dataCheck.ts';
+import { Difficulty } from './difficulty.ts';
+import { Lightshow } from './lightshow.ts';
+import { AudioData } from './audioData.ts';
 
 function tag(name: string): string[] {
    return ['v4', 'parse', name];

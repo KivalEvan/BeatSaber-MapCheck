@@ -1,8 +1,8 @@
 // deno-lint-ignore-file no-explicit-any
 
-import { IWrapBaseItem, IWrapBaseItemAttribute } from './baseItem';
-import { IWrapFxEventFloat, IWrapFxEventFloatAttribute } from './fxEventFloat';
-import { IWrapFxEventInt, IWrapFxEventIntAttribute } from './fxEventInt';
+import type { IWrapBaseItem, IWrapBaseItemAttribute } from './baseItem.ts';
+import type { IWrapFxEventFloat, IWrapFxEventFloatAttribute } from './fxEventFloat.ts';
+import type { IWrapFxEventInt, IWrapFxEventIntAttribute } from './fxEventInt.ts';
 
 export interface IWrapFxEventsCollectionAttribute<
    T extends { [P in keyof T]: T[P] } = Record<string, any>,

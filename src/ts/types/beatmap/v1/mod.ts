@@ -7,10 +7,10 @@
  * @module
  */
 
-export * from './custom/mod';
-export * from './difficulty';
-export * from './event';
-export * from './info';
-export * from './note';
-export * from './object';
-export * from './obstacle';
+export * from './custom/mod.ts';
+export * from './difficulty.ts';
+export * from './event.ts';
+export * from './info.ts';
+export * from './note.ts';
+export * from './object.ts';
+export * from './obstacle.ts';

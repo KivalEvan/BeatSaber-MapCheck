@@ -1,5 +1,5 @@
 // deno-lint-ignore-file no-explicit-any
-import { IWrapBaseItem, IWrapBaseItemAttribute } from './baseItem';
+import type { IWrapBaseItem, IWrapBaseItemAttribute } from './baseItem.ts';
 
 export interface IWrapBaseObjectAttribute<T extends { [P in keyof T]: T[P] } = Record<string, any>>
    extends IWrapBaseItemAttribute<T> {

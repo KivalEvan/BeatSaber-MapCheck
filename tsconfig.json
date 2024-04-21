@@ -16,7 +16,8 @@
       "strictPropertyInitialization": true,
       "useUnknownInCatchVariables": false,
       "allowImportingTsExtensions": true,
-      "allowSyntheticDefaultImports": true
+      "allowSyntheticDefaultImports": true,
+      "resolveJsonModule": true
    },
    "include": ["./src"],
    "exclude": ["node_modules"]

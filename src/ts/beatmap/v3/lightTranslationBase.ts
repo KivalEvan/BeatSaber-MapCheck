@@ -1,7 +1,7 @@
-import { ILightTranslationEvent } from '../../types/beatmap/v3/lightTranslationEvent';
-import { IWrapLightTranslationEventAttribute } from '../../types/beatmap/wrapper/lightTranslationEvent';
-import { deepCopy } from '../../utils/misc';
-import { WrapLightTranslationEvent } from '../wrapper/lightTranslationEvent';
+import type { ILightTranslationEvent } from '../../types/beatmap/v3/lightTranslationEvent.ts';
+import type { IWrapLightTranslationEventAttribute } from '../../types/beatmap/wrapper/lightTranslationEvent.ts';
+import { deepCopy } from '../../utils/misc.ts';
+import { WrapLightTranslationEvent } from '../wrapper/lightTranslationEvent.ts';
 
 /** Light translation base beatmap v3 class object. */
 export class LightTranslationBase extends WrapLightTranslationEvent<ILightTranslationEvent> {

@@ -1,4 +1,4 @@
-import { Version } from '../../types/beatmap/shared/version';
+import type { Version } from '../../types/beatmap/shared/version.ts';
 
 /** Internal use, compare beatmap version to another. */
 export function compareVersion(version: Version, compareTo: Version): 'old' | 'new' | 'current' {

@@ -1,17 +1,17 @@
-import { FloatPointDefinition, Vector4PointDefinition } from '../../shared/custom/heck';
-import { Easings } from '../../../easings';
-import { ColorArray } from '../../../colors';
-import { ICustomDataBase } from '../../shared/custom/customData';
-import {
+import type { FloatPointDefinition, Vector4PointDefinition } from '../../shared/custom/heck.ts';
+import type { Easings } from '../../../easings.ts';
+import type { ColorArray } from '../../../colors.ts';
+import type { ICustomDataBase } from '../../shared/custom/customData.ts';
+import type {
    EnvironmentMaterial,
    GeometryType,
    LookupMethod,
    ShaderKeywords,
    ShaderType,
-} from '../../shared/custom/chroma';
-import { IHeckBase, IInfoSettingsCustomData } from './heck';
-import { LooseAutocomplete } from '../../../utils';
-import { Vector2, Vector3 } from '../../../vector';
+} from '../../shared/custom/chroma.ts';
+import type { IHeckBase, IInfoSettingsCustomData } from './heck.ts';
+import type { LooseAutocomplete } from '../../../utils.ts';
+import type { Vector2, Vector3 } from '../../../vector.ts';
 
 /** Chroma Material interface for Environment Enhancement. */
 export interface IChromaMaterial {

@@ -1,21 +1,24 @@
-import { EnvironmentAllName, EnvironmentName } from '../../types/beatmap/shared/environment';
-import { IInfo, IInfoDifficulty, IInfoSet } from '../../types/beatmap/v2/info';
-import { CharacteristicName } from '../../types/beatmap/shared/characteristic';
-import { EnvironmentV3Name } from '../../types/beatmap/shared/environment';
-import { WrapInfo, WrapInfoDifficulty } from '../wrapper/info';
-import { DifficultyName } from '../../types/beatmap/shared/difficulty';
-import { DeepPartial, LooseAutocomplete } from '../../types/utils';
-import { GenericFilename } from '../../types/beatmap/shared/filename';
-import { Environment360Name } from '../../types/beatmap/shared/environment';
-import { deepCopy, shallowCopy } from '../../utils/misc';
-import {
+import type {
+   EnvironmentAllName,
+   EnvironmentName,
+} from '../../types/beatmap/shared/environment.ts';
+import type { IInfo, IInfoDifficulty, IInfoSet } from '../../types/beatmap/v2/info.ts';
+import type { CharacteristicName } from '../../types/beatmap/shared/characteristic.ts';
+import type { EnvironmentV3Name } from '../../types/beatmap/shared/environment.ts';
+import { WrapInfo, WrapInfoDifficulty } from '../wrapper/info.ts';
+import type { DifficultyName } from '../../types/beatmap/shared/difficulty.ts';
+import type { DeepPartial, LooseAutocomplete } from '../../types/utils.ts';
+import type { GenericFilename } from '../../types/beatmap/shared/filename.ts';
+import type { Environment360Name } from '../../types/beatmap/shared/environment.ts';
+import { deepCopy, shallowCopy } from '../../utils/misc.ts';
+import type {
    IWrapInfo,
    IWrapInfoAudio,
    IWrapInfoColorScheme,
    IWrapInfoDifficultyAttribute,
    IWrapInfoSong,
-} from '../../types/beatmap/wrapper/info';
-import { IWrapInfoAttribute } from '../../types/beatmap/wrapper/info';
+} from '../../types/beatmap/wrapper/info.ts';
+import type { IWrapInfoAttribute } from '../../types/beatmap/wrapper/info.ts';
 
 export interface IV2ExtraInfo {
    levelAuthorName: string;

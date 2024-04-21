@@ -1,5 +1,5 @@
-import { IEventBox } from './eventBox';
-import { IItem } from './item';
+import type { IEventBox } from './eventBox.ts';
+import type { IItem } from './item.ts';
 
 export interface IEventBoxGroup extends IItem {
    /**

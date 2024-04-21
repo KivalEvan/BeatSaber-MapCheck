@@ -1,5 +1,5 @@
 // deno-lint-ignore-file no-explicit-any
-import { IWrapBaseObject, IWrapBaseObjectAttribute } from './baseObject';
+import type { IWrapBaseObject, IWrapBaseObjectAttribute } from './baseObject.ts';
 
 export interface IWrapColorBoostEventAttribute<
    T extends { [P in keyof T]: T[P] } = Record<string, any>,

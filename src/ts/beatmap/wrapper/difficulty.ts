@@ -1,49 +1,64 @@
-import { IWrapEvent, IWrapEventAttribute } from '../../types/beatmap/wrapper/event';
-import { IWrapEventTypesWithKeywords } from '../../types/beatmap/wrapper/eventTypesWithKeywords';
-import { IWrapBombNote, IWrapBombNoteAttribute } from '../../types/beatmap/wrapper/bombNote';
-import { IWrapBPMEvent, IWrapBPMEventAttribute } from '../../types/beatmap/wrapper/bpmEvent';
-import { IWrapChain, IWrapChainAttribute } from '../../types/beatmap/wrapper/chain';
-import {
+import type { IWrapEvent, IWrapEventAttribute } from '../../types/beatmap/wrapper/event.ts';
+import type { IWrapEventTypesWithKeywords } from '../../types/beatmap/wrapper/eventTypesWithKeywords.ts';
+import type {
+   IWrapBombNote,
+   IWrapBombNoteAttribute,
+} from '../../types/beatmap/wrapper/bombNote.ts';
+import type {
+   IWrapBPMEvent,
+   IWrapBPMEventAttribute,
+} from '../../types/beatmap/wrapper/bpmEvent.ts';
+import type { IWrapChain, IWrapChainAttribute } from '../../types/beatmap/wrapper/chain.ts';
+import type {
    IWrapColorBoostEvent,
    IWrapColorBoostEventAttribute,
-} from '../../types/beatmap/wrapper/colorBoostEvent';
-import { IWrapColorNote, IWrapColorNoteAttribute } from '../../types/beatmap/wrapper/colorNote';
-import {
+} from '../../types/beatmap/wrapper/colorBoostEvent.ts';
+import type {
+   IWrapColorNote,
+   IWrapColorNoteAttribute,
+} from '../../types/beatmap/wrapper/colorNote.ts';
+import type {
    IWrapLightColorEventBoxGroup,
    IWrapLightColorEventBoxGroupAttribute,
-} from '../../types/beatmap/wrapper/lightColorEventBoxGroup';
-import {
+} from '../../types/beatmap/wrapper/lightColorEventBoxGroup.ts';
+import type {
    IWrapLightRotationEventBoxGroup,
    IWrapLightRotationEventBoxGroupAttribute,
-} from '../../types/beatmap/wrapper/lightRotationEventBoxGroup';
-import {
+} from '../../types/beatmap/wrapper/lightRotationEventBoxGroup.ts';
+import type {
    IWrapLightTranslationEventBoxGroup,
    IWrapLightTranslationEventBoxGroupAttribute,
-} from '../../types/beatmap/wrapper/lightTranslationEventBoxGroup';
-import { IWrapObstacle, IWrapObstacleAttribute } from '../../types/beatmap/wrapper/obstacle';
-import {
+} from '../../types/beatmap/wrapper/lightTranslationEventBoxGroup.ts';
+import type {
+   IWrapObstacle,
+   IWrapObstacleAttribute,
+} from '../../types/beatmap/wrapper/obstacle.ts';
+import type {
    IWrapRotationEvent,
    IWrapRotationEventAttribute,
-} from '../../types/beatmap/wrapper/rotationEvent';
-import { IWrapArc, IWrapArcAttribute } from '../../types/beatmap/wrapper/arc';
-import { IWrapWaypoint, IWrapWaypointAttribute } from '../../types/beatmap/wrapper/waypoint';
-import { BeatPerMinute } from '../shared/bpm';
-import {
+} from '../../types/beatmap/wrapper/rotationEvent.ts';
+import type { IWrapArc, IWrapArcAttribute } from '../../types/beatmap/wrapper/arc.ts';
+import type {
+   IWrapWaypoint,
+   IWrapWaypointAttribute,
+} from '../../types/beatmap/wrapper/waypoint.ts';
+import { BeatPerMinute } from '../shared/bpm.ts';
+import type {
    _ObtainCustomData,
    DeepPartialWrapper,
    LooseAutocomplete,
    PartialWrapper,
-} from '../../types/utils';
-import { GenericFilename } from '../../types/beatmap/shared/filename';
-import { EventContainer, NoteContainer } from '../../types/beatmap/wrapper/container';
-import { Version } from '../../types/beatmap/shared/version';
-import { WrapBaseItem } from './baseItem';
-import { IWrapDifficulty } from '../../types/beatmap/wrapper/difficulty';
-import {
+} from '../../types/utils.ts';
+import type { GenericFilename } from '../../types/beatmap/shared/filename.ts';
+import type { EventContainer, NoteContainer } from '../../types/beatmap/wrapper/container.ts';
+import type { Version } from '../../types/beatmap/shared/version.ts';
+import { WrapBaseItem } from './baseItem.ts';
+import type { IWrapDifficulty } from '../../types/beatmap/wrapper/difficulty.ts';
+import type {
    IWrapFxEventBoxGroup,
    IWrapFxEventBoxGroupAttribute,
-} from '../../types/beatmap/wrapper/fxEventBoxGroup';
-import { sortNoteFn, sortObjectFn } from '../shared/helpers';
+} from '../../types/beatmap/wrapper/fxEventBoxGroup.ts';
+import { sortNoteFn, sortObjectFn } from '../shared/helpers.ts';
 
 /** Difficulty beatmap class object. */
 export abstract class WrapDifficulty<T extends { [P in keyof T]: T[P] }>

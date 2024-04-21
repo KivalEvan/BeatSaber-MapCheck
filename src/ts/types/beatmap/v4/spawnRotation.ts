@@ -1,5 +1,5 @@
-import { ExecutionTime } from '../shared/constants';
-import { IItem } from './item';
+import type { ExecutionTime } from '../shared/constants.ts';
+import type { IItem } from './item.ts';
 
 export interface ISpawnRotation extends IItem {
    /**

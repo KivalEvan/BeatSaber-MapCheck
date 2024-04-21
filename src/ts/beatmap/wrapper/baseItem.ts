@@ -1,6 +1,6 @@
-import { IWrapBaseItem } from '../../types/beatmap/wrapper/baseItem';
-import { _ObtainCustomData } from '../../types/utils';
-import { Serializable } from '../shared/serializable';
+import type { IWrapBaseItem } from '../../types/beatmap/wrapper/baseItem.ts';
+import type { _ObtainCustomData } from '../../types/utils.ts';
+import { Serializable } from '../shared/serializable.ts';
 
 /** Basic building block of beatmap object. */
 export abstract class WrapBaseItem<T extends { [P in keyof T]: T[P] }>

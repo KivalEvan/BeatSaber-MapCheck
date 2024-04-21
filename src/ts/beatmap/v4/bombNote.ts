@@ -1,11 +1,11 @@
-import { IBombNote } from '../../types/beatmap/v4/bombNote';
-import { deepCopy } from '../../utils/misc';
-import { WrapBombNote } from '../wrapper/bombNote';
-import { IWrapBombNoteAttribute } from '../../types/beatmap/wrapper/bombNote';
-import { isVector3 } from '../../utils/vector';
-import { IBombNoteContainer } from '../../types/beatmap/container/v4';
-import { DeepRequiredIgnore } from '../../types/utils';
-import { IObjectLane } from '../../types/beatmap/v4/object';
+import type { IBombNote } from '../../types/beatmap/v4/bombNote.ts';
+import { deepCopy } from '../../utils/misc.ts';
+import { WrapBombNote } from '../wrapper/bombNote.ts';
+import type { IWrapBombNoteAttribute } from '../../types/beatmap/wrapper/bombNote.ts';
+import { isVector3 } from '../../utils/vector.ts';
+import type { IBombNoteContainer } from '../../types/beatmap/container/v4.ts';
+import type { DeepRequiredIgnore } from '../../types/utils.ts';
+import type { IObjectLane } from '../../types/beatmap/v4/object.ts';
 
 /** Bomb note beatmap v4 class object. */
 export class BombNote extends WrapBombNote<IBombNoteContainer> {
@@ -88,7 +88,7 @@ export class BombNote extends WrapBombNote<IBombNoteContainer> {
                      -this.customData.animation.definitePosition[0];
                } else {
                   this.customData.animation.definitePosition.forEach((dp) => {
-                     dp[0] = -dp[0];
+                     if (Array.isArray(dp)) dp[0] = -dp[0];
                   });
                }
             }
@@ -98,7 +98,7 @@ export class BombNote extends WrapBombNote<IBombNoteContainer> {
                      -this.customData.animation.offsetPosition[0];
                } else {
                   this.customData.animation.offsetPosition.forEach((op) => {
-                     op[0] = -op[0];
+                     if (Array.isArray(op)) op[0] = -op[0];
                   });
                }
             }

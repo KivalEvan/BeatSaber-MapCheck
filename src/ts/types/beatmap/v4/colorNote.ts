@@ -1,5 +1,5 @@
-import { ICustomDataNote } from '../v3/custom/note';
-import { IGrid } from './grid';
+import type { ICustomDataNote } from '../v3/custom/note.ts';
+import type { IGrid } from './grid.ts';
 
 export interface IColorNote extends IGrid {
    /**

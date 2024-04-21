@@ -1,7 +1,7 @@
-import { IArc } from '../../types/beatmap/v2/arc';
-import { IWrapArcAttribute } from '../../types/beatmap/wrapper/arc';
-import { deepCopy } from '../../utils/misc';
-import { WrapArc } from '../wrapper/arc';
+import type { IArc } from '../../types/beatmap/v2/arc.ts';
+import type { IWrapArcAttribute } from '../../types/beatmap/wrapper/arc.ts';
+import { deepCopy } from '../../utils/misc.ts';
+import { WrapArc } from '../wrapper/arc.ts';
 
 /** Arc beatmap v2 class object. */
 export class Arc extends WrapArc<IArc> {

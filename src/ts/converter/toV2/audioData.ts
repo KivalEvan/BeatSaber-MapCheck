@@ -1,7 +1,7 @@
-import logger from '../../logger';
-import { BPMInfo as V2AudioData } from '../../beatmap/v2/bpmInfo';
-import { AudioData as V4AudioData } from '../../beatmap/v4/audioData';
-import { IWrapAudio } from '../../types/beatmap/wrapper/audioData';
+import logger from '../../logger.ts';
+import { BPMInfo as V2AudioData } from '../../beatmap/v2/bpmInfo.ts';
+import { AudioData as V4AudioData } from '../../beatmap/v4/audioData.ts';
+import type { IWrapAudio } from '../../types/beatmap/wrapper/audioData.ts';
 
 function tag(name: string): string[] {
    return ['convert', 'toV2Audio', name];

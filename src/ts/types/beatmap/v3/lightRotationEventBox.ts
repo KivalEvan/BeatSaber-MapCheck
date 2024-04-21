@@ -1,7 +1,7 @@
-import { Axis } from '../shared/constants';
-import { DistributionType } from '../shared/constants';
-import { IEventBox } from './eventBox';
-import { ILightRotationEvent } from './lightRotationEvent';
+import type { Axis } from '../shared/constants.ts';
+import type { DistributionType } from '../shared/constants.ts';
+import type { IEventBox } from './eventBox.ts';
+import type { ILightRotationEvent } from './lightRotationEvent.ts';
 
 export interface ILightRotationEventBox extends IEventBox {
    /** Rotation distribution `<float>` of light rotation event box. */

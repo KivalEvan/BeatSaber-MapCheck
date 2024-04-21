@@ -1,5 +1,5 @@
-import { DistributionType } from '../shared/constants';
-import { IEventBox } from './eventBox';
+import type { DistributionType } from '../shared/constants.ts';
+import type { IEventBox } from './eventBox.ts';
 
 export interface IFxEventBox extends IEventBox {
    /** FX distribution `<float>` of FX event box. */

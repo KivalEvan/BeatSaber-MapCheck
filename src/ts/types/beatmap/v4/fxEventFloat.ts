@@ -1,5 +1,5 @@
-import { EaseType } from '../shared/constants';
-import { IItem } from './item';
+import type { EaseType } from '../shared/constants.ts';
+import type { IItem } from './item.ts';
 
 export interface IFxEventFloat extends IItem {
    /** Use previous event value `<int>` in FX event. */

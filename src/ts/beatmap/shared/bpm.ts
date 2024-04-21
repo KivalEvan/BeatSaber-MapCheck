@@ -1,9 +1,12 @@
-import { IBPMChangeTime, IBPMTimeScale } from '../../types/beatmap/shared/custom/bpm';
-import { IBPMChange as IV2BPMChange, IBPMChangeOld } from '../../types/beatmap/v2/custom/bpmChange';
-import { IBPMChange as IV3BPMChange } from '../../types/beatmap/v3/custom/bpmChange';
-import { IBPMEvent } from '../../types/beatmap/v3/bpmEvent';
-import { IWrapBPMEventAttribute } from '../../types/beatmap/wrapper/bpmEvent';
-import logger from '../../logger';
+import type { IBPMChangeTime, IBPMTimeScale } from '../../types/beatmap/shared/custom/bpm.ts';
+import type {
+   IBPMChange as IV2BPMChange,
+   IBPMChangeOld,
+} from '../../types/beatmap/v2/custom/bpmChange.ts';
+import type { IBPMChange as IV3BPMChange } from '../../types/beatmap/v3/custom/bpmChange.ts';
+import type { IBPMEvent } from '../../types/beatmap/v3/bpmEvent.ts';
+import type { IWrapBPMEventAttribute } from '../../types/beatmap/wrapper/bpmEvent.ts';
+import logger from '../../logger.ts';
 
 function tag(name: string): string[] {
    return ['beatmap', 'shared', 'bpm', name];

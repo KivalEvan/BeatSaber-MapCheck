@@ -1,10 +1,10 @@
-import { IWaypointContainer } from '../../types/beatmap/container/v4';
-import { IObjectLane } from '../../types/beatmap/v4/object';
-import { IWaypoint } from '../../types/beatmap/v4/waypoint';
-import { IWrapWaypointAttribute } from '../../types/beatmap/wrapper/waypoint';
-import { DeepRequiredIgnore } from '../../types/utils';
-import { deepCopy } from '../../utils/misc';
-import { WrapWaypoint } from '../wrapper/waypoint';
+import type { IWaypointContainer } from '../../types/beatmap/container/v4.ts';
+import type { IObjectLane } from '../../types/beatmap/v4/object.ts';
+import type { IWaypoint } from '../../types/beatmap/v4/waypoint.ts';
+import type { IWrapWaypointAttribute } from '../../types/beatmap/wrapper/waypoint.ts';
+import type { DeepRequiredIgnore } from '../../types/utils.ts';
+import { deepCopy } from '../../utils/misc.ts';
+import { WrapWaypoint } from '../wrapper/waypoint.ts';
 
 /** Waypoint beatmap v4 class object. */
 export class Waypoint extends WrapWaypoint<IWaypointContainer> {

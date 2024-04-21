@@ -1,9 +1,9 @@
-import logger from '../../logger';
-import { Info as V1Info } from '../../beatmap/v1/info';
-import { Info as V2Info } from '../../beatmap/v2/info';
-import { Info as V4Info } from '../../beatmap/v4/info';
-import { IWrapInfo } from '../../types/beatmap/wrapper/info';
-import { deepCopy, shallowCopy } from '../../utils/misc';
+import logger from '../../logger.ts';
+import { Info as V1Info } from '../../beatmap/v1/info.ts';
+import { Info as V2Info } from '../../beatmap/v2/info.ts';
+import { Info as V4Info } from '../../beatmap/v4/info.ts';
+import type { IWrapInfo } from '../../types/beatmap/wrapper/info.ts';
+import { deepCopy, shallowCopy } from '../../utils/misc.ts';
 
 function tag(name: string): string[] {
    return ['convert', 'toV4Info', name];

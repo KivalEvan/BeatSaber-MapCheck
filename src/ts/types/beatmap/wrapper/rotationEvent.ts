@@ -1,6 +1,6 @@
 // deno-lint-ignore-file no-explicit-any
-import { ExecutionTime } from '../shared/constants';
-import { IWrapBaseObject, IWrapBaseObjectAttribute } from './baseObject';
+import type { ExecutionTime } from '../shared/constants.ts';
+import type { IWrapBaseObject, IWrapBaseObjectAttribute } from './baseObject.ts';
 
 export interface IWrapRotationEventAttribute<
    T extends { [P in keyof T]: T[P] } = Record<string, any>,

@@ -1,5 +1,5 @@
-import { IWrapEventTypesForKeywords } from '../../types/beatmap/wrapper/eventTypesForKeywords';
-import { Serializable } from '../shared/serializable';
+import type { IWrapEventTypesForKeywords } from '../../types/beatmap/wrapper/eventTypesForKeywords.ts';
+import { Serializable } from '../shared/serializable.ts';
 
 /**
  * Basic event types for keywords beatmap class object.

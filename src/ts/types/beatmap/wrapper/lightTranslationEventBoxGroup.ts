@@ -1,9 +1,9 @@
 // deno-lint-ignore-file no-explicit-any
-import { IWrapEventBoxGroup, IWrapEventBoxGroupAttribute } from './eventBoxGroup';
-import {
+import type { IWrapEventBoxGroup, IWrapEventBoxGroupAttribute } from './eventBoxGroup.ts';
+import type {
    IWrapLightTranslationEventBox,
    IWrapLightTranslationEventBoxAttribute,
-} from './lightTranslationEventBox';
+} from './lightTranslationEventBox.ts';
 
 export interface IWrapLightTranslationEventBoxGroupAttribute<
    TGroup extends { [P in keyof TGroup]: TGroup[P] } = Record<string, any>,

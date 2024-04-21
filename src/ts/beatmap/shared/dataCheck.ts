@@ -1,7 +1,7 @@
-import { DataCheck } from '../../types/beatmap/shared/dataCheck';
-import logger from '../../logger';
-import { Version } from '../../types/beatmap/shared/version';
-import { compareVersion } from './version';
+import type { DataCheck } from '../../types/beatmap/shared/dataCheck.ts';
+import logger from '../../logger.ts';
+import type { Version } from '../../types/beatmap/shared/version.ts';
+import { compareVersion } from './version.ts';
 
 function tag(name: string): string[] {
    return ['shared', 'dataCheck', name];

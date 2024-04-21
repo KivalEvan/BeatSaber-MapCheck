@@ -1,12 +1,12 @@
-import { IBasicEvent } from './basicEvent';
-import { IColorBoostEvent } from './colorBoostEvent';
-import { ILightColorEventBoxGroup } from './lightColorEventBoxGroup';
-import { ILightRotationEventBoxGroup } from './lightRotationEventBoxGroup';
-import { ILightTranslationEventBoxGroup } from './lightTranslationEventBoxGroup';
-import { ICustomDataDifficulty } from './custom/difficulty';
-import { IBaseItem } from './baseItem';
-import { IFxEventBoxGroup } from './fxEventBoxGroup';
-import { IFxEventsCollection } from './fxEventsCollection';
+import type { IBasicEvent } from './basicEvent.ts';
+import type { IColorBoostEvent } from './colorBoostEvent.ts';
+import type { ILightColorEventBoxGroup } from './lightColorEventBoxGroup.ts';
+import type { ILightRotationEventBoxGroup } from './lightRotationEventBoxGroup.ts';
+import type { ILightTranslationEventBoxGroup } from './lightTranslationEventBoxGroup.ts';
+import type { ICustomDataDifficulty } from './custom/difficulty.ts';
+import type { IBaseItem } from './baseItem.ts';
+import type { IFxEventBoxGroup } from './fxEventBoxGroup.ts';
+import type { IFxEventsCollection } from './fxEventsCollection.ts';
 
 export interface ILightshow extends IBaseItem {
    basicBeatmapEvents?: IBasicEvent[];

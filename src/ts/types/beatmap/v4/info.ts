@@ -1,7 +1,9 @@
-import { CharacteristicName } from '../shared/characteristic';
-import { EnvironmentAllName } from '../shared/environment';
-import { DifficultyName } from '../shared/difficulty';
-import { IItem } from './item';
+import type { CharacteristicName } from '../shared/characteristic.ts';
+import type { EnvironmentAllName } from '../shared/environment.ts';
+import type { DifficultyName } from '../shared/difficulty.ts';
+import type { IItem } from './item.ts';
+import type { ICustomDataInfo } from './custom/info.ts';
+import { ICustomDataInfoBeatmap } from './custom/info.ts';
 
 export interface IInfo extends IItem {
    version: '4.0.0';
@@ -12,6 +14,7 @@ export interface IInfo extends IItem {
    environmentNames: EnvironmentAllName[];
    colorSchemes: IInfoColorScheme[];
    difficultyBeatmaps: IInfoDifficulty[];
+   customData?: ICustomDataInfo;
 }
 
 export interface IInfoSong {
@@ -59,4 +62,5 @@ export interface IInfoDifficulty extends IItem {
    noteJumpStartBeatOffset: number; // float
    lightshowDataFilename: string;
    beatmapDataFilename: string;
+   customData?: ICustomDataInfoBeatmap;
 }

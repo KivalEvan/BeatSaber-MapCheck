@@ -1,7 +1,7 @@
-import { DistributionType } from '../shared/constants';
-import { Axis } from '../shared/constants';
-import { IEventBox } from './eventBox';
-import { ILightTranslationEvent } from './lightTranslationEvent';
+import type { DistributionType } from '../shared/constants.ts';
+import type { Axis } from '../shared/constants.ts';
+import type { IEventBox } from './eventBox.ts';
+import type { ILightTranslationEvent } from './lightTranslationEvent.ts';
 
 export interface ILightTranslationEventBox extends IEventBox {
    /** Translation distribution `<float>` of light translation event box. */

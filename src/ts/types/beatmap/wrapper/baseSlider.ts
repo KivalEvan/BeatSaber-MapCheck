@@ -1,5 +1,5 @@
 // deno-lint-ignore-file no-explicit-any
-import { IWrapBaseNote, IWrapBaseNoteAttribute } from './baseNote';
+import type { IWrapBaseNote, IWrapBaseNoteAttribute } from './baseNote.ts';
 
 export interface IWrapBaseSliderAttribute<T extends { [P in keyof T]: T[P] } = Record<string, any>>
    extends IWrapBaseNoteAttribute<T> {

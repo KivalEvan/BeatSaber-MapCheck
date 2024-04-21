@@ -1,4 +1,4 @@
-import { IBaseObject } from './object';
+import type { IBaseObject } from './object.ts';
 
 /** Beatmap object interface for Obstacle. */
 export interface IObstacle extends IBaseObject {

@@ -1,7 +1,7 @@
 // deno-lint-ignore-file no-explicit-any
-import { Vector2 } from '../../vector';
-import { ModType } from '../shared/modCheck';
-import { IWrapBaseObject, IWrapBaseObjectAttribute } from './baseObject';
+import type { Vector2 } from '../../vector.ts';
+import type { ModType } from '../shared/modCheck.ts';
+import type { IWrapBaseObject, IWrapBaseObjectAttribute } from './baseObject.ts';
 
 export interface IWrapGridObjectAttribute<T extends { [P in keyof T]: T[P] } = Record<string, any>>
    extends IWrapBaseObjectAttribute<T> {

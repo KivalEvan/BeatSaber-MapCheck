@@ -1,7 +1,7 @@
-import { ILightColorEvent } from '../../types/beatmap/v3/lightColorEvent';
-import { IWrapLightColorEventAttribute } from '../../types/beatmap/wrapper/lightColorEvent';
-import { deepCopy } from '../../utils/misc';
-import { WrapLightColorEvent } from '../wrapper/lightColorEvent';
+import type { ILightColorEvent } from '../../types/beatmap/v3/lightColorEvent.ts';
+import type { IWrapLightColorEventAttribute } from '../../types/beatmap/wrapper/lightColorEvent.ts';
+import { deepCopy } from '../../utils/misc.ts';
+import { WrapLightColorEvent } from '../wrapper/lightColorEvent.ts';
 
 /** Light color base beatmap v3 class object. */
 export class LightColorBase extends WrapLightColorEvent<ILightColorEvent> {

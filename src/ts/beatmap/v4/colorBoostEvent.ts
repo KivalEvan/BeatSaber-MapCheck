@@ -1,10 +1,10 @@
-import { IColorBoostEvent } from '../../types/beatmap/v4/colorBoostEvent';
-import { IColorBoostEventContainer } from '../../types/beatmap/container/v4';
-import { IObject } from '../../types/beatmap/v4/object';
-import { IWrapColorBoostEventAttribute } from '../../types/beatmap/wrapper/colorBoostEvent';
-import { DeepRequiredIgnore } from '../../types/utils';
-import { deepCopy } from '../../utils/misc';
-import { WrapColorBoostEvent } from '../wrapper/colorBoostEvent';
+import type { IColorBoostEvent } from '../../types/beatmap/v4/colorBoostEvent.ts';
+import type { IColorBoostEventContainer } from '../../types/beatmap/container/v4.ts';
+import type { IObject } from '../../types/beatmap/v4/object.ts';
+import type { IWrapColorBoostEventAttribute } from '../../types/beatmap/wrapper/colorBoostEvent.ts';
+import type { DeepRequiredIgnore } from '../../types/utils.ts';
+import { deepCopy } from '../../utils/misc.ts';
+import { WrapColorBoostEvent } from '../wrapper/colorBoostEvent.ts';
 
 /** Boost event beatmap v4 class object. */
 export class ColorBoostEvent extends WrapColorBoostEvent<IColorBoostEventContainer> {

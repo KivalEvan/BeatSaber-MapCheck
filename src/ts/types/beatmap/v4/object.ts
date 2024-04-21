@@ -1,4 +1,4 @@
-import { IItem } from './item';
+import type { IItem } from './item.ts';
 
 export interface IObject extends IItem {
    b?: number; // float

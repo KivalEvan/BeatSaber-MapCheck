@@ -1,12 +1,12 @@
-import { IIndexFilter } from '../../types/beatmap/v3/indexFilter';
-import { ILightRotationEvent } from '../../types/beatmap/v3/lightRotationEvent';
-import { ILightRotationEventBox } from '../../types/beatmap/v3/lightRotationEventBox';
-import { IWrapLightRotationEventBoxAttribute } from '../../types/beatmap/wrapper/lightRotationEventBox';
-import { DeepPartial } from '../../types/utils';
-import { deepCopy } from '../../utils/misc';
-import { WrapLightRotationEventBox } from '../wrapper/lightRotationEventBox';
-import { IndexFilter } from './indexFilter';
-import { LightRotationBase } from './lightRotationBase';
+import type { IIndexFilter } from '../../types/beatmap/v3/indexFilter.ts';
+import type { ILightRotationEvent } from '../../types/beatmap/v3/lightRotationEvent.ts';
+import type { ILightRotationEventBox } from '../../types/beatmap/v3/lightRotationEventBox.ts';
+import type { IWrapLightRotationEventBoxAttribute } from '../../types/beatmap/wrapper/lightRotationEventBox.ts';
+import type { DeepPartial } from '../../types/utils.ts';
+import { deepCopy } from '../../utils/misc.ts';
+import { WrapLightRotationEventBox } from '../wrapper/lightRotationEventBox.ts';
+import { IndexFilter } from './indexFilter.ts';
+import { LightRotationBase } from './lightRotationBase.ts';
 
 /** Light rotation event box beatmap v3 class object. */
 export class LightRotationEventBox extends WrapLightRotationEventBox<

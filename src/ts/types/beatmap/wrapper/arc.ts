@@ -1,7 +1,7 @@
 // deno-lint-ignore-file no-explicit-any
-import { SliderMidAnchorMode } from '../shared/constants';
-import { ModType } from '../shared/modCheck';
-import { IWrapBaseSlider, IWrapBaseSliderAttribute } from './baseSlider';
+import type { SliderMidAnchorMode } from '../shared/constants.ts';
+import type { ModType } from '../shared/modCheck.ts';
+import type { IWrapBaseSlider, IWrapBaseSliderAttribute } from './baseSlider.ts';
 
 export interface IWrapArcAttribute<T extends { [P in keyof T]: T[P] } = Record<string, any>>
    extends IWrapBaseSliderAttribute<T> {

@@ -1,9 +1,9 @@
-import { LooseAutocomplete } from '../../utils';
-import { EnvironmentV3Name } from '../shared/environment';
-import { CharacteristicName } from '../shared/characteristic';
-import { DifficultyName, DifficultyRank } from '../shared/difficulty';
-import { EnvironmentName } from '../shared/environment';
-import { ICustomInfo, ICustomInfoDifficulty } from './custom/info';
+import type { LooseAutocomplete } from '../../utils.ts';
+import type { EnvironmentV3Name } from '../shared/environment.ts';
+import type { CharacteristicName } from '../shared/characteristic.ts';
+import type { DifficultyName, DifficultyRank } from '../shared/difficulty.ts';
+import type { EnvironmentName } from '../shared/environment.ts';
+import type { ICustomInfo, ICustomInfoDifficulty } from './custom/info.ts';
 
 export type GenericJSONFileName = `${DifficultyName}${CharacteristicName | ''}.json`;
 

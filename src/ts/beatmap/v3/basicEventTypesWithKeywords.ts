@@ -1,9 +1,9 @@
-import { IBasicEventTypesForKeywords } from '../../types/beatmap/v3/basicEventTypesForKeywords';
-import { IBasicEventTypesWithKeywords } from '../../types/beatmap/v3/basicEventTypesWithKeywords';
-import { IWrapEventTypesWithKeywordsAttribute } from '../../types/beatmap/wrapper/eventTypesWithKeywords';
-import { DeepPartial } from '../../types/utils';
-import { WrapEventTypesWithKeywords } from '../wrapper/eventTypesWithKeywords';
-import { BasicEventTypesForKeywords } from './basicEventTypesForKeywords';
+import type { IBasicEventTypesForKeywords } from '../../types/beatmap/v3/basicEventTypesForKeywords.ts';
+import type { IBasicEventTypesWithKeywords } from '../../types/beatmap/v3/basicEventTypesWithKeywords.ts';
+import type { IWrapEventTypesWithKeywordsAttribute } from '../../types/beatmap/wrapper/eventTypesWithKeywords.ts';
+import type { DeepPartial } from '../../types/utils.ts';
+import { WrapEventTypesWithKeywords } from '../wrapper/eventTypesWithKeywords.ts';
+import { BasicEventTypesForKeywords } from './basicEventTypesForKeywords.ts';
 
 /** Basic event types with keywords beatmap v3 class object. */
 export class BasicEventTypesWithKeywords extends WrapEventTypesWithKeywords<

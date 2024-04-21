@@ -1,8 +1,8 @@
-import { LINE_COUNT } from '../shared/constants';
-import { IWrapBaseSlider } from '../../types/beatmap/wrapper/baseSlider';
-import { WrapBaseNote } from './baseNote';
-import { ModType } from '../../types/beatmap/shared/modCheck';
-import { Vector2 } from '../../types/vector';
+import { LINE_COUNT } from '../shared/constants.ts';
+import type { IWrapBaseSlider } from '../../types/beatmap/wrapper/baseSlider.ts';
+import { WrapBaseNote } from './baseNote.ts';
+import type { ModType } from '../../types/beatmap/shared/modCheck.ts';
+import type { Vector2 } from '../../types/vector.ts';
 
 /** Base slider beatmap class object. */
 export abstract class WrapBaseSlider<T extends { [P in keyof T]: T[P] }>

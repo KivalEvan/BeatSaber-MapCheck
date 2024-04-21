@@ -1,6 +1,6 @@
-import { IWrapIndexFilter } from '../../types/beatmap/wrapper/indexFilter';
-import { LimitAlsoAffectsType, RandomType } from '../../types/beatmap/shared/constants';
-import { WrapBaseItem } from './baseItem';
+import type { IWrapIndexFilter } from '../../types/beatmap/wrapper/indexFilter.ts';
+import { LimitAlsoAffectsType, RandomType } from '../../types/beatmap/shared/constants.ts';
+import { WrapBaseItem } from './baseItem.ts';
 
 /** Index filter beatmap class object. */
 export abstract class WrapIndexFilter<T extends { [P in keyof T]: T[P] }>

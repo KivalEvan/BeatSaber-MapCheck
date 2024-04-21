@@ -1,6 +1,6 @@
-import { EventBoxColor } from '../shared/constants';
-import { EaseType } from '../shared/constants';
-import { IItem } from './item';
+import type { EventBoxColor } from '../shared/constants.ts';
+import type { EaseType } from '../shared/constants.ts';
+import type { IItem } from './item.ts';
 
 export interface ILightColorEvent extends IItem {
    /** Use previous event value `<int>` of light color. */

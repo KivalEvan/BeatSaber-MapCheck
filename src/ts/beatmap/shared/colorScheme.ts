@@ -1,7 +1,7 @@
-import { ColorSchemeName } from '../../types/beatmap/shared/colorScheme';
-import { EnvironmentAllName } from '../../types/beatmap/shared/environment';
-import { IColorScheme } from '../../types/beatmap/v2/custom/colorScheme';
-import { IWrapInfoColorScheme } from '../../types/beatmap/wrapper/info';
+import type { ColorSchemeName } from '../../types/beatmap/shared/colorScheme.ts';
+import type { EnvironmentAllName } from '../../types/beatmap/shared/environment.ts';
+import type { IColorScheme } from '../../types/beatmap/v2/custom/colorScheme.ts';
+import type { IWrapInfoColorScheme } from '../../types/beatmap/wrapper/info.ts';
 
 /** Record of Environment Color to Color Scheme. */
 export const EnvironmentSchemeName: {
@@ -44,6 +44,7 @@ export const EnvironmentSchemeName: {
    TheRollingStonesEnvironment: 'The Rolling Stones',
    LatticeEnvironment: 'Lattice',
    DaftPunkEnvironment: 'Daft Punk',
+   HipHopEnvironment: 'Hip Hop Mixtape',
    GlassDesertEnvironment: 'Glass Desert',
    MultiplayerEnvironment: 'Origins',
 } as const;
@@ -356,6 +357,17 @@ export const ColorScheme: {
       _envColorRightBoost: { r: 0, g: 0.8196079, b: 0.8039216 },
       _envColorWhiteBoost: { r: 1, g: 0.834256, b: 0.4874213 },
       _obstacleColor: { r: 0.6068091, g: 0, b: 1 },
+   },
+   'Hip Hop Mixtape': {
+      _colorLeft: { r: 1, g: 0.583857, b: 0.3137255 },
+      _colorRight: { r: 0.01542656, g: 0.6132076, b: 0.5896002 },
+      _envColorLeft: { r: 0.9137256, g: 0.4941177, b: 0 },
+      _envColorRight: { r: 0.05882353, g: 0.8039216, b: 0.1843137 },
+      _envColorWhite: { r: 0.8000001, g: 0.7568628, b: 0.7058824 },
+      _envColorLeftBoost: { r: 0.1411765, g: 1, b: 0.9686275 },
+      _envColorRightBoost: { r: 0.227451, g: 0.2745098, b: 1 },
+      _envColorWhiteBoost: { r: 0.8784314, g: 0.8784314, b: 0.8784314 },
+      _obstacleColor: { r: 1, g: 0.3137255, b: 0.5529412 },
    },
    'Glass Desert': {
       _colorLeft: { r: 0.6792453, g: 0.5712628, b: 0 },

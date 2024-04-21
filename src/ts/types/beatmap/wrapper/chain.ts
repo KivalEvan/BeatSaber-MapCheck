@@ -1,5 +1,5 @@
 // deno-lint-ignore-file no-explicit-any
-import { IWrapBaseSlider, IWrapBaseSliderAttribute } from './baseSlider';
+import type { IWrapBaseSlider, IWrapBaseSliderAttribute } from './baseSlider.ts';
 
 export interface IWrapChainAttribute<T extends { [P in keyof T]: T[P] } = Record<string, any>>
    extends IWrapBaseSliderAttribute<T> {

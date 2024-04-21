@@ -1,4 +1,4 @@
-import { Version } from './version';
+import type { Version } from './version.ts';
 
 interface DataCheckBase {
    type: string | string[]; // string array because there'll soon be having to check both

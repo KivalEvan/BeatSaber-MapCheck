@@ -1,8 +1,8 @@
 // deno-lint-ignore-file no-explicit-any
-import { IWrapBaseItem, IWrapBaseItemAttribute } from './baseItem';
-import { Version } from '../shared/version';
-import { IFileInfo } from '../shared/filename';
-import { IWrapBPMEventAttribute } from './bpmEvent';
+import type { IWrapBaseItem, IWrapBaseItemAttribute } from './baseItem.ts';
+import type { Version } from '../shared/version.ts';
+import type { IFileInfo } from '../shared/filename.ts';
+import type { IWrapBPMEventAttribute } from './bpmEvent.ts';
 
 export interface IWrapAudioAttribute<T extends { [P in keyof T]: T[P] } = Record<string, any>>
    extends IWrapBaseItemAttribute<T>,

@@ -1,8 +1,8 @@
 // deno-lint-ignore-file no-explicit-any
-import { EventBoxColor } from '../shared/constants';
-import { TransitionType } from '../shared/constants';
-import { EaseType } from '../shared/constants';
-import { IWrapBaseObject, IWrapBaseObjectAttribute } from './baseObject';
+import type { EventBoxColor } from '../shared/constants.ts';
+import type { TransitionType } from '../shared/constants.ts';
+import type { EaseType } from '../shared/constants.ts';
+import type { IWrapBaseObject, IWrapBaseObjectAttribute } from './baseObject.ts';
 
 export interface IWrapLightColorEventAttribute<
    T extends { [P in keyof T]: T[P] } = Record<string, any>,

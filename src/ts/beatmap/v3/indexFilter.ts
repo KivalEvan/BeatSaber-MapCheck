@@ -1,7 +1,7 @@
-import { IIndexFilter } from '../../types/beatmap/v3/indexFilter';
-import { IWrapIndexFilterAttribute } from '../../types/beatmap/wrapper/indexFilter';
-import { deepCopy } from '../../utils/misc';
-import { WrapIndexFilter } from '../wrapper/indexFilter';
+import type { IIndexFilter } from '../../types/beatmap/v3/indexFilter.ts';
+import type { IWrapIndexFilterAttribute } from '../../types/beatmap/wrapper/indexFilter.ts';
+import { deepCopy } from '../../utils/misc.ts';
+import { WrapIndexFilter } from '../wrapper/indexFilter.ts';
 
 /** Index filter beatmap v3 class object. */
 export class IndexFilter extends WrapIndexFilter<IIndexFilter> {

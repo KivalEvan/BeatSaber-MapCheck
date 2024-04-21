@@ -1,6 +1,6 @@
 // deno-lint-ignore-file no-explicit-any
-import { ModType } from '../shared/modCheck';
-import { IWrapGridObject, IWrapGridObjectAttribute } from './gridObject';
+import type { ModType } from '../shared/modCheck.ts';
+import type { IWrapGridObject, IWrapGridObjectAttribute } from './gridObject.ts';
 
 export interface IWrapObstacleAttribute<T extends { [P in keyof T]: T[P] } = Record<string, any>>
    extends IWrapGridObjectAttribute<T> {

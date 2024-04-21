@@ -1,4 +1,4 @@
-import { EnvironmentAllName } from '../shared/environment';
+import type { EnvironmentAllName } from '../shared/environment.ts';
 
 interface IVector3Object {
    x: number;

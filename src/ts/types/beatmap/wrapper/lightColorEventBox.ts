@@ -1,7 +1,7 @@
 // deno-lint-ignore-file no-explicit-any
-import { DistributionType } from '../shared/constants';
-import { IWrapEventBox, IWrapEventBoxAttribute } from './eventBox';
-import { IWrapLightColorEvent, IWrapLightColorEventAttribute } from './lightColorEvent';
+import type { DistributionType } from '../shared/constants.ts';
+import type { IWrapEventBox, IWrapEventBoxAttribute } from './eventBox.ts';
+import type { IWrapLightColorEvent, IWrapLightColorEventAttribute } from './lightColorEvent.ts';
 
 export interface IWrapLightColorEventBoxAttribute<
    TBox extends { [P in keyof TBox]: TBox[P] } = Record<string, any>,

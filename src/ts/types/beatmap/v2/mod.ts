@@ -7,15 +7,15 @@
  * @module
  */
 
-export * from './custom/mod';
-export * from './arc';
-export * from './bpmInfo';
-export * from './difficulty';
-export * from './event';
-export * from './info';
-export * from './note';
-export * from './object';
-export * from './obstacle';
-export * from './specialEventsKeywordFilters';
-export * from './specialEventsKeywordFiltersKeywords';
-export * from './waypoint';
+export * from './custom/mod.ts';
+export * from './arc.ts';
+export * from './bpmInfo.ts';
+export * from './difficulty.ts';
+export * from './event.ts';
+export * from './info.ts';
+export * from './note.ts';
+export * from './object.ts';
+export * from './obstacle.ts';
+export * from './specialEventsKeywordFilters.ts';
+export * from './specialEventsKeywordFiltersKeywords.ts';
+export * from './waypoint.ts';

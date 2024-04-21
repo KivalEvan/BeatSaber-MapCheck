@@ -1,8 +1,8 @@
-import { round } from '../../utils/math';
-import { ICleanOptions } from '../../types/beatmap/shared/clean';
-import { IInfo } from '../../types/beatmap/v2/info';
-import { IDifficulty } from '../../types/beatmap/v2/difficulty';
-import { deepClean, purgeZeros } from '../shared/clean';
+import { round } from '../../utils/math.ts';
+import type { ICleanOptions } from '../../types/beatmap/shared/clean.ts';
+import type { IInfo } from '../../types/beatmap/v2/info.ts';
+import type { IDifficulty } from '../../types/beatmap/v2/difficulty.ts';
+import { deepClean, purgeZeros } from '../shared/clean.ts';
 
 export function cleanDifficulty(
    // deno-lint-ignore no-explicit-any

@@ -1,11 +1,11 @@
-import logger from '../../logger';
-import { Info as V1Info } from '../../beatmap/v1/info';
-import { Info as V2Info } from '../../beatmap/v2/info';
-import { Info as V4Info } from '../../beatmap/v4/info';
-import { shallowCopy } from '../../utils/misc';
-import { IWrapInfo } from '../../types/beatmap/wrapper/info';
-import { deepCopy } from '../../utils/misc';
-import { DifficultyRanking } from '../../beatmap/shared/difficulty';
+import logger from '../../logger.ts';
+import { Info as V1Info } from '../../beatmap/v1/info.ts';
+import { Info as V2Info } from '../../beatmap/v2/info.ts';
+import { Info as V4Info } from '../../beatmap/v4/info.ts';
+import { shallowCopy } from '../../utils/misc.ts';
+import type { IWrapInfo } from '../../types/beatmap/wrapper/info.ts';
+import { deepCopy } from '../../utils/misc.ts';
+import { DifficultyRanking } from '../../beatmap/shared/difficulty.ts';
 
 function tag(name: string): string[] {
    return ['convert', 'toV2Info', name];

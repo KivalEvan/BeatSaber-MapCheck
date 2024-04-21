@@ -39,7 +39,8 @@ export type EnvironmentV3Name =
    | 'LinkinPark2Environment'
    | 'TheRollingStonesEnvironment'
    | 'LatticeEnvironment'
-   | 'DaftPunkEnvironment';
+   | 'DaftPunkEnvironment'
+   | 'HipHopEnvironment';
 
 /** List of available 360 environment in base game. */
 export type Environment360Name = 'GlassDesertEnvironment' | 'MultiplayerEnvironment';

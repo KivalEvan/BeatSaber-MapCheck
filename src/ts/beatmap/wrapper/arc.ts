@@ -1,7 +1,7 @@
-import { WrapBaseSlider } from './baseSlider';
-import { NoteDirectionAngle } from '../shared/constants';
-import { IWrapArc } from '../../types/beatmap/wrapper/arc';
-import { ModType } from '../../types/beatmap/shared/modCheck';
+import { WrapBaseSlider } from './baseSlider.ts';
+import { NoteDirectionAngle } from '../shared/constants.ts';
+import type { IWrapArc } from '../../types/beatmap/wrapper/arc.ts';
+import type { ModType } from '../../types/beatmap/shared/modCheck.ts';
 
 /**
  * Arc beatmap class object.

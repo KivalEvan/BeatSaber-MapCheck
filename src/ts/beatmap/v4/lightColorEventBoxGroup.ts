@@ -1,18 +1,18 @@
-import { DeepPartial, DeepRequiredIgnore } from '../../types/utils';
-import { LightColorEventBox } from './lightColorEventBox';
-import { WrapLightColorEventBoxGroup } from '../wrapper/lightColorEventBoxGroup';
-import { deepCopy } from '../../utils/misc';
-import { IIndexFilter } from '../../types/beatmap/v4/indexFilter';
-import { IWrapLightColorEventBoxGroupAttribute } from '../../types/beatmap/wrapper/lightColorEventBoxGroup';
-import {
+import type { DeepPartial, DeepRequiredIgnore } from '../../types/utils.ts';
+import { LightColorEventBox } from './lightColorEventBox.ts';
+import { WrapLightColorEventBoxGroup } from '../wrapper/lightColorEventBoxGroup.ts';
+import { deepCopy } from '../../utils/misc.ts';
+import type { IIndexFilter } from '../../types/beatmap/v4/indexFilter.ts';
+import type { IWrapLightColorEventBoxGroupAttribute } from '../../types/beatmap/wrapper/lightColorEventBoxGroup.ts';
+import type {
    IEventBoxGroupContainer,
    ILightColorEventContainer,
-} from '../../types/beatmap/container/v4';
-import { EventBoxType } from '../../types/beatmap/shared/constants';
-import { IEventBoxGroup } from '../../types/beatmap/v4/eventBoxGroup';
-import { ILightColorBoxContainer } from '../../types/beatmap/container/v4';
-import { ILightColorEventBox } from '../../types/beatmap/v4/lightColorEventBox';
-import { ILightColorEvent } from '../../types/beatmap/v4/lightColorEvent';
+} from '../../types/beatmap/container/v4.ts';
+import { EventBoxType } from '../../types/beatmap/shared/constants.ts';
+import type { IEventBoxGroup } from '../../types/beatmap/v4/eventBoxGroup.ts';
+import type { ILightColorBoxContainer } from '../../types/beatmap/container/v4.ts';
+import type { ILightColorEventBox } from '../../types/beatmap/v4/lightColorEventBox.ts';
+import type { ILightColorEvent } from '../../types/beatmap/v4/lightColorEvent.ts';
 
 /** Light color event box group beatmap v4 class object. */
 export class LightColorEventBoxGroup extends WrapLightColorEventBoxGroup<

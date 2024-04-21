@@ -1,14 +1,14 @@
-import { ModType } from '../../types/beatmap/shared/modCheck';
-import { IChain } from '../../types/beatmap/v4/chain';
-import { IColorNote } from '../../types/beatmap/v4/colorNote';
-import { IChainContainer } from '../../types/beatmap/container/v4';
-import { IObjectChain } from '../../types/beatmap/v4/object';
-import { IWrapChainAttribute } from '../../types/beatmap/wrapper/chain';
-import { DeepRequiredIgnore } from '../../types/utils';
-import { Vector2 } from '../../types/vector';
-import { deepCopy } from '../../utils/misc';
-import { isVector3 } from '../../utils/vector';
-import { WrapChain } from '../wrapper/chain';
+import type { ModType } from '../../types/beatmap/shared/modCheck.ts';
+import type { IChain } from '../../types/beatmap/v4/chain.ts';
+import type { IColorNote } from '../../types/beatmap/v4/colorNote.ts';
+import type { IChainContainer } from '../../types/beatmap/container/v4.ts';
+import type { IObjectChain } from '../../types/beatmap/v4/object.ts';
+import type { IWrapChainAttribute } from '../../types/beatmap/wrapper/chain.ts';
+import type { DeepRequiredIgnore } from '../../types/utils.ts';
+import type { Vector2 } from '../../types/vector.ts';
+import { deepCopy } from '../../utils/misc.ts';
+import { isVector3 } from '../../utils/vector.ts';
+import { WrapChain } from '../wrapper/chain.ts';
 
 /**
  * Chain beatmap v4 class object.
@@ -143,7 +143,7 @@ export class Chain extends WrapChain<IChainContainer> {
                      -this.customData.animation.definitePosition[0];
                } else {
                   this.customData.animation.definitePosition.forEach((dp) => {
-                     dp[0] = -dp[0];
+                     if (Array.isArray(dp)) dp[0] = -dp[0];
                   });
                }
             }
@@ -153,7 +153,7 @@ export class Chain extends WrapChain<IChainContainer> {
                      -this.customData.animation.offsetPosition[0];
                } else {
                   this.customData.animation.offsetPosition.forEach((op) => {
-                     op[0] = -op[0];
+                     if (Array.isArray(op)) op[0] = -op[0];
                   });
                }
             }

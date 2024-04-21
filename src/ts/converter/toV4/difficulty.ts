@@ -1,14 +1,14 @@
-import logger from '../../logger';
-import { Difficulty as V1Difficulty } from '../../beatmap/v1/difficulty';
-import { Difficulty as V2Difficulty } from '../../beatmap/v2/difficulty';
-import { Difficulty as V3Difficulty } from '../../beatmap/v3/difficulty';
-import { Difficulty as V4Difficulty } from '../../beatmap/v4/difficulty';
-import { IWrapDifficulty } from '../../types/beatmap/wrapper/difficulty';
-import { deepCopy } from '../../utils/misc';
-import { clamp } from '../../utils/math';
-import objectToV3 from '../customData/objectToV3';
-import { SpawnRotation } from '../../beatmap/v4/rotationEvent';
-import { EventLaneRotationValue } from '../../types/beatmap/shared/constants';
+import logger from '../../logger.ts';
+import { Difficulty as V1Difficulty } from '../../beatmap/v1/difficulty.ts';
+import { Difficulty as V2Difficulty } from '../../beatmap/v2/difficulty.ts';
+import { Difficulty as V3Difficulty } from '../../beatmap/v3/difficulty.ts';
+import { Difficulty as V4Difficulty } from '../../beatmap/v4/difficulty.ts';
+import type { IWrapDifficulty } from '../../types/beatmap/wrapper/difficulty.ts';
+import { deepCopy } from '../../utils/misc.ts';
+import { clamp } from '../../utils/math.ts';
+import objectToV3 from '../customData/objectToV3.ts';
+import { SpawnRotation } from '../../beatmap/v4/rotationEvent.ts';
+import { EventLaneRotationValue } from '../../types/beatmap/shared/constants.ts';
 
 function tag(name: string): string[] {
    return ['convert', 'toV4Difficulty', name];
@@ -29,7 +29,7 @@ export function toV4Difficulty(data: IWrapDifficulty): V4Difficulty {
          fromV3Difficulty(template, data as V3Difficulty);
          break;
       case data instanceof V4Difficulty:
-         template = new V4Difficulty(data.toJSON());
+         template = new V4Difficulty(data);
          break;
       default:
          logger.tWarn(tag('main'), 'Unknown beatmap data, returning empty template');

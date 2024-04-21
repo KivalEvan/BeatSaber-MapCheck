@@ -1,14 +1,14 @@
-import { IArc } from '../../types/beatmap/v4/arc';
-import { IWrapArcAttribute } from '../../types/beatmap/wrapper/arc';
-import { ModType } from '../../types/beatmap/shared/modCheck';
-import { Vector2 } from '../../types/vector';
-import { deepCopy } from '../../utils/misc';
-import { isVector3 } from '../../utils/vector';
-import { WrapArc } from '../wrapper/arc';
-import { IArcContainer } from '../../types/beatmap/container/v4';
-import { DeepRequiredIgnore } from '../../types/utils';
-import { IColorNote } from '../../types/beatmap/v4/colorNote';
-import { IObjectArc } from '../../types/beatmap/v4/object';
+import type { IArc } from '../../types/beatmap/v4/arc.ts';
+import type { IWrapArcAttribute } from '../../types/beatmap/wrapper/arc.ts';
+import type { ModType } from '../../types/beatmap/shared/modCheck.ts';
+import type { Vector2 } from '../../types/vector.ts';
+import { deepCopy } from '../../utils/misc.ts';
+import { isVector3 } from '../../utils/vector.ts';
+import { WrapArc } from '../wrapper/arc.ts';
+import type { IArcContainer } from '../../types/beatmap/container/v4.ts';
+import type { DeepRequiredIgnore } from '../../types/utils.ts';
+import type { IColorNote } from '../../types/beatmap/v4/colorNote.ts';
+import type { IObjectArc } from '../../types/beatmap/v4/object.ts';
 
 /** Arc beatmap v4 class object. */
 export class Arc extends WrapArc<IArcContainer> {
@@ -158,7 +158,7 @@ export class Arc extends WrapArc<IArcContainer> {
                      -this.customData.animation.definitePosition[0];
                } else {
                   this.customData.animation.definitePosition.forEach((dp) => {
-                     dp[0] = -dp[0];
+                     if (Array.isArray(dp)) dp[0] = -dp[0];
                   });
                }
             }
@@ -168,7 +168,7 @@ export class Arc extends WrapArc<IArcContainer> {
                      -this.customData.animation.offsetPosition[0];
                } else {
                   this.customData.animation.offsetPosition.forEach((op) => {
-                     op[0] = -op[0];
+                     if (Array.isArray(op)) op[0] = -op[0];
                   });
                }
             }

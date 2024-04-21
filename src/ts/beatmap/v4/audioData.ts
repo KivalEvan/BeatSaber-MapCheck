@@ -1,7 +1,7 @@
-import { WrapAudioData } from '../wrapper/audioData';
-import { IAudio } from '../../types/beatmap/v4/audioData';
-import { IWrapAudioAttribute } from '../../types/beatmap/wrapper/audioData';
-import { DeepPartial } from '../../types/utils';
+import { WrapAudioData } from '../wrapper/audioData.ts';
+import type { IAudio } from '../../types/beatmap/v4/audioData.ts';
+import type { IWrapAudioAttribute } from '../../types/beatmap/wrapper/audioData.ts';
+import type { DeepPartial } from '../../types/utils.ts';
 
 export class AudioData extends WrapAudioData<IAudio> {
    readonly version = '4.0.0';

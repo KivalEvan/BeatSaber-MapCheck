@@ -1,9 +1,9 @@
-import { IWrapEvent } from './event';
-import { IWrapBombNote } from './bombNote';
-import { IWrapChain } from './chain';
-import { IWrapColorBoostEvent } from './colorBoostEvent';
-import { IWrapColorNote } from './colorNote';
-import { IWrapArc } from './arc';
+import type { IWrapEvent } from './event.ts';
+import type { IWrapBombNote } from './bombNote.ts';
+import type { IWrapChain } from './chain.ts';
+import type { IWrapColorBoostEvent } from './colorBoostEvent.ts';
+import type { IWrapColorNote } from './colorNote.ts';
+import type { IWrapArc } from './arc.ts';
 
 interface ContainerBase {
    type: string;

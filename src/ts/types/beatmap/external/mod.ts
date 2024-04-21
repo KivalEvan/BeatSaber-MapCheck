@@ -1,2 +1,2 @@
-export * from './chroma';
-export * from './cinema';
+export * from './chroma.ts';
+export * from './cinema.ts';

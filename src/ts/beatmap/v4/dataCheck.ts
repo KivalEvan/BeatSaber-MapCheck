@@ -1,38 +1,42 @@
-import { DataCheck } from '../../types/beatmap/shared/dataCheck';
-import { IArc } from '../../types/beatmap/v4/arc';
-import { IAudioLUFS } from '../../types/beatmap/v4/audioData';
-import { IAudio, IAudioBPM } from '../../types/beatmap/v4/audioData';
-import { IBasicEvent } from '../../types/beatmap/v4/basicEvent';
-import { IBombNote } from '../../types/beatmap/v4/bombNote';
-import { IChain } from '../../types/beatmap/v4/chain';
-import { IColorBoostEvent } from '../../types/beatmap/v4/colorBoostEvent';
-import { IColorNote } from '../../types/beatmap/v4/colorNote';
-import { IDifficulty } from '../../types/beatmap/v4/difficulty';
-import { IEventBox } from '../../types/beatmap/v4/eventBox';
-import { IEventBoxGroup } from '../../types/beatmap/v4/eventBoxGroup';
-import { IFxEventBox } from '../../types/beatmap/v4/fxEventBox';
-import { IFxEventFloat } from '../../types/beatmap/v4/fxEventFloat';
-import { IIndexFilter } from '../../types/beatmap/v4/indexFilter';
-import {
+import type { DataCheck } from '../../types/beatmap/shared/dataCheck.ts';
+import type { IArc } from '../../types/beatmap/v4/arc.ts';
+import type { IAudio, IAudioBPM, IAudioLUFS } from '../../types/beatmap/v4/audioData.ts';
+import type { IBasicEvent } from '../../types/beatmap/v4/basicEvent.ts';
+import type { IBombNote } from '../../types/beatmap/v4/bombNote.ts';
+import type { IChain } from '../../types/beatmap/v4/chain.ts';
+import type { IColorBoostEvent } from '../../types/beatmap/v4/colorBoostEvent.ts';
+import type { IColorNote } from '../../types/beatmap/v4/colorNote.ts';
+import type { IDifficulty } from '../../types/beatmap/v4/difficulty.ts';
+import type { IEventBox } from '../../types/beatmap/v4/eventBox.ts';
+import type { IEventBoxGroup } from '../../types/beatmap/v4/eventBoxGroup.ts';
+import type { IFxEventBox } from '../../types/beatmap/v4/fxEventBox.ts';
+import type { IFxEventFloat } from '../../types/beatmap/v4/fxEventFloat.ts';
+import type { IIndexFilter } from '../../types/beatmap/v4/indexFilter.ts';
+import type {
    IInfo,
    IInfoAudio,
    IInfoBeatmapAuthors,
    IInfoColorScheme,
    IInfoDifficulty,
    IInfoSong,
-} from '../../types/beatmap/v4/info';
-import { ILightColorEvent } from '../../types/beatmap/v4/lightColorEvent';
-import { ILightColorEventBox } from '../../types/beatmap/v4/lightColorEventBox';
-import { ILightRotationEvent } from '../../types/beatmap/v4/lightRotationEvent';
-import { ILightRotationEventBox } from '../../types/beatmap/v4/lightRotationEventBox';
-import { ILightTranslationEvent } from '../../types/beatmap/v4/lightTranslationEvent';
-import { ILightTranslationEventBox } from '../../types/beatmap/v4/lightTranslationEventBox';
-import { ILightshow } from '../../types/beatmap/v4/lightshow';
-import { IObject, IObjectArc, IObjectChain, IObjectLane } from '../../types/beatmap/v4/object';
-import { IObstacle } from '../../types/beatmap/v4/obstacle';
-import { ISpawnRotation } from '../../types/beatmap/v4/spawnRotation';
-import { IWaypoint } from '../../types/beatmap/v4/waypoint';
-import { BasicEventTypesWithKeywordsDataCheck } from '../v3/dataCheck';
+} from '../../types/beatmap/v4/info.ts';
+import type { ILightColorEvent } from '../../types/beatmap/v4/lightColorEvent.ts';
+import type { ILightColorEventBox } from '../../types/beatmap/v4/lightColorEventBox.ts';
+import type { ILightRotationEvent } from '../../types/beatmap/v4/lightRotationEvent.ts';
+import type { ILightRotationEventBox } from '../../types/beatmap/v4/lightRotationEventBox.ts';
+import type { ILightTranslationEvent } from '../../types/beatmap/v4/lightTranslationEvent.ts';
+import type { ILightTranslationEventBox } from '../../types/beatmap/v4/lightTranslationEventBox.ts';
+import type { ILightshow } from '../../types/beatmap/v4/lightshow.ts';
+import type {
+   IObject,
+   IObjectArc,
+   IObjectChain,
+   IObjectLane,
+} from '../../types/beatmap/v4/object.ts';
+import type { IObstacle } from '../../types/beatmap/v4/obstacle.ts';
+import type { ISpawnRotation } from '../../types/beatmap/v4/spawnRotation.ts';
+import type { IWaypoint } from '../../types/beatmap/v4/waypoint.ts';
+import { BasicEventTypesWithKeywordsDataCheck } from '../v3/dataCheck.ts';
 
 export const ObjectDataCheck: { readonly [key in keyof IObject]: DataCheck } = {
    b: {

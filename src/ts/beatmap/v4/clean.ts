@@ -1,9 +1,9 @@
-import { round } from '../../utils/math';
-import { ICleanOptions } from '../../types/beatmap/shared/clean';
-import { IInfo } from '../../types/beatmap/v4/info';
-import { IDifficulty } from '../../types/beatmap/v4/difficulty';
-import { ILightshow } from '../../types/beatmap/v4/lightshow';
-import { deepClean, purgeZeros } from '../shared/clean';
+import { round } from '../../utils/math.ts';
+import type { ICleanOptions } from '../../types/beatmap/shared/clean.ts';
+import type { IInfo } from '../../types/beatmap/v4/info.ts';
+import type { IDifficulty } from '../../types/beatmap/v4/difficulty.ts';
+import type { ILightshow } from '../../types/beatmap/v4/lightshow.ts';
+import { deepClean, purgeZeros } from '../shared/clean.ts';
 
 export function cleanDifficulty(data: IDifficulty, options: ICleanOptions) {
    for (let i = 0; i < data.arcs.length; i++) {
@@ -200,6 +200,14 @@ export function cleanLightshow(data: ILightshow, options: ICleanOptions) {
          deepClean(o2.customData!, `lightshow.eventBoxGroups[${i}].e[${j}].customData`, options);
          if (!Object.keys(o2.customData!).length) {
             delete o2.customData;
+         }
+         if (options.purgeZeros) purgeZeros(o2);
+         for (let k = 0; k < o2.l!.length; k++) {
+            const o3 = o2.l![k];
+            if (options.floatTrim) {
+               o3.b = round(o3.b!, options.floatTrim);
+            }
+            if (options.purgeZeros) purgeZeros(o3);
          }
       }
       deepClean(o.customData!, `difficulty.eventBoxGroups[${i}].customData`, options);

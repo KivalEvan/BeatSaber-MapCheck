@@ -1,7 +1,7 @@
 // deno-lint-ignore-file no-unused-vars
-import { WrapBaseObject } from './baseObject';
-import { EnvironmentAllName } from '../../types/beatmap/shared/environment';
-import { IWrapEvent } from '../../types/beatmap/wrapper/event';
+import { WrapBaseObject } from './baseObject.ts';
+import type { EnvironmentAllName } from '../../types/beatmap/shared/environment.ts';
+import type { IWrapEvent } from '../../types/beatmap/wrapper/event.ts';
 
 /** Event beatmap class object. */
 export abstract class WrapEvent<T extends { [P in keyof T]: T[P] }>

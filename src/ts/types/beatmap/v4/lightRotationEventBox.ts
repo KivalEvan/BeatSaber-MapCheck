@@ -1,5 +1,5 @@
-import { Axis } from '../shared/constants';
-import { IEventBoxCommon } from './eventBoxCommon';
+import type { Axis } from '../shared/constants.ts';
+import type { IEventBoxCommon } from './eventBoxCommon.ts';
 
 export interface ILightRotationEventBox extends IEventBoxCommon {
    /**
