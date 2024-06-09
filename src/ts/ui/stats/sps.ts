@@ -1,6 +1,6 @@
-import { round } from '../../utils';
-import { IWrapInfo } from '../../types/beatmap/wrapper/info';
-import { IBeatmapItem } from '../../types/mapcheck';
+import { round } from '../../bsmap/utils/mod';
+import { IWrapInfo } from '../../bsmap/types/beatmap/wrapper/info';
+import { IBeatmapItem } from '../../types';
 import { prefix } from './constants';
 
 export function createSPSTable(mapInfo: IWrapInfo, mapData: IBeatmapItem): HTMLTableElement {

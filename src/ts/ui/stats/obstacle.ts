@@ -1,6 +1,6 @@
-import { IWrapInfo } from '../../types/beatmap/wrapper/info';
-import { IBeatmapItem } from '../../types/mapcheck';
-import { countObstacle } from '../../analyzers/stats/obstacle';
+import { IWrapInfo } from '../../bsmap/types/beatmap/wrapper/info';
+import { IBeatmapItem } from '../../types';
+import { countObstacle } from '../../bsmap/extensions/stats/obstacle';
 import { prefix } from './constants';
 
 export function createObstacleCountTable(

@@ -1,8 +1,8 @@
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
-import { NoteContainer } from '../../types/beatmap/wrapper/container';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import { INoteContainer, NoteContainerType } from '../../types/tools/container';
 import UIInput from '../../ui/helpers/input';
 import { printResultTime } from '../helpers';
-import { NoteDirection } from '../../beatmap/shared/constants';
+import { NoteDirection } from '../../bsmap/beatmap/shared/constants';
 
 const name = 'Improper Chain';
 const description = 'Check for correct use of chain.';
@@ -36,20 +36,22 @@ const tool: Tool = {
    run,
 };
 
-function check(map: ToolArgs) {
+function check(args: ToolArgs) {
    // kinda slow but i need slider first
-   const noteContainer = [...map.difficulty!.noteContainer]
-      .sort((a, b) => (a.type !== 'chain' ? 1 : b.type !== 'chain' ? -1 : 0))
+   const noteContainer = [...args.beatmap!.noteContainer]
+      .sort((a, b) =>
+         a.type !== NoteContainerType.CHAIN ? 1 : b.type !== NoteContainerType.CHAIN ? -1 : 0,
+      )
       .sort((a, b) => a.data.time - b.data.time);
 
-   const arr: NoteContainer[] = [];
+   const arr: INoteContainer[] = [];
    for (let i = 0, potential = true, len = noteContainer.length; i < len; i++) {
       const chain = noteContainer[i];
-      if (chain.type === 'chain') {
+      if (chain.type === NoteContainerType.CHAIN) {
          potential = true;
          for (let j = i; j < len; j++) {
             const other = noteContainer[j];
-            if (other.type === 'note') {
+            if (other.type === NoteContainerType.COLOR) {
                if (
                   chain.data.posX === other.data.posX &&
                   chain.data.posY === other.data.posY &&
@@ -63,7 +65,7 @@ function check(map: ToolArgs) {
                   break;
                }
             }
-            if (other.type === 'bomb') {
+            if (other.type === NoteContainerType.BOMB) {
                if (
                   chain.data.posX === other.data.posX &&
                   chain.data.posY === other.data.posY &&
@@ -88,11 +90,16 @@ function check(map: ToolArgs) {
       });
 }
 
-function run(map: ToolArgs) {
-   const result = check(map);
+function run(args: ToolArgs) {
+   const result = check(args);
 
    if (result.length) {
-      tool.output.html = printResultTime('Improper chain', result, map.settings.bpm, 'error');
+      tool.output.html = printResultTime(
+         'Improper chain',
+         result,
+         args.settings.timeProcessor,
+         'error',
+      );
    } else {
       tool.output.html = null;
    }

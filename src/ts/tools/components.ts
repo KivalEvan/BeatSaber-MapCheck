@@ -3,7 +3,7 @@ import * as notes from './notes';
 import * as obstacles from './obstacles';
 import * as events from './events';
 import * as others from './others';
-import { Tool } from '../types/mapcheck/tools/tool';
+import { Tool } from '../types/tools/tool';
 
 export default class AnalysisComponent {
    private constructor() {}

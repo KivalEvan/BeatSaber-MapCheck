@@ -1,12 +1,13 @@
 import UISelect from '../helpers/select';
-import SavedData from '../../savedData';
-import { round } from '../../utils';
-import { IWrapInfo } from '../../types/beatmap/wrapper/info';
-import { IBeatmapItem } from '../../types/mapcheck';
-import { NoteContainer } from '../../types/beatmap/wrapper/container';
-import { countX, countXY, countY } from '../../analyzers/stats/note';
+import LoadedData from '../../loadedData';
+import { round } from '../../bsmap/utils/mod';
+import { IWrapInfo } from '../../bsmap/types/beatmap/wrapper/info';
+import { IBeatmapItem } from '../../types';
+import { INoteContainer } from '../../types/tools/container';
+import { countX, countXY, countY } from '../../bsmap/extensions/stats/note';
 import { logPrefix, prefix } from './constants';
 import { getFilteredContainer } from './helpers';
+import { IWrapGridObjectAttribute } from '../../bsmap/types/beatmap/wrapper/gridObject';
 
 function notePlacementSelectHandler(ev: Event) {
    const target = ev.target as HTMLSelectElement;
@@ -14,21 +15,22 @@ function notePlacementSelectHandler(ev: Event) {
 
    const characteristic = id[0];
    const difficulty = id[1];
-   const noteContainer = SavedData.beatmapDifficulty.find(
-      (set) => set.characteristic === characteristic && set.difficulty === difficulty,
+   const noteContainer = LoadedData.beatmaps.find(
+      (bm) =>
+         bm.settings.characteristic === characteristic && bm.settings.difficulty === difficulty,
    )?.noteContainer;
    if (!noteContainer) {
       console.error(logPrefix + 'note could not be found');
       return;
    }
-   const filteredContainer = getFilteredContainer(noteContainer, target.value);
+   const filteredContainer = getFilteredContainer(noteContainer, target.value).map((e) => e.data);
    const htmlTableBody = document.querySelector(
       `#${prefix}table-placement-${characteristic}-${difficulty}`,
    )!;
    htmlTableBody.innerHTML = notePlacementTableString(filteredContainer);
 }
 
-function notePlacementTableString(nc: NoteContainer[]): string {
+function notePlacementTableString(nc: IWrapGridObjectAttribute[]): string {
    const totalNote = nc.length || 1;
    let htmlString = '';
    for (let l = 2; l >= 0; l--) {
@@ -59,11 +61,11 @@ function notePlacementTableString(nc: NoteContainer[]): string {
 }
 
 export function createNotePlacementTable(
-   mapInfo: IWrapInfo,
-   mapData: IBeatmapItem,
+   beatmapInfo: IWrapInfo,
+   beatmap: IBeatmapItem,
 ): HTMLTableElement {
    const htmlSelect = UISelect.create(
-      `${prefix}table-select-placement-${mapData.characteristic}-${mapData.difficulty}`,
+      `${prefix}table-select-placement-${beatmap.settings.characteristic}-${beatmap.settings.difficulty}`,
       'Note Placement: ',
       'caption',
       `${prefix}table-caption`,
@@ -83,8 +85,8 @@ export function createNotePlacementTable(
       .querySelector<HTMLSelectElement>('select')
       ?.addEventListener('change', notePlacementSelectHandler);
 
-   let htmlString = `<tbody id="${prefix}table-placement-${mapData.characteristic}-${mapData.difficulty}">${notePlacementTableString(
-      mapData.noteContainer,
+   let htmlString = `<tbody id="${prefix}table-placement-${beatmap.settings.characteristic}-${beatmap.settings.difficulty}">${notePlacementTableString(
+      beatmap.noteContainer.map((e) => e.data),
    )}</tbody>`;
 
    const htmlTable = document.createElement('table');

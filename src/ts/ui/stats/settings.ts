@@ -1,16 +1,18 @@
-import { round } from '../../utils';
-import { BeatPerMinute } from '../../beatmap/shared/bpm';
-import { NoteJumpSpeed } from '../../beatmap/shared/njs';
-import { IWrapInfo } from '../../types/beatmap/wrapper/info';
-import { IBeatmapItem } from '../../types/mapcheck';
+import { round } from '../../bsmap/utils/mod';
+import { TimeProcessor } from '../../bsmap/beatmap/helpers/timeProcessor';
+import { NoteJumpSpeed } from '../../bsmap/beatmap/helpers/njs';
+import { IWrapInfo } from '../../bsmap/types/beatmap/wrapper/info';
+import { IBeatmapItem } from '../../types';
 import { prefix } from './constants';
 
-export function createSettingsTable(mapInfo: IWrapInfo, mapData: IBeatmapItem): HTMLTableElement {
-   const bpm = BeatPerMinute.create(mapInfo.audio.bpm);
+export function createSettingsTable(
+   beatmapInfo: IWrapInfo,
+   beatmap: IBeatmapItem,
+): HTMLTableElement {
    const njs = NoteJumpSpeed.create(
-      bpm,
-      mapData.info.njs || NoteJumpSpeed.FallbackNJS[mapData.difficulty],
-      mapData.info.njsOffset,
+      beatmapInfo.audio.bpm,
+      beatmap.settings.njs || NoteJumpSpeed.FallbackNJS[beatmap.settings.difficulty],
+      beatmap.settings.njsOffset,
    );
 
    const htmlTable = document.createElement('table');

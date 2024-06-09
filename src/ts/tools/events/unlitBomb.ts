@@ -1,11 +1,11 @@
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
-import { EnvironmentAllName } from '../../types/beatmap/shared/environment';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import { EnvironmentAllName } from '../../bsmap/types/beatmap/shared/environment';
 import UIInput from '../../ui/helpers/input';
 import { printResultTime } from '../helpers';
-import { BeatPerMinute } from '../../beatmap/shared/bpm';
-import { EventList } from '../../beatmap/shared/environment';
-import { IWrapEvent } from '../../types/beatmap/wrapper/event';
-import { IWrapBombNote } from '../../types/beatmap/wrapper/bombNote';
+import { TimeProcessor } from '../../bsmap/beatmap/helpers/timeProcessor';
+import { EventList } from '../../bsmap/beatmap/shared/environment';
+import { IWrapEvent } from '../../bsmap/types/beatmap/wrapper/event';
+import { IWrapBombNote } from '../../bsmap/types/beatmap/wrapper/bombNote';
 
 const name = 'Unlit Bomb';
 const description = 'Check for lighting around bomb.';
@@ -43,7 +43,7 @@ const tool: Tool = {
 const unlitBomb = (
    bombs: IWrapBombNote[],
    events: IWrapEvent[],
-   bpm: BeatPerMinute,
+   bpm: TimeProcessor,
    environment: EnvironmentAllName,
 ) => {
    if (!events.length) {
@@ -161,20 +161,25 @@ const unlitBomb = (
       });
 };
 
-function run(map: ToolArgs) {
-   if (!map.difficulty) {
+function run(args: ToolArgs) {
+   if (!args.beatmap) {
       console.error('Something went wrong!');
       return;
    }
    const result = unlitBomb(
-      map.difficulty.data.bombNotes,
-      map.difficulty.lightshow.basicEvents,
-      map.settings.bpm,
-      map.difficulty.environment,
+      args.beatmap.data.bombNotes,
+      args.beatmap.data.basicEvents,
+      args.settings.timeProcessor,
+      args.beatmap.environment,
    );
 
    if (result.length) {
-      tool.output.html = printResultTime('Unlit bomb', result, map.settings.bpm, 'warning');
+      tool.output.html = printResultTime(
+         'Unlit bomb',
+         result,
+         args.settings.timeProcessor,
+         'warning',
+      );
    } else {
       tool.output.html = null;
    }

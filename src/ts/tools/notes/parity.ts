@@ -1,11 +1,13 @@
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import UISelect from '../../ui/helpers/select';
-import Parity from '../../analyzers/parity/parity';
-import swing from '../../analyzers/swing/swing';
-import { NoteContainer, NoteContainerBomb } from '../../types/beatmap/wrapper/container';
+import Parity from '../../bsmap/extensions/parity/parity';
+import swing from '../../bsmap/extensions/swing/swing';
+import { INoteContainer, NoteContainerType } from '../../types/tools/container';
 import { printResultTime } from '../helpers';
 import UIInput from '../../ui/helpers/input';
-import { NoteColor } from '../../beatmap/shared/constants';
+import { NoteColor } from '../../bsmap/beatmap/shared/constants';
+import { IWrapBombNote } from '../../bsmap/types/beatmap/wrapper/bombNote';
+import { IWrapColorNote } from '../../bsmap/types/beatmap/wrapper/colorNote';
 
 const name = 'Parity Check';
 const description = 'Perform parity check.';
@@ -79,9 +81,9 @@ const tool: Tool<{ warningThres: number; errorThres: number; allowedRot: number 
 function inputSelectRotateHandler(this: HTMLInputElement) {}
 function inputSelectParityHandler(this: HTMLInputElement) {}
 
-function check(map: ToolArgs) {
-   const { bpm } = map.settings;
-   const { noteContainer } = map.difficulty!;
+function check(args: ToolArgs) {
+   const { timeProcessor } = args.settings;
+   const { noteContainer } = args.beatmap!;
    const { warningThres, errorThres, allowedRot } = <
       {
          warningThres: number;
@@ -90,23 +92,37 @@ function check(map: ToolArgs) {
       }
    >tool.input.params;
 
-   const lastNote: { [key: number]: NoteContainer } = {};
-   const swingNoteArray: { [key: number]: NoteContainer[] } = {
+   const lastNote: { [key: number]: IWrapColorNote } = {};
+   const swingNoteArray: { [key: number]: IWrapColorNote[] } = {
       [NoteColor.RED]: [],
       [NoteColor.BLUE]: [],
    };
-   const bombContext: { [key: number]: NoteContainerBomb[] } = {
+   const bombContext: { [key: number]: IWrapBombNote[] } = {
       [NoteColor.RED]: [],
       [NoteColor.BLUE]: [],
    };
-   const lastBombContext: { [key: number]: NoteContainerBomb[] } = {
+   const lastBombContext: { [key: number]: IWrapBombNote[] } = {
       [NoteColor.RED]: [],
       [NoteColor.BLUE]: [],
    };
 
    const swingParity: { [key: number]: Parity } = {
-      [NoteColor.RED]: new Parity(noteContainer, 0, warningThres, errorThres, allowedRot),
-      [NoteColor.BLUE]: new Parity(noteContainer, 1, warningThres, errorThres, allowedRot),
+      [NoteColor.RED]: new Parity(
+         args.beatmap!.data.colorNotes,
+         args.beatmap!.data.bombNotes,
+         0,
+         warningThres,
+         errorThres,
+         allowedRot,
+      ),
+      [NoteColor.BLUE]: new Parity(
+         args.beatmap!.data.colorNotes,
+         args.beatmap!.data.bombNotes,
+         1,
+         warningThres,
+         errorThres,
+         allowedRot,
+      ),
    };
    const parity: { warning: number[]; error: number[] } = {
       warning: [],
@@ -114,8 +130,15 @@ function check(map: ToolArgs) {
    };
    for (let i = 0, len = noteContainer.length; i < len; i++) {
       const note = noteContainer[i];
-      if (note.type === 'note' && lastNote[note.data.color]) {
-         if (swing.next(note, lastNote[note.data.color], bpm, swingNoteArray[note.data.color])) {
+      if (note.type === NoteContainerType.COLOR && lastNote[note.data.color]) {
+         if (
+            swing.next(
+               note.data,
+               lastNote[note.data.color],
+               timeProcessor,
+               swingNoteArray[note.data.color],
+            )
+         ) {
             // check previous swing parity
             const parityStatus = swingParity[note.data.color].check(
                swingNoteArray[note.data.color],
@@ -123,11 +146,11 @@ function check(map: ToolArgs) {
             );
             switch (parityStatus) {
                case 'warning': {
-                  parity.warning.push(swingNoteArray[note.data.color][0].data.time);
+                  parity.warning.push(swingNoteArray[note.data.color][0].time);
                   break;
                }
                case 'error': {
-                  parity.error.push(swingNoteArray[note.data.color][0].data.time);
+                  parity.error.push(swingNoteArray[note.data.color][0].time);
                   break;
                }
             }
@@ -140,13 +163,13 @@ function check(map: ToolArgs) {
             swingNoteArray[note.data.color] = [];
          }
       }
-      if (note.type === 'bomb') {
-         bombContext[NoteColor.RED].push(note);
-         bombContext[NoteColor.BLUE].push(note);
+      if (note.type === NoteContainerType.BOMB) {
+         bombContext[NoteColor.RED].push(note.data);
+         bombContext[NoteColor.BLUE].push(note.data);
       }
-      if (note.type === 'note') {
-         lastNote[note.data.color] = note;
-         swingNoteArray[note.data.color].push(note);
+      if (note.type === NoteContainerType.COLOR) {
+         lastNote[note.data.color] = note.data;
+         swingNoteArray[note.data.color].push(note.data);
       }
    }
    // final
@@ -155,11 +178,11 @@ function check(map: ToolArgs) {
          const parityStatus = swingParity[i].check(swingNoteArray[i], bombContext[i]);
          switch (parityStatus) {
             case 'warning': {
-               parity.warning.push(swingNoteArray[i][0].data.time);
+               parity.warning.push(swingNoteArray[i][0].time);
                break;
             }
             case 'error': {
-               parity.error.push(swingNoteArray[i][0].data.time);
+               parity.error.push(swingNoteArray[i][0].time);
                break;
             }
          }
@@ -168,12 +191,12 @@ function check(map: ToolArgs) {
    return parity;
 }
 
-function run(map: ToolArgs) {
-   if (!map.difficulty) {
+function run(args: ToolArgs) {
+   if (!args.beatmap) {
       console.error('Something went wrong!');
       return;
    }
-   const result = check(map);
+   const result = check(args);
    result.warning = result.warning
       .filter(function (x, i, ary) {
          return !i || x !== ary[i - 1];
@@ -188,11 +211,13 @@ function run(map: ToolArgs) {
    const htmlResult: HTMLElement[] = [];
    if (result.warning.length) {
       htmlResult.push(
-         printResultTime('Parity warning', result.warning, map.settings.bpm, 'warning'),
+         printResultTime('Parity warning', result.warning, args.settings.timeProcessor, 'warning'),
       );
    }
    if (result.error.length) {
-      htmlResult.push(printResultTime('Parity error', result.error, map.settings.bpm, 'error'));
+      htmlResult.push(
+         printResultTime('Parity error', result.error, args.settings.timeProcessor, 'error'),
+      );
    }
 
    if (htmlResult.length) {

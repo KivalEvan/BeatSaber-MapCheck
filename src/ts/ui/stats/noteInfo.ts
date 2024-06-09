@@ -1,28 +1,31 @@
-import { formatNumber, round } from '../../utils';
-import { IWrapInfo } from '../../types/beatmap/wrapper/info';
-import { IBeatmapItem } from '../../types/mapcheck';
-import * as swing from '../../analyzers/swing/mod';
-import * as score from '../../analyzers/score';
+import { formatNumber, round } from '../../bsmap/utils/mod';
+import { IWrapInfo } from '../../bsmap/types/beatmap/wrapper/info';
+import { IBeatmapItem } from '../../types';
+import * as swing from '../../bsmap/extensions/swing/mod';
+import * as score from '../../bsmap/extensions/score/mod';
 import { prefix } from './constants';
-import { countNote } from '../../analyzers/stats/note';
+import { countNote } from '../../bsmap/extensions/stats/note';
 
-export function createNoteInfoTable(mapInfo: IWrapInfo, mapData: IBeatmapItem): HTMLTableElement {
-   const noteCount = countNote(mapData.data.colorNotes);
+export function createNoteInfoTable(
+   beatmapInfo: IWrapInfo,
+   beatmap: IBeatmapItem,
+): HTMLTableElement {
+   const noteCount = countNote(beatmap.data.colorNotes);
    let htmlString = `<caption class="${prefix}table-caption">Note Information:</caption><tr><th class="${prefix}table-header" colspan="2">R/B Ratio</th><td class="${prefix}table-element">${round(
       noteCount.red.total / noteCount.blue.total,
       2,
    )}</td></tr><tr><th class="${prefix}table-header" colspan="2">Max Score</th><td class="${prefix}table-element">${formatNumber(
-      score.calculate(mapData.noteContainer),
+      score.calculate(beatmap.data),
    )}</td></tr><tr><th class="${prefix}table-header" colspan="2">Effective BPM</th><td class="${prefix}table-element">${round(
-      swing.getMaxEffectiveBpm(mapData.swingAnalysis.container),
+      swing.getMaxEffectiveBpm(beatmap.swingAnalysis.container),
       2,
    )}</td></tr><tr><th class="${prefix}table-header" colspan="2">Effective BPM (swing)</th><td class="${prefix}table-element">${round(
-      swing.getMaxEffectiveBpmSwing(mapData.swingAnalysis.container),
+      swing.getMaxEffectiveBpmSwing(beatmap.swingAnalysis.container),
       2,
    )}</td></tr>`;
 
-   let minSpeed = round(swing.getMinSliderSpeed(mapData.swingAnalysis.container) * 1000, 1);
-   let maxSpeed = round(swing.getMaxSliderSpeed(mapData.swingAnalysis.container) * 1000, 1);
+   let minSpeed = round(swing.getMinSliderSpeed(beatmap.swingAnalysis.container) * 1000, 1);
+   let maxSpeed = round(swing.getMaxSliderSpeed(beatmap.swingAnalysis.container) * 1000, 1);
    if (minSpeed && maxSpeed) {
       htmlString += `<tr><th class="${prefix}table-header" colspan="2">Min. Slider Speed</th><td class="${prefix}table-element">${minSpeed}ms</td></tr><tr><th class="${prefix}table-header" colspan="2">Max. Slider Speed</th><td class="${prefix}table-element">${maxSpeed}ms</td></tr>`;
    }

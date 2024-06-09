@@ -1,4 +1,4 @@
-import { MapDetail } from './types/mapcheck/beatsaver';
+import { MapDetail } from './types/beatsaver';
 
 async function fetchJSON(url: string): Promise<any> {
    return new Promise(function (resolve, reject) {

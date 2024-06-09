@@ -1,4 +1,4 @@
-import SavedData from '../savedData';
+import LoadedData from '../loadedData';
 import UILoading from './loading';
 import UIHeader from './header';
 import UIInfo from './information';
@@ -16,5 +16,5 @@ export default function resetHandler() {
    UIInfo.reset();
    UITools.reset();
    UIStats.reset();
-   SavedData.clear();
+   LoadedData.clear();
 }

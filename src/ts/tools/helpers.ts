@@ -1,7 +1,7 @@
-import { BeatPerMinute } from '../beatmap/shared/bpm';
+import { TimeProcessor } from '../bsmap/beatmap/helpers/timeProcessor';
 import settings from '../settings';
-import { round } from '../utils/math';
-import { toMmss, toMmssms } from '../utils/time';
+import { round } from '../bsmap/utils/math';
+import { toMmss, toMmssms } from '../bsmap/utils/time';
 
 type Symbol = 'info' | 'warning' | 'error' | 'rank';
 
@@ -44,7 +44,7 @@ export function printResult(label: string, text?: string, symbol?: Symbol) {
 export function printResultTime(
    label: string,
    timeAry: number[],
-   bpm: BeatPerMinute,
+   timeProcessor: TimeProcessor,
    symbol?: Symbol,
 ) {
    const htmlContainer = document.createElement('div');
@@ -55,22 +55,22 @@ export function printResultTime(
       .map((n) => {
          switch (settings.beatNumbering) {
             case 'realtime':
-               return `<span title="Beat ${round(bpm.adjustTime(n), settings.rounding)}">${toMmss(
-                  bpm.toRealTime(n),
+               return `<span title="Beat ${round(timeProcessor.adjustTime(n), settings.rounding)}">${toMmss(
+                  timeProcessor.toRealTime(n),
                )}</span>`;
             case 'realtimems':
-               return `<span title="Beat ${round(bpm.adjustTime(n), settings.rounding)}">${toMmssms(
-                  bpm.toRealTime(n),
+               return `<span title="Beat ${round(timeProcessor.adjustTime(n), settings.rounding)}">${toMmssms(
+                  timeProcessor.toRealTime(n),
                )}</span>`;
             case 'jsontime':
-               return `<span title="Time ${toMmssms(bpm.toRealTime(n))}">${round(
+               return `<span title="Time ${toMmssms(timeProcessor.toRealTime(n))}">${round(
                   n,
                   settings.rounding,
                )}</span>`;
             case 'beattime':
             default:
-               return `<span title="Time ${toMmssms(bpm.toRealTime(n))}">${round(
-                  bpm.adjustTime(n),
+               return `<span title="Time ${toMmssms(timeProcessor.toRealTime(n))}">${round(
+                  timeProcessor.adjustTime(n),
                   settings.rounding,
                )}</span>`;
          }

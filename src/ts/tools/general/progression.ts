@@ -1,11 +1,11 @@
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
-import { round } from '../../utils';
-import SavedData from '../../savedData';
-import * as swing from '../../analyzers/swing/mod';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import { round } from '../../bsmap/utils/mod';
+import LoadedData from '../../loadedData';
+import * as swing from '../../bsmap/extensions/swing/mod';
 import { printResult } from '../helpers';
 import UIInput from '../../ui/helpers/input';
-import { DifficultyRename } from '../../beatmap/shared/difficulty';
-import { DifficultyName } from '../../types/beatmap/shared/difficulty';
+import { DifficultyRename } from '../../bsmap/beatmap/shared/difficulty';
+import { DifficultyName } from '../../bsmap/types/beatmap/shared/difficulty';
 
 const name = 'Difficulty Progression';
 const description = 'For ranking purpose, check difficuly progression to fit rankability criteria.';
@@ -65,14 +65,14 @@ const tool: Tool<{ [k in DifficultyName]: boolean }> = {
    run,
 };
 
-function run(map: ToolArgs) {
-   const { audioDuration } = map.settings;
+function run(args: ToolArgs) {
+   const { audioDuration } = args.settings;
    if (!audioDuration) {
       tool.output.html = null;
       return;
    }
-   const standardSpsAry = SavedData.beatmapDifficulty
-      .filter((a) => a.characteristic === 'Standard')
+   const standardSpsAry = LoadedData.beatmaps
+      .filter((a) => a.settings.characteristic === 'Standard')
       .map((d) => d.swingAnalysis)
       .filter((a) => tool.input.params[a.difficulty] && a.total.total > 0)
       .sort((a, b) => b.total.average - a.total.average);

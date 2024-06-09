@@ -1,9 +1,12 @@
-import { IndexFilterType } from '../../beatmap/mod';
-import { EventList } from '../../beatmap/shared/environment';
-import { EnvironmentAllName, EnvironmentV3Name } from '../../types/beatmap/shared/environment';
-import { IWrapEventBoxGroup } from '../../types/beatmap/wrapper/eventBoxGroup';
-import { IWrapLightshow } from '../../types/beatmap/wrapper/lightshow';
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
+import { IndexFilterType } from '../../bsmap/types/beatmap/shared/constants';
+import { EventList } from '../../bsmap/beatmap/shared/environment';
+import {
+   EnvironmentAllName,
+   EnvironmentV3Name,
+} from '../../bsmap/types/beatmap/shared/environment';
+import { IWrapEventBoxGroup } from '../../bsmap/types/beatmap/wrapper/eventBoxGroup';
+import { IWrapLightshow } from '../../bsmap/types/beatmap/wrapper/lightshow';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import UIInput from '../../ui/helpers/input';
 import { printResultTime } from '../helpers';
 
@@ -296,17 +299,22 @@ function check(map: IWrapLightshow, environment: EnvironmentAllName) {
    };
 }
 
-function run(map: ToolArgs) {
-   if (!map.difficulty) {
+function run(args: ToolArgs) {
+   if (!args.beatmap) {
       console.error('Something went wrong!');
       return;
    }
-   const result = check(map.difficulty.lightshow, map.difficulty.environment);
+   const result = check(args.beatmap.data, args.beatmap.environment);
 
    const htmlResult: HTMLElement[] = [];
    if (result.defectID.length) {
       htmlResult.push(
-         printResultTime('Invalid event box group ID', result.defectID, map.settings.bpm, 'error'),
+         printResultTime(
+            'Invalid event box group ID',
+            result.defectID,
+            args.settings.timeProcessor,
+            'error',
+         ),
       );
    }
    if (result.defectFilter.length) {
@@ -314,7 +322,7 @@ function run(map: ToolArgs) {
          printResultTime(
             'Invalid event box filter',
             result.defectFilter,
-            map.settings.bpm,
+            args.settings.timeProcessor,
             'error',
          ),
       );

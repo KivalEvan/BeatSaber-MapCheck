@@ -1,12 +1,12 @@
 import Settings from '../../settings';
-import { round, toMmss } from '../../utils';
-import { BeatPerMinute } from '../../beatmap/shared/bpm';
-import { ICustomEvent } from '../../types/beatmap/v3/custom/customEvent';
+import { round, toMmss } from '../../bsmap/utils/mod';
+import { TimeProcessor } from '../../bsmap/beatmap/helpers/timeProcessor';
+import { ICustomEvent } from '../../bsmap/types/beatmap/v3/custom/customEvent';
 import { htmlTableCustomEvents } from './constants';
 import { displayTableRow, hideTableRow } from './helpers';
-import { NEDataAbbreviation } from '../../analyzers/renamer/customData';
+import { NEDataAbbreviation } from '../../bsmap/extensions/renamer/customData';
 
-export function setCustomEvents(arr?: ICustomEvent[], bpm?: BeatPerMinute | null): void {
+export function setCustomEvents(arr?: ICustomEvent[], bpm?: TimeProcessor | null): void {
    if (arr == null || !arr.length) {
       hideTableRow(htmlTableCustomEvents);
       return;

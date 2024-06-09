@@ -1,26 +1,26 @@
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
-import { round } from '../../utils';
-import { NoteContainer } from '../../types/beatmap/wrapper/container';
-import { checkDirection } from '../../analyzers/placement/note';
-import swing from '../../analyzers/swing/swing';
-import { ColorNote } from '../../beatmap/v3/colorNote';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import { round } from '../../bsmap/utils/mod';
+import { INoteContainer, NoteContainerType } from '../../types/tools/container';
+import { checkDirection } from '../../bsmap/extensions/placement/note';
+import swing from '../../bsmap/extensions/swing/swing';
+import { ColorNote } from '../../bsmap/beatmap/core/colorNote';
 import { printResultTime } from '../helpers';
 import UIInput from '../../ui/helpers/input';
-import { BeatPerMinute } from '../../beatmap/shared/bpm';
+import { TimeProcessor } from '../../bsmap/beatmap/helpers/timeProcessor';
 import {
    NoteColor,
    NoteDirection,
    NoteDirectionAngle,
    PosX,
    PosY,
-} from '../../beatmap/shared/constants';
-import { IWrapColorNote } from '../../types/beatmap/wrapper/colorNote';
+} from '../../bsmap/beatmap/shared/constants';
+import { IWrapColorNote } from '../../bsmap/types/beatmap/wrapper/colorNote';
 
 const name = 'Inline Sharp Angle';
 const description = 'Check for angle changes within inline note.';
 const enabled = true;
 const defaultMaxTime = 0.15;
-let localBPM!: BeatPerMinute;
+let localBPM!: TimeProcessor;
 
 const [htmlLabelMaxTime, htmlInputMaxTime] = UIInput.createNumber(
    function (this: HTMLInputElement) {
@@ -91,21 +91,21 @@ const tool: Tool<{ maxTime: number }> = {
    run,
 };
 
-function adjustTimeHandler(bpm: BeatPerMinute) {
+function adjustTimeHandler(bpm: TimeProcessor) {
    localBPM = bpm;
    htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.maxTime), 2).toString();
 }
 
-function check(map: ToolArgs) {
-   const { bpm } = map.settings;
-   const noteContainer = map.difficulty!.noteContainer;
+function check(args: ToolArgs) {
+   const { timeProcessor } = args.settings;
+   const noteContainer = args.beatmap!.noteContainer;
    const { maxTime: temp } = tool.input.params;
-   const maxTime = bpm.toBeatTime(temp) + 0.001;
+   const maxTime = timeProcessor.toBeatTime(temp) + 0.001;
 
-   const lastNote: { [key: number]: NoteContainer } = {};
+   const lastNote: { [key: number]: IWrapColorNote } = {};
    const lastNoteAngle: { [key: number]: number } = {};
    const startNoteDot: { [key: number]: IWrapColorNote | null } = {};
-   const swingNoteArray: { [key: number]: NoteContainer[] } = {
+   const swingNoteArray: { [key: number]: IWrapColorNote[] } = {
       [NoteColor.RED]: [],
       [NoteColor.BLUE]: [],
    };
@@ -114,8 +114,15 @@ function check(map: ToolArgs) {
    let lastIndex = 0;
    for (let i = 0, len = noteContainer.length; i < len; i++) {
       const note = noteContainer[i];
-      if (note.type === 'note' && lastNote[note.data.color]) {
-         if (swing.next(note, lastNote[note.data.color], bpm, swingNoteArray[note.data.color])) {
+      if (note.type === NoteContainerType.COLOR && lastNote[note.data.color]) {
+         if (
+            swing.next(
+               note.data,
+               lastNote[note.data.color],
+               timeProcessor,
+               swingNoteArray[note.data.color],
+            )
+         ) {
             if (startNoteDot[note.data.color]) {
                startNoteDot[note.data.color] = null;
                lastNoteAngle[note.data.color] = (lastNoteAngle[note.data.color] + 180) % 360;
@@ -145,14 +152,14 @@ function check(map: ToolArgs) {
                lastNoteAngle[note.data.color] = note.data.getAngle();
             }
          }
-      } else if (note.type === 'note') {
+      } else if (note.type === NoteContainerType.COLOR) {
          lastNoteAngle[note.data.color] = note.data.getAngle();
       }
-      if (note.type === 'note') {
-         lastNote[note.data.color] = note;
-         swingNoteArray[note.data.color].push(note);
+      if (note.type === NoteContainerType.COLOR) {
+         lastNote[note.data.color] = note.data;
+         swingNoteArray[note.data.color].push(note.data);
       }
-      if (note.type === 'bomb') {
+      if (note.type === NoteContainerType.BOMB) {
          // on bottom row
          if (note.data.posY === PosY.BOTTOM) {
             //on right center
@@ -188,10 +195,10 @@ function check(map: ToolArgs) {
       });
 }
 
-function checkInline(n: IWrapColorNote, notes: NoteContainer[], index: number, maxTime: number) {
+function checkInline(n: IWrapColorNote, notes: INoteContainer[], index: number, maxTime: number) {
    for (let i = index; notes[i].data.time < n.time; i++) {
       const note = notes[i];
-      if (note.type !== 'note') {
+      if (note.type !== NoteContainerType.COLOR) {
          continue;
       }
       if (n.isInline(note.data) && n.time - notes[i].data.time <= maxTime) {
@@ -201,15 +208,20 @@ function checkInline(n: IWrapColorNote, notes: NoteContainer[], index: number, m
    return false;
 }
 
-function run(map: ToolArgs) {
-   if (!map.difficulty) {
+function run(args: ToolArgs) {
+   if (!args.beatmap) {
       console.error('Something went wrong!');
       return;
    }
-   const result = check(map);
+   const result = check(args);
 
    if (result.length) {
-      tool.output.html = printResultTime('Inline sharp angle', result, map.settings.bpm, 'warning');
+      tool.output.html = printResultTime(
+         'Inline sharp angle',
+         result,
+         args.settings.timeProcessor,
+         'warning',
+      );
    } else {
       tool.output.html = null;
    }

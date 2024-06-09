@@ -1,6 +1,6 @@
-import { EnvironmentAllName } from '../../types/beatmap/shared/environment';
-import { IWrapEvent } from '../../types/beatmap/wrapper/event';
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
+import { EnvironmentAllName } from '../../bsmap/types/beatmap/shared/environment';
+import { IWrapEvent } from '../../bsmap/types/beatmap/wrapper/event';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import UIInput from '../../ui/helpers/input';
 import { printResult } from '../helpers';
 
@@ -49,13 +49,13 @@ function sufficientLight(events: IWrapEvent[], environment: EnvironmentAllName):
    return false;
 }
 
-function run(map: ToolArgs) {
-   if (!map.difficulty) {
+function run(args: ToolArgs) {
+   if (!args.beatmap) {
       console.error('Something went wrong!');
       return;
    }
-   const env = map.difficulty.environment;
-   const result = sufficientLight(map.difficulty.lightshow.basicEvents, env);
+   const env = args.beatmap.environment;
+   const result = sufficientLight(args.beatmap.data.basicEvents, env);
 
    if (!result) {
       switch (env) {

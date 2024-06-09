@@ -1,12 +1,13 @@
 import UISelect from '../helpers/select';
-import SavedData from '../../savedData';
-import { round } from '../../utils';
-import { IWrapInfo } from '../../types/beatmap/wrapper/info';
-import { IBeatmapItem } from '../../types/mapcheck';
-import { NoteContainer } from '../../types/beatmap/wrapper/container';
-import { countDirection } from '../../analyzers/stats/note';
+import LoadedData from '../../loadedData';
+import { round } from '../../bsmap/utils/mod';
+import { IWrapInfo } from '../../bsmap/types/beatmap/wrapper/info';
+import { IBeatmapItem } from '../../types';
+import { INoteContainer } from '../../types/tools/container';
+import { countDirection } from '../../bsmap/extensions/stats/note';
 import { logPrefix, prefix } from './constants';
 import { getFilteredContainer } from './helpers';
+import { IWrapBaseNote } from '../../bsmap/types/beatmap/wrapper/baseNote';
 
 function noteAngleSelectHandler(ev: Event) {
    const target = ev.target as HTMLSelectElement;
@@ -14,14 +15,15 @@ function noteAngleSelectHandler(ev: Event) {
 
    const characteristic = id[0];
    const difficulty = id[1];
-   const noteContainer = SavedData.beatmapDifficulty.find(
-      (set) => set.characteristic === characteristic && set.difficulty === difficulty,
+   const noteContainer = LoadedData.beatmaps.find(
+      (set) =>
+         set.settings.characteristic === characteristic && set.settings.difficulty === difficulty,
    )?.noteContainer;
    if (!noteContainer) {
       console.error(logPrefix + 'note could not be found');
       return;
    }
-   const filteredContainer = getFilteredContainer(noteContainer, target.value);
+   const filteredContainer = getFilteredContainer(noteContainer, target.value).map((e) => e.data);
    const htmlTableBody = document.querySelector(
       `#${prefix}table-angle-${characteristic}-${difficulty}`,
    )!;
@@ -29,7 +31,7 @@ function noteAngleSelectHandler(ev: Event) {
 }
 
 // TODO: use angle instead of cut direction
-function noteAngleTableString(notes: NoteContainer[]): string {
+function noteAngleTableString(notes: IWrapBaseNote[]): string {
    const totalNote = notes.length || 1;
    const cutOrder = [4, 0, 5, 2, 8, 3, 6, 1, 7];
    let htmlString = '';
@@ -47,9 +49,12 @@ function noteAngleTableString(notes: NoteContainer[]): string {
    return htmlString;
 }
 
-export function createNoteAngleTable(mapInfo: IWrapInfo, mapData: IBeatmapItem): HTMLTableElement {
+export function createNoteAngleTable(
+   beatmapInfo: IWrapInfo,
+   beatmap: IBeatmapItem,
+): HTMLTableElement {
    const htmlSelect = UISelect.create(
-      `${prefix}table-select-angle-${mapData.characteristic}-${mapData.difficulty}`,
+      `${prefix}table-select-angle-${beatmap.settings.characteristic}-${beatmap.settings.difficulty}`,
       'Note Angle: ',
       'caption',
       `${prefix}table-caption`,
@@ -68,8 +73,8 @@ export function createNoteAngleTable(mapInfo: IWrapInfo, mapData: IBeatmapItem):
       .querySelector<HTMLSelectElement>('select')
       ?.addEventListener('change', noteAngleSelectHandler);
 
-   let htmlString = `<tbody id="${prefix}table-angle-${mapData.characteristic}-${mapData.difficulty}">${noteAngleTableString(
-      mapData.noteContainer,
+   let htmlString = `<tbody id="${prefix}table-angle-${beatmap.settings.characteristic}-${beatmap.settings.difficulty}">${noteAngleTableString(
+      beatmap.noteContainer.map((e) => e.data),
    )}</tbody>`;
 
    const htmlTable = document.createElement('table');

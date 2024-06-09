@@ -1,8 +1,8 @@
 // TODO: generate options instead of hardcoded in HTML
-import { UIThemeName } from '../types/mapcheck/ui';
+import { UIThemeName } from '../types/ui';
 import UITheme from './theme';
 import Settings from '../settings';
-import { BeatNumbering } from '../types/mapcheck/settings';
+import { BeatNumbering } from '../types/settings';
 import { setTableHeight } from './information/helpers';
 
 const htmlSettingsTheme: HTMLSelectElement = document.querySelector('.settings__theme')!;

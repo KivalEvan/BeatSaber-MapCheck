@@ -1,5 +1,5 @@
-import { ISettings } from './types/mapcheck/settings';
-import { deepCopy } from './utils';
+import { ISettings } from './types/settings';
+import { deepCopy } from './bsmap/utils/mod';
 
 const settingsDefault: ISettings = {
    version: 4,

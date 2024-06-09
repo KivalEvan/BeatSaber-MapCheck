@@ -1,5 +1,5 @@
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
-import { toMmss } from '../../utils';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import { toMmss } from '../../bsmap/utils/mod';
 import settings from '../../settings';
 import flag from '../../flag';
 import { printResult } from '../helpers';
@@ -37,8 +37,8 @@ const tool: Tool = {
    run,
 };
 
-function run(map: ToolArgs) {
-   const { audioDuration } = map.settings;
+function run(args: ToolArgs) {
+   const { audioDuration } = args.settings;
 
    if (audioDuration && audioDuration < 20) {
       tool.output.html = printResult(

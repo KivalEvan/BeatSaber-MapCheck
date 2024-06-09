@@ -1,15 +1,15 @@
-import SavedData from '../savedData';
+import LoadedData from '../loadedData';
 import Analyser from '../tools/analyzer';
 import UILoading from './loading';
 import UIInformation from './information';
 import { removeOptions } from '../utils/web';
-import { BeatPerMinute } from '../beatmap/shared/bpm';
-import { CharacteristicRename } from '../beatmap/shared/characteristic';
-import { DifficultyRename } from '../beatmap/shared/difficulty';
-import { CharacteristicName } from '../types/beatmap/shared/characteristic';
-import { DifficultyName } from '../types/beatmap/shared/difficulty';
-import { IWrapInfo } from '../types/beatmap/wrapper/info';
-import savedData from '../savedData';
+import { TimeProcessor } from '../bsmap/beatmap/helpers/timeProcessor';
+import { CharacteristicRename } from '../bsmap/beatmap/shared/characteristic';
+import { DifficultyRename } from '../bsmap/beatmap/shared/difficulty';
+import { CharacteristicName } from '../bsmap/types/beatmap/shared/characteristic';
+import { DifficultyName } from '../bsmap/types/beatmap/shared/difficulty';
+import { IWrapInfo } from '../bsmap/types/beatmap/wrapper/info';
+import savedData from '../loadedData';
 
 const logPrefix = 'UI Tools: ';
 
@@ -44,7 +44,7 @@ htmlToolsSelectDifficulty.forEach((elem) =>
 );
 
 function displayOutputGeneral(): void {
-   const analysis = SavedData.analysis?.general;
+   const analysis = LoadedData.analysis?.general;
    if (!analysis) {
       htmlToolsOutputGeneral.textContent = 'ERROR: could not find analysis for general';
       return;
@@ -72,7 +72,7 @@ function displayOutputDifficulty(
       throw new Error(logPrefix + 'something went wrong!');
    }
    htmlToolsOutputDifficulty.innerHTML = '';
-   const analysis = SavedData.analysis?.map.find(
+   const analysis = LoadedData.analysis?.map.find(
       (set) => set.difficulty === difficulty && set.characteristic === characteristic,
    );
    if (!analysis) {
@@ -116,10 +116,10 @@ function populateSelectDifficulty(characteristic?: CharacteristicName): void {
             DifficultyRename[diff.difficulty] +
             (diff.customData._difficultyLabel ? ' -- ' + diff.customData._difficultyLabel : '');
          if (first) {
-            const diffData = SavedData.beatmapDifficulty.find(
-               (el) =>
-                  el.difficulty === diff.difficulty &&
-                  el.characteristic === mapInfo.difficulties[i].characteristic,
+            const diffData = LoadedData.beatmaps.find(
+               (bm) =>
+                  bm.settings.difficulty === diff.difficulty &&
+                  bm.settings.characteristic === mapInfo.difficulties[i].characteristic,
             );
             if (!diffData) {
                throw new Error('missing _mapSetData');
@@ -164,11 +164,11 @@ function populateSelectCharacteristic(mapInfo?: IWrapInfo): void {
 }
 
 function adjustBeatTime(): void {
-   const mapInfo = SavedData.beatmapInfo;
+   const mapInfo = LoadedData.beatmapInfo;
    if (!mapInfo) {
       throw new Error(logPrefix + 'could not find map info');
    }
-   const bpm = BeatPerMinute.create(mapInfo.audio.bpm);
+   const bpm = TimeProcessor.create(mapInfo.audio.bpm);
    Analyser.adjustTime(bpm);
 }
 
@@ -226,7 +226,7 @@ function selectCharacteristicHandler(ev: Event): void {
          elem.value = target.value;
       }
    });
-   const infoDiff = SavedData.beatmapInfo?.difficulties.find(
+   const infoDiff = LoadedData.beatmapInfo?.difficulties.find(
       (elem) => elem.characteristic === target.value,
    );
    populateSelectDifficulty(infoDiff?.characteristic);
@@ -239,22 +239,24 @@ function selectDifficultyHandler(ev: Event): void {
          elem.value = target.value;
       }
    });
-   const infoDiff = SavedData.beatmapInfo?.difficulties.find(
+   const infoDiff = LoadedData.beatmapInfo?.difficulties.find(
       (elem) => elem.characteristic === htmlToolsSelectCharacteristic.item(0).value,
    );
    if (!infoDiff) {
       throw new Error('aaaaaaaaaaaaaaaaaaa');
    }
-   const diff = SavedData.beatmapDifficulty?.find(
-      (elem) => elem.difficulty === target.value && elem.characteristic === infoDiff.characteristic,
+   const diff = LoadedData.beatmaps?.find(
+      (bm) =>
+         bm.settings.difficulty === target.value &&
+         bm.settings.characteristic === infoDiff.characteristic,
    );
    if (diff) {
-      UIInformation.setDiffInfoTable(SavedData.beatmapInfo!, diff);
+      UIInformation.setDiffInfoTable(LoadedData.beatmapInfo!, diff);
       setDifficultyLabel(
-         diff.info.customData._difficultyLabel ||
+         diff.settings.customData._difficultyLabel ||
             DifficultyRename[target.value as keyof typeof DifficultyRename],
       );
-      displayOutputDifficulty(diff.characteristic, diff.difficulty);
+      displayOutputDifficulty(diff.settings.characteristic, diff.settings.difficulty);
    }
 }
 

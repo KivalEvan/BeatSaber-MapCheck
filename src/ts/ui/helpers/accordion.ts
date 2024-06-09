@@ -1,4 +1,4 @@
-import { UIBackgroundColor, UIBackgroundColorType } from '../../types/mapcheck/ui/accordion';
+import { UIBackgroundColor, UIBackgroundColorType } from '../../types/ui/accordion';
 
 const prefix = 'accordion__';
 const htmlAccordion: NodeListOf<HTMLInputElement> =

@@ -1,4 +1,4 @@
-import { IFlag } from './types/mapcheck/flag';
+import { IFlag } from './types/flag';
 
 export default new (class Flag implements IFlag {
    loading = {

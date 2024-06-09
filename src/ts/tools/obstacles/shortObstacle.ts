@@ -1,9 +1,9 @@
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import UIInput from '../../ui/helpers/input';
 import { printResultTime } from '../helpers';
-import { PosX, PosY } from '../../beatmap/shared/constants';
-import { Obstacle } from '../../beatmap/v4/obstacle';
-import { IWrapObstacle } from '../../types/beatmap/wrapper/obstacle';
+import { PosX, PosY } from '../../bsmap/beatmap/shared/constants';
+import { Obstacle } from '../../bsmap/beatmap/core/obstacle';
+import { IWrapObstacle } from '../../bsmap/types/beatmap/wrapper/obstacle';
 
 const name = '<15ms Obstacle';
 const description =
@@ -40,11 +40,11 @@ const tool: Tool<{ minDur: number }> = {
    run,
 };
 
-function check(map: ToolArgs) {
-   const { obstacles } = map.difficulty!.data;
-   const { bpm } = map.settings;
+function check(args: ToolArgs) {
+   const { obstacles } = args.beatmap!.data;
+   const { timeProcessor } = args.settings;
    const { minDur: temp } = tool.input.params;
-   const minDur = bpm.toBeatTime(temp);
+   const minDur = timeProcessor.toBeatTime(temp);
    const ary: IWrapObstacle[] = [];
    let obstacleLFull: IWrapObstacle = new Obstacle();
    let obstacleRFull: IWrapObstacle = new Obstacle();
@@ -178,15 +178,20 @@ function check(map: ToolArgs) {
       });
 }
 
-function run(map: ToolArgs) {
-   if (!map.difficulty) {
+function run(args: ToolArgs) {
+   if (!args.beatmap) {
       console.error('Something went wrong!');
       return;
    }
-   const result = check(map);
+   const result = check(args);
 
    if (result.length) {
-      tool.output.html = printResultTime('<15ms obstacle', result, map.settings.bpm, 'warning');
+      tool.output.html = printResultTime(
+         '<15ms obstacle',
+         result,
+         args.settings.timeProcessor,
+         'warning',
+      );
    } else {
       tool.output.html = null;
    }

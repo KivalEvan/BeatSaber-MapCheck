@@ -5,20 +5,21 @@ import {
    ToolArgs,
    ToolInputOrder,
    ToolOutputOrder,
-} from '../../types/mapcheck';
-import { round } from '../../utils';
-import { NoteContainer, NoteContainerNote } from '../../types/beatmap/wrapper/container';
-import swing from '../../analyzers/swing/swing';
+} from '../../types';
+import { round } from '../../bsmap/utils/mod';
+import swing from '../../bsmap/extensions/swing/swing';
 import { printResultTime } from '../helpers';
 import UIInput from '../../ui/helpers/input';
-import { BeatPerMinute } from '../../beatmap/shared/bpm';
-import { NoteColor } from '../../beatmap/shared/constants';
+import { TimeProcessor } from '../../bsmap/beatmap/helpers/timeProcessor';
+import { NoteColor } from '../../bsmap/beatmap/shared/constants';
+import { NoteContainerType } from '../../types/tools/container';
+import { IWrapColorNote } from '../../bsmap/types/beatmap/wrapper/colorNote';
 
 const name = 'Speed Pause';
 const description = 'Look for stream/burst containing timing gap causing sudden change of pace.';
 const enabled = false;
 const defaultMaxTime = 0.075;
-let localBPM!: BeatPerMinute;
+let localBPM!: TimeProcessor;
 
 const [htmlLabelMinTime, htmlInputMinTime] = UIInput.createNumber(
    function (this: HTMLInputElement) {
@@ -87,7 +88,7 @@ const tool: Tool<{ maxTime: number }> = {
    run,
 };
 
-function adjustTimeHandler(bpm: BeatPerMinute) {
+function adjustTimeHandler(bpm: TimeProcessor) {
    localBPM = bpm;
    htmlInputMinPrec.value = round(
       1 / localBPM.toBeatTime(tool.input.params.maxTime as number),
@@ -96,68 +97,72 @@ function adjustTimeHandler(bpm: BeatPerMinute) {
 }
 
 function check(settings: IBeatmapSettings, difficulty: IBeatmapItem) {
-   const { bpm } = settings;
+   const { timeProcessor } = settings;
    const { noteContainer } = difficulty;
    const { maxTime: temp } = <{ maxTime: number }>tool.input.params;
-   const maxTime = bpm.toBeatTime(temp) + 0.001;
+   const maxTime = timeProcessor.toBeatTime(temp) + 0.001;
 
-   const lastNote: { [key: number]: NoteContainer } = {};
-   const lastNotePause: { [key: number]: NoteContainer } = {};
+   const lastNote: { [key: number]: IWrapColorNote } = {};
+   const lastNotePause: { [key: number]: IWrapColorNote } = {};
    const maybePause: { [key: number]: boolean } = {
       [NoteColor.RED]: false,
       [NoteColor.BLUE]: false,
    };
-   const swingNoteArray: { [key: number]: NoteContainer[] } = {
+   const swingNoteArray: { [key: number]: IWrapColorNote[] } = {
       [NoteColor.RED]: [],
       [NoteColor.BLUE]: [],
    };
 
-   const arr: NoteContainer[] = [];
+   const arr: IWrapColorNote[] = [];
    for (let i = 0, len = noteContainer.length; i < len; i++) {
-      if (noteContainer[i].type !== 'note') {
+      if (noteContainer[i].type !== NoteContainerType.COLOR) {
          continue;
       }
-      const note = noteContainer[i] as NoteContainerNote;
-      if (lastNote[note.data.color]) {
-         if (swing.next(note, lastNote[note.data.color], bpm, swingNoteArray[note.data.color])) {
-            if (note.data.time - lastNote[note.data.color].data.time <= maxTime * 2) {
+      const note = noteContainer[i].data as IWrapColorNote;
+      if (lastNote[note.color]) {
+         if (swing.next(note, lastNote[note.color], timeProcessor, swingNoteArray[note.color])) {
+            if (note.time - lastNote[note.color].time <= maxTime * 2) {
                if (
                   maybePause[NoteColor.RED] &&
                   maybePause[NoteColor.BLUE] &&
-                  lastNote[note.data.color].data.time - lastNotePause[note.data.color].data.time <=
-                     maxTime * 3
+                  lastNote[note.color].time - lastNotePause[note.color].time <= maxTime * 3
                ) {
-                  arr.push(lastNote[note.data.color]);
+                  arr.push(lastNote[note.color]);
                }
-               maybePause[note.data.color] = false;
-            } else if (!maybePause[note.data.color]) {
-               maybePause[note.data.color] = true;
-               lastNotePause[note.data.color] = lastNote[note.data.color];
+               maybePause[note.color] = false;
+            } else if (!maybePause[note.color]) {
+               maybePause[note.color] = true;
+               lastNotePause[note.color] = lastNote[note.color];
             }
-            swingNoteArray[note.data.color] = [];
-            lastNote[note.data.color] = note;
+            swingNoteArray[note.color] = [];
+            lastNote[note.color] = note;
          }
       } else {
-         lastNote[note.data.color] = note;
+         lastNote[note.color] = note;
       }
-      swingNoteArray[note.data.color].push(note);
+      swingNoteArray[note.color].push(note);
    }
    return arr
-      .map((n) => n.data.time)
+      .map((n) => n.time)
       .filter(function (x, i, ary) {
          return !i || x !== ary[i - 1];
       });
 }
 
-function run(map: ToolArgs) {
-   if (!map.difficulty) {
+function run(args: ToolArgs) {
+   if (!args.beatmap) {
       console.error('Something went wrong!');
       return;
    }
-   const result = check(map.settings, map.difficulty);
+   const result = check(args.settings, args.beatmap);
 
    if (result.length) {
-      tool.output.html = printResultTime('Speed pause', result, map.settings.bpm, 'warning');
+      tool.output.html = printResultTime(
+         'Speed pause',
+         result,
+         args.settings.timeProcessor,
+         'warning',
+      );
    } else {
       tool.output.html = null;
    }

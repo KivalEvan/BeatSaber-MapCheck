@@ -1,10 +1,10 @@
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
-import { round } from '../../utils';
-import { NoteContainer } from '../../types/beatmap/wrapper/container';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import { round } from '../../bsmap/utils/mod';
+import { INoteContainer, NoteContainerType } from '../../types/tools/container';
 import { printResultTime } from '../helpers';
 import UIInput from '../../ui/helpers/input';
-import { BeatPerMinute } from '../../beatmap/shared/bpm';
-import { PosX, PosY } from '../../beatmap/shared/constants';
+import { TimeProcessor } from '../../bsmap/beatmap/helpers/timeProcessor';
+import { PosX, PosY } from '../../bsmap/beatmap/shared/constants';
 
 const name = 'Vision Block';
 const description = 'Check for vision block caused by center note.';
@@ -12,7 +12,7 @@ const enabled = true;
 const defaultMinTime = 0.1;
 const defaultMaxTime = 0.5;
 
-let localBPM!: BeatPerMinute;
+let localBPM!: TimeProcessor;
 
 const vbDiff: { [key: string]: { min: number; max: number } } = {
    Easy: {
@@ -180,7 +180,7 @@ const tool: Tool<{ specific: 'difficulty' | 'time'; minTime: number; maxTime: nu
    run,
 };
 
-function adjustTimeHandler(bpm: BeatPerMinute) {
+function adjustTimeHandler(bpm: TimeProcessor) {
    localBPM = bpm;
    htmlInputMinBeat.value = round(localBPM.toBeatTime(tool.input.params.minTime), 2).toString();
    htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.maxTime), 2).toString();
@@ -191,22 +191,27 @@ function inputSpecCheckHandler(this: HTMLInputElement) {
    tool.input.params.specific = this.value as 'difficulty' | 'time';
 }
 
-function check(map: ToolArgs) {
-   const { bpm, njs } = map.settings;
-   const noteContainer = map.difficulty!.data.getNoteContainer().filter((n) => n.type !== 'arc');
+function check(args: ToolArgs) {
+   const { timeProcessor, njs } = args.settings;
+   const noteContainer = args.beatmap!.noteContainer.filter(
+      (n) => n.type !== NoteContainerType.ARC,
+   );
    const { minTime: temp1, maxTime: temp2, specific: vbSpecific } = tool.input.params;
    const minTime =
       vbSpecific === 'time'
-         ? bpm.toBeatTime(temp1)
-         : bpm.toBeatTime(vbDiff[map.difficulty!.difficulty].min);
+         ? timeProcessor.toBeatTime(temp1)
+         : timeProcessor.toBeatTime(vbDiff[args.beatmap!.settings.difficulty].min);
    const maxTime =
       vbSpecific === 'time'
-         ? bpm.toBeatTime(temp2)
-         : Math.min(njs.hjd, bpm.toBeatTime(vbDiff[map.difficulty!.difficulty].max));
+         ? timeProcessor.toBeatTime(temp2)
+         : Math.min(
+              njs.hjd,
+              timeProcessor.toBeatTime(vbDiff[args.beatmap!.settings.difficulty].max),
+           );
 
-   let lastMidL: NoteContainer | null = null;
-   let lastMidR: NoteContainer | null = null;
-   const arr: NoteContainer[] = [];
+   let lastMidL: INoteContainer | null = null;
+   let lastMidR: INoteContainer | null = null;
+   const arr: INoteContainer[] = [];
    for (let i = 0, len = noteContainer.length; i < len; i++) {
       const note = noteContainer[i];
       if (lastMidL) {
@@ -248,15 +253,20 @@ function check(map: ToolArgs) {
       });
 }
 
-function run(map: ToolArgs) {
-   if (!map.difficulty) {
+function run(args: ToolArgs) {
+   if (!args.beatmap) {
       console.error('Something went wrong!');
       return;
    }
-   const result = check(map);
+   const result = check(args);
 
    if (result.length) {
-      tool.output.html = printResultTime('Vision block', result, map.settings.bpm, 'warning');
+      tool.output.html = printResultTime(
+         'Vision block',
+         result,
+         args.settings.timeProcessor,
+         'warning',
+      );
    } else {
       tool.output.html = null;
    }

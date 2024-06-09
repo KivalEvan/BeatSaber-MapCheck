@@ -1,9 +1,9 @@
 import UIPanel from '../helpers/panel';
-import { colorToHex } from '../../utils';
-import { ColorSchemeRename } from '../../beatmap/shared/colorScheme';
+import { colorToHex } from '../../bsmap/utils/mod';
+import { ColorSchemeRename } from '../../bsmap/beatmap/shared/colorScheme';
 import { htmlTableColorScheme } from './constants';
 import { displayTableRow, hideTableRow } from './helpers';
-import { IWrapInfoColorScheme } from '../../types/beatmap/wrapper/info';
+import { IWrapInfoColorScheme } from '../../bsmap/types/beatmap/wrapper/info';
 
 export function setColorScheme(colorSch?: IWrapInfoColorScheme): void {
    if (

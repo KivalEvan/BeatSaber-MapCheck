@@ -1,7 +1,7 @@
-import { NoteJumpSpeed } from '../../beatmap/mod';
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
+import { NoteJumpSpeed } from '../../bsmap/beatmap/helpers/njs';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import UIInput from '../../ui/helpers/input';
-import { round } from '../../utils';
+import { round } from '../../bsmap/utils/mod';
 import { printResult } from '../helpers';
 
 const name = 'NJS Check';
@@ -36,15 +36,15 @@ const tool: Tool = {
    run,
 };
 
-function run(map: ToolArgs) {
-   if (!map.difficulty) {
+function run(args: ToolArgs) {
+   if (!args.beatmap) {
       console.error('Something went wrong!');
       return;
    }
-   const { njs, bpm } = map.settings;
+   const { njs, timeProcessor } = args.settings;
 
    const htmlResult: HTMLElement[] = [];
-   if (map.difficulty.info.njs === 0) {
+   if (args.beatmap.settings.njs === 0) {
       htmlResult.push(printResult('Unset NJS', 'fallback NJS is used', 'error'));
    }
    if (njs.value > 23) {
@@ -80,10 +80,10 @@ function run(map: ToolArgs) {
          ),
       );
    }
-   if (bpm.toRealTime(njs.hjd) < 0.42) {
+   if (timeProcessor.toRealTime(njs.hjd) < 0.42) {
       htmlResult.push(
          printResult(
-            `Very quick reaction time (${round(bpm.toRealTime(njs.hjd) * 1000)}ms)`,
+            `Very quick reaction time (${round(timeProcessor.toRealTime(njs.hjd) * 1000)}ms)`,
             'may lead to suboptimal gameplay',
             'warning',
          ),

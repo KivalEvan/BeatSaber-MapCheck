@@ -1,4 +1,4 @@
-import { UILoadingStatusType } from '../types/mapcheck/ui/loading';
+import { UILoadingStatusType } from '../types/ui/loading';
 
 const htmlLoadingBar: HTMLElement = document.querySelector('.loading__bar')!;
 const htmlLoadingBarError = 'loading__bar--error';

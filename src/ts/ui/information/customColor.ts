@@ -1,15 +1,15 @@
 import UIPanel from '../helpers/panel';
-import { colorToHex } from '../../utils';
-import { IColorScheme } from '../../types/beatmap/v2/custom/colorScheme';
-import { EnvironmentName } from '../../types/beatmap/shared/environment';
+import { colorToHex } from '../../bsmap/utils/mod';
+import { IColorScheme } from '../../bsmap/types/beatmap/v2/custom/colorScheme';
+import { EnvironmentName } from '../../bsmap/types/beatmap/shared/environment';
 import {
    ColorScheme,
    CustomColorRename,
    EnvironmentSchemeName,
-} from '../../beatmap/shared/colorScheme';
+} from '../../bsmap/beatmap/shared/colorScheme';
 import { htmlTableCustomColor } from './constants';
 import { displayTableRow, hideTableRow } from './helpers';
-import { IColor } from '../../types/colors';
+import { IColor } from '../../bsmap/types/colors';
 
 export function setCustomColor(customColor?: IColorScheme, environment?: EnvironmentName): void {
    if (

@@ -1,4 +1,4 @@
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import UIInput from '../../ui/helpers/input';
 import { printResult, printResultTime } from '../helpers';
 
@@ -34,16 +34,17 @@ const tool: Tool = {
    run,
 };
 
-function run(map: ToolArgs) {
+function run(args: ToolArgs) {
    let notOneSaberNote: number[] | undefined;
    let whyisthisonesaber = false;
    let isOneSaber =
-      map.difficulty!.characteristic === 'OneSaber' || map.difficulty!.info.customData.oneSaber;
+      args.beatmap!.settings.characteristic === 'OneSaber' ||
+      args.beatmap!.settings.customData.oneSaber;
    if (isOneSaber) {
-      notOneSaberNote = map.difficulty!.data.colorNotes.filter((n) => n.isRed()).map((n) => n.time);
+      notOneSaberNote = args.beatmap!.data.colorNotes.filter((n) => n.isRed()).map((n) => n.time);
    } else {
-      const hasBlueNote = map.difficulty!.data.colorNotes.filter((n) => n.isBlue()).length > 0;
-      const hasRedNote = map.difficulty!.data.colorNotes.filter((n) => n.isRed()).length > 0;
+      const hasBlueNote = args.beatmap!.data.colorNotes.filter((n) => n.isBlue()).length > 0;
+      const hasRedNote = args.beatmap!.data.colorNotes.filter((n) => n.isRed()).length > 0;
       whyisthisonesaber = hasBlueNote ? !hasRedNote : hasRedNote;
    }
 
@@ -51,7 +52,7 @@ function run(map: ToolArgs) {
       tool.output.html = printResultTime(
          'Wrong One Saber Note',
          notOneSaberNote,
-         map.settings.bpm,
+         args.settings.timeProcessor,
          'error',
       );
    } else if (whyisthisonesaber) {

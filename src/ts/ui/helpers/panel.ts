@@ -3,7 +3,7 @@ import {
    UIPanelOffsetType,
    UIPanelSize,
    UIPanelSizeType,
-} from '../../types/mapcheck/ui/panel';
+} from '../../types/ui/panel';
 
 export default {
    create: (

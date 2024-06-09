@@ -1,5 +1,5 @@
 import settings from '../../settings';
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 
 const name = 'April Fools';
 const description = 'xdd.';
@@ -23,7 +23,7 @@ const tool: Tool = {
    run,
 };
 
-function run(map: ToolArgs) {
+function run(args: ToolArgs) {
    const aprilFirst = new Date('01 April 1984');
    const currDate = new Date();
    const isAprilFirst =

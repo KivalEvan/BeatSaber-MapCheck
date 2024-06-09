@@ -5,10 +5,10 @@ import {
    ToolArgs,
    ToolInputOrder,
    ToolOutputOrder,
-} from '../../types/mapcheck';
-import { NoteContainer } from '../../types/beatmap/wrapper/container';
-import { checkDirection } from '../../analyzers/placement/note';
-import swing from '../../analyzers/swing/swing';
+} from '../../types';
+import { NoteContainerType } from '../../types/tools/container';
+import { checkDirection } from '../../bsmap/extensions/placement/note';
+import swing from '../../bsmap/extensions/swing/swing';
 import UIInput from '../../ui/helpers/input';
 import { printResultTime } from '../helpers';
 import {
@@ -17,8 +17,8 @@ import {
    NoteDirectionAngle,
    PosX,
    PosY,
-} from '../../beatmap/shared/constants';
-import { IWrapColorNote } from '../../types/beatmap/wrapper/colorNote';
+} from '../../bsmap/beatmap/shared/constants';
+import { IWrapColorNote } from '../../bsmap/types/beatmap/wrapper/colorNote';
 
 const name = 'Double-directional';
 const description = 'Check double-directional note swing (this may not mean parity break).';
@@ -53,12 +53,12 @@ const tool: Tool = {
 };
 
 function check(settings: IBeatmapSettings, difficulty: IBeatmapItem) {
-   const { bpm } = settings;
+   const { timeProcessor } = settings;
    const noteContainer = difficulty.noteContainer;
-   const lastNote: { [key: number]: NoteContainer } = {};
+   const lastNote: { [key: number]: IWrapColorNote } = {};
    const lastNoteAngle: { [key: number]: number } = {};
    const startNoteDot: { [key: number]: IWrapColorNote | null } = {};
-   const swingNoteArray: { [key: number]: NoteContainer[] } = {
+   const swingNoteArray: { [key: number]: IWrapColorNote[] } = {
       [NoteColor.RED]: [],
       [NoteColor.BLUE]: [],
    };
@@ -66,8 +66,15 @@ function check(settings: IBeatmapSettings, difficulty: IBeatmapItem) {
    const arr: IWrapColorNote[] = [];
    for (let i = 0, len = noteContainer.length; i < len; i++) {
       const note = noteContainer[i];
-      if (note.type === 'note' && lastNote[note.data.color]) {
-         if (swing.next(note, lastNote[note.data.color], bpm, swingNoteArray[note.data.color])) {
+      if (note.type === NoteContainerType.COLOR && lastNote[note.data.color]) {
+         if (
+            swing.next(
+               note.data,
+               lastNote[note.data.color],
+               timeProcessor,
+               swingNoteArray[note.data.color],
+            )
+         ) {
             if (startNoteDot[note.data.color]) {
                startNoteDot[note.data.color] = null;
                lastNoteAngle[note.data.color] = (lastNoteAngle[note.data.color] + 180) % 360;
@@ -95,14 +102,14 @@ function check(settings: IBeatmapSettings, difficulty: IBeatmapItem) {
                lastNoteAngle[note.data.color] = note.data.getAngle();
             }
          }
-      } else if (note.type === 'note') {
+      } else if (note.type === NoteContainerType.COLOR) {
          lastNoteAngle[note.data.color] = note.data.getAngle();
       }
-      if (note.type === 'note') {
-         lastNote[note.data.color] = note;
-         swingNoteArray[note.data.color].push(note);
+      if (note.type === NoteContainerType.COLOR) {
+         lastNote[note.data.color] = note.data;
+         swingNoteArray[note.data.color].push(note.data);
       }
-      if (note.type === 'bomb') {
+      if (note.type === NoteContainerType.BOMB) {
          // on bottom row
          if (note.data.posY === PosY.BOTTOM) {
             //on right center
@@ -138,15 +145,20 @@ function check(settings: IBeatmapSettings, difficulty: IBeatmapItem) {
       });
 }
 
-function run(map: ToolArgs) {
-   if (!map.difficulty) {
+function run(args: ToolArgs) {
+   if (!args.beatmap) {
       console.error('Something went wrong!');
       return;
    }
-   const result = check(map.settings, map.difficulty);
+   const result = check(args.settings, args.beatmap);
 
    if (result.length) {
-      tool.output.html = printResultTime('Double-directional', result, map.settings.bpm, 'warning');
+      tool.output.html = printResultTime(
+         'Double-directional',
+         result,
+         args.settings.timeProcessor,
+         'warning',
+      );
    } else {
       tool.output.html = null;
    }

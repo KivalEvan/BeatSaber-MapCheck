@@ -1,15 +1,15 @@
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
-import { round } from '../../utils';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import { round } from '../../bsmap/utils/mod';
 import { printResultTime } from '../helpers';
 import UIInput from '../../ui/helpers/input';
-import { BeatPerMinute } from '../../beatmap/shared/bpm';
+import { TimeProcessor } from '../../bsmap/beatmap/helpers/timeProcessor';
 
 const name = 'Slow Slider';
 const description = 'Look for slider that require slow swing.';
 const enabled = true;
 const defaultSpeed = 0.025;
 
-let localBPM!: BeatPerMinute;
+let localBPM!: TimeProcessor;
 
 const [htmlLabelMinTime, htmlInputMinTime] = UIInput.createNumber(
    function (this: HTMLInputElement) {
@@ -78,7 +78,7 @@ const tool: Tool<{ minSpeed: number }> = {
    run,
 };
 
-function adjustTimeHandler(bpm: BeatPerMinute) {
+function adjustTimeHandler(bpm: TimeProcessor) {
    localBPM = bpm;
    htmlInputMinPrec.value = round(
       1 / localBPM.toBeatTime(tool.input.params.minSpeed),
@@ -86,8 +86,8 @@ function adjustTimeHandler(bpm: BeatPerMinute) {
    ).toString();
 }
 
-function check(map: ToolArgs) {
-   const { swingAnalysis } = map.difficulty!;
+function check(args: ToolArgs) {
+   const { swingAnalysis } = args.beatmap!;
    const { minSpeed } = tool.input.params;
 
    return swingAnalysis.container
@@ -98,19 +98,19 @@ function check(map: ToolArgs) {
       });
 }
 
-function run(map: ToolArgs) {
-   if (!map.difficulty) {
+function run(args: ToolArgs) {
+   if (!args.beatmap) {
       console.error('Something went wrong!');
       return;
    }
    const { minSpeed } = tool.input.params;
-   const result = check(map);
+   const result = check(args);
 
    if (result.length) {
       tool.output.html = printResultTime(
          `Slow slider (>${round(minSpeed * 1000, 1)}ms)`,
          result,
-         map.settings.bpm,
+         args.settings.timeProcessor,
          'warning',
       );
    } else {

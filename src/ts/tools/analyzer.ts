@@ -1,11 +1,12 @@
 import AnalysisComponents from './components';
-import SavedData from '../savedData';
-import { BeatPerMinute } from '../beatmap/shared/bpm';
-import { NoteJumpSpeed } from '../beatmap/shared/njs';
-import { CharacteristicName, DifficultyName } from '../types/beatmap/shared/mod';
-import { IBeatmapSettings } from '../types/mapcheck/tools/tool';
-import { Tool } from '../types/mapcheck';
-import logger from '../logger';
+import LoadedData from '../loadedData';
+import { TimeProcessor } from '../bsmap/beatmap/helpers/timeProcessor';
+import { NoteJumpSpeed } from '../bsmap/beatmap/helpers/njs';
+import { CharacteristicName, DifficultyName } from '../bsmap/types/beatmap/shared/mod';
+import { IBeatmapSettings } from '../types/tools/tool';
+import { Tool } from '../types';
+import logger from '../bsmap/logger';
+import { getLastInteractiveTime } from '../bsmap/beatmap/helpers/beatmap';
 
 function tag(name: string) {
    return ['analyzer', name];
@@ -20,7 +21,7 @@ const toolListOutput: ReadonlyArray<Tool> = [...toolListInput].sort(
 );
 
 function init(): void {
-   SavedData.analysis = {
+   LoadedData.analysis = {
       general: {
          html: null,
       },
@@ -29,25 +30,25 @@ function init(): void {
 }
 
 function runGeneral(): void {
-   const mapInfo = SavedData.beatmapInfo;
+   const mapInfo = LoadedData.beatmapInfo;
    if (!mapInfo) {
       logger.tError(tag('runGeneral'), 'Could not analyse, missing map info');
       return;
    }
 
-   if (!SavedData.analysis) {
+   if (!LoadedData.analysis) {
       init();
    }
 
-   const analysisExist = SavedData.analysis?.general;
+   const analysisExist = LoadedData.analysis?.general;
 
-   const bpm = BeatPerMinute.create(mapInfo.audio.bpm);
-   const njs = NoteJumpSpeed.create(bpm);
+   const timeProcessor = TimeProcessor.create(mapInfo.audio.bpm);
+   const njs = NoteJumpSpeed.create(mapInfo.audio.bpm);
 
    const mapSettings: IBeatmapSettings = {
-      bpm: bpm,
+      timeProcessor: timeProcessor,
       njs: njs,
-      audioDuration: SavedData.duration ?? null,
+      audioDuration: LoadedData.duration ?? null,
       mapDuration: 0,
    };
 
@@ -77,41 +78,40 @@ function runGeneral(): void {
 }
 
 function runDifficulty(characteristic: CharacteristicName, difficulty: DifficultyName): void {
-   const mapInfo = SavedData.beatmapInfo;
+   const mapInfo = LoadedData.beatmapInfo;
    if (!mapInfo) {
       logger.tError(tag('runDifficulty'), 'Could not analyse, missing map info');
       return;
    }
 
-   if (!SavedData.analysis) {
+   if (!LoadedData.analysis) {
       init();
    }
 
-   const beatmapDifficulty = SavedData.beatmapDifficulty?.find(
-      (set) => set.characteristic === characteristic && set.difficulty === difficulty,
+   const beatmap = LoadedData.beatmaps?.find(
+      (bm) =>
+         bm.settings.characteristic === characteristic && bm.settings.difficulty === difficulty,
    );
-   if (!beatmapDifficulty) {
+   if (!beatmap) {
       logger.tError(tag('runDifficulty'), 'Could not analyse, missing map data');
       return;
    }
 
-   const analysisExist = SavedData.analysis?.map.find(
+   const analysisExist = LoadedData.analysis?.map.find(
       (set) => set.difficulty === difficulty && set.characteristic === characteristic,
    );
 
    const njs = NoteJumpSpeed.create(
-      beatmapDifficulty.bpm,
-      beatmapDifficulty.info.njs || NoteJumpSpeed.FallbackNJS[beatmapDifficulty.difficulty],
-      beatmapDifficulty.info.njsOffset,
+      beatmap.timeProcessor.bpm,
+      beatmap.settings.njs || NoteJumpSpeed.FallbackNJS[beatmap.settings.difficulty],
+      beatmap.settings.njsOffset,
    );
 
    const mapSettings: IBeatmapSettings = {
-      bpm: beatmapDifficulty.bpm,
+      timeProcessor: beatmap.timeProcessor,
       njs: njs,
-      audioDuration: SavedData.duration ?? null,
-      mapDuration: beatmapDifficulty.bpm.toRealTime(
-         beatmapDifficulty.data.getLastInteractiveTime(),
-      ),
+      audioDuration: LoadedData.duration ?? null,
+      mapDuration: beatmap.timeProcessor.toRealTime(getLastInteractiveTime(beatmap.data)),
    };
 
    logger.tInfo(tag('runDifficulty'), `Analysing ${characteristic} ${difficulty}`);
@@ -123,7 +123,7 @@ function runDifficulty(characteristic: CharacteristicName, difficulty: Difficult
             try {
                tool.run({
                   settings: mapSettings,
-                  difficulty: beatmapDifficulty,
+                  beatmap: beatmap,
                   info: mapInfo,
                });
                if (tool.output.html) {
@@ -138,7 +138,7 @@ function runDifficulty(characteristic: CharacteristicName, difficulty: Difficult
    if (analysisExist) {
       analysisExist.html = htmlArr;
    } else {
-      SavedData.analysis?.map.push({
+      LoadedData.analysis?.map.push({
          characteristic: characteristic,
          difficulty: difficulty,
          html: htmlArr,
@@ -146,7 +146,7 @@ function runDifficulty(characteristic: CharacteristicName, difficulty: Difficult
    }
 }
 
-function adjustTime(bpm: BeatPerMinute): void {
+function adjustTime(bpm: TimeProcessor): void {
    const toolList = AnalysisComponents.getDifficulty().sort(
       (a, b) => a.order.output - b.order.output,
    );
@@ -158,7 +158,9 @@ function adjustTime(bpm: BeatPerMinute): void {
 }
 
 function applyAll(): void {
-   SavedData.beatmapDifficulty?.forEach((set) => runDifficulty(set.characteristic, set.difficulty));
+   LoadedData.beatmaps?.forEach((bm) =>
+      runDifficulty(bm.settings.characteristic, bm.settings.difficulty),
+   );
 }
 
 export default {

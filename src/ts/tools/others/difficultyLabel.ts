@@ -1,4 +1,4 @@
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import UIInput from '../../ui/helpers/input';
 import { printResult } from '../helpers';
 
@@ -34,12 +34,12 @@ const tool: Tool = {
    run,
 };
 
-function run(map: ToolArgs) {
-   if (!map.difficulty) {
+function run(args: ToolArgs) {
+   if (!args.beatmap) {
       console.error('Something went wrong!');
       return;
    }
-   const result = map.difficulty.info.customData._difficultyLabel;
+   const result = args.beatmap.settings.customData._difficultyLabel;
 
    if (result && result.length > 30) {
       tool.output.html = printResult(

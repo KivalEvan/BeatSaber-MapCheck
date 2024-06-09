@@ -1,8 +1,8 @@
-import { BeatPerMinute } from '../../beatmap/shared/bpm';
-import { IWrapBaseObject } from '../../types/beatmap/wrapper/baseObject';
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
+import { TimeProcessor } from '../../bsmap/beatmap/helpers/timeProcessor';
+import { IWrapBaseObject } from '../../bsmap/types/beatmap/wrapper/baseObject';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import UIInput from '../../ui/helpers/input';
-import { round, toMmss } from '../../utils';
+import { round, toMmss } from '../../bsmap/utils/mod';
 import { printResult } from '../helpers';
 
 const name = 'Outside Playable Object';
@@ -40,14 +40,14 @@ const tool: Tool = {
 function objectBeforeTime(
    tag: string,
    objects: IWrapBaseObject[],
-   bpm: BeatPerMinute,
+   timeProcessor: TimeProcessor,
    results: HTMLElement[],
 ) {
    if (objects.length && objects[0].time < 0) {
       results.push(
          printResult(
             tag + '(s) before start time',
-            `${round(objects[0].time, 3)} (${toMmss(bpm.toRealTime(objects[0].time))}`,
+            `${round(objects[0].time, 3)} (${toMmss(timeProcessor.toRealTime(objects[0].time))}`,
             'error',
          ),
       );
@@ -57,7 +57,7 @@ function objectBeforeTime(
 function objectAfterTime(
    tag: string,
    objects: IWrapBaseObject[],
-   bpm: BeatPerMinute,
+   bpm: TimeProcessor,
    endTime: number,
    results: HTMLElement[],
 ) {
@@ -74,14 +74,18 @@ function objectAfterTime(
    }
 }
 
-function run(map: ToolArgs) {
-   if (!map.difficulty) {
+function run(args: ToolArgs) {
+   if (!args.beatmap) {
       console.error('Something went wrong!');
       return;
    }
-   const { bpm, audioDuration: duration } = map.settings;
-   const { colorNotes, bombNotes, obstacles, arcs, chains } = map.difficulty.data;
+   const { timeProcessor, audioDuration: duration } = args.settings;
    const {
+      colorNotes,
+      bombNotes,
+      obstacles,
+      arcs,
+      chains,
       basicEvents,
       colorBoostEvents,
       waypoints,
@@ -89,64 +93,69 @@ function run(map: ToolArgs) {
       lightRotationEventBoxGroups,
       lightTranslationEventBoxGroups,
       fxEventBoxGroups,
-   } = map.difficulty.lightshow;
+   } = args.beatmap.data;
 
    const htmlResult: HTMLElement[] = [];
    if (duration) {
-      let endBeat = bpm.toBeatTime(duration, true);
-      objectBeforeTime('Note', colorNotes, bpm, htmlResult);
-      objectBeforeTime('Bomb', bombNotes, bpm, htmlResult);
-      objectBeforeTime('Obstacle', obstacles, bpm, htmlResult);
-      objectBeforeTime('Arc', arcs, bpm, htmlResult);
-      objectBeforeTime('Chain', chains, bpm, htmlResult);
-      objectBeforeTime('Event', basicEvents, bpm, htmlResult);
-      objectBeforeTime('Color Boost', colorBoostEvents, bpm, htmlResult);
-      objectBeforeTime('Waypoint', waypoints, bpm, htmlResult);
-      objectBeforeTime('Light Color Event Box Group', lightColorEventBoxGroups, bpm, htmlResult);
+      let endBeat = timeProcessor.toBeatTime(duration, true);
+      objectBeforeTime('Note', colorNotes, timeProcessor, htmlResult);
+      objectBeforeTime('Bomb', bombNotes, timeProcessor, htmlResult);
+      objectBeforeTime('Obstacle', obstacles, timeProcessor, htmlResult);
+      objectBeforeTime('Arc', arcs, timeProcessor, htmlResult);
+      objectBeforeTime('Chain', chains, timeProcessor, htmlResult);
+      objectBeforeTime('Event', basicEvents, timeProcessor, htmlResult);
+      objectBeforeTime('Color Boost', colorBoostEvents, timeProcessor, htmlResult);
+      objectBeforeTime('Waypoint', waypoints, timeProcessor, htmlResult);
+      objectBeforeTime(
+         'Light Color Event Box Group',
+         lightColorEventBoxGroups,
+         timeProcessor,
+         htmlResult,
+      );
       objectBeforeTime(
          'Light Rotation Event Box Group',
          lightRotationEventBoxGroups,
-         bpm,
+         timeProcessor,
          htmlResult,
       );
       objectBeforeTime(
          'Light Translation Event Box Group',
          lightTranslationEventBoxGroups,
-         bpm,
+         timeProcessor,
          htmlResult,
       );
-      objectBeforeTime('FX Event Box Group', fxEventBoxGroups, bpm, htmlResult);
+      objectBeforeTime('FX Event Box Group', fxEventBoxGroups, timeProcessor, htmlResult);
 
-      objectAfterTime('Note', colorNotes, bpm, endBeat, htmlResult);
-      objectAfterTime('Bomb', bombNotes, bpm, endBeat, htmlResult);
-      objectAfterTime('Obstacle', obstacles, bpm, endBeat, htmlResult);
-      objectAfterTime('Arc', arcs, bpm, endBeat, htmlResult);
-      objectAfterTime('Chain', chains, bpm, endBeat, htmlResult);
-      objectAfterTime('Event', basicEvents, bpm, endBeat, htmlResult);
-      objectAfterTime('Color Boost', colorBoostEvents, bpm, endBeat, htmlResult);
-      objectAfterTime('Waypoint', waypoints, bpm, endBeat, htmlResult);
+      objectAfterTime('Note', colorNotes, timeProcessor, endBeat, htmlResult);
+      objectAfterTime('Bomb', bombNotes, timeProcessor, endBeat, htmlResult);
+      objectAfterTime('Obstacle', obstacles, timeProcessor, endBeat, htmlResult);
+      objectAfterTime('Arc', arcs, timeProcessor, endBeat, htmlResult);
+      objectAfterTime('Chain', chains, timeProcessor, endBeat, htmlResult);
+      objectAfterTime('Event', basicEvents, timeProcessor, endBeat, htmlResult);
+      objectAfterTime('Color Boost', colorBoostEvents, timeProcessor, endBeat, htmlResult);
+      objectAfterTime('Waypoint', waypoints, timeProcessor, endBeat, htmlResult);
       objectAfterTime(
          'Light Color Event Box Group',
          lightColorEventBoxGroups,
-         bpm,
+         timeProcessor,
          endBeat,
          htmlResult,
       );
       objectAfterTime(
          'Light Rotation Event Box Group',
          lightRotationEventBoxGroups,
-         bpm,
+         timeProcessor,
          endBeat,
          htmlResult,
       );
       objectAfterTime(
          'Light Translation Event Box Group',
          lightTranslationEventBoxGroups,
-         bpm,
+         timeProcessor,
          endBeat,
          htmlResult,
       );
-      objectAfterTime('FX Event Box Group', fxEventBoxGroups, bpm, endBeat, htmlResult);
+      objectAfterTime('FX Event Box Group', fxEventBoxGroups, timeProcessor, endBeat, htmlResult);
    }
 
    if (htmlResult.length) {

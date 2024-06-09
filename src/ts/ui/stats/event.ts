@@ -1,14 +1,17 @@
-import { IWrapInfo } from '../../types/beatmap/wrapper/info';
-import { IBeatmapItem } from '../../types/mapcheck';
-import { countEvent } from '../../analyzers/stats/mod';
-import { eventTypeRename } from '../../analyzers/renamer/mod';
+import { IWrapInfo } from '../../bsmap/types/beatmap/wrapper/info';
+import { IBeatmapItem } from '../../types';
+import { countEvent } from '../../bsmap/extensions/stats/mod';
+import { eventTypeRename } from '../../bsmap/extensions/renamer/mod';
 import { prefix } from './constants';
 
-export function createEventCountTable(mapInfo: IWrapInfo, mapData: IBeatmapItem): HTMLTableElement {
-   const environment = mapData.environment;
+export function createEventCountTable(
+   beatmapInfo: IWrapInfo,
+   beatmap: IBeatmapItem,
+): HTMLTableElement {
+   const environment = beatmap.environment;
    const eventCount = countEvent(
-      mapData.lightshow.basicEvents,
-      mapData.lightshow.colorBoostEvents,
+      beatmap.data.basicEvents,
+      beatmap.data.colorBoostEvents,
       environment,
    );
    let chroma = 0;

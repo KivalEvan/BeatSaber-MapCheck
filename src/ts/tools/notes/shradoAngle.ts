@@ -1,18 +1,19 @@
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
-import { round } from '../../utils';
-import { NoteContainer, NoteContainerNote } from '../../types/beatmap/wrapper/container';
-import swing from '../../analyzers/swing/swing';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import { round } from '../../bsmap/utils/mod';
+import { INoteContainer, NoteContainerType } from '../../types/tools/container';
+import swing from '../../bsmap/extensions/swing/swing';
 import { printResultTime } from '../helpers';
 import UIInput from '../../ui/helpers/input';
-import { BeatPerMinute } from '../../beatmap/shared/bpm';
-import { NoteColor, NoteDirection, NoteDirectionFlip } from '../../beatmap/shared/constants';
+import { TimeProcessor } from '../../bsmap/beatmap/helpers/timeProcessor';
+import { NoteColor, NoteDirection, NoteDirectionFlip } from '../../bsmap/beatmap/shared/constants';
+import { IWrapColorNote } from '../../bsmap/types/beatmap/wrapper/colorNote';
 
 const name = 'shrado Angle';
 const description = 'Look for common negative curvature pattern.';
 const enabled = false;
 const defaultMaxTime = 0.15;
 const defaultDistance = 1;
-let localBPM!: BeatPerMinute;
+let localBPM!: TimeProcessor;
 
 const [htmlLabelMaxTime, htmlInputMaxTime] = UIInput.createNumber(
    function (this: HTMLInputElement) {
@@ -94,81 +95,73 @@ const tool: Tool<{ distance: number; maxTime: number }> = {
    run,
 };
 
-function adjustTimeHandler(bpm: BeatPerMinute) {
+function adjustTimeHandler(bpm: TimeProcessor) {
    localBPM = bpm;
    htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.maxTime), 2).toString();
 }
 
-function check(map: ToolArgs) {
-   const { bpm } = map.settings;
-   const { noteContainer } = map.difficulty!;
+function check(args: ToolArgs) {
+   const { timeProcessor } = args.settings;
+   const { noteContainer } = args.beatmap!;
    const { maxTime: temp, distance } = tool.input.params;
-   const maxTime = bpm.toBeatTime(temp) + 0.001;
+   const maxTime = timeProcessor.toBeatTime(temp) + 0.001;
 
-   const lastNote: { [key: number]: NoteContainer } = {};
+   const lastNote: { [key: number]: IWrapColorNote } = {};
    const lastNoteDirection: { [key: number]: number } = {};
-   const startNoteDot: { [key: number]: NoteContainer | null } = {};
-   const swingNoteArray: { [key: number]: NoteContainer[] } = {
+   const startNoteDot: { [key: number]: IWrapColorNote | null } = {};
+   const swingNoteArray: { [key: number]: IWrapColorNote[] } = {
       [NoteColor.RED]: [],
       [NoteColor.BLUE]: [],
    };
-   const arr: NoteContainer[] = [];
+   const arr: IWrapColorNote[] = [];
    for (let i = 0, len = noteContainer.length; i < len; i++) {
-      if (noteContainer[i].type !== 'note') {
+      if (noteContainer[i].type !== NoteContainerType.COLOR) {
          continue;
       }
-      const note = noteContainer[i] as NoteContainerNote;
-      if (lastNote[note.data.color]) {
-         if (swing.next(note, lastNote[note.data.color], bpm, swingNoteArray[note.data.color])) {
+      const note = noteContainer[i].data as IWrapColorNote;
+      if (lastNote[note.color]) {
+         if (swing.next(note, lastNote[note.color], timeProcessor, swingNoteArray[note.color])) {
             // FIXME: maybe fix rotation or something
-            if (startNoteDot[note.data.color]) {
-               startNoteDot[note.data.color] = null;
-               lastNoteDirection[note.data.color] =
-                  NoteDirectionFlip[lastNoteDirection[note.data.color] as 0] ?? 8;
+            if (startNoteDot[note.color]) {
+               startNoteDot[note.color] = null;
+               lastNoteDirection[note.color] =
+                  NoteDirectionFlip[lastNoteDirection[note.color] as 0] ?? 8;
             }
             if (
-               note.data.getDistance(lastNote[note.data.color].data) >= distance &&
-               checkShrAngle(
-                  note.data.direction,
-                  lastNoteDirection[note.data.color],
-                  note.data.color,
-               ) &&
-               note.data.time - lastNote[note.data.color].data.time <= maxTime
+               note.getDistance(lastNote[note.color]) >= distance &&
+               checkShrAngle(note.direction, lastNoteDirection[note.color], note.color) &&
+               note.time - lastNote[note.color].time <= maxTime
             ) {
                arr.push(note);
             }
-            if (note.data.direction === NoteDirection.ANY) {
-               startNoteDot[note.data.color] = note;
+            if (note.direction === NoteDirection.ANY) {
+               startNoteDot[note.color] = note;
             } else {
-               lastNoteDirection[note.data.color] = note.data.direction;
+               lastNoteDirection[note.color] = note.direction;
             }
-            swingNoteArray[note.data.color] = [];
+            swingNoteArray[note.color] = [];
          } else {
             if (
-               startNoteDot[note.data.color] &&
-               note.data.getDistance(lastNote[note.data.color].data) >= distance &&
-               checkShrAngle(
-                  note.data.direction,
-                  lastNoteDirection[note.data.color],
-                  note.data.color,
-               ) &&
-               note.data.time - lastNote[note.data.color].data.time <= maxTime
+               startNoteDot[note.color] &&
+               note.getDistance(lastNote[note.color]) >= distance &&
+               checkShrAngle(note.direction, lastNoteDirection[note.color], note.color) &&
+               note.time - lastNote[note.color].time <= maxTime
             ) {
-               arr.push(startNoteDot[note.data.color]!);
-               startNoteDot[note.data.color] = null;
+               arr.push(startNoteDot[note.color]!);
+               startNoteDot[note.color] = null;
             }
-            if (note.data.direction !== NoteDirection.ANY) {
-               lastNoteDirection[note.data.color] = note.data.direction;
+            if (note.direction !== NoteDirection.ANY) {
+               lastNoteDirection[note.color] = note.direction;
             }
          }
       } else {
-         lastNoteDirection[note.data.color] = note.data.direction;
+         lastNoteDirection[note.color] = note.direction;
       }
-      lastNote[note.data.color] = note;
-      swingNoteArray[note.data.color].push(note);
+      lastNote[note.color] = note;
+      swingNoteArray[note.color].push(note);
    }
    return arr
-      .map((n) => n.data.time)
+      .map((n) => n.time)
       .filter(function (x, i, ary) {
          return !i || x !== ary[i - 1];
       });
@@ -184,15 +177,20 @@ function checkShrAngle(currCutDirection: number, prevCutDirection: number, type:
    return false;
 }
 
-function run(map: ToolArgs) {
-   if (!map.difficulty) {
+function run(args: ToolArgs) {
+   if (!args.beatmap) {
       console.error('Something went wrong!');
       return;
    }
-   const result = check(map);
+   const result = check(args);
 
    if (result.length) {
-      tool.output.html = printResultTime('Shrado angle', result, map.settings.bpm, 'warning');
+      tool.output.html = printResultTime(
+         'Shrado angle',
+         result,
+         args.settings.timeProcessor,
+         'warning',
+      );
    } else {
       tool.output.html = null;
    }

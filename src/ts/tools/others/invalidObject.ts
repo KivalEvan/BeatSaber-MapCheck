@@ -1,4 +1,12 @@
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
+import {
+   hasMappingExtensionsArc,
+   hasMappingExtensionsBombNote,
+   hasMappingExtensionsChain,
+   hasMappingExtensionsNote,
+   hasMappingExtensionsObstacle,
+   hasMappingExtensionsObstacleV2,
+} from '../../bsmap/beatmap/mod';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import UIInput from '../../ui/helpers/input';
 import { printResultTime } from '../helpers';
 
@@ -34,13 +42,17 @@ const tool: Tool = {
    run,
 };
 
-function run(map: ToolArgs) {
-   if (!map.difficulty) {
+function run(args: ToolArgs) {
+   if (!args.beatmap) {
       console.error('Something went wrong!');
       return;
    }
-   const { colorNotes, bombNotes, obstacles, arcs, chains } = map.difficulty.data;
    const {
+      colorNotes,
+      bombNotes,
+      obstacles,
+      arcs,
+      chains,
       waypoints,
       basicEvents,
       colorBoostEvents,
@@ -48,20 +60,24 @@ function run(map: ToolArgs) {
       lightRotationEventBoxGroups,
       lightTranslationEventBoxGroups,
       fxEventBoxGroups,
-   } = map.difficulty.lightshow;
+   } = args.beatmap.data;
 
    let noteResult: number[] = [];
    let obstacleResult: number[] = [];
    let bombResult: number[] = [];
    let sliderResult: number[] = [];
    let chainResult: number[] = [];
-   if (!map.difficulty.info.customData._requirements?.includes('Mapping Extensions')) {
-      if (map.difficulty.info.customData._requirements?.includes('Noodle Extensions')) {
-         noteResult = colorNotes.filter((n) => n.isMappingExtensions()).map((n) => n.time);
-         obstacleResult = obstacles.filter((o) => o.isMappingExtensions()).map((o) => o.time);
-         bombResult = bombNotes.filter((n) => n.isMappingExtensions()).map((n) => n.time);
-         sliderResult = arcs.filter((o) => o.isMappingExtensions()).map((o) => o.time);
-         chainResult = chains.filter((o) => o.isMappingExtensions()).map((o) => o.time);
+   if (!args.beatmap.settings.customData._requirements?.includes('Mapping Extensions')) {
+      if (args.beatmap.settings.customData._requirements?.includes('Noodle Extensions')) {
+         const hasMEObstacle =
+            args.beatmap.rawVersion === 2
+               ? hasMappingExtensionsObstacleV2
+               : hasMappingExtensionsObstacle;
+         noteResult = colorNotes.filter(hasMappingExtensionsNote).map((n) => n.time);
+         obstacleResult = obstacles.filter(hasMEObstacle).map((o) => o.time);
+         bombResult = bombNotes.filter(hasMappingExtensionsBombNote).map((n) => n.time);
+         sliderResult = arcs.filter(hasMappingExtensionsArc).map((o) => o.time);
+         chainResult = chains.filter(hasMappingExtensionsChain).map((o) => o.time);
       } else {
          noteResult = colorNotes.filter((n) => !n.isValid()).map((n) => n.time);
          obstacleResult = obstacles.filter((o) => !o.isValid()).map((o) => o.time);
@@ -86,33 +102,48 @@ function run(map: ToolArgs) {
 
    const htmlResult: HTMLElement[] = [];
    if (noteResult.length) {
-      htmlResult.push(printResultTime('Invalid note', noteResult, map.settings.bpm, 'error'));
+      htmlResult.push(
+         printResultTime('Invalid note', noteResult, args.settings.timeProcessor, 'error'),
+      );
    }
    if (bombResult.length) {
-      htmlResult.push(printResultTime('Invalid bomb', bombResult, map.settings.bpm, 'error'));
+      htmlResult.push(
+         printResultTime('Invalid bomb', bombResult, args.settings.timeProcessor, 'error'),
+      );
    }
    if (sliderResult.length) {
-      htmlResult.push(printResultTime('Invalid arc', sliderResult, map.settings.bpm, 'error'));
+      htmlResult.push(
+         printResultTime('Invalid arc', sliderResult, args.settings.timeProcessor, 'error'),
+      );
    }
    if (chainResult.length) {
-      htmlResult.push(printResultTime('Invalid chain', chainResult, map.settings.bpm, 'error'));
+      htmlResult.push(
+         printResultTime('Invalid chain', chainResult, args.settings.timeProcessor, 'error'),
+      );
    }
    if (obstacleResult.length) {
       htmlResult.push(
-         printResultTime('Invalid obstacle', obstacleResult, map.settings.bpm, 'error'),
+         printResultTime('Invalid obstacle', obstacleResult, args.settings.timeProcessor, 'error'),
       );
    }
    if (waypointResult.length) {
       htmlResult.push(
-         printResultTime('Invalid waypoint', waypointResult, map.settings.bpm, 'error'),
+         printResultTime('Invalid waypoint', waypointResult, args.settings.timeProcessor, 'error'),
       );
    }
    if (eventResult.length) {
-      htmlResult.push(printResultTime('Invalid event', eventResult, map.settings.bpm, 'error'));
+      htmlResult.push(
+         printResultTime('Invalid event', eventResult, args.settings.timeProcessor, 'error'),
+      );
    }
    if (colorBoostResult.length) {
       htmlResult.push(
-         printResultTime('Invalid color boost', colorBoostResult, map.settings.bpm, 'error'),
+         printResultTime(
+            'Invalid color boost',
+            colorBoostResult,
+            args.settings.timeProcessor,
+            'error',
+         ),
       );
    }
    if (lightColorBoxResult.length) {
@@ -120,7 +151,7 @@ function run(map: ToolArgs) {
          printResultTime(
             'Invalid light color event',
             lightColorBoxResult,
-            map.settings.bpm,
+            args.settings.timeProcessor,
             'error',
          ),
       );
@@ -130,7 +161,7 @@ function run(map: ToolArgs) {
          printResultTime(
             'Invalid light rotation event',
             lightRotationBoxResult,
-            map.settings.bpm,
+            args.settings.timeProcessor,
             'error',
          ),
       );
@@ -140,14 +171,19 @@ function run(map: ToolArgs) {
          printResultTime(
             'Invalid light translation event',
             lightTranslationBoxResult,
-            map.settings.bpm,
+            args.settings.timeProcessor,
             'error',
          ),
       );
    }
    if (fxEventBoxResult.length) {
       htmlResult.push(
-         printResultTime('Invalid FX event', fxEventBoxResult, map.settings.bpm, 'error'),
+         printResultTime(
+            'Invalid FX event',
+            fxEventBoxResult,
+            args.settings.timeProcessor,
+            'error',
+         ),
       );
    }
 

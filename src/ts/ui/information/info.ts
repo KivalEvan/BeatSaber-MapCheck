@@ -1,13 +1,9 @@
-import SavedData from '../../savedData';
-import { removeOptions } from '../../utils';
-import {
-   EnvironmentAllName,
-   EnvironmentName,
-   EnvironmentV3Name,
-} from '../../types/beatmap/shared/environment';
-import { IEditor, IEditorInfo } from '../../types/beatmap/v2/custom/editor';
-import { IContributorB64 } from '../../types/mapcheck';
-import { EnvironmentRename } from '../../beatmap/shared/environment';
+import LoadedData from '../../loadedData';
+import { removeOptions } from '../../utils/web';
+import { EnvironmentAllName } from '../../bsmap/types/beatmap/shared/environment';
+import { IEditor, IEditorInfo } from '../../bsmap/types/beatmap/v2/custom/editor';
+import { IContributorB64 } from '../../types';
+import { EnvironmentRename } from '../../bsmap/beatmap/shared/environment';
 
 const htmlInfoLevelAuthor: HTMLElement = document.querySelector('.info__level-author')!;
 const htmlInfoEnvironment: HTMLElement = document.querySelector('.info__environment')!;
@@ -102,5 +98,5 @@ export function populateContributors(arr?: IContributorB64[]): void {
 
 function contributorsSelectHandler(ev: Event): void {
    const target = ev.target as HTMLSelectElement;
-   setContributors(SavedData.contributors[parseInt(target.value)]);
+   setContributors(LoadedData.contributors[parseInt(target.value)]);
 }

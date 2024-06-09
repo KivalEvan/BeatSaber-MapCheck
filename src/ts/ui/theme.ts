@@ -1,4 +1,4 @@
-import { UIThemeName } from '../types/mapcheck/ui';
+import { UIThemeName } from '../types/ui';
 
 const htmlBody = document.querySelector<HTMLBodyElement>('body');
 const list: ReadonlyArray<UIThemeName> = ['Dark', 'Light', 'Monochrome'];

@@ -1,18 +1,18 @@
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
-import { round } from '../../utils';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import { round } from '../../bsmap/utils/mod';
 import { printResultTime } from '../helpers';
 import UIInput from '../../ui/helpers/input';
-import { BeatPerMinute } from '../../beatmap/shared/bpm';
-import { PosX, PosY } from '../../beatmap/shared/constants';
-import { Obstacle } from '../../beatmap/v4/obstacle';
-import { IWrapObstacle } from '../../types/beatmap/wrapper/obstacle';
+import { TimeProcessor } from '../../bsmap/beatmap/helpers/timeProcessor';
+import { PosX, PosY } from '../../bsmap/beatmap/shared/constants';
+import { Obstacle } from '../../bsmap/beatmap/core/obstacle';
+import { IWrapObstacle } from '../../bsmap/types/beatmap/wrapper/obstacle';
 
 const name = '2-wide Center Obstacle';
 const description =
    'Look for 2-wide center obstacle including obstacles that are relatively close to each other.';
 const enabled = true;
 const defaultMaxTime = 0.25;
-let localBPM!: BeatPerMinute;
+let localBPM!: TimeProcessor;
 
 const [htmlLabelMaxTime, htmlInputMaxTime] = UIInput.createNumber(
    function (this: HTMLInputElement) {
@@ -82,14 +82,14 @@ const tool: Tool<{ recovery: number }> = {
    run,
 };
 
-function adjustTimeHandler(bpm: BeatPerMinute) {
+function adjustTimeHandler(bpm: TimeProcessor) {
    localBPM = bpm;
    htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.recovery), 2).toString();
 }
 
-function check(map: ToolArgs) {
-   const { obstacles } = map.difficulty!.data;
-   const { bpm } = map.settings;
+function check(args: ToolArgs) {
+   const { obstacles } = args.beatmap!.data;
+   const { timeProcessor } = args.settings;
    const { recovery } = tool.input.params;
    const arr: IWrapObstacle[] = [];
    let obstacleLeftFull: IWrapObstacle = new Obstacle();
@@ -109,9 +109,12 @@ function check(map: ToolArgs) {
             if (o.posX === PosX.LEFT) {
                if (o.isLonger(obstacleLeftFull)) {
                   if (
-                     bpm.toRealTime(o.time) > bpm.toRealTime(obstacleRightFull.time) - recovery &&
-                     bpm.toRealTime(o.time) <
-                        bpm.toRealTime(obstacleRightFull.time + obstacleRightFull.duration) +
+                     timeProcessor.toRealTime(o.time) >
+                        timeProcessor.toRealTime(obstacleRightFull.time) - recovery &&
+                     timeProcessor.toRealTime(o.time) <
+                        timeProcessor.toRealTime(
+                           obstacleRightFull.time + obstacleRightFull.duration,
+                        ) +
                            recovery
                   ) {
                      arr.push(o);
@@ -131,9 +134,13 @@ function check(map: ToolArgs) {
             if (o.posX === PosX.MIDDLE_RIGHT) {
                if (o.isLonger(obstacleRightFull)) {
                   if (
-                     bpm.toRealTime(o.time) > bpm.toRealTime(obstacleLeftFull.time) - recovery &&
-                     bpm.toRealTime(o.time) <
-                        bpm.toRealTime(obstacleLeftFull.time + obstacleLeftFull.duration) + recovery
+                     timeProcessor.toRealTime(o.time) >
+                        timeProcessor.toRealTime(obstacleLeftFull.time) - recovery &&
+                     timeProcessor.toRealTime(o.time) <
+                        timeProcessor.toRealTime(
+                           obstacleLeftFull.time + obstacleLeftFull.duration,
+                        ) +
+                           recovery
                   ) {
                      arr.push(o);
                   }
@@ -145,9 +152,12 @@ function check(map: ToolArgs) {
             if (o.posX === PosX.MIDDLE_LEFT) {
                if (o.isLonger(obstacleLeftFull)) {
                   if (
-                     bpm.toRealTime(o.time) > bpm.toRealTime(obstacleRightFull.time) - recovery &&
-                     bpm.toRealTime(o.time) <
-                        bpm.toRealTime(obstacleRightFull.time + obstacleRightFull.duration) +
+                     timeProcessor.toRealTime(o.time) >
+                        timeProcessor.toRealTime(obstacleRightFull.time) - recovery &&
+                     timeProcessor.toRealTime(o.time) <
+                        timeProcessor.toRealTime(
+                           obstacleRightFull.time + obstacleRightFull.duration,
+                        ) +
                            recovery
                   ) {
                      arr.push(o);
@@ -158,9 +168,13 @@ function check(map: ToolArgs) {
             if (o.posX === PosX.MIDDLE_RIGHT) {
                if (o.isLonger(obstacleRightFull)) {
                   if (
-                     bpm.toRealTime(o.time) > bpm.toRealTime(obstacleLeftFull.time) - recovery &&
-                     bpm.toRealTime(o.time) <
-                        bpm.toRealTime(obstacleLeftFull.time + obstacleLeftFull.duration) + recovery
+                     timeProcessor.toRealTime(o.time) >
+                        timeProcessor.toRealTime(obstacleLeftFull.time) - recovery &&
+                     timeProcessor.toRealTime(o.time) <
+                        timeProcessor.toRealTime(
+                           obstacleLeftFull.time + obstacleLeftFull.duration,
+                        ) +
+                           recovery
                   ) {
                      arr.push(o);
                   }
@@ -177,19 +191,19 @@ function check(map: ToolArgs) {
       });
 }
 
-function run(map: ToolArgs) {
-   if (!map.difficulty) {
+function run(args: ToolArgs) {
+   if (!args.beatmap) {
       console.error('Something went wrong!');
       return;
    }
-   const result = check(map);
+   const result = check(args);
    const { recovery } = tool.input.params;
 
    if (result.length) {
       tool.output.html = printResultTime(
          `2-wide center obstacle (<${round(recovery * 1000)}ms)`,
          result,
-         map.settings.bpm,
+         args.settings.timeProcessor,
          'error',
       );
    } else {

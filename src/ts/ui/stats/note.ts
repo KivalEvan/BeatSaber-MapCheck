@@ -1,6 +1,6 @@
-import { IWrapInfo } from '../../types/beatmap/wrapper/info';
-import { IBeatmapItem } from '../../types/mapcheck';
-import { countBomb, countNote } from '../../analyzers/stats/note';
+import { IWrapInfo } from '../../bsmap/types/beatmap/wrapper/info';
+import { IBeatmapItem } from '../../types';
+import { countBomb, countNote } from '../../bsmap/extensions/stats/note';
 import { prefix } from './constants';
 
 export function createNoteCountTable(mapInfo: IWrapInfo, mapData: IBeatmapItem): HTMLTableElement {

@@ -1,10 +1,10 @@
 import Settings from '../../settings';
-import { round, toMmss } from '../../utils';
-import { BeatPerMinute } from '../../beatmap/shared/bpm';
+import { round, toMmss } from '../../bsmap/utils/mod';
+import { TimeProcessor } from '../../bsmap/beatmap/helpers/timeProcessor';
 import { htmlTableBPMChanges } from './constants';
 import { displayTableRow, hideTableRow } from './helpers';
 
-export function setBPMChanges(bpm?: BeatPerMinute | null): void {
+export function setBPMChanges(bpm?: TimeProcessor | null): void {
    if (!bpm || !bpm.change.length) {
       hideTableRow(htmlTableBPMChanges);
       return;

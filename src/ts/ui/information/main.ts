@@ -1,8 +1,8 @@
 import UIHeader from '../header';
-import SavedData from '../../savedData';
-import { IWrapInfo } from '../../types/beatmap/wrapper/info';
-import { IBeatmapItem } from '../../types/mapcheck';
-import { BeatPerMinute } from '../../beatmap/shared/bpm';
+import LoadedData from '../../loadedData';
+import { IWrapInfo } from '../../bsmap/types/beatmap/wrapper/info';
+import { IBeatmapItem } from '../../types';
+import { TimeProcessor } from '../../bsmap/beatmap/helpers/timeProcessor';
 import {
    populateContributors,
    setContributors,
@@ -30,7 +30,11 @@ import { setPointDefinitions } from './pointDefinition';
 import { setTableHeight } from './helpers';
 import { setPlayTime } from './playTime';
 import { setColorScheme } from './colorScheme';
-import { EnvironmentAllName } from '../../types/beatmap/shared/environment';
+import { EnvironmentAllName } from '../../bsmap/types/beatmap/shared/environment';
+import {
+   getFirstInteractiveTime,
+   getLastInteractiveTime,
+} from '../../bsmap/beatmap/helpers/beatmap';
 
 function setInfo(info: IWrapInfo): void {
    UIHeader.setSongName(info.song.title);
@@ -52,21 +56,21 @@ function setInfo(info: IWrapInfo): void {
 
 function setDiffInfoTable(info: IWrapInfo, mapData: IBeatmapItem): void {
    setVersion((mapData.rawData as any)._version || (mapData.rawData as any).version || 'Unknown');
-   setMappers(mapData.info.authors.mappers);
-   setLighters(mapData.info.authors.lighters);
-   setEnvironmentId(info.environmentNames.at(mapData.info.environmentId));
-   setColorScheme(info.colorSchemes.at(mapData.info.colorSchemeId));
-   if (mapData.info.customData) {
-      setCustomColor(mapData.info.customData);
-      setRequirements(mapData.info.customData._requirements as string[]);
-      setSuggestions(mapData.info.customData._suggestions as string[]);
-      setInformation(mapData.info.customData._information);
-      setWarnings(mapData.info.customData._warnings);
+   setMappers(mapData.settings.authors.mappers);
+   setLighters(mapData.settings.authors.lighters);
+   setEnvironmentId(info.environmentNames.at(mapData.settings.environmentId));
+   setColorScheme(info.colorSchemes.at(mapData.settings.colorSchemeId));
+   if (mapData.settings.customData) {
+      setCustomColor(mapData.settings.customData);
+      setRequirements(mapData.settings.customData._requirements as string[]);
+      setSuggestions(mapData.settings.customData._suggestions as string[]);
+      setInformation(mapData.settings.customData._information);
+      setWarnings(mapData.settings.customData._warnings);
    }
    if (mapData.data?.customData) {
-      const bpm = SavedData.beatmapInfo?.audio.bpm
-         ? BeatPerMinute.create(
-              SavedData.beatmapInfo.audio.bpm,
+      const bpm = LoadedData.beatmapInfo?.audio.bpm
+         ? TimeProcessor.create(
+              LoadedData.beatmapInfo.audio.bpm,
               mapData.data.customData._bpmChanges ||
                  mapData.data.customData._BPMChanges ||
                  mapData.data.customData.BPMChanges,
@@ -80,8 +84,8 @@ function setDiffInfoTable(info: IWrapInfo, mapData: IBeatmapItem): void {
       setCustomEvents(mapData.data.customData.customEvents, bpm);
    }
    setPlayTime(
-      mapData.bpm.toRealTime(mapData.data.getFirstInteractiveTime()),
-      mapData.bpm.toRealTime(mapData.data.getLastInteractiveTime()),
+      mapData.timeProcessor.toRealTime(getFirstInteractiveTime(mapData.data)),
+      mapData.timeProcessor.toRealTime(getLastInteractiveTime(mapData.data)),
    );
 }
 

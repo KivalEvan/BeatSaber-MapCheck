@@ -5,7 +5,7 @@ import {
    ToolArgs,
    ToolInputOrder,
    ToolOutputOrder,
-} from '../../types/mapcheck';
+} from '../../types';
 import UIInput from '../../ui/helpers/input';
 import { printResultTime } from '../helpers';
 
@@ -58,7 +58,7 @@ const tool: Tool<{ prec: number[] }> = {
 };
 
 function check(settings: IBeatmapSettings, difficulty: IBeatmapItem) {
-   const { bpm } = settings;
+   const { timeProcessor } = settings;
    const swingContainer = difficulty.swingAnalysis.container;
    const { prec } = tool.input.params;
 
@@ -72,7 +72,7 @@ function check(settings: IBeatmapSettings, difficulty: IBeatmapItem) {
             return false;
          }
          for (let i = 0; i < prec.length; i++) {
-            if ((bpm.adjustTime(n) + 0.001) % (1 / prec[i]) < 0.01) {
+            if ((timeProcessor.adjustTime(n) + 0.001) % (1 / prec[i]) < 0.01) {
                return false;
             }
          }
@@ -80,15 +80,20 @@ function check(settings: IBeatmapSettings, difficulty: IBeatmapItem) {
       });
 }
 
-function run(map: ToolArgs) {
-   if (!map.difficulty) {
+function run(args: ToolArgs) {
+   if (!args.beatmap) {
       console.error('Something went wrong!');
       return;
    }
-   const result = check(map.settings, map.difficulty);
+   const result = check(args.settings, args.beatmap);
 
    if (result.length) {
-      tool.output.html = printResultTime('Off-beat precision', result, map.settings.bpm, 'warning');
+      tool.output.html = printResultTime(
+         'Off-beat precision',
+         result,
+         args.settings.timeProcessor,
+         'warning',
+      );
    } else {
       tool.output.html = null;
    }

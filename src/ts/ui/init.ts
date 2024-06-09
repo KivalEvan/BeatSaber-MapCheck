@@ -7,7 +7,7 @@ import UISettings from './settings';
 import UIAccordion from './helpers/accordion';
 import UITheme from './theme';
 import UITools from './tools';
-import logger from '../logger';
+import logger from '../bsmap/logger';
 
 export default (function () {
    let executed = false;

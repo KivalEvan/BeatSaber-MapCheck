@@ -1,8 +1,8 @@
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
-import { NoteContainer } from '../../types/beatmap/wrapper/container';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import { NoteContainerType, INoteContainer } from '../../types/tools/container';
 import UIInput from '../../ui/helpers/input';
 import { printResultTime } from '../helpers';
-import { NoteDirection } from '../../beatmap/shared/constants';
+import { NoteDirection } from '../../bsmap/beatmap/shared/constants';
 
 const name = 'Improper Arc';
 const description = 'Check for correct use of arc.';
@@ -36,21 +36,23 @@ const tool: Tool = {
    run,
 };
 
-function check(map: ToolArgs) {
+function check(args: ToolArgs) {
    // kinda slow but i need arc first
-   const noteContainer = [...map.difficulty!.noteContainer]
-      .sort((a, b) => (a.type !== 'arc' ? 1 : b.type !== 'arc' ? -1 : 0))
+   const noteContainer = [...args.beatmap!.noteContainer]
+      .sort((a, b) =>
+         a.type !== NoteContainerType.ARC ? 1 : b.type !== NoteContainerType.ARC ? -1 : 0,
+      )
       .sort((a, b) => a.data.time - b.data.time);
 
-   const arr: NoteContainer[] = [];
+   const arr: INoteContainer[] = [];
    for (let i = 0, potential = true, len = noteContainer.length; i < len; i++) {
       const arc = noteContainer[i];
       const lastTime = noteContainer.at(-1)!.data.time;
-      if (arc.type === 'arc') {
+      if (arc.type === NoteContainerType.ARC) {
          potential = true;
          for (let j = i, sike = false; j < len; j++) {
             const head = noteContainer[j];
-            if (head.type === 'note') {
+            if (head.type === NoteContainerType.COLOR) {
                if (
                   arc.data.posX === head.data.posX &&
                   arc.data.posY === head.data.posY &&
@@ -62,7 +64,7 @@ function check(map: ToolArgs) {
                ) {
                   for (let k = j; k < len; k++) {
                      const tail = noteContainer[j];
-                     if (tail.type === 'bomb') {
+                     if (tail.type === NoteContainerType.BOMB) {
                         if (
                            arc.data.posX === tail.data.posX &&
                            arc.data.posY === tail.data.posY &&
@@ -72,7 +74,10 @@ function check(map: ToolArgs) {
                            break;
                         }
                      }
-                     if (tail.type !== 'note' || tail.data.time < arc.data.tailTime) {
+                     if (
+                        tail.type !== NoteContainerType.COLOR ||
+                        tail.data.time < arc.data.tailTime
+                     ) {
                         continue;
                      }
                      if (
@@ -95,7 +100,7 @@ function check(map: ToolArgs) {
                   break;
                }
             }
-            if (head.type === 'bomb') {
+            if (head.type === NoteContainerType.COLOR) {
                if (
                   arc.data.posX === head.data.posX &&
                   arc.data.posY === head.data.posY &&
@@ -109,7 +114,7 @@ function check(map: ToolArgs) {
                break;
             }
             if (
-               (head.type === 'arc' || head.type === 'chain') &&
+               (head.type === NoteContainerType.ARC || head.type === NoteContainerType.CHAIN) &&
                head.data.time + 0.001 > lastTime
             ) {
                potential = false;
@@ -127,11 +132,16 @@ function check(map: ToolArgs) {
       });
 }
 
-function run(map: ToolArgs) {
-   const result = check(map);
+function run(args: ToolArgs) {
+   const result = check(args);
 
    if (result.length) {
-      tool.output.html = printResultTime('Improper arc', result, map.settings.bpm, 'error');
+      tool.output.html = printResultTime(
+         'Improper arc',
+         result,
+         args.settings.timeProcessor,
+         'error',
+      );
    } else {
       tool.output.html = null;
    }

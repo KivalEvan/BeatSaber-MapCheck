@@ -1,4 +1,4 @@
-import { Tool, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
+import { Tool, ToolInputOrder, ToolOutputOrder } from '../../types';
 import uiHeader from '../../ui/header';
 import flag from '../../flag';
 import settings from '../../settings';

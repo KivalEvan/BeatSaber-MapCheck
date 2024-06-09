@@ -1,4 +1,4 @@
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import UIInput from '../../ui/helpers/input';
 import { printResultTime } from '../helpers';
 
@@ -31,23 +31,28 @@ const tool: Tool = {
    output: {
       html: null,
    },
-   run: run,
+   run,
 };
 
-function check(map: ToolArgs) {
-   const { obstacles } = map.difficulty!.data;
+function check(args: ToolArgs) {
+   const { obstacles } = args.beatmap!.data;
    return obstacles.filter((o) => o.hasZero()).map((o) => o.time);
 }
 
-function run(map: ToolArgs) {
-   if (!map.difficulty) {
+function run(args: ToolArgs) {
+   if (!args.beatmap) {
       console.error('Something went wrong!');
       return;
    }
-   const result = check(map);
+   const result = check(args);
 
    if (result.length) {
-      tool.output.html = printResultTime('Zero value obstacle', result, map.settings.bpm, 'error');
+      tool.output.html = printResultTime(
+         'Zero value obstacle',
+         result,
+         args.settings.timeProcessor,
+         'error',
+      );
    } else {
       tool.output.html = null;
    }

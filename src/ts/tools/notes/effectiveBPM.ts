@@ -1,8 +1,8 @@
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
-import { round } from '../../utils';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import { round } from '../../bsmap/utils/mod';
 import { printResultTime } from '../helpers';
 import UIInput from '../../ui/helpers/input';
-import { BeatPerMinute } from '../../beatmap/shared/bpm';
+import { TimeProcessor } from '../../bsmap/beatmap/helpers/timeProcessor';
 
 const name = 'Effective BPM';
 const description =
@@ -61,18 +61,18 @@ const tool: Tool<{ ebpmThres: number; ebpmsThres: number }> = {
    output: {
       html: null,
    },
-   run: run,
+   run,
 };
 
-function adjustTimeHandler(bpm: BeatPerMinute) {
-   tool.input.params.ebpmThres = round(Math.min(defaultEBPM, bpm.value * 2 * 1.285714), 1);
-   tool.input.params.ebpmsThres = round(Math.min(defaultEBPMS, bpm.value * 2), 1);
+function adjustTimeHandler(timeProcessor: TimeProcessor) {
+   tool.input.params.ebpmThres = round(Math.min(defaultEBPM, timeProcessor.bpm * 2 * 1.285714), 1);
+   tool.input.params.ebpmsThres = round(Math.min(defaultEBPMS, timeProcessor.bpm * 2), 1);
    htmlEBPM[1].value = tool.input.params.ebpmThres.toString();
    htmlEBPMS[1].value = tool.input.params.ebpmsThres.toString();
 }
 
-function check(map: ToolArgs) {
-   const { swingAnalysis } = map.difficulty!;
+function check(args: ToolArgs) {
+   const { swingAnalysis } = args.beatmap!;
    let { ebpmThres, ebpmsThres } = tool.input.params;
    ebpmThres += 0.001;
    ebpmsThres += 0.001;
@@ -85,18 +85,23 @@ function check(map: ToolArgs) {
    return { base: noteEBPM, swing: noteEBPMS };
 }
 
-function run(map: ToolArgs) {
-   if (!map.difficulty) {
+function run(args: ToolArgs) {
+   if (!args.beatmap) {
       console.error('Something went wrong!');
       return;
    }
-   const result = check(map);
+   const result = check(args);
    const { ebpmThres, ebpmsThres } = tool.input.params;
 
    const htmlResult: HTMLElement[] = [];
    if (result.base.length) {
       htmlResult.push(
-         printResultTime(`>${ebpmThres}EBPM warning`, result.base, map.settings.bpm, 'warning'),
+         printResultTime(
+            `>${ebpmThres}EBPM warning`,
+            result.base,
+            args.settings.timeProcessor,
+            'warning',
+         ),
       );
    }
    if (result.swing.length) {
@@ -104,7 +109,7 @@ function run(map: ToolArgs) {
          printResultTime(
             `>${ebpmsThres}EBPM (swing) warning`,
             result.swing,
-            map.settings.bpm,
+            args.settings.timeProcessor,
             'warning',
          ),
       );

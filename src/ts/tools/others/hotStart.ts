@@ -1,7 +1,8 @@
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import UIInput from '../../ui/helpers/input';
-import { round } from '../../utils';
+import { round } from '../../bsmap/utils/mod';
 import { printResult } from '../helpers';
+import { getFirstInteractiveTime } from '../../bsmap/beatmap/helpers/beatmap';
 
 const name = 'Hot Start';
 const description = 'Check for first interactive object starting from start time.';
@@ -49,13 +50,15 @@ const tool: Tool<{ time: number }> = {
    run,
 };
 
-function run(map: ToolArgs) {
-   if (!map.difficulty) {
+function run(args: ToolArgs) {
+   if (!args.beatmap) {
       console.error('Something went wrong!');
       return;
    }
    const { time } = tool.input.params;
-   const result = map.settings.bpm.toRealTime(map.difficulty.data.getFirstInteractiveTime());
+   const result = args.settings.timeProcessor.toRealTime(
+      getFirstInteractiveTime(args.beatmap.data),
+   );
 
    if (result < time) {
       tool.output.html = printResult('Hot start', `${round(result, 2)}s`, 'warning');

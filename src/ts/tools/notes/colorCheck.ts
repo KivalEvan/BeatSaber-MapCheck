@@ -1,9 +1,9 @@
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
-import { ColorArray } from '../../types/colors';
-import { colorFrom, deltaE00, round } from '../../utils';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import { ColorArray } from '../../bsmap/types/colors';
+import { colorFrom, deltaE00, round } from '../../bsmap/utils/mod';
 import UIInput from '../../ui/helpers/input';
 import { printResult } from '../helpers';
-import { ColorScheme, EnvironmentSchemeName } from '../../beatmap/shared/colorScheme';
+import { ColorScheme, EnvironmentSchemeName } from '../../bsmap/beatmap/shared/colorScheme';
 
 const name = 'Color Check';
 const description = 'Compare note color with other colored note and the arrow on itself.';
@@ -57,11 +57,11 @@ const tool: Tool = {
 
 function customColorSimilarity(map: ToolArgs) {
    const checkColorLeft =
-      map.difficulty?.info.customData?._colorLeft ??
-      ColorScheme[EnvironmentSchemeName[map.difficulty!.environment] ?? 'The First']._colorLeft;
+      map.beatmap?.settings.customData?._colorLeft ??
+      ColorScheme[EnvironmentSchemeName[map.beatmap!.environment] ?? 'The First']._colorLeft;
    const checkColorRight =
-      map.difficulty?.info.customData?._colorRight ??
-      ColorScheme[EnvironmentSchemeName[map.difficulty!.environment] ?? 'The First']._colorRight;
+      map.beatmap?.settings.customData?._colorRight ??
+      ColorScheme[EnvironmentSchemeName[map.beatmap!.environment] ?? 'The First']._colorRight;
    if (checkColorLeft && checkColorRight) {
       return deltaE00(colorFrom(checkColorLeft), colorFrom(checkColorRight));
    }
@@ -72,11 +72,11 @@ function customColorArrowSimilarity(map: ToolArgs) {
    let deltaELeft = 100,
       deltaERight = 100;
    const checkColorLeft =
-      map.difficulty?.info.customData?._colorLeft ??
-      ColorScheme[EnvironmentSchemeName[map.difficulty!.environment] ?? 'The First']._colorLeft;
+      map.beatmap?.settings.customData?._colorLeft ??
+      ColorScheme[EnvironmentSchemeName[map.beatmap!.environment] ?? 'The First']._colorLeft;
    const checkColorRight =
-      map.difficulty?.info.customData?._colorRight ??
-      ColorScheme[EnvironmentSchemeName[map.difficulty!.environment] ?? 'The First']._colorRight;
+      map.beatmap?.settings.customData?._colorRight ??
+      ColorScheme[EnvironmentSchemeName[map.beatmap!.environment] ?? 'The First']._colorRight;
    if (checkColorLeft) {
       deltaELeft = deltaE00(arrowColor, colorFrom(checkColorLeft));
    }
@@ -86,16 +86,16 @@ function customColorArrowSimilarity(map: ToolArgs) {
    return Math.min(deltaELeft, deltaERight);
 }
 
-function run(map: ToolArgs) {
+function run(args: ToolArgs) {
    if (
-      !map.difficulty?.info.customData?._colorLeft &&
-      !map.difficulty?.info.customData?._colorRight
+      !args.beatmap?.settings.customData?._colorLeft &&
+      !args.beatmap?.settings.customData?._colorRight
    ) {
       return;
    }
 
-   const ccSimilar = customColorSimilarity(map);
-   const ccaSimilar = customColorArrowSimilarity(map);
+   const ccSimilar = customColorSimilarity(args);
+   const ccaSimilar = customColorArrowSimilarity(args);
 
    const htmlResult: HTMLElement[] = [];
    if (ccSimilar <= 20) {

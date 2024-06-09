@@ -1,10 +1,10 @@
 // i hate implementing these so much
 import UIAccordion from '../helpers/accordion';
 import UIPanel from '../helpers/panel';
-import SavedData from '../../savedData';
+import LoadedData from '../../loadedData';
 import Settings from '../../settings';
-import { DifficultyRename } from '../../beatmap/shared/difficulty';
-import { CharacteristicRename } from '../../beatmap/shared/characteristic';
+import { DifficultyRename } from '../../bsmap/beatmap/shared/difficulty';
+import { CharacteristicRename } from '../../bsmap/beatmap/shared/characteristic';
 import { logPrefix, prefix } from './constants';
 import { createNPSTable } from './nps';
 import { createSettingsTable } from './settings';
@@ -16,18 +16,18 @@ import { createNoteInfoTable } from './noteInfo';
 import { createNoteCountTable } from './note';
 import { createNotePlacementTable } from './notePlacement';
 import { createObstacleCountTable } from './obstacle';
-import { CharacteristicName } from '../../types/beatmap/shared/characteristic';
-import { IWrapInfoDifficulty } from '../../types/beatmap/wrapper/info';
+import { CharacteristicName } from '../../bsmap/types/beatmap/shared/characteristic';
+import { IWrapInfoBeatmap } from '../../bsmap/types/beatmap/wrapper/info';
 
 const htmlStats: HTMLElement = document.querySelector('#stats .accordion__collapsible')!;
 
 function populate(): void {
-   if (!SavedData.beatmapInfo) {
+   if (!LoadedData.beatmapInfo) {
       throw new Error(logPrefix + 'map info could not be found in savedData');
    }
-   const mapInfo = SavedData.beatmapInfo;
+   const mapInfo = LoadedData.beatmapInfo;
 
-   const diffSet: Partial<Record<CharacteristicName, IWrapInfoDifficulty[]>> = {};
+   const diffSet: Partial<Record<CharacteristicName, IWrapInfoBeatmap[]>> = {};
    for (const difficulty of mapInfo.difficulties) {
       diffSet[difficulty.characteristic] ||= [];
       diffSet[difficulty.characteristic]!.push(difficulty);
@@ -46,8 +46,9 @@ function populate(): void {
       const diffList = diffSet[set as CharacteristicName]!;
       for (let i = diffList.length - 1; i >= 0; i--) {
          const diff = diffList[i];
-         const mapData = SavedData.beatmapDifficulty.find(
-            (data) => data.characteristic === set && data.difficulty === diff.difficulty,
+         const mapData = LoadedData.beatmaps.find(
+            (bm) =>
+               bm.settings.characteristic === set && bm.settings.difficulty === diff.difficulty,
          );
          if (!mapData) {
             throw new Error(logPrefix + 'Could not find map data');

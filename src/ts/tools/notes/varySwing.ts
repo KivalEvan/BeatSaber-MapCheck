@@ -1,10 +1,4 @@
-import {
-   IBeatmapItem,
-   Tool,
-   ToolArgs,
-   ToolInputOrder,
-   ToolOutputOrder,
-} from '../../types/mapcheck';
+import { IBeatmapItem, Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import UIInput from '../../ui/helpers/input';
 import { printResultTime } from '../helpers';
 
@@ -50,15 +44,20 @@ function check(difficulty: IBeatmapItem) {
       });
 }
 
-function run(map: ToolArgs) {
-   if (!map.difficulty) {
+function run(args: ToolArgs) {
+   if (!args.beatmap) {
       console.error('Something went wrong!');
       return;
    }
-   const result = check(map.difficulty);
+   const result = check(args.beatmap);
 
    if (result.length) {
-      tool.output.html = printResultTime('Varying swing speed', result, map.settings.bpm, 'error');
+      tool.output.html = printResultTime(
+         'Varying swing speed',
+         result,
+         args.settings.timeProcessor,
+         'error',
+      );
    } else {
       tool.output.html = null;
    }

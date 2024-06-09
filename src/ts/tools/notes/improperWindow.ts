@@ -1,9 +1,10 @@
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
-import { NoteContainer, NoteContainerNote } from '../../types/beatmap/wrapper/container';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import { NoteContainerType } from '../../types/tools/container';
 import UIInput from '../../ui/helpers/input';
-import swing from '../../analyzers/swing/swing';
+import swing from '../../bsmap/extensions/swing/swing';
 import { printResultTime } from '../helpers';
-import { NoteColor, NoteDirection } from '../../beatmap/shared/constants';
+import { NoteColor, NoteDirection } from '../../bsmap/beatmap/shared/constants';
+import { IWrapColorNote } from '../../bsmap/types/beatmap/wrapper/colorNote';
 
 const name = 'Improper Window Snap';
 const description = 'Check for slanted window snap timing.';
@@ -37,55 +38,60 @@ const tool: Tool = {
    run,
 };
 
-function check(map: ToolArgs) {
-   const { bpm } = map.settings;
-   const { noteContainer } = map.difficulty!;
-   const lastNote: { [key: number]: NoteContainerNote } = {};
-   const swingNoteArray: { [key: number]: NoteContainer[] } = {
+function check(args: ToolArgs) {
+   const { timeProcessor } = args.settings;
+   const { noteContainer } = args.beatmap!;
+   const lastNote: { [key: number]: IWrapColorNote } = {};
+   const swingNoteArray: { [key: number]: IWrapColorNote[] } = {
       [NoteColor.RED]: [],
       [NoteColor.BLUE]: [],
    };
 
-   const arr: NoteContainer[] = [];
+   const arr: IWrapColorNote[] = [];
    for (let i = 0, len = noteContainer.length; i < len; i++) {
-      if (noteContainer[i].type !== 'note') {
+      if (noteContainer[i].type !== NoteContainerType.COLOR) {
          continue;
       }
-      const note = noteContainer[i] as NoteContainerNote;
-      if (lastNote[note.data.color]) {
-         if (swing.next(note, lastNote[note.data.color], bpm, swingNoteArray[note.data.color])) {
-            lastNote[note.data.color] = note;
-            swingNoteArray[note.data.color] = [];
+      const note = noteContainer[i].data as IWrapColorNote;
+      if (lastNote[note.color]) {
+         if (swing.next(note, lastNote[note.color], timeProcessor, swingNoteArray[note.color])) {
+            lastNote[note.color] = note;
+            swingNoteArray[note.color] = [];
          } else if (
-            note.data.isSlantedWindow(lastNote[note.data.color].data) &&
-            note.data.time - lastNote[note.data.color].data.time >= 0.001 &&
-            note.data.direction === lastNote[note.data.color].data.direction &&
-            note.data.direction !== NoteDirection.ANY &&
-            lastNote[note.data.color].data.direction !== NoteDirection.ANY
+            note.isSlantedWindow(lastNote[note.color]) &&
+            note.time - lastNote[note.color].time >= 0.001 &&
+            note.direction === lastNote[note.color].direction &&
+            note.direction !== NoteDirection.ANY &&
+            lastNote[note.color].direction !== NoteDirection.ANY
          ) {
-            arr.push(lastNote[note.data.color]);
+            arr.push(lastNote[note.color]);
          }
       } else {
-         lastNote[note.data.color] = note;
+         lastNote[note.color] = note;
       }
-      swingNoteArray[note.data.color].push(note);
+      swingNoteArray[note.color].push(note);
    }
    return arr
-      .map((n) => n.data.time)
+      .map((n) => n.time)
       .filter(function (x, i, ary) {
          return !i || x !== ary[i - 1];
       });
 }
 
-function run(map: ToolArgs) {
-   if (!map.difficulty) {
+function run(args: ToolArgs) {
+   if (!args.beatmap) {
       console.error('Something went wrong!');
       return;
    }
-   const result = check(map);
+   const result = check(args);
 
    if (result.length) {
-      tool.output.html = printResultTime('Improper window snap', result, map.settings.bpm, 'error');
+      tool.output.html = printResultTime(
+         'Improper window snap',
+         result,
+         args.settings.timeProcessor,
+         'error',
+      );
    } else {
       tool.output.html = null;
    }

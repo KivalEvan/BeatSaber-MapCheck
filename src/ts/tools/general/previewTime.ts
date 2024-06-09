@@ -1,4 +1,4 @@
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import UIInput from '../../ui/helpers/input';
 import { printResult } from '../helpers';
 
@@ -34,8 +34,8 @@ const tool: Tool = {
    run,
 };
 
-function run(map: ToolArgs) {
-   const { previewStartTime, previewDuration } = map.info.audio;
+function run(args: ToolArgs) {
+   const { previewStartTime, previewDuration } = args.info.audio;
 
    if (previewStartTime === 12 && previewDuration === 10) {
       tool.output.html = printResult(

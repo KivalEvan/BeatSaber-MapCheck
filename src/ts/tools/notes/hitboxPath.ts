@@ -1,8 +1,9 @@
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
-import { isIntersect } from '../../analyzers/placement/note';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import { isIntersect } from '../../bsmap/extensions/placement/note';
 import UIInput from '../../ui/helpers/input';
 import { printResultTime } from '../helpers';
-import { IWrapColorNote } from '../../types/beatmap/wrapper/colorNote';
+import { IWrapColorNote } from '../../bsmap/types/beatmap/wrapper/colorNote';
+import { NoteContainerType } from '../../types/tools/container';
 
 const name = 'Hitbox Path';
 const description = 'Check for overlapping pre-swing note hitbox at same time.';
@@ -36,10 +37,10 @@ const tool: Tool = {
    run,
 };
 
-function check(map: ToolArgs) {
-   const { bpm } = map.settings;
-   const noteContainer = map.difficulty!.noteContainer.filter(
-      (n) => n.type === 'bomb' || n.type === 'note',
+function check(args: ToolArgs) {
+   const { timeProcessor } = args.settings;
+   const noteContainer = args.beatmap!.noteContainer.filter(
+      (n) => n.type === NoteContainerType.BOMB || n.type === NoteContainerType.COLOR,
    );
 
    const arr: IWrapColorNote[] = [];
@@ -48,19 +49,25 @@ function check(map: ToolArgs) {
    for (let i = 0, len = noteContainer.length; i < len; i++) {
       const currentNote = noteContainer[i];
       if (
-         currentNote.type === 'bomb' ||
-         currentNote.type === 'arc' ||
-         currentNote.type === 'chain' ||
-         bpm.toRealTime(currentNote.data.time) < lastTime + 0.01
+         currentNote.type === NoteContainerType.BOMB ||
+         currentNote.type === NoteContainerType.ARC ||
+         currentNote.type === NoteContainerType.CHAIN ||
+         timeProcessor.toRealTime(currentNote.data.time) < lastTime + 0.01
       ) {
          continue;
       }
       for (let j = i + 1; j < len; j++) {
          const compareTo = noteContainer[j];
-         if (bpm.toRealTime(compareTo.data.time) > bpm.toRealTime(currentNote.data.time) + 0.01) {
+         if (
+            timeProcessor.toRealTime(compareTo.data.time) >
+            timeProcessor.toRealTime(currentNote.data.time) + 0.01
+         ) {
             break;
          }
-         if (compareTo.type === 'note' && currentNote.data.color === compareTo.data.color) {
+         if (
+            compareTo.type === NoteContainerType.COLOR &&
+            currentNote.data.color === compareTo.data.color
+         ) {
             continue;
          }
          if (
@@ -77,7 +84,7 @@ function check(map: ToolArgs) {
                ]).some((b) => b))
          ) {
             arr.push(currentNote.data);
-            lastTime = bpm.toRealTime(currentNote.data.time);
+            lastTime = timeProcessor.toRealTime(currentNote.data.time);
          }
       }
    }
@@ -88,15 +95,20 @@ function check(map: ToolArgs) {
       });
 }
 
-function run(map: ToolArgs) {
-   if (!map.difficulty) {
+function run(args: ToolArgs) {
+   if (!args.beatmap) {
       console.error('Something went wrong!');
       return;
    }
-   const result = check(map);
+   const result = check(args);
 
    if (result.length) {
-      tool.output.html = printResultTime('Hitbox path', result, map.settings.bpm, 'error');
+      tool.output.html = printResultTime(
+         'Hitbox path',
+         result,
+         args.settings.timeProcessor,
+         'error',
+      );
    } else {
       tool.output.html = null;
    }

@@ -1,10 +1,15 @@
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types/mapcheck';
-import { NoteContainer, NoteContainerNote } from '../../types/beatmap/wrapper/container';
-import { isIntersect } from '../../analyzers/placement/note';
-import swing from '../../analyzers/swing/swing';
+import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import {
+   INoteContainer,
+   INoteContainerColor,
+   NoteContainerType,
+} from '../../types/tools/container';
+import { isIntersect } from '../../bsmap/extensions/placement/note';
+import swing from '../../bsmap/extensions/swing/swing';
 import UIInput from '../../ui/helpers/input';
 import { printResultTime } from '../helpers';
-import { NoteColor, NoteDirection } from '../../beatmap/shared/constants';
+import { NoteColor, NoteDirection } from '../../bsmap/beatmap/shared/constants';
+import { IWrapColorNote } from '../../bsmap/types/beatmap/wrapper/colorNote';
 
 const name = 'Hitbox Reverse Staircase';
 const description = 'Check for overlapping pre-swing hitbox with note hitbox during swing.';
@@ -40,71 +45,80 @@ const tool: Tool = {
 
 const constant = 0.03414823529;
 const constantDiagonal = 0.03414823529;
-function check(map: ToolArgs) {
-   const { bpm, njs } = map.settings;
-   const { noteContainer } = map.difficulty!;
+function check(args: ToolArgs) {
+   const { timeProcessor, njs } = args.settings;
+   const { noteContainer } = args.beatmap!;
 
-   const lastNote: { [key: number]: NoteContainer } = {};
-   const swingNoteArray: { [key: number]: NoteContainer[] } = {
+   const lastNote: { [key: number]: IWrapColorNote } = {};
+   const swingNoteArray: { [key: number]: IWrapColorNote[] } = {
       [NoteColor.RED]: [],
       [NoteColor.BLUE]: [],
    };
 
-   const arr: NoteContainer[] = [];
+   const arr: IWrapColorNote[] = [];
    for (let i = 0, len = noteContainer.length; i < len; i++) {
-      if (noteContainer[i].type !== 'note') {
+      if (noteContainer[i].type !== NoteContainerType.COLOR) {
          continue;
       }
-      const note = noteContainer[i] as NoteContainerNote;
+      const note = noteContainer[i] as INoteContainerColor;
       if (lastNote[note.data.color]) {
-         if (swing.next(note, lastNote[note.data.color], bpm, swingNoteArray[note.data.color])) {
+         if (
+            swing.next(
+               note.data,
+               lastNote[note.data.color],
+               timeProcessor,
+               swingNoteArray[note.data.color],
+            )
+         ) {
             swingNoteArray[note.data.color] = [];
          }
       }
       for (const other of swingNoteArray[(note.data.color + 1) % 2]) {
-         if (other.type !== 'note') {
-            continue;
-         }
-         if (other.data.direction !== NoteDirection.ANY) {
-            if (!(bpm.toRealTime(note.data.time) > bpm.toRealTime(other.data.time) + 0.01)) {
+         if (other.direction !== NoteDirection.ANY) {
+            if (
+               !(
+                  timeProcessor.toRealTime(note.data.time) >
+                  timeProcessor.toRealTime(other.time) + 0.01
+               )
+            ) {
                continue;
             }
-            const isDiagonal = other.data.getAngle() % 90 > 15 && other.data.getAngle() % 90 < 75;
+            const isDiagonal = other.getAngle() % 90 > 15 && other.getAngle() % 90 < 75;
             // magic number 1.425 from saber length + good/bad hitbox
             if (
                njs.value <
                   1.425 /
-                     ((60 * (note.data.time - other.data.time)) / bpm.value +
+                     ((60 * (note.data.time - other.time)) / timeProcessor.bpm +
                         (isDiagonal ? constantDiagonal : constant)) &&
-               isIntersect(note.data, other.data, [[15, 1.5]])[1]
+               isIntersect(note.data, other, [[15, 1.5]])[1]
             ) {
                arr.push(other);
                break;
             }
          }
       }
-      lastNote[note.data.color] = note;
-      swingNoteArray[note.data.color].push(note);
+      lastNote[note.data.color] = note.data;
+      swingNoteArray[note.data.color].push(note.data);
    }
    return arr
-      .map((n) => n.data.time)
+      .map((n) => n.time)
       .filter(function (x, i, ary) {
          return !i || x !== ary[i - 1];
       });
 }
 
-function run(map: ToolArgs) {
-   if (!map.difficulty) {
+function run(args: ToolArgs) {
+   if (!args.beatmap) {
       console.error('Something went wrong!');
       return;
    }
-   const result = check(map);
+   const result = check(args);
 
    if (result.length) {
       tool.output.html = printResultTime(
          'Hitbox reverse Staircase',
          result,
-         map.settings.bpm,
+         args.settings.timeProcessor,
          'rank',
       );
    } else {

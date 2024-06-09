@@ -5,10 +5,10 @@ import {
    ToolArgs,
    ToolInputOrder,
    ToolOutputOrder,
-} from '../../types/mapcheck';
+} from '../../types';
 import UIInput from '../../ui/helpers/input';
 import { printResultTime } from '../helpers';
-import { IWrapGridObject } from '../../types/beatmap/wrapper/gridObject';
+import { IWrapGridObject } from '../../bsmap/types/beatmap/wrapper/gridObject';
 
 const name = 'Stacked Note';
 const description = 'Look for stacked note.';
@@ -43,23 +43,26 @@ const tool: Tool = {
 };
 
 function checkNote(settings: IBeatmapSettings, map: IBeatmapItem) {
-   const { bpm } = settings;
+   const { timeProcessor } = settings;
    const { colorNotes } = map.data;
 
    const ary: IWrapGridObject[] = [];
    // to avoid multiple of stack popping up, ignore anything within this time
    let lastTime: number = 0;
    for (let i = 0, len = colorNotes.length; i < len; i++) {
-      if (bpm.toRealTime(colorNotes[i].time) < lastTime + 0.01) {
+      if (timeProcessor.toRealTime(colorNotes[i].time) < lastTime + 0.01) {
          continue;
       }
       for (let j = i + 1; j < len; j++) {
-         if (bpm.toRealTime(colorNotes[j].time) > bpm.toRealTime(colorNotes[i].time) + 0.01) {
+         if (
+            timeProcessor.toRealTime(colorNotes[j].time) >
+            timeProcessor.toRealTime(colorNotes[i].time) + 0.01
+         ) {
             break;
          }
          if (colorNotes[j].isInline(colorNotes[i])) {
             ary.push(colorNotes[i]);
-            lastTime = bpm.toRealTime(colorNotes[i].time);
+            lastTime = timeProcessor.toRealTime(colorNotes[i].time);
          }
       }
    }
@@ -71,20 +74,24 @@ function checkNote(settings: IBeatmapSettings, map: IBeatmapItem) {
 }
 
 function checkBomb(settings: IBeatmapSettings, map: IBeatmapItem) {
-   const { bpm, njs } = settings;
+   const { timeProcessor, njs } = settings;
    const { bombNotes } = map.data;
 
    const ary: IWrapGridObject[] = [];
    for (let i = 0, len = bombNotes.length; i < len; i++) {
       for (let j = i + 1; j < len; j++) {
          // arbitrary break after 1s to not loop too much often
-         if (bpm.toRealTime(bombNotes[j].time) > bpm.toRealTime(bombNotes[i].time) + 1) {
+         if (
+            timeProcessor.toRealTime(bombNotes[j].time) >
+            timeProcessor.toRealTime(bombNotes[i].time) + 1
+         ) {
             break;
          }
          if (
             bombNotes[i].isInline(bombNotes[j]) &&
-            (njs.value < bpm.value / (120 * (bombNotes[j].time - bombNotes[i].time)) ||
-               bpm.toRealTime(bombNotes[j].time) < bpm.toRealTime(bombNotes[i].time) + 0.02)
+            (njs.value < timeProcessor.bpm / (120 * (bombNotes[j].time - bombNotes[i].time)) ||
+               timeProcessor.toRealTime(bombNotes[j].time) <
+                  timeProcessor.toRealTime(bombNotes[i].time) + 0.02)
          ) {
             ary.push(bombNotes[i]);
          }
@@ -97,20 +104,24 @@ function checkBomb(settings: IBeatmapSettings, map: IBeatmapItem) {
       });
 }
 
-function run(map: ToolArgs) {
-   if (!map.difficulty) {
+function run(args: ToolArgs) {
+   if (!args.beatmap) {
       console.error('Something went wrong!');
       return;
    }
-   const resultNote = checkNote(map.settings, map.difficulty);
-   const resultBomb = checkBomb(map.settings, map.difficulty);
+   const resultNote = checkNote(args.settings, args.beatmap);
+   const resultBomb = checkBomb(args.settings, args.beatmap);
 
    const htmlResult: HTMLElement[] = [];
    if (resultNote.length) {
-      htmlResult.push(printResultTime('Stacked note', resultNote, map.settings.bpm, 'error'));
+      htmlResult.push(
+         printResultTime('Stacked note', resultNote, args.settings.timeProcessor, 'error'),
+      );
    }
    if (resultBomb.length) {
-      htmlResult.push(printResultTime('Stacked bomb', resultBomb, map.settings.bpm, 'error'));
+      htmlResult.push(
+         printResultTime('Stacked bomb', resultBomb, args.settings.timeProcessor, 'error'),
+      );
    }
 
    if (htmlResult.length) {
