@@ -1,4 +1,4 @@
-$tabs_list: "info", "stats", "tools", "settings";
+$tabs_list: 'info', 'stats', 'checks', 'settings';
 
 .tabs {
    &__container {
@@ -20,8 +20,8 @@ $tabs_list: "info", "stats", "tools", "settings";
       left: -9999px;
       &:checked {
          @each $name in $tabs_list {
-            &[id=tabs__#{$name}] ~ .tabs__nav .tabs__label[for=tabs__#{$name}] {
-               border-bottom: 1px solid var(--bg-tools-tab-select);
+            &[id='tabs__#{$name}'] ~ .tabs__nav .tabs__label[for='tabs__#{$name}'] {
+               border-bottom: 1px solid var(--bg-checks-tab-select);
                filter: contrast(110%) brightness(1.05);
             }
          }
@@ -46,10 +46,10 @@ $tabs_list: "info", "stats", "tools", "settings";
          text-align: center;
          text-transform: uppercase;
          line-height: 1.5;
-         border-bottom: 1px solid var(--bg-tools-tab);
+         border-bottom: 1px solid var(--bg-checks-tab);
          &:hover {
-            border-bottom: 1px solid var(--bg-tools-tab-select);
-         filter: contrast(110%) brightness(1.05);
+            border-bottom: 1px solid var(--bg-checks-tab-select);
+            filter: contrast(110%) brightness(1.05);
          }
       }
       &-select {

@@ -1,6 +1,6 @@
 import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import { round } from '../../bsmap/utils/mod';
-import { INoteContainer, NoteContainerType } from '../../types/tools/container';
+import { INoteContainer, NoteContainerType } from '../../types/checks/container';
 import { checkDirection } from '../../bsmap/extensions/placement/note';
 import swing from '../../bsmap/extensions/swing/swing';
 import { ColorNote } from '../../bsmap/beatmap/core/colorNote';

@@ -2,7 +2,7 @@ import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import UISelect from '../../ui/helpers/select';
 import Parity from '../../bsmap/extensions/parity/parity';
 import swing from '../../bsmap/extensions/swing/swing';
-import { INoteContainer, NoteContainerType } from '../../types/tools/container';
+import { INoteContainer, NoteContainerType } from '../../types/checks/container';
 import { printResultTime } from '../helpers';
 import UIInput from '../../ui/helpers/input';
 import { NoteColor } from '../../bsmap/beatmap/shared/constants';
@@ -15,7 +15,7 @@ const enabled = false;
 
 const htmlContainer = document.createElement('div');
 const htmlSelectRotation = UISelect.create(
-   'input__tools-parity-rotation',
+   'input__checks-parity-rotation',
    'Wrist rotation type: ',
    'div',
    '',
@@ -24,7 +24,7 @@ const htmlSelectRotation = UISelect.create(
    { text: 'Squid', value: '180' },
 );
 const htmlSelectParityLeft = UISelect.create(
-   'input__tools-parity-left',
+   'input__checks-parity-left',
    'Left hand parity: ',
    'div',
    '',
@@ -33,7 +33,7 @@ const htmlSelectParityLeft = UISelect.create(
    { text: 'Backhand', value: 'backhand' },
 );
 const htmlSelectParityRight = UISelect.create(
-   'input__tools-parity-right',
+   'input__checks-parity-right',
    'Right hand parity: ',
    'div',
    '',

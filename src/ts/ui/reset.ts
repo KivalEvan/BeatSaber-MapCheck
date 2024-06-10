@@ -2,7 +2,7 @@ import LoadedData from '../loadedData';
 import UILoading from './loading';
 import UIHeader from './header';
 import UIInfo from './information';
-import UITools from './tools';
+import UIChecks from './checks';
 import UIStats from './stats';
 
 const htmlResetButton: NodeListOf<HTMLInputElement> =
@@ -14,7 +14,7 @@ export default function resetHandler() {
    UILoading.reset();
    UIHeader.reset();
    UIInfo.reset();
-   UITools.reset();
+   UIChecks.reset();
    UIStats.reset();
    LoadedData.clear();
 }

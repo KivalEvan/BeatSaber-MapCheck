@@ -3,7 +3,7 @@ import { isIntersect } from '../../bsmap/extensions/placement/note';
 import UIInput from '../../ui/helpers/input';
 import { printResultTime } from '../helpers';
 import { IWrapColorNote } from '../../bsmap/types/beatmap/wrapper/colorNote';
-import { NoteContainerType } from '../../types/tools/container';
+import { NoteContainerType } from '../../types/checks/container';
 
 const name = 'Hitbox Path';
 const description = 'Check for overlapping pre-swing note hitbox at same time.';

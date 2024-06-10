@@ -1,5 +1,5 @@
 import LoadedData from '../loadedData';
-import Analyser from '../tools/analyzer';
+import Analyser from '../checks/analyzer';
 import UILoading from './loading';
 import UIInformation from './information';
 import { removeOptions } from '../utils/web';
@@ -11,52 +11,52 @@ import { DifficultyName } from '../bsmap/types/beatmap/shared/difficulty';
 import { IWrapInfo } from '../bsmap/types/beatmap/wrapper/info';
 import savedData from '../loadedData';
 
-const logPrefix = 'UI Tools: ';
+const logPrefix = 'UI Checks: ';
 
-const htmlToolsSelectCharacteristic: NodeListOf<HTMLSelectElement> = document.querySelectorAll(
-   '.tools__select-characteristic',
+const htmlChecksSelectCharacteristic: NodeListOf<HTMLSelectElement> = document.querySelectorAll(
+   '.checks__select-characteristic',
 );
-const htmlToolsSelectDifficulty: NodeListOf<HTMLSelectElement> = document.querySelectorAll(
-   '.tools__select-difficulty',
+const htmlChecksSelectDifficulty: NodeListOf<HTMLSelectElement> = document.querySelectorAll(
+   '.checks__select-difficulty',
 );
-const htmlToolsDifficultyLabel: NodeListOf<HTMLElement> =
+const htmlChecksDifficultyLabel: NodeListOf<HTMLElement> =
    document.querySelectorAll('.difficulty__label');
-const htmlToolsNote: HTMLElement = document.querySelector('.tools__note-content')!;
-const htmlToolsObstacle: HTMLElement = document.querySelector('.tools__obstacle-content')!;
-const htmlToolsEvent: HTMLElement = document.querySelector('.tools__event-content')!;
-const htmlToolsOther: HTMLElement = document.querySelector('.tools__other-content')!;
-const htmlToolsGeneral: HTMLElement = document.querySelector('.tools__general-content')!;
-const htmlToolsOutputDifficulty: HTMLElement = document.querySelector('.tools__output-diff')!;
-const htmlToolsOutputGeneral: HTMLElement = document.querySelector('.tools__output-general')!;
-const htmlToolsApplyThis: HTMLInputElement = document.querySelector('.tools__apply-this')!;
-const htmlToolsApplyAll: HTMLInputElement = document.querySelector('.tools__apply-all')!;
-const htmlToolsApplyGeneral: HTMLInputElement = document.querySelector('.tools__apply-general')!;
+const htmlChecksNote: HTMLElement = document.querySelector('.checks__note-content')!;
+const htmlChecksObstacle: HTMLElement = document.querySelector('.checks__obstacle-content')!;
+const htmlChecksEvent: HTMLElement = document.querySelector('.checks__event-content')!;
+const htmlChecksOther: HTMLElement = document.querySelector('.checks__other-content')!;
+const htmlChecksGeneral: HTMLElement = document.querySelector('.checks__general-content')!;
+const htmlChecksOutputDifficulty: HTMLElement = document.querySelector('.checks__output-diff')!;
+const htmlChecksOutputGeneral: HTMLElement = document.querySelector('.checks__output-general')!;
+const htmlChecksApplyThis: HTMLInputElement = document.querySelector('.checks__apply-this')!;
+const htmlChecksApplyAll: HTMLInputElement = document.querySelector('.checks__apply-all')!;
+const htmlChecksApplyGeneral: HTMLInputElement = document.querySelector('.checks__apply-general')!;
 
-htmlToolsApplyThis.addEventListener('click', applyThisHandler);
-htmlToolsApplyAll.addEventListener('click', applyAllHandler);
-htmlToolsApplyGeneral.addEventListener('click', applyGeneralHandler);
+htmlChecksApplyThis.addEventListener('click', applyThisHandler);
+htmlChecksApplyAll.addEventListener('click', applyAllHandler);
+htmlChecksApplyGeneral.addEventListener('click', applyGeneralHandler);
 
-htmlToolsSelectCharacteristic.forEach((elem) =>
+htmlChecksSelectCharacteristic.forEach((elem) =>
    elem.addEventListener('change', selectCharacteristicHandler),
 );
-htmlToolsSelectDifficulty.forEach((elem) =>
+htmlChecksSelectDifficulty.forEach((elem) =>
    elem.addEventListener('change', selectDifficultyHandler),
 );
 
 function displayOutputGeneral(): void {
    const analysis = LoadedData.analysis?.general;
    if (!analysis) {
-      htmlToolsOutputGeneral.textContent = 'ERROR: could not find analysis for general';
+      htmlChecksOutputGeneral.textContent = 'ERROR: could not find analysis for general';
       return;
    }
    if (!analysis.html) {
-      htmlToolsOutputGeneral.textContent = 'ERROR: could not find HTML for general';
+      htmlChecksOutputGeneral.textContent = 'ERROR: could not find HTML for general';
       return;
    }
-   htmlToolsOutputGeneral.innerHTML = '';
-   analysis.html.forEach((h) => htmlToolsOutputGeneral.appendChild(h));
-   if (!htmlToolsOutputGeneral.firstChild) {
-      htmlToolsOutputGeneral.textContent = 'No issues found.';
+   htmlChecksOutputGeneral.innerHTML = '';
+   analysis.html.forEach((h) => htmlChecksOutputGeneral.appendChild(h));
+   if (!htmlChecksOutputGeneral.firstChild) {
+      htmlChecksOutputGeneral.textContent = 'No issues found.';
    }
 }
 
@@ -65,34 +65,34 @@ function displayOutputDifficulty(
    difficulty?: DifficultyName,
 ): void {
    if (!characteristic && !difficulty) {
-      characteristic = htmlToolsSelectCharacteristic[0].value as CharacteristicName;
-      difficulty = htmlToolsSelectDifficulty[0].value as DifficultyName;
+      characteristic = htmlChecksSelectCharacteristic[0].value as CharacteristicName;
+      difficulty = htmlChecksSelectDifficulty[0].value as DifficultyName;
    }
    if (!characteristic || !difficulty) {
       throw new Error(logPrefix + 'something went wrong!');
    }
-   htmlToolsOutputDifficulty.innerHTML = '';
+   htmlChecksOutputDifficulty.innerHTML = '';
    const analysis = LoadedData.analysis?.map.find(
       (set) => set.difficulty === difficulty && set.characteristic === characteristic,
    );
    if (!analysis) {
-      htmlToolsOutputDifficulty.textContent =
+      htmlChecksOutputDifficulty.textContent =
          'ERROR: could not find analysis for ' + characteristic + ' ' + difficulty;
       return;
    }
    if (!analysis.html) {
-      htmlToolsOutputDifficulty.textContent =
+      htmlChecksOutputDifficulty.textContent =
          'ERROR: could not find HTML for ' + characteristic + ' ' + difficulty;
       return;
    }
-   analysis.html.forEach((h) => htmlToolsOutputDifficulty.appendChild(h));
-   if (!htmlToolsOutputDifficulty.firstChild) {
-      htmlToolsOutputDifficulty.textContent = 'No issues found.';
+   analysis.html.forEach((h) => htmlChecksOutputDifficulty.appendChild(h));
+   if (!htmlChecksOutputDifficulty.firstChild) {
+      htmlChecksOutputDifficulty.textContent = 'No issues found.';
    }
 }
 
 function setDifficultyLabel(str: string): void {
-   htmlToolsDifficultyLabel.forEach((elem) => (elem.textContent = str));
+   htmlChecksDifficultyLabel.forEach((elem) => (elem.textContent = str));
 }
 
 function populateSelectDifficulty(characteristic?: CharacteristicName): void {
@@ -100,7 +100,7 @@ function populateSelectDifficulty(characteristic?: CharacteristicName): void {
    if (!characteristic || !mapInfo) {
       return;
    }
-   htmlToolsSelectDifficulty.forEach((elem) => {
+   htmlChecksSelectDifficulty.forEach((elem) => {
       for (let i = elem.options.length - 1; i >= 0; i--) {
          elem.remove(i);
       }
@@ -109,7 +109,7 @@ function populateSelectDifficulty(characteristic?: CharacteristicName): void {
    for (let i = mapInfo.difficulties.length - 1; i >= 0; i--) {
       const diff = mapInfo.difficulties[i];
       if (characteristic !== diff.characteristic) continue;
-      htmlToolsSelectDifficulty.forEach((elem) => {
+      htmlChecksSelectDifficulty.forEach((elem) => {
          const optDiff = document.createElement('option');
          optDiff.value = diff.difficulty;
          optDiff.textContent =
@@ -138,8 +138,8 @@ function populateSelectDifficulty(characteristic?: CharacteristicName): void {
 
 function populateSelectCharacteristic(mapInfo?: IWrapInfo): void {
    if (!mapInfo) {
-      htmlToolsSelectCharacteristic.forEach((elem) => removeOptions(elem));
-      htmlToolsSelectDifficulty.forEach((elem) => removeOptions(elem));
+      htmlChecksSelectCharacteristic.forEach((elem) => removeOptions(elem));
+      htmlChecksSelectDifficulty.forEach((elem) => removeOptions(elem));
       return;
    }
    let first = true;
@@ -147,7 +147,7 @@ function populateSelectCharacteristic(mapInfo?: IWrapInfo): void {
    mapInfo.difficulties.forEach((infoDiff) => {
       if (addedCharacteristic.has(infoDiff.characteristic)) return;
       addedCharacteristic.add(infoDiff.characteristic);
-      htmlToolsSelectCharacteristic.forEach((elem) => {
+      htmlChecksSelectCharacteristic.forEach((elem) => {
          const optCharacteristic = document.createElement('option');
          optCharacteristic.value = infoDiff.characteristic;
          optCharacteristic.textContent = CharacteristicRename[infoDiff.characteristic];
@@ -177,23 +177,23 @@ function populateTool(): void {
       if (tl.input.html) {
          switch (tl.type) {
             case 'note': {
-               htmlToolsNote.appendChild(tl.input.html);
+               htmlChecksNote.appendChild(tl.input.html);
                break;
             }
             case 'obstacle': {
-               htmlToolsObstacle.appendChild(tl.input.html);
+               htmlChecksObstacle.appendChild(tl.input.html);
                break;
             }
             case 'event': {
-               htmlToolsEvent.appendChild(tl.input.html);
+               htmlChecksEvent.appendChild(tl.input.html);
                break;
             }
             case 'other': {
-               htmlToolsOther.appendChild(tl.input.html);
+               htmlChecksOther.appendChild(tl.input.html);
                break;
             }
             case 'general': {
-               htmlToolsGeneral.appendChild(tl.input.html);
+               htmlChecksGeneral.appendChild(tl.input.html);
                break;
             }
             default: {
@@ -205,11 +205,11 @@ function populateTool(): void {
 }
 
 function clearOutput(): void {
-   if (htmlToolsOutputGeneral) {
-      htmlToolsOutputGeneral.innerHTML = 'No output.';
+   if (htmlChecksOutputGeneral) {
+      htmlChecksOutputGeneral.innerHTML = 'No output.';
    }
-   if (htmlToolsOutputDifficulty) {
-      htmlToolsOutputDifficulty.innerHTML = 'No output.';
+   if (htmlChecksOutputDifficulty) {
+      htmlChecksOutputDifficulty.innerHTML = 'No output.';
    }
 }
 
@@ -221,7 +221,7 @@ function reset(): void {
 
 function selectCharacteristicHandler(ev: Event): void {
    const target = ev.target as HTMLSelectElement;
-   htmlToolsSelectCharacteristic.forEach((elem) => {
+   htmlChecksSelectCharacteristic.forEach((elem) => {
       if (elem !== target) {
          elem.value = target.value;
       }
@@ -234,13 +234,13 @@ function selectCharacteristicHandler(ev: Event): void {
 
 function selectDifficultyHandler(ev: Event): void {
    const target = ev.target as HTMLSelectElement;
-   htmlToolsSelectDifficulty.forEach((elem) => {
+   htmlChecksSelectDifficulty.forEach((elem) => {
       if (elem !== target) {
          elem.value = target.value;
       }
    });
    const infoDiff = LoadedData.beatmapInfo?.difficulties.find(
-      (elem) => elem.characteristic === htmlToolsSelectCharacteristic.item(0).value,
+      (elem) => elem.characteristic === htmlChecksSelectCharacteristic.item(0).value,
    );
    if (!infoDiff) {
       throw new Error('aaaaaaaaaaaaaaaaaaa');
@@ -261,8 +261,8 @@ function selectDifficultyHandler(ev: Event): void {
 }
 
 function applyThisHandler(): void {
-   const characteristic = htmlToolsSelectCharacteristic[0].value as CharacteristicName;
-   const difficulty = htmlToolsSelectDifficulty[0].value as DifficultyName;
+   const characteristic = htmlChecksSelectCharacteristic[0].value as CharacteristicName;
+   const difficulty = htmlChecksSelectDifficulty[0].value as DifficultyName;
    if (!characteristic || !difficulty) {
       throw new Error(logPrefix + 'characteristic/difficulty does not exist');
    }
@@ -273,8 +273,8 @@ function applyThisHandler(): void {
 }
 
 function applyAllHandler(): void {
-   const characteristic = htmlToolsSelectCharacteristic[0].value as CharacteristicName;
-   const difficulty = htmlToolsSelectDifficulty[0].value as DifficultyName;
+   const characteristic = htmlChecksSelectCharacteristic[0].value as CharacteristicName;
+   const difficulty = htmlChecksSelectDifficulty[0].value as DifficultyName;
    if (!characteristic || !difficulty) {
       throw new Error(logPrefix + 'characteristic/difficulty does not exist');
    }

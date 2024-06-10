@@ -1,10 +1,10 @@
 import UIHeader from './ui/header';
 import UILoading from './ui/loading';
 import UIInfo from './ui/information';
-import UITools from './ui/tools';
+import UIChecks from './ui/checks';
 import UIStats from './ui/stats';
 import UIInput from './ui/input';
-import Analyser from './tools/analyzer';
+import Analyser from './checks/analyzer';
 import Settings from './settings';
 import flag from './flag';
 import LoadedData from './loadedData';
@@ -197,18 +197,18 @@ export default async (type: LoadType) => {
          UIHeader.setSongBPM(info.audio.bpm, minBPM, maxBPM);
       }
 
-      UITools.adjustBeatTime();
-      UITools.populateSelect(info);
+      UIChecks.adjustBeatTime();
+      UIChecks.populateSelect(info);
 
       logger.tInfo(tag(), 'Analysing map');
       UILoading.status('info', 'Analysing general...', 85);
       Analyser.runGeneral();
-      UITools.displayOutputGeneral();
+      UIChecks.displayOutputGeneral();
       await new Promise((r) => setTimeout(r, 5));
 
       UILoading.status('info', 'Analysing difficulty...', 90);
       Analyser.applyAll();
-      UITools.displayOutputDifficulty();
+      UIChecks.displayOutputDifficulty();
       await new Promise((r) => setTimeout(r, 5));
 
       UILoading.status('info', 'Populating stats...', 95);

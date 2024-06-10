@@ -1,7 +1,7 @@
 import { IWrapInfo } from '../bsmap/types/beatmap/wrapper/info';
-import { IBeatmapItem } from './tools/beatmapItem';
+import { IBeatmapItem } from './checks/beatmapItem';
 import { IContributorB64 } from './contributor';
-import { IAnalysis } from './tools/analysis';
+import { IAnalysis } from './checks/analysis';
 
 export interface ILoadedData {
    beatmapInfo: IWrapInfo | null;

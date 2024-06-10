@@ -6,7 +6,7 @@ import UIFooter from './footer';
 import UISettings from './settings';
 import UIAccordion from './helpers/accordion';
 import UITheme from './theme';
-import UITools from './tools';
+import UIChecks from './checks';
 import logger from '../bsmap/logger';
 
 export default (function () {
@@ -16,7 +16,7 @@ export default (function () {
          executed = true;
          UIFooter.setWatermark(Version.watermark);
          UIFooter.setVersion(Version.value);
-         UITools.populateTool();
+         UIChecks.populateTool();
          UISettings.setTheme(Settings.theme);
          UISettings.setBeatNumbering(Settings.beatNumbering);
          UISettings.setRounding(Settings.rounding);

@@ -1,6 +1,6 @@
 import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import { round } from '../../bsmap/utils/mod';
-import { INoteContainer, NoteContainerType } from '../../types/tools/container';
+import { INoteContainer, NoteContainerType } from '../../types/checks/container';
 import { printResultTime } from '../helpers';
 import UIInput from '../../ui/helpers/input';
 import { TimeProcessor } from '../../bsmap/beatmap/helpers/timeProcessor';

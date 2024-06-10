@@ -1,5 +1,5 @@
 import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import { NoteContainerType } from '../../types/tools/container';
+import { NoteContainerType } from '../../types/checks/container';
 import { isEnd } from '../../bsmap/extensions/placement/note';
 import swing from '../../bsmap/extensions/swing/swing';
 import { ColorNote } from '../../bsmap/beatmap/core/colorNote';

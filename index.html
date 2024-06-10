@@ -91,17 +91,17 @@
         <div class="panel panel--large panel--offset-half">
           <div class="panel panel--max panel--flex">
             <div class="panel panel--medium panel--flex">
-              <label class="tools__label tools__label-select input-toggle" for="tools__select-characteristic-1">
+              <label class="checks__label checks__label-select input-toggle" for="checks__select-characteristic-1">
                 <span>Characteristic:</span>
               </label>
-              <select class="tools__select tools__select-characteristic" id="tools__select-characteristic-1">
+              <select class="checks__select checks__select-characteristic" id="checks__select-characteristic-1">
               </select>
             </div>
             <div class="panel panel--medium panel--flex">
-              <label class="tools__label tools__label-select input-toggle" for="tools__select-difficulty-1">
+              <label class="checks__label checks__label-select input-toggle" for="checks__select-difficulty-1">
                 <span>Difficulty:</span>
               </label>
-              <select class="tools__select tools__select-difficulty" id="tools__select-difficulty-1">
+              <select class="checks__select checks__select-difficulty" id="checks__select-difficulty-1">
               </select>
             </div>
           </div>
@@ -184,91 +184,91 @@
           </div>
         </div>
       </div>
-      <input type="radio" class="tabs__radio" id="tabs__tools" name="tabs__radio" value="tools">
-      <div class="tabs__tab" id="tools">
+      <input type="radio" class="tabs__radio" id="tabs__checks" name="tabs__radio" value="checks">
+      <div class="tabs__tab" id="checks">
         <div class="panel panel--medium panel--offset-half">
-          <input type="radio" class="tools__radio tools__note" id="tools__note" name="tools__radio" value="note"
+          <input type="radio" class="checks__radio checks__note" id="checks__note" name="checks__radio" value="note"
             checked>
-          <input type="radio" class="tools__radio tools__obstacle" id="tools__obstacle" name="tools__radio"
+          <input type="radio" class="checks__radio checks__obstacle" id="checks__obstacle" name="checks__radio"
             value="obstacle">
-          <input type="radio" class="tools__radio tools__event" id="tools__event" name="tools__radio" value="event">
-          <input type="radio" class="tools__radio tools__other" id="tools__other" name="tools__radio" value="other">
-          <input type="radio" class="tools__radio tools__general" id="tools__general" name="tools__radio"
+          <input type="radio" class="checks__radio checks__event" id="checks__event" name="checks__radio" value="event">
+          <input type="radio" class="checks__radio checks__other" id="checks__other" name="checks__radio" value="other">
+          <input type="radio" class="checks__radio checks__general" id="checks__general" name="checks__radio"
             value="general">
-          <div class="tools__nav">
-            <label class="tools__label tools__label-tab tools__label-note unselectable" for="tools__note">Note</label>
-            <label class="tools__label tools__label-tab tools__label-obstacle unselectable"
-              for="tools__obstacle">Obstacle</label>
-            <label class="tools__label tools__label-tab tools__label-event unselectable"
-              for="tools__event">Event</label>
-            <label class="tools__label tools__label-tab tools__label-other unselectable"
-              for="tools__other">Other</label>
-            <label class="tools__label tools__label-tab tools__label-general unselectable"
-              for="tools__general">General</label>
+          <div class="checks__nav">
+            <label class="checks__label checks__label-tab checks__label-note unselectable" for="checks__note">Note</label>
+            <label class="checks__label checks__label-tab checks__label-obstacle unselectable"
+              for="checks__obstacle">Obstacle</label>
+            <label class="checks__label checks__label-tab checks__label-event unselectable"
+              for="checks__event">Event</label>
+            <label class="checks__label checks__label-tab checks__label-other unselectable"
+              for="checks__other">Other</label>
+            <label class="checks__label checks__label-tab checks__label-general unselectable"
+              for="checks__general">General</label>
           </div>
-          <div class="tools__tab tools__note-content"></div>
-          <div class="tools__tab tools__obstacle-content"></div>
-          <div class="tools__tab tools__event-content"></div>
-          <div class="tools__tab tools__other-content"></div>
-          <div class="tools__tab tools__general-content"></div>
+          <div class="checks__tab checks__note-content"></div>
+          <div class="checks__tab checks__obstacle-content"></div>
+          <div class="checks__tab checks__event-content"></div>
+          <div class="checks__tab checks__other-content"></div>
+          <div class="checks__tab checks__general-content"></div>
           <hr>
-          <div class="tools__apply panel">
+          <div class="checks__apply panel">
             <span>Apply changes to:</span>
-            <input type="button" class="tools__apply-this input-toggle" value="Selected">
-            <input type="button" class="tools__apply-all input-toggle" value="All">
-            <input type="button" class="tools__apply-general input-toggle" value="General">
+            <input type="button" class="checks__apply-this input-toggle" value="Selected">
+            <input type="button" class="checks__apply-all input-toggle" value="All">
+            <input type="button" class="checks__apply-general input-toggle" value="General">
           </div>
         </div>
         <div class="panel panel--medium panel--offset-half">
           <div class="panel panel--max panel--flex">
             <div class="panel panel--medium panel--flex">
-              <label class="tools__label tools__label-select" for="tools__select-characteristic-2">
+              <label class="checks__label checks__label-select" for="checks__select-characteristic-2">
                 <span>Characteristic:</span>
               </label>
-              <select class="tools__select tools__select-characteristic input-toggle"
-                id="tools__select-characteristic-2">
+              <select class="checks__select checks__select-characteristic input-toggle"
+                id="checks__select-characteristic-2">
               </select>
             </div>
             <div class="panel panel--medium panel--flex">
-              <label class="tools__label tools__label-select" for="tools__select-difficulty-2">
+              <label class="checks__label checks__label-select" for="checks__select-difficulty-2">
                 <span>Difficulty:</span>
               </label>
-              <select class="tools__select tools__select-difficulty input-toggle" id="tools__select-difficulty-2">
+              <select class="checks__select checks__select-difficulty input-toggle" id="checks__select-difficulty-2">
               </select>
             </div>
           </div>
-          <span class="tools__output-text">Map:</span><br>
-          <div class="tools__output-box tools__output-diff">
+          <span class="checks__output-text">Map:</span><br>
+          <div class="checks__output-box checks__output-diff">
             No output.
           </div>
-          <span class="tools__output-text">General:</span><br>
-          <div class="tools__output-box tools__output-general">
+          <span class="checks__output-text">General:</span><br>
+          <div class="checks__output-box checks__output-general">
             No output.
           </div>
-          <span class="tools__output-text">Legend:</span><br>
-          <span class="tools__output-text">🚧 <b>Ranking:</b> for rankability reason.</span><br>
-          <span class="tools__output-text">❌ <b>Error:</b> should be fixed unless you know what you are
+          <span class="checks__output-text">Legend:</span><br>
+          <span class="checks__output-text">🚧 <b>Ranking:</b> for rankability reason.</span><br>
+          <span class="checks__output-text">❌ <b>Error:</b> should be fixed unless you know what you are
             doing.</span><br>
-          <span class="tools__output-text">❗ <b>Warning:</b> not necessarily needed to be fixed, worth
+          <span class="checks__output-text">❗ <b>Warning:</b> not necessarily needed to be fixed, worth
             considering.</span><br>
-          <span class="tools__output-text">⚠️ <b>Info:</b> no action necessary, take note.</span><br>
+          <span class="checks__output-text">⚠️ <b>Info:</b> no action necessary, take note.</span><br>
         </div>
       </div>
       <input type="radio" class="tabs__radio" id="tabs__stats" name="tabs__radio" value="stats">
       <div class="tabs__tab" id="stats">
         <div class="panel panel--max panel--flex">
           <div class="panel panel--medium panel--flex">
-            <label class="tools__label tools__label-select input-toggle" for="tools__select-characteristic-1">
+            <label class="checks__label checks__label-select input-toggle" for="checks__select-characteristic-1">
               <span>Characteristic:</span>
             </label>
-            <select class="tools__select tools__select-characteristic" id="tools__select-characteristic-1">
+            <select class="checks__select checks__select-characteristic" id="checks__select-characteristic-1">
             </select>
           </div>
           <div class="panel panel--medium panel--flex">
-            <label class="tools__label tools__label-select input-toggle" for="tools__select-difficulty-1">
+            <label class="checks__label checks__label-select input-toggle" for="checks__select-difficulty-1">
               <span>Difficulty:</span>
             </label>
-            <select class="tools__select tools__select-difficulty" id="tools__select-difficulty-1">
+            <select class="checks__select checks__select-difficulty" id="checks__select-difficulty-1">
             </select>
           </div>
         </div>
@@ -312,10 +312,10 @@
           <label for="settings__show-info">
             <span>Information</span>
           </label><br>
-          <input type="radio" class="settings__checkbox settings__show" id="settings__show-tools"
+          <input type="radio" class="settings__checkbox settings__show" id="settings__show-checks"
             name="settings__radio">
-          <label for="settings__show-tools">
-            <span>Tools</span>
+          <label for="settings__show-checks">
+            <span>Checks</span>
           </label><br>
           <input type="radio" class="settings__checkbox settings__show" id="settings__show-stats"
             name="settings__radio">
@@ -366,7 +366,7 @@
       </div>
       <div class="tabs__nav">
         <label class="tabs__label tabs__label-tab unselectable" for="tabs__info">Information</label>
-        <label class="tabs__label tabs__label-tab unselectable" for="tabs__tools">Tools</label>
+        <label class="tabs__label tabs__label-tab unselectable" for="tabs__checks">Checks</label>
         <label class="tabs__label tabs__label-tab unselectable" for="tabs__stats">Stats</label>
         <label class="tabs__label tabs__label-tab unselectable" for="tabs__settings">Settings</label>
       </div>

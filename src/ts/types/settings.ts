@@ -12,7 +12,7 @@ interface ISettingsLoad extends SettingsFlag {
 
 interface ISettingsShow extends SettingsFlag {
    info: boolean;
-   tools: boolean;
+   checks: boolean;
    stats: boolean;
    settings: boolean;
 }

@@ -1,4 +1,4 @@
-import { NoteContainerType, INoteContainer } from '../../types/tools/container';
+import { NoteContainerType, INoteContainer } from '../../types/checks/container';
 
 export function getFilteredContainer(container: INoteContainer[], value: string) {
    switch (value) {

@@ -18,7 +18,7 @@ const settingsDefault: ISettings = {
    onLoad: { stats: false },
    show: {
       info: false,
-      tools: false,
+      checks: false,
       stats: false,
       settings: false,
    },

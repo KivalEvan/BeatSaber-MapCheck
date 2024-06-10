@@ -3,14 +3,14 @@ import * as swing from './bsmap/extensions/swing/mod';
 import { TimeProcessor } from './bsmap/beatmap/helpers/timeProcessor';
 import logger from './bsmap/logger';
 import { IWrapInfo } from './bsmap/types/beatmap/wrapper/info';
-import { IBeatmapAudio, IBeatmapItem } from './types/tools/beatmapItem';
+import { IBeatmapAudio, IBeatmapItem } from './types/checks/beatmapItem';
 import { IBPMInfo } from './bsmap/types/beatmap/v2/bpmInfo';
 import { IAudio } from './bsmap/types/beatmap/v4/audioData';
 import { IBPMEvent } from './bsmap/types/beatmap/v3/bpmEvent';
 import settings from './settings';
 import { Beatmap, loadDifficulty, loadInfo, loadLightshow, toV4Beatmap } from './bsmap/beatmap/mod';
 import { IWrapBeatmap } from './bsmap/types/beatmap/wrapper/beatmap';
-import { INoteContainer, NoteContainerType } from './types/tools/container';
+import { INoteContainer, NoteContainerType } from './types/checks/container';
 
 function tag(name: string) {
    return ['load', name];

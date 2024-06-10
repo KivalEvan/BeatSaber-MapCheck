@@ -3,7 +3,7 @@ import LoadedData from '../loadedData';
 import { TimeProcessor } from '../bsmap/beatmap/helpers/timeProcessor';
 import { NoteJumpSpeed } from '../bsmap/beatmap/helpers/njs';
 import { CharacteristicName, DifficultyName } from '../bsmap/types/beatmap/shared/mod';
-import { IBeatmapSettings } from '../types/tools/tool';
+import { IBeatmapSettings } from '../types/checks/check';
 import { Tool } from '../types';
 import logger from '../bsmap/logger';
 import { getLastInteractiveTime } from '../bsmap/beatmap/helpers/beatmap';

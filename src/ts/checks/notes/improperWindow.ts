@@ -1,5 +1,5 @@
 import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import { NoteContainerType } from '../../types/tools/container';
+import { NoteContainerType } from '../../types/checks/container';
 import UIInput from '../../ui/helpers/input';
 import swing from '../../bsmap/extensions/swing/swing';
 import { printResultTime } from '../helpers';

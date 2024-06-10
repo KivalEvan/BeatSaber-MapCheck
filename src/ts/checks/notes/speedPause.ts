@@ -12,7 +12,7 @@ import { printResultTime } from '../helpers';
 import UIInput from '../../ui/helpers/input';
 import { TimeProcessor } from '../../bsmap/beatmap/helpers/timeProcessor';
 import { NoteColor } from '../../bsmap/beatmap/shared/constants';
-import { NoteContainerType } from '../../types/tools/container';
+import { NoteContainerType } from '../../types/checks/container';
 import { IWrapColorNote } from '../../bsmap/types/beatmap/wrapper/colorNote';
 
 const name = 'Speed Pause';

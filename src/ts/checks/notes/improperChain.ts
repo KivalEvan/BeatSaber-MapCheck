@@ -1,5 +1,5 @@
 import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import { INoteContainer, NoteContainerType } from '../../types/tools/container';
+import { INoteContainer, NoteContainerType } from '../../types/checks/container';
 import UIInput from '../../ui/helpers/input';
 import { printResultTime } from '../helpers';
 import { NoteDirection } from '../../bsmap/beatmap/shared/constants';
