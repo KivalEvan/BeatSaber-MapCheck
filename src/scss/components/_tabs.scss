@@ -1,0 +1,87 @@
+$tabs_list: "info", "stats", "tools", "settings";
+
+.tabs {
+   &__container {
+      display: flex;
+      height: 100%;
+      box-sizing: border-box;
+      flex-direction: column-reverse;
+      justify-content: space-between;
+   }
+   &__nav {
+      display: flex;
+      width: 100%;
+      justify-content: space-evenly;
+   }
+   &__radio {
+      position: absolute;
+      width: 0;
+      height: 0;
+      left: -9999px;
+      &:checked {
+         @each $name in $tabs_list {
+            &[id=tabs__#{$name}] ~ .tabs__nav .tabs__label[for=tabs__#{$name}] {
+               border-bottom: 1px solid var(--bg-tools-tab-select);
+               filter: contrast(110%) brightness(1.05);
+            }
+         }
+         + .tabs__tab {
+            display: flex;
+         }
+      }
+      &:focus {
+         outline: 1px dashed var(--c-outline-focus-accordion);
+         outline-offset: -1px;
+      }
+   }
+   &__label {
+      &-tab {
+         width: 100%;
+         padding: 0.25em;
+         background-color: var(--bg-accordion-base);
+         color: var(--c-accordion-text);
+         cursor: pointer;
+         font-size: 1.25em;
+         font-weight: 800;
+         text-align: center;
+         text-transform: uppercase;
+         line-height: 1.5;
+         border-bottom: 1px solid var(--bg-tools-tab);
+         &:hover {
+            border-bottom: 1px solid var(--bg-tools-tab-select);
+         filter: contrast(110%) brightness(1.05);
+         }
+      }
+      &-select {
+         padding: 0 0.25em;
+      }
+   }
+   &__tab {
+      display: none;
+      box-sizing: border-box;
+      max-height: fit-content;
+      overflow: auto;
+   }
+   &__apply {
+      text-align: center;
+      margin-top: auto;
+   }
+   &__select {
+      cursor: pointer;
+      width: 100%;
+   }
+   &__output {
+      &-text {
+         margin: 0 0.25em;
+         padding: 0 0.25em;
+      }
+      &-box {
+         border: 1px solid gray;
+         border-radius: 4px;
+         margin: 0.25em;
+         padding: 0.25em;
+         max-height: 16em;
+         overflow: auto;
+      }
+   }
+}

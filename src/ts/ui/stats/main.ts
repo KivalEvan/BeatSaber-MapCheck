@@ -19,7 +19,7 @@ import { createObstacleCountTable } from './obstacle';
 import { CharacteristicName } from '../../bsmap/types/beatmap/shared/characteristic';
 import { IWrapInfoBeatmap } from '../../bsmap/types/beatmap/wrapper/info';
 
-const htmlStats: HTMLElement = document.querySelector('#stats .accordion__collapsible')!;
+const htmlStats: HTMLElement = document.querySelector('#stats')!;
 
 function populate(): void {
    if (!LoadedData.beatmapInfo) {

@@ -1,9 +1,9 @@
 import { version } from '../../package.json';
 
-const watermark: string = 'Kival Evan#5480';
+const watermark: string = 'Kival Evan';
 
 export default new (class Version {
-   private _version: string = version;
+   private _version: string = version + '-beta-a';
    private _wm: string = watermark;
 
    get value(): string {

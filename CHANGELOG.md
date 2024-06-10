@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.7.0 [2024-06-xx]
+
+### Added
+
+-  Collider environment & color scheme
+
+### Changed
+
+-  Beatmap core complete overhaul
+   -  No longer converts beatmap for compatibility
+-  UI revamped
+   -  Stats no longer generate all difficulty at once, uses currently selected
+
 ## 2.6.1 [2024-03-25]
 
 ### Fixed

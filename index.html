@@ -65,11 +65,9 @@
       <div class="loading__bar"></div>
       <span class="loading__text">No map loaded</span>
     </div>
-    <div class="accordion" id="info">
-      <input type="checkbox" class="accordion__button" id="accordion__info">
-      <label class="accordion__label accordion__label--medium accordion__label--upper unselectable"
-        for="accordion__info"><span>Information</span></label>
-      <div class="accordion__collapsible-flex">
+    <div class="tabs__container">
+      <input type="radio" class="tabs__radio" id="tabs__info" name="tabs__radio" value="info" checked>
+      <div class="tabs__tab" id="info">
         <div class="panel panel--small panel--offset-half">
           <div class="info__level-author" title="Level Author">Level Author</div>
           <div class="info__environment" title="Environment">Environment</div>
@@ -186,14 +184,8 @@
           </div>
         </div>
       </div>
-    </div>
-    <div class="accordion" id="tools">
-      <input type="checkbox" class="accordion__button" id="accordion__tools">
-      <label class="accordion__label accordion__label--medium accordion__label--upper unselectable"
-        for="accordion__tools">
-        <span>Tools</span>
-      </label>
-      <div class="accordion__collapsible-flex">
+      <input type="radio" class="tabs__radio" id="tabs__tools" name="tabs__radio" value="tools">
+      <div class="tabs__tab" id="tools">
         <div class="panel panel--medium panel--offset-half">
           <input type="radio" class="tools__radio tools__note" id="tools__note" name="tools__radio" value="note"
             checked>
@@ -262,22 +254,27 @@
           <span class="tools__output-text">⚠️ <b>Info:</b> no action necessary, take note.</span><br>
         </div>
       </div>
-    </div>
-    <div class="accordion" id="stats">
-      <input type="checkbox" class="accordion__button" id="accordion__stats">
-      <label class="accordion__label accordion__label--medium accordion__label--upper unselectable"
-        for="accordion__stats">
-        <span>Stats</span>
-      </label>
-      <div class="accordion__collapsible"></div>
-    </div>
-    <div class="accordion" id="settings">
-      <input type="checkbox" class="accordion__button" id="accordion__settings">
-      <label class="accordion__label accordion__label--medium accordion__label--upper unselectable"
-        for="accordion__settings">
-        <span>Settings</span>
-      </label>
-      <div class="accordion__collapsible-flex">
+      <input type="radio" class="tabs__radio" id="tabs__stats" name="tabs__radio" value="stats">
+      <div class="tabs__tab" id="stats">
+        <div class="panel panel--max panel--flex">
+          <div class="panel panel--medium panel--flex">
+            <label class="tools__label tools__label-select input-toggle" for="tools__select-characteristic-1">
+              <span>Characteristic:</span>
+            </label>
+            <select class="tools__select tools__select-characteristic" id="tools__select-characteristic-1">
+            </select>
+          </div>
+          <div class="panel panel--medium panel--flex">
+            <label class="tools__label tools__label-select input-toggle" for="tools__select-difficulty-1">
+              <span>Difficulty:</span>
+            </label>
+            <select class="tools__select tools__select-difficulty" id="tools__select-difficulty-1">
+            </select>
+          </div>
+        </div>
+      </div>
+      <input type="radio" class="tabs__radio" id="tabs__settings" name="tabs__radio" value="settings">
+      <div class="tabs__tab" id="settings">
         <div class="panel panel--small panel--offset-half">
           <span>Map zip loading:</span><br>
           <input type="checkbox" class="settings__checkbox settings__load" id="settings__load-audio" name="audio">
@@ -310,20 +307,23 @@
           <div>Disabling these speeds up loading time but may cause unintended result.</div>
         </div>
         <div class="panel panel--small panel--offset-half">
-          <span>Show on launch:</span><br>
-          <input type="checkbox" class="settings__checkbox settings__show" id="settings__show-info">
+          <span>Default tab:</span><br>
+          <input type="radio" class="settings__checkbox settings__show" id="settings__show-info" name="settings__radio">
           <label for="settings__show-info">
             <span>Information</span>
           </label><br>
-          <input type="checkbox" class="settings__checkbox settings__show" id="settings__show-tools">
+          <input type="radio" class="settings__checkbox settings__show" id="settings__show-tools"
+            name="settings__radio">
           <label for="settings__show-tools">
             <span>Tools</span>
           </label><br>
-          <input type="checkbox" class="settings__checkbox settings__show" id="settings__show-stats">
+          <input type="radio" class="settings__checkbox settings__show" id="settings__show-stats"
+            name="settings__radio">
           <label for="settings__show-stats">
             <span>Stats</span>
           </label><br>
-          <input type="checkbox" class="settings__checkbox settings__show" id="settings__show-settings">
+          <input type="radio" class="settings__checkbox settings__show" id="settings__show-settings"
+            name="settings__radio">
           <label for="settings__show-settings">
             <span>Settings</span>
           </label><br>
@@ -364,16 +364,22 @@
             value="Clear Settings">
         </div>
       </div>
+      <div class="tabs__nav">
+        <label class="tabs__label tabs__label-tab unselectable" for="tabs__info">Information</label>
+        <label class="tabs__label tabs__label-tab unselectable" for="tabs__tools">Tools</label>
+        <label class="tabs__label tabs__label-tab unselectable" for="tabs__stats">Stats</label>
+        <label class="tabs__label tabs__label-tab unselectable" for="tabs__settings">Settings</label>
+      </div>
     </div>
     <footer>
       <div>
         <a href='https://ko-fi.com/I3I620UNJ' target='_blank'><img style='position:absolute;height:1.5rem;left:-1.5rem;'
             src='/img/kofi.png' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
-        <a class="link link__watermark" href="https://kivalevan.github.io/">watermark</a>
+        <a class="link link__watermark" href="https://kivalevan.github.io/">Kival Evan</a>
         <span> | </span>
         <a class="link link__version"
           href="https://github.com/KivalEvan/BeatSaber-MapCheck/blob/main/CHANGELOG.md">version</a>
-        <a class="link link__github" href="https://github.com/KivalEvan/BeatSaber-MapCheck">github</a>
+        <a class="link link__github" href="https://github.com/KivalEvan/BeatSaber-MapCheck">source</a>
         <a class="link link__wiki" href="https://github.com/KivalEvan/BeatSaber-MapCheck/wiki">wiki</a>
         <a class="link link__utility" href="https://kivalevan.github.io/BeatSaber-MappingUtility/">utility</a>
       </div>
