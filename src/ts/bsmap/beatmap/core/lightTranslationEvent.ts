@@ -45,8 +45,8 @@ export class LightTranslationEvent extends BaseObject implements IWrapLightTrans
 
    isValid(fn?: (object: this) => boolean, override?: boolean): boolean {
       return override
-         ? super.isValid(fn)
-         : super.isValid(fn) &&
+         ? super.isValid(fn, override)
+         : super.isValid(fn, override) &&
               (this.previous === 0 || this.previous === 1) &&
               this.easing >= -1 &&
               this.easing <= 103;

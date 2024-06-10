@@ -96,8 +96,8 @@ export class Lightshow extends BaseItem implements IWrapLightshow {
 
    isValid(fn?: (object: this) => boolean, override?: boolean): boolean {
       return override
-         ? super.isValid(fn)
-         : super.isValid(fn) &&
+         ? super.isValid(fn, override)
+         : super.isValid(fn, override) &&
               this.waypoints.every((e) => e.isValid()) &&
               this.basicEvents.every((e) => e.isValid()) &&
               this.colorBoostEvents.every((e) => e.isValid()) &&

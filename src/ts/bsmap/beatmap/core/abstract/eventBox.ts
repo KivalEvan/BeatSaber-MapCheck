@@ -36,11 +36,11 @@ export abstract class EventBox extends BaseItem implements IWrapEventBox {
 
    isValid(fn?: (object: this) => boolean, override?: boolean): boolean {
       return override
-         ? super.isValid(fn)
-         : super.isValid(fn) &&
+         ? super.isValid(fn, override)
+         : super.isValid(fn, override) &&
               (this.beatDistributionType === 1 || this.beatDistributionType === 2) &&
-              this.easing >= 0 &&
-              this.easing <= 3 &&
+              this.easing >= -1 &&
+              this.easing <= 103 &&
               this.events.every((e) => typeof e === 'number' || e.isValid()) &&
               this.filter.isValid();
    }

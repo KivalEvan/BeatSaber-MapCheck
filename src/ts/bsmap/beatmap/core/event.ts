@@ -34,8 +34,8 @@ export class BasicEvent extends BaseObject implements IWrapEvent {
 
    isValid(fn?: (object: this) => boolean, override?: boolean): boolean {
       return override
-         ? super.isValid(fn)
-         : super.isValid(fn) &&
+         ? super.isValid(fn, override)
+         : super.isValid(fn, override) &&
               this.isValidType() &&
               this.value >= 0 &&
               !(!this.isLaserRotationEvent() && this.value > 12 && !this.isOldChroma());

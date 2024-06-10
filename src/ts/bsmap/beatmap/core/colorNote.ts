@@ -36,8 +36,8 @@ export class ColorNote extends BaseNote implements IWrapColorNote {
 
    isValid(fn?: (object: this) => boolean, override?: boolean): boolean {
       return override
-         ? super.isValid(fn)
-         : super.isValid(fn) &&
+         ? super.isValid(fn, override)
+         : super.isValid(fn, override) &&
               this.posX >= 0 &&
               this.posX <= 3 &&
               this.posY >= 0 &&

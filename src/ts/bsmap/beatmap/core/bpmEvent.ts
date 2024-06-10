@@ -23,7 +23,7 @@ export class BPMEvent extends BaseObject implements IWrapBPMEvent {
    }
 
    isValid(fn?: (object: this) => boolean, override?: boolean): boolean {
-      return override ? super.isValid(fn) : super.isValid(fn) && this.bpm > 0;
+      return override ? super.isValid(fn, override) : super.isValid(fn, override) && this.bpm > 0;
    }
 
    bpm: IWrapBPMEvent['bpm'];

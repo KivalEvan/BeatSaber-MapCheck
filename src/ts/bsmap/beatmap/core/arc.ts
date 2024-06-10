@@ -48,8 +48,8 @@ export class Arc extends BaseSlider implements IWrapArc {
 
    isValid(fn?: (object: this) => boolean, override?: boolean): boolean {
       return override
-         ? super.isValid(fn)
-         : super.isValid(fn) &&
+         ? super.isValid(fn, override)
+         : super.isValid(fn, override) &&
               !(
                  this.isInverse() ||
                  this.posX < 0 ||

@@ -48,8 +48,8 @@ export class AudioData extends BaseItem implements IWrapAudioData {
 
    isValid(fn?: (object: this) => boolean, override?: boolean): boolean {
       return override
-         ? super.isValid(fn)
-         : super.isValid(fn) &&
+         ? super.isValid(fn, override)
+         : super.isValid(fn, override) &&
               this.frequency >= 0 &&
               this.sampleCount >= 0 &&
               this.bpmData.every(

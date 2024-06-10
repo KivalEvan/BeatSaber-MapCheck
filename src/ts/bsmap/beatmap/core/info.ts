@@ -144,8 +144,8 @@ export class Info extends BaseItem implements IWrapInfo {
 
    isValid(fn?: (object: this) => boolean, override?: boolean): boolean {
       return override
-         ? super.isValid(fn)
-         : super.isValid(fn) &&
+         ? super.isValid(fn, override)
+         : super.isValid(fn, override) &&
               this.audio.filename !== '' &&
               this.audio.duration > 0 &&
               this.audio.previewDuration > 0 &&
@@ -237,8 +237,11 @@ export class InfoBeatmap extends BaseItem implements IWrapInfoBeatmap {
 
    isValid(fn?: (object: this) => boolean, override?: boolean): boolean {
       return override
-         ? super.isValid(fn)
-         : super.isValid(fn) && this.njs > 0 && this.colorSchemeId >= -1 && this.environmentId >= 0;
+         ? super.isValid(fn, override)
+         : super.isValid(fn, override) &&
+              this.njs > 0 &&
+              this.colorSchemeId >= -1 &&
+              this.environmentId >= 0;
    }
 
    characteristic: CharacteristicName;
