@@ -66,248 +66,249 @@
       <span class="loading__text">No map loaded</span>
     </div>
     <div class="tabs__container">
-      <input type="radio" class="tabs__radio" id="tabs__info" name="tabs__radio" value="info" checked>
+      <input type="radio" class="tabs__radio" id="tabs__info" name="tabs__nav" value="info" checked>
       <div class="tabs__tab" id="info">
-        <div class="panel panel--small panel--offset-half">
-          <div class="info__level-author" title="Level Author">Level Author</div>
-          <div class="info__environment" title="Environment">Environment</div>
-          <div class="info__tags hidden">Tag</div>
-          <div class="info__editors hidden">Editors</div>
-          <div class="info__contributors hidden">
-            <label class="info__label" for="info__contributors-select">
-              <span>Contributors:</span>
-            </label>
-            <select class="info__select info__contributors-select" id="info__contributors-select">
-            </select>
-            <div class="info__contributors-card">
-              <img class="info__contributors-image" src="/img/unknown.jpg" alt="contributor image">
-              <div class="info__contributors-content">
-                <span class="info__contributors-name">Name</span><br>
-                <span class="info__contributors-role">Role</span>
+        <div class="panel panel--flex">
+          <div class="panel panel--small panel--offset-half">
+            <div class="info__level-author" title="Level Author">Level Author</div>
+            <div class="info__environment" title="Environment">Environment</div>
+            <div class="info__tags hidden">Tag</div>
+            <div class="info__editors hidden">Editors</div>
+            <div class="info__contributors hidden">
+              <label class="info__label" for="info__contributors-select">
+                <span>Contributors:</span>
+              </label>
+              <select class="info__select info__contributors-select" id="info__contributors-select">
+              </select>
+              <div class="info__contributors-card">
+                <img class="info__contributors-image" src="/img/unknown.jpg" alt="contributor image">
+                <div class="info__contributors-content">
+                  <span class="info__contributors-name">Name</span><br>
+                  <span class="info__contributors-role">Role</span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="panel panel--large panel--offset-half">
-          <div class="panel panel--max">
-            <table class="info__table">
-              <tbody>
-                <tr class="info__table-row info__version hidden">
-                  <th class="info__table-header">Version</th>
-                  <td class="info__table-element"></td>
-                </tr>
-                <tr class="info__table-row info__mappers hidden">
-                  <th class="info__table-header">Mappers</th>
-                  <td class="info__table-element"></td>
-                </tr>
-                <tr class="info__table-row info__lighters hidden">
-                  <th class="info__table-header">Lighters</th>
-                  <td class="info__table-element"></td>
-                </tr>
-                <tr class="info__table-row info__environmentId hidden">
-                  <th class="info__table-header">Environment</th>
-                  <td class="info__table-element"></td>
-                </tr>
-                <tr class="info__table-row info__play-time hidden">
-                  <th class="info__table-header">Play Time</th>
-                  <td class="info__table-element"></td>
-                </tr>
-                <tr class="info__table-row info__time-spend hidden">
-                  <th class="info__table-header">Time Spent</th>
-                  <td class="info__table-element"></td>
-                </tr>
-                <tr class="info__table-row info__color-scheme hidden">
-                  <th class="info__table-header">Color Scheme</th>
-                  <td class="info__table-element"></td>
-                </tr>
-                <tr class="info__table-row info__custom-color hidden">
-                  <th class="info__table-header">Custom Color</th>
-                  <td class="info__table-element"></td>
-                </tr>
-                <tr class="info__table-row info__requirements hidden">
-                  <th class="info__table-header">Requirements</th>
-                  <td class="info__table-element"></td>
-                </tr>
-                <tr class="info__table-row info__suggestions hidden">
-                  <th class="info__table-header">Suggestions</th>
-                  <td class="info__table-element"></td>
-                </tr>
-                <tr class="info__table-row info__information hidden">
-                  <th class="info__table-header">Information</th>
-                  <td class="info__table-element"></td>
-                </tr>
-                <tr class="info__table-row info__warnings hidden">
-                  <th class="info__table-header">Warnings</th>
-                  <td class="info__table-element"></td>
-                </tr>
-                <tr class="info__table-row info__bookmarks hidden">
-                  <th class="info__table-header">Bookmarks</th>
-                  <td class="info__table-element"></td>
-                </tr>
-                <tr class="info__table-row info__bpm-changes hidden">
-                  <th class="info__table-header">BPM Changes</th>
-                  <td class="info__table-element"></td>
-                </tr>
-                <tr class="info__table-row info__environment-enhancement hidden">
-                  <th class="info__table-header">Environment</th>
-                  <td class="info__table-element"></td>
-                </tr>
-                <tr class="info__table-row info__point-definitions hidden">
-                  <th class="info__table-header">Point Definitions</th>
-                  <td class="info__table-element"></td>
-                </tr>
-                <tr class="info__table-row info__custom-events hidden">
-                  <th class="info__table-header">Custom Events</th>
-                  <td class="info__table-element"></td>
-                </tr>
-              </tbody>
-            </table>
+          <div class="panel panel--large panel--offset-half">
+            <div class="panel panel--max">
+              <table class="info__table">
+                <tbody>
+                  <tr class="info__table-row info__version hidden">
+                    <th class="info__table-header">Version</th>
+                    <td class="info__table-element"></td>
+                  </tr>
+                  <tr class="info__table-row info__mappers hidden">
+                    <th class="info__table-header">Mappers</th>
+                    <td class="info__table-element"></td>
+                  </tr>
+                  <tr class="info__table-row info__lighters hidden">
+                    <th class="info__table-header">Lighters</th>
+                    <td class="info__table-element"></td>
+                  </tr>
+                  <tr class="info__table-row info__environmentId hidden">
+                    <th class="info__table-header">Environment</th>
+                    <td class="info__table-element"></td>
+                  </tr>
+                  <tr class="info__table-row info__play-time hidden">
+                    <th class="info__table-header">Play Time</th>
+                    <td class="info__table-element"></td>
+                  </tr>
+                  <tr class="info__table-row info__time-spend hidden">
+                    <th class="info__table-header">Time Spent</th>
+                    <td class="info__table-element"></td>
+                  </tr>
+                  <tr class="info__table-row info__color-scheme hidden">
+                    <th class="info__table-header">Color Scheme</th>
+                    <td class="info__table-element"></td>
+                  </tr>
+                  <tr class="info__table-row info__custom-color hidden">
+                    <th class="info__table-header">Custom Color</th>
+                    <td class="info__table-element"></td>
+                  </tr>
+                  <tr class="info__table-row info__requirements hidden">
+                    <th class="info__table-header">Requirements</th>
+                    <td class="info__table-element"></td>
+                  </tr>
+                  <tr class="info__table-row info__suggestions hidden">
+                    <th class="info__table-header">Suggestions</th>
+                    <td class="info__table-element"></td>
+                  </tr>
+                  <tr class="info__table-row info__information hidden">
+                    <th class="info__table-header">Information</th>
+                    <td class="info__table-element"></td>
+                  </tr>
+                  <tr class="info__table-row info__warnings hidden">
+                    <th class="info__table-header">Warnings</th>
+                    <td class="info__table-element"></td>
+                  </tr>
+                  <tr class="info__table-row info__bookmarks hidden">
+                    <th class="info__table-header">Bookmarks</th>
+                    <td class="info__table-element"></td>
+                  </tr>
+                  <tr class="info__table-row info__bpm-changes hidden">
+                    <th class="info__table-header">BPM Changes</th>
+                    <td class="info__table-element"></td>
+                  </tr>
+                  <tr class="info__table-row info__environment-enhancement hidden">
+                    <th class="info__table-header">Environment</th>
+                    <td class="info__table-element"></td>
+                  </tr>
+                  <tr class="info__table-row info__point-definitions hidden">
+                    <th class="info__table-header">Point Definitions</th>
+                    <td class="info__table-element"></td>
+                  </tr>
+                  <tr class="info__table-row info__custom-events hidden">
+                    <th class="info__table-header">Custom Events</th>
+                    <td class="info__table-element"></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
-      <input type="radio" class="tabs__radio" id="tabs__checks" name="tabs__radio" value="checks">
+      <input type="radio" class="tabs__radio" id="tabs__checks" name="tabs__nav" value="checks">
       <div class="tabs__tab" id="checks">
-        <div class="panel panel--medium panel--offset-half">
-          <input type="radio" class="checks__radio checks__note" id="checks__note" name="checks__radio" value="note"
-            checked>
-          <input type="radio" class="checks__radio checks__obstacle" id="checks__obstacle" name="checks__radio"
-            value="obstacle">
-          <input type="radio" class="checks__radio checks__event" id="checks__event" name="checks__radio" value="event">
-          <input type="radio" class="checks__radio checks__other" id="checks__other" name="checks__radio" value="other">
-          <input type="radio" class="checks__radio checks__general" id="checks__general" name="checks__radio"
-            value="general">
-          <div class="checks__nav">
-            <label class="checks__label checks__label-tab checks__label-note unselectable"
-              for="checks__note">Note</label>
-            <label class="checks__label checks__label-tab checks__label-obstacle unselectable"
-              for="checks__obstacle">Obstacle</label>
-            <label class="checks__label checks__label-tab checks__label-event unselectable"
-              for="checks__event">Event</label>
-            <label class="checks__label checks__label-tab checks__label-other unselectable"
-              for="checks__other">Other</label>
-            <label class="checks__label checks__label-tab checks__label-general unselectable"
-              for="checks__general">General</label>
+        <div class="panel panel--flex">
+          <div class="panel panel--medium panel--offset-half">
+            <div class="tabs__container">
+              <input type="radio" class="tabs__radio" id="tabs__note" name="tabs__checks" value="note" checked>
+              <div class="tabs__tab checks__note-content"></div>
+              <input type="radio" class="tabs__radio" id="tabs__obstacle" name="tabs__checks" value="obstacle">
+              <div class="tabs__tab checks__obstacle-content"></div>
+              <input type="radio" class="tabs__radio" id="tabs__event" name="tabs__checks" value="event">
+              <div class="tabs__tab checks__event-content"></div>
+              <input type="radio" class="tabs__radio" id="tabs__other" name="tabs__checks" value="other">
+              <div class="tabs__tab checks__other-content"></div>
+              <input type="radio" class="tabs__radio" id="tabs__general" name="tabs__checks" value="general">
+              <div class="tabs__tab checks__general-content"></div>
+              <div class="tabs__nav">
+                <label class="tabs__label tabs__label-text unselectable" for="tabs__note">Note</label>
+                <label class="tabs__label tabs__label-text unselectable" for="tabs__obstacle">Obstacle</label>
+                <label class="tabs__label tabs__label-text unselectable" for="tabs__event">Event</label>
+                <label class="tabs__label tabs__label-text unselectable" for="tabs__other">Other</label>
+                <label class="tabs__label tabs__label-text unselectable" for="tabs__general">General</label>
+              </div>
+            </div>
           </div>
-          <div class="checks__tab checks__note-content"></div>
-          <div class="checks__tab checks__obstacle-content"></div>
-          <div class="checks__tab checks__event-content"></div>
-          <div class="checks__tab checks__other-content"></div>
-          <div class="checks__tab checks__general-content"></div>
-          <hr>
-          <div class="checks__apply panel">
-            <span>Apply changes to:</span>
-            <input type="button" class="checks__apply-this input-toggle" value="Selected">
-            <input type="button" class="checks__apply-all input-toggle" value="All">
-            <input type="button" class="checks__apply-general input-toggle" value="General">
+          <div class="panel panel--medium panel--offset-half">
+            <div class="checks__apply panel">
+              <span>Apply changes to:</span>
+              <input type="button" class="checks__apply-this input-toggle" value="Selected">
+              <input type="button" class="checks__apply-all input-toggle" value="All">
+              <input type="button" class="checks__apply-general input-toggle" value="General">
+            </div>
+            <hr>
+            <span class="checks__output-text">Beatmap Issue(s):</span><br>
+            <div class="checks__output-box checks__output-diff">
+              No output.
+            </div>
+            <span class="checks__output-text">General Issue(s):</span><br>
+            <div class="checks__output-box checks__output-general">
+              No output.
+            </div>
+            <span class="checks__output-text">Legend:</span><br>
+            <span class="checks__output-text">🚧 <b>Ranking:</b> for rankability reason.</span><br>
+            <span class="checks__output-text">❌ <b>Error:</b> should be fixed unless you know what you are
+              doing.</span><br>
+            <span class="checks__output-text">❗ <b>Warning:</b> not necessarily needed to be fixed, worth
+              considering.</span><br>
+            <span class="checks__output-text">⚠️ <b>Info:</b> no action necessary, take note.</span><br>
           </div>
-        </div>
-        <div class="panel panel--medium panel--offset-half">
-          <span class="checks__output-text">Beatmap Issue(s):</span><br>
-          <div class="checks__output-box checks__output-diff">
-            No output.
-          </div>
-          <span class="checks__output-text">General Issue(s):</span><br>
-          <div class="checks__output-box checks__output-general">
-            No output.
-          </div>
-          <span class="checks__output-text">Legend:</span><br>
-          <span class="checks__output-text">🚧 <b>Ranking:</b> for rankability reason.</span><br>
-          <span class="checks__output-text">❌ <b>Error:</b> should be fixed unless you know what you are
-            doing.</span><br>
-          <span class="checks__output-text">❗ <b>Warning:</b> not necessarily needed to be fixed, worth
-            considering.</span><br>
-          <span class="checks__output-text">⚠️ <b>Info:</b> no action necessary, take note.</span><br>
         </div>
       </div>
-      <input type="radio" class="tabs__radio" id="tabs__stats" name="tabs__radio" value="stats">
+      <input type="radio" class="tabs__radio" id="tabs__stats" name="tabs__nav" value="stats">
       <div class="tabs__tab" id="stats">
-        <div class="stats__content">
+        <div class="panel panel--flex stats__content">
           Map not loaded.
         </div>
       </div>
-      <input type="radio" class="tabs__radio" id="tabs__settings" name="tabs__radio" value="settings">
+      <input type="radio" class="tabs__radio" id="tabs__settings" name="tabs__nav" value="settings">
       <div class="tabs__tab" id="settings">
-        <div class="panel panel--small panel--offset-half">
-          <span>Map zip loading:</span><br>
-          <input type="checkbox" class="settings__checkbox settings__load" id="settings__load-audio" name="audio">
-          <label for="settings__load-audio">
-            <span>Load audio</span>
-          </label><br>
-          <input type="checkbox" class="settings__checkbox settings__load" id="settings__load-imagecover"
-            name="imageCover">
-          <label for="settings__load-imagecover">
-            <span>Load cover image</span>
-          </label><br>
-          <input type="checkbox" class="settings__checkbox settings__load" id="settings__load-imagecontributor"
-            name="imageContributor">
-          <label for="settings__load-imagecontributor">
-            <span>Load contributor image</span>
-          </label><br>
-          <input type="checkbox" class="settings__checkbox settings__sort" id="settings__sort">
-          <label for="settings__sort">
-            <span>Sorting</span>
-          </label><br>
-          <input type="checkbox" class="settings__checkbox settings__data-check" id="settings__data-check">
-          <label for="settings__data-check">
-            <span>Data check</span>
-          </label><br>
-          <input type="checkbox" class="settings__checkbox settings__data-error" id="settings__data-error">
-          <label for="settings__data-error">
-            <span>Data error</span>
-          </label><br>
-          <br>
-          <div>Disabling these speeds up loading time but may cause unintended result.</div>
-        </div>
-        <div class="panel panel--small panel--offset-half">
-          <span>Default tab:</span><br>
-          <input type="radio" class="settings__checkbox settings__show" id="settings__show-info" name="settings__radio">
-          <label for="settings__show-info">
-            <span>Information</span>
-          </label><br>
-          <input type="radio" class="settings__checkbox settings__show" id="settings__show-checks"
-            name="settings__radio">
-          <label for="settings__show-checks">
-            <span>Checks</span>
-          </label><br>
-          <input type="radio" class="settings__checkbox settings__show" id="settings__show-stats"
-            name="settings__radio">
-          <label for="settings__show-stats">
-            <span>Stats</span>
-          </label><br>
-          <input type="radio" class="settings__checkbox settings__show" id="settings__show-settings"
-            name="settings__radio">
-          <label for="settings__show-settings">
-            <span>Settings</span>
-          </label>
-        </div>
-        <div class="panel panel--small panel--offset-half">
-          <span>Preferences:</span><br>
-          <label for="settings__theme">
-            <span>Theme:</span>
-          </label>
-          <select class="settings__theme" id="settings__theme"></select><br>
-          <label for="settings__info-height">
-            <span>Info Row Height:</span>
-          </label>
-          <input type="number" class="settings__info-height input-toggle input--small" id="settings__info-height"
-            step="1" min="1"><br>
-          <label for="settings__beat-numbering">
-            <span>Beat Numbering:</span>
-          </label>
-          <select class="settings__beat-numbering input-toggle" id="settings__beat-numbering">
-            <option value="beattime">Beat Time</option>
-            <option value="jsontime">JSON Time</option>
-            <option value="realtime">RT (MMSS)</option>
-            <option value="realtimems">RT (MMSSms)</option>
-          </select><br>
-          <label for="settings__rounding">
-            <span>Rounding:</span>
-          </label>
-          <input type="number" class="settings__rounding input-toggle input--small" id="settings__rounding" step="1"
-            min="0"><br>
-          <br>
-          <input type="button" class="settings__clear-button input-toggle" id="settings__clear-button"
-            value="Clear Settings">
+        <div class="panel panel--flex">
+          <div class="panel panel--small panel--offset-half">
+            <span>Map zip loading:</span><br>
+            <input type="checkbox" class="settings__checkbox settings__load" id="settings__load-audio" name="audio">
+            <label for="settings__load-audio">
+              <span>Load audio</span>
+            </label><br>
+            <input type="checkbox" class="settings__checkbox settings__load" id="settings__load-imagecover"
+              name="imageCover">
+            <label for="settings__load-imagecover">
+              <span>Load cover image</span>
+            </label><br>
+            <input type="checkbox" class="settings__checkbox settings__load" id="settings__load-imagecontributor"
+              name="imageContributor">
+            <label for="settings__load-imagecontributor">
+              <span>Load contributor image</span>
+            </label><br>
+            <input type="checkbox" class="settings__checkbox settings__sort" id="settings__sort">
+            <label for="settings__sort">
+              <span>Sorting</span>
+            </label><br>
+            <input type="checkbox" class="settings__checkbox settings__data-check" id="settings__data-check">
+            <label for="settings__data-check">
+              <span>Data check</span>
+            </label><br>
+            <input type="checkbox" class="settings__checkbox settings__data-error" id="settings__data-error">
+            <label for="settings__data-error">
+              <span>Data error</span>
+            </label><br>
+            <br>
+            <div>Disabling these speeds up loading time but may cause unintended result.</div>
+          </div>
+          <div class="panel panel--small panel--offset-half">
+            <span>Default tab:</span><br>
+            <input type="radio" class="settings__checkbox settings__show" id="settings__show-info"
+              name="settings__radio">
+            <label for="settings__show-info">
+              <span>Information</span>
+            </label><br>
+            <input type="radio" class="settings__checkbox settings__show" id="settings__show-checks"
+              name="settings__radio">
+            <label for="settings__show-checks">
+              <span>Checks</span>
+            </label><br>
+            <input type="radio" class="settings__checkbox settings__show" id="settings__show-stats"
+              name="settings__radio">
+            <label for="settings__show-stats">
+              <span>Stats</span>
+            </label><br>
+            <input type="radio" class="settings__checkbox settings__show" id="settings__show-settings"
+              name="settings__radio">
+            <label for="settings__show-settings">
+              <span>Settings</span>
+            </label>
+          </div>
+          <div class="panel panel--small panel--offset-half">
+            <span>Preferences:</span><br>
+            <label for="settings__theme">
+              <span>Theme:</span>
+            </label>
+            <select class="settings__theme" id="settings__theme"></select><br>
+            <label for="settings__info-height">
+              <span>Info Row Height:</span>
+            </label>
+            <input type="number" class="settings__info-height input-toggle input--small" id="settings__info-height"
+              step="1" min="1"><br>
+            <label for="settings__beat-numbering">
+              <span>Beat Numbering:</span>
+            </label>
+            <select class="settings__beat-numbering input-toggle" id="settings__beat-numbering">
+              <option value="beattime">Beat Time</option>
+              <option value="jsontime">JSON Time</option>
+              <option value="realtime">RT (MMSS)</option>
+              <option value="realtimems">RT (MMSSms)</option>
+            </select><br>
+            <label for="settings__rounding">
+              <span>Rounding:</span>
+            </label>
+            <input type="number" class="settings__rounding input-toggle input--small" id="settings__rounding" step="1"
+              min="0"><br>
+            <br>
+            <input type="button" class="settings__clear-button input-toggle" id="settings__clear-button"
+              value="Clear Settings">
+          </div>
         </div>
       </div>
       <hr>
@@ -330,10 +331,10 @@
         </div>
       </div>
       <div class="tabs__nav">
-        <label class="tabs__label tabs__label-tab unselectable" for="tabs__info">Information</label>
-        <label class="tabs__label tabs__label-tab unselectable" for="tabs__checks">Checks</label>
-        <label class="tabs__label tabs__label-tab unselectable" for="tabs__stats">Stats</label>
-        <label class="tabs__label tabs__label-tab unselectable" for="tabs__settings">Settings</label>
+        <label class="tabs__label tabs__label-block unselectable" for="tabs__info">Information</label>
+        <label class="tabs__label tabs__label-block unselectable" for="tabs__checks">Checks</label>
+        <label class="tabs__label tabs__label-block unselectable" for="tabs__stats">Stats</label>
+        <label class="tabs__label tabs__label-block unselectable" for="tabs__settings">Settings</label>
       </div>
     </div>
     <footer>

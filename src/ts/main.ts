@@ -212,11 +212,6 @@ export default async (type: LoadType) => {
       UIChecks.displayOutputDifficulty();
       await new Promise((r) => setTimeout(r, 5));
 
-      UILoading.status('info', 'Populating stats...', 95);
-      logger.tInfo(tag(), 'Populating stats');
-      UIStats.populate();
-      await new Promise((r) => setTimeout(r, 5));
-
       UIInput.enable(true);
       UILoading.status('info', 'Successfully loaded!');
    } catch (err) {

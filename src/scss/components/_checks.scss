@@ -11,67 +11,6 @@
       width: 100%;
       justify-content: space-evenly;
    }
-   &__radio {
-      position: absolute;
-      width: 0;
-      height: 0;
-      left: -9999px;
-      &:checked {
-         &[id='checks__note'] ~ .checks__nav .checks__label-note,
-         &[id='checks__obstacle'] ~ .checks__nav .checks__label-obstacle,
-         &[id='checks__event'] ~ .checks__nav .checks__label-event,
-         &[id='checks__other'] ~ .checks__nav .checks__label-other,
-         &[id='checks__general'] ~ .checks__nav .checks__label-general {
-            padding: 0 1em;
-            margin: 0;
-            border-bottom: 1px solid var(--bg-checks-tab-select);
-         }
-         + .checks__tab,
-         &[id='checks__note'] ~ .checks__note-content,
-         &[id='checks__obstacle'] ~ .checks__obstacle-content,
-         &[id='checks__event'] ~ .checks__event-content,
-         &[id='checks__other'] ~ .checks__other-content,
-         &[id='checks__general'] ~ .checks__general-content {
-            display: block;
-         }
-      }
-      &:focus {
-         outline: 1px dashed var(--c-outline-focus-accordion);
-         outline-offset: -1px;
-      }
-   }
-   &__label {
-      &-tab {
-         padding: 0 0.25em;
-         margin: 0 0.75em;
-         cursor: pointer;
-         text-align: center;
-         line-height: 1.5;
-         border-bottom: 1px solid var(--bg-checks-tab);
-         transition:
-            margin 0.125s ease,
-            padding 0.125s ease;
-         &:hover {
-            padding: 0 1em;
-            margin: 0;
-            border-bottom: 1px solid var(--bg-checks-tab-select);
-         }
-      }
-      &-select {
-         padding: 0 0.25em;
-      }
-   }
-   &__tab {
-      display: none;
-      box-sizing: border-box;
-      margin: 0.25em;
-      height: 20em;
-      overflow: auto;
-   }
-   &__apply {
-      text-align: center;
-      margin-top: auto;
-   }
    &__select {
       cursor: pointer;
       width: 100%;

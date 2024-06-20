@@ -1,9 +1,8 @@
-$tabs_list: 'info', 'stats', 'checks', 'settings';
+$tabs_list: 'info', 'stats', 'checks', 'settings', 'note', 'obstacle', 'event', 'other', 'general';
 
 .tabs {
    &__container {
       display: flex;
-      height: 100%;
       box-sizing: border-box;
       flex-direction: column-reverse;
       justify-content: space-between;
@@ -21,17 +20,20 @@ $tabs_list: 'info', 'stats', 'checks', 'settings';
       left: -9999px;
       &:checked {
          @each $name in $tabs_list {
-            &[id='tabs__#{$name}'] ~ .tabs__nav .tabs__label[for='tabs__#{$name}'] {
+            &[id='tabs__#{$name}'] ~ .tabs__nav .tabs__label-block[for='tabs__#{$name}'], 
+            + .tabs__label-block {
                border-bottom: 1px solid var(--bg-checks-tab-select);
                filter: contrast(110%) brightness(1.05);
             }
-         }
-         + .tabs__label {
-            border-bottom: 1px solid var(--bg-checks-tab-select);
-            filter: contrast(110%) brightness(1.05);
+            &[id='tabs__#{$name}'] ~ .tabs__nav .tabs__label-text[for='tabs__#{$name}'],
+            + .tabs__label-text {
+               padding: 0 1em;
+               margin: 0;
+               border-bottom: 1px solid var(--bg-checks-tab-select);
+            }
          }
          + .tabs__tab {
-            display: flex;
+            display: block;
          }
       }
       &:focus {
@@ -40,7 +42,10 @@ $tabs_list: 'info', 'stats', 'checks', 'settings';
       }
    }
    &__label {
-      &-tab {
+      &-block {
+         display: flex;
+         align-items: center;
+         justify-content: center;
          width: 100%;
          height: 100%;
          padding: 0.25em;
@@ -53,10 +58,29 @@ $tabs_list: 'info', 'stats', 'checks', 'settings';
          text-transform: uppercase;
          line-height: 1.5;
          border-bottom: 1px solid var(--bg-checks-tab);
+         transition:
+            filter 0.05s ease;
          &:hover {
-            border-bottom: 1px solid var(--bg-checks-tab-select);
             filter: contrast(110%) brightness(1.05);
          }
+      }
+      &-text {
+         padding: 0 0.25em;
+         margin: 0 0.75em;
+         cursor: pointer;
+         text-align: center;
+         line-height: 1.5;
+         border-bottom: 1px solid var(--bg-checks-tab);
+         transition:
+            margin 0.125s ease,
+            padding 0.125s ease;
+         &:hover {
+            padding: 0 1em;
+            margin: 0;
+         }
+      }
+      &:hover {
+         border-bottom: 1px solid var(--bg-checks-tab-select);
       }
       &-select {
          padding: 0 0.25em;

@@ -17,7 +17,7 @@ import { createNotePlacementTable } from './notePlacement';
 import { createObstacleCountTable } from './obstacle';
 import { CharacteristicName } from '../../bsmap/types/beatmap/shared/characteristic';
 import { IWrapInfoBeatmap } from '../../bsmap/types/beatmap/wrapper/info';
-import { getSelectedCharacteristic, getSelectedDifficulty } from '../selection';
+import { getSelectedCharacteristic, getSelectedDifficulty, selectionOnChangeHandlers } from '../selection';
 
 const htmlStats: HTMLElement = document.querySelector('.stats__content')!;
 
@@ -33,7 +33,6 @@ function populate(): void {
       diffSet[difficulty.characteristic]!.push(difficulty);
    }
 
-   const htmlContainer = document.createElement('div');
    const characteristic = getSelectedCharacteristic();
    const difficulty = getSelectedDifficulty();
    const mapData = LoadedData.beatmaps.find(
@@ -47,7 +46,6 @@ function populate(): void {
    const htmlPanelL = UIPanel.create('small', 'half');
    const htmlPanelM = UIPanel.create('small', 'half');
    const htmlPanelR = UIPanel.create('small', 'half');
-   const htmlContent = document.createElement('div');
 
    htmlStats.innerHTML = '';
 
@@ -71,12 +69,9 @@ function populate(): void {
    htmlPanelR.append(document.createElement('br'));
    htmlPanelR.append(createObstacleCountTable(mapInfo, mapData));
 
-   htmlContent.appendChild(htmlPanelL);
-   htmlContent.appendChild(htmlPanelM);
-   htmlContent.appendChild(htmlPanelR);
-   htmlContainer.appendChild(htmlContent);
-
-   htmlStats.appendChild(htmlContainer);
+   htmlStats.appendChild(htmlPanelL);
+   htmlStats.appendChild(htmlPanelM);
+   htmlStats.appendChild(htmlPanelR);
 }
 
 function reset(): void {
@@ -84,6 +79,8 @@ function reset(): void {
       htmlStats.removeChild(htmlStats.firstChild);
    }
 }
+
+selectionOnChangeHandlers.push(populate)
 
 export {
    createEventCountTable,
@@ -95,6 +92,5 @@ export {
    createObstacleCountTable,
    createSettingsTable,
    createSPSTable,
-   populate,
    reset,
 };

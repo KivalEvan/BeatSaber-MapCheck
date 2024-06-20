@@ -21,16 +21,20 @@ export function createTab(
    htmlTab.appendChild(radio);
 
    const htmlLabel = document.createElement('label');
-   htmlLabel.className = 'tabs__label tabs__label-tab unselectable';
+   htmlLabel.className = 'tabs__label tabs__label-block unselectable';
    htmlLabel.htmlFor = id;
+
+   const htmlPad = document.createElement('div');
    const str = label.split('\n');
    for (let i = 0; i < str.length; i++) {
       const s = str[i];
       const htmlSpan = document.createElement('span');
       htmlSpan.textContent = s;
-      htmlLabel.appendChild(htmlSpan);
-      if (i !== str.length - 1) htmlLabel.appendChild(document.createElement('br'));
+      htmlPad.appendChild(htmlSpan);
+      if (i !== str.length - 1) htmlPad.appendChild(document.createElement('br'));
    }
+
+   htmlLabel.appendChild(htmlPad);
    htmlTab.appendChild(htmlLabel);
 
    return htmlTab;
