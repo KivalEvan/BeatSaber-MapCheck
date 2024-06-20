@@ -1,0 +1,23 @@
+.selection {
+   &__header {
+      width: 16%;
+      padding: 0.4rem 1rem;
+      font-size: 1.4rem;
+      text-align: right;
+      border-right: 2px solid gray;
+      font-family: 'Teko';
+   }
+   &__body {
+      width: 84%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Teko';
+      font-weight: bold;
+      text-align: center;
+   }
+   &__content {
+      width: 100%;
+      padding: 0.4rem;
+   }
+}

@@ -1,4 +1,4 @@
-import savedData from '../../loadedData';
+import LoadedData from '../../loadedData';
 import { toMmss } from '../../bsmap/utils/time';
 import { htmlTablePlayTime } from './constants';
 import { displayTableRow, hideTableRow } from './helpers';
@@ -11,7 +11,9 @@ export function setPlayTime(start?: number, end?: number): void {
    displayTableRow(
       htmlTablePlayTime,
       `${toMmss(start)} to ${toMmss(end)}${
-         savedData.duration ? ` -- [ ${toMmss(end - start)} / ${toMmss(savedData.duration)} ]` : ''
+         LoadedData.duration
+            ? ` -- [ ${toMmss(end - start)} / ${toMmss(LoadedData.duration)} ]`
+            : ''
       }`,
    );
 }

@@ -1,8 +1,9 @@
 import UIHeader from './ui/header';
 import UILoading from './ui/loading';
 import UIInfo from './ui/information';
-import UIChecks from './ui/checks';
+import UIChecks from './ui/checks/main';
 import UIStats from './ui/stats';
+import UISelection from './ui/selection';
 import UIInput from './ui/input';
 import Analyser from './checks/analyzer';
 import Settings from './settings';
@@ -198,7 +199,7 @@ export default async (type: LoadType) => {
       }
 
       UIChecks.adjustBeatTime();
-      UIChecks.populateSelect(info);
+      UISelection.populateSelectCharacteristic(info);
 
       logger.tInfo(tag(), 'Analysing map');
       UILoading.status('info', 'Analysing general...', 85);

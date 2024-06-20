@@ -7,6 +7,7 @@ $tabs_list: 'info', 'stats', 'checks', 'settings';
       box-sizing: border-box;
       flex-direction: column-reverse;
       justify-content: space-between;
+      flex: 1;
    }
    &__nav {
       display: flex;
@@ -25,6 +26,10 @@ $tabs_list: 'info', 'stats', 'checks', 'settings';
                filter: contrast(110%) brightness(1.05);
             }
          }
+         + .tabs__label {
+            border-bottom: 1px solid var(--bg-checks-tab-select);
+            filter: contrast(110%) brightness(1.05);
+         }
          + .tabs__tab {
             display: flex;
          }
@@ -37,6 +42,7 @@ $tabs_list: 'info', 'stats', 'checks', 'settings';
    &__label {
       &-tab {
          width: 100%;
+         height: 100%;
          padding: 0.25em;
          background-color: var(--bg-accordion-base);
          color: var(--c-accordion-text);

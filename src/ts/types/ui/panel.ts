@@ -1,10 +1,12 @@
-export type UIPanelSizeType = 'tiny' | 'small' | 'medium' | 'large' | 'max';
+export type UIPanelSizeType = 'tiny' | 'x-small' | 'small' | 'medium' | 'x-large' | 'large' | 'max';
 
 export enum UIPanelSize {
    'tiny' = 'panel--tiny',
+   'x-small' = 'panel--x-small',
    'small' = 'panel--small',
    'medium' = 'panel--medium',
    'large' = 'panel--large',
+   'x-large' = 'panel--x-large',
    'max' = 'panel--max',
 }
 

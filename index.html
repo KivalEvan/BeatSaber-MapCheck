@@ -89,25 +89,6 @@
           </div>
         </div>
         <div class="panel panel--large panel--offset-half">
-          <div class="panel panel--max panel--flex">
-            <div class="panel panel--medium panel--flex">
-              <label class="checks__label checks__label-select input-toggle" for="checks__select-characteristic-1">
-                <span>Characteristic:</span>
-              </label>
-              <select class="checks__select checks__select-characteristic" id="checks__select-characteristic-1">
-              </select>
-            </div>
-            <div class="panel panel--medium panel--flex">
-              <label class="checks__label checks__label-select input-toggle" for="checks__select-difficulty-1">
-                <span>Difficulty:</span>
-              </label>
-              <select class="checks__select checks__select-difficulty" id="checks__select-difficulty-1">
-              </select>
-            </div>
-          </div>
-          <div class="panel panel--max">
-            <span class="difficulty__label" id="output-difficulty-label">Difficulty Label</span>
-          </div>
           <div class="panel panel--max">
             <table class="info__table">
               <tbody>
@@ -196,7 +177,8 @@
           <input type="radio" class="checks__radio checks__general" id="checks__general" name="checks__radio"
             value="general">
           <div class="checks__nav">
-            <label class="checks__label checks__label-tab checks__label-note unselectable" for="checks__note">Note</label>
+            <label class="checks__label checks__label-tab checks__label-note unselectable"
+              for="checks__note">Note</label>
             <label class="checks__label checks__label-tab checks__label-obstacle unselectable"
               for="checks__obstacle">Obstacle</label>
             <label class="checks__label checks__label-tab checks__label-event unselectable"
@@ -220,28 +202,11 @@
           </div>
         </div>
         <div class="panel panel--medium panel--offset-half">
-          <div class="panel panel--max panel--flex">
-            <div class="panel panel--medium panel--flex">
-              <label class="checks__label checks__label-select" for="checks__select-characteristic-2">
-                <span>Characteristic:</span>
-              </label>
-              <select class="checks__select checks__select-characteristic input-toggle"
-                id="checks__select-characteristic-2">
-              </select>
-            </div>
-            <div class="panel panel--medium panel--flex">
-              <label class="checks__label checks__label-select" for="checks__select-difficulty-2">
-                <span>Difficulty:</span>
-              </label>
-              <select class="checks__select checks__select-difficulty input-toggle" id="checks__select-difficulty-2">
-              </select>
-            </div>
-          </div>
-          <span class="checks__output-text">Map:</span><br>
+          <span class="checks__output-text">Beatmap Issue(s):</span><br>
           <div class="checks__output-box checks__output-diff">
             No output.
           </div>
-          <span class="checks__output-text">General:</span><br>
+          <span class="checks__output-text">General Issue(s):</span><br>
           <div class="checks__output-box checks__output-general">
             No output.
           </div>
@@ -256,21 +221,8 @@
       </div>
       <input type="radio" class="tabs__radio" id="tabs__stats" name="tabs__radio" value="stats">
       <div class="tabs__tab" id="stats">
-        <div class="panel panel--max panel--flex">
-          <div class="panel panel--medium panel--flex">
-            <label class="checks__label checks__label-select input-toggle" for="checks__select-characteristic-1">
-              <span>Characteristic:</span>
-            </label>
-            <select class="checks__select checks__select-characteristic" id="checks__select-characteristic-1">
-            </select>
-          </div>
-          <div class="panel panel--medium panel--flex">
-            <label class="checks__label checks__label-select input-toggle" for="checks__select-difficulty-1">
-              <span>Difficulty:</span>
-            </label>
-            <select class="checks__select checks__select-difficulty" id="checks__select-difficulty-1">
-            </select>
-          </div>
+        <div class="stats__content">
+          Map not loaded.
         </div>
       </div>
       <input type="radio" class="tabs__radio" id="tabs__settings" name="tabs__radio" value="settings">
@@ -326,13 +278,7 @@
             name="settings__radio">
           <label for="settings__show-settings">
             <span>Settings</span>
-          </label><br>
-          <br>
-          <span>On map load:</span><br>
-          <input type="checkbox" class="settings__checkbox settings__onload" id="settings__onload-stats" name="stats">
-          <label for="settings__onload-stats">
-            <span>Show difficulty stats</span>
-          </label><br>
+          </label>
         </div>
         <div class="panel panel--small panel--offset-half">
           <span>Preferences:</span><br>
@@ -362,6 +308,25 @@
           <br>
           <input type="button" class="settings__clear-button input-toggle" id="settings__clear-button"
             value="Clear Settings">
+        </div>
+      </div>
+      <hr>
+      <div class="panel panel--max">
+        <div class="panel panel--max panel--flex">
+          <div class="selection__header">
+            <span>CHARACTERISTIC</span>
+          </div>
+          <div class="selection__body" id="select-characteristic">
+            <div class="selection__content">Empty</div>
+          </div>
+        </div>
+        <div class="panel panel--max panel--flex">
+          <div class="selection__header">
+            <span>DIFFICULTY</span>
+          </div>
+          <div class="selection__body" id="select-difficulty">
+            <div class="selection__content">Empty</div>
+          </div>
         </div>
       </div>
       <div class="tabs__nav">

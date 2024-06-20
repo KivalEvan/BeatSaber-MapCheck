@@ -1,0 +1,88 @@
+$-sz-panel-tiny: 16%;
+$-sz-panel-x-small: 25%;
+$-sz-panel-small: 33.33%;
+$-sz-panel-medium: 50%;
+$-sz-panel-large: 66.66%;
+$-sz-panel-x-large: 75%;
+$-sz-panel-huge: 84%;
+$-sz-panel-offset: 0.75em;
+$-mobile-breakpoint: 800px;
+
+:root {
+   --panel-offset: #{$-sz-panel-offset};
+}
+
+.panel {
+   position: relative;
+   box-sizing: border-box;
+   &--tiny {
+      width: $-sz-panel-tiny;
+   }
+   &--small {
+      width: $-sz-panel-x-small;
+   }
+   &--x-small {
+      width: $-sz-panel-small;
+   }
+   &--medium {
+      width: $-sz-panel-medium;
+   }
+   &--large {
+      width: $-sz-panel-large;
+   }
+   &--x-large {
+      width: $-sz-panel-x-large;
+   }
+   &--huge {
+      width: $-sz-panel-huge;
+   }
+   &--max {
+      width: 100%;
+   }
+   &--offset {
+      margin: $-sz-panel-offset;
+      &-half {
+         margin: calc(#{$-sz-panel-offset} / 2);
+      }
+   }
+   &--flex {
+      display: flex;
+      &-column {
+         display: flex;
+         flex-direction: column;
+      }
+   }
+}
+
+@media (max-width: $-mobile-breakpoint) {
+   .panel {
+      &--tiny {
+         width: auto;
+      }
+      &--small {
+         width: auto;
+      }
+      &--medium {
+         width: auto;
+      }
+      &--large {
+         width: auto;
+      }
+      &--max {
+         width: auto;
+      }
+      &--offset {
+         margin: 0;
+         padding: $-sz-panel-offset;
+         &-half {
+            margin: 0;
+            padding: calc(#{$-sz-panel-offset} / 2);
+         }
+      }
+   }
+   header {
+      display: block;
+      height: unset;
+      position: relative;
+   }
+}

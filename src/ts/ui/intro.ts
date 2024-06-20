@@ -79,9 +79,16 @@ function inputFileDropHandler(ev: DragEvent): void {
          throw new Error('No file input');
       }
       if (ev.dataTransfer.items) {
+         if (!ev.dataTransfer.items[0]) {
+            throw new Error('Failed to retrieve file from drag & drop');
+         }
          if (ev.dataTransfer.items[0].kind === 'file') {
             let file = ev.dataTransfer.items[0].getAsFile() as File;
-            if (file && (file.name.substr(-4) === '.zip' || file.name.substr(-4) === '.bsl')) {
+            if (
+               file &&
+               (file.name.substring(file.name.length - 4) === '.zip' ||
+                  file.name.substring(file.name.length - 4) === '.bsl')
+            ) {
                const fr = new FileReader();
                fr.readAsArrayBuffer(file);
                fr.addEventListener('load', () => {

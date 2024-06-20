@@ -16,8 +16,6 @@ const htmlSettingsDataError: HTMLInputElement = document.querySelector('.setting
 const htmlSettingsLoad: NodeListOf<HTMLInputElement> = document.querySelectorAll('.settings__load');
 const htmlSettingsSort: HTMLInputElement = document.querySelector('.settings__sort')!;
 const htmlSettingsShow: NodeListOf<HTMLInputElement> = document.querySelectorAll('.settings__show');
-const htmlSettingsOnLoad: NodeListOf<HTMLInputElement> =
-   document.querySelectorAll('.settings__onload');
 const htmlSettingsClear: HTMLInputElement = document.querySelector('.settings__clear-button')!;
 
 htmlSettingsTheme.addEventListener('change', themeChangeHandler);
@@ -34,7 +32,6 @@ htmlSettingsDataCheck.addEventListener('change', dataCheckChangeHandler);
 htmlSettingsDataError.addEventListener('change', dataErrorChangeHandler);
 htmlSettingsLoad.forEach((elem) => elem.addEventListener('change', loadCheckHandler));
 htmlSettingsSort.addEventListener('change', sortCheckHandler);
-htmlSettingsOnLoad.forEach((elem) => elem.addEventListener('change', onLoadCheckHandler));
 htmlSettingsShow.forEach((elem) => elem.addEventListener('change', showCheckHandler));
 htmlSettingsClear.addEventListener('click', clear);
 
@@ -79,6 +76,9 @@ function dataErrorChangeHandler(ev: Event): void {
 function showCheckHandler(ev: Event): void {
    const target = ev.target as HTMLInputElement;
    const id = target.id.replace('settings__show-', '');
+   for (const k of Object.keys(Settings.show)) {
+      Settings.show[k] = false;
+   }
    Settings.show[id] = target.checked;
    Settings.save();
 }
@@ -112,21 +112,6 @@ function loadCheckHandler(ev: Event): void {
 
 function setLoadCheck(id: string, bool: boolean): void {
    htmlSettingsLoad.forEach((elem) => {
-      if (elem.name === id) {
-         elem.checked = bool;
-      }
-   });
-}
-
-function onLoadCheckHandler(ev: Event): void {
-   const target = ev.target as HTMLInputElement;
-   const id = target.name;
-   Settings.onLoad[id] = target.checked;
-   Settings.save();
-}
-
-function setOnLoadCheck(id: string, bool: boolean): void {
-   htmlSettingsOnLoad.forEach((elem) => {
       if (elem.name === id) {
          elem.checked = bool;
       }
@@ -168,7 +153,6 @@ export default {
    setShowCheck,
    setSortCheck,
    setLoadCheck,
-   setOnLoadCheck,
    setTheme,
    setBeatNumbering,
    setRounding,

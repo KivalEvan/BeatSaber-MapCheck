@@ -6,7 +6,7 @@ import UIFooter from './footer';
 import UISettings from './settings';
 import UIAccordion from './helpers/accordion';
 import UITheme from './theme';
-import UIChecks from './checks';
+import UIChecks from './checks/main';
 import logger from '../bsmap/logger';
 
 export default (function () {
@@ -30,9 +30,6 @@ export default (function () {
          for (const id in Settings.show) {
             UIAccordion.show(id, Settings.show[id]);
             UISettings.setShowCheck(id, Settings.show[id]);
-         }
-         for (const id in Settings.onLoad) {
-            UISettings.setOnLoadCheck(id, Settings.onLoad[id]);
          }
          UITheme.set(Settings.theme);
          logger.tInfo(['init'], 'User interface initialised');

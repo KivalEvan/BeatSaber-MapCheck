@@ -1,5 +1,4 @@
 // i hate implementing these so much
-import UIAccordion from '../helpers/accordion';
 import UIPanel from '../helpers/panel';
 import LoadedData from '../../loadedData';
 import Settings from '../../settings';
@@ -18,12 +17,13 @@ import { createNotePlacementTable } from './notePlacement';
 import { createObstacleCountTable } from './obstacle';
 import { CharacteristicName } from '../../bsmap/types/beatmap/shared/characteristic';
 import { IWrapInfoBeatmap } from '../../bsmap/types/beatmap/wrapper/info';
+import { getSelectedCharacteristic, getSelectedDifficulty } from '../selection';
 
-const htmlStats: HTMLElement = document.querySelector('#stats')!;
+const htmlStats: HTMLElement = document.querySelector('.stats__content')!;
 
 function populate(): void {
    if (!LoadedData.beatmapInfo) {
-      throw new Error(logPrefix + 'map info could not be found in savedData');
+      throw new Error(logPrefix + 'map info could not be found in loadedData');
    }
    const mapInfo = LoadedData.beatmapInfo;
 
@@ -32,72 +32,51 @@ function populate(): void {
       diffSet[difficulty.characteristic] ||= [];
       diffSet[difficulty.characteristic]!.push(difficulty);
    }
-   for (const set in diffSet) {
-      const htmlContainer = document.createElement('div');
-      htmlContainer.className = prefix + 'characteristic-' + set;
 
-      const htmlTitle = document.createElement('div');
-      htmlTitle.className = prefix + 'title';
-      htmlTitle.textContent = CharacteristicRename[set as CharacteristicName] || set;
-      // if (set.customData._characteristicLabel)
-      //    htmlTitle.textContent += ` -- ${set.customData._characteristicLabel}`;
-      htmlContainer.appendChild(htmlTitle);
-
-      const diffList = diffSet[set as CharacteristicName]!;
-      for (let i = diffList.length - 1; i >= 0; i--) {
-         const diff = diffList[i];
-         const mapData = LoadedData.beatmaps.find(
-            (bm) =>
-               bm.settings.characteristic === set && bm.settings.difficulty === diff.difficulty,
-         );
-         if (!mapData) {
-            throw new Error(logPrefix + 'Could not find map data');
-         }
-
-         const htmlAccordion = UIAccordion.create(
-            `${prefix}${set}-${diff.difficulty}`,
-            DifficultyRename[diff.difficulty as 'Easy'] +
-               (diff.customData._difficultyLabel ? ' -- ' + diff.customData._difficultyLabel : ''),
-            diff.difficulty,
-            true,
-         );
-
-         const htmlContent = htmlAccordion.querySelector('.accordion__collapsible-flex')!;
-         const htmlCheckbox = htmlAccordion.querySelector<HTMLInputElement>('.accordion__button')!;
-         htmlCheckbox.checked = Settings.onLoad.stats;
-
-         const htmlPanelL = UIPanel.create('small', 'half');
-         const htmlPanelM = UIPanel.create('small', 'half');
-         const htmlPanelR = UIPanel.create('small', 'half');
-
-         htmlPanelL.append(createSettingsTable(mapInfo, mapData));
-         htmlPanelL.append(document.createElement('br'));
-         htmlPanelL.append(createNPSTable(mapInfo, mapData));
-         htmlPanelL.append(document.createElement('br'));
-         htmlPanelL.append(createSPSTable(mapInfo, mapData));
-
-         htmlPanelM.append(createNoteInfoTable(mapInfo, mapData));
-         htmlPanelM.append(document.createElement('br'));
-         htmlPanelM.append(createNoteCountTable(mapInfo, mapData));
-         htmlPanelM.append(document.createElement('br'));
-         htmlPanelM.append(createNotePlacementTable(mapInfo, mapData));
-         htmlPanelM.append(document.createElement('br'));
-         htmlPanelM.append(createNoteAngleTable(mapInfo, mapData));
-
-         htmlPanelR.append(createEventCountTable(mapInfo, mapData));
-         htmlPanelR.append(document.createElement('br'));
-         htmlPanelR.append(createEBGCountTable(mapInfo, mapData));
-         htmlPanelR.append(document.createElement('br'));
-         htmlPanelR.append(createObstacleCountTable(mapInfo, mapData));
-
-         htmlContent.appendChild(htmlPanelL);
-         htmlContent.appendChild(htmlPanelM);
-         htmlContent.appendChild(htmlPanelR);
-         htmlContainer.appendChild(htmlAccordion);
-      }
-
-      htmlStats.appendChild(htmlContainer);
+   const htmlContainer = document.createElement('div');
+   const characteristic = getSelectedCharacteristic();
+   const difficulty = getSelectedDifficulty();
+   const mapData = LoadedData.beatmaps.find(
+      (bm) =>
+         bm.settings.characteristic === characteristic && bm.settings.difficulty === difficulty,
+   );
+   if (!mapData) {
+      throw new Error(logPrefix + 'Could not find map data');
    }
+
+   const htmlPanelL = UIPanel.create('small', 'half');
+   const htmlPanelM = UIPanel.create('small', 'half');
+   const htmlPanelR = UIPanel.create('small', 'half');
+   const htmlContent = document.createElement('div');
+
+   htmlStats.innerHTML = '';
+
+   htmlPanelL.append(createSettingsTable(mapInfo, mapData));
+   htmlPanelL.append(document.createElement('br'));
+   htmlPanelL.append(createNPSTable(mapInfo, mapData));
+   htmlPanelL.append(document.createElement('br'));
+   htmlPanelL.append(createSPSTable(mapInfo, mapData));
+
+   htmlPanelM.append(createNoteInfoTable(mapInfo, mapData));
+   htmlPanelM.append(document.createElement('br'));
+   htmlPanelM.append(createNoteCountTable(mapInfo, mapData));
+   htmlPanelM.append(document.createElement('br'));
+   htmlPanelM.append(createNotePlacementTable(mapInfo, mapData));
+   htmlPanelM.append(document.createElement('br'));
+   htmlPanelM.append(createNoteAngleTable(mapInfo, mapData));
+
+   htmlPanelR.append(createEventCountTable(mapInfo, mapData));
+   htmlPanelR.append(document.createElement('br'));
+   htmlPanelR.append(createEBGCountTable(mapInfo, mapData));
+   htmlPanelR.append(document.createElement('br'));
+   htmlPanelR.append(createObstacleCountTable(mapInfo, mapData));
+
+   htmlContent.appendChild(htmlPanelL);
+   htmlContent.appendChild(htmlPanelM);
+   htmlContent.appendChild(htmlPanelR);
+   htmlContainer.appendChild(htmlContent);
+
+   htmlStats.appendChild(htmlContainer);
 }
 
 function reset(): void {
@@ -110,7 +89,7 @@ export {
    createEventCountTable,
    createNoteAngleTable,
    createNoteCountTable,
-   createNoteInfoTable as createInfoTable,
+   createNoteInfoTable,
    createNotePlacementTable,
    createNPSTable,
    createObstacleCountTable,
