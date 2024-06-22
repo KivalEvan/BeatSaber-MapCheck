@@ -29,3 +29,8 @@ export function removeOptions(selectElement: HTMLSelectElement): void {
       selectElement.remove(i);
    }
 }
+
+// this is needed just to offset and sync the UI somehow
+export function sleep(ms: number): Promise<void> {
+   return new Promise((resolve) => setTimeout(resolve, ms));
+}

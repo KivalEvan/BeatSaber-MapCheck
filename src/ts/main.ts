@@ -11,8 +11,8 @@ import flag from './flag';
 import LoadedData from './loadedData';
 import { extractBeatmaps, extractBpmInfo, extractInfo } from './load';
 import { downloadFromHash, downloadFromId, downloadFromUrl } from './download';
-import { sanitizeBeatSaverId, sanitizeUrl } from './utils/web';
-import { isHex, lerp } from './bsmap/utils/mod';
+import { sanitizeBeatSaverId, sanitizeUrl, sleep } from './utils/web';
+import { isHex, lerp, round } from './bsmap/utils/mod';
 import { extractZip } from './extract';
 import logger from './bsmap/logger';
 import { LoadType } from './types/main';
@@ -25,20 +25,24 @@ function tag() {
 async function getFileInput(type: LoadType): Promise<ArrayBuffer | File> {
    if (type.file) {
       return type.file;
-   } else if (type.link) {
-      return downloadFromUrl(sanitizeUrl(decodeURI(type.link)));
-   } else if (type.id) {
-      return downloadFromId(sanitizeBeatSaverId(decodeURI(type.id)));
-   } else if (type.hash && isHex(decodeURI(type.hash).trim())) {
-      return downloadFromHash(decodeURI(type.hash).trim());
-   } else {
-      throw new Error('Could not search for file.');
    }
+   if (type.link) {
+      return downloadFromUrl(sanitizeUrl(decodeURI(type.link)));
+   }
+   if (type.id) {
+      return downloadFromId(sanitizeBeatSaverId(decodeURI(type.id)));
+   }
+   if (type.hash && isHex(decodeURI(type.hash).trim())) {
+      return downloadFromHash(decodeURI(type.hash).trim());
+   }
+   throw new Error('Could not search for file.');
 }
 
 export default async (type: LoadType) => {
+   let start = 0;
    try {
       console.time('loading time');
+      start = performance.now();
       UIInput.enable(false);
       let file = await getFileInput(type);
       UILoading.status('info', 'Extracting zip', 0);
@@ -205,15 +209,16 @@ export default async (type: LoadType) => {
       UILoading.status('info', 'Analysing general...', 85);
       Analyser.runGeneral();
       UIChecks.displayOutputGeneral();
-      await new Promise((r) => setTimeout(r, 5));
+      await sleep(5);
 
       UILoading.status('info', 'Analysing difficulty...', 90);
       Analyser.applyAll();
       UIChecks.displayOutputDifficulty();
-      await new Promise((r) => setTimeout(r, 5));
+      await sleep(5);
 
       UIInput.enable(true);
-      UILoading.status('info', 'Successfully loaded!');
+      let end = performance.now();
+      UILoading.status('info', `Completed! (took ${round((end - start) / 1000, 2)}s)`);
    } catch (err) {
       UILoading.status('error', err);
       logger.tError(tag(), err);

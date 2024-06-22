@@ -64,7 +64,7 @@ function setSongBPM(num: number, minBPM?: number, maxBPM?: number): void {
       maxBPM = Math.max(num, minBPM);
    }
    let text = round(num, 2).toString() + 'BPM';
-   if (minBPM && maxBPM) {
+   if (minBPM && maxBPM && minBPM !== maxBPM) {
       text += ` (${round(minBPM, 2)}-${round(maxBPM, 2)})`;
    }
    htmlMetadataSongBPM.textContent = text;

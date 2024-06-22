@@ -13,6 +13,10 @@
 -  UI revamped
    -  Stats no longer generate all difficulty at once, uses currently selected
 
+### Fixed
+
+- Mappers and lighters information does not reset upon reset
+
 ## 2.6.1 [2024-03-25]
 
 ### Fixed

@@ -194,7 +194,6 @@ export const info: ISchemaContainer<IWrapInfoAttribute, IInfo> = {
                   m.characteristic = set._beatmapCharacteristicName;
                   m.authors = {
                      mappers: [data._levelAuthorName ?? defaultValue._levelAuthorName],
-                     lighters: [data._levelAuthorName ?? defaultValue._levelAuthorName],
                   };
                   return m;
                }),

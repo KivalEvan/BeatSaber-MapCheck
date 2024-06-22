@@ -28,6 +28,13 @@ function populateSelectCharacteristic(beatmapInfo?: IWrapInfo): void {
    }
    htmlLoadedDifficulty = [];
    if (!beatmapInfo) {
+      const htmlDiv = document.createElement('div');
+      htmlDiv.className = 'selection__content';
+      const htmlSpan = document.createElement('span');
+      htmlSpan.textContent = 'Empty';
+      htmlDiv.appendChild(htmlSpan);
+      htmlSelectCharacteristic.appendChild(htmlDiv);
+      populateSelectDifficulty();
       return;
    }
    let first = true;
@@ -54,6 +61,15 @@ function populateSelectCharacteristic(beatmapInfo?: IWrapInfo): void {
          first = false;
       }
    });
+   if (htmlLoadedCharacteristic.length === 0) {
+      const htmlDiv = document.createElement('div');
+      htmlDiv.className = 'selection__content';
+      const htmlSpan = document.createElement('span');
+      htmlSpan.textContent = 'Empty';
+      htmlDiv.appendChild(htmlSpan);
+      htmlSelectCharacteristic.appendChild(htmlDiv);
+      populateSelectDifficulty();
+   }
 }
 
 function populateSelectDifficulty(characteristic?: CharacteristicName): void {
@@ -64,12 +80,17 @@ function populateSelectDifficulty(characteristic?: CharacteristicName): void {
    }
    htmlLoadedDifficulty = [];
    if (!characteristic || !beatmapInfo) {
+      const htmlDiv = document.createElement('div');
+      htmlDiv.className = 'selection__content';
+      const htmlSpan = document.createElement('span');
+      htmlSpan.textContent = 'Empty';
+      htmlDiv.appendChild(htmlSpan);
+      htmlSelectDifficulty.appendChild(htmlDiv);
       return;
    }
    const targetIdx = beatmapInfo.difficulties.findIndex(
       (e) => e.difficulty === prevSelected && e.characteristic === characteristic,
    );
-   console.log(targetIdx);
    for (let i = 0; i < beatmapInfo.difficulties.length; i++) {
       const diff = beatmapInfo.difficulties[i];
       if (characteristic !== diff.characteristic) continue;
@@ -98,6 +119,14 @@ function populateSelectDifficulty(characteristic?: CharacteristicName): void {
          UIInformation.setDiffInfoTable(LoadedData.beatmapInfo!, diffData);
          selectionOnChangeHandlers.forEach((fn) => fn(diff.characteristic, diff.difficulty));
       }
+   }
+   if (htmlLoadedDifficulty.length === 0) {
+      const htmlDiv = document.createElement('div');
+      htmlDiv.className = 'selection__content';
+      const htmlSpan = document.createElement('span');
+      htmlSpan.textContent = 'Empty';
+      htmlDiv.appendChild(htmlSpan);
+      htmlSelectDifficulty.appendChild(htmlDiv);
    }
 }
 

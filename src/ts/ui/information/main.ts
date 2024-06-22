@@ -95,6 +95,8 @@ function reset(): void {
    setEditors();
    populateContributors();
    setVersion();
+   setMappers();
+   setLighters();
    setEnvironmentId();
    setPlayTime();
    setTimeSpend();

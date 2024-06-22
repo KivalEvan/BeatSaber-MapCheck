@@ -1,4 +1,5 @@
 import type { IWrapBeatmap } from '../../types/beatmap/wrapper/beatmap.ts';
+import { sortNoteFn } from './sort.ts';
 import type { TimeProcessor } from './timeProcessor.ts';
 
 export function calculateNps(beatmap: IWrapBeatmap, duration: number): number {
@@ -33,7 +34,7 @@ export function getFirstInteractiveTime(beatmap: IWrapBeatmap): number {
       ...beatmap.difficulty.colorNotes,
       ...beatmap.difficulty.bombNotes,
       ...beatmap.difficulty.chains,
-   ];
+   ].sort(sortNoteFn);
    let firstNoteTime = Number.MAX_VALUE;
    if (notes.length > 0) {
       firstNoteTime = notes[0].time;
@@ -47,7 +48,7 @@ export function getLastInteractiveTime(beatmap: IWrapBeatmap): number {
       ...beatmap.difficulty.colorNotes,
       ...beatmap.difficulty.bombNotes,
       ...beatmap.difficulty.chains,
-   ];
+   ].sort(sortNoteFn);
    let lastNoteTime = 0;
    if (notes.length > 0) {
       lastNoteTime = notes[notes.length - 1].time;
