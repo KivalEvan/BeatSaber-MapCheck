@@ -1,18 +1,21 @@
 import {
    IBeatmapItem,
-   IBeatmapSettings,
-   Tool,
+   ITool,
+   IToolOutput,
    ToolArgs,
    ToolInputOrder,
    ToolOutputOrder,
 } from '../../types';
 import { round } from '../../bsmap/utils/mod';
 import swing from '../../bsmap/extensions/swing/swing';
-import { printResultTime } from '../helpers';
 import UIInput from '../../ui/helpers/input';
 import { TimeProcessor } from '../../bsmap/beatmap/helpers/timeProcessor';
 import { NoteColor } from '../../bsmap/beatmap/shared/constants';
-import { NoteContainerType } from '../../types/checks/container';
+import {
+   IObjectContainer,
+   IObjectContainerColor,
+   ObjectContainerType,
+} from '../../types/checks/container';
 import { IWrapColorNote } from '../../bsmap/types/beatmap/wrapper/colorNote';
 
 const name = 'Speed Pause';
@@ -27,7 +30,7 @@ const [htmlLabelMinTime, htmlInputMinTime] = UIInput.createNumber(
       this.value = round(tool.input.params.maxTime * 1000, 1).toString();
       if (localBPM) {
          htmlInputMinPrec.value = round(
-            1 / localBPM.toBeatTime(tool.input.params.maxTime as number),
+            1 / localBPM.toBeatTime(tool.input.params.maxTime as number, false),
             2,
          ).toString();
       }
@@ -52,7 +55,7 @@ const [htmlLabelMinPrec, htmlInputMinPrec] = UIInput.createNumber(
    0,
 );
 
-const tool: Tool<{ maxTime: number }> = {
+const tool: ITool<{ maxTime: number }> = {
    name,
    description,
    type: 'note',
@@ -82,25 +85,22 @@ const tool: Tool<{ maxTime: number }> = {
       ),
       adjustTime: adjustTimeHandler,
    },
-   output: {
-      html: null,
-   },
    run,
 };
 
 function adjustTimeHandler(bpm: TimeProcessor) {
    localBPM = bpm;
    htmlInputMinPrec.value = round(
-      1 / localBPM.toBeatTime(tool.input.params.maxTime as number),
+      1 / localBPM.toBeatTime(tool.input.params.maxTime as number, false),
       2,
    ).toString();
 }
 
-function check(settings: IBeatmapSettings, difficulty: IBeatmapItem) {
-   const { timeProcessor } = settings;
-   const { noteContainer } = difficulty;
-   const { maxTime: temp } = <{ maxTime: number }>tool.input.params;
-   const maxTime = timeProcessor.toBeatTime(temp) + 0.001;
+function check(beatmapItem: IBeatmapItem) {
+   const timeProcessor  = beatmapItem.timeProcessor;
+   const colorNotes = beatmapItem.data.colorNotes;
+   const { maxTime: temp } = tool.input.params;
+   const maxTime = timeProcessor.toBeatTime(temp, false) + 0.001;
 
    const lastNote: { [key: number]: IWrapColorNote } = {};
    const lastNotePause: { [key: number]: IWrapColorNote } = {};
@@ -113,21 +113,26 @@ function check(settings: IBeatmapSettings, difficulty: IBeatmapItem) {
       [NoteColor.BLUE]: [],
    };
 
-   const arr: IWrapColorNote[] = [];
-   for (let i = 0, len = noteContainer.length; i < len; i++) {
-      if (noteContainer[i].type !== NoteContainerType.COLOR) {
-         continue;
-      }
-      const note = noteContainer[i].data as IWrapColorNote;
+   const result: IWrapColorNote[] = [];
+   for (let i = 0, len = colorNotes.length; i < len; i++) {
+      const note = colorNotes[i];
       if (lastNote[note.color]) {
-         if (swing.next(note, lastNote[note.color], timeProcessor, swingNoteArray[note.color])) {
+         if (
+            swing.next(
+               note,
+               lastNote[note.color],
+               timeProcessor,
+               swingNoteArray[note.color],
+            )
+         ) {
             if (note.time - lastNote[note.color].time <= maxTime * 2) {
                if (
                   maybePause[NoteColor.RED] &&
                   maybePause[NoteColor.BLUE] &&
-                  lastNote[note.color].time - lastNotePause[note.color].time <= maxTime * 3
+                  lastNote[note.color].time - lastNotePause[note.color].time <=
+                     maxTime * 3
                ) {
-                  arr.push(lastNote[note.color]);
+                  result.push(lastNote[note.color]);
                }
                maybePause[note.color] = false;
             } else if (!maybePause[note.color]) {
@@ -142,30 +147,23 @@ function check(settings: IBeatmapSettings, difficulty: IBeatmapItem) {
       }
       swingNoteArray[note.color].push(note);
    }
-   return arr
-      .map((n) => n.time)
-      .filter(function (x, i, ary) {
-         return !i || x !== ary[i - 1];
-      });
+   return result;
 }
 
-function run(args: ToolArgs) {
-   if (!args.beatmap) {
-      console.error('Something went wrong!');
-      return;
-   }
-   const result = check(args.settings, args.beatmap);
+function run(args: ToolArgs): IToolOutput[] {
+   const result = check(args.beatmap);
 
    if (result.length) {
-      tool.output.html = printResultTime(
-         'Speed pause',
-         result,
-         args.settings.timeProcessor,
-         'warning',
-      );
-   } else {
-      tool.output.html = null;
+      return [
+         {
+            type: 'time',
+            label: 'Speed pause',
+            value: result,
+            symbol: 'warning',
+         },
+      ];
    }
+   return [];
 }
 
 export default tool;

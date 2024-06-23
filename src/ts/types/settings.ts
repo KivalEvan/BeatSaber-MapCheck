@@ -17,10 +17,6 @@ interface ISettingsShow extends SettingsFlag {
    settings: boolean;
 }
 
-interface ISettingsOnLoad extends SettingsFlag {
-   stats: boolean;
-}
-
 export interface ISettings {
    version: number;
    load: ISettingsLoad;
@@ -30,8 +26,8 @@ export interface ISettings {
    rounding: number;
    dataCheck: boolean;
    dataError: boolean;
+   deduplicateTime: boolean;
    theme: UIThemeName;
-   onLoad: ISettingsOnLoad;
    show: ISettingsShow;
    aprilFooled: boolean;
 }

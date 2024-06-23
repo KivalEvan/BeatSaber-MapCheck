@@ -10,7 +10,8 @@ import { ILightshow as IV4Lightshow } from '../../bsmap/types/beatmap/v4/lightsh
 import { ISwingAnalysis } from '../../bsmap/extensions/swing/types/mod';
 import { EnvironmentAllName } from '../../bsmap/types/beatmap/shared/environment';
 import { IWrapBeatmap } from '../../bsmap/types/beatmap/wrapper/beatmap';
-import { INoteContainer } from './container';
+import { IObjectContainer } from './container';
+import { NoteJumpSpeed } from '../../bsmap/beatmap/helpers/njs';
 
 export interface IBeatmapAudio {
    readonly duration: number;
@@ -21,9 +22,10 @@ interface IBeatmapItemBase {
    readonly settings: IWrapInfoBeatmap;
    readonly environment: EnvironmentAllName;
    readonly timeProcessor: TimeProcessor;
+   readonly njs: NoteJumpSpeed;
    readonly data: IWrapBeatmap;
    readonly swingAnalysis: ISwingAnalysis;
-   readonly noteContainer: INoteContainer[];
+   readonly noteContainer: IObjectContainer[];
 }
 
 interface IBeatmapItemV1 extends IBeatmapItemBase {

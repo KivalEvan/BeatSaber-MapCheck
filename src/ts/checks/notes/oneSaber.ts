@@ -1,12 +1,12 @@
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import { ObjectContainerType } from '../../types/checks/container';
 import UIInput from '../../ui/helpers/input';
-import { printResult, printResultTime } from '../helpers';
 
 const name = 'One Saber';
 const description = 'Check for one saber.';
 const enabled = true;
 
-const tool: Tool = {
+const tool: ITool = {
    name,
    description,
    type: 'note',
@@ -28,42 +28,43 @@ const tool: Tool = {
          ),
       ),
    },
-   output: {
-      html: null,
-   },
    run,
 };
 
-function run(args: ToolArgs) {
-   let notOneSaberNote: number[] | undefined;
+function run(args: ToolArgs): IToolOutput[] {
+   let notOneSaberNote;
    let whyisthisonesaber = false;
    let isOneSaber =
-      args.beatmap!.settings.characteristic === 'OneSaber' ||
-      args.beatmap!.settings.customData.oneSaber;
+      args.beatmap.settings.characteristic === 'OneSaber' ||
+      args.beatmap.settings.customData.oneSaber;
    if (isOneSaber) {
-      notOneSaberNote = args.beatmap!.data.colorNotes.filter((n) => n.isRed()).map((n) => n.time);
+      notOneSaberNote = args.beatmap.data.colorNotes.filter((n) => n.isRed());
    } else {
-      const hasBlueNote = args.beatmap!.data.colorNotes.filter((n) => n.isBlue()).length > 0;
-      const hasRedNote = args.beatmap!.data.colorNotes.filter((n) => n.isRed()).length > 0;
+      const hasBlueNote = args.beatmap.data.colorNotes.filter((n) => n.isBlue()).length > 0;
+      const hasRedNote = args.beatmap.data.colorNotes.filter((n) => n.isRed()).length > 0;
       whyisthisonesaber = hasBlueNote ? !hasRedNote : hasRedNote;
    }
 
-   if (notOneSaberNote?.length) {
-      tool.output.html = printResultTime(
-         'Wrong One Saber Note',
-         notOneSaberNote,
-         args.settings.timeProcessor,
-         'error',
-      );
+   if (notOneSaberNote!?.length) {
+      return [
+         {
+            type: 'time',
+            label: 'Wrong One Saber Note',
+            value: notOneSaberNote!,
+            symbol: 'error',
+         },
+      ];
    } else if (whyisthisonesaber) {
-      tool.output.html = printResult(
-         'Unintended One Saber',
-         'One Saber gameplay outside of One Saber characteristic',
-         'rank',
-      );
-   } else {
-      tool.output.html = null;
+      return [
+         {
+            type: 'string',
+            label: 'Unintended One Saber',
+            value: 'One Saber gameplay outside of One Saber characteristic',
+            symbol: 'rank',
+         },
+      ];
    }
+   return [];
 }
 
 export default tool;

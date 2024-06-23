@@ -1,9 +1,8 @@
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import UISelect from '../../ui/helpers/select';
 import Parity from '../../bsmap/extensions/parity/parity';
 import swing from '../../bsmap/extensions/swing/swing';
-import { INoteContainer, NoteContainerType } from '../../types/checks/container';
-import { printResultTime } from '../helpers';
+import { IObjectContainer, ObjectContainerType } from '../../types/checks/container';
 import UIInput from '../../ui/helpers/input';
 import { NoteColor } from '../../bsmap/beatmap/shared/constants';
 import { IWrapBombNote } from '../../bsmap/types/beatmap/wrapper/bombNote';
@@ -55,7 +54,7 @@ htmlContainer.appendChild(
    ),
 );
 
-const tool: Tool<{ warningThres: number; errorThres: number; allowedRot: number }> = {
+const tool: ITool<{ warningThres: number; errorThres: number; allowedRot: number }> = {
    name,
    description,
    type: 'note',
@@ -72,9 +71,6 @@ const tool: Tool<{ warningThres: number; errorThres: number; allowedRot: number 
       },
       html: htmlContainer,
    },
-   output: {
-      html: null,
-   },
    run,
 };
 
@@ -82,8 +78,7 @@ function inputSelectRotateHandler(this: HTMLInputElement) {}
 function inputSelectParityHandler(this: HTMLInputElement) {}
 
 function check(args: ToolArgs) {
-   const { timeProcessor } = args.settings;
-   const { noteContainer } = args.beatmap!;
+   const { timeProcessor, noteContainer } = args.beatmap;
    const { warningThres, errorThres, allowedRot } = <
       {
          warningThres: number;
@@ -108,29 +103,29 @@ function check(args: ToolArgs) {
 
    const swingParity: { [key: number]: Parity } = {
       [NoteColor.RED]: new Parity(
-         args.beatmap!.data.colorNotes,
-         args.beatmap!.data.bombNotes,
+         args.beatmap.data.colorNotes,
+         args.beatmap.data.bombNotes,
          0,
          warningThres,
          errorThres,
          allowedRot,
       ),
       [NoteColor.BLUE]: new Parity(
-         args.beatmap!.data.colorNotes,
-         args.beatmap!.data.bombNotes,
+         args.beatmap.data.colorNotes,
+         args.beatmap.data.bombNotes,
          1,
          warningThres,
          errorThres,
          allowedRot,
       ),
    };
-   const parity: { warning: number[]; error: number[] } = {
+   const parity: { warning: IWrapColorNote[]; error: IWrapColorNote[] } = {
       warning: [],
       error: [],
    };
    for (let i = 0, len = noteContainer.length; i < len; i++) {
       const note = noteContainer[i];
-      if (note.type === NoteContainerType.COLOR && lastNote[note.data.color]) {
+      if (note.type === ObjectContainerType.COLOR && lastNote[note.data.color]) {
          if (
             swing.next(
                note.data,
@@ -146,11 +141,11 @@ function check(args: ToolArgs) {
             );
             switch (parityStatus) {
                case 'warning': {
-                  parity.warning.push(swingNoteArray[note.data.color][0].time);
+                  parity.warning.push(swingNoteArray[note.data.color][0]);
                   break;
                }
                case 'error': {
-                  parity.error.push(swingNoteArray[note.data.color][0].time);
+                  parity.error.push(swingNoteArray[note.data.color][0]);
                   break;
                }
             }
@@ -163,11 +158,11 @@ function check(args: ToolArgs) {
             swingNoteArray[note.data.color] = [];
          }
       }
-      if (note.type === NoteContainerType.BOMB) {
+      if (note.type === ObjectContainerType.BOMB) {
          bombContext[NoteColor.RED].push(note.data);
          bombContext[NoteColor.BLUE].push(note.data);
       }
-      if (note.type === NoteContainerType.COLOR) {
+      if (note.type === ObjectContainerType.COLOR) {
          lastNote[note.data.color] = note.data;
          swingNoteArray[note.data.color].push(note.data);
       }
@@ -178,11 +173,11 @@ function check(args: ToolArgs) {
          const parityStatus = swingParity[i].check(swingNoteArray[i], bombContext[i]);
          switch (parityStatus) {
             case 'warning': {
-               parity.warning.push(swingNoteArray[i][0].time);
+               parity.warning.push(swingNoteArray[i][0]);
                break;
             }
             case 'error': {
-               parity.error.push(swingNoteArray[i][0].time);
+               parity.error.push(swingNoteArray[i][0]);
                break;
             }
          }
@@ -191,42 +186,24 @@ function check(args: ToolArgs) {
    return parity;
 }
 
-function run(args: ToolArgs) {
-   if (!args.beatmap) {
-      console.error('Something went wrong!');
-      return;
-   }
+function run(args: ToolArgs): IToolOutput[] {
    const result = check(args);
-   result.warning = result.warning
-      .filter(function (x, i, ary) {
-         return !i || x !== ary[i - 1];
-      })
-      .sort((a, b) => a - b);
-   result.error = result.error
-      .filter(function (x, i, ary) {
-         return !i || x !== ary[i - 1];
-      })
-      .sort((a, b) => a - b);
+   result.warning = result.warning;
+   result.error = result.error;
 
-   const htmlResult: HTMLElement[] = [];
+   const results: IToolOutput[] = [];
    if (result.warning.length) {
-      htmlResult.push(
-         printResultTime('Parity warning', result.warning, args.settings.timeProcessor, 'warning'),
-      );
+      results.push({
+         type: 'time',
+         label: 'Parity warning',
+         value: result.warning,
+         symbol: 'warning',
+      });
    }
    if (result.error.length) {
-      htmlResult.push(
-         printResultTime('Parity error', result.error, args.settings.timeProcessor, 'error'),
-      );
+      results.push({ type: 'time', label: 'Parity error', value: result.error, symbol: 'error' });
    }
-
-   if (htmlResult.length) {
-      const htmlContainer = document.createElement('div');
-      htmlResult.forEach((h) => htmlContainer.append(h));
-      tool.output.html = htmlContainer;
-   } else {
-      tool.output.html = null;
-   }
+   return results;
 }
 
 export default tool;

@@ -12,5 +12,5 @@ export interface IAnalysisMap extends IAnalysisBase {
 
 export interface IAnalysis {
    general: IAnalysisBase;
-   map: IAnalysisMap[];
+   beatmap: IAnalysisMap[];
 }

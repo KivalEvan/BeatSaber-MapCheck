@@ -1,11 +1,11 @@
 import settings from '../../settings';
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 
 const name = 'April Fools';
 const description = 'xdd.';
 const enabled = true;
 
-const tool: Tool = {
+const tool: ITool = {
    name,
    description,
    type: 'general',
@@ -17,13 +17,10 @@ const tool: Tool = {
       enabled,
       params: {},
    },
-   output: {
-      html: null,
-   },
    run,
 };
 
-function run(args: ToolArgs) {
+function run(args: ToolArgs): IToolOutput[] {
    const aprilFirst = new Date('01 April 1984');
    const currDate = new Date();
    const isAprilFirst =
@@ -41,10 +38,9 @@ function run(args: ToolArgs) {
       htmlContainer.innerHTML = `<b><span title="Info: no action necessary, take note."> ⚠️ </span>AI generated content detected:</b> this may violate TOS, please refer to `;
       htmlContainer.append(htmlLink);
 
-      tool.output.html = htmlContainer;
-   } else {
-      tool.output.html = null;
+      return [{ type: 'html', label: '', value: [htmlContainer] }];
    }
+   return [];
 }
 
 export default tool;

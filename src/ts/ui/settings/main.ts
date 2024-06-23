@@ -1,9 +1,9 @@
 // TODO: generate options instead of hardcoded in HTML
-import { UIThemeName } from '../types/ui';
-import UITheme from './theme';
-import Settings from '../settings';
-import { BeatNumbering } from '../types/settings';
-import { setTableHeight } from './information/helpers';
+import { UIThemeName } from '../../types/ui';
+import UITheme from '../theme';
+import Settings from '../../settings';
+import { BeatNumbering } from '../../types/settings';
+import { setTableHeight } from '../information/helpers';
 
 const htmlSettingsTheme: HTMLSelectElement = document.querySelector('.settings__theme')!;
 const htmlSettingsBeatNumbering: HTMLSelectElement = document.querySelector(

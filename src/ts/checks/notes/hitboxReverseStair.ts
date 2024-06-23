@@ -1,13 +1,12 @@
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import {
-   INoteContainer,
-   INoteContainerColor,
-   NoteContainerType,
+   IObjectContainer,
+   IObjectContainerColor,
+   ObjectContainerType,
 } from '../../types/checks/container';
 import { isIntersect } from '../../bsmap/extensions/placement/note';
 import swing from '../../bsmap/extensions/swing/swing';
 import UIInput from '../../ui/helpers/input';
-import { printResultTime } from '../helpers';
 import { NoteColor, NoteDirection } from '../../bsmap/beatmap/shared/constants';
 import { IWrapColorNote } from '../../bsmap/types/beatmap/wrapper/colorNote';
 
@@ -15,7 +14,7 @@ const name = 'Hitbox Reverse Staircase';
 const description = 'Check for overlapping pre-swing hitbox with note hitbox during swing.';
 const enabled = true;
 
-const tool: Tool = {
+const tool: ITool = {
    name,
    description,
    type: 'note',
@@ -37,17 +36,13 @@ const tool: Tool = {
          ),
       ),
    },
-   output: {
-      html: null,
-   },
    run,
 };
 
 const constant = 0.03414823529;
 const constantDiagonal = 0.03414823529;
 function check(args: ToolArgs) {
-   const { timeProcessor, njs } = args.settings;
-   const { noteContainer } = args.beatmap!;
+   const { timeProcessor, njs, noteContainer } = args.beatmap;
 
    const lastNote: { [key: number]: IWrapColorNote } = {};
    const swingNoteArray: { [key: number]: IWrapColorNote[] } = {
@@ -55,12 +50,12 @@ function check(args: ToolArgs) {
       [NoteColor.BLUE]: [],
    };
 
-   const arr: IWrapColorNote[] = [];
+   const result: IWrapColorNote[] = [];
    for (let i = 0, len = noteContainer.length; i < len; i++) {
-      if (noteContainer[i].type !== NoteContainerType.COLOR) {
+      if (noteContainer[i].type !== ObjectContainerType.COLOR) {
          continue;
       }
-      const note = noteContainer[i] as INoteContainerColor;
+      const note = noteContainer[i] as IObjectContainerColor;
       if (lastNote[note.data.color]) {
          if (
             swing.next(
@@ -92,7 +87,7 @@ function check(args: ToolArgs) {
                         (isDiagonal ? constantDiagonal : constant)) &&
                isIntersect(note.data, other, [[15, 1.5]])[1]
             ) {
-               arr.push(other);
+               result.push(other);
                break;
             }
          }
@@ -100,30 +95,16 @@ function check(args: ToolArgs) {
       lastNote[note.data.color] = note.data;
       swingNoteArray[note.data.color].push(note.data);
    }
-   return arr
-      .map((n) => n.time)
-      .filter(function (x, i, ary) {
-         return !i || x !== ary[i - 1];
-      });
+   return result;
 }
 
-function run(args: ToolArgs) {
-   if (!args.beatmap) {
-      console.error('Something went wrong!');
-      return;
-   }
+function run(args: ToolArgs): IToolOutput[] {
    const result = check(args);
 
    if (result.length) {
-      tool.output.html = printResultTime(
-         'Hitbox reverse Staircase',
-         result,
-         args.settings.timeProcessor,
-         'rank',
-      );
-   } else {
-      tool.output.html = null;
+      return [{ type: 'time', label: 'Hitbox reverse Staircase', value: result, symbol: 'rank' }];
    }
+   return [];
 }
 
 export default tool;

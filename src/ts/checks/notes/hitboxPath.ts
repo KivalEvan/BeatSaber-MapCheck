@@ -1,15 +1,14 @@
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import { isIntersect } from '../../bsmap/extensions/placement/note';
 import UIInput from '../../ui/helpers/input';
-import { printResultTime } from '../helpers';
 import { IWrapColorNote } from '../../bsmap/types/beatmap/wrapper/colorNote';
-import { NoteContainerType } from '../../types/checks/container';
+import { ObjectContainerType } from '../../types/checks/container';
 
 const name = 'Hitbox Path';
 const description = 'Check for overlapping pre-swing note hitbox at same time.';
 const enabled = true;
 
-const tool: Tool = {
+const tool: ITool = {
    name,
    description,
    type: 'note',
@@ -31,41 +30,35 @@ const tool: Tool = {
          ),
       ),
    },
-   output: {
-      html: null,
-   },
    run,
 };
 
 function check(args: ToolArgs) {
-   const { timeProcessor } = args.settings;
-   const noteContainer = args.beatmap!.noteContainer.filter(
-      (n) => n.type === NoteContainerType.BOMB || n.type === NoteContainerType.COLOR,
+   const timeProcessor = args.beatmap.timeProcessor;
+   const noteContainer = args.beatmap.noteContainer.filter(
+      (n) => n.type === ObjectContainerType.BOMB || n.type === ObjectContainerType.COLOR,
    );
 
-   const arr: IWrapColorNote[] = [];
+   const result: IWrapColorNote[] = [];
    // to avoid multiple of stack popping up, ignore anything within this time
    let lastTime: number = 0;
    for (let i = 0, len = noteContainer.length; i < len; i++) {
       const currentNote = noteContainer[i];
       if (
-         currentNote.type === NoteContainerType.BOMB ||
-         currentNote.type === NoteContainerType.ARC ||
-         currentNote.type === NoteContainerType.CHAIN ||
-         timeProcessor.toRealTime(currentNote.data.time) < lastTime + 0.01
+         currentNote.type === ObjectContainerType.BOMB ||
+         currentNote.type === ObjectContainerType.ARC ||
+         currentNote.type === ObjectContainerType.CHAIN ||
+         currentNote.data.customData.__mapcheck_secondtime < lastTime + 0.01
       ) {
          continue;
       }
       for (let j = i + 1; j < len; j++) {
          const compareTo = noteContainer[j];
-         if (
-            timeProcessor.toRealTime(compareTo.data.time) >
-            timeProcessor.toRealTime(currentNote.data.time) + 0.01
-         ) {
+         if (compareTo.data.customData.__mapcheck_secondtime > currentNote.data.customData.__mapcheck_secondtime + 0.01) {
             break;
          }
          if (
-            compareTo.type === NoteContainerType.COLOR &&
+            compareTo.type === ObjectContainerType.COLOR &&
             currentNote.data.color === compareTo.data.color
          ) {
             continue;
@@ -83,35 +76,28 @@ function check(args: ToolArgs) {
                   [15, 1.5],
                ]).some((b) => b))
          ) {
-            arr.push(currentNote.data);
-            lastTime = timeProcessor.toRealTime(currentNote.data.time);
+            result.push(currentNote.data);
+            lastTime = currentNote.data.customData.__mapcheck_secondtime;
          }
       }
    }
-   return arr
-      .map((n) => n.time)
-      .filter(function (x, i, ary) {
-         return !i || x !== ary[i - 1];
-      });
+   return result
 }
 
-function run(args: ToolArgs) {
-   if (!args.beatmap) {
-      console.error('Something went wrong!');
-      return;
-   }
+function run(args: ToolArgs): IToolOutput[] {
    const result = check(args);
 
    if (result.length) {
-      tool.output.html = printResultTime(
-         'Hitbox path',
-         result,
-         args.settings.timeProcessor,
-         'error',
-      );
-   } else {
-      tool.output.html = null;
+      return [
+         {
+            type: 'time',
+            label: 'Hitbox path',
+            value: result,
+            symbol: 'error',
+         },
+      ];
    }
+   return [];
 }
 
 export default tool;

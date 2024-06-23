@@ -1,14 +1,13 @@
 import { NoteJumpSpeed } from '../../bsmap/beatmap/helpers/njs';
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import UIInput from '../../ui/helpers/input';
 import { round } from '../../bsmap/utils/mod';
-import { printResult } from '../helpers';
 
 const name = 'NJS Check';
 const description = 'Check note jump speed for suitable value.';
 const enabled = true;
 
-const tool: Tool = {
+const tool: ITool = {
    name,
    description,
    type: 'other',
@@ -30,82 +29,79 @@ const tool: Tool = {
          ),
       ),
    },
-   output: {
-      html: null,
-   },
    run,
 };
 
-function run(args: ToolArgs) {
-   if (!args.beatmap) {
-      console.error('Something went wrong!');
-      return;
-   }
-   const { njs, timeProcessor } = args.settings;
+function run(args: ToolArgs): IToolOutput[] {
+   const { njs, timeProcessor } = args.beatmap;
 
-   const htmlResult: HTMLElement[] = [];
+   const results: IToolOutput[] = [];
    if (args.beatmap.settings.njs === 0) {
-      htmlResult.push(printResult('Unset NJS', 'fallback NJS is used', 'error'));
+      results.push({
+         type: 'string',
+         label: 'Unset NJS',
+         value: 'fallback NJS is used',
+         symbol: 'error',
+      });
    }
    if (njs.value > 23) {
-      htmlResult.push(
-         printResult(
-            `NJS is too high (${round(njs.value, 2)})`,
-            'use lower whenever necessary',
-            'warning',
-         ),
-      );
+      results.push({
+         type: 'string',
+         label: `NJS is too high (${round(njs.value, 2)})`,
+         value: 'use lower whenever possible',
+         symbol: 'warning',
+      });
    }
    if (njs.value < 3) {
-      htmlResult.push(
-         printResult(
-            `NJS is too low (${round(njs.value, 2)})`,
-            'timing is less significant below this',
-            'warning',
-         ),
-      );
+      results.push({
+         type: 'string',
+         label: `NJS is too low (${round(njs.value, 2)})`,
+         value: 'timing is less significant below this',
+         symbol: 'warning',
+      });
    }
    if (njs.jd > 36) {
-      htmlResult.push(printResult('Very high jump distance', `${round(njs.jd, 2)}`, 'warning'));
+      results.push({
+         type: 'string',
+         label: 'Very high jump distance',
+         value: `${round(njs.jd, 2)}`,
+         symbol: 'warning',
+      });
    }
    if (njs.jd < 18) {
-      htmlResult.push(printResult('Very low jump distance', `${round(njs.jd, 2)}`, 'warning'));
+      results.push({
+         type: 'string',
+         label: 'Very low jump distance',
+         value: `${round(njs.jd, 2)}`,
+         symbol: 'warning',
+      });
    }
    if (njs.jd > njs.calcJdOptimal()[1]) {
-      htmlResult.push(
-         printResult(
-            `High jump distance warning (>${round(njs.calcJdOptimal()[1], 2)})`,
-            'NJS & offset may be uncomfortable to play',
-            'warning',
-         ),
-      );
+      results.push({
+         type: 'string',
+         label: `High jump distance warning (>${round(njs.calcJdOptimal()[1], 2)})`,
+         value: 'NJS & offset may be uncomfortable to play',
+         symbol: 'warning',
+      });
    }
-   if (timeProcessor.toRealTime(njs.hjd) < 0.42) {
-      htmlResult.push(
-         printResult(
-            `Very quick reaction time (${round(timeProcessor.toRealTime(njs.hjd) * 1000)}ms)`,
-            'may lead to suboptimal gameplay',
-            'warning',
-         ),
-      );
+   if (timeProcessor.toRealTime(njs.hjd, false) < 0.42) {
+      results.push({
+         type: 'string',
+         label: `Very quick reaction time (${round(timeProcessor.toRealTime(njs.hjd, false) * 1000)}ms)`,
+         value: 'may lead to suboptimal gameplay',
+         symbol: 'warning',
+      });
    }
    if (njs.calcHjd(0) + njs.offset < NoteJumpSpeed.HJD_MIN) {
-      htmlResult.push(
-         printResult(
-            'Unnecessary negative offset',
-            `will not drop below ${NoteJumpSpeed.HJD_MIN}`,
-            'warning',
-         ),
-      );
+      results.push({
+         type: 'string',
+         label: 'Unnecessary negative offset',
+         value: `will not drop below ${NoteJumpSpeed.HJD_MIN}`,
+         symbol: 'warning',
+      });
    }
 
-   if (htmlResult.length) {
-      const htmlContainer = document.createElement('div');
-      htmlResult.forEach((h) => htmlContainer.append(h));
-      tool.output.html = htmlContainer;
-   } else {
-      tool.output.html = null;
-   }
+   return results;
 }
 
 export default tool;

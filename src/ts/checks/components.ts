@@ -3,36 +3,36 @@ import * as notes from './notes';
 import * as obstacles from './obstacles';
 import * as events from './events';
 import * as others from './others';
-import { Tool } from '../types/checks/check';
+import { ITool } from '../types/checks/check';
 
 export default class AnalysisComponent {
    private constructor() {}
 
-   private static getNote = (): Tool[] => {
+   private static getNote(): ITool[] {
       return Object.keys(notes).map((key) => notes[key as keyof typeof notes]);
    };
 
-   private static getObstacle = (): Tool[] => {
+   private static getObstacle(): ITool[] {
       return Object.keys(obstacles).map((key) => obstacles[key as keyof typeof obstacles]);
    };
 
-   private static getEvent = (): Tool[] => {
+   private static getEvent(): ITool[] {
       return Object.keys(events).map((key) => events[key as keyof typeof events]);
    };
 
-   private static getOther = (): Tool[] => {
+   private static getOther(): ITool[] {
       return Object.keys(others).map((key) => others[key as keyof typeof others]);
    };
 
-   static getGeneral = (): Tool[] => {
+   static getGeneral(): ITool[] {
       return Object.keys(general).map((key) => general[key as keyof typeof general]);
    };
 
-   static getDifficulty = (): Tool[] => {
+   static getDifficulty(): ITool[] {
       return [...this.getNote(), ...this.getObstacle(), ...this.getEvent(), ...this.getOther()];
    };
 
-   static getAll = (): Tool[] => {
+   static getAll(): ITool[] {
       return [
          ...this.getNote(),
          ...this.getObstacle(),

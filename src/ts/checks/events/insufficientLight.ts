@@ -1,14 +1,13 @@
 import { EnvironmentAllName } from '../../bsmap/types/beatmap/shared/environment';
 import { IWrapEvent } from '../../bsmap/types/beatmap/wrapper/event';
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import UIInput from '../../ui/helpers/input';
-import { printResult } from '../helpers';
 
 const name = 'Insufficient Lighting Event';
 const description = 'Check if there is enough light event.';
 const enabled = true;
 
-const tool: Tool = {
+const tool: ITool = {
    name,
    description,
    type: 'event',
@@ -30,9 +29,6 @@ const tool: Tool = {
          ),
       ),
    },
-   output: {
-      html: null,
-   },
    run,
 };
 
@@ -49,11 +45,7 @@ function sufficientLight(events: IWrapEvent[], environment: EnvironmentAllName):
    return false;
 }
 
-function run(args: ToolArgs) {
-   if (!args.beatmap) {
-      console.error('Something went wrong!');
-      return;
-   }
+function run(args: ToolArgs): IToolOutput[] {
    const env = args.beatmap.environment;
    const result = sufficientLight(args.beatmap.data.basicEvents, env);
 
@@ -83,18 +75,26 @@ function run(args: ToolArgs) {
          case 'HalloweenEnvironment':
          case 'GagaEnvironment':
          case 'GlassDesertEnvironment':
-            tool.output.html = printResult('Insufficient light event', '', 'rank');
-            break;
+            return [
+               {
+                  type: 'string',
+                  label: 'Insufficient light event',
+                  value: '',
+                  symbol: 'rank',
+               },
+            ];
          default:
-            tool.output.html = printResult(
-               'Unknown light event',
-               'v3 environment light should be manually checked',
-               'rank',
-            );
+            return [
+               {
+                  type: 'string',
+                  label: 'Unknown light event',
+                  value: 'v3 environment light should be manually checked',
+                  symbol: 'rank',
+               },
+            ];
       }
-   } else {
-      tool.output.html = null;
    }
+   return [];
 }
 
 export default tool;

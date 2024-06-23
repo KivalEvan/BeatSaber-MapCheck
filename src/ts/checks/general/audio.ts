@@ -1,15 +1,14 @@
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import { toMmss } from '../../bsmap/utils/mod';
 import settings from '../../settings';
 import flag from '../../flag';
-import { printResult } from '../helpers';
 import UIInput from '../../ui/helpers/input';
 
 const name = 'Audio Duration';
 const description = 'For ranking purpose, check for audio duration.';
 const enabled = true;
 
-const tool: Tool = {
+const tool: ITool = {
    name,
    description,
    type: 'general',
@@ -31,29 +30,34 @@ const tool: Tool = {
          ),
       ),
    },
-   output: {
-      html: null,
-   },
    run,
 };
 
-function run(args: ToolArgs) {
-   const { audioDuration } = args.settings;
+function run(args: ToolArgs): IToolOutput[] {
+   const audioDuration = args.audioDuration;
 
    if (audioDuration && audioDuration < 20) {
-      tool.output.html = printResult(
-         'Unrankable audio length',
-         `too short (${toMmss(audioDuration)}s)`,
-         'rank',
-      );
+      return [
+         {
+            type: 'string',
+            label: 'Unrankable audio length',
+            value: `too short (${toMmss(audioDuration)}s)`,
+            symbol: 'rank',
+         },
+      ];
    } else if (!flag.loading.audio) {
-      tool.output.html = printResult(
-         'No audio',
-         settings.load.audio ? 'could not be loaded or not found' : 'no audio mode is enabled',
-      );
-   } else {
-      tool.output.html = null;
+      return [
+         {
+            type: 'string',
+            label: 'No audio',
+            value: settings.load.audio
+               ? 'could not be loaded or not found'
+               : 'no audio mode is enabled',
+         },
+      ];
    }
+
+   return [];
 }
 
 export default tool;

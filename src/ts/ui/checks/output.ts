@@ -1,11 +1,10 @@
-import { TimeProcessor } from '../bsmap/beatmap/helpers/timeProcessor';
-import settings from '../settings';
-import { round } from '../bsmap/utils/math';
-import { toMmss, toMmssms } from '../bsmap/utils/time';
+import settings from '../../settings';
+import { round } from '../../bsmap/utils/math';
+import { toMmss, toMmssms } from '../../bsmap/utils/time';
+import { OutputSymbol } from '../../types/checks/check';
+import { IWrapBaseObject } from '../../bsmap/types/beatmap/wrapper/baseObject';
 
-type Symbol = 'info' | 'warning' | 'error' | 'rank';
-
-function addLabel(str: string, symbol?: Symbol): string {
+function addLabel(str: string, symbol?: OutputSymbol): string {
    switch (symbol) {
       case 'rank':
          str = '<span title="Ranking: for rankability reason."> 🚧 </span>' + str;
@@ -27,7 +26,7 @@ function addLabel(str: string, symbol?: Symbol): string {
    return str;
 }
 
-export function printResult(label: string, text?: string, symbol?: Symbol) {
+export function printResult(label: string, text?: string, symbol?: OutputSymbol) {
    const htmlContainer = document.createElement('div');
 
    label = addLabel(label, symbol);
@@ -41,36 +40,38 @@ export function printResult(label: string, text?: string, symbol?: Symbol) {
    return htmlContainer;
 }
 
-export function printResultTime(
-   label: string,
-   timeAry: number[],
-   timeProcessor: TimeProcessor,
-   symbol?: Symbol,
-) {
+function deduplicateFilter<T extends IWrapBaseObject>(obj: T, i: number, ary: T[]) {
+   return i === 0 || obj.time !== ary[i - 1].time;
+}
+
+export function printResultTime(label: string, timeAry: IWrapBaseObject[], symbol?: OutputSymbol) {
    const htmlContainer = document.createElement('div');
 
-   label = addLabel(label, symbol);
+   if (settings.deduplicateTime) {
+      timeAry = timeAry.filter(deduplicateFilter);
+   }
 
+   label = addLabel(label, symbol);
    htmlContainer.innerHTML = `<b>${label} [${timeAry.length}]:</b> ${timeAry
       .map((n) => {
          switch (settings.beatNumbering) {
             case 'realtime':
-               return `<span title="Beat ${round(timeProcessor.adjustTime(n), settings.rounding)}">${toMmss(
-                  timeProcessor.toRealTime(n),
+               return `<span title="Beat ${round(n.customData.__mapcheck_beattime, settings.rounding)}">${toMmss(
+                  n.customData.__mapcheck_secondtime,
                )}</span>`;
             case 'realtimems':
-               return `<span title="Beat ${round(timeProcessor.adjustTime(n), settings.rounding)}">${toMmssms(
-                  timeProcessor.toRealTime(n),
+               return `<span title="Beat ${round(n.customData.__mapcheck_beattime, settings.rounding)}">${toMmssms(
+                  n.customData.__mapcheck_secondtime,
                )}</span>`;
             case 'jsontime':
-               return `<span title="Time ${toMmssms(timeProcessor.toRealTime(n))}">${round(
-                  n,
+               return `<span title="Time ${toMmssms(n.customData.__mapcheck_secondtime)}">${round(
+                  n.time,
                   settings.rounding,
                )}</span>`;
             case 'beattime':
             default:
-               return `<span title="Time ${toMmssms(timeProcessor.toRealTime(n))}">${round(
-                  timeProcessor.adjustTime(n),
+               return `<span title="Time ${toMmssms(n.customData.__mapcheck_secondtime)}">${round(
+                  n.customData.__mapcheck_beattime,
                   settings.rounding,
                )}</span>`;
          }

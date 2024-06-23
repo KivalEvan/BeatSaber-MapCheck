@@ -5,7 +5,7 @@ import UIChecks from './ui/checks/main';
 import UIStats from './ui/stats';
 import UISelection from './ui/selection';
 import UIInput from './ui/input';
-import Analyser from './checks/analyzer';
+import Analyser from './checks/main';
 import Settings from './settings';
 import flag from './flag';
 import LoadedData from './loadedData';

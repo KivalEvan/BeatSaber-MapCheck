@@ -1,20 +1,19 @@
 import {
    IBeatmapItem,
-   IBeatmapSettings,
-   Tool,
+   ITool,
+   IToolOutput,
    ToolArgs,
    ToolInputOrder,
    ToolOutputOrder,
 } from '../../types';
 import UIInput from '../../ui/helpers/input';
-import { printResultTime } from '../helpers';
-import { IWrapGridObject } from '../../bsmap/types/beatmap/wrapper/gridObject';
+import { IWrapBaseObject } from '../../bsmap/types/beatmap/wrapper/baseObject';
 
 const name = 'Stacked Note';
 const description = 'Look for stacked note.';
 const enabled = true;
 
-const tool: Tool = {
+const tool: ITool = {
    name,
    description,
    type: 'note',
@@ -36,101 +35,86 @@ const tool: Tool = {
          ),
       ),
    },
-   output: {
-      html: null,
-   },
    run,
 };
 
-function checkNote(settings: IBeatmapSettings, map: IBeatmapItem) {
-   const { timeProcessor } = settings;
-   const { colorNotes } = map.data;
+function checkNote(map: IBeatmapItem) {
+   const colorNotes = map.data.colorNotes;
 
-   const ary: IWrapGridObject[] = [];
+   const result: IWrapBaseObject[] = [];
    // to avoid multiple of stack popping up, ignore anything within this time
    let lastTime: number = 0;
    for (let i = 0, len = colorNotes.length; i < len; i++) {
-      if (timeProcessor.toRealTime(colorNotes[i].time) < lastTime + 0.01) {
+      if (colorNotes[i].customData.__mapcheck_secondtime < lastTime + 0.01) {
          continue;
       }
       for (let j = i + 1; j < len; j++) {
          if (
-            timeProcessor.toRealTime(colorNotes[j].time) >
-            timeProcessor.toRealTime(colorNotes[i].time) + 0.01
+            colorNotes[j].customData.__mapcheck_secondtime >
+            colorNotes[i].customData.__mapcheck_secondtime + 0.01
          ) {
             break;
          }
          if (colorNotes[j].isInline(colorNotes[i])) {
-            ary.push(colorNotes[i]);
-            lastTime = timeProcessor.toRealTime(colorNotes[i].time);
+            result.push(colorNotes[i]);
+            lastTime = colorNotes[i].customData.__mapcheck_secondtime;
          }
       }
    }
-   return ary
-      .map((n) => n.time)
-      .filter(function (x, i, ary) {
-         return !i || x !== ary[i - 1];
-      });
+   return result;
 }
 
-function checkBomb(settings: IBeatmapSettings, map: IBeatmapItem) {
-   const { timeProcessor, njs } = settings;
-   const { bombNotes } = map.data;
+function checkBomb(map: IBeatmapItem) {
+   const timeProcessor = map.timeProcessor;
+   const njs = map.njs;
+   const bombNotes = map.data.bombNotes;
 
-   const ary: IWrapGridObject[] = [];
+   const result: IWrapBaseObject[] = [];
    for (let i = 0, len = bombNotes.length; i < len; i++) {
       for (let j = i + 1; j < len; j++) {
          // arbitrary break after 1s to not loop too much often
          if (
-            timeProcessor.toRealTime(bombNotes[j].time) >
-            timeProcessor.toRealTime(bombNotes[i].time) + 1
+            bombNotes[j].customData.__mapcheck_secondtime >
+            bombNotes[i].customData.__mapcheck_secondtime + 1
          ) {
             break;
          }
          if (
             bombNotes[i].isInline(bombNotes[j]) &&
             (njs.value < timeProcessor.bpm / (120 * (bombNotes[j].time - bombNotes[i].time)) ||
-               timeProcessor.toRealTime(bombNotes[j].time) <
-                  timeProcessor.toRealTime(bombNotes[i].time) + 0.02)
+               bombNotes[j].customData.__mapcheck_secondtime <
+                  bombNotes[i].customData.__mapcheck_secondtime + 0.02)
          ) {
-            ary.push(bombNotes[i]);
+            result.push(bombNotes[i]);
          }
       }
    }
-   return ary
-      .map((n) => n.time)
-      .filter(function (x, i, ary) {
-         return !i || x !== ary[i - 1];
-      });
+   return result;
 }
 
-function run(args: ToolArgs) {
-   if (!args.beatmap) {
-      console.error('Something went wrong!');
-      return;
-   }
-   const resultNote = checkNote(args.settings, args.beatmap);
-   const resultBomb = checkBomb(args.settings, args.beatmap);
+function run(args: ToolArgs): IToolOutput[] {
+   const resultNote = checkNote(args.beatmap);
+   const resultBomb = checkBomb(args.beatmap);
 
-   const htmlResult: HTMLElement[] = [];
+   const results: IToolOutput[] = [];
    if (resultNote.length) {
-      htmlResult.push(
-         printResultTime('Stacked note', resultNote, args.settings.timeProcessor, 'error'),
-      );
+      results.push({
+         type: 'time',
+         label: 'Stacked note',
+         value: resultNote,
+         symbol: 'error',
+      });
    }
    if (resultBomb.length) {
-      htmlResult.push(
-         printResultTime('Stacked bomb', resultBomb, args.settings.timeProcessor, 'error'),
-      );
+      results.push({
+         type: 'time',
+         label: 'Stacked bomb',
+         value: resultBomb,
+         symbol: 'error',
+      });
    }
 
-   if (htmlResult.length) {
-      const htmlContainer = document.createElement('div');
-      htmlResult.forEach((h) => htmlContainer.append(h));
-      tool.output.html = htmlContainer;
-   } else {
-      tool.output.html = null;
-   }
+   return results;
 }
 
 export default tool;

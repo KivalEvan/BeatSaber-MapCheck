@@ -3,20 +3,21 @@ import LoadedData from '../loadedData';
 import { TimeProcessor } from '../bsmap/beatmap/helpers/timeProcessor';
 import { NoteJumpSpeed } from '../bsmap/beatmap/helpers/njs';
 import { CharacteristicName, DifficultyName } from '../bsmap/types/beatmap/shared/mod';
-import { IBeatmapSettings } from '../types/checks/check';
-import { Tool } from '../types';
+import { IToolOutput } from '../types/checks/check';
+import { IBeatmapItem, ITool } from '../types';
 import logger from '../bsmap/logger';
 import { getLastInteractiveTime } from '../bsmap/beatmap/helpers/beatmap';
+import { printResult, printResultTime } from '../ui/checks/output';
 
 function tag(name: string) {
    return ['analyzer', name];
 }
 
-const toolListInput: ReadonlyArray<Tool> = AnalysisComponents.getAll().sort(
+const toolListInput: ReadonlyArray<ITool> = AnalysisComponents.getAll().sort(
    (a, b) => a.order.input - b.order.input,
 );
 
-const toolListOutput: ReadonlyArray<Tool> = [...toolListInput].sort(
+const toolListOutput: ReadonlyArray<ITool> = [...toolListInput].sort(
    (a, b) => a.order.output - b.order.output,
 );
 
@@ -25,11 +26,28 @@ function init(): void {
       general: {
          html: null,
       },
-      map: [],
+      beatmap: [],
    };
 }
 
-function runGeneral(): void {
+function outputToHtml(output: IToolOutput): HTMLDivElement {
+   switch (output.type) {
+      case 'string':
+         return printResult(output.label, output.value, output.symbol);
+      case 'number':
+         return printResult(output.label, output.value.join(', '), output.symbol);
+      case 'time':
+         return printResultTime(output.label, output.value, output.symbol);
+      case 'html':
+         const htmlContainer = document.createElement('div');
+         output.value.forEach((h) => htmlContainer.appendChild(h));
+         return htmlContainer;
+      default:
+         throw new Error('Unexpected result type');
+   }
+}
+
+function checkGeneral(): void {
    const mapInfo = LoadedData.beatmapInfo;
    if (!mapInfo) {
       logger.tError(tag('runGeneral'), 'Could not analyse, missing map info');
@@ -42,16 +60,6 @@ function runGeneral(): void {
 
    const analysisExist = LoadedData.analysis?.general;
 
-   const timeProcessor = TimeProcessor.create(mapInfo.audio.bpm);
-   const njs = NoteJumpSpeed.create(mapInfo.audio.bpm);
-
-   const mapSettings: IBeatmapSettings = {
-      timeProcessor: timeProcessor,
-      njs: njs,
-      audioDuration: LoadedData.duration ?? null,
-      mapDuration: 0,
-   };
-
    logger.tInfo(tag('runGeneral'), `Analysing general`);
    const htmlArr: HTMLElement[] = [];
    toolListOutput
@@ -59,13 +67,13 @@ function runGeneral(): void {
       .forEach((tool) => {
          if (tool.input.enabled) {
             try {
-               tool.run({
-                  settings: mapSettings,
+               const results = tool.run({
+                  audioDuration: LoadedData.duration ?? null,
+                  mapDuration: 0,
+                  beatmap: null as unknown as IBeatmapItem,
                   info: mapInfo,
                });
-               if (tool.output.html) {
-                  htmlArr.push(tool.output.html);
-               }
+               htmlArr.push(...results.map(outputToHtml));
             } catch (err) {
                logger.tError(tag('runGeneral'), err);
             }
@@ -77,7 +85,7 @@ function runGeneral(): void {
    }
 }
 
-function runDifficulty(characteristic: CharacteristicName, difficulty: DifficultyName): void {
+function checkDifficulty(characteristic: CharacteristicName, difficulty: DifficultyName): void {
    const mapInfo = LoadedData.beatmapInfo;
    if (!mapInfo) {
       logger.tError(tag('runDifficulty'), 'Could not analyse, missing map info');
@@ -97,7 +105,7 @@ function runDifficulty(characteristic: CharacteristicName, difficulty: Difficult
       return;
    }
 
-   const analysisExist = LoadedData.analysis?.map.find(
+   const analysisExist = LoadedData.analysis?.beatmap.find(
       (set) => set.difficulty === difficulty && set.characteristic === characteristic,
    );
 
@@ -107,13 +115,6 @@ function runDifficulty(characteristic: CharacteristicName, difficulty: Difficult
       beatmap.settings.njsOffset,
    );
 
-   const mapSettings: IBeatmapSettings = {
-      timeProcessor: beatmap.timeProcessor,
-      njs: njs,
-      audioDuration: LoadedData.duration ?? null,
-      mapDuration: beatmap.timeProcessor.toRealTime(getLastInteractiveTime(beatmap.data)),
-   };
-
    logger.tInfo(tag('runDifficulty'), `Analysing ${characteristic} ${difficulty}`);
    const htmlArr: HTMLElement[] = [];
    toolListOutput
@@ -121,14 +122,15 @@ function runDifficulty(characteristic: CharacteristicName, difficulty: Difficult
       .forEach((tool) => {
          if (tool.input.enabled) {
             try {
-               tool.run({
-                  settings: mapSettings,
+               const results = tool.run({
+                  audioDuration: LoadedData.duration ?? null,
+                  mapDuration: beatmap.timeProcessor.toRealTime(
+                     getLastInteractiveTime(beatmap.data),
+                  ),
                   beatmap: beatmap,
                   info: mapInfo,
                });
-               if (tool.output.html) {
-                  htmlArr.push(tool.output.html);
-               }
+               htmlArr.push(...results.map(outputToHtml));
             } catch (err) {
                logger.tError(tag('runDifficulty'), err);
             }
@@ -138,7 +140,7 @@ function runDifficulty(characteristic: CharacteristicName, difficulty: Difficult
    if (analysisExist) {
       analysisExist.html = htmlArr;
    } else {
-      LoadedData.analysis?.map.push({
+      LoadedData.analysis?.beatmap.push({
          characteristic: characteristic,
          difficulty: difficulty,
          html: htmlArr,
@@ -159,14 +161,14 @@ function adjustTime(bpm: TimeProcessor): void {
 
 function applyAll(): void {
    LoadedData.beatmaps?.forEach((bm) =>
-      runDifficulty(bm.settings.characteristic, bm.settings.difficulty),
+      checkDifficulty(bm.settings.characteristic, bm.settings.difficulty),
    );
 }
 
 export default {
    toolListInput,
-   runGeneral,
-   runDifficulty,
+   runGeneral: checkGeneral,
+   runDifficulty: checkDifficulty,
    adjustTime,
    applyAll,
 };

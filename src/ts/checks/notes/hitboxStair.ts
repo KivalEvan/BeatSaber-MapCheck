@@ -1,10 +1,8 @@
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import { NoteContainerType } from '../../types/checks/container';
+import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import { isEnd } from '../../bsmap/extensions/placement/note';
 import swing from '../../bsmap/extensions/swing/swing';
 import { ColorNote } from '../../bsmap/beatmap/core/colorNote';
 import UIInput from '../../ui/helpers/input';
-import { printResultTime } from '../helpers';
 import { NoteColor, NoteDirection, NoteDirectionSpace } from '../../bsmap/beatmap/shared/constants';
 import { IWrapColorNote } from '../../bsmap/types/beatmap/wrapper/colorNote';
 
@@ -12,7 +10,7 @@ const name = 'Hitbox Staircase';
 const description = 'Check for overlapping post-swing hitbox with note hitbox during swing.';
 const enabled = true;
 
-const tool: Tool = {
+const tool: ITool = {
    name,
    description,
    type: 'note',
@@ -34,9 +32,6 @@ const tool: Tool = {
          ),
       ),
    },
-   output: {
-      html: null,
-   },
    run,
 };
 
@@ -53,9 +48,9 @@ function isDouble(note: IWrapColorNote, nc: IWrapColorNote[], index: number): bo
 }
 
 function check(args: ToolArgs) {
-   const { timeProcessor } = args.settings;
-   const notes = args.beatmap!.data.colorNotes;
-   const hitboxTime = timeProcessor.toBeatTime(0.15);
+   const { timeProcessor } = args.beatmap;
+   const notes = args.beatmap.data.colorNotes;
+   const hitboxTime = timeProcessor.toBeatTime(0.15, false);
 
    const lastNote: { [key: number]: IWrapColorNote } = {};
    const lastNoteDirection: { [key: number]: number } = {};
@@ -70,7 +65,7 @@ function check(args: ToolArgs) {
    };
 
    // FIXME: use new system
-   const arr: IWrapColorNote[] = [];
+   const result: IWrapColorNote[] = [];
    for (let i = 0, len = notes.length; i < len; i++) {
       const note = notes[i];
       if (lastNote[note.color]) {
@@ -106,9 +101,9 @@ function check(args: ToolArgs) {
             if (
                note.posX === noteOccupy[(note.color + 1) % 2].posX &&
                note.posY === noteOccupy[(note.color + 1) % 2].posY &&
-               !isDouble(note, args.beatmap!.data.colorNotes, i)
+               !isDouble(note, args.beatmap.data.colorNotes, i)
             ) {
-               arr.push(note);
+               result.push(note);
             }
          }
       } else {
@@ -124,30 +119,23 @@ function check(args: ToolArgs) {
       lastNote[note.color] = note;
       swingNoteArray[note.color].push(note);
    }
-   return arr
-      .map((n) => n.time)
-      .filter(function (x, i, ary) {
-         return !i || x !== ary[i - 1];
-      });
+   return result;
 }
 
-function run(args: ToolArgs) {
-   if (!args.beatmap) {
-      console.error('Something went wrong!');
-      return;
-   }
+function run(args: ToolArgs): IToolOutput[] {
    const result = check(args);
 
    if (result.length) {
-      tool.output.html = printResultTime(
-         'Hitbox staircase',
-         result,
-         args.settings.timeProcessor,
-         'rank',
-      );
-   } else {
-      tool.output.html = null;
+      return [
+         {
+            type: 'time',
+            label: 'Hitbox staircase',
+            value: result,
+            symbol: 'rank',
+         },
+      ];
    }
+   return [];
 }
 
 export default tool;

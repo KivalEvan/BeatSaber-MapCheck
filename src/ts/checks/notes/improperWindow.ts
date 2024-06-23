@@ -1,8 +1,7 @@
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import { NoteContainerType } from '../../types/checks/container';
+import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import { ObjectContainerType } from '../../types/checks/container';
 import UIInput from '../../ui/helpers/input';
 import swing from '../../bsmap/extensions/swing/swing';
-import { printResultTime } from '../helpers';
 import { NoteColor, NoteDirection } from '../../bsmap/beatmap/shared/constants';
 import { IWrapColorNote } from '../../bsmap/types/beatmap/wrapper/colorNote';
 
@@ -10,7 +9,7 @@ const name = 'Improper Window Snap';
 const description = 'Check for slanted window snap timing.';
 const enabled = true;
 
-const tool: Tool = {
+const tool: ITool = {
    name,
    description,
    type: 'note',
@@ -32,24 +31,20 @@ const tool: Tool = {
          ),
       ),
    },
-   output: {
-      html: null,
-   },
    run,
 };
 
 function check(args: ToolArgs) {
-   const { timeProcessor } = args.settings;
-   const { noteContainer } = args.beatmap!;
+   const { timeProcessor, noteContainer } = args.beatmap;
    const lastNote: { [key: number]: IWrapColorNote } = {};
    const swingNoteArray: { [key: number]: IWrapColorNote[] } = {
       [NoteColor.RED]: [],
       [NoteColor.BLUE]: [],
    };
 
-   const arr: IWrapColorNote[] = [];
+   const result: IWrapColorNote[] = [];
    for (let i = 0, len = noteContainer.length; i < len; i++) {
-      if (noteContainer[i].type !== NoteContainerType.COLOR) {
+      if (noteContainer[i].type !== ObjectContainerType.COLOR) {
          continue;
       }
       const note = noteContainer[i].data as IWrapColorNote;
@@ -64,37 +59,30 @@ function check(args: ToolArgs) {
             note.direction !== NoteDirection.ANY &&
             lastNote[note.color].direction !== NoteDirection.ANY
          ) {
-            arr.push(lastNote[note.color]);
+            result.push(lastNote[note.color]);
          }
       } else {
          lastNote[note.color] = note;
       }
       swingNoteArray[note.color].push(note);
    }
-   return arr
-      .map((n) => n.time)
-      .filter(function (x, i, ary) {
-         return !i || x !== ary[i - 1];
-      });
+   return result
 }
 
-function run(args: ToolArgs) {
-   if (!args.beatmap) {
-      console.error('Something went wrong!');
-      return;
-   }
+function run(args: ToolArgs): IToolOutput[] {
    const result = check(args);
 
    if (result.length) {
-      tool.output.html = printResultTime(
-         'Improper window snap',
-         result,
-         args.settings.timeProcessor,
-         'error',
-      );
-   } else {
-      tool.output.html = null;
+      return [
+         {
+            type: 'time',
+            label: 'Improper window snap',
+            value: result,
+            symbol: 'error',
+         },
+      ];
    }
+   return [];
 }
 
 export default tool;

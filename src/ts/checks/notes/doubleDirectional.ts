@@ -1,16 +1,15 @@
 import {
    IBeatmapItem,
-   IBeatmapSettings,
-   Tool,
+   ITool,
+   IToolOutput,
    ToolArgs,
    ToolInputOrder,
    ToolOutputOrder,
 } from '../../types';
-import { NoteContainerType } from '../../types/checks/container';
+import { ObjectContainerType } from '../../types/checks/container';
 import { checkDirection } from '../../bsmap/extensions/placement/note';
 import swing from '../../bsmap/extensions/swing/swing';
 import UIInput from '../../ui/helpers/input';
-import { printResultTime } from '../helpers';
 import {
    NoteColor,
    NoteDirection,
@@ -24,7 +23,7 @@ const name = 'Double-directional';
 const description = 'Check double-directional note swing (this may not mean parity break).';
 const enabled = true;
 
-const tool: Tool = {
+const tool: ITool = {
    name,
    description,
    type: 'note',
@@ -46,15 +45,12 @@ const tool: Tool = {
          ),
       ),
    },
-   output: {
-      html: null,
-   },
    run,
 };
 
-function check(settings: IBeatmapSettings, difficulty: IBeatmapItem) {
-   const { timeProcessor } = settings;
-   const noteContainer = difficulty.noteContainer;
+function check(beatmapItem: IBeatmapItem) {
+   const timeProcessor = beatmapItem.timeProcessor;
+   const noteContainer = beatmapItem.noteContainer;
    const lastNote: { [key: number]: IWrapColorNote } = {};
    const lastNoteAngle: { [key: number]: number } = {};
    const startNoteDot: { [key: number]: IWrapColorNote | null } = {};
@@ -66,7 +62,7 @@ function check(settings: IBeatmapSettings, difficulty: IBeatmapItem) {
    const arr: IWrapColorNote[] = [];
    for (let i = 0, len = noteContainer.length; i < len; i++) {
       const note = noteContainer[i];
-      if (note.type === NoteContainerType.COLOR && lastNote[note.data.color]) {
+      if (note.type === ObjectContainerType.COLOR && lastNote[note.data.color]) {
          if (
             swing.next(
                note.data,
@@ -102,14 +98,14 @@ function check(settings: IBeatmapSettings, difficulty: IBeatmapItem) {
                lastNoteAngle[note.data.color] = note.data.getAngle();
             }
          }
-      } else if (note.type === NoteContainerType.COLOR) {
+      } else if (note.type === ObjectContainerType.COLOR) {
          lastNoteAngle[note.data.color] = note.data.getAngle();
       }
-      if (note.type === NoteContainerType.COLOR) {
+      if (note.type === ObjectContainerType.COLOR) {
          lastNote[note.data.color] = note.data;
          swingNoteArray[note.data.color].push(note.data);
       }
-      if (note.type === NoteContainerType.BOMB) {
+      if (note.type === ObjectContainerType.BOMB) {
          // on bottom row
          if (note.data.posY === PosY.BOTTOM) {
             //on right center
@@ -138,30 +134,23 @@ function check(settings: IBeatmapSettings, difficulty: IBeatmapItem) {
          }
       }
    }
-   return arr
-      .map((n) => n.time)
-      .filter(function (x, i, ary) {
-         return !i || x !== ary[i - 1];
-      });
+   return arr;
 }
 
-function run(args: ToolArgs) {
-   if (!args.beatmap) {
-      console.error('Something went wrong!');
-      return;
-   }
-   const result = check(args.settings, args.beatmap);
+function run(args: ToolArgs): IToolOutput[] {
+   const result = check(args.beatmap);
 
    if (result.length) {
-      tool.output.html = printResultTime(
-         'Double-directional',
-         result,
-         args.settings.timeProcessor,
-         'warning',
-      );
-   } else {
-      tool.output.html = null;
+      return [
+         {
+            type: 'time',
+            label: 'Double-directional',
+            value: result,
+            symbol: 'warning',
+         },
+      ];
    }
+   return [];
 }
 
 export default tool;

@@ -1,6 +1,5 @@
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import { round } from '../../bsmap/utils/mod';
-import { printResultTime } from '../helpers';
 import UIInput from '../../ui/helpers/input';
 import { TimeProcessor } from '../../bsmap/beatmap/helpers/timeProcessor';
 import { PosX, PosY } from '../../bsmap/beatmap/shared/constants';
@@ -20,7 +19,7 @@ const [htmlLabelMaxTime, htmlInputMaxTime] = UIInput.createNumber(
       this.value = round(tool.input.params.recovery * 1000, 1).toString();
       if (localBPM) {
          htmlInputMaxBeat.value = round(
-            localBPM.toBeatTime(tool.input.params.recovery),
+            localBPM.toBeatTime(tool.input.params.recovery, false),
             2,
          ).toString();
       }
@@ -46,7 +45,7 @@ const [htmlLabelMaxBeat, htmlInputMaxBeat] = UIInput.createNumber(
    0.1,
 );
 
-const tool: Tool<{ recovery: number }> = {
+const tool: ITool<{ recovery: number }> = {
    name,
    description,
    type: 'obstacle',
@@ -76,20 +75,17 @@ const tool: Tool<{ recovery: number }> = {
       ),
       adjustTime: adjustTimeHandler,
    },
-   output: {
-      html: null,
-   },
    run,
 };
 
 function adjustTimeHandler(bpm: TimeProcessor) {
    localBPM = bpm;
-   htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.recovery), 2).toString();
+   htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.recovery, false), 2).toString();
 }
 
 function check(args: ToolArgs) {
-   const { obstacles } = args.beatmap!.data;
-   const { timeProcessor } = args.settings;
+   const { obstacles } = args.beatmap.data;
+   const { timeProcessor } = args.beatmap;
    const { recovery } = tool.input.params;
    const arr: IWrapObstacle[] = [];
    let obstacleLeftFull: IWrapObstacle = new Obstacle();
@@ -184,31 +180,25 @@ function check(args: ToolArgs) {
          }
       }
    });
-   return arr
-      .map((o) => o.time)
-      .filter(function (x, i, ary) {
-         return !i || x !== ary[i - 1];
-      });
+   return arr;
 }
 
-function run(args: ToolArgs) {
-   if (!args.beatmap) {
-      console.error('Something went wrong!');
-      return;
-   }
+function run(args: ToolArgs): IToolOutput[] {
    const result = check(args);
    const { recovery } = tool.input.params;
 
    if (result.length) {
-      tool.output.html = printResultTime(
-         `2-wide center obstacle (<${round(recovery * 1000)}ms)`,
-         result,
-         args.settings.timeProcessor,
-         'error',
-      );
-   } else {
-      tool.output.html = null;
+      return [
+         {
+            type: 'time',
+            label: `2-wide center obstacle (<${round(recovery * 1000)}ms)`,
+            value: result,
+            symbol: 'error',
+         },
+      ];
    }
+
+   return [];
 }
 
 export default tool;

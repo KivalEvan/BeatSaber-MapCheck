@@ -8,9 +8,16 @@ import { IBPMInfo } from './bsmap/types/beatmap/v2/bpmInfo';
 import { IAudio } from './bsmap/types/beatmap/v4/audioData';
 import { IBPMEvent } from './bsmap/types/beatmap/v3/bpmEvent';
 import settings from './settings';
-import { Beatmap, loadDifficulty, loadInfo, loadLightshow } from './bsmap/beatmap/mod';
+import {
+   Beatmap,
+   NoteJumpSpeed,
+   loadDifficulty,
+   loadInfo,
+   loadLightshow,
+} from './bsmap/beatmap/mod';
 import { IWrapBeatmap } from './bsmap/types/beatmap/wrapper/beatmap';
-import { INoteContainer, NoteContainerType } from './types/checks/container';
+import { IObjectContainer, ObjectContainerType } from './types/checks/container';
+import { IWrapBaseObject } from './bsmap/types/beatmap/wrapper/baseObject';
 
 function tag(name: string) {
    return ['load', name];
@@ -62,25 +69,25 @@ export async function extractInfo(zip: JSZip) {
 }
 
 export function extractBeatmaps(info: IWrapInfo, zip: JSZip): Promise<IBeatmapItem | null>[] {
-   return info.difficulties.map(async (d, i) => {
-      const diffInfo = d;
-      const difficultyFile = zip.file(diffInfo.filename);
+   return info.difficulties.map(async (d) => {
+      const infoDiff = d;
+      const difficultyFile = zip.file(infoDiff.filename);
       if (!difficultyFile) {
          logger.tError(
             tag('extractBeatmaps'),
-            `Missing ${diffInfo.filename} file for ${diffInfo.characteristic} ${diffInfo.difficulty}, ignoring.`,
+            `Missing ${infoDiff.filename} file for ${infoDiff.characteristic} ${infoDiff.difficulty}, ignoring.`,
          );
          return null;
       }
       logger.tInfo(
          tag('extractBeatmaps'),
-         `Loading ${diffInfo.characteristic} ${diffInfo.difficulty}`,
+         `Loading ${infoDiff.characteristic} ${infoDiff.difficulty}`,
       );
       let jsonDifficulty;
       try {
          jsonDifficulty = await difficultyFile!.async('string').then(JSON.parse);
       } catch (err) {
-         throw new Error(`${diffInfo.characteristic} ${diffInfo.difficulty} ${err}`);
+         throw new Error(`${infoDiff.characteristic} ${infoDiff.difficulty} ${err}`);
       }
       let jsonVerStr =
          typeof jsonDifficulty._version === 'string'
@@ -103,101 +110,118 @@ export function extractBeatmaps(info: IWrapInfo, zip: JSZip): Promise<IBeatmapIt
       if (jsonDifficulty._notes && jsonDifficulty.version) {
          logger.tError(
             tag('extractBeatmaps'),
-            `${diffInfo.characteristic} ${diffInfo.difficulty} contains 2 version of the map in the same file, attempting to load v3 instead`,
+            `${infoDiff.characteristic} ${infoDiff.difficulty} contains 2 version of the map in the same file, attempting to load v3 instead`,
          );
       }
-      try {
-         let data = loadDifficulty(jsonDifficulty);
-         let lightshow = jsonDifficultyVer === 4 ? new Beatmap() : data;
-         let jsonLightshow;
-         if (jsonDifficultyVer === 4) {
-            const lightshowFile = zip.file(diffInfo.lightshowFilename);
-            if (!lightshowFile) {
-               logger.tError(
-                  tag('extractBeatmaps'),
-                  `Missing ${diffInfo.lightshowFilename} lightshow file for ${diffInfo.characteristic} ${diffInfo.difficulty}, ignoring.`,
-               );
-            }
-            logger.tInfo(
+
+      let data = loadDifficulty(jsonDifficulty, { sort: false });
+      let lightshow = jsonDifficultyVer === 4 ? new Beatmap() : data;
+      let jsonLightshow;
+      if (jsonDifficultyVer === 4) {
+         const lightshowFile = zip.file(infoDiff.lightshowFilename);
+         if (!lightshowFile) {
+            logger.tError(
                tag('extractBeatmaps'),
-               `Loading ${diffInfo.characteristic} ${diffInfo.difficulty} lightshow`,
+               `Missing ${infoDiff.lightshowFilename} lightshow file for ${infoDiff.characteristic} ${infoDiff.difficulty}, ignoring.`,
             );
-            try {
-               jsonLightshow = await lightshowFile!.async('string').then(JSON.parse);
-               lightshow = loadLightshow(jsonLightshow);
-            } catch (err) {
-               logger.tError(
-                  tag('extractBeatmaps'),
-                  `Could not load ${diffInfo.lightshowFilename} lightshow file; ${err}`,
-               );
-            }
          }
-         const timeProcessor = TimeProcessor.create(
-            info.audio.bpm,
-            jsonDifficultyVer === 3
-               ? [
-                    ...(data.customData.BPMChanges ?? []),
-                    ...(jsonDifficulty.bpmEvents ?? []).map((be: IBPMEvent) => be),
-                 ]
-               : jsonDifficultyVer === 2
-                 ? data.customData._BPMChanges ?? data.customData._bpmChanges
-                 : jsonDifficultyVer === 1
-                   ? jsonDifficulty._BPMChanges
-                   : [],
-            diffInfo.customData?._editorOffset,
+         logger.tInfo(
+            tag('extractBeatmaps'),
+            `Loading ${infoDiff.characteristic} ${infoDiff.difficulty} lightshow`,
          );
-         data = data;
-         data.lightshow = lightshow.lightshow;
-         if (settings.sorting) {
-            data.sort();
-            lightshow.sort();
+         try {
+            jsonLightshow = await lightshowFile!.async('string').then(JSON.parse);
+            lightshow = loadLightshow(jsonLightshow, { sort: false });
+         } catch (err) {
+            logger.tError(
+               tag('extractBeatmaps'),
+               `Could not load ${infoDiff.lightshowFilename} lightshow file; ${err}`,
+            );
          }
-         return {
-            settings: diffInfo,
-            environment: info.environmentNames.at(diffInfo.environmentId)!,
-            timeProcessor,
-            data,
-            noteContainer: getNoteContainer(data, timeProcessor),
-            swingAnalysis: swing.info(
-               data,
-               timeProcessor,
-               diffInfo.characteristic,
-               diffInfo.difficulty,
-            ),
-            rawVersion: jsonDifficultyVer as 4,
-            rawData: jsonDifficulty,
-            rawLightshow: jsonLightshow,
-         };
-      } catch (err) {
-         throw err;
       }
+      const timeProcessor = TimeProcessor.create(
+         info.audio.bpm,
+         jsonDifficultyVer === 3
+            ? [
+                 ...(data.customData.BPMChanges ?? []),
+                 ...(jsonDifficulty.bpmEvents ?? []).map((be: IBPMEvent) => be),
+              ]
+            : jsonDifficultyVer === 2
+              ? data.customData._BPMChanges ?? data.customData._bpmChanges
+              : jsonDifficultyVer === 1
+                ? jsonDifficulty._BPMChanges
+                : [],
+         infoDiff.customData?._editorOffset,
+      );
+      data = data;
+      data.lightshow = lightshow.lightshow;
+      if (settings.sorting) {
+         data.sort();
+         lightshow.sort();
+      }
+      precalculateTimes(data, timeProcessor);
+      return {
+         settings: infoDiff,
+         environment: info.environmentNames.at(infoDiff.environmentId)!,
+         timeProcessor,
+         njs: new NoteJumpSpeed(timeProcessor.bpm, infoDiff.njs, infoDiff.njsOffset),
+         data,
+         noteContainer: getNoteContainer(data),
+         swingAnalysis: swing.info(
+            data,
+            timeProcessor,
+            infoDiff.characteristic,
+            infoDiff.difficulty,
+         ),
+         rawVersion: jsonDifficultyVer as 4,
+         rawData: jsonDifficulty,
+         rawLightshow: jsonLightshow,
+      };
    });
 }
-function getNoteContainer(beatmap: IWrapBeatmap, timeProcessor: TimeProcessor): INoteContainer[] {
+
+function getNoteContainer(beatmap: IWrapBeatmap): IObjectContainer[] {
    return [
       ...beatmap.colorNotes.map((e) => ({
-         beatTime: timeProcessor.toBeatTime(e.time, true),
-         secondTime: timeProcessor.toRealTime(e.time, true),
          data: e,
-         type: NoteContainerType.COLOR,
+         type: ObjectContainerType.COLOR,
       })),
       ...beatmap.bombNotes.map((e) => ({
-         beatTime: timeProcessor.toBeatTime(e.time, true),
-         secondTime: timeProcessor.toRealTime(e.time, true),
          data: e,
-         type: NoteContainerType.BOMB,
+         type: ObjectContainerType.BOMB,
       })),
       ...beatmap.chains.map((e) => ({
-         beatTime: timeProcessor.toBeatTime(e.time, true),
-         secondTime: timeProcessor.toRealTime(e.time, true),
          data: e,
-         type: NoteContainerType.CHAIN,
+         type: ObjectContainerType.CHAIN,
       })),
       ...beatmap.arcs.map((e) => ({
-         beatTime: timeProcessor.toBeatTime(e.time, true),
-         secondTime: timeProcessor.toRealTime(e.time, true),
          data: e,
-         type: NoteContainerType.ARC,
+         type: ObjectContainerType.ARC,
       })),
-   ].sort((a, b) => a.data.time - b.data.time) as INoteContainer[];
+   ].sort((a, b) => a.data.time - b.data.time) as IObjectContainer[];
+}
+
+function precalculateTimes(beatmap: IWrapBeatmap, timeProcessor: TimeProcessor) {
+   const fn = applyTime(timeProcessor);
+   beatmap.bpmEvents.forEach(fn);
+   beatmap.rotationEvents.forEach(fn);
+   beatmap.colorNotes.forEach(fn);
+   beatmap.bombNotes.forEach(fn);
+   beatmap.obstacles.forEach(fn);
+   beatmap.arcs.forEach(fn);
+   beatmap.chains.forEach(fn);
+   beatmap.waypoints.forEach(fn);
+   beatmap.basicEvents.forEach(fn);
+   beatmap.colorBoostEvents.forEach(fn);
+   beatmap.lightColorEventBoxGroups.forEach(fn);
+   beatmap.lightRotationEventBoxGroups.forEach(fn);
+   beatmap.lightTranslationEventBoxGroups.forEach(fn);
+   beatmap.fxEventBoxGroups.forEach(fn);
+}
+
+function applyTime(timeProcessor: TimeProcessor) {
+   return function (object: IWrapBaseObject) {
+      object.customData.__mapcheck_secondtime = timeProcessor.toRealTime(object.time, true);
+      object.customData.__mapcheck_beattime = timeProcessor.adjustTime(object.time);
+   };
 }

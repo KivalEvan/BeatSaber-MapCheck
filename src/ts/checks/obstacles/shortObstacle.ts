@@ -1,6 +1,5 @@
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import UIInput from '../../ui/helpers/input';
-import { printResultTime } from '../helpers';
 import { PosX, PosY } from '../../bsmap/beatmap/shared/constants';
 import { Obstacle } from '../../bsmap/beatmap/core/obstacle';
 import { IWrapObstacle } from '../../bsmap/types/beatmap/wrapper/obstacle';
@@ -10,7 +9,7 @@ const description =
    'Look for obstacle with inadequate duration.\nThis causes player to not take damage when in collision with obstacle.';
 const enabled = true;
 
-const tool: Tool<{ minDur: number }> = {
+const tool: ITool<{ minDur: number }> = {
    name,
    description,
    type: 'obstacle',
@@ -34,17 +33,14 @@ const tool: Tool<{ minDur: number }> = {
          ),
       ),
    },
-   output: {
-      html: null,
-   },
    run,
 };
 
 function check(args: ToolArgs) {
-   const { obstacles } = args.beatmap!.data;
-   const { timeProcessor } = args.settings;
+   const { obstacles } = args.beatmap.data;
+   const { timeProcessor } = args.beatmap;
    const { minDur: temp } = tool.input.params;
-   const minDur = timeProcessor.toBeatTime(temp);
+   const minDur = timeProcessor.toBeatTime(temp, false);
    const ary: IWrapObstacle[] = [];
    let obstacleLFull: IWrapObstacle = new Obstacle();
    let obstacleRFull: IWrapObstacle = new Obstacle();
@@ -171,30 +167,23 @@ function check(args: ToolArgs) {
          }
       }
    });
-   return ary
-      .map((o) => o.time)
-      .filter(function (x, i, ary) {
-         return !i || x !== ary[i - 1];
-      });
+   return ary;
 }
 
-function run(args: ToolArgs) {
-   if (!args.beatmap) {
-      console.error('Something went wrong!');
-      return;
-   }
+function run(args: ToolArgs): IToolOutput[] {
    const result = check(args);
 
    if (result.length) {
-      tool.output.html = printResultTime(
-         '<15ms obstacle',
-         result,
-         args.settings.timeProcessor,
-         'warning',
-      );
-   } else {
-      tool.output.html = null;
+      return [
+         {
+            type: 'time',
+            label: '<15ms obstacle',
+            value: result,
+            symbol: 'warning',
+         },
+      ];
    }
+   return [];
 }
 
 export default tool;

@@ -2,41 +2,43 @@ import { IWrapArc } from '../../bsmap/types/beatmap/wrapper/arc';
 import { IWrapBombNote } from '../../bsmap/types/beatmap/wrapper/bombNote';
 import { IWrapColorNote } from '../../bsmap/types/beatmap/wrapper/colorNote';
 import { IWrapChain } from '../../bsmap/types/beatmap/wrapper/chain';
+import { IWrapBaseObject } from '../../bsmap/types/beatmap/wrapper/baseObject';
 
-export const enum NoteContainerType {
+export const enum ObjectContainerType {
+   OBJECT = -1,
    COLOR,
    BOMB,
    ARC,
    CHAIN,
 }
 
-export interface INoteContainerBase {
-   readonly beatTime: number;
-   readonly secondTime: number;
+export interface IObjectContainerBase {
+   readonly type: ObjectContainerType;
+   readonly data: IWrapBaseObject;
 }
 
-export interface INoteContainerArc extends INoteContainerBase {
-   readonly type: NoteContainerType.ARC;
+export interface IObjectContainerArc extends IObjectContainerBase {
+   readonly type: ObjectContainerType.ARC;
    readonly data: IWrapArc;
 }
 
-export interface INoteContainerBomb extends INoteContainerBase {
-   readonly type: NoteContainerType.BOMB;
+export interface IObjectContainerBomb extends IObjectContainerBase {
+   readonly type: ObjectContainerType.BOMB;
    readonly data: IWrapBombNote;
 }
 
-export interface INoteContainerColor extends INoteContainerBase {
-   readonly type: NoteContainerType.COLOR;
+export interface IObjectContainerColor extends IObjectContainerBase {
+   readonly type: ObjectContainerType.COLOR;
    readonly data: IWrapColorNote;
 }
 
-export interface INoteContainerChain extends INoteContainerBase {
-   readonly type: NoteContainerType.CHAIN;
+export interface IObjectContainerChain extends IObjectContainerBase {
+   readonly type: ObjectContainerType.CHAIN;
    readonly data: IWrapChain;
 }
 
-export type INoteContainer =
-   | INoteContainerColor
-   | INoteContainerBomb
-   | INoteContainerArc
-   | INoteContainerChain;
+export type IObjectContainer =
+   | IObjectContainerColor
+   | IObjectContainerBomb
+   | IObjectContainerArc
+   | IObjectContainerChain;

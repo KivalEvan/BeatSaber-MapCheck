@@ -2,7 +2,7 @@ import { ISettings } from './types/settings';
 import { deepCopy } from './bsmap/utils/mod';
 
 const settingsDefault: ISettings = {
-   version: 4,
+   version: 5,
    load: {
       audio: true,
       imageCover: true,
@@ -14,8 +14,8 @@ const settingsDefault: ISettings = {
    rounding: 3,
    dataCheck: true,
    dataError: true,
+   deduplicateTime: true,
    theme: 'Dark',
-   onLoad: { stats: false },
    show: {
       info: false,
       checks: false,
@@ -75,14 +75,17 @@ export default new (class Settings implements ISettings {
    set dataError(val: boolean) {
       this.property.dataError = val;
    }
+   get deduplicateTime(): boolean {
+      return this.property.deduplicateTime;
+   }
+   set deduplicateTime(val: boolean) {
+      this.property.deduplicateTime = val;
+   }
    get theme(): ISettings['theme'] {
       return this.property.theme;
    }
    set theme(val: ISettings['theme']) {
       this.property.theme = val;
-   }
-   get onLoad() {
-      return this.property.onLoad;
    }
    get show(): ISettings['show'] {
       return this.property.show;

@@ -1,6 +1,5 @@
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import { round } from '../../bsmap/utils/mod';
-import { printResultTime } from '../helpers';
 import UIInput from '../../ui/helpers/input';
 import { TimeProcessor } from '../../bsmap/beatmap/helpers/timeProcessor';
 
@@ -30,7 +29,7 @@ const htmlEBPMS = UIInput.createNumber(
    0,
 );
 
-const tool: Tool<{ ebpmThres: number; ebpmsThres: number }> = {
+const tool: ITool<{ ebpmThres: number; ebpmsThres: number }> = {
    name,
    description,
    type: 'note',
@@ -58,9 +57,6 @@ const tool: Tool<{ ebpmThres: number; ebpmsThres: number }> = {
       ),
       adjustTime: adjustTimeHandler,
    },
-   output: {
-      html: null,
-   },
    run,
 };
 
@@ -72,56 +68,42 @@ function adjustTimeHandler(timeProcessor: TimeProcessor) {
 }
 
 function check(args: ToolArgs) {
-   const { swingAnalysis } = args.beatmap!;
+   const { swingAnalysis } = args.beatmap;
    let { ebpmThres, ebpmsThres } = tool.input.params;
    ebpmThres += 0.001;
    ebpmsThres += 0.001;
 
-   const noteEBPM = swingAnalysis.container.filter((s) => s.ebpm > ebpmThres).map((s) => s.time);
+   const noteEBPM = swingAnalysis.container.filter((s) => s.ebpm > ebpmThres).map((s) => s.data[0]);
    const noteEBPMS = swingAnalysis.container
       .filter((s) => s.ebpmSwing > ebpmsThres)
-      .map((s) => s.time);
+      .map((s) => s.data[0]);
 
    return { base: noteEBPM, swing: noteEBPMS };
 }
 
-function run(args: ToolArgs) {
-   if (!args.beatmap) {
-      console.error('Something went wrong!');
-      return;
-   }
+function run(args: ToolArgs): IToolOutput[] {
    const result = check(args);
    const { ebpmThres, ebpmsThres } = tool.input.params;
 
-   const htmlResult: HTMLElement[] = [];
+   const results: IToolOutput[] = [];
    if (result.base.length) {
-      htmlResult.push(
-         printResultTime(
-            `>${ebpmThres}EBPM warning`,
-            result.base,
-            args.settings.timeProcessor,
-            'warning',
-         ),
-      );
+      results.push({
+         type: 'time',
+         label: `>${ebpmThres}EBPM warning`,
+         value: result.base,
+         symbol: 'warning',
+      });
    }
    if (result.swing.length) {
-      htmlResult.push(
-         printResultTime(
-            `>${ebpmsThres}EBPM (swing) warning`,
-            result.swing,
-            args.settings.timeProcessor,
-            'warning',
-         ),
-      );
+      results.push({
+         type: 'time',
+         label: `>${ebpmsThres}EBPM (swing) warning`,
+         value: result.swing,
+         symbol: 'warning',
+      });
    }
 
-   if (htmlResult.length) {
-      const htmlContainer = document.createElement('div');
-      htmlResult.forEach((h) => htmlContainer.append(h));
-      tool.output.html = htmlContainer;
-   } else {
-      tool.output.html = null;
-   }
+   return results;
 }
 
 export default tool;

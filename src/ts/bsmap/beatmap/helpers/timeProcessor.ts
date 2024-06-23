@@ -173,6 +173,7 @@ export class TimeProcessor {
     * ```
     */
    private offsetBegone(beat: number): number {
+      if (this._offset === 0) return beat;
       return this.toBeatTime(this.toRealTime(beat, false) - this._offset);
    }
 
@@ -204,19 +205,19 @@ export class TimeProcessor {
     * ```
     */
    // this is stupid 2 electric boogaloo
-   toBeatTime(seconds: number, timescale = false): number {
+   toBeatTime(seconds: number, timescale = true): number {
       if (!timescale) {
          return (seconds * this.bpm) / 60;
       }
       let calculatedSecond = 0;
       for (let i = this._timeScale.length - 1; i >= 0; i--) {
-         const currentSeconds = this.toRealTime(this._timeScale[i].time);
+         const currentSeconds = this.toRealTime(this._timeScale[i].time, timescale);
          if (seconds > currentSeconds) {
             calculatedSecond += (seconds - currentSeconds) / this._timeScale[i].scale;
             seconds = currentSeconds;
          }
       }
-      return this.toBeatTime(seconds + calculatedSecond);
+      return this.toBeatTime(seconds + calculatedSecond, false);
    }
 
    /**

@@ -1,15 +1,14 @@
-import { Tool, ToolInputOrder, ToolOutputOrder } from '../../types';
+import { ITool, IToolOutput, ToolInputOrder, ToolOutputOrder } from '../../types';
 import uiHeader from '../../ui/header';
 import flag from '../../flag';
 import settings from '../../settings';
-import { printResult } from '../helpers';
 import UIInput from '../../ui/helpers/input';
 
 const name = 'Validate Cover Image';
 const description = 'Validate cover image.';
 const enabled = true;
 
-const tool: Tool = {
+const tool: ITool = {
    name,
    description,
    type: 'general',
@@ -31,45 +30,43 @@ const tool: Tool = {
          ),
       ),
    },
-   output: {
-      html: null,
-   },
    run,
 };
 
-function run() {
+function run(): IToolOutput[] {
    const img = new Image();
    const src = uiHeader.getCoverImage();
 
-   const htmlResult: HTMLElement[] = [];
+   const results: IToolOutput[] = [];
    if (flag.loading.coverImage && src !== null) {
       img.src = src;
       if (img.width !== img.height) {
-         htmlResult.push(printResult('Cover image is not square', 'resize to fit square', 'error'));
+         results.push({
+            type: 'string',
+            label: 'Cover image is not square',
+            value: 'resize to fit square',
+            symbol: 'error',
+         });
       }
       if (img.width < 256 || img.height < 256) {
-         htmlResult.push(
-            printResult('Cover image is too small', 'require at least 256x256', 'error'),
-         );
+         results.push({
+            type: 'string',
+            label: 'Cover image is too small',
+            value: 'require at least 256x256',
+            symbol: 'error',
+         });
       }
    } else {
-      htmlResult.push(
-         printResult(
-            'No cover image',
-            settings.load.imageCover
-               ? 'could not be loaded or found'
-               : 'no cover image option is enabled',
-         ),
-      );
+      results.push({
+         type: 'string',
+         label: 'No cover image',
+         value: settings.load.imageCover
+            ? 'could not be loaded or found'
+            : 'no cover image option is enabled',
+      });
    }
 
-   if (htmlResult.length) {
-      const htmlContainer = document.createElement('div');
-      htmlResult.forEach((h) => htmlContainer.append(h));
-      tool.output.html = htmlContainer;
-   } else {
-      tool.output.html = null;
-   }
+   return results;
 }
 
 export default tool;

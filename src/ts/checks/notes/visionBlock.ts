@@ -1,7 +1,6 @@
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import { round } from '../../bsmap/utils/mod';
-import { INoteContainer, NoteContainerType } from '../../types/checks/container';
-import { printResultTime } from '../helpers';
+import { IObjectContainer, ObjectContainerType } from '../../types/checks/container';
 import UIInput from '../../ui/helpers/input';
 import { TimeProcessor } from '../../bsmap/beatmap/helpers/timeProcessor';
 import { PosX, PosY } from '../../bsmap/beatmap/shared/constants';
@@ -57,14 +56,14 @@ const [htmlLabelMinTime, htmlInputMinTime] = UIInput.createNumber(
       this.value = round(tool.input.params.minTime * 1000, 1).toString();
       if (localBPM) {
          htmlInputMinBeat.value = round(
-            localBPM.toBeatTime(tool.input.params.minTime),
+            localBPM.toBeatTime(tool.input.params.minTime, false),
             2,
          ).toString();
          if (tool.input.params.minTime > tool.input.params.maxTime) {
             tool.input.params.maxTime = tool.input.params.minTime;
             htmlInputMaxTime.value = round(tool.input.params.maxTime * 1000, 1).toString();
             htmlInputMaxBeat.value = round(
-               localBPM.toBeatTime(tool.input.params.maxTime),
+               localBPM.toBeatTime(tool.input.params.maxTime, false),
                2,
             ).toString();
          }
@@ -88,7 +87,7 @@ const [htmlLabelMinBeat, htmlInputMinBeat] = UIInput.createNumber(
          tool.input.params.maxTime = tool.input.params.minTime;
          htmlInputMaxTime.value = round(tool.input.params.maxTime * 1000, 1).toString();
          htmlInputMaxBeat.value = round(
-            localBPM.toBeatTime(tool.input.params.maxTime),
+            localBPM.toBeatTime(tool.input.params.maxTime, false),
             2,
          ).toString();
       }
@@ -105,7 +104,7 @@ const [htmlLabelMaxTime, htmlInputMaxTime] = UIInput.createNumber(
       this.value = round(tool.input.params.maxTime * 1000, 1).toString();
       if (localBPM) {
          htmlInputMaxBeat.value = round(
-            localBPM.toBeatTime(tool.input.params.maxTime),
+            localBPM.toBeatTime(tool.input.params.maxTime, false),
             2,
          ).toString();
       }
@@ -132,7 +131,7 @@ const [htmlLabelMaxBeat, htmlInputMaxBeat] = UIInput.createNumber(
    0.1,
 );
 
-const tool: Tool<{ specific: 'difficulty' | 'time'; minTime: number; maxTime: number }> = {
+const tool: ITool<{ specific: 'difficulty' | 'time'; minTime: number; maxTime: number }> = {
    name,
    description,
    type: 'note',
@@ -174,16 +173,19 @@ const tool: Tool<{ specific: 'difficulty' | 'time'; minTime: number; maxTime: nu
       ),
       adjustTime: adjustTimeHandler,
    },
-   output: {
-      html: null,
-   },
    run,
 };
 
 function adjustTimeHandler(bpm: TimeProcessor) {
    localBPM = bpm;
-   htmlInputMinBeat.value = round(localBPM.toBeatTime(tool.input.params.minTime), 2).toString();
-   htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.maxTime), 2).toString();
+   htmlInputMinBeat.value = round(
+      localBPM.toBeatTime(tool.input.params.minTime, false),
+      2,
+   ).toString();
+   htmlInputMaxBeat.value = round(
+      localBPM.toBeatTime(tool.input.params.maxTime, false),
+      2,
+   ).toString();
 }
 
 function inputSpecCheckHandler(this: HTMLInputElement) {
@@ -192,26 +194,26 @@ function inputSpecCheckHandler(this: HTMLInputElement) {
 }
 
 function check(args: ToolArgs) {
-   const { timeProcessor, njs } = args.settings;
-   const noteContainer = args.beatmap!.noteContainer.filter(
-      (n) => n.type !== NoteContainerType.ARC,
+   const { timeProcessor, njs } = args.beatmap;
+   const noteContainer = args.beatmap.noteContainer.filter(
+      (n) => n.type !== ObjectContainerType.ARC,
    );
    const { minTime: temp1, maxTime: temp2, specific: vbSpecific } = tool.input.params;
    const minTime =
       vbSpecific === 'time'
-         ? timeProcessor.toBeatTime(temp1)
-         : timeProcessor.toBeatTime(vbDiff[args.beatmap!.settings.difficulty].min);
+         ? timeProcessor.toBeatTime(temp1, false)
+         : timeProcessor.toBeatTime(vbDiff[args.beatmap.settings.difficulty].min, false);
    const maxTime =
       vbSpecific === 'time'
-         ? timeProcessor.toBeatTime(temp2)
+         ? timeProcessor.toBeatTime(temp2, false)
          : Math.min(
               njs.hjd,
-              timeProcessor.toBeatTime(vbDiff[args.beatmap!.settings.difficulty].max),
+              timeProcessor.toBeatTime(vbDiff[args.beatmap.settings.difficulty].max, false),
            );
 
-   let lastMidL: INoteContainer | null = null;
-   let lastMidR: INoteContainer | null = null;
-   const arr: INoteContainer[] = [];
+   let lastMidL: IObjectContainer | null = null;
+   let lastMidR: IObjectContainer | null = null;
+   const result: IObjectContainer[] = [];
    for (let i = 0, len = noteContainer.length; i < len; i++) {
       const note = noteContainer[i];
       if (lastMidL) {
@@ -220,7 +222,7 @@ function check(args: ToolArgs) {
             note.data.time - lastMidL.data.time <= maxTime
          ) {
             if (note.data.posX < PosX.MIDDLE_RIGHT) {
-               arr.push(note);
+               result.push(note);
             }
          } // yeet the last note if nothing else found so we dont have to perform check every note
          else if (note.data.time - lastMidL.data.time > maxTime) {
@@ -233,7 +235,7 @@ function check(args: ToolArgs) {
             note.data.time - lastMidR.data.time <= maxTime
          ) {
             if (note.data.posX > PosX.MIDDLE_LEFT) {
-               arr.push(note);
+               result.push(note);
             }
          } else if (note.data.time - lastMidR.data.time > maxTime) {
             lastMidR = null;
@@ -246,30 +248,23 @@ function check(args: ToolArgs) {
          lastMidR = note;
       }
    }
-   return arr
-      .map((n) => n.data.time)
-      .filter(function (x, i, ary) {
-         return !i || x !== ary[i - 1];
-      });
+   return result
 }
 
-function run(args: ToolArgs) {
-   if (!args.beatmap) {
-      console.error('Something went wrong!');
-      return;
-   }
+function run(args: ToolArgs): IToolOutput[] {
    const result = check(args);
 
    if (result.length) {
-      tool.output.html = printResultTime(
-         'Vision block',
-         result,
-         args.settings.timeProcessor,
-         'warning',
-      );
-   } else {
-      tool.output.html = null;
+      return [
+         {
+            type: 'time',
+            label: 'Vision block',
+            value: result.map(n => n.data),
+            symbol: 'warning',
+         },
+      ];
    }
+   return [];
 }
 
 export default tool;

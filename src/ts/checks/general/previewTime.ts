@@ -1,12 +1,11 @@
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import UIInput from '../../ui/helpers/input';
-import { printResult } from '../helpers';
 
 const name = 'Preview Time';
 const description = 'Warn default editor preview time.';
 const enabled = true;
 
-const tool: Tool = {
+const tool: ITool = {
    name,
    description,
    type: 'general',
@@ -28,24 +27,23 @@ const tool: Tool = {
          ),
       ),
    },
-   output: {
-      html: null,
-   },
    run,
 };
 
-function run(args: ToolArgs) {
+function run(args: ToolArgs): IToolOutput[] {
    const { previewStartTime, previewDuration } = args.info.audio;
 
    if (previewStartTime === 12 && previewDuration === 10) {
-      tool.output.html = printResult(
-         'Default preview time',
-         "strongly recommended to set for audience's 1st impression",
-         'info',
-      );
-   } else {
-      tool.output.html = null;
+      return [
+         {
+            type: 'string',
+            label: 'Default preview time',
+            value: "strongly recommended to set for audience's 1st impression",
+            symbol: 'info',
+         },
+      ];
    }
+   return [];
 }
 
 export default tool;

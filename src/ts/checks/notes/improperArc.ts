@@ -1,14 +1,14 @@
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import { NoteContainerType, INoteContainer } from '../../types/checks/container';
+import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import { ObjectContainerType, IObjectContainer } from '../../types/checks/container';
 import UIInput from '../../ui/helpers/input';
-import { printResultTime } from '../helpers';
 import { NoteDirection } from '../../bsmap/beatmap/shared/constants';
+import { IWrapArc } from '../../bsmap/types/beatmap/wrapper/arc';
 
 const name = 'Improper Arc';
 const description = 'Check for correct use of arc.';
 const enabled = true;
 
-const tool: Tool = {
+const tool: ITool = {
    name,
    description,
    type: 'note',
@@ -30,29 +30,26 @@ const tool: Tool = {
          ),
       ),
    },
-   output: {
-      html: null,
-   },
    run,
 };
 
 function check(args: ToolArgs) {
    // kinda slow but i need arc first
-   const noteContainer = [...args.beatmap!.noteContainer]
+   const noteContainer = [...args.beatmap.noteContainer]
       .sort((a, b) =>
-         a.type !== NoteContainerType.ARC ? 1 : b.type !== NoteContainerType.ARC ? -1 : 0,
+         a.type !== ObjectContainerType.ARC ? 1 : b.type !== ObjectContainerType.ARC ? -1 : 0,
       )
       .sort((a, b) => a.data.time - b.data.time);
 
-   const arr: INoteContainer[] = [];
+   const result: IWrapArc[] = [];
    for (let i = 0, potential = true, len = noteContainer.length; i < len; i++) {
       const arc = noteContainer[i];
       const lastTime = noteContainer.at(-1)!.data.time;
-      if (arc.type === NoteContainerType.ARC) {
+      if (arc.type === ObjectContainerType.ARC) {
          potential = true;
          for (let j = i, sike = false; j < len; j++) {
             const head = noteContainer[j];
-            if (head.type === NoteContainerType.COLOR) {
+            if (head.type === ObjectContainerType.COLOR) {
                if (
                   arc.data.posX === head.data.posX &&
                   arc.data.posY === head.data.posY &&
@@ -64,7 +61,7 @@ function check(args: ToolArgs) {
                ) {
                   for (let k = j; k < len; k++) {
                      const tail = noteContainer[j];
-                     if (tail.type === NoteContainerType.BOMB) {
+                     if (tail.type === ObjectContainerType.BOMB) {
                         if (
                            arc.data.posX === tail.data.posX &&
                            arc.data.posY === tail.data.posY &&
@@ -75,7 +72,7 @@ function check(args: ToolArgs) {
                         }
                      }
                      if (
-                        tail.type !== NoteContainerType.COLOR ||
+                        tail.type !== ObjectContainerType.COLOR ||
                         tail.data.time < arc.data.tailTime
                      ) {
                         continue;
@@ -100,7 +97,7 @@ function check(args: ToolArgs) {
                   break;
                }
             }
-            if (head.type === NoteContainerType.COLOR) {
+            if (head.type === ObjectContainerType.COLOR) {
                if (
                   arc.data.posX === head.data.posX &&
                   arc.data.posY === head.data.posY &&
@@ -114,37 +111,34 @@ function check(args: ToolArgs) {
                break;
             }
             if (
-               (head.type === NoteContainerType.ARC || head.type === NoteContainerType.CHAIN) &&
+               (head.type === ObjectContainerType.ARC || head.type === ObjectContainerType.CHAIN) &&
                head.data.time + 0.001 > lastTime
             ) {
                potential = false;
             }
          }
          if (potential) {
-            arr.push(arc);
+            result.push(arc.data);
          }
       }
    }
-   return arr
-      .map((n) => n.data.time)
-      .filter(function (x, i, ary) {
-         return !i || x !== ary[i - 1];
-      });
+   return result
 }
 
-function run(args: ToolArgs) {
+function run(args: ToolArgs): IToolOutput[] {
    const result = check(args);
 
    if (result.length) {
-      tool.output.html = printResultTime(
-         'Improper arc',
-         result,
-         args.settings.timeProcessor,
-         'error',
-      );
-   } else {
-      tool.output.html = null;
+      return [
+         {
+            type: 'time',
+            label: 'Improper arc',
+            value: result,
+            symbol: 'error',
+         },
+      ];
    }
+   return [];
 }
 
 export default tool;

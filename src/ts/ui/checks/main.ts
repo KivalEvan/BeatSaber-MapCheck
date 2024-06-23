@@ -1,4 +1,4 @@
-import Analyser from '../../checks/analyzer';
+import Analyser from '../../checks/main';
 import UILoading from '../loading';
 import { TimeProcessor } from '../../bsmap/beatmap/helpers/timeProcessor';
 import { CharacteristicName } from '../../bsmap/types/beatmap/shared/characteristic';
@@ -58,7 +58,7 @@ function displayOutputDifficulty(
       throw new Error(logPrefix + 'something went wrong!');
    }
    htmlChecksOutputDifficulty.innerHTML = '';
-   const analysis = LoadedData.analysis?.map.find(
+   const analysis = LoadedData.analysis?.beatmap.find(
       (set) => set.difficulty === difficulty && set.characteristic === characteristic,
    );
    if (!analysis) {

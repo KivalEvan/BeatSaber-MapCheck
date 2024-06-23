@@ -1,12 +1,11 @@
-import { IBeatmapItem, Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import { IBeatmapItem, ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import UIInput from '../../ui/helpers/input';
-import { printResultTime } from '../helpers';
 
 const name = 'Varying Swing Speed';
 const description = 'Check for varying swing speed due to changes in slider distance.';
 const enabled = true;
 
-const tool: Tool = {
+const tool: ITool = {
    name,
    description,
    type: 'note',
@@ -28,9 +27,6 @@ const tool: Tool = {
          ),
       ),
    },
-   output: {
-      html: null,
-   },
    run,
 };
 
@@ -38,29 +34,22 @@ function check(difficulty: IBeatmapItem) {
    const { swingAnalysis } = difficulty;
    return swingAnalysis.container
       .filter((n) => Math.abs(n.minSpeed - n.maxSpeed) > 0.002)
-      .map((n) => n.time)
-      .filter((x, i, ary) => {
-         return !i || x !== ary[i - 1];
-      });
 }
 
-function run(args: ToolArgs) {
-   if (!args.beatmap) {
-      console.error('Something went wrong!');
-      return;
-   }
+function run(args: ToolArgs): IToolOutput[] {
    const result = check(args.beatmap);
 
    if (result.length) {
-      tool.output.html = printResultTime(
-         'Varying swing speed',
-         result,
-         args.settings.timeProcessor,
-         'error',
-      );
-   } else {
-      tool.output.html = null;
+      return [
+         {
+            type: 'time',
+            label: 'Varying swing speed',
+            value: result.map(n => n.data[0]),
+            symbol: 'error',
+         },
+      ];
    }
+   return [];
 }
 
 export default tool;

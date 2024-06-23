@@ -1,7 +1,6 @@
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import UIInput from '../../ui/helpers/input';
 import { round } from '../../bsmap/utils/mod';
-import { printResult } from '../helpers';
 import { getFirstInteractiveTime } from '../../bsmap/beatmap/helpers/beatmap';
 
 const name = 'Hot Start';
@@ -9,7 +8,7 @@ const description = 'Check for first interactive object starting from start time
 const enabled = true;
 const defaultTime = 1.5;
 
-const tool: Tool<{ time: number }> = {
+const tool: ITool<{ time: number }> = {
    name,
    description,
    type: 'other',
@@ -44,27 +43,19 @@ const tool: Tool<{ time: number }> = {
          ),
       ),
    },
-   output: {
-      html: null,
-   },
    run,
 };
 
-function run(args: ToolArgs) {
-   if (!args.beatmap) {
-      console.error('Something went wrong!');
-      return;
-   }
+function run(args: ToolArgs): IToolOutput[] {
    const { time } = tool.input.params;
-   const result = args.settings.timeProcessor.toRealTime(
-      getFirstInteractiveTime(args.beatmap.data),
-   );
+   const result = args.beatmap.timeProcessor.toRealTime(getFirstInteractiveTime(args.beatmap.data));
 
    if (result < time) {
-      tool.output.html = printResult('Hot start', `${round(result, 2)}s`, 'warning');
-   } else {
-      tool.output.html = null;
+      return [
+         { type: 'string', label: 'Hot start', value: `${round(result, 2)}s`, symbol: 'warning' },
+      ];
    }
+   return [];
 }
 
 export default tool;

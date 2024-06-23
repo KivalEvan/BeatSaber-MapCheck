@@ -1,6 +1,5 @@
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import { round } from '../../bsmap/utils/mod';
-import { printResultTime } from '../helpers';
 import UIInput from '../../ui/helpers/input';
 import { TimeProcessor } from '../../bsmap/beatmap/helpers/timeProcessor';
 
@@ -17,7 +16,7 @@ const [htmlLabelMinTime, htmlInputMinTime] = UIInput.createNumber(
       this.value = round(tool.input.params.minSpeed * 1000, 1).toString();
       if (localBPM) {
          htmlInputMinPrec.value = round(
-            1 / localBPM.toBeatTime(tool.input.params.minSpeed),
+            1 / localBPM.toBeatTime(tool.input.params.minSpeed, false),
             2,
          ).toString();
       }
@@ -42,7 +41,7 @@ const [htmlLabelMinPrec, htmlInputMinPrec] = UIInput.createNumber(
    0,
 );
 
-const tool: Tool<{ minSpeed: number }> = {
+const tool: ITool<{ minSpeed: number }> = {
    name,
    description,
    type: 'note',
@@ -72,50 +71,40 @@ const tool: Tool<{ minSpeed: number }> = {
       ),
       adjustTime: adjustTimeHandler,
    },
-   output: {
-      html: null,
-   },
    run,
 };
 
 function adjustTimeHandler(bpm: TimeProcessor) {
    localBPM = bpm;
    htmlInputMinPrec.value = round(
-      1 / localBPM.toBeatTime(tool.input.params.minSpeed),
+      1 / localBPM.toBeatTime(tool.input.params.minSpeed, false),
       2,
    ).toString();
 }
 
 function check(args: ToolArgs) {
-   const { swingAnalysis } = args.beatmap!;
+   const { swingAnalysis } = args.beatmap;
    const { minSpeed } = tool.input.params;
 
    return swingAnalysis.container
       .filter((s) => s.maxSpeed > minSpeed || s.minSpeed > minSpeed)
-      .map((n) => n.time)
-      .filter((x, i, ary) => {
-         return !i || x !== ary[i - 1];
-      });
 }
 
-function run(args: ToolArgs) {
-   if (!args.beatmap) {
-      console.error('Something went wrong!');
-      return;
-   }
+function run(args: ToolArgs): IToolOutput[] {
    const { minSpeed } = tool.input.params;
    const result = check(args);
 
    if (result.length) {
-      tool.output.html = printResultTime(
-         `Slow slider (>${round(minSpeed * 1000, 1)}ms)`,
-         result,
-         args.settings.timeProcessor,
-         'warning',
-      );
-   } else {
-      tool.output.html = null;
+      return [
+         {
+            type: 'time',
+            label: `Slow slider (>${round(minSpeed * 1000, 1)}ms)`,
+            value: result.map(n => n.data[0]),
+            symbol: 'warning',
+         },
+      ];
    }
+   return [];
 }
 
 export default tool;

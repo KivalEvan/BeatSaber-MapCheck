@@ -1,12 +1,11 @@
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import UIInput from '../../ui/helpers/input';
-import { printResult } from '../helpers';
 
 const name = 'Difficulty Label Check';
 const description = 'For ranking purpose, check difficulty label to fit rankability criteria.';
 const enabled = true;
 
-const tool: Tool = {
+const tool: ITool = {
    name,
    description,
    type: 'other',
@@ -28,28 +27,23 @@ const tool: Tool = {
          ),
       ),
    },
-   output: {
-      html: null,
-   },
    run,
 };
 
-function run(args: ToolArgs) {
-   if (!args.beatmap) {
-      console.error('Something went wrong!');
-      return;
-   }
+function run(args: ToolArgs): IToolOutput[] {
    const result = args.beatmap.settings.customData._difficultyLabel;
 
    if (result && result.length > 30) {
-      tool.output.html = printResult(
-         `Difficulty label is too long (${result.length} characters)`,
-         'exceeded 30 max characters by ranking criteria',
-         'rank',
-      );
-   } else {
-      tool.output.html = null;
+      return [
+         {
+            type: 'string',
+            label: `Difficulty label is too long (${result.length} characters)`,
+            value: 'exceeded 30 max characters by ranking criteria',
+            symbol: 'rank',
+         },
+      ];
    }
+   return [];
 }
 
 export default tool;

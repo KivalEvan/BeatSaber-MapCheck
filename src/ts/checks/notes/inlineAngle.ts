@@ -1,10 +1,9 @@
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import { round } from '../../bsmap/utils/mod';
-import { INoteContainer, NoteContainerType } from '../../types/checks/container';
+import { IObjectContainer, ObjectContainerType } from '../../types/checks/container';
 import { checkDirection } from '../../bsmap/extensions/placement/note';
 import swing from '../../bsmap/extensions/swing/swing';
 import { ColorNote } from '../../bsmap/beatmap/core/colorNote';
-import { printResultTime } from '../helpers';
 import UIInput from '../../ui/helpers/input';
 import { TimeProcessor } from '../../bsmap/beatmap/helpers/timeProcessor';
 import {
@@ -28,7 +27,7 @@ const [htmlLabelMaxTime, htmlInputMaxTime] = UIInput.createNumber(
       this.value = round(tool.input.params.maxTime * 1000, 1).toString();
       if (localBPM) {
          htmlInputMaxBeat.value = round(
-            localBPM.toBeatTime(tool.input.params.maxTime),
+            localBPM.toBeatTime(tool.input.params.maxTime, false),
             2,
          ).toString();
       }
@@ -55,7 +54,7 @@ const [htmlLabelMaxBeat, htmlInputMaxBeat] = UIInput.createNumber(
    0.1,
 );
 
-const tool: Tool<{ maxTime: number }> = {
+const tool: ITool<{ maxTime: number }> = {
    name,
    description,
    type: 'note',
@@ -85,22 +84,22 @@ const tool: Tool<{ maxTime: number }> = {
       ),
       adjustTime: adjustTimeHandler,
    },
-   output: {
-      html: null,
-   },
    run,
 };
 
 function adjustTimeHandler(bpm: TimeProcessor) {
    localBPM = bpm;
-   htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.maxTime), 2).toString();
+   htmlInputMaxBeat.value = round(
+      localBPM.toBeatTime(tool.input.params.maxTime, false),
+      2,
+   ).toString();
 }
 
 function check(args: ToolArgs) {
-   const { timeProcessor } = args.settings;
-   const noteContainer = args.beatmap!.noteContainer;
+   const { timeProcessor } = args.beatmap;
+   const noteContainer = args.beatmap.noteContainer;
    const { maxTime: temp } = tool.input.params;
-   const maxTime = timeProcessor.toBeatTime(temp) + 0.001;
+   const maxTime = timeProcessor.toBeatTime(temp, false) + 0.001;
 
    const lastNote: { [key: number]: IWrapColorNote } = {};
    const lastNoteAngle: { [key: number]: number } = {};
@@ -109,12 +108,12 @@ function check(args: ToolArgs) {
       [NoteColor.RED]: [],
       [NoteColor.BLUE]: [],
    };
-   const arr: IWrapColorNote[] = [];
+   const result: IWrapColorNote[] = [];
    let lastTime = 0;
    let lastIndex = 0;
    for (let i = 0, len = noteContainer.length; i < len; i++) {
       const note = noteContainer[i];
-      if (note.type === NoteContainerType.COLOR && lastNote[note.data.color]) {
+      if (note.type === ObjectContainerType.COLOR && lastNote[note.data.color]) {
          if (
             swing.next(
                note.data,
@@ -131,7 +130,7 @@ function check(args: ToolArgs) {
                checkInline(note.data, noteContainer, lastIndex, maxTime) &&
                checkDirection(note.data, lastNoteAngle[note.data.color], 90, true)
             ) {
-               arr.push(note.data);
+               result.push(note.data);
             }
             if (note.data.direction === NoteDirection.ANY) {
                startNoteDot[note.data.color] = note.data;
@@ -145,21 +144,21 @@ function check(args: ToolArgs) {
                checkInline(note.data, noteContainer, lastIndex, maxTime) &&
                checkDirection(note.data, lastNoteAngle[note.data.color], 90, true)
             ) {
-               arr.push(startNoteDot[note.data.color] as ColorNote);
+               result.push(startNoteDot[note.data.color] as ColorNote);
                startNoteDot[note.data.color] = null;
             }
             if (note.data.direction !== NoteDirection.ANY) {
                lastNoteAngle[note.data.color] = note.data.getAngle();
             }
          }
-      } else if (note.type === NoteContainerType.COLOR) {
+      } else if (note.type === ObjectContainerType.COLOR) {
          lastNoteAngle[note.data.color] = note.data.getAngle();
       }
-      if (note.type === NoteContainerType.COLOR) {
+      if (note.type === ObjectContainerType.COLOR) {
          lastNote[note.data.color] = note.data;
          swingNoteArray[note.data.color].push(note.data);
       }
-      if (note.type === NoteContainerType.BOMB) {
+      if (note.type === ObjectContainerType.BOMB) {
          // on bottom row
          if (note.data.posY === PosY.BOTTOM) {
             //on right center
@@ -188,17 +187,13 @@ function check(args: ToolArgs) {
          }
       }
    }
-   return arr
-      .map((n) => n.time)
-      .filter(function (x, i, ary) {
-         return !i || x !== ary[i - 1];
-      });
+   return result
 }
 
-function checkInline(n: IWrapColorNote, notes: INoteContainer[], index: number, maxTime: number) {
+function checkInline(n: IWrapColorNote, notes: IObjectContainer[], index: number, maxTime: number) {
    for (let i = index; notes[i].data.time < n.time; i++) {
       const note = notes[i];
-      if (note.type !== NoteContainerType.COLOR) {
+      if (note.type !== ObjectContainerType.COLOR) {
          continue;
       }
       if (n.isInline(note.data) && n.time - notes[i].data.time <= maxTime) {
@@ -208,23 +203,20 @@ function checkInline(n: IWrapColorNote, notes: INoteContainer[], index: number, 
    return false;
 }
 
-function run(args: ToolArgs) {
-   if (!args.beatmap) {
-      console.error('Something went wrong!');
-      return;
-   }
+function run(args: ToolArgs): IToolOutput[] {
    const result = check(args);
 
    if (result.length) {
-      tool.output.html = printResultTime(
-         'Inline sharp angle',
-         result,
-         args.settings.timeProcessor,
-         'warning',
-      );
-   } else {
-      tool.output.html = null;
+      return [
+         {
+            type: 'time',
+            label: 'Inline sharp angle',
+            value: result,
+            symbol: 'warning',
+         },
+      ];
    }
+   return [];
 }
 
 export default tool;

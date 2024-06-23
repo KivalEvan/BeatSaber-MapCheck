@@ -6,15 +6,14 @@ import {
 } from '../../bsmap/types/beatmap/shared/environment';
 import { IWrapEventBoxGroup } from '../../bsmap/types/beatmap/wrapper/eventBoxGroup';
 import { IWrapLightshow } from '../../bsmap/types/beatmap/wrapper/lightshow';
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import UIInput from '../../ui/helpers/input';
-import { printResultTime } from '../helpers';
 
 const name = 'Invalid Event Box';
 const description = 'Check for valid event box group usage.';
 const enabled = true;
 
-const tool: Tool = {
+const tool: ITool = {
    name,
    description,
    type: 'event',
@@ -35,9 +34,6 @@ const tool: Tool = {
             enabled,
          ),
       ),
-   },
-   output: {
-      html: null,
    },
    run,
 };
@@ -286,55 +282,33 @@ function check(map: IWrapLightshow, environment: EnvironmentAllName) {
    }
 
    return {
-      defectID: defectID
-         .map((n) => n.time)
-         .filter(function (x, i, ary) {
-            return !i || x !== ary[i - 1];
-         }),
-      defectFilter: defectFilter
-         .map((n) => n.time)
-         .filter(function (x, i, ary) {
-            return !i || x !== ary[i - 1];
-         }),
+      defectID: defectID,
+      defectFilter: defectFilter,
    };
 }
 
-function run(args: ToolArgs) {
-   if (!args.beatmap) {
-      console.error('Something went wrong!');
-      return;
-   }
+function run(args: ToolArgs): IToolOutput[] {
    const result = check(args.beatmap.data, args.beatmap.environment);
 
-   const htmlResult: HTMLElement[] = [];
+   const results: IToolOutput[] = [];
    if (result.defectID.length) {
-      htmlResult.push(
-         printResultTime(
-            'Invalid event box group ID',
-            result.defectID,
-            args.settings.timeProcessor,
-            'error',
-         ),
-      );
+      results.push({
+         type: 'time',
+         label: 'Invalid event box group ID',
+         value: result.defectID,
+         symbol: 'error',
+      });
    }
    if (result.defectFilter.length) {
-      htmlResult.push(
-         printResultTime(
-            'Invalid event box filter',
-            result.defectFilter,
-            args.settings.timeProcessor,
-            'error',
-         ),
-      );
+      results.push({
+         type: 'time',
+         label: 'Invalid event box filter',
+         value: result.defectFilter,
+         symbol: 'error',
+      });
    }
 
-   if (htmlResult.length) {
-      const htmlContainer = document.createElement('div');
-      htmlResult.forEach((h) => htmlContainer.append(h));
-      tool.output.html = htmlContainer;
-   } else {
-      tool.output.html = null;
-   }
+   return results;
 }
 
 export default tool;

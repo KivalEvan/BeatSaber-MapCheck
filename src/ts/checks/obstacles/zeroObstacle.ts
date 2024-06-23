@@ -1,12 +1,11 @@
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import UIInput from '../../ui/helpers/input';
-import { printResultTime } from '../helpers';
 
 const name = 'Zero Obstacle';
 const description = 'Look for obstacle with zero value.';
 const enabled = true;
 
-const tool: Tool = {
+const tool: ITool = {
    name,
    description,
    type: 'obstacle',
@@ -28,34 +27,28 @@ const tool: Tool = {
          ),
       ),
    },
-   output: {
-      html: null,
-   },
    run,
 };
 
 function check(args: ToolArgs) {
-   const { obstacles } = args.beatmap!.data;
-   return obstacles.filter((o) => o.hasZero()).map((o) => o.time);
+   const { obstacles } = args.beatmap.data;
+   return obstacles.filter((o) => o.hasZero());
 }
 
-function run(args: ToolArgs) {
-   if (!args.beatmap) {
-      console.error('Something went wrong!');
-      return;
-   }
+function run(args: ToolArgs): IToolOutput[] {
    const result = check(args);
 
    if (result.length) {
-      tool.output.html = printResultTime(
-         'Zero value obstacle',
-         result,
-         args.settings.timeProcessor,
-         'error',
-      );
-   } else {
-      tool.output.html = null;
+      return [
+         {
+            type: 'time',
+            label: 'Zero value obstacle',
+            value: result,
+            symbol: 'error',
+         },
+      ];
    }
+   return [];
 }
 
 export default tool;

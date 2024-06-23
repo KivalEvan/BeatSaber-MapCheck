@@ -1,15 +1,14 @@
 import { TimeProcessor } from '../../bsmap/beatmap/helpers/timeProcessor';
 import { IWrapBaseObject } from '../../bsmap/types/beatmap/wrapper/baseObject';
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import UIInput from '../../ui/helpers/input';
 import { round, toMmss } from '../../bsmap/utils/mod';
-import { printResult } from '../helpers';
 
 const name = 'Outside Playable Object';
 const description = 'Look for any object starting before and after song timer.';
 const enabled = true;
 
-const tool: Tool = {
+const tool: ITool = {
    name,
    description,
    type: 'other',
@@ -31,9 +30,6 @@ const tool: Tool = {
          ),
       ),
    },
-   output: {
-      html: null,
-   },
    run,
 };
 
@@ -41,16 +37,15 @@ function objectBeforeTime(
    tag: string,
    objects: IWrapBaseObject[],
    timeProcessor: TimeProcessor,
-   results: HTMLElement[],
+   results: IToolOutput[],
 ) {
    if (objects.length && objects[0].time < 0) {
-      results.push(
-         printResult(
-            tag + '(s) before start time',
-            `${round(objects[0].time, 3)} (${toMmss(timeProcessor.toRealTime(objects[0].time))}`,
-            'error',
-         ),
-      );
+      results.push({
+         type: 'string',
+         label: tag + '(s) before start time',
+         value: `${round(objects[0].time, 3)} (${toMmss(timeProcessor.toRealTime(objects[0].time))}`,
+         symbol: 'error',
+      });
    }
 }
 
@@ -59,27 +54,23 @@ function objectAfterTime(
    objects: IWrapBaseObject[],
    bpm: TimeProcessor,
    endTime: number,
-   results: HTMLElement[],
+   results: IToolOutput[],
 ) {
    if (objects.length && objects[objects.length - 1].time > endTime) {
-      results.push(
-         printResult(
-            tag + '(s) after end time',
-            `${round(objects[objects.length - 1].time, 3)} (${toMmss(
-               bpm.toRealTime(objects[objects.length - 1].time),
-            )})`,
-            'error',
-         ),
-      );
+      results.push({
+         type: 'string',
+         label: tag + '(s) after end time',
+         value: `${round(objects[objects.length - 1].time, 3)} (${toMmss(
+            bpm.toRealTime(objects[objects.length - 1].time),
+         )})`,
+         symbol: 'error',
+      });
    }
 }
 
-function run(args: ToolArgs) {
-   if (!args.beatmap) {
-      console.error('Something went wrong!');
-      return;
-   }
-   const { timeProcessor, audioDuration: duration } = args.settings;
+function run(args: ToolArgs): IToolOutput[] {
+   const duration = args.audioDuration;
+   const timeProcessor = args.beatmap.timeProcessor;
    const {
       colorNotes,
       bombNotes,
@@ -95,76 +86,70 @@ function run(args: ToolArgs) {
       fxEventBoxGroups,
    } = args.beatmap.data;
 
-   const htmlResult: HTMLElement[] = [];
+   const results: IToolOutput[] = [];
    if (duration) {
       let endBeat = timeProcessor.toBeatTime(duration, true);
-      objectBeforeTime('Note', colorNotes, timeProcessor, htmlResult);
-      objectBeforeTime('Bomb', bombNotes, timeProcessor, htmlResult);
-      objectBeforeTime('Obstacle', obstacles, timeProcessor, htmlResult);
-      objectBeforeTime('Arc', arcs, timeProcessor, htmlResult);
-      objectBeforeTime('Chain', chains, timeProcessor, htmlResult);
-      objectBeforeTime('Event', basicEvents, timeProcessor, htmlResult);
-      objectBeforeTime('Color Boost', colorBoostEvents, timeProcessor, htmlResult);
-      objectBeforeTime('Waypoint', waypoints, timeProcessor, htmlResult);
+      objectBeforeTime('Note', colorNotes, timeProcessor, results);
+      objectBeforeTime('Bomb', bombNotes, timeProcessor, results);
+      objectBeforeTime('Obstacle', obstacles, timeProcessor, results);
+      objectBeforeTime('Arc', arcs, timeProcessor, results);
+      objectBeforeTime('Chain', chains, timeProcessor, results);
+      objectBeforeTime('Event', basicEvents, timeProcessor, results);
+      objectBeforeTime('Color Boost', colorBoostEvents, timeProcessor, results);
+      objectBeforeTime('Waypoint', waypoints, timeProcessor, results);
       objectBeforeTime(
          'Light Color Event Box Group',
          lightColorEventBoxGroups,
          timeProcessor,
-         htmlResult,
+         results,
       );
       objectBeforeTime(
          'Light Rotation Event Box Group',
          lightRotationEventBoxGroups,
          timeProcessor,
-         htmlResult,
+         results,
       );
       objectBeforeTime(
          'Light Translation Event Box Group',
          lightTranslationEventBoxGroups,
          timeProcessor,
-         htmlResult,
+         results,
       );
-      objectBeforeTime('FX Event Box Group', fxEventBoxGroups, timeProcessor, htmlResult);
+      objectBeforeTime('FX Event Box Group', fxEventBoxGroups, timeProcessor, results);
 
-      objectAfterTime('Note', colorNotes, timeProcessor, endBeat, htmlResult);
-      objectAfterTime('Bomb', bombNotes, timeProcessor, endBeat, htmlResult);
-      objectAfterTime('Obstacle', obstacles, timeProcessor, endBeat, htmlResult);
-      objectAfterTime('Arc', arcs, timeProcessor, endBeat, htmlResult);
-      objectAfterTime('Chain', chains, timeProcessor, endBeat, htmlResult);
-      objectAfterTime('Event', basicEvents, timeProcessor, endBeat, htmlResult);
-      objectAfterTime('Color Boost', colorBoostEvents, timeProcessor, endBeat, htmlResult);
-      objectAfterTime('Waypoint', waypoints, timeProcessor, endBeat, htmlResult);
+      objectAfterTime('Note', colorNotes, timeProcessor, endBeat, results);
+      objectAfterTime('Bomb', bombNotes, timeProcessor, endBeat, results);
+      objectAfterTime('Obstacle', obstacles, timeProcessor, endBeat, results);
+      objectAfterTime('Arc', arcs, timeProcessor, endBeat, results);
+      objectAfterTime('Chain', chains, timeProcessor, endBeat, results);
+      objectAfterTime('Event', basicEvents, timeProcessor, endBeat, results);
+      objectAfterTime('Color Boost', colorBoostEvents, timeProcessor, endBeat, results);
+      objectAfterTime('Waypoint', waypoints, timeProcessor, endBeat, results);
       objectAfterTime(
          'Light Color Event Box Group',
          lightColorEventBoxGroups,
          timeProcessor,
          endBeat,
-         htmlResult,
+         results,
       );
       objectAfterTime(
          'Light Rotation Event Box Group',
          lightRotationEventBoxGroups,
          timeProcessor,
          endBeat,
-         htmlResult,
+         results,
       );
       objectAfterTime(
          'Light Translation Event Box Group',
          lightTranslationEventBoxGroups,
          timeProcessor,
          endBeat,
-         htmlResult,
+         results,
       );
-      objectAfterTime('FX Event Box Group', fxEventBoxGroups, timeProcessor, endBeat, htmlResult);
+      objectAfterTime('FX Event Box Group', fxEventBoxGroups, timeProcessor, endBeat, results);
    }
 
-   if (htmlResult.length) {
-      const htmlContainer = document.createElement('div');
-      htmlResult.forEach((h) => htmlContainer.append(h));
-      tool.output.html = htmlContainer;
-   } else {
-      tool.output.html = null;
-   }
+   return results;
 }
 
 export default tool;

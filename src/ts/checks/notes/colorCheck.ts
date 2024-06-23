@@ -1,8 +1,7 @@
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import { ColorArray } from '../../bsmap/types/colors';
 import { colorFrom, deltaE00, round } from '../../bsmap/utils/mod';
 import UIInput from '../../ui/helpers/input';
-import { printResult } from '../helpers';
 import { ColorScheme, EnvironmentSchemeName } from '../../bsmap/beatmap/shared/colorScheme';
 
 const name = 'Color Check';
@@ -27,7 +26,7 @@ function levelMsg(level: { [key: number]: string }, perc: number): string {
    return level[key];
 }
 
-const tool: Tool = {
+const tool: ITool = {
    name,
    description,
    type: 'note',
@@ -48,9 +47,6 @@ const tool: Tool = {
             enabled,
          ),
       ),
-   },
-   output: {
-      html: null,
    },
    run,
 };
@@ -86,44 +82,36 @@ function customColorArrowSimilarity(map: ToolArgs) {
    return Math.min(deltaELeft, deltaERight);
 }
 
-function run(args: ToolArgs) {
+function run(args: ToolArgs): IToolOutput[] {
    if (
-      !args.beatmap?.settings.customData?._colorLeft &&
-      !args.beatmap?.settings.customData?._colorRight
+      !args.beatmap.settings.customData?._colorLeft &&
+      !args.beatmap.settings.customData?._colorRight
    ) {
-      return;
+      return [];
    }
 
    const ccSimilar = customColorSimilarity(args);
    const ccaSimilar = customColorArrowSimilarity(args);
 
-   const htmlResult: HTMLElement[] = [];
+   const results: IToolOutput[] = [];
    if (ccSimilar <= 20) {
-      htmlResult.push(
-         printResult(
-            `${levelMsg(deltaELevel, ccSimilar)} note color (dE${round(ccSimilar, 1)})`,
-            'suggest change to better differentiate between 2 note colour',
-            'warning',
-         ),
-      );
+      results.push({
+         type: 'string',
+         label: `${levelMsg(deltaELevel, ccSimilar)} note color (dE${round(ccSimilar, 1)})`,
+         value: 'suggest change to better differentiate between 2 note colour',
+         symbol: 'warning',
+      });
    }
    if (ccaSimilar <= 20) {
-      htmlResult.push(
-         printResult(
-            `${levelMsg(deltaELevel, ccaSimilar)} arrow note color (dE${round(ccaSimilar, 1)})`,
-            'may be difficult to see the arrow',
-            'warning',
-         ),
-      );
+      results.push({
+         type: 'string',
+         label: `${levelMsg(deltaELevel, ccaSimilar)} arrow note color (dE${round(ccaSimilar, 1)})`,
+         value: 'may be difficult to see the arrow',
+         symbol: 'warning',
+      });
    }
 
-   if (htmlResult.length) {
-      const htmlContainer = document.createElement('div');
-      htmlResult.forEach((h) => htmlContainer.append(h));
-      tool.output.html = htmlContainer;
-   } else {
-      tool.output.html = null;
-   }
+   return results;
 }
 
 export default tool;

@@ -1,14 +1,13 @@
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import { INoteContainer, NoteContainerType } from '../../types/checks/container';
+import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import { IObjectContainer, ObjectContainerType } from '../../types/checks/container';
 import UIInput from '../../ui/helpers/input';
-import { printResultTime } from '../helpers';
 import { NoteDirection } from '../../bsmap/beatmap/shared/constants';
 
 const name = 'Improper Chain';
 const description = 'Check for correct use of chain.';
 const enabled = true;
 
-const tool: Tool = {
+const tool: ITool = {
    name,
    description,
    type: 'note',
@@ -30,28 +29,25 @@ const tool: Tool = {
          ),
       ),
    },
-   output: {
-      html: null,
-   },
    run,
 };
 
 function check(args: ToolArgs) {
    // kinda slow but i need slider first
-   const noteContainer = [...args.beatmap!.noteContainer]
+   const noteContainer = [...args.beatmap.noteContainer]
       .sort((a, b) =>
-         a.type !== NoteContainerType.CHAIN ? 1 : b.type !== NoteContainerType.CHAIN ? -1 : 0,
+         a.type !== ObjectContainerType.CHAIN ? 1 : b.type !== ObjectContainerType.CHAIN ? -1 : 0,
       )
       .sort((a, b) => a.data.time - b.data.time);
 
-   const arr: INoteContainer[] = [];
+   const result: IObjectContainer[] = [];
    for (let i = 0, potential = true, len = noteContainer.length; i < len; i++) {
       const chain = noteContainer[i];
-      if (chain.type === NoteContainerType.CHAIN) {
+      if (chain.type === ObjectContainerType.CHAIN) {
          potential = true;
          for (let j = i; j < len; j++) {
             const other = noteContainer[j];
-            if (other.type === NoteContainerType.COLOR) {
+            if (other.type === ObjectContainerType.COLOR) {
                if (
                   chain.data.posX === other.data.posX &&
                   chain.data.posY === other.data.posY &&
@@ -65,7 +61,7 @@ function check(args: ToolArgs) {
                   break;
                }
             }
-            if (other.type === NoteContainerType.BOMB) {
+            if (other.type === ObjectContainerType.BOMB) {
                if (
                   chain.data.posX === other.data.posX &&
                   chain.data.posY === other.data.posY &&
@@ -79,30 +75,27 @@ function check(args: ToolArgs) {
             }
          }
          if (potential) {
-            arr.push(chain);
+            result.push(chain);
          }
       }
    }
-   return arr
-      .map((n) => n.data.time)
-      .filter(function (x, i, ary) {
-         return !i || x !== ary[i - 1];
-      });
+   return result;
 }
 
-function run(args: ToolArgs) {
+function run(args: ToolArgs): IToolOutput[] {
    const result = check(args);
 
    if (result.length) {
-      tool.output.html = printResultTime(
-         'Improper chain',
-         result,
-         args.settings.timeProcessor,
-         'error',
-      );
-   } else {
-      tool.output.html = null;
+      return [
+         {
+            type: 'time',
+            label: 'Improper chain',
+            value: result.map(n => n.data),
+            symbol: 'error',
+         },
+      ];
    }
+   return [];
 }
 
 export default tool;

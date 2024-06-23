@@ -1,17 +1,17 @@
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import { EnvironmentAllName } from '../../bsmap/types/beatmap/shared/environment';
 import UIInput from '../../ui/helpers/input';
-import { printResultTime } from '../helpers';
 import { TimeProcessor } from '../../bsmap/beatmap/helpers/timeProcessor';
 import { EventList } from '../../bsmap/beatmap/shared/environment';
 import { IWrapEvent } from '../../bsmap/types/beatmap/wrapper/event';
+import { IObjectContainerBomb, ObjectContainerType } from '../../types/checks/container';
 import { IWrapBombNote } from '../../bsmap/types/beatmap/wrapper/bombNote';
 
 const name = 'Unlit Bomb';
 const description = 'Check for lighting around bomb.';
 const enabled = true;
 
-const tool: Tool = {
+const tool: ITool = {
    name,
    description,
    type: 'event',
@@ -33,9 +33,6 @@ const tool: Tool = {
          ),
       ),
    },
-   output: {
-      html: null,
-   },
    run,
 };
 
@@ -43,13 +40,13 @@ const tool: Tool = {
 const unlitBomb = (
    bombs: IWrapBombNote[],
    events: IWrapEvent[],
-   bpm: TimeProcessor,
+   timeProcessor: TimeProcessor,
    environment: EnvironmentAllName,
 ) => {
    if (!events.length) {
       return [];
    }
-   const arr: IWrapBombNote[] = [];
+   const result: IWrapBombNote[] = [];
    const commonEvent = EventList[environment]?.[0] ?? EventList['DefaultEnvironment'][0];
    const eventsLight = events
       .filter((ev) => ev.isLightEvent(environment) && commonEvent.includes(ev.type))
@@ -75,8 +72,8 @@ const unlitBomb = (
       [key: number]: [number, boolean][];
    } = {};
    commonEvent.forEach((e) => (eventLitTime[e] = [[0, false]]));
-   const fadeTime = bpm.toBeatTime(1);
-   const reactTime = bpm.toBeatTime(0.25);
+   const fadeTime = timeProcessor.toBeatTime(1, false);
+   const reactTime = timeProcessor.toBeatTime(0.25, false);
    for (let i = 0, len = eventsLight.length; i < len; i++) {
       const ev = eventsLight[i];
       if ((ev.isOn() || ev.isFlash()) && eventState[ev.type].state !== 'on') {
@@ -151,38 +148,32 @@ const unlitBomb = (
          }
       }
       if (!isLit) {
-         arr.push(note);
+         result.push(note);
       }
    }
-   return arr
-      .map((n) => n.time)
-      .filter(function (x, i, ary) {
-         return !i || x !== ary[i - 1];
-      });
+   return result;
 };
 
-function run(args: ToolArgs) {
-   if (!args.beatmap) {
-      console.error('Something went wrong!');
-      return;
-   }
+function run(args: ToolArgs): IToolOutput[] {
    const result = unlitBomb(
       args.beatmap.data.bombNotes,
       args.beatmap.data.basicEvents,
-      args.settings.timeProcessor,
+      args.beatmap.timeProcessor,
       args.beatmap.environment,
    );
 
    if (result.length) {
-      tool.output.html = printResultTime(
-         'Unlit bomb',
-         result,
-         args.settings.timeProcessor,
-         'warning',
-      );
-   } else {
-      tool.output.html = null;
+      return [
+         {
+            type: 'time',
+            label: 'Unlit bomb',
+            value: result,
+            symbol: 'warning',
+         },
+      ];
    }
+
+   return [];
 }
 
 export default tool;

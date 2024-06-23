@@ -1,12 +1,11 @@
-import { Tool, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import {
-   NoteContainerType,
-   INoteContainer,
-   INoteContainerColor,
+   ObjectContainerType,
+   IObjectContainer,
+   IObjectContainerColor,
 } from '../../types/checks/container';
 import swing from '../../bsmap/extensions/swing/swing';
 import UIInput from '../../ui/helpers/input';
-import { printResultTime } from '../helpers';
 import { NoteColor } from '../../bsmap/beatmap/shared/constants';
 import { IWrapColorNote } from '../../bsmap/types/beatmap/wrapper/colorNote';
 
@@ -14,7 +13,7 @@ const name = 'Hitbox Inline';
 const description = 'Check for overlapping note hitbox for inline note.';
 const enabled = true;
 
-const tool: Tool = {
+const tool: ITool = {
    name,
    description,
    type: 'note',
@@ -36,75 +35,65 @@ const tool: Tool = {
          ),
       ),
    },
-   output: {
-      html: null,
-   },
    run,
 };
 
 const constant = 0;
 function check(args: ToolArgs) {
-   const { timeProcessor, njs } = args.settings;
-   const { noteContainer } = args.beatmap!;
+   const { timeProcessor, njs } = args.beatmap;
 
-   const lastNote: { [key: number]: INoteContainerColor } = {};
+   const lastNote: { [key: number]: IWrapColorNote } = {};
    const swingNoteArray: { [key: number]: IWrapColorNote[] } = {
       [NoteColor.RED]: [],
       [NoteColor.BLUE]: [],
    };
 
-   const arr: INoteContainer[] = [];
-   for (let i = 0, len = noteContainer.length; i < len; i++) {
-      if (noteContainer[i].type !== NoteContainerType.COLOR) {
-         continue;
-      }
-      const note = noteContainer[i] as INoteContainerColor;
-      if (lastNote[note.data.color]) {
+   const arr: IWrapColorNote[] = [];
+   for (let i = 0, len = args.beatmap.data.colorNotes.length; i < len; i++) {
+      const note = args.beatmap.data.colorNotes[i];
+      if (lastNote[note.color]) {
          if (
             swing.next(
-               note.data,
-               lastNote[note.data.color].data,
+               note,
+               lastNote[note.color],
                timeProcessor,
-               swingNoteArray[note.data.color],
+               swingNoteArray[note.color],
             )
          ) {
-            swingNoteArray[note.data.color] = [];
+            swingNoteArray[note.color] = [];
          }
       }
-      for (const other of swingNoteArray[(note.data.color + 1) % 2]) {
+      for (const other of swingNoteArray[(note.color + 1) % 2]) {
          // magic number 1.425 from saber length + good/bad hitbox
          if (
             njs.value <
-               1.425 / ((60 * (note.data.time - other.time)) / timeProcessor.bpm + constant) &&
-            note.data.isInline(other)
+               1.425 / ((60 * (note.time - other.time)) / timeProcessor.bpm + constant) &&
+            note.isInline(other)
          ) {
             arr.push(note);
             break;
          }
       }
-      lastNote[note.data.color] = note;
-      swingNoteArray[note.data.color].push(note.data);
+      lastNote[note.color] = note;
+      swingNoteArray[note.color].push(note);
    }
-   return arr
-      .map((n) => n.data.time)
-      .filter(function (x, i, ary) {
-         return !i || x !== ary[i - 1];
-      });
+   return arr;
 }
 
-function run(args: ToolArgs) {
+function run(args: ToolArgs): IToolOutput[] {
    const result = check(args);
 
    if (result.length) {
-      tool.output.html = printResultTime(
-         'Hitbox inline',
-         result,
-         args.settings.timeProcessor,
-         'rank',
-      );
-   } else {
-      tool.output.html = null;
+      return [
+         {
+            type: 'time',
+            label: 'Hitbox inline',
+            value: result,
+            symbol: 'rank',
+         },
+      ];
    }
+   return [];
 }
 
 export default tool;

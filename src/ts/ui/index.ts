@@ -6,7 +6,7 @@ export { default as input } from './input';
 export * as intro from './intro';
 export { default as loading } from './loading';
 export { default as select } from './helpers/select';
-export { default as settings } from './settings';
+export { default as settings } from './settings/main';
 export * as stats from './stats';
 export { default as theme } from './theme';
 export { default as checks } from './checks/main';

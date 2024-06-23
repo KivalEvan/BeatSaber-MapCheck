@@ -3,7 +3,7 @@ import LoadedData from '../../loadedData';
 import { round } from '../../bsmap/utils/mod';
 import { IWrapInfo } from '../../bsmap/types/beatmap/wrapper/info';
 import { IBeatmapItem } from '../../types';
-import { INoteContainer } from '../../types/checks/container';
+import { IObjectContainer } from '../../types/checks/container';
 import { countX, countXY, countY } from '../../bsmap/extensions/stats/note';
 import { logPrefix, prefix } from './constants';
 import { getFilteredContainer } from './helpers';
