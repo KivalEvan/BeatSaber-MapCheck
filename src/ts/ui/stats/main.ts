@@ -17,7 +17,11 @@ import { createNotePlacementTable } from './notePlacement';
 import { createObstacleCountTable } from './obstacle';
 import { CharacteristicName } from '../../bsmap/types/beatmap/shared/characteristic';
 import { IWrapInfoBeatmap } from '../../bsmap/types/beatmap/wrapper/info';
-import { getSelectedCharacteristic, getSelectedDifficulty, selectionOnChangeHandlers } from '../selection';
+import {
+   getSelectedCharacteristic,
+   getSelectedDifficulty,
+   selectionOnChangeHandlers,
+} from '../selection';
 
 const htmlStats: HTMLElement = document.querySelector('.stats__content')!;
 
@@ -80,7 +84,7 @@ function reset(): void {
    }
 }
 
-selectionOnChangeHandlers.push(populate)
+selectionOnChangeHandlers.push(populate);
 
 export {
    createEventCountTable,

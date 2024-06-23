@@ -20,7 +20,7 @@ $tabs_list: 'info', 'stats', 'checks', 'settings', 'note', 'obstacle', 'event', 
       left: -9999px;
       &:checked {
          @each $name in $tabs_list {
-            &[id='tabs__#{$name}'] ~ .tabs__nav .tabs__label-block[for='tabs__#{$name}'], 
+            &[id='tabs__#{$name}'] ~ .tabs__nav .tabs__label-block[for='tabs__#{$name}'],
             + .tabs__label-block {
                border-bottom: 1px solid var(--bg-checks-tab-select);
                filter: contrast(110%) brightness(1.05);
@@ -58,8 +58,7 @@ $tabs_list: 'info', 'stats', 'checks', 'settings', 'note', 'obstacle', 'event', 
          text-transform: uppercase;
          line-height: 1.5;
          border-bottom: 1px solid var(--bg-checks-tab);
-         transition:
-            filter 0.05s ease;
+         transition: filter 0.05s ease;
          &:hover {
             filter: contrast(110%) brightness(1.05);
          }

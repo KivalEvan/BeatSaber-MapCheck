@@ -90,7 +90,7 @@ function run(args: ToolArgs): IToolOutput[] {
          {
             type: 'time',
             label: 'Improper chain',
-            value: result.map(n => n.data),
+            value: result.map((n) => n.data),
             symbol: 'error',
          },
       ];

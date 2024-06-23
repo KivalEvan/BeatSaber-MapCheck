@@ -80,7 +80,10 @@ const tool: ITool<{ recovery: number }> = {
 
 function adjustTimeHandler(bpm: TimeProcessor) {
    localBPM = bpm;
-   htmlInputMaxBeat.value = round(localBPM.toBeatTime(tool.input.params.recovery, false), 2).toString();
+   htmlInputMaxBeat.value = round(
+      localBPM.toBeatTime(tool.input.params.recovery, false),
+      2,
+   ).toString();
 }
 
 function check(args: ToolArgs) {

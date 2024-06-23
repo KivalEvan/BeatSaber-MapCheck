@@ -158,7 +158,7 @@ function check(args: ToolArgs) {
       lastNote[note.color] = note;
       swingNoteArray[note.color].push(note);
    }
-   return result
+   return result;
 }
 
 function checkShrAngle(currCutDirection: number, prevCutDirection: number, type: number) {

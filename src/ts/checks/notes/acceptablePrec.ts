@@ -74,7 +74,7 @@ function check(beatmapItem: IBeatmapItem) {
             }
          }
          return true;
-      })
+      });
 }
 
 function run(args: ToolArgs): IToolOutput[] {

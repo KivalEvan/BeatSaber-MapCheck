@@ -187,7 +187,7 @@ function check(args: ToolArgs) {
          }
       }
    }
-   return result
+   return result;
 }
 
 function checkInline(n: IWrapColorNote, notes: IObjectContainer[], index: number, maxTime: number) {

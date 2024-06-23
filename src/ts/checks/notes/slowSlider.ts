@@ -86,8 +86,7 @@ function check(args: ToolArgs) {
    const { swingAnalysis } = args.beatmap;
    const { minSpeed } = tool.input.params;
 
-   return swingAnalysis.container
-      .filter((s) => s.maxSpeed > minSpeed || s.minSpeed > minSpeed)
+   return swingAnalysis.container.filter((s) => s.maxSpeed > minSpeed || s.minSpeed > minSpeed);
 }
 
 function run(args: ToolArgs): IToolOutput[] {
@@ -99,7 +98,7 @@ function run(args: ToolArgs): IToolOutput[] {
          {
             type: 'time',
             label: `Slow slider (>${round(minSpeed * 1000, 1)}ms)`,
-            value: result.map(n => n.data[0]),
+            value: result.map((n) => n.data[0]),
             symbol: 'warning',
          },
       ];

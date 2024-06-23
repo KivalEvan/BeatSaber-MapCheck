@@ -122,7 +122,7 @@ function check(args: ToolArgs) {
          }
       }
    }
-   return result
+   return result;
 }
 
 function run(args: ToolArgs): IToolOutput[] {

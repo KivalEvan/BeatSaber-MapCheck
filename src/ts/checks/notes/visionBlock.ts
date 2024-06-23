@@ -248,7 +248,7 @@ function check(args: ToolArgs) {
          lastMidR = note;
       }
    }
-   return result
+   return result;
 }
 
 function run(args: ToolArgs): IToolOutput[] {
@@ -259,7 +259,7 @@ function run(args: ToolArgs): IToolOutput[] {
          {
             type: 'time',
             label: 'Vision block',
-            value: result.map(n => n.data),
+            value: result.map((n) => n.data),
             symbol: 'warning',
          },
       ];

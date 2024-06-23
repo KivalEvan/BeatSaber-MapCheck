@@ -129,7 +129,8 @@ export default class Swing implements ISwingContainer {
       return (
          timeProc.bpm /
          (timeProc.toBeatTime(
-            timeProc.toRealTime(currObj.time) - timeProc.toRealTime(prevObj.time), false
+            timeProc.toRealTime(currObj.time) - timeProc.toRealTime(prevObj.time),
+            false,
          ) *
             2)
       );

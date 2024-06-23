@@ -1,4 +1,11 @@
-import { IBeatmapItem, ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import {
+   IBeatmapItem,
+   ITool,
+   IToolOutput,
+   ToolArgs,
+   ToolInputOrder,
+   ToolOutputOrder,
+} from '../../types';
 import UIInput from '../../ui/helpers/input';
 
 const name = 'Varying Swing Speed';
@@ -32,8 +39,7 @@ const tool: ITool = {
 
 function check(difficulty: IBeatmapItem) {
    const { swingAnalysis } = difficulty;
-   return swingAnalysis.container
-      .filter((n) => Math.abs(n.minSpeed - n.maxSpeed) > 0.002)
+   return swingAnalysis.container.filter((n) => Math.abs(n.minSpeed - n.maxSpeed) > 0.002);
 }
 
 function run(args: ToolArgs): IToolOutput[] {
@@ -44,7 +50,7 @@ function run(args: ToolArgs): IToolOutput[] {
          {
             type: 'time',
             label: 'Varying swing speed',
-            value: result.map(n => n.data[0]),
+            value: result.map((n) => n.data[0]),
             symbol: 'error',
          },
       ];

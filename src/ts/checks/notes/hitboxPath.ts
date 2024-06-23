@@ -54,7 +54,10 @@ function check(args: ToolArgs) {
       }
       for (let j = i + 1; j < len; j++) {
          const compareTo = noteContainer[j];
-         if (compareTo.data.customData.__mapcheck_secondtime > currentNote.data.customData.__mapcheck_secondtime + 0.01) {
+         if (
+            compareTo.data.customData.__mapcheck_secondtime >
+            currentNote.data.customData.__mapcheck_secondtime + 0.01
+         ) {
             break;
          }
          if (
@@ -81,7 +84,7 @@ function check(args: ToolArgs) {
          }
       }
    }
-   return result
+   return result;
 }
 
 function run(args: ToolArgs): IToolOutput[] {

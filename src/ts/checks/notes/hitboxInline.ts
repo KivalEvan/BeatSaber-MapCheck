@@ -52,22 +52,14 @@ function check(args: ToolArgs) {
    for (let i = 0, len = args.beatmap.data.colorNotes.length; i < len; i++) {
       const note = args.beatmap.data.colorNotes[i];
       if (lastNote[note.color]) {
-         if (
-            swing.next(
-               note,
-               lastNote[note.color],
-               timeProcessor,
-               swingNoteArray[note.color],
-            )
-         ) {
+         if (swing.next(note, lastNote[note.color], timeProcessor, swingNoteArray[note.color])) {
             swingNoteArray[note.color] = [];
          }
       }
       for (const other of swingNoteArray[(note.color + 1) % 2]) {
          // magic number 1.425 from saber length + good/bad hitbox
          if (
-            njs.value <
-               1.425 / ((60 * (note.time - other.time)) / timeProcessor.bpm + constant) &&
+            njs.value < 1.425 / ((60 * (note.time - other.time)) / timeProcessor.bpm + constant) &&
             note.isInline(other)
          ) {
             arr.push(note);

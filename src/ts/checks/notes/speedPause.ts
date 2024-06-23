@@ -97,7 +97,7 @@ function adjustTimeHandler(bpm: TimeProcessor) {
 }
 
 function check(beatmapItem: IBeatmapItem) {
-   const timeProcessor  = beatmapItem.timeProcessor;
+   const timeProcessor = beatmapItem.timeProcessor;
    const colorNotes = beatmapItem.data.colorNotes;
    const { maxTime: temp } = tool.input.params;
    const maxTime = timeProcessor.toBeatTime(temp, false) + 0.001;
@@ -117,20 +117,12 @@ function check(beatmapItem: IBeatmapItem) {
    for (let i = 0, len = colorNotes.length; i < len; i++) {
       const note = colorNotes[i];
       if (lastNote[note.color]) {
-         if (
-            swing.next(
-               note,
-               lastNote[note.color],
-               timeProcessor,
-               swingNoteArray[note.color],
-            )
-         ) {
+         if (swing.next(note, lastNote[note.color], timeProcessor, swingNoteArray[note.color])) {
             if (note.time - lastNote[note.color].time <= maxTime * 2) {
                if (
                   maybePause[NoteColor.RED] &&
                   maybePause[NoteColor.BLUE] &&
-                  lastNote[note.color].time - lastNotePause[note.color].time <=
-                     maxTime * 3
+                  lastNote[note.color].time - lastNotePause[note.color].time <= maxTime * 3
                ) {
                   result.push(lastNote[note.color]);
                }

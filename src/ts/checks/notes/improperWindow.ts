@@ -66,7 +66,7 @@ function check(args: ToolArgs) {
       }
       swingNoteArray[note.color].push(note);
    }
-   return result
+   return result;
 }
 
 function run(args: ToolArgs): IToolOutput[] {
