@@ -1,8 +1,9 @@
 import { CharacteristicName } from '../../bsmap/types/beatmap/shared/characteristic';
 import { DifficultyName } from '../../bsmap/types/beatmap/shared/difficulty';
+import { IToolOutput } from './check';
 
 interface IAnalysisBase {
-   html: HTMLElement[] | null;
+   output: IToolOutput[];
 }
 
 export interface IAnalysisMap extends IAnalysisBase {

@@ -150,7 +150,7 @@ export default async (type: LoadType) => {
                if (!LoadedData.duration) UIHeader.setSongDuration();
                logger.tError(tag(), `${info.audio.filename} does not exist.`);
             }
-            itemDone += 3;
+            itemDone += 2;
             itemSet.delete('Audio');
             updateStatus();
             resolve(null);

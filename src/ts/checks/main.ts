@@ -7,7 +7,6 @@ import { IToolOutput } from '../types/checks/check';
 import { IBeatmapItem, ITool } from '../types';
 import logger from '../bsmap/logger';
 import { getLastInteractiveTime } from '../bsmap/beatmap/helpers/beatmap';
-import { printResult, printResultTime } from '../ui/checks/output';
 
 function tag(name: string) {
    return ['analyzer', name];
@@ -24,34 +23,17 @@ const toolListOutput: ReadonlyArray<ITool> = [...toolListInput].sort(
 function init(): void {
    LoadedData.analysis = {
       general: {
-         html: null,
+         output: [],
       },
       beatmap: [],
    };
 }
 
-function outputToHtml(output: IToolOutput): HTMLDivElement {
-   switch (output.type) {
-      case 'string':
-         return printResult(output.label, output.value, output.symbol);
-      case 'number':
-         return printResult(output.label, output.value.join(', '), output.symbol);
-      case 'time':
-         return printResultTime(output.label, output.value, output.symbol);
-      case 'html':
-         const htmlContainer = document.createElement('div');
-         output.value.forEach((h) => htmlContainer.appendChild(h));
-         return htmlContainer;
-      default:
-         throw new Error('Unexpected result type');
-   }
-}
-
-function checkGeneral(): void {
+export function checkGeneral(): IToolOutput[] {
    const mapInfo = LoadedData.beatmapInfo;
    if (!mapInfo) {
       logger.tError(tag('runGeneral'), 'Could not analyse, missing map info');
-      return;
+      return [];
    }
 
    if (!LoadedData.analysis) {
@@ -61,7 +43,7 @@ function checkGeneral(): void {
    const analysisExist = LoadedData.analysis?.general;
 
    logger.tInfo(tag('runGeneral'), `Analysing general`);
-   const htmlArr: HTMLElement[] = [];
+   const collections: IToolOutput[] = [];
    toolListOutput
       .filter((tool) => tool.type === 'general')
       .forEach((tool) => {
@@ -73,7 +55,7 @@ function checkGeneral(): void {
                   beatmap: null as unknown as IBeatmapItem,
                   info: mapInfo,
                });
-               htmlArr.push(...results.map(outputToHtml));
+               collections.push(...results);
             } catch (err) {
                logger.tError(tag('runGeneral'), err);
             }
@@ -81,15 +63,20 @@ function checkGeneral(): void {
       });
 
    if (analysisExist) {
-      analysisExist.html = htmlArr;
+      analysisExist.output = collections;
    }
+
+   return collections;
 }
 
-function checkDifficulty(characteristic: CharacteristicName, difficulty: DifficultyName): void {
+export function checkDifficulty(
+   characteristic: CharacteristicName,
+   difficulty: DifficultyName,
+): IToolOutput[] {
    const mapInfo = LoadedData.beatmapInfo;
    if (!mapInfo) {
       logger.tError(tag('runDifficulty'), 'Could not analyse, missing map info');
-      return;
+      return [];
    }
 
    if (!LoadedData.analysis) {
@@ -102,7 +89,7 @@ function checkDifficulty(characteristic: CharacteristicName, difficulty: Difficu
    );
    if (!beatmap) {
       logger.tError(tag('runDifficulty'), 'Could not analyse, missing map data');
-      return;
+      return [];
    }
 
    const analysisExist = LoadedData.analysis?.beatmap.find(
@@ -116,7 +103,7 @@ function checkDifficulty(characteristic: CharacteristicName, difficulty: Difficu
    );
 
    logger.tInfo(tag('runDifficulty'), `Analysing ${characteristic} ${difficulty}`);
-   const htmlArr: HTMLElement[] = [];
+   const collections: IToolOutput[] = [];
    toolListOutput
       .filter((tool) => tool.type !== 'general')
       .forEach((tool) => {
@@ -130,7 +117,7 @@ function checkDifficulty(characteristic: CharacteristicName, difficulty: Difficu
                   beatmap: beatmap,
                   info: mapInfo,
                });
-               htmlArr.push(...results.map(outputToHtml));
+               collections.push(...results);
             } catch (err) {
                logger.tError(tag('runDifficulty'), err);
             }
@@ -138,14 +125,16 @@ function checkDifficulty(characteristic: CharacteristicName, difficulty: Difficu
       });
 
    if (analysisExist) {
-      analysisExist.html = htmlArr;
+      analysisExist.output = collections;
    } else {
       LoadedData.analysis?.beatmap.push({
          characteristic: characteristic,
          difficulty: difficulty,
-         html: htmlArr,
+         output: collections,
       });
    }
+
+   return collections;
 }
 
 function adjustTime(bpm: TimeProcessor): void {

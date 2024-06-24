@@ -9,6 +9,8 @@ import {
    getSelectedDifficulty,
    selectionOnChangeHandlers,
 } from '../selection';
+import { IToolOutput } from '../../types/checks/check';
+import { printResult, printResultTime } from './output';
 
 const logPrefix = 'UI Checks: ';
 
@@ -29,26 +31,43 @@ htmlChecksApplyThis.addEventListener('click', applyThisHandler);
 htmlChecksApplyAll.addEventListener('click', applyAllHandler);
 htmlChecksApplyGeneral.addEventListener('click', applyGeneralHandler);
 
+function outputToHtml(output: IToolOutput): HTMLDivElement {
+   switch (output.type) {
+      case 'string':
+         return printResult(output.label, output.value, output.symbol);
+      case 'number':
+         return printResult(output.label, output.value.join(', '), output.symbol);
+      case 'time':
+         return printResultTime(output.label, output.value, output.symbol);
+      case 'html':
+         const htmlContainer = document.createElement('div');
+         output.value.forEach((h) => htmlContainer.appendChild(h));
+         return htmlContainer;
+      default:
+         throw new Error('Unexpected result type');
+   }
+}
+
 function displayOutputGeneral(): void {
    const analysis = LoadedData.analysis?.general;
    if (!analysis) {
       htmlChecksOutputGeneral.textContent = 'ERROR: could not find analysis for general';
       return;
    }
-   if (!analysis.html) {
+   if (!analysis.output) {
       htmlChecksOutputGeneral.textContent = 'ERROR: could not find HTML for general';
       return;
    }
    htmlChecksOutputGeneral.innerHTML = '';
-   analysis.html.forEach((h) => htmlChecksOutputGeneral.appendChild(h));
+   analysis.output.forEach((h) => htmlChecksOutputGeneral.appendChild(outputToHtml(h)));
    if (!htmlChecksOutputGeneral.firstChild) {
       htmlChecksOutputGeneral.textContent = 'No issues found.';
    }
 }
 
 function displayOutputDifficulty(
-   characteristic?: CharacteristicName,
-   difficulty?: DifficultyName,
+   characteristic?: CharacteristicName | null,
+   difficulty?: DifficultyName | null,
 ): void {
    if (!characteristic && !difficulty) {
       characteristic = getSelectedCharacteristic();
@@ -66,12 +85,12 @@ function displayOutputDifficulty(
          'ERROR: could not find analysis for ' + characteristic + ' ' + difficulty;
       return;
    }
-   if (!analysis.html) {
+   if (!analysis.output) {
       htmlChecksOutputDifficulty.textContent =
          'ERROR: could not find HTML for ' + characteristic + ' ' + difficulty;
       return;
    }
-   analysis.html.forEach((h) => htmlChecksOutputDifficulty.appendChild(h));
+   analysis.output.forEach((h) => htmlChecksOutputDifficulty.appendChild(outputToHtml(h)));
    if (!htmlChecksOutputDifficulty.firstChild) {
       htmlChecksOutputDifficulty.textContent = 'No issues found.';
    }
