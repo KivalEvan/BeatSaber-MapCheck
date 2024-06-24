@@ -25,6 +25,7 @@ export interface IDataCheckObject extends IDataCheckBase {
 export type IDataCheck = IDataCheckPrimitive | IDataCheckNumber | IDataCheckObject;
 
 export interface IDataCheckOption {
+   enabled: boolean;
    /**
     * If condition is not met, handle an error.
     *

@@ -5,7 +5,7 @@
 A small project to bring extensive overview of maps, aimed to reduce error
 before modding & release.
 
-by **Kival Evan#5480**
+by **@kivalevan**
 
 ## How to use
 
@@ -38,7 +38,7 @@ error/problem or want an improvement.
 -  File names shall use camel case.
 -  Use formatting standard given in prettier config.
 -  Top-level function must use regular function.
--  Use `dev` branch as base for new development and only merge here.
+-  Use `dev` branch as base for new development/branch.
 -  No other third-dependencies unless absolutely necessary.
 -  Avoid circular imports.
 

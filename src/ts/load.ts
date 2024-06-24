@@ -86,7 +86,10 @@ async function fetchLightshow(
    );
    try {
       const json = await file!.async('string').then(JSON.parse);
-      const lightshow = loadLightshow(json, { sort: settings.sorting });
+      const lightshow = loadLightshow(json, {
+         sort: settings.sorting,
+         dataCheck: { enabled: settings.dataCheck },
+      });
       return [json, lightshow];
    } catch (err) {
       logger.tError(
@@ -143,7 +146,10 @@ export function extractBeatmaps(info: IWrapInfo, zip: JSZip): Promise<IBeatmapIt
             `${infoDiff.characteristic} ${infoDiff.difficulty} contains 2 version of the map in the same file, attempting to load v3 instead`,
          );
       }
-      let data = loadDifficulty(jsonDifficulty, { sort: settings.sorting });
+      let data = loadDifficulty(jsonDifficulty, {
+         sort: settings.sorting,
+         dataCheck: { enabled: settings.dataCheck },
+      });
 
       let lightshow = jsonDifficultyVer === 4 ? new Beatmap() : data;
       let jsonLightshow;

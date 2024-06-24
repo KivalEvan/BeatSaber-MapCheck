@@ -123,7 +123,7 @@ export function loadBeatmap<T extends Record<string, any>>(
    let data: any;
    const schema = schemaMap[jsonVer];
    if (schema) {
-      validateJSON(type, json, jsonVer, opt.dataCheck);
+      if (opt.dataCheck.enabled) validateJSON(type, json, jsonVer, opt.dataCheck);
       data = new coreClass(schema.deserialize(json));
    } else {
       throw new Error(

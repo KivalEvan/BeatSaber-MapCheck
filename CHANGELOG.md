@@ -2,7 +2,7 @@
 
 ## 2.7.0 [2024-06-xx]
 
-Major changes here should result better QoL, faster loading, and less memory usage.
+Major changes here should result in better QoL, faster loading, and less memory usage.
 Automated testing in the source has also been developed to ensure any future update won't result in inconsistency between update.
 
 ### Added
@@ -15,10 +15,12 @@ Automated testing in the source has also been developed to ensure any future upd
    -  No longer converts beatmap for compatibility
 -  UI revamped
    -  Stats no longer generate all difficulty at once, uses currently selected
+   -  Overall should result in less memory usage
 
 ### Fixed
 
 - Mappers and lighters information does not reset upon reset
+- BPM change shows even if the minimum and maximum are equal
 
 ## 2.6.1 [2024-03-25]
 

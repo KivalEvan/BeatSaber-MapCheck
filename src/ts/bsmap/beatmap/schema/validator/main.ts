@@ -16,6 +16,7 @@ function tag(name: string): string[] {
 }
 
 const defaultOptions: IDataCheckOption = {
+   enabled: true,
    throwOn: {
       unused: false,
       missing: true,
@@ -34,6 +35,7 @@ export function validateJSON<T extends Record<string, any> = Record<string, any>
    options?: Partial<IDataCheckOption>,
 ): T {
    const opt: Required<IDataCheckOption> = {
+      enabled: options?.enabled ?? defaultOptions.enabled,
       throwOn: {
          ...defaultOptions.throwOn,
          ...options?.throwOn,
