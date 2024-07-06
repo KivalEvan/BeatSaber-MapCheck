@@ -59,9 +59,6 @@ function check(beatmapItem: IBeatmapItem) {
    const { prec } = tool.input.params;
 
    return swingContainer
-      .filter((x, i, ary) => {
-         return !i || x.time !== ary[i - 1].time;
-      })
       .map((n) => n.data.sort(sortObjectFn)[0])
       .filter((n) => {
          if (!prec.length) {

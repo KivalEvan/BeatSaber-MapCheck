@@ -12,7 +12,6 @@ const htmlSettingsBeatNumbering: HTMLSelectElement = document.querySelector(
 const htmlSettingsRounding: HTMLInputElement = document.querySelector('.settings__rounding')!;
 const htmlSettingsInfoHeight: HTMLInputElement = document.querySelector('.settings__info-height')!;
 const htmlSettingsDataCheck: HTMLInputElement = document.querySelector('.settings__data-check')!;
-const htmlSettingsDataError: HTMLInputElement = document.querySelector('.settings__data-error')!;
 const htmlSettingsLoad: NodeListOf<HTMLInputElement> = document.querySelectorAll('.settings__load');
 const htmlSettingsSort: HTMLInputElement = document.querySelector('.settings__sort')!;
 const htmlSettingsShow: NodeListOf<HTMLInputElement> = document.querySelectorAll('.settings__show');
@@ -29,7 +28,6 @@ htmlSettingsBeatNumbering.addEventListener('change', beatNumberingChangeHandler)
 htmlSettingsRounding.addEventListener('change', roundingChangeHandler);
 htmlSettingsInfoHeight.addEventListener('change', infoHeightChangeHandler);
 htmlSettingsDataCheck.addEventListener('change', dataCheckChangeHandler);
-htmlSettingsDataError.addEventListener('change', dataErrorChangeHandler);
 htmlSettingsLoad.forEach((elem) => elem.addEventListener('change', loadCheckHandler));
 htmlSettingsSort.addEventListener('change', sortCheckHandler);
 htmlSettingsShow.forEach((elem) => elem.addEventListener('change', showCheckHandler));
@@ -64,12 +62,6 @@ function infoHeightChangeHandler(ev: Event): void {
 function dataCheckChangeHandler(ev: Event): void {
    const target = ev.target as HTMLInputElement;
    Settings.dataCheck = target.checked;
-   Settings.save();
-}
-
-function dataErrorChangeHandler(ev: Event): void {
-   const target = ev.target as HTMLInputElement;
-   Settings.dataError = target.checked;
    Settings.save();
 }
 
@@ -139,10 +131,6 @@ function setDataCheck(bool: boolean): void {
    htmlSettingsDataCheck.checked = bool;
 }
 
-function setDataError(bool: boolean): void {
-   htmlSettingsDataError.checked = bool;
-}
-
 function clear(): void {
    Settings.clear();
    Settings.reset();
@@ -158,6 +146,5 @@ export default {
    setRounding,
    setInfoHeight,
    setDataCheck,
-   setDataError,
    clear,
 };

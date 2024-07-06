@@ -25,7 +25,6 @@ export interface ISettings {
    infoRowHeight: number;
    rounding: number;
    dataCheck: boolean;
-   dataError: boolean;
    deduplicateTime: boolean;
    theme: UIThemeName;
    show: ISettingsShow;

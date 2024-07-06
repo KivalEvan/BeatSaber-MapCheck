@@ -46,7 +46,8 @@ function check(args: ToolArgs) {
    let obstacleRFull: IWrapObstacle = new Obstacle();
    let obstacleLHalf: IWrapObstacle = new Obstacle();
    let obstacleRHalf: IWrapObstacle = new Obstacle();
-   obstacles.forEach((o) => {
+   for(let i = 0; i < obstacles.length; i++) {
+      const o = obstacles[i]
       if (o.posY === PosY.BOTTOM && o.height > 2 && o.duration > 0) {
          if (o.width > 2 || (o.width > 1 && o.posX === 1)) {
             if (o.isLonger(obstacleLFull)) {
@@ -166,7 +167,7 @@ function check(args: ToolArgs) {
             }
          }
       }
-   });
+   };
    return ary;
 }
 

@@ -22,7 +22,6 @@ export default (function () {
          UISettings.setRounding(Settings.rounding);
          UISettings.setInfoHeight(Settings.infoRowHeight);
          UISettings.setDataCheck(Settings.dataCheck);
-         UISettings.setDataError(Settings.dataError);
          for (const id in Settings.load) {
             UISettings.setLoadCheck(id, Settings.load[id]);
          }

@@ -13,7 +13,6 @@ const settingsDefault: ISettings = {
    infoRowHeight: 4,
    rounding: 3,
    dataCheck: true,
-   dataError: true,
    deduplicateTime: true,
    theme: 'Dark',
    show: {
@@ -68,12 +67,6 @@ export default new (class Settings implements ISettings {
    }
    set dataCheck(val: boolean) {
       this.property.dataCheck = val;
-   }
-   get dataError(): boolean {
-      return this.property.dataError;
-   }
-   set dataError(val: boolean) {
-      this.property.dataError = val;
    }
    get deduplicateTime(): boolean {
       return this.property.deduplicateTime;

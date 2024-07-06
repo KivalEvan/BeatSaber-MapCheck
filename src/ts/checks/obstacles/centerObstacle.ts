@@ -93,7 +93,8 @@ function check(args: ToolArgs) {
    const arr: IWrapObstacle[] = [];
    let obstacleLeftFull: IWrapObstacle = new Obstacle();
    let obstacleRightFull: IWrapObstacle = new Obstacle();
-   obstacles.forEach((o) => {
+   for(let i = 0; i < obstacles.length; i++) {
+      const o = obstacles[i]
       if (o.posY < PosY.TOP && o.height > 1) {
          if (o.width > 2) {
             arr.push(o);
@@ -178,7 +179,7 @@ function check(args: ToolArgs) {
             }
          }
       }
-   });
+   }
    return arr;
 }
 
