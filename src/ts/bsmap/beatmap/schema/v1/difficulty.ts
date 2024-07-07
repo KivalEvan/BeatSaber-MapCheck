@@ -16,23 +16,7 @@ import { bpmEvent } from './bpmEvent.ts';
 import { obstacle } from './obstacle.ts';
 import type { ISchemaContainer } from '../../../types/beatmap/shared/schema.ts';
 
-const defaultValue = {
-   _version: '1.5.0',
-   _beatsPerMinute: 120,
-   _beatsPerBar: 4,
-   _shuffle: 0,
-   _shufflePeriod: 0,
-   _noteJumpSpeed: 0,
-   _noteJumpStartBeatOffset: 0,
-   _notes: [],
-   _obstacles: [],
-   _events: [],
-   _time: 0,
-   _BPMChanges: [],
-   _bookmarks: [],
-} as Required<IDifficulty>;
 export const difficulty: ISchemaContainer<IWrapBeatmapAttribute, IDifficulty> = {
-   defaultValue,
    serialize(data: IWrapBeatmapAttribute): IDifficulty {
       return {
          _version: '1.5.0',
@@ -63,7 +47,7 @@ export const difficulty: ISchemaContainer<IWrapBeatmapAttribute, IDifficulty> = 
    deserialize(data: DeepPartial<IDifficulty> = {}): DeepPartial<IWrapBeatmapAttribute> {
       const colorNotes: Partial<IWrapColorNoteAttribute>[] = [];
       const bombNotes: Partial<IWrapBombNoteAttribute>[] = [];
-      (data._notes ?? defaultValue._notes).forEach((obj) => {
+      data._notes?.forEach((obj) => {
          if (obj?._type === 3) {
             bombNotes.push(bombNote.deserialize(obj));
          } else {
@@ -75,7 +59,7 @@ export const difficulty: ISchemaContainer<IWrapBeatmapAttribute, IDifficulty> = 
       const colorBoostEvents: Partial<IWrapColorBoostEventAttribute>[] = [];
       const rotationEvents: Partial<IWrapRotationEventAttribute>[] = [];
       const bpmEvents: Partial<IWrapBPMEventAttribute>[] = [];
-      (data._events ?? defaultValue._events).forEach((obj) => {
+      data._events?.forEach((obj) => {
          switch (obj?._type) {
             case 5:
                colorBoostEvents.push(colorBoostEvent.deserialize(obj));
@@ -98,13 +82,13 @@ export const difficulty: ISchemaContainer<IWrapBeatmapAttribute, IDifficulty> = 
          difficulty: {
             colorNotes,
             bombNotes,
-            obstacles: (data._obstacles ?? []).map(obstacle.deserialize),
+            obstacles: data._obstacles?.map(obstacle.deserialize),
             bpmEvents,
             rotationEvents,
             customData: {
-               _bpmChanges: data._BPMChanges ?? defaultValue._BPMChanges,
-               _bookmarks: data._bookmarks ?? defaultValue._bookmarks,
-               _time: data._time ?? defaultValue._time,
+               _bpmChanges: data._BPMChanges,
+               _bookmarks: data._bookmarks,
+               _time: data._time,
             },
          },
          lightshow: {

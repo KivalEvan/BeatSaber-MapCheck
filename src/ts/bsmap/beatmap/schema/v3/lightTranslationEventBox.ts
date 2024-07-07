@@ -6,24 +6,10 @@ import { deepCopy } from '../../../utils/misc.ts';
 import { indexFilter } from './indexFilter.ts';
 import { lightTranslationEvent } from './lightTranslationEvent.ts';
 
-const defaultValue = {
-   f: { ...indexFilter.defaultValue },
-   w: 0,
-   d: 1,
-   s: 0,
-   t: 1,
-   a: 0,
-   r: 0,
-   b: 0,
-   i: 0,
-   l: [],
-   customData: {},
-} as Required<ILightTranslationEventBox>;
 export const lightTranslationEventBox: ISchemaContainer<
    IWrapLightTranslationEventBoxAttribute,
    ILightTranslationEventBox
 > = {
-   defaultValue,
    serialize(data: IWrapLightTranslationEventBoxAttribute): ILightTranslationEventBox {
       return {
          f: indexFilter.serialize(data.filter),
@@ -43,17 +29,17 @@ export const lightTranslationEventBox: ISchemaContainer<
       data: DeepPartial<ILightTranslationEventBox> = {},
    ): DeepPartial<IWrapLightTranslationEventBoxAttribute> {
       return {
-         filter: indexFilter.deserialize(data.f ?? defaultValue.f),
-         beatDistribution: data.w ?? defaultValue.w,
-         beatDistributionType: data.d ?? defaultValue.d,
-         gapDistribution: data.s ?? defaultValue.s,
-         gapDistributionType: data.t ?? defaultValue.t,
-         axis: data.a ?? defaultValue.a,
-         flip: data.r ?? defaultValue.r,
-         affectFirst: data.b ?? defaultValue.b,
-         easing: data.i ?? defaultValue.i,
-         events: (data.l ?? defaultValue.l).map(lightTranslationEvent.deserialize),
-         customData: deepCopy(data.customData ?? defaultValue.customData),
+         filter: indexFilter.deserialize(data.f),
+         beatDistribution: data.w,
+         beatDistributionType: data.d,
+         gapDistribution: data.s,
+         gapDistributionType: data.t,
+         axis: data.a,
+         flip: data.r,
+         affectFirst: data.b,
+         easing: data.i,
+         events: data.l?.map(lightTranslationEvent.deserialize),
+         customData: data.customData,
       };
    },
 };

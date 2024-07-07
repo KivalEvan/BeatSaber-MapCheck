@@ -7,21 +7,10 @@ import type { IEventBoxGroupContainer } from '../../../types/beatmap/container/v
 import { EventBoxType } from '../../../types/beatmap/shared/constants.ts';
 import type { ILightColorBoxContainer } from '../../../types/beatmap/container/v4.ts';
 
-const defaultValue = {
-   object: {
-      t: EventBoxType.TRANSLATION,
-      b: 0,
-      g: 0,
-      e: [],
-      customData: {},
-   },
-   boxData: [],
-} as DeepRequiredIgnore<IEventBoxGroupContainer<ILightColorBoxContainer>, 'customData'>;
 export const lightColorEventBoxGroup: ISchemaContainer<
    IWrapLightColorEventBoxGroupAttribute,
    IEventBoxGroupContainer<ILightColorBoxContainer>
 > = {
-   defaultValue,
    serialize(
       data: IWrapLightColorEventBoxGroupAttribute,
    ): IEventBoxGroupContainer<ILightColorBoxContainer> {
@@ -40,10 +29,10 @@ export const lightColorEventBoxGroup: ISchemaContainer<
       data: DeepPartial<IEventBoxGroupContainer<ILightColorBoxContainer>> = {},
    ): DeepPartial<IWrapLightColorEventBoxGroupAttribute> {
       return {
-         time: data.object?.b ?? defaultValue.object.b,
-         id: data.object?.g ?? defaultValue.object.g,
-         boxes: (data.boxData ?? defaultValue.boxData).map(lightColorEventBox.deserialize),
-         customData: deepCopy(data.object?.customData ?? defaultValue.object.customData),
+         time: data.object?.b,
+         id: data.object?.g,
+         boxes: data.boxData?.map(lightColorEventBox.deserialize),
+         customData: data.object?.customData,
       };
    },
 };

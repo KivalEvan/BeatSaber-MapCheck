@@ -4,18 +4,7 @@ import type { IWrapInfoBeatmapAttribute } from '../../../types/beatmap/wrapper/i
 import type { ISchemaContainer } from '../../../types/beatmap/shared/schema.ts';
 import { DifficultyRanking } from '../../shared/difficulty.ts';
 
-const defaultValue = {
-   _difficulty: 'Easy',
-   _difficultyRank: 1,
-   _beatmapFilename: 'UnnamedFile.dat',
-   _noteJumpMovementSpeed: 0,
-   _noteJumpStartBeatOffset: 0,
-   _beatmapColorSchemeIdx: 0,
-   _environmentNameIdx: 0,
-   _customData: {},
-} as Required<IInfoDifficulty>;
 export const infoDifficulty: ISchemaContainer<IWrapInfoBeatmapAttribute, IInfoDifficulty> = {
-   defaultValue,
    serialize(data: IWrapInfoBeatmapAttribute): IInfoDifficulty {
       return {
          _difficulty: data.difficulty,
@@ -30,13 +19,13 @@ export const infoDifficulty: ISchemaContainer<IWrapInfoBeatmapAttribute, IInfoDi
    },
    deserialize(data: Partial<IInfoDifficulty> = {}): Partial<IWrapInfoBeatmapAttribute> {
       return {
-         difficulty: data._difficulty ?? defaultValue._difficulty,
-         filename: data._beatmapFilename ?? defaultValue._beatmapFilename,
-         njs: data._noteJumpMovementSpeed ?? defaultValue._noteJumpMovementSpeed,
-         njsOffset: data._noteJumpStartBeatOffset ?? defaultValue._noteJumpStartBeatOffset,
-         colorSchemeId: data._beatmapColorSchemeIdx ?? defaultValue._beatmapColorSchemeIdx,
-         environmentId: data._environmentNameIdx ?? defaultValue._environmentNameIdx,
-         customData: deepCopy(data._customData ?? defaultValue._customData),
+         difficulty: data._difficulty,
+         filename: data._beatmapFilename,
+         njs: data._noteJumpMovementSpeed,
+         njsOffset: data._noteJumpStartBeatOffset,
+         colorSchemeId: data._beatmapColorSchemeIdx,
+         environmentId: data._environmentNameIdx,
+         customData: data._customData,
       };
    },
 };

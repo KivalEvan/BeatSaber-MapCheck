@@ -3,17 +3,7 @@ import { deepCopy } from '../../../utils/misc.ts';
 import type { IWrapColorNoteAttribute } from '../../../types/beatmap/wrapper/colorNote.ts';
 import type { ISchemaContainer } from '../../../types/beatmap/shared/schema.ts';
 
-const defaultValue = {
-   b: 0,
-   c: 0,
-   x: 0,
-   y: 0,
-   d: 0,
-   a: 0,
-   customData: {},
-} as Required<IColorNote>;
 export const colorNote: ISchemaContainer<IWrapColorNoteAttribute, IColorNote> = {
-   defaultValue,
    serialize(data: IWrapColorNoteAttribute): IColorNote {
       return {
          b: data.time,
@@ -27,13 +17,13 @@ export const colorNote: ISchemaContainer<IWrapColorNoteAttribute, IColorNote> = 
    },
    deserialize(data: Partial<IColorNote> = {}): Partial<IWrapColorNoteAttribute> {
       return {
-         time: data.b ?? defaultValue.b,
-         posX: data.x ?? defaultValue.x,
-         posY: data.y ?? defaultValue.y,
-         color: data.c ?? defaultValue.c,
-         direction: data.d ?? defaultValue.d,
-         angleOffset: data.a ?? defaultValue.a,
-         customData: deepCopy(data.customData ?? defaultValue.customData),
+         time: data.b,
+         posX: data.x,
+         posY: data.y,
+         color: data.c,
+         direction: data.d,
+         angleOffset: data.a,
+         customData: data.customData,
       };
    },
 };

@@ -5,24 +5,7 @@ import type { IColorNoteContainer } from '../../../types/beatmap/container/v4.ts
 import type { DeepRequiredIgnore } from '../../../types/utils.ts';
 import type { DeepPartial } from '../../../types/utils.ts';
 
-const defaultValue = {
-   object: {
-      b: 0,
-      i: 0,
-      r: 0,
-      customData: {},
-   },
-   data: {
-      c: 0,
-      x: 0,
-      y: 0,
-      d: 0,
-      a: 0,
-      customData: {},
-   },
-} as DeepRequiredIgnore<IColorNoteContainer, 'customData'>;
 export const colorNote: ISchemaContainer<IWrapColorNoteAttribute, IColorNoteContainer> = {
-   defaultValue,
    serialize(data: IWrapColorNoteAttribute): IColorNoteContainer {
       return {
          object: {
@@ -43,14 +26,14 @@ export const colorNote: ISchemaContainer<IWrapColorNoteAttribute, IColorNoteCont
    },
    deserialize(data: DeepPartial<IColorNoteContainer> = {}): Partial<IWrapColorNoteAttribute> {
       return {
-         time: data.object?.b ?? defaultValue.object.b,
-         laneRotation: data.object?.r ?? defaultValue.object.r,
-         posX: data.data?.x ?? defaultValue.data.x,
-         posY: data.data?.y ?? defaultValue.data.y,
-         color: data.data?.c ?? defaultValue.data.c,
-         direction: data.data?.d ?? defaultValue.data.d,
-         angleOffset: data.data?.a ?? defaultValue.data.a,
-         customData: deepCopy(data.data?.customData ?? defaultValue.data.customData),
+         time: data.object?.b,
+         laneRotation: data.object?.r,
+         posX: data.data?.x,
+         posY: data.data?.y,
+         color: data.data?.c,
+         direction: data.data?.d,
+         angleOffset: data.data?.a,
+         customData: data.data?.customData,
       };
    },
 };

@@ -4,16 +4,7 @@ import type { IWrapObstacleAttribute } from '../../../types/beatmap/wrapper/obst
 import { remap } from '../../../utils/math.ts';
 import { deepCopy } from '../../../utils/misc.ts';
 
-const defaultValue = {
-   _time: 0,
-   _lineIndex: 0,
-   _type: 0,
-   _duration: 0,
-   _width: 0,
-   _customData: {},
-} as Required<IObstacle>;
 export const obstacle: ISchemaContainer<IWrapObstacleAttribute, IObstacle> = {
-   defaultValue,
    serialize(data: IWrapObstacleAttribute): IObstacle {
       let type = 0;
       if (data.height >= 0 && data.posY >= 0) {
@@ -34,7 +25,7 @@ export const obstacle: ISchemaContainer<IWrapObstacleAttribute, IObstacle> = {
       };
    },
    deserialize(data: Partial<IObstacle> = {}): Partial<IWrapObstacleAttribute> {
-      const type = data._type ?? defaultValue._type;
+      const type = data._type ?? 0;
       const height =
          type === 1
             ? 3
@@ -46,13 +37,13 @@ export const obstacle: ISchemaContainer<IWrapObstacleAttribute, IObstacle> = {
       const posY =
          type === 1 ? 2 : type > 4000 && type <= 4005000 ? Math.floor((type - 4001) / 1000) : 0;
       return {
-         time: data._time ?? defaultValue._time,
+         time: data._time,
          posY,
-         posX: data._lineIndex ?? defaultValue._lineIndex,
-         duration: data._duration ?? defaultValue._duration,
-         width: data._width ?? defaultValue._width,
+         posX: data._lineIndex,
+         duration: data._duration,
+         width: data._width,
          height,
-         customData: deepCopy(data._customData ?? defaultValue._customData),
+         customData: data._customData,
       };
    },
 };

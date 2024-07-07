@@ -93,8 +93,8 @@ function check(args: ToolArgs) {
    const arr: IWrapObstacle[] = [];
    let obstacleLeftFull: IWrapObstacle = new Obstacle();
    let obstacleRightFull: IWrapObstacle = new Obstacle();
-   for(let i = 0; i < obstacles.length; i++) {
-      const o = obstacles[i]
+   for (let i = 0; i < obstacles.length; i++) {
+      const o = obstacles[i];
       if (o.posY < PosY.TOP && o.height > 1) {
          if (o.width > 2) {
             arr.push(o);

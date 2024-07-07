@@ -6,21 +6,7 @@ import { deepCopy } from '../../../utils/misc.ts';
 import { indexFilter } from './indexFilter.ts';
 import { fxEventFloat } from './fxEventFloat.ts';
 
-const defaultValue = {
-   data: {
-      w: 0,
-      d: 1,
-      s: 0,
-      t: 1,
-      b: 0,
-      e: 0,
-      customData: {},
-   },
-   eventData: [],
-   filterData: { ...indexFilter.defaultValue },
-} as DeepRequiredIgnore<IFxEventFloatBoxContainer, 'customData'>;
 export const fxEventBox: ISchemaContainer<IWrapFxEventBoxAttribute, IFxEventFloatBoxContainer> = {
-   defaultValue,
    serialize(data: IWrapFxEventBoxAttribute): IFxEventFloatBoxContainer {
       return {
          data: {
@@ -40,15 +26,15 @@ export const fxEventBox: ISchemaContainer<IWrapFxEventBoxAttribute, IFxEventFloa
       data: DeepPartial<IFxEventFloatBoxContainer> = {},
    ): DeepPartial<IWrapFxEventBoxAttribute> {
       return {
-         filter: indexFilter.deserialize(data.filterData ?? defaultValue.filterData),
-         beatDistribution: data.data?.w ?? defaultValue.data.w,
-         beatDistributionType: data.data?.d ?? defaultValue.data.d,
-         fxDistribution: data.data?.s ?? defaultValue.data.s,
-         fxDistributionType: data.data?.t ?? defaultValue.data.t,
-         affectFirst: data.data?.b ?? defaultValue.data.b,
-         easing: data.data?.e ?? defaultValue.data.e,
-         events: (data.eventData ?? defaultValue.eventData).map(fxEventFloat.deserialize),
-         customData: deepCopy(data.data?.customData ?? defaultValue.data.customData),
+         filter: indexFilter.deserialize(data.filterData),
+         beatDistribution: data.data?.w,
+         beatDistributionType: data.data?.d,
+         fxDistribution: data.data?.s,
+         fxDistributionType: data.data?.t,
+         affectFirst: data.data?.b,
+         easing: data.data?.e,
+         events: data.eventData?.map(fxEventFloat.deserialize),
+         customData: data.data?.customData,
       };
    },
 };

@@ -19,31 +19,7 @@ import { fxEventBoxGroup } from './fxEventBoxGroup.ts';
 import type { IWrapBeatmapAttribute } from '../../../types/beatmap/wrapper/beatmap.ts';
 import type { ISchemaContainer } from '../../../types/beatmap/shared/schema.ts';
 
-const defaultValue = {
-   version: '3.3.0',
-   bpmEvents: [],
-   rotationEvents: [],
-   colorNotes: [],
-   bombNotes: [],
-   obstacles: [],
-   sliders: [],
-   burstSliders: [],
-   waypoints: [],
-   basicBeatmapEvents: [],
-   colorBoostBeatmapEvents: [],
-   lightColorEventBoxGroups: [],
-   lightRotationEventBoxGroups: [],
-   lightTranslationEventBoxGroups: [],
-   vfxEventBoxGroups: [],
-   _fxEventsCollection: { _fl: [], _il: [] },
-   basicEventTypesWithKeywords: {
-      d: [],
-   },
-   useNormalEventsAsCompatibleEvents: false,
-   customData: {},
-} as Required<IDifficulty>;
 export const difficulty: ISchemaContainer<IWrapBeatmapAttribute, IDifficulty> = {
-   defaultValue,
    serialize(data: IWrapBeatmapAttribute): Required<IDifficulty> {
       const json: Required<IDifficulty> = {
          version: '3.3.0',
@@ -95,59 +71,42 @@ export const difficulty: ISchemaContainer<IWrapBeatmapAttribute, IDifficulty> = 
          difficulty: {},
          lightshow: {},
       };
-      d.difficulty!.bpmEvents = (data.bpmEvents ?? defaultValue.bpmEvents).map(
-         bpmEvent.deserialize,
+      d.difficulty!.bpmEvents = data.bpmEvents?.map(bpmEvent.deserialize);
+      d.difficulty!.rotationEvents = data.rotationEvents?.map(rotationEvent.deserialize);
+      d.difficulty!.colorNotes = data.colorNotes?.map(colorNote.deserialize);
+      d.difficulty!.bombNotes = data.bombNotes?.map(bombNote.deserialize);
+      d.difficulty!.obstacles = data.obstacles?.map(obstacle.deserialize);
+      d.difficulty!.arcs = data.sliders?.map(arc.deserialize);
+      d.difficulty!.chains = data.burstSliders?.map(chain.deserialize);
+      d.lightshow!.waypoints = data.waypoints?.map(waypoint.deserialize);
+      d.lightshow!.basicEvents = data.basicBeatmapEvents?.map(basicEvent.deserialize);
+      d.lightshow!.colorBoostEvents = data.colorBoostBeatmapEvents?.map(
+         colorBoostEvent.deserialize,
       );
-      d.difficulty!.rotationEvents = (data.rotationEvents ?? defaultValue.rotationEvents).map(
-         rotationEvent.deserialize,
+      d.lightshow!.lightColorEventBoxGroups = data.lightColorEventBoxGroups?.map(
+         lightColorEventBoxGroup.deserialize,
       );
-      d.difficulty!.colorNotes = (data.colorNotes ?? defaultValue.colorNotes).map(
-         colorNote.deserialize,
+      d.lightshow!.lightRotationEventBoxGroups = data.lightRotationEventBoxGroups?.map(
+         lightRotationEventBoxGroup.deserialize,
       );
-      d.difficulty!.bombNotes = (data.bombNotes ?? defaultValue.bombNotes).map(
-         bombNote.deserialize,
+      d.lightshow!.lightTranslationEventBoxGroups = data.lightTranslationEventBoxGroups?.map(
+         lightTranslationEventBoxGroup.deserialize,
       );
-      d.difficulty!.obstacles = (data.obstacles ?? defaultValue.obstacles).map(
-         obstacle.deserialize,
-      );
-      d.difficulty!.arcs = (data.sliders ?? defaultValue.sliders).map(arc.deserialize);
-      d.difficulty!.chains = (data.burstSliders ?? defaultValue.burstSliders).map(
-         chain.deserialize,
-      );
-      d.lightshow!.waypoints = (data.waypoints ?? defaultValue.waypoints).map(waypoint.deserialize);
-      d.lightshow!.basicEvents = (data.basicBeatmapEvents ?? defaultValue.basicBeatmapEvents).map(
-         basicEvent.deserialize,
-      );
-      d.lightshow!.colorBoostEvents = (
-         data.colorBoostBeatmapEvents ?? defaultValue.colorBoostBeatmapEvents
-      ).map(colorBoostEvent.deserialize);
-      d.lightshow!.lightColorEventBoxGroups = (
-         data.lightColorEventBoxGroups ?? defaultValue.lightColorEventBoxGroups
-      ).map(lightColorEventBoxGroup.deserialize);
-      d.lightshow!.lightRotationEventBoxGroups = (
-         data.lightRotationEventBoxGroups ?? defaultValue.lightRotationEventBoxGroups
-      ).map(lightRotationEventBoxGroup.deserialize);
-      d.lightshow!.lightTranslationEventBoxGroups = (
-         data.lightTranslationEventBoxGroups ?? defaultValue.lightTranslationEventBoxGroups
-      ).map(lightTranslationEventBoxGroup.deserialize);
-      const fx = data._fxEventsCollection?._fl ?? defaultValue._fxEventsCollection._fl!;
-      d.lightshow!.fxEventBoxGroups = (
-         data.vfxEventBoxGroups ?? defaultValue.vfxEventBoxGroups
-      ).map((obj) =>
+      const fx = data._fxEventsCollection?._fl;
+      d.lightshow!.fxEventBoxGroups = data.vfxEventBoxGroups?.map((obj) =>
          fxEventBoxGroup.deserialize({
             object: obj,
             boxData: obj.e?.map((box) => ({
                data: box,
-               eventData: box.l?.map((idx) => fx[idx]),
+               eventData: box.l?.map((idx) => fx![idx]),
             })),
          }),
       );
       d.lightshow!.eventTypesWithKeywords = eventTypesWithKeywords.deserialize(
-         data.basicEventTypesWithKeywords ?? defaultValue.basicEventTypesWithKeywords,
+         data.basicEventTypesWithKeywords,
       );
-      d.lightshow!.useNormalEventsAsCompatibleEvents =
-         data.useNormalEventsAsCompatibleEvents ?? defaultValue.useNormalEventsAsCompatibleEvents;
-      d.customData = deepCopy(data.customData ?? defaultValue.customData);
+      d.lightshow!.useNormalEventsAsCompatibleEvents = data.useNormalEventsAsCompatibleEvents;
+      d.customData = deepCopy(data.customData);
       return d;
    },
 };

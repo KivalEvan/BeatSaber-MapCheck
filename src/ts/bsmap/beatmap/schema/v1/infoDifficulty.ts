@@ -4,26 +4,7 @@ import type { IWrapInfoBeatmapAttribute } from '../../../types/beatmap/wrapper/i
 import type { ISchemaContainer } from '../../../types/beatmap/shared/schema.ts';
 import { DifficultyRanking } from '../../shared/difficulty.ts';
 
-const defaultValue = {
-   difficulty: 'Easy',
-   difficultyRank: 1,
-   audioPath: 'song.ogg',
-   jsonPath: 'UnnamedFile.json',
-   characteristic: 'Standard',
-
-   offset: 0,
-   oldOffset: 0,
-   chromaToggle: '',
-   customColors: false,
-   difficultyLabel: '',
-   colorLeft: {},
-   colorRight: {},
-   envColorLeft: {},
-   envColorRight: {},
-   obstacleColor: {},
-} as Required<IInfoDifficulty>;
 export const infoDifficulty: ISchemaContainer<IWrapInfoBeatmapAttribute, IInfoDifficulty> = {
-   defaultValue,
    serialize(data: IWrapInfoBeatmapAttribute): IInfoDifficulty {
       return {
          difficulty: data.difficulty,
@@ -45,13 +26,13 @@ export const infoDifficulty: ISchemaContainer<IWrapInfoBeatmapAttribute, IInfoDi
    },
    deserialize(data: Partial<IInfoDifficulty> = {}): Partial<IWrapInfoBeatmapAttribute> {
       return {
-         difficulty: data.difficulty ?? defaultValue.difficulty,
-         filename: data.jsonPath ?? defaultValue.jsonPath,
+         difficulty: data.difficulty,
+         filename: data.jsonPath,
          njs: 0,
          njsOffset: 0,
 
          // audioPath: songFileName ?? 'song.ogg',
-         characteristic: data.characteristic || defaultValue.characteristic,
+         characteristic: data.characteristic,
          customData: {
             _editorOffset: data.offset,
             _editorOldOffset: data.oldOffset,

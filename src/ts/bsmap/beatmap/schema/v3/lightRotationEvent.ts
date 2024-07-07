@@ -3,20 +3,10 @@ import type { ILightRotationEvent } from '../../../types/beatmap/v3/lightRotatio
 import type { IWrapLightRotationEventAttribute } from '../../../types/beatmap/wrapper/lightRotationEvent.ts';
 import { deepCopy } from '../../../utils/misc.ts';
 
-const defaultValue = {
-   b: 0,
-   p: 0,
-   e: 0,
-   l: 0,
-   r: 0,
-   o: 0,
-   customData: {},
-} as Required<ILightRotationEvent>;
 export const lightRotationEvent: ISchemaContainer<
    IWrapLightRotationEventAttribute,
    ILightRotationEvent
 > = {
-   defaultValue,
    serialize(data: IWrapLightRotationEventAttribute): ILightRotationEvent {
       return {
          b: data.time,
@@ -30,13 +20,13 @@ export const lightRotationEvent: ISchemaContainer<
    },
    deserialize(data: Partial<ILightRotationEvent> = {}): Partial<IWrapLightRotationEventAttribute> {
       return {
-         time: data.b ?? defaultValue.b,
-         easing: data.e ?? defaultValue.e,
-         loop: data.l ?? defaultValue.l,
-         direction: data.o ?? defaultValue.o,
-         previous: data.p ?? defaultValue.p,
-         rotation: data.r ?? defaultValue.r,
-         customData: deepCopy(data.customData ?? defaultValue.customData),
+         time: data.b,
+         easing: data.e,
+         loop: data.l,
+         direction: data.o,
+         previous: data.p,
+         rotation: data.r,
+         customData: data.customData,
       };
    },
 };

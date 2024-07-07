@@ -3,20 +3,7 @@ import type { IIndexFilter } from '../../../types/beatmap/v4/indexFilter.ts';
 import type { IWrapIndexFilterAttribute } from '../../../types/beatmap/wrapper/indexFilter.ts';
 import { deepCopy } from '../../../utils/misc.ts';
 
-const defaultValue = {
-   f: 1,
-   p: 0,
-   t: 0,
-   r: 0,
-   c: 0,
-   n: 0,
-   s: 0,
-   l: 0,
-   d: 0,
-   customData: {},
-} as Required<IIndexFilter>;
 export const indexFilter: ISchemaContainer<IWrapIndexFilterAttribute, IIndexFilter> = {
-   defaultValue,
    serialize(data: IWrapIndexFilterAttribute): IIndexFilter {
       return {
          f: data.type,
@@ -33,16 +20,16 @@ export const indexFilter: ISchemaContainer<IWrapIndexFilterAttribute, IIndexFilt
    },
    deserialize(data: Partial<IIndexFilter> = {}): Partial<IWrapIndexFilterAttribute> {
       return {
-         type: data.f ?? defaultValue.f,
-         p0: data.p ?? defaultValue.p,
-         p1: data.t ?? defaultValue.t,
-         reverse: data.r ?? defaultValue.r,
-         chunks: data.c ?? defaultValue.c,
-         random: data.n ?? defaultValue.n,
-         seed: data.s ?? defaultValue.s,
-         limit: data.l ?? defaultValue.l,
-         limitAffectsType: data.d ?? defaultValue.d,
-         customData: deepCopy(data.customData ?? defaultValue.customData),
+         type: data.f,
+         p0: data.p,
+         p1: data.t,
+         reverse: data.r,
+         chunks: data.c,
+         random: data.n,
+         seed: data.s,
+         limit: data.l,
+         limitAffectsType: data.d,
+         customData: data.customData,
       };
    },
 };

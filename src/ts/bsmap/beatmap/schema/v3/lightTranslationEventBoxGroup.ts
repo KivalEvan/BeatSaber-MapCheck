@@ -5,17 +5,10 @@ import { deepCopy } from '../../../utils/misc.ts';
 import type { IWrapLightTranslationEventBoxGroupAttribute } from '../../../types/beatmap/wrapper/lightTranslationEventBoxGroup.ts';
 import { lightTranslationEventBox } from './lightTranslationEventBox.ts';
 
-const defaultValue = {
-   b: 0,
-   g: 0,
-   e: [],
-   customData: {},
-} as Required<ILightTranslationEventBoxGroup>;
 export const lightTranslationEventBoxGroup: ISchemaContainer<
    IWrapLightTranslationEventBoxGroupAttribute,
    ILightTranslationEventBoxGroup
 > = {
-   defaultValue,
    serialize(data: IWrapLightTranslationEventBoxGroupAttribute): ILightTranslationEventBoxGroup {
       return {
          b: data.time,
@@ -28,10 +21,10 @@ export const lightTranslationEventBoxGroup: ISchemaContainer<
       data: DeepPartial<ILightTranslationEventBoxGroup> = {},
    ): DeepPartial<IWrapLightTranslationEventBoxGroupAttribute> {
       return {
-         time: data.b ?? defaultValue.b,
-         id: data.g ?? defaultValue.g,
-         boxes: (data.e ?? defaultValue.e).map(lightTranslationEventBox.deserialize),
-         customData: deepCopy(data.customData ?? defaultValue.customData),
+         time: data.b,
+         id: data.g,
+         boxes: data.e?.map(lightTranslationEventBox.deserialize),
+         customData: data.customData,
       };
    },
 };

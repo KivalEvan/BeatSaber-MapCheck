@@ -6,22 +6,10 @@ import { deepCopy } from '../../../utils/misc.ts';
 import { indexFilter } from './indexFilter.ts';
 import { lightColorEvent } from './lightColorEvent.ts';
 
-const defaultValue = {
-   f: { ...indexFilter.defaultValue },
-   w: 0,
-   d: 1,
-   r: 0,
-   t: 1,
-   b: 0,
-   i: 0,
-   e: [],
-   customData: {},
-} as Required<ILightColorEventBox>;
 export const lightColorEventBox: ISchemaContainer<
    IWrapLightColorEventBoxAttribute,
    ILightColorEventBox
 > = {
-   defaultValue,
    serialize(data: IWrapLightColorEventBoxAttribute): ILightColorEventBox {
       return {
          f: indexFilter.serialize(data.filter),
@@ -39,15 +27,15 @@ export const lightColorEventBox: ISchemaContainer<
       data: DeepPartial<ILightColorEventBox> = {},
    ): DeepPartial<IWrapLightColorEventBoxAttribute> {
       return {
-         filter: indexFilter.deserialize(data.f ?? defaultValue.f),
-         beatDistribution: data.w ?? defaultValue.w,
-         beatDistributionType: data.d ?? defaultValue.d,
-         brightnessDistribution: data.r ?? defaultValue.r,
-         brightnessDistributionType: data.t ?? defaultValue.t,
-         affectFirst: data.b ?? defaultValue.b,
-         easing: data.i ?? defaultValue.i,
-         events: (data.e ?? defaultValue.e).map(lightColorEvent.deserialize),
-         customData: deepCopy(data.customData ?? defaultValue.customData),
+         filter: indexFilter.deserialize(data.f),
+         beatDistribution: data.w,
+         beatDistributionType: data.d,
+         brightnessDistribution: data.r,
+         brightnessDistributionType: data.t,
+         affectFirst: data.b,
+         easing: data.i,
+         events: data.e?.map(lightColorEvent.deserialize),
+         customData: data.customData,
       };
    },
 };

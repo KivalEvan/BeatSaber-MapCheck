@@ -6,26 +6,10 @@ import { deepCopy } from '../../../utils/misc.ts';
 import { indexFilter } from './indexFilter.ts';
 import { lightRotationEvent } from './lightRotationEvent.ts';
 
-const defaultValue = {
-   data: {
-      w: 0,
-      d: 1,
-      s: 0,
-      t: 1,
-      b: 0,
-      e: 0,
-      f: 0,
-      a: 0,
-      customData: {},
-   },
-   eventData: [],
-   filterData: { ...indexFilter.defaultValue },
-} as DeepRequiredIgnore<ILightRotationBoxContainer, 'customData'>;
 export const lightRotationEventBox: ISchemaContainer<
    IWrapLightRotationEventBoxAttribute,
    ILightRotationBoxContainer
 > = {
-   defaultValue,
    serialize(data: IWrapLightRotationEventBoxAttribute): ILightRotationBoxContainer {
       return {
          data: {
@@ -47,17 +31,17 @@ export const lightRotationEventBox: ISchemaContainer<
       data: DeepPartial<ILightRotationBoxContainer> = {},
    ): DeepPartial<IWrapLightRotationEventBoxAttribute> {
       return {
-         filter: indexFilter.deserialize(data.filterData ?? defaultValue.filterData),
-         beatDistribution: data.data?.w ?? defaultValue.data.w,
-         beatDistributionType: data.data?.d ?? defaultValue.data.d,
-         rotationDistribution: data.data?.s ?? defaultValue.data.s,
-         rotationDistributionType: data.data?.t ?? defaultValue.data.t,
-         affectFirst: data.data?.b ?? defaultValue.data.b,
-         easing: data.data?.e ?? defaultValue.data.e,
-         axis: data.data?.a ?? defaultValue.data.a,
-         flip: data.data?.f ?? defaultValue.data.f,
-         events: (data.eventData ?? defaultValue.eventData).map(lightRotationEvent.deserialize),
-         customData: deepCopy(data.data?.customData ?? defaultValue.data.customData),
+         filter: indexFilter.deserialize(data.filterData),
+         beatDistribution: data.data?.w,
+         beatDistributionType: data.data?.d,
+         rotationDistribution: data.data?.s,
+         rotationDistributionType: data.data?.t,
+         affectFirst: data.data?.b,
+         easing: data.data?.e,
+         axis: data.data?.a,
+         flip: data.data?.f,
+         events: data.eventData?.map(lightRotationEvent.deserialize),
+         customData: data.data?.customData,
       };
    },
 };

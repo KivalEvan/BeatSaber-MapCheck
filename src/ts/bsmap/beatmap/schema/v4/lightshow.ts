@@ -14,32 +14,7 @@ import type { IObject } from '../../../types/beatmap/v4/object.ts';
 import type { IWrapBeatmapAttribute } from '../../../types/beatmap/wrapper/beatmap.ts';
 import { eventTypesWithKeywords } from '../v3/eventTypesWithKeywords.ts';
 
-const defaultValue = {
-   version: '4.0.0',
-   waypoints: [],
-   waypointsData: [],
-   basicEvents: [],
-   basicEventsData: [],
-   colorBoostEvents: [],
-   colorBoostEventsData: [],
-   eventBoxGroups: [],
-   indexFilters: [],
-   lightColorEvents: [],
-   lightColorEventBoxes: [],
-   lightRotationEvents: [],
-   lightRotationEventBoxes: [],
-   lightTranslationEvents: [],
-   lightTranslationEventBoxes: [],
-   floatFxEvents: [],
-   fxEventBoxes: [],
-   basicEventTypesWithKeywords: {
-      ...eventTypesWithKeywords.defaultValue,
-   },
-   useNormalEventsAsCompatibleEvents: false,
-   customData: {},
-} as DeepRequiredIgnore<ILightshow, 'customData'>;
 export const lightshow: ISchemaContainer<IWrapBeatmapAttribute, ILightshow> = {
-   defaultValue,
    serialize(data: IWrapBeatmapAttribute): ILightshow {
       const json: Required<ILightshow> = {
          version: '4.0.0',
@@ -180,19 +155,19 @@ export const lightshow: ISchemaContainer<IWrapBeatmapAttribute, ILightshow> = {
             fxEventBoxGroups: [],
          },
       };
-      d.lightshow!.waypoints = (data?.waypoints ?? []).map((obj) =>
+      d.lightshow!.waypoints = data?.waypoints?.map((obj) =>
          waypoint.deserialize({
             object: obj,
             data: data?.waypointsData?.[obj?.i || 0],
          }),
       );
-      d.lightshow!.basicEvents = (data?.basicEvents ?? []).map((obj) =>
+      d.lightshow!.basicEvents = data?.basicEvents?.map((obj) =>
          basicEvent.deserialize({
             object: obj,
             data: data?.basicEventsData?.[obj?.i || 0],
          }),
       );
-      d.lightshow!.colorBoostEvents = (data?.colorBoostEvents ?? []).map((obj) =>
+      d.lightshow!.colorBoostEvents = data?.colorBoostEvents?.map((obj) =>
          colorBoostEvent.deserialize({
             object: obj,
             data: data?.colorBoostEventsData?.[obj?.i || 0],
@@ -273,11 +248,9 @@ export const lightshow: ISchemaContainer<IWrapBeatmapAttribute, ILightshow> = {
          }
       }
       d.lightshow!.eventTypesWithKeywords = eventTypesWithKeywords.deserialize(
-         data?.basicEventTypesWithKeywords || defaultValue.basicEventTypesWithKeywords,
+         data?.basicEventTypesWithKeywords,
       );
-      d.lightshow!.useNormalEventsAsCompatibleEvents = !!(
-         data?.useNormalEventsAsCompatibleEvents ?? defaultValue.useNormalEventsAsCompatibleEvents
-      );
+      d.lightshow!.useNormalEventsAsCompatibleEvents = !!data?.useNormalEventsAsCompatibleEvents;
       d.lightshow!.customData = deepCopy(data?.customData ?? {});
       return d;
    },
