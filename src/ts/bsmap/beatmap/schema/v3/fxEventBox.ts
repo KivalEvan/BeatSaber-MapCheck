@@ -5,7 +5,6 @@ import { deepCopy } from '../../../utils/misc.ts';
 import { indexFilter } from './indexFilter.ts';
 import { fxEventFloat } from './fxEventFloat.ts';
 import type { IFxEventFloatBoxContainer } from '../../../types/beatmap/container/v3.ts';
-import type { DeepRequiredIgnore } from '../../../types/utils.ts';
 
 export const fxEventBox: ISchemaContainer<IWrapFxEventBoxAttribute, IFxEventFloatBoxContainer> = {
    serialize(data: IWrapFxEventBoxAttribute): IFxEventFloatBoxContainer {

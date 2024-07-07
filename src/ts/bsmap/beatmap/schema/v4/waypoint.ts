@@ -1,7 +1,7 @@
 import type { ISchemaContainer } from '../../../types/beatmap/shared/schema.ts';
 import type { IWaypointContainer } from '../../../types/beatmap/container/v4.ts';
 import type { IWrapWaypointAttribute } from '../../../types/beatmap/wrapper/waypoint.ts';
-import type { DeepPartial, DeepRequiredIgnore } from '../../../types/utils.ts';
+import type { DeepPartial } from '../../../types/utils.ts';
 import { deepCopy } from '../../../utils/misc.ts';
 
 export const waypoint: ISchemaContainer<IWrapWaypointAttribute, IWaypointContainer> = {

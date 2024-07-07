@@ -106,7 +106,7 @@ export const difficulty: ISchemaContainer<IWrapBeatmapAttribute, IDifficulty> = 
          data.basicEventTypesWithKeywords,
       );
       d.lightshow!.useNormalEventsAsCompatibleEvents = data.useNormalEventsAsCompatibleEvents;
-      d.customData = deepCopy(data.customData);
+      d.difficulty!.customData = data.customData;
       return d;
    },
 };

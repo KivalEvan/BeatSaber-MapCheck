@@ -2,18 +2,22 @@ import Settings from '../../settings';
 import UIPanel from '../helpers/panel';
 import { colorToHex, round, toMmss } from '../../bsmap/utils/mod';
 import { TimeProcessor } from '../../bsmap/beatmap/helpers/timeProcessor';
-import { IBookmark } from '../../bsmap/types/beatmap/v3/custom/bookmark';
+import { IBookmark as IBookmarkV2 } from '../../bsmap/types/beatmap/v2/custom/bookmark';
+import { IBookmark as IBookmarkV3 } from '../../bsmap/types/beatmap/v3/custom/bookmark';
 import { htmlTableBookmarks } from './constants';
 import { displayTableRow, hideTableRow } from './helpers';
 
-export function setBookmarks(arr?: IBookmark[], bpm?: TimeProcessor | null): void {
+export function setBookmarks(
+   arr?: Partial<IBookmarkV2 & IBookmarkV3>[],
+   bpm?: TimeProcessor | null,
+): void {
    if (arr == null || !arr.length) {
       hideTableRow(htmlTableBookmarks);
       return;
    }
    const panel = UIPanel.create('max', 'none', true);
    arr.forEach((elem, i) => {
-      let time = elem.b;
+      let time = elem.b ?? elem._time ?? 0;
       let rt!: number;
       const container = document.createElement('div');
       const colorContainer = document.createElement('div');
@@ -25,7 +29,8 @@ export function setBookmarks(arr?: IBookmark[], bpm?: TimeProcessor | null): voi
       colorContainer.style.backgroundColor = '#000000';
       textContainer.className = 'info__color-text';
 
-      if (typeof elem.n !== 'string') {
+      const text = elem.n ?? elem._name;
+      if (typeof text !== 'string') {
          textContainer.textContent = `Error parsing bookmarks[${i}]`;
          panel.appendChild(container);
       }
@@ -33,13 +38,15 @@ export function setBookmarks(arr?: IBookmark[], bpm?: TimeProcessor | null): voi
          time = bpm.adjustTime(time);
          rt = bpm.toRealTime(time);
       }
-      colorContainer.style.backgroundColor = elem.c
-         ? colorToHex({ r: elem.c[0], g: elem.c[1], b: elem.c[2] })
+
+      const color = elem.c ?? elem._color;
+      colorContainer.style.backgroundColor = color
+         ? colorToHex({ r: color[0], g: color[1], b: color[2] })
          : '#333333';
 
-      textContainer.textContent = `${round(elem.b, Settings.rounding)}${
+      textContainer.textContent = `${round(time, Settings.rounding)}${
          rt ? ' | ' + toMmss(rt) : ''
-      } -- ${elem.n != '' ? elem.n : '**EMPTY NAME**'}`;
+      } -- ${text != '' ? text : '**EMPTY NAME**'}`;
 
       panel.appendChild(container);
    });

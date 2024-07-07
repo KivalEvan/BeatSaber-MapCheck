@@ -4,7 +4,6 @@ import type { IWrapRotationEventAttribute } from '../../../types/beatmap/wrapper
 import { EventLaneRotationValue } from '../../shared/constants.ts';
 
 export const rotationEvent: ISchemaContainer<IWrapRotationEventAttribute, IEvent> = {
-   
    serialize(data: IWrapRotationEventAttribute): IEvent {
       let r = data.rotation % 360;
       if (r >= -60 && r <= 60 && r % 15 === 0 && r / 15 !== 0) {

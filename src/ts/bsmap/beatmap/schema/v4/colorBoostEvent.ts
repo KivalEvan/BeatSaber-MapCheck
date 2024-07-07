@@ -1,7 +1,6 @@
 import type { ISchemaContainer } from '../../../types/beatmap/shared/schema.ts';
 import type { IColorBoostEventContainer } from '../../../types/beatmap/container/v4.ts';
 import type { IWrapColorBoostEventAttribute } from '../../../types/beatmap/wrapper/colorBoostEvent.ts';
-import type { DeepRequiredIgnore } from '../../../types/utils.ts';
 import { deepCopy } from '../../../utils/misc.ts';
 
 export const colorBoostEvent: ISchemaContainer<

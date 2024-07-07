@@ -52,11 +52,14 @@ const tool: ITool = {
 };
 
 function customColorSimilarity(map: ToolArgs) {
+   const colorScheme = map.info.colorSchemes[map.beatmap.settings.colorSchemeId];
    const checkColorLeft =
       map.beatmap?.settings.customData?._colorLeft ??
+      colorScheme.saberLeftColor ??
       ColorScheme[EnvironmentSchemeName[map.beatmap!.environment] ?? 'The First']._colorLeft;
    const checkColorRight =
       map.beatmap?.settings.customData?._colorRight ??
+      colorScheme.saberRightColor ??
       ColorScheme[EnvironmentSchemeName[map.beatmap!.environment] ?? 'The First']._colorRight;
    if (checkColorLeft && checkColorRight) {
       return deltaE00(colorFrom(checkColorLeft), colorFrom(checkColorRight));
@@ -65,13 +68,16 @@ function customColorSimilarity(map: ToolArgs) {
 }
 
 function customColorArrowSimilarity(map: ToolArgs) {
+   const colorScheme = map.info.colorSchemes[map.beatmap.settings.colorSchemeId];
    let deltaELeft = 100,
       deltaERight = 100;
    const checkColorLeft =
       map.beatmap?.settings.customData?._colorLeft ??
+      colorScheme.saberLeftColor ??
       ColorScheme[EnvironmentSchemeName[map.beatmap!.environment] ?? 'The First']._colorLeft;
    const checkColorRight =
       map.beatmap?.settings.customData?._colorRight ??
+      colorScheme.saberRightColor ??
       ColorScheme[EnvironmentSchemeName[map.beatmap!.environment] ?? 'The First']._colorRight;
    if (checkColorLeft) {
       deltaELeft = deltaE00(arrowColor, colorFrom(checkColorLeft));
@@ -83,9 +89,11 @@ function customColorArrowSimilarity(map: ToolArgs) {
 }
 
 function run(args: ToolArgs): IToolOutput[] {
+   const colorScheme = args.info.colorSchemes[args.beatmap.settings.colorSchemeId];
    if (
       !args.beatmap.settings.customData?._colorLeft &&
-      !args.beatmap.settings.customData?._colorRight
+      !args.beatmap.settings.customData?._colorRight &&
+      !colorScheme
    ) {
       return [];
    }

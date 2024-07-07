@@ -60,29 +60,34 @@ function setDiffInfoTable(info: IWrapInfo, mapData: IBeatmapItem): void {
    setLighters(mapData.settings.authors.lighters);
    setEnvironmentId(info.environmentNames.at(mapData.settings.environmentId));
    setColorScheme(info.colorSchemes.at(mapData.settings.colorSchemeId));
-   if (mapData.settings.customData) {
-      setCustomColor(mapData.settings.customData);
-      setRequirements(mapData.settings.customData._requirements as string[]);
-      setSuggestions(mapData.settings.customData._suggestions as string[]);
-      setInformation(mapData.settings.customData._information);
-      setWarnings(mapData.settings.customData._warnings);
-   }
-   if (mapData.data?.customData) {
-      const bpm = LoadedData.beatmapInfo?.audio.bpm
-         ? TimeProcessor.create(
-              LoadedData.beatmapInfo.audio.bpm,
-              mapData.data.customData._bpmChanges ||
-                 mapData.data.customData._BPMChanges ||
-                 mapData.data.customData.BPMChanges,
-           )
-         : null;
-      setTimeSpend(mapData.data.customData._time ?? mapData.data.customData.time);
-      setBookmarks(mapData.data.customData._bookmarks ?? mapData.data.customData._bookmarks, bpm);
-      setBPMChanges(bpm);
-      setEnvironmentEnhancement(mapData.data.customData.environment);
-      setPointDefinitions(mapData.data.customData.pointDefinitions);
-      setCustomEvents(mapData.data.customData.customEvents, bpm);
-   }
+   setCustomColor(mapData.settings.customData);
+   setRequirements(mapData.settings.customData._requirements as string[]);
+   setSuggestions(mapData.settings.customData._suggestions as string[]);
+   setInformation(mapData.settings.customData._information);
+   setWarnings(mapData.settings.customData._warnings);
+
+   const bpm = mapData.timeProcessor;
+   setTimeSpend(
+      mapData.data.difficulty.customData.time ?? mapData.data.difficulty.customData._time,
+   );
+   setBookmarks(
+      mapData.data.difficulty.customData.bookmarks ?? mapData.data.difficulty.customData._bookmarks,
+      bpm,
+   );
+   setBPMChanges(bpm);
+   setEnvironmentEnhancement(
+      mapData.data.difficulty.customData.environment ??
+         mapData.data.difficulty.customData._environment,
+   );
+   setPointDefinitions(
+      (mapData.data.difficulty.customData.pointDefinitions as any) ??
+         mapData.data.difficulty.customData._pointDefinitions,
+   );
+   setCustomEvents(
+      mapData.data.difficulty.customData.customEvents ??
+         mapData.data.difficulty.customData._customEvents,
+      bpm,
+   );
    setPlayTime(
       mapData.timeProcessor.toRealTime(getFirstInteractiveTime(mapData.data)),
       mapData.timeProcessor.toRealTime(getLastInteractiveTime(mapData.data)),

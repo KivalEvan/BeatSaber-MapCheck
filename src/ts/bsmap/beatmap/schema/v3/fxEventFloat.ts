@@ -15,11 +15,11 @@ export const fxEventFloat: ISchemaContainer<IWrapFxEventFloatAttribute, IFxEvent
    },
    deserialize(data: Partial<IFxEventFloat> = {}): Partial<IWrapFxEventFloatAttribute> {
       return {
-         time: data.b ,
-         easing: data.i ,
-         previous: data.p ,
-         value: data.v ,
-         customData: data.customData ,
+         time: data.b,
+         easing: data.i,
+         previous: data.p,
+         value: data.v,
+         customData: data.customData,
       };
    },
 };

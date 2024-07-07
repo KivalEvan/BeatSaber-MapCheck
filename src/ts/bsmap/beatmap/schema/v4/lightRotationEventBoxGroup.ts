@@ -1,5 +1,5 @@
 import type { ISchemaContainer } from '../../../types/beatmap/shared/schema.ts';
-import type { DeepPartial, DeepRequiredIgnore } from '../../../types/utils.ts';
+import type { DeepPartial } from '../../../types/utils.ts';
 import { lightRotationEventBox } from './lightRotationEventBox.ts';
 import { deepCopy } from '../../../utils/misc.ts';
 import type { IWrapLightRotationEventBoxGroupAttribute } from '../../../types/beatmap/wrapper/lightRotationEventBoxGroup.ts';

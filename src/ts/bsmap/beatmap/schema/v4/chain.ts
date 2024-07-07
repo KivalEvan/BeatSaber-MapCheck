@@ -1,7 +1,6 @@
 import type { ISchemaContainer } from '../../../types/beatmap/shared/schema.ts';
 import type { IChainContainer } from '../../../types/beatmap/container/v4.ts';
 import type { IWrapChainAttribute } from '../../../types/beatmap/wrapper/chain.ts';
-import type { DeepRequiredIgnore } from '../../../types/utils.ts';
 import { deepCopy } from '../../../utils/misc.ts';
 
 export const chain: ISchemaContainer<IWrapChainAttribute, IChainContainer> = {

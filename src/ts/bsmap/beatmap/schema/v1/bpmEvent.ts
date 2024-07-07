@@ -3,7 +3,6 @@ import type { IEvent } from '../../../types/beatmap/v1/event.ts';
 import type { IWrapBPMEventAttribute } from '../../../types/beatmap/wrapper/bpmEvent.ts';
 
 export const bpmEvent: ISchemaContainer<IWrapBPMEventAttribute, IEvent> = {
-   
    serialize(data: IWrapBPMEventAttribute): IEvent {
       return {
          _time: data.time,

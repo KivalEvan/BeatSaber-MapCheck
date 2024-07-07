@@ -1,5 +1,4 @@
 import type { IInfo, IInfoDifficulty } from '../../../types/beatmap/v4/info.ts';
-import type { DeepRequiredIgnore } from '../../../types/utils.ts';
 import { deepCopy } from '../../../utils/misc.ts';
 import type {
    IWrapInfoAttribute,

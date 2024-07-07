@@ -1,5 +1,5 @@
 import type { ISchemaContainer } from '../../../types/beatmap/shared/schema.ts';
-import type { DeepPartial, DeepRequiredIgnore } from '../../../types/utils.ts';
+import type { DeepPartial } from '../../../types/utils.ts';
 import { lightColorEventBox } from './lightColorEventBox.ts';
 import { deepCopy } from '../../../utils/misc.ts';
 import type { IWrapLightColorEventBoxGroupAttribute } from '../../../types/beatmap/wrapper/lightColorEventBoxGroup.ts';

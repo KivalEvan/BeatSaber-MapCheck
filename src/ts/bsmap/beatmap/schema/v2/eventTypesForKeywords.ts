@@ -7,7 +7,6 @@ export const eventTypesForKeywords: ISchemaContainer<
    IWrapEventTypesForKeywordsAttribute,
    ISpecialEventsKeywordFiltersKeywords
 > = {
-   
    serialize(data: IWrapEventTypesForKeywordsAttribute): ISpecialEventsKeywordFiltersKeywords {
       return {
          _keyword: data.keyword,
@@ -18,8 +17,8 @@ export const eventTypesForKeywords: ISchemaContainer<
       data: DeepPartial<ISpecialEventsKeywordFiltersKeywords> = {},
    ): DeepPartial<IWrapEventTypesForKeywordsAttribute> {
       return {
-         keyword: data._keyword ,
-         events: data._specialEvents ,
+         keyword: data._keyword,
+         events: data._specialEvents,
       };
    },
 };

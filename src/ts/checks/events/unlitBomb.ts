@@ -114,7 +114,11 @@ const unlitBomb = (
                      ev.customData._color[0],
                      ev.customData._color[1],
                      ev.customData._color[2],
-                  ) < 0.25))) &&
+                  ) < 0.25)) ||
+            (ev.customData.color &&
+               ((typeof ev.customData.color[3] === 'number' && ev.customData.color[3] < 0.25) ||
+                  Math.max(ev.customData.color[0], ev.customData.color[1], ev.customData.color[2]) <
+                     0.25))) &&
          eventState[ev.type].state !== 'off'
       ) {
          eventState[ev.type] = {

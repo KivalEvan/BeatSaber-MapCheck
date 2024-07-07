@@ -4,7 +4,6 @@ import type { INote } from '../../../types/beatmap/v2/note.ts';
 import { deepCopy } from '../../../utils/misc.ts';
 
 export const bombNote: ISchemaContainer<IWrapBombNoteAttribute, INote> = {
-   
    serialize(data: IWrapBombNoteAttribute): INote {
       return {
          _time: data.time,

@@ -2,7 +2,6 @@ import type { ISchemaContainer } from '../../../types/beatmap/shared/schema.ts';
 import { deepCopy } from '../../../utils/misc.ts';
 import type { IWrapColorNoteAttribute } from '../../../types/beatmap/wrapper/colorNote.ts';
 import type { IColorNoteContainer } from '../../../types/beatmap/container/v4.ts';
-import type { DeepRequiredIgnore } from '../../../types/utils.ts';
 import type { DeepPartial } from '../../../types/utils.ts';
 
 export const colorNote: ISchemaContainer<IWrapColorNoteAttribute, IColorNoteContainer> = {

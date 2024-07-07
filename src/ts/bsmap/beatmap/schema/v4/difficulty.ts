@@ -8,7 +8,7 @@ import { arc } from './arc.ts';
 import { rotationEvent } from './rotationEvent.ts';
 import { deepCopy } from '../../../utils/misc.ts';
 import type { IWrapBeatmapAttribute } from '../../../types/beatmap/wrapper/beatmap.ts';
-import type { DeepPartial, DeepRequiredIgnore } from '../../../types/utils.ts';
+import type { DeepPartial } from '../../../types/utils.ts';
 
 export const difficulty: ISchemaContainer<IWrapBeatmapAttribute, IDifficulty> = {
    serialize(data: IWrapBeatmapAttribute): IDifficulty {
@@ -70,46 +70,46 @@ export const difficulty: ISchemaContainer<IWrapBeatmapAttribute, IDifficulty> = 
       return {
          version: 4,
          difficulty: {
-            colorNotes: data?.colorNotes?.map((obj) =>
+            colorNotes: data.colorNotes?.map((obj) =>
                colorNote.deserialize({
                   object: obj,
-                  data: data?.colorNotesData?.[obj?.i || 0],
+                  data: data.colorNotesData?.[obj?.i || 0],
                }),
             ),
-            bombNotes: data?.bombNotes?.map((obj) =>
+            bombNotes: data.bombNotes?.map((obj) =>
                bombNote.deserialize({
                   object: obj,
-                  data: data?.bombNotesData?.[obj?.i || 0],
+                  data: data.bombNotesData?.[obj?.i || 0],
                }),
             ),
-            obstacles: data?.obstacles?.map((obj) =>
+            obstacles: data.obstacles?.map((obj) =>
                obstacle.deserialize({
                   object: obj,
-                  data: data?.obstaclesData?.[obj?.i || 0],
+                  data: data.obstaclesData?.[obj?.i || 0],
                }),
             ),
-            arcs: data?.arcs?.map((obj) =>
+            arcs: data.arcs?.map((obj) =>
                arc.deserialize({
                   object: obj,
-                  data: data?.arcsData?.[obj?.ai || 0],
-                  headData: data?.colorNotesData?.[obj?.hi || 0],
-                  tailData: data?.colorNotesData?.[obj?.ti || 0],
+                  data: data.arcsData?.[obj?.ai || 0],
+                  headData: data.colorNotesData?.[obj?.hi || 0],
+                  tailData: data.colorNotesData?.[obj?.ti || 0],
                }),
             ),
-            chains: data?.chains?.map((obj) =>
+            chains: data.chains?.map((obj) =>
                chain.deserialize({
                   object: obj,
-                  data: data?.colorNotesData?.[obj?.i || 0],
-                  chainData: data?.chainsData?.[obj?.ci || 0],
+                  data: data.colorNotesData?.[obj?.i || 0],
+                  chainData: data.chainsData?.[obj?.ci || 0],
                }),
             ),
-            rotationEvents: data?.spawnRotations?.map((obj) =>
+            rotationEvents: data.spawnRotations?.map((obj) =>
                rotationEvent.deserialize({
                   object: obj,
-                  data: data?.spawnRotationsData?.[obj?.i || 0],
+                  data: data.spawnRotationsData?.[obj?.i || 0],
                }),
             ),
-            customData: data?.customData,
+            customData: data.customData,
          },
       };
    },

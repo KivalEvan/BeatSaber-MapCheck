@@ -4,7 +4,6 @@ import type { IWrapAudioDataAttribute } from '../../../types/beatmap/wrapper/aud
 import type { DeepPartial } from '../../../types/utils.ts';
 
 export const audioData: ISchemaContainer<IWrapAudioDataAttribute, IBPMInfo> = {
-   
    serialize(data: IWrapAudioDataAttribute): IBPMInfo {
       return {
          _version: '2.0.0',
@@ -23,7 +22,7 @@ export const audioData: ISchemaContainer<IWrapAudioDataAttribute, IBPMInfo> = {
          version: 2,
          sampleCount: data._songSampleCount,
          frequency: data._songFrequency,
-         bpmData: (data._regions)?.map((bd) => ({
+         bpmData: data._regions?.map((bd) => ({
             startBeat: bd?._startBeat,
             endBeat: bd?._endBeat,
             startSampleIndex: bd?._startSampleIndex,

@@ -35,7 +35,7 @@ export const fxEventBoxGroup: ISchemaContainer<
       d.time = data.object?.b;
       d.id = data.object?.g;
       d.boxes = data.boxData?.map(fxEventBox.deserialize);
-      d.customData = deepCopy(data.object?.customData);
+      d.customData = data.object?.customData;
       return d;
    },
 };

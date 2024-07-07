@@ -4,7 +4,6 @@ import type { IWrapObstacleAttribute } from '../../../types/beatmap/wrapper/obst
 import { remap } from '../../../utils/math.ts';
 
 export const obstacle: ISchemaContainer<IWrapObstacleAttribute, IObstacle> = {
-   
    serialize(data: IWrapObstacleAttribute): IObstacle {
       let type = 0;
       if (data.height >= 0 && data.posY >= 0) {

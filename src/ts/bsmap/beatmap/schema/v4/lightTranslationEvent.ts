@@ -8,7 +8,6 @@ export const lightTranslationEvent: ISchemaContainer<
    IWrapLightTranslationEventAttribute,
    ILightTranslationEventContainer
 > = {
-   
    serialize(data: IWrapLightTranslationEventAttribute): ILightTranslationEventContainer {
       return {
          data: {

@@ -2,7 +2,7 @@ import type { ISchemaContainer } from '../../../types/beatmap/shared/schema.ts';
 import { deepCopy } from '../../../utils/misc.ts';
 import type { IWrapBombNoteAttribute } from '../../../types/beatmap/wrapper/bombNote.ts';
 import type { IBombNoteContainer } from '../../../types/beatmap/container/v4.ts';
-import type { DeepPartial, DeepRequiredIgnore } from '../../../types/utils.ts';
+import type { DeepPartial } from '../../../types/utils.ts';
 
 export const bombNote: ISchemaContainer<IWrapBombNoteAttribute, IBombNoteContainer> = {
    serialize(data: IWrapBombNoteAttribute): Required<IBombNoteContainer> {
