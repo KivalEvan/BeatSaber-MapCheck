@@ -43,7 +43,10 @@ function setInfo(info: IWrapInfo): void {
    UIHeader.setSongBPM(info.audio.bpm);
    const mapperSet = new Set<string>();
    const lighterSet = new Set<string>();
-   const envSet = new Set<EnvironmentAllName>();
+   const envSet = new Set<EnvironmentAllName>([
+      info.environmentBase.normal!,
+      info.environmentBase.allDirections!,
+   ]);
    info.difficulties.forEach((d) => {
       d.authors.mappers.forEach((m) => mapperSet.add(m));
       d.authors.lighters.forEach((l) => lighterSet.add(l));
