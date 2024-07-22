@@ -45,9 +45,7 @@ function check(args: ToolArgs) {
    for (let i = 0, len = noteContainer.length; i < len; i++) {
       const currentNote = noteContainer[i];
       if (
-         currentNote.type === ObjectContainerType.BOMB ||
-         currentNote.type === ObjectContainerType.ARC ||
-         currentNote.type === ObjectContainerType.CHAIN ||
+         currentNote.type !== ObjectContainerType.COLOR ||
          currentNote.data.customData.__mapcheck_secondtime < lastTime + 0.01
       ) {
          continue;

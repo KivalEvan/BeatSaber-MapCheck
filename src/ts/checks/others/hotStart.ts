@@ -52,7 +52,12 @@ function run(args: ToolArgs): IToolOutput[] {
 
    if (result < time) {
       return [
-         { type: 'string', label: 'Hot start', value: `${round(result, 2)}s`, symbol: 'warning' },
+         {
+            type: 'string',
+            label: 'Hot start',
+            value: `${round(result, 2)}s`,
+            symbol: 'warning',
+         },
       ];
    }
    return [];

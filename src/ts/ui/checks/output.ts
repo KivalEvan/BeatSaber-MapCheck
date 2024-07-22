@@ -56,13 +56,15 @@ export function printResultTime(label: string, timeAry: IWrapBaseObject[], symbo
       .map((n) => {
          switch (settings.beatNumbering) {
             case 'realtime':
-               return `<span title="Beat ${round(n.customData.__mapcheck_beattime, settings.rounding)}">${toMmss(
-                  n.customData.__mapcheck_secondtime,
-               )}</span>`;
+               return `<span title="Beat ${round(
+                  n.customData.__mapcheck_beattime,
+                  settings.rounding,
+               )}">${toMmss(n.customData.__mapcheck_secondtime)}</span>`;
             case 'realtimems':
-               return `<span title="Beat ${round(n.customData.__mapcheck_beattime, settings.rounding)}">${toMmssms(
-                  n.customData.__mapcheck_secondtime,
-               )}</span>`;
+               return `<span title="Beat ${round(
+                  n.customData.__mapcheck_beattime,
+                  settings.rounding,
+               )}">${toMmssms(n.customData.__mapcheck_secondtime)}</span>`;
             case 'jsontime':
                return `<span title="Time ${toMmssms(n.customData.__mapcheck_secondtime)}">${round(
                   n.time,

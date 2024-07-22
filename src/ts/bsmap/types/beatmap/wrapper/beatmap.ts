@@ -6,7 +6,7 @@ import type { IWrapObstacle, IWrapObstacleAttribute } from './obstacle.ts';
 import type { IWrapArc, IWrapArcAttribute } from './arc.ts';
 import type { IWrapChain, IWrapChainAttribute } from './chain.ts';
 import type { IWrapWaypoint, IWrapWaypointAttribute } from './waypoint.ts';
-import type { IWrapEvent, IWrapEventAttribute } from './event.ts';
+import type { IWrapBasicEvent, IWrapBasicEventAttribute } from './basicEvent.ts';
 import type { IWrapColorBoostEvent, IWrapColorBoostEventAttribute } from './colorBoostEvent.ts';
 import type {
    IWrapLightColorEventBoxGroup,
@@ -20,7 +20,7 @@ import type {
    IWrapLightTranslationEventBoxGroup,
    IWrapLightTranslationEventBoxGroupAttribute,
 } from './lightTranslationEventBoxGroup.ts';
-import type { IWrapEventTypesWithKeywords } from './eventTypesWithKeywords.ts';
+import type { IWrapBasicEventTypesWithKeywords } from './basicEventTypesWithKeywords.ts';
 import type { DeepPartial, LooseAutocomplete } from '../../utils.ts';
 import type { IWrapFxEventBoxGroup, IWrapFxEventBoxGroupAttribute } from './fxEventBoxGroup.ts';
 import type { IWrapDifficulty, IWrapDifficultyAttribute } from './difficulty.ts';
@@ -59,13 +59,13 @@ export interface IWrapBeatmap extends IWrapBeatmapFile, IWrapBeatmapAttribute {
    arcs: IWrapArc[];
    chains: IWrapChain[];
    waypoints: IWrapWaypoint[];
-   basicEvents: IWrapEvent[];
+   basicEvents: IWrapBasicEvent[];
    colorBoostEvents: IWrapColorBoostEvent[];
    lightColorEventBoxGroups: IWrapLightColorEventBoxGroup[];
    lightRotationEventBoxGroups: IWrapLightRotationEventBoxGroup[];
    lightTranslationEventBoxGroups: IWrapLightTranslationEventBoxGroup[];
    fxEventBoxGroups: IWrapFxEventBoxGroup[];
-   eventTypesWithKeywords: IWrapEventTypesWithKeywords;
+   basicEventTypesWithKeywords: IWrapBasicEventTypesWithKeywords;
    useNormalEventsAsCompatibleEvents: boolean;
 
    setLightshowFilename(filename: LooseAutocomplete<GenericFilename>): this;
@@ -78,7 +78,7 @@ export interface IWrapBeatmap extends IWrapBeatmapFile, IWrapBeatmapAttribute {
    addArcs(...data: Partial<IWrapArcAttribute>[]): this;
    addChains(...data: Partial<IWrapChainAttribute>[]): this;
    addWaypoints(...data: Partial<IWrapWaypointAttribute>[]): this;
-   addBasicEvents(...data: Partial<IWrapEventAttribute>[]): this;
+   addBasicEvents(...data: Partial<IWrapBasicEventAttribute>[]): this;
    addColorBoostEvents(...data: Partial<IWrapColorBoostEventAttribute>[]): this;
    addLightColorEventBoxGroups(...data: DeepPartial<IWrapLightColorEventBoxGroupAttribute>[]): this;
    addLightRotationEventBoxGroups(
@@ -88,4 +88,13 @@ export interface IWrapBeatmap extends IWrapBeatmapFile, IWrapBeatmapAttribute {
       ...data: DeepPartial<IWrapLightTranslationEventBoxGroupAttribute>[]
    ): this;
    addFxEventBoxGroups(...data: DeepPartial<IWrapFxEventBoxGroupAttribute>[]): this;
+
+   /**
+    * This custom data does not contain the actual custom data from difficulty file, rather an arbitrary placement.
+    *
+    * If you need to handle custom data from actual beatmap, use `customData` inside `data` instead.
+    *
+    * @deprecated this is used as a warning, unless you know what you are doing.
+    */
+   customData: ICustomDataBase;
 }

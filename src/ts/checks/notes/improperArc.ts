@@ -1,5 +1,5 @@
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import { ObjectContainerType, IObjectContainer } from '../../types/checks/container';
+import { IObjectContainer, ObjectContainerType } from '../../types/checks/container';
 import UIInput from '../../ui/helpers/input';
 import { NoteDirection } from '../../bsmap/beatmap/shared/constants';
 import { IWrapArc } from '../../bsmap/types/beatmap/wrapper/arc';

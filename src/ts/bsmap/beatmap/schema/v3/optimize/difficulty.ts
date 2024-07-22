@@ -7,9 +7,14 @@ export function optimizeDifficulty(data: IDifficulty, options: IOptimizeOptions)
    if (options.deduplicate) {
       const [newFloatFxEvents, remapFloatFxEventsIdx] = remapDedupe(data._fxEventsCollection!._fl!);
 
-      data.vfxEventBoxGroups?.forEach((d) => {
-         d.e?.forEach((e) => (e.l = e.l?.map((i) => remapFloatFxEventsIdx.get(i) || 0) ?? []));
-      });
+      const vfxebg = data.vfxEventBoxGroups || [];
+      for (let i = 0; i < vfxebg.length; i++) {
+         const d = vfxebg[i].e || [];
+         for (let j = 0; j < d.length; j++) {
+            const e = d[i];
+            e.l = e.l?.map((i) => remapFloatFxEventsIdx.get(i) || 0) ?? [];
+         }
+      }
 
       data._fxEventsCollection!._fl = newFloatFxEvents;
    }

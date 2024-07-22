@@ -7,6 +7,6 @@ export * from './colorNote.ts';
 export * from './dataCheck.ts';
 export * from './difficulty.ts';
 export * from './info.ts';
-export * from './infoDifficulty.ts';
+export * from './infoBeatmap.ts';
 export * from './obstacle.ts';
 export * from './rotationEvent.ts';

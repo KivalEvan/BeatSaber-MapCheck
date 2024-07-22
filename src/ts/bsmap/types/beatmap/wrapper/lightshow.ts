@@ -1,5 +1,5 @@
 import type { IWrapWaypoint, IWrapWaypointAttribute } from './waypoint.ts';
-import type { IWrapEvent, IWrapEventAttribute } from './event.ts';
+import type { IWrapBasicEvent, IWrapBasicEventAttribute } from './basicEvent.ts';
 import type { IWrapColorBoostEvent, IWrapColorBoostEventAttribute } from './colorBoostEvent.ts';
 import type {
    IWrapLightColorEventBoxGroup,
@@ -14,9 +14,9 @@ import type {
    IWrapLightTranslationEventBoxGroupAttribute,
 } from './lightTranslationEventBoxGroup.ts';
 import type {
-   IWrapEventTypesWithKeywords,
-   IWrapEventTypesWithKeywordsAttribute,
-} from './eventTypesWithKeywords.ts';
+   IWrapBasicEventTypesWithKeywords,
+   IWrapBasicEventTypesWithKeywordsAttribute,
+} from './basicEventTypesWithKeywords.ts';
 import type { DeepPartial } from '../../utils.ts';
 import type { IWrapFxEventBoxGroup, IWrapFxEventBoxGroupAttribute } from './fxEventBoxGroup.ts';
 import type { ICustomDataDifficulty } from './custom/difficulty.ts';
@@ -24,32 +24,32 @@ import type { IWrapBaseItem, IWrapBaseItemAttribute } from './baseItem.ts';
 
 export interface IWrapLightshowAttribute extends IWrapBaseItemAttribute {
    waypoints: IWrapWaypointAttribute[];
-   basicEvents: IWrapEventAttribute[];
+   basicEvents: IWrapBasicEventAttribute[];
    colorBoostEvents: IWrapColorBoostEventAttribute[];
    lightColorEventBoxGroups: IWrapLightColorEventBoxGroupAttribute[];
    lightRotationEventBoxGroups: IWrapLightRotationEventBoxGroupAttribute[];
    lightTranslationEventBoxGroups: IWrapLightTranslationEventBoxGroupAttribute[];
    fxEventBoxGroups: IWrapFxEventBoxGroupAttribute[];
-   eventTypesWithKeywords: IWrapEventTypesWithKeywordsAttribute;
+   basicEventTypesWithKeywords: IWrapBasicEventTypesWithKeywordsAttribute;
    useNormalEventsAsCompatibleEvents: boolean;
    customData: ICustomDataDifficulty;
 }
 
 export interface IWrapLightshow extends Omit<IWrapBaseItem, 'customData'>, IWrapLightshowAttribute {
    waypoints: IWrapWaypoint[];
-   basicEvents: IWrapEvent[];
+   basicEvents: IWrapBasicEvent[];
    colorBoostEvents: IWrapColorBoostEvent[];
    lightColorEventBoxGroups: IWrapLightColorEventBoxGroup[];
    lightRotationEventBoxGroups: IWrapLightRotationEventBoxGroup[];
    lightTranslationEventBoxGroups: IWrapLightTranslationEventBoxGroup[];
    fxEventBoxGroups: IWrapFxEventBoxGroup[];
-   eventTypesWithKeywords: IWrapEventTypesWithKeywords;
+   basicEventTypesWithKeywords: IWrapBasicEventTypesWithKeywords;
 
    setCustomData(object: this['customData']): this;
    addCustomData(object: this['customData']): this;
 
    addWaypoints(...data: Partial<IWrapWaypointAttribute>[]): this;
-   addBasicEvents(...data: Partial<IWrapEventAttribute>[]): this;
+   addBasicEvents(...data: Partial<IWrapBasicEventAttribute>[]): this;
    addColorBoostEvents(...data: Partial<IWrapColorBoostEventAttribute>[]): this;
    addLightColorEventBoxGroups(...data: DeepPartial<IWrapLightColorEventBoxGroupAttribute>[]): this;
    addLightRotationEventBoxGroups(

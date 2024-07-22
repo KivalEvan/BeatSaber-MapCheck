@@ -1,5 +1,5 @@
 import { EnvironmentAllName } from '../../bsmap/types/beatmap/shared/environment';
-import { IWrapEvent } from '../../bsmap/types/beatmap/wrapper/event';
+import { IWrapBasicEvent } from '../../bsmap/types/beatmap/wrapper/basicEvent';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import UIInput from '../../ui/helpers/input';
 
@@ -32,7 +32,7 @@ const tool: ITool = {
    run,
 };
 
-function sufficientLight(events: IWrapEvent[], environment: EnvironmentAllName): boolean {
+function sufficientLight(events: IWrapBasicEvent[], environment: EnvironmentAllName): boolean {
    let count = 0;
    for (let i = events.length - 1; i >= 0; i--) {
       if (events[i].isLightEvent(environment) && !events[i].isOff()) {

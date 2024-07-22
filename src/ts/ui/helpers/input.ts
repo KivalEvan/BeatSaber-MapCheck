@@ -4,8 +4,9 @@ export default {
    createBlock: function (...childs: (HTMLElement[] | HTMLElement)[]): HTMLDivElement {
       const div = document.createElement('div');
       for (const child of childs) {
-         if (Array.isArray(child)) for (const c of child) div.append(c);
-         else div.appendChild(child);
+         if (Array.isArray(child)) {
+            for (const c of child) div.append(c);
+         } else div.appendChild(child);
       }
       return div;
    },

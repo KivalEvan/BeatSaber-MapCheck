@@ -35,12 +35,12 @@ error/problem or want an improvement.
 
 ### Guidelines
 
--  File names shall use camel case.
--  Use formatting standard given in prettier config.
--  Top-level function must use regular function.
--  Use `dev` branch as base for new development/branch.
--  No other third-dependencies unless absolutely necessary.
--  Avoid circular imports.
+- File names shall use camel case.
+- Use formatting standard given in prettier config.
+- Top-level function must use regular function.
+- Use `dev` branch as base for new development/branch.
+- No other third-dependencies unless absolutely necessary.
+- Avoid circular imports.
 
 Any beatmap related has to be done in
 [Beat Saber Deno](https://github.com/KivalEvan/BeatSaber-Deno) repository
@@ -48,11 +48,11 @@ instead.
 
 ## Planned
 
--  Pre-render page for higher performance
--  Rewrite swing detection
--  Save tool parameters
--  Tool presets
--  Localization
+- Pre-render page for higher performance
+- Rewrite swing detection
+- Save tool parameters
+- Tool presets
+- Localization
 
 ## Note
 
@@ -62,7 +62,7 @@ or feedback, let me know on Discord@Kival Evan#5480
 
 ## Credits
 
--  Uninstaller and Qwasyx (improving it) for note swing detection algorithm
--  Top_Cat for math guidance
--  BSMG Team for CORS proxy service
--  Others for helpful feedback & indirect contribution
+- Uninstaller and Qwasyx (improving it) for note swing detection algorithm
+- Top_Cat for math guidance
+- BSMG Team for CORS proxy service
+- Others for helpful feedback & indirect contribution

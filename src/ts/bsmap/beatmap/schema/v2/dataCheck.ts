@@ -358,7 +358,9 @@ export const InfoSetDifficultyDataCheck: {
    },
 };
 
-export const InfoSetDataCheck: { readonly [key in keyof IInfoSet]: IDataCheck } = {
+export const InfoSetDataCheck: {
+   readonly [key in keyof IInfoSet]: IDataCheck;
+} = {
    _beatmapCharacteristicName: {
       type: 'string',
       version: '2.0.0',
@@ -535,7 +537,9 @@ export const InfoDataCheck: { readonly [key in keyof IInfo]: IDataCheck } = {
    },
 };
 
-export const BPMInfoRegionDataCheck: { readonly [key in keyof IBPMInfoRegion]: IDataCheck } = {
+export const BPMInfoRegionDataCheck: {
+   readonly [key in keyof IBPMInfoRegion]: IDataCheck;
+} = {
    _startSampleIndex: {
       type: 'number',
       version: '2.0.0',
@@ -558,7 +562,9 @@ export const BPMInfoRegionDataCheck: { readonly [key in keyof IBPMInfoRegion]: I
    },
 };
 
-export const BPMInfoDataCheck: { readonly [key in keyof IBPMInfo]: IDataCheck } = {
+export const BPMInfoDataCheck: {
+   readonly [key in keyof IBPMInfo]: IDataCheck;
+} = {
    _version: {
       type: 'string',
       version: '2.0.0',

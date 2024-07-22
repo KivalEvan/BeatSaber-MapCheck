@@ -1,34 +1,34 @@
 {
-  "name": "map-check",
-  "version": "2.7.0",
-  "description": "map check or somethin",
-  "private": true,
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "check": "tsc",
-    "format": "prettier --write ./src",
-    "preview": "vite preview",
-    "serve": "vite preview --port 8080"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/KivalEvan/BeatSaber-MapCheck.git"
-  },
-  "author": "Kival Evan",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/KivalEvan/BeatSaber-MapCheck/issues"
-  },
-  "homepage": "https://github.com/KivalEvan/BeatSaber-MapCheck#readme",
-  "dependencies": {
-    "jszip": "^3.10.1"
-  },
-  "devDependencies": {
-    "@types/node": "^20.14.10",
-    "prettier": "^3.3.2",
-    "sass": "^1.77.6",
-    "typescript": "^5.5.3",
-    "vite": "^5.3.3"
-  }
+   "name": "map-check",
+   "version": "2.7.0",
+   "description": "Web application for extensive overview for Beat Saber beatmap.",
+   "private": true,
+   "scripts": {
+      "dev": "vite",
+      "build": "vite build",
+      "check": "tsc",
+      "format": "prettier --write ./src",
+      "preview": "vite preview",
+      "serve": "vite preview --port 8080"
+   },
+   "repository": {
+      "type": "git",
+      "url": "git+https://github.com/KivalEvan/BeatSaber-MapCheck.git"
+   },
+   "author": "Kival Evan",
+   "license": "MIT",
+   "bugs": {
+      "url": "https://github.com/KivalEvan/BeatSaber-MapCheck/issues"
+   },
+   "homepage": "https://github.com/KivalEvan/BeatSaber-MapCheck#readme",
+   "dependencies": {
+      "jszip": "^3.10.1"
+   },
+   "devDependencies": {
+      "@types/node": "^20.14.11",
+      "prettier": "^3.3.3",
+      "sass": "^1.77.8",
+      "typescript": "^5.5.3",
+      "vite": "^5.3.4"
+   }
 }

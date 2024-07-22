@@ -4,9 +4,9 @@ import { lerpColor } from '../../utils/colors.ts';
 import { normalize } from '../../utils/math.ts';
 import type { IWrapBeatmap } from '../../types/beatmap/wrapper/beatmap.ts';
 import type { IChromaLightGradient } from '../../types/beatmap/v2/custom/chroma.ts';
-import type { IWrapEvent } from '../../types/beatmap/wrapper/event.ts';
+import type { IWrapBasicEvent } from '../../types/beatmap/wrapper/basicEvent.ts';
 import type { Easings } from '../../types/easings.ts';
-import { BasicEvent } from '../core/event.ts';
+import { BasicEvent } from '../core/basicEvent.ts';
 
 function tag(name: string): string[] {
    return ['convert', name];
@@ -53,7 +53,7 @@ export function chromaLightGradientToVanillaGradient<T extends IWrapBeatmap>(dat
             const easing =
                EasingsFn[(ev.customData._lightGradient._easing as Easings) ?? 'easeLinear'];
             let hasOff = false;
-            let previousEvent: IWrapEvent = ev;
+            let previousEvent: IWrapBasicEvent = ev;
             for (const eig of eventInGradient) {
                if (!hasOff && eig.time > ev.time + ev.customData._lightGradient._duration - 0.001) {
                   newEvents.push(

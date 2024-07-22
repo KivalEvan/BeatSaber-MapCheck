@@ -12,19 +12,33 @@ export function optimizeDifficulty(data: IDifficulty, options: IOptimizeOptions)
       const [newArcData, remapArcIdx] = remapDedupe(data.arcsData);
       const [newSRData, remapSRIdx] = remapDedupe(data.spawnRotationsData);
 
-      data.colorNotes.forEach((d) => (d.i = remapColorNoteIdx.get(d.i!)));
-      data.bombNotes.forEach((d) => (d.i = remapBombNoteIdx.get(d.i!)));
-      data.obstacles.forEach((d) => (d.i = remapObstacleIdx.get(d.i!)));
-      data.chains.forEach((d) => {
+      for (let i = 0; i < data.colorNotes.length; i++) {
+         const d = data.colorNotes[i];
+         d.i = remapColorNoteIdx.get(d.i!);
+      }
+      for (let i = 0; i < data.bombNotes.length; i++) {
+         const d = data.bombNotes[i];
+         d.i = remapBombNoteIdx.get(d.i!);
+      }
+      for (let i = 0; i < data.obstacles.length; i++) {
+         const d = data.obstacles[i];
+         d.i = remapObstacleIdx.get(d.i!);
+      }
+      for (let i = 0; i < data.chains.length; i++) {
+         const d = data.chains[i];
          d.ci = remapChainIdx.get(d.ci!);
          d.i = remapColorNoteIdx.get(d.i!);
-      });
-      data.arcs.forEach((d) => {
+      }
+      for (let i = 0; i < data.arcs.length; i++) {
+         const d = data.arcs[i];
          d.ai = remapArcIdx.get(d.ai!);
          d.hi = remapColorNoteIdx.get(d.hi!);
          d.ti = remapColorNoteIdx.get(d.ti!);
-      });
-      data.spawnRotations.forEach((d) => (d.i = remapSRIdx.get(d.i!)));
+      }
+      for (let i = 0; i < data.spawnRotations.length; i++) {
+         const d = data.spawnRotations[i];
+         d.i = remapSRIdx.get(d.i!);
+      }
 
       data.colorNotesData = newNoteColorData;
       data.bombNotesData = newBombNoteData;

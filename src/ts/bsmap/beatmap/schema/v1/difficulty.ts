@@ -3,7 +3,7 @@ import type { IWrapBeatmapAttribute } from '../../../types/beatmap/wrapper/beatm
 import type { DeepPartial } from '../../../types/utils.ts';
 import type { IWrapColorNoteAttribute } from '../../../types/beatmap/wrapper/colorNote.ts';
 import type { IWrapBombNoteAttribute } from '../../../types/beatmap/wrapper/bombNote.ts';
-import type { IWrapEventAttribute } from '../../../types/beatmap/wrapper/event.ts';
+import type { IWrapBasicEventAttribute } from '../../../types/beatmap/wrapper/basicEvent.ts';
 import type { IWrapBPMEventAttribute } from '../../../types/beatmap/wrapper/bpmEvent.ts';
 import type { IWrapRotationEventAttribute } from '../../../types/beatmap/wrapper/rotationEvent.ts';
 import type { IWrapColorBoostEventAttribute } from '../../../types/beatmap/wrapper/colorBoostEvent.ts';
@@ -47,19 +47,23 @@ export const difficulty: ISchemaContainer<IWrapBeatmapAttribute, IDifficulty> = 
    deserialize(data: DeepPartial<IDifficulty> = {}): DeepPartial<IWrapBeatmapAttribute> {
       const colorNotes: Partial<IWrapColorNoteAttribute>[] = [];
       const bombNotes: Partial<IWrapBombNoteAttribute>[] = [];
-      data._notes?.forEach((obj) => {
+      const _notes = data._notes || [];
+      for (let i = 0; i < _notes.length; i++) {
+         const obj = _notes[i];
          if (obj?._type === 3) {
             bombNotes.push(bombNote.deserialize(obj));
          } else {
             colorNotes.push(colorNote.deserialize(obj));
          }
-      });
+      }
 
-      const basicEvents: Partial<IWrapEventAttribute>[] = [];
+      const basicEvents: Partial<IWrapBasicEventAttribute>[] = [];
       const colorBoostEvents: Partial<IWrapColorBoostEventAttribute>[] = [];
       const rotationEvents: Partial<IWrapRotationEventAttribute>[] = [];
       const bpmEvents: Partial<IWrapBPMEventAttribute>[] = [];
-      data._events?.forEach((obj) => {
+      const _events = data._events || [];
+      for (let i = 0; i < _events.length; i++) {
+         const obj = _events[i];
          switch (obj?._type) {
             case 5:
                colorBoostEvents.push(colorBoostEvent.deserialize(obj));
@@ -75,7 +79,7 @@ export const difficulty: ISchemaContainer<IWrapBeatmapAttribute, IDifficulty> = 
             default:
                basicEvents.push(basicEvent.deserialize(obj));
          }
-      });
+      }
 
       return {
          version: 1,

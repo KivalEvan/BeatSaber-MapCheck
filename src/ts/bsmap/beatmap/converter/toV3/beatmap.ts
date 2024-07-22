@@ -10,6 +10,8 @@ import type { IWrapBeatmap } from '../../../types/beatmap/wrapper/beatmap.ts';
 import type { IWrapObstacle } from '../../../types/beatmap/wrapper/obstacle.ts';
 import type { IWrapColorNote } from '../../../types/beatmap/wrapper/colorNote.ts';
 import type { IWrapBombNote } from '../../../types/beatmap/wrapper/bombNote.ts';
+import { sortObjectFn } from '../../helpers/sort.ts';
+import { BaseSlider } from '../../core/abstract/baseSlider.ts';
 
 function tag(name: string): string[] {
    return ['convert', 'toV3Beatmap', name];
@@ -36,7 +38,9 @@ export function toV3Beatmap(data: IWrapBeatmap, fromVersion: number): IWrapBeatm
          fromV2(data);
          break;
       case 3:
+         break;
       case 4:
+         fromV4(data);
          data.version = 3;
          break;
       default:
@@ -495,4 +499,38 @@ function fromV2(bm: IWrapBeatmap) {
       }
    }
    bm.lightshow.useNormalEventsAsCompatibleEvents = true;
+}
+
+function fromV4(bm: IWrapBeatmap) {
+   let impossibleRotationEvt = false;
+   const mapTime: Record<number, number> = {};
+
+   const objects = [bm.arcs, bm.bombNotes, bm.chains, bm.colorNotes, bm.obstacles, bm.waypoints]
+      .flat()
+      .sort(sortObjectFn);
+
+   for (let i = 0; i < objects.length; i++) {
+      const obj = objects[i];
+      if (!(obj.time in mapTime)) {
+         mapTime[obj.time] = obj.laneRotation;
+      } else if (mapTime[obj.time] !== obj.laneRotation) {
+         impossibleRotationEvt = true;
+         break;
+      }
+   }
+
+   if (impossibleRotationEvt) {
+      for (let i = 0; i < objects.length; i++) {
+         const obj = objects[i];
+         if (obj.laneRotation) obj.customData.worldRotation = obj.laneRotation;
+      }
+   } else {
+      bm.rotationEvents = [];
+      bm.addRotationEvents(...Object.entries(mapTime).map(([k, v]) => ({ time: +k, rotation: v })));
+   }
+   for (let i = 0; i < objects.length; i++) {
+      const obj = objects[i];
+      obj.laneRotation = 0;
+      if (obj instanceof BaseSlider) obj.tailLaneRotation = 0;
+   }
 }

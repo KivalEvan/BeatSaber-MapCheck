@@ -2,6 +2,7 @@ export * from './modded/mod.ts';
 export * from './beatmap.ts';
 export * from './convert.ts';
 export * from './dataCheck.ts';
+export * from './environment.ts';
 export * from './njs.ts';
 export * from './optimize.ts';
 export * from './sort.ts';

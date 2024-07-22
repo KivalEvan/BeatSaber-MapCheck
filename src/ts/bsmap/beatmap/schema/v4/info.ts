@@ -8,7 +8,7 @@ import { hexToRgba, toColorObject } from '../../../utils/colors.ts';
 import { colorToHex } from '../../../utils/colors.ts';
 import type { DeepPartial } from '../../../types/utils.ts';
 import type { ISchemaContainer } from '../../../types/beatmap/shared/schema.ts';
-import { infoDifficulty } from './infoBeatmap.ts';
+import { infoBeatmap } from './infoBeatmap.ts';
 
 export const info: ISchemaContainer<IWrapInfoAttribute, IInfo> = {
    serialize(data: IWrapInfoAttribute): IInfo {
@@ -50,7 +50,7 @@ export const info: ISchemaContainer<IWrapInfoAttribute, IInfo> = {
             }
             return cs;
          }),
-         difficultyBeatmaps: data.difficulties.map(infoDifficulty.serialize),
+         difficultyBeatmaps: data.difficulties.map(infoBeatmap.serialize),
          customData: deepCopy(data.customData),
       };
    },
@@ -99,7 +99,7 @@ export const info: ISchemaContainer<IWrapInfoAttribute, IInfo> = {
             return scheme;
          }),
          difficulties: (data.difficultyBeatmaps ?? []).map((d) =>
-            infoDifficulty.deserialize(d as IInfoDifficulty),
+            infoBeatmap.deserialize(d as IInfoDifficulty),
          ),
          customData: data.customData,
       };

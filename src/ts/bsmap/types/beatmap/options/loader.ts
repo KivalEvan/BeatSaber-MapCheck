@@ -1,5 +1,5 @@
 // deno-lint-ignore-file no-explicit-any no-explicit-any
-import type { IDataCheckOption } from '../shared/dataCheck.ts';
+import type { IDataCheckOptions } from './dataCheck.ts';
 
 export interface ILoadOptions<T extends Record<string, any> = Record<string, any>> {
    /**
@@ -9,7 +9,7 @@ export interface ILoadOptions<T extends Record<string, any> = Record<string, any
     */
    forceConvert?: boolean;
    /** Data check option when loading. */
-   dataCheck?: Partial<IDataCheckOption>;
+   dataCheck?: Partial<IDataCheckOptions>;
    /**
     * Sort object(s) on load.
     *

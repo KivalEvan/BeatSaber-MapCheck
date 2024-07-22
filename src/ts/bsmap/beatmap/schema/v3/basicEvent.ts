@@ -1,10 +1,10 @@
 import type { IBasicEvent } from '../../../types/beatmap/v3/basicEvent.ts';
 import { deepCopy } from '../../../utils/misc.ts';
-import type { IWrapEventAttribute } from '../../../types/beatmap/wrapper/event.ts';
+import type { IWrapBasicEventAttribute } from '../../../types/beatmap/wrapper/basicEvent.ts';
 import type { ISchemaContainer } from '../../../types/beatmap/shared/schema.ts';
 
-export const basicEvent: ISchemaContainer<IWrapEventAttribute, IBasicEvent> = {
-   serialize(data: IWrapEventAttribute): IBasicEvent {
+export const basicEvent: ISchemaContainer<IWrapBasicEventAttribute, IBasicEvent> = {
+   serialize(data: IWrapBasicEventAttribute): IBasicEvent {
       return {
          b: data.time,
          et: data.type,
@@ -13,7 +13,7 @@ export const basicEvent: ISchemaContainer<IWrapEventAttribute, IBasicEvent> = {
          customData: deepCopy(data.customData),
       };
    },
-   deserialize(data: Partial<IBasicEvent> = {}): Partial<IWrapEventAttribute> {
+   deserialize(data: Partial<IBasicEvent> = {}): Partial<IWrapBasicEventAttribute> {
       return {
          time: data.b,
          type: data.et,

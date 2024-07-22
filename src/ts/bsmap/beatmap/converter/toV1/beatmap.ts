@@ -1,5 +1,7 @@
 import logger from '../../../logger.ts';
 import type { IWrapBeatmap } from '../../../types/beatmap/wrapper/beatmap.ts';
+import { BaseSlider } from '../../core/abstract/baseSlider.ts';
+import { sortObjectFn } from '../../helpers/sort.ts';
 
 function tag(name: string): string[] {
    return ['convert', 'toV1Beatmap', name];
@@ -58,6 +60,34 @@ function fromV3(bm: IWrapBeatmap) {
    delete bm.difficulty.customData.bookmarks;
 }
 
-function fromV4(data: IWrapBeatmap) {
-   data.difficulty.customData._time = data.difficulty.customData.time ?? 0;
+function fromV4(bm: IWrapBeatmap) {
+   bm.difficulty.customData._time = bm.difficulty.customData.time ?? 0;
+   let impossibleRotationEvt = false;
+   const mapTime: Record<number, number> = {};
+
+   const objects = [bm.arcs, bm.bombNotes, bm.chains, bm.colorNotes, bm.obstacles, bm.waypoints]
+      .flat()
+      .sort(sortObjectFn);
+
+   for (let i = 0; i < objects.length; i++) {
+      const obj = objects[i];
+      if (!(obj.time in mapTime)) {
+         mapTime[obj.time] = obj.laneRotation;
+      } else if (mapTime[obj.time] !== obj.laneRotation) {
+         impossibleRotationEvt = true;
+         break;
+      }
+   }
+
+   if (impossibleRotationEvt) {
+      logger.warn(tag('fromV4'), 'Impossible rotation event cannot be represented in v1!');
+   } else {
+      bm.rotationEvents = [];
+      bm.addRotationEvents(...Object.entries(mapTime).map(([k, v]) => ({ time: +k, rotation: v })));
+   }
+   for (let i = 0; i < objects.length; i++) {
+      const obj = objects[i];
+      obj.laneRotation = 0;
+      if (obj instanceof BaseSlider) obj.tailLaneRotation = 0;
+   }
 }

@@ -3,7 +3,7 @@ import type { IWrapColorNote } from '../../types/beatmap/wrapper/colorNote.ts';
 import type { IWrapBaseSlider } from '../../types/beatmap/wrapper/baseSlider.ts';
 import type { ICountNote, ICountStatsNote } from './types/stats.ts';
 import type { IWrapBaseNote } from '../../types/beatmap/wrapper/baseNote.ts';
-import { IWrapGridObjectAttribute } from '../../types/beatmap/wrapper/gridObject.ts';
+import type { IWrapGridObjectAttribute } from '../../types/beatmap/wrapper/gridObject.ts';
 
 /**
  * Count number of red, blue, and bomb notes with their properties in given array and return a note count object.

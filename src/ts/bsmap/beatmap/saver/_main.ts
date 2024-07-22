@@ -6,7 +6,7 @@ import type { IWrapInfo } from '../../types/beatmap/wrapper/info.ts';
 import type { IWrapAudioData } from '../../types/beatmap/wrapper/audioData.ts';
 import type { IWrapBeatmap } from '../../types/beatmap/wrapper/beatmap.ts';
 import type { IWrapBeatmapFile } from '../../types/beatmap/wrapper/baseFile.ts';
-import { validateJSON } from '../schema/validator/main.ts';
+import { validateJSON } from '../validator/json.ts';
 import type { IOptimizeOptions } from '../../types/beatmap/options/optimize.ts';
 import {
    difficultyOptimizeMap,
@@ -19,6 +19,7 @@ import {
    infoSchemaMap,
    lightshowSchemaMap,
 } from '../mapping/schema.ts';
+import { compatibilityCheck } from '../validator/compatibility.ts';
 
 export function tag(name: string): string[] {
    return ['saver', name];
@@ -137,6 +138,10 @@ export function saveBeatmap<
    if (opt.sort) {
       logger.tInfo(tag('saveBeatmap'), 'Sorting beatmap objects');
       data.sort();
+   }
+
+   if (opt.validate.enabled) {
+      compatibilityCheck(type, data, ver, opt.validate?.compatibility);
    }
 
    logger.tInfo(tag('saveBeatmap'), 'Serializing beatmap ' + type + ' as JSON');

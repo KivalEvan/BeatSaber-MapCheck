@@ -39,7 +39,9 @@ export function setEnvironmentEnhancement(
       const id = elem.id || elem._id;
       return `${geometry ? 'Geometry' : elem.lookupMethod || elem._lookupMethod} [${keyArr.join(
          '',
-      )}]${track ? `(${track})` : ''} -> ${geometry ? (geometry as any).type || (geometry as any)._type : id}`;
+      )}]${track ? `(${track})` : ''} -> ${
+         geometry ? (geometry as any).type || (geometry as any)._type : id
+      }`;
    });
    displayTableRow(htmlTableEnvironmentEnhancement, envEnhance);
 }

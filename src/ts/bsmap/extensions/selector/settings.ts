@@ -1,7 +1,7 @@
 import type { TimeProcessor } from '../../beatmap/helpers/timeProcessor.ts';
 
 export const settings: {
-   BPM: TimeProcessor | null;
+   timeProcessor: TimeProcessor | null;
 } = {
-   BPM: null,
+   timeProcessor: null,
 };

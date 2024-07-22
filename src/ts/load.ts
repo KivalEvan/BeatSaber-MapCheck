@@ -10,10 +10,10 @@ import { IBPMEvent } from './bsmap/types/beatmap/v3/bpmEvent';
 import settings from './settings';
 import {
    Beatmap,
-   NoteJumpSpeed,
    loadDifficulty,
    loadInfo,
    loadLightshow,
+   NoteJumpSpeed,
 } from './bsmap/beatmap/mod';
 import { IWrapBeatmap } from './bsmap/types/beatmap/wrapper/beatmap';
 import { IObjectContainer, ObjectContainerType } from './types/checks/container';
@@ -154,8 +154,9 @@ export function extractBeatmaps(info: IWrapInfo, zip: JSZip): Promise<IBeatmapIt
       let lightshow = jsonDifficultyVer === 4 ? new Beatmap() : data;
       let jsonLightshow;
       if (jsonDifficultyVer === 4) {
-         if (!loaded[infoDiff.lightshowFilename])
+         if (!loaded[infoDiff.lightshowFilename]) {
             loaded[infoDiff.lightshowFilename] = fetchLightshow(zip, infoDiff);
+         }
          const res = await loaded[infoDiff.lightshowFilename];
          if (res) {
             jsonLightshow = res[0];
@@ -172,7 +173,7 @@ export function extractBeatmaps(info: IWrapInfo, zip: JSZip): Promise<IBeatmapIt
                  ...(jsonDifficulty.bpmEvents ?? []).map((be: IBPMEvent) => be),
               ]
             : jsonDifficultyVer === 2
-              ? data.customData._BPMChanges ?? data.customData._bpmChanges
+              ? (data.customData._BPMChanges ?? data.customData._bpmChanges)
               : jsonDifficultyVer === 1
                 ? jsonDifficulty._BPMChanges
                 : [],

@@ -31,28 +31,61 @@ export function optimizeLightshow(data: ILightshow, options: IOptimizeOptions) {
       const [newFxEventBoxes, remapFxEventBoxesIdx] = remapDedupe(data.fxEventBoxes);
       const [newFloatFxEvents, remapFloatFxEventsIdx] = remapDedupe(data.floatFxEvents);
 
-      data.basicEvents.forEach((d) => (d.i = remapBasicEventsIdx.get(d.i!)));
-      data.colorBoostEvents.forEach((d) => (d.i = remapColorBoostEventsIdx.get(d.i!)));
-      data.waypoints.forEach((d) => (d.i = remapWaypointsIdx.get(d.i!)));
-      for (const ebg of data.eventBoxGroups) {
-         for (const evt of ebg.e!) {
-            evt.f = remapIndexFiltersIdx.get(evt.f!);
+      for (let i = 0; i < data.basicEvents.length; i++) {
+         const d = data.basicEvents[i];
+         d.i = remapBasicEventsIdx.get(d.i!);
+      }
+      for (let i = 0; i < data.colorBoostEvents.length; i++) {
+         const d = data.colorBoostEvents[i];
+         d.i = remapColorBoostEventsIdx.get(d.i!);
+      }
+      for (let i = 0; i < data.waypoints.length; i++) {
+         const d = data.waypoints[i];
+         d.i = remapWaypointsIdx.get(d.i!);
+      }
+      for (let i = 0; i < data.eventBoxGroups.length; i++) {
+         const ebg = data.eventBoxGroups[i] || [];
+         const boxes = ebg.e || [];
+         for (let j = 0; j < boxes.length; j++) {
+            const box = boxes[j];
+            box.f = remapIndexFiltersIdx.get(box.f!);
             switch (ebg.t) {
-               case EventBoxType.COLOR:
-                  evt.e = remapLightColorEventBoxesIdx.get(evt.e!);
-                  evt.l?.forEach((l) => (l.i = remapLightColorEventsIdx.get(l.i!)));
+               case EventBoxType.COLOR: {
+                  box.e = remapLightColorEventBoxesIdx.get(box.e!);
+                  const l = box.l || [];
+                  for (let k = 0; k < l.length; k++) {
+                     const e = l[k];
+                     e.i = remapLightColorEventsIdx.get(e.i!);
+                  }
                   break;
-               case EventBoxType.ROTATION:
-                  evt.e = remapLightRotationEventBoxesIdx.get(evt.e!);
-                  evt.l?.forEach((l) => (l.i = remapLightRotationEventsIdx.get(l.i!)));
+               }
+               case EventBoxType.ROTATION: {
+                  box.e = remapLightRotationEventBoxesIdx.get(box.e!);
+                  const l = box.l || [];
+                  for (let k = 0; k < l.length; k++) {
+                     const e = l[k];
+                     e.i = remapLightRotationEventsIdx.get(e.i!);
+                  }
                   break;
-               case EventBoxType.TRANSLATION:
-                  evt.e = remapLightTranslationEventBoxesIdx.get(evt.e!);
-                  evt.l?.forEach((l) => (l.i = remapLightTranslationEventsIdx.get(l.i!)));
+               }
+               case EventBoxType.TRANSLATION: {
+                  box.e = remapLightTranslationEventBoxesIdx.get(box.e!);
+                  const l = box.l || [];
+                  for (let k = 0; k < l.length; k++) {
+                     const e = l[k];
+                     e.i = remapLightTranslationEventsIdx.get(e.i!);
+                  }
                   break;
-               case EventBoxType.FX_FLOAT:
-                  evt.e = remapFxEventBoxesIdx.get(evt.e!);
-                  evt.l?.forEach((l) => (l.i = remapFloatFxEventsIdx.get(l.i!)));
+               }
+               case EventBoxType.FX_FLOAT: {
+                  box.e = remapFxEventBoxesIdx.get(box.e!);
+                  const l = box.l || [];
+                  for (let k = 0; k < l.length; k++) {
+                     const e = l[k];
+                     e.i = remapFloatFxEventsIdx.get(e.i!);
+                  }
+                  break;
+               }
             }
          }
       }

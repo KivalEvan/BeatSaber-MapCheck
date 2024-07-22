@@ -102,7 +102,14 @@ function run(args: ToolArgs): IToolOutput[] {
    const result = check(args);
 
    if (result.length) {
-      return [{ type: 'time', label: 'Hitbox reverse Staircase', value: result, symbol: 'rank' }];
+      return [
+         {
+            type: 'time',
+            label: 'Hitbox reverse Staircase',
+            value: result,
+            symbol: 'rank',
+         },
+      ];
    }
    return [];
 }

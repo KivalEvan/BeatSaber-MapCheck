@@ -201,7 +201,12 @@ function run(args: ToolArgs): IToolOutput[] {
       });
    }
    if (result.error.length) {
-      results.push({ type: 'time', label: 'Parity error', value: result.error, symbol: 'error' });
+      results.push({
+         type: 'time',
+         label: 'Parity error',
+         value: result.error,
+         symbol: 'error',
+      });
    }
    return results;
 }

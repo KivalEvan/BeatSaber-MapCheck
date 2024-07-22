@@ -10,6 +10,10 @@ export function toV4Info(data: IWrapInfo, fromVersion: number): IWrapInfo {
 
    switch (fromVersion) {
       case 1:
+         data.environmentNames = [data.environmentBase.normal || 'DefaultEnvironment'];
+         data.difficulties.forEach((d) => {
+            d.environmentId = 0;
+         }); /** Falls through */
       case 2:
       case 3:
       case 4:

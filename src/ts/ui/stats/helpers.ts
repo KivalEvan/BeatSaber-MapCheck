@@ -1,4 +1,4 @@
-import { ObjectContainerType, IObjectContainer } from '../../types/checks/container';
+import { IObjectContainer, ObjectContainerType } from '../../types/checks/container';
 
 export function getFilteredContainer(container: IObjectContainer[], value: string) {
    switch (value) {

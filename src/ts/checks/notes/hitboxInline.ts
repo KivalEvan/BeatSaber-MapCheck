@@ -1,8 +1,8 @@
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import {
-   ObjectContainerType,
    IObjectContainer,
    IObjectContainerColor,
+   ObjectContainerType,
 } from '../../types/checks/container';
 import swing from '../../bsmap/extensions/swing/swing';
 import UIInput from '../../ui/helpers/input';

@@ -1,7 +1,12 @@
 import type { LooseAutocomplete } from '../../utils.ts';
 import type { CharacteristicName } from '../shared/characteristic.ts';
 import type { DifficultyName } from '../shared/difficulty.ts';
-import type { EnvironmentAllName } from '../shared/environment.ts';
+import type {
+   Environment360Name,
+   EnvironmentAllName,
+   EnvironmentName,
+   EnvironmentV3Name,
+} from '../shared/environment.ts';
 import type { IColor } from '../../colors.ts';
 import type { ICustomDataInfo } from './custom/info.ts';
 import type { ICustomDataInfoBeatmap } from '../v4/custom/info.ts';
@@ -14,6 +19,13 @@ export interface IWrapInfoAttribute extends IWrapBaseItemAttribute, IWrapBaseFil
    audio: IWrapInfoAudio;
    songPreviewFilename: string;
    coverImageFilename: string;
+   /**
+    * @deprecated use for pre-v4
+    */
+   environmentBase: {
+      normal: EnvironmentName | EnvironmentV3Name | null;
+      allDirections: Environment360Name | null;
+   };
    environmentNames: EnvironmentAllName[];
    colorSchemes: IWrapInfoColorScheme[];
    difficulties: IWrapInfoBeatmapAttribute[];
@@ -58,9 +70,10 @@ export interface IWrapInfoAudio {
 
 export interface IWrapInfoColorScheme {
    /**
-    * For use in v2 info, true by default.
+    * @deprecated for use in v2 info only
+    * @default true
     */
-   useOverride?: boolean;
+   useOverride: boolean;
    name: string;
    saberLeftColor: Required<IColor>;
    saberRightColor: Required<IColor>;

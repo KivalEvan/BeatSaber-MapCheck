@@ -4,7 +4,7 @@ import type { IWrapInfoBeatmapAttribute } from '../../../types/beatmap/wrapper/i
 import type { DeepPartial } from '../../../types/utils.ts';
 import type { ISchemaContainer } from '../../../types/beatmap/shared/schema.ts';
 
-export const infoDifficulty: ISchemaContainer<IWrapInfoBeatmapAttribute, IInfoDifficulty> = {
+export const infoBeatmap: ISchemaContainer<IWrapInfoBeatmapAttribute, IInfoDifficulty> = {
    serialize(data: IWrapInfoBeatmapAttribute): IInfoDifficulty {
       return {
          characteristic: data.characteristic,

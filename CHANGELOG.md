@@ -2,7 +2,8 @@
 
 ## 2.7.0 [2024-07-xx]
 
-Major changes here should result in better QoL, faster loading, and less memory usage.
+Major changes here should result in better QoL, faster loading, and less memory
+usage.
 
 ### Added
 
@@ -18,8 +19,8 @@ Major changes here should result in better QoL, faster loading, and less memory 
 
 ### Fixed
 
-- Mappers and lighters information does not reset upon reset
-- BPM change shows even if the minimum and maximum are equal
+-  Mappers and lighters information does not reset upon reset
+-  BPM change shows even if the minimum and maximum are equal
 
 ## 2.6.1 [2024-03-25]
 

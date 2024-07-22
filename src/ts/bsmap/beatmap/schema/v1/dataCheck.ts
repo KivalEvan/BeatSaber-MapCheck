@@ -34,7 +34,9 @@ export const NoteDataCheck: { readonly [key in keyof INote]: IDataCheck } = {
    },
 } as const;
 
-export const ObstacleDataCheck: { readonly [key in keyof IObstacle]: IDataCheck } = {
+export const ObstacleDataCheck: {
+   readonly [key in keyof IObstacle]: IDataCheck;
+} = {
    _time: {
       type: 'number',
       version: '1.5.0',
@@ -78,7 +80,9 @@ export const EventDataCheck: { readonly [key in keyof IEvent]: IDataCheck } = {
    },
 } as const;
 
-export const DifficultyDataCheck: { readonly [key in keyof IDifficulty]: IDataCheck } = {
+export const DifficultyDataCheck: {
+   readonly [key in keyof IDifficulty]: IDataCheck;
+} = {
    _version: {
       type: 'string',
       version: '1.5.0',
@@ -143,7 +147,9 @@ export const DifficultyDataCheck: { readonly [key in keyof IDifficulty]: IDataCh
    },
 } as const;
 
-export const InfoDifficultyDataCheck: { readonly [key in keyof IInfoDifficulty]: IDataCheck } = {
+export const InfoDifficultyDataCheck: {
+   readonly [key in keyof IInfoDifficulty]: IDataCheck;
+} = {
    difficulty: {
       type: 'string',
       version: '1.0.0',

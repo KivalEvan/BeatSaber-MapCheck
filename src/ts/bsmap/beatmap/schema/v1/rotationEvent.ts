@@ -1,13 +1,13 @@
 import type { ISchemaContainer } from '../../../types/beatmap/shared/schema.ts';
 import type { IEvent } from '../../../types/beatmap/v1/event.ts';
 import type { IWrapRotationEventAttribute } from '../../../types/beatmap/wrapper/rotationEvent.ts';
-import { EventLaneRotationValue } from '../../shared/constants.ts';
+import { EventLaneRotationValue, RotationValueEventValue } from '../../shared/constants.ts';
 
 export const rotationEvent: ISchemaContainer<IWrapRotationEventAttribute, IEvent> = {
    serialize(data: IWrapRotationEventAttribute): IEvent {
       let r = data.rotation % 360;
       if (r >= -60 && r <= 60 && r % 15 === 0 && r / 15 !== 0) {
-         r /= 15;
+         r = RotationValueEventValue[r] || r + 1360;
       } else r += 1360;
       return {
          _time: data.time,
@@ -20,7 +20,7 @@ export const rotationEvent: ISchemaContainer<IWrapRotationEventAttribute, IEvent
       return {
          time: data._time,
          executionTime: data._type === 15 ? 1 : 0,
-         rotation: value >= 1000 ? (value - 1360) % 360 : EventLaneRotationValue[value] ?? 0,
+         rotation: value >= 1000 ? (value - 1360) % 360 : (EventLaneRotationValue[value] ?? 0),
       };
    },
 };

@@ -3,8 +3,9 @@ import type { DeepPartial } from '../../../types/utils.ts';
 import { deepCopy } from '../../../utils/misc.ts';
 import type { IWrapInfoAttribute } from '../../../types/beatmap/wrapper/info.ts';
 import type { ISchemaContainer } from '../../../types/beatmap/shared/schema.ts';
-import { infoDifficulty } from './infoDifficulty.ts';
+import { infoBeatmap } from './infoBeatmap.ts';
 import type { EnvironmentName } from '../../../types/beatmap/shared/environment.ts';
+import { is360Environment } from '../../helpers/environment.ts';
 
 export const info: ISchemaContainer<IWrapInfoAttribute, IInfo> = {
    serialize(data: IWrapInfoAttribute): IInfo {
@@ -16,8 +17,11 @@ export const info: ISchemaContainer<IWrapInfoAttribute, IInfo> = {
          previewStartTime: data.audio.previewStartTime,
          previewDuration: data.audio.previewDuration,
          coverImagePath: data.coverImageFilename,
-         environmentName: data.environmentNames[0] as EnvironmentName,
-         difficultyLevels: data.difficulties.map(infoDifficulty.serialize),
+         environmentName:
+            data.environmentBase.normal ||
+            (data.environmentNames.find((e) => !is360Environment(e)) as EnvironmentName) ||
+            'DefaultEnvironment',
+         difficultyLevels: data.difficulties.map(infoBeatmap.serialize),
          oneSaber: data.difficulties.some((m) => m.characteristic === 'OneSaber'),
          contributors: deepCopy(data.customData._contributors),
          customEnvironment: data.customData._customEnvironment,
@@ -40,9 +44,9 @@ export const info: ISchemaContainer<IWrapInfoAttribute, IInfo> = {
          },
          songPreviewFilename: data.difficultyLevels?.find((e) => e?.audioPath)?.audioPath,
          coverImageFilename: data.coverImagePath,
-         environmentNames: [data.environmentName],
+         environmentBase: { normal: data.environmentName },
 
-         difficulties: data.difficultyLevels?.map(infoDifficulty.deserialize),
+         difficulties: data.difficultyLevels?.map(infoBeatmap.deserialize),
 
          customData: {
             _contributors: data.contributors,

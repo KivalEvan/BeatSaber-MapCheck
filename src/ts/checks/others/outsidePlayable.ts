@@ -38,7 +38,9 @@ function objectBeforeTime(tag: string, objects: IWrapBaseObject[], results: IToo
       results.push({
          type: 'string',
          label: tag + '(s) before start time',
-         value: `${round(objects[0].time, 3)} (${toMmss(objects[0].customData.__mapcheck_secondtime)}`,
+         value: `${round(objects[0].time, 3)} (${toMmss(
+            objects[0].customData.__mapcheck_secondtime,
+         )}`,
          symbol: 'error',
       });
    }

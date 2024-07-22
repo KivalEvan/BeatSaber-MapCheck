@@ -15,7 +15,7 @@ import {
    infoSchemaMap,
    lightshowSchemaMap,
 } from '../mapping/schema.ts';
-import { validateJSON } from '../schema/validator/main.ts';
+import { validateJSON } from '../validator/json.ts';
 import { Beatmap } from '../core/beatmap.ts';
 
 export function tag(name: string): string[] {

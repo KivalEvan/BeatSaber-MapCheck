@@ -3,7 +3,7 @@ import type { ColorArray } from '../../types/colors.ts';
 import { ColorScheme, EnvironmentSchemeName } from '../shared/colorScheme.ts';
 import type { EnvironmentAllName } from '../../types/beatmap/shared/environment.ts';
 import type { IWrapBeatmap } from '../../types/beatmap/wrapper/beatmap.ts';
-import type { IWrapEvent } from '../../types/beatmap/wrapper/event.ts';
+import type { IWrapBasicEvent } from '../../types/beatmap/wrapper/basicEvent.ts';
 
 function tag(name: string): string[] {
    return ['convert', name];
@@ -23,8 +23,8 @@ export function ogChromaToV2Chroma<T extends IWrapBeatmap>(
       tag('ogChromaToV2Chroma'),
       'Converting old Chroma event value to Chroma event customData',
    );
-   const events: IWrapEvent[] = data.basicEvents;
-   const newEvents: IWrapEvent[] = [];
+   const events: IWrapBasicEvent[] = data.basicEvents;
+   const newEvents: IWrapBasicEvent[] = [];
    const colorScheme = ColorScheme[EnvironmentSchemeName[environment]];
    const defaultLeftLight: ColorArray = [
       colorScheme._envColorLeft!.r,

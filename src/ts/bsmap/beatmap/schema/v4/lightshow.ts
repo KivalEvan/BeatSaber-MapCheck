@@ -12,7 +12,7 @@ import { deepCopy } from '../../../utils/misc.ts';
 import { EventBoxType } from '../../../types/beatmap/shared/constants.ts';
 import type { IObject } from '../../../types/beatmap/v4/object.ts';
 import type { IWrapBeatmapAttribute } from '../../../types/beatmap/wrapper/beatmap.ts';
-import { eventTypesWithKeywords } from '../v3/eventTypesWithKeywords.ts';
+import { basicEventTypesWithKeywords } from '../v3/basicEventTypesWithKeywords.ts';
 
 export const lightshow: ISchemaContainer<IWrapBeatmapAttribute, ILightshow> = {
    serialize(data: IWrapBeatmapAttribute): ILightshow {
@@ -34,8 +34,8 @@ export const lightshow: ISchemaContainer<IWrapBeatmapAttribute, ILightshow> = {
          lightTranslationEvents: [],
          fxEventBoxes: [],
          floatFxEvents: [],
-         basicEventTypesWithKeywords: eventTypesWithKeywords.serialize(
-            data.lightshow.eventTypesWithKeywords,
+         basicEventTypesWithKeywords: basicEventTypesWithKeywords.serialize(
+            data.lightshow.basicEventTypesWithKeywords,
          ),
          useNormalEventsAsCompatibleEvents: data.lightshow.useNormalEventsAsCompatibleEvents,
          customData: deepCopy(data.difficulty.customData),
@@ -247,7 +247,7 @@ export const lightshow: ISchemaContainer<IWrapBeatmapAttribute, ILightshow> = {
                break;
          }
       }
-      d.lightshow!.eventTypesWithKeywords = eventTypesWithKeywords.deserialize(
+      d.lightshow!.basicEventTypesWithKeywords = basicEventTypesWithKeywords.deserialize(
          data.basicEventTypesWithKeywords,
       );
       d.lightshow!.useNormalEventsAsCompatibleEvents = !!data.useNormalEventsAsCompatibleEvents;

@@ -1,5 +1,6 @@
 // deno-lint-ignore-file no-explicit-any
-import type { IDataCheckOption } from '../shared/dataCheck.ts';
+import type { ICompatibilityOptions } from './compatibility.ts';
+import type { IDataCheckOptions } from './dataCheck.ts';
 import type { IOptimizeOptions } from './optimize.ts';
 
 export interface ISaveOptions<T extends Record<string, any> = Record<string, any>> {
@@ -48,5 +49,6 @@ export interface ISaveValidate {
     * @default false
     */
    vanilla?: boolean;
-   dataCheck?: IDataCheckOption;
+   compatibility?: ICompatibilityOptions;
+   dataCheck?: IDataCheckOptions;
 }

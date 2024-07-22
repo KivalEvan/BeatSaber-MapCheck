@@ -2,9 +2,9 @@ import { formatNumber, round } from '../../bsmap/utils/mod';
 import { IWrapInfo } from '../../bsmap/types/beatmap/wrapper/info';
 import { IBeatmapItem } from '../../types';
 import * as swing from '../../bsmap/extensions/swing/mod';
-import * as score from '../../bsmap/extensions/score/mod';
 import { prefix } from './constants';
 import { countNote } from '../../bsmap/extensions/stats/note';
+import { calculateScore } from '../../bsmap/beatmap/shared/score';
 
 export function createNoteInfoTable(
    beatmapInfo: IWrapInfo,
@@ -15,7 +15,7 @@ export function createNoteInfoTable(
       noteCount.red.total / noteCount.blue.total,
       2,
    )}</td></tr><tr><th class="${prefix}table-header" colspan="2">Max Score</th><td class="${prefix}table-element">${formatNumber(
-      score.calculate(beatmap.data),
+      calculateScore(beatmap.data),
    )}</td></tr><tr><th class="${prefix}table-header" colspan="2">Effective BPM</th><td class="${prefix}table-element">${round(
       swing.getMaxEffectiveBpm(beatmap.swingAnalysis.container),
       2,

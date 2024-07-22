@@ -1,6 +1,6 @@
 import type { IDifficulty } from '../../../types/beatmap/v3/difficulty.ts';
 import { basicEvent } from './basicEvent.ts';
-import { eventTypesWithKeywords } from './eventTypesWithKeywords.ts';
+import { basicEventTypesWithKeywords } from './basicEventTypesWithKeywords.ts';
 import { bombNote } from './bombNote.ts';
 import { bpmEvent } from './bpmEvent.ts';
 import { chain } from './chain.ts';
@@ -43,8 +43,8 @@ export const difficulty: ISchemaContainer<IWrapBeatmapAttribute, IDifficulty> = 
             lightTranslationEventBoxGroup.serialize,
          ),
          vfxEventBoxGroups: [],
-         basicEventTypesWithKeywords: eventTypesWithKeywords.serialize(
-            data.lightshow.eventTypesWithKeywords,
+         basicEventTypesWithKeywords: basicEventTypesWithKeywords.serialize(
+            data.lightshow.basicEventTypesWithKeywords,
          ),
          _fxEventsCollection: {
             _fl: [],
@@ -102,7 +102,7 @@ export const difficulty: ISchemaContainer<IWrapBeatmapAttribute, IDifficulty> = 
             })),
          }),
       );
-      d.lightshow!.eventTypesWithKeywords = eventTypesWithKeywords.deserialize(
+      d.lightshow!.basicEventTypesWithKeywords = basicEventTypesWithKeywords.deserialize(
          data.basicEventTypesWithKeywords,
       );
       d.lightshow!.useNormalEventsAsCompatibleEvents = data.useNormalEventsAsCompatibleEvents;

@@ -46,11 +46,12 @@ function populateSelectCharacteristic(beatmapInfo?: IWrapInfo): void {
          (e) => e.characteristic === infoDiff.characteristic,
       );
       const characteristicLabel = customCharacteristic
-         ? `${customCharacteristic.label}\n(${CharacteristicRename[infoDiff.characteristic] || infoDiff.characteristic})`
+         ? `${customCharacteristic.label}\n(${
+              CharacteristicRename[infoDiff.characteristic] || infoDiff.characteristic
+           })`
          : CharacteristicRename[infoDiff.characteristic] || infoDiff.characteristic;
       const htmlSelect = createTab(
          `select-${infoDiff.characteristic}`,
-
          characteristicLabel,
          'select-characteristic',
          infoDiff.characteristic,
@@ -98,7 +99,9 @@ function populateSelectDifficulty(characteristic?: CharacteristicName): void {
       const diff = beatmapInfo.difficulties[i];
       if (characteristic !== diff.characteristic) continue;
       const difficultyLabel = diff.customData._difficultyLabel
-         ? `${diff.customData._difficultyLabel}\n(${DifficultyRename[diff.difficulty] || diff.difficulty})`
+         ? `${diff.customData._difficultyLabel}\n(${
+              DifficultyRename[diff.difficulty] || diff.difficulty
+           })`
          : DifficultyRename[diff.difficulty] || diff.difficulty;
       const htmlSelect = createTab(
          `select-${diff.difficulty}`,

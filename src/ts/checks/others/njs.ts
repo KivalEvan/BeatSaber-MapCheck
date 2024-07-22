@@ -87,7 +87,9 @@ function run(args: ToolArgs): IToolOutput[] {
    if (timeProcessor.toRealTime(njs.hjd, false) < 0.42) {
       results.push({
          type: 'string',
-         label: `Very quick reaction time (${round(timeProcessor.toRealTime(njs.hjd, false) * 1000)}ms)`,
+         label: `Very quick reaction time (${round(
+            timeProcessor.toRealTime(njs.hjd, false) * 1000,
+         )}ms)`,
          value: 'may lead to suboptimal gameplay',
          symbol: 'warning',
       });
