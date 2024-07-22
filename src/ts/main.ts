@@ -49,10 +49,30 @@ export default async (type: LoadType) => {
       UIHeader.switchHeader(false);
       const beatmapZip = await extractZip(file);
 
+      const entries = beatmapZip
+         .filter(
+            (relPath) =>
+               relPath.endsWith('Info.dat') ||
+               relPath.endsWith('info.dat') ||
+               relPath.endsWith('Info.json') ||
+               relPath.endsWith('info.json'),
+         )
+         .map((file) => file.name.split('/'))
+         .filter((paths) => paths.length <= 2)
+         .sort((a, b) => a.length - b.length);
+      if (entries.length === 0) {
+         throw new Error("Couldn't find Info.dat");
+      }
+      let path = entries[0].slice(0, -1).join('/');
+      if (path) {
+         flag.loading.nested = true;
+         path += '/';
+      }
+
       UIInput.enable(false);
       UILoading.status('info', 'Parsing map info...', 10);
       logger.tInfo(tag(), 'Parsing map info');
-      const info = await extractInfo(beatmapZip);
+      const info = await extractInfo(beatmapZip, path);
       LoadedData.beatmapInfo = info;
       UIInfo.setInfo(info);
 
@@ -156,7 +176,7 @@ export default async (type: LoadType) => {
             resolve(null);
          }),
          new Promise<IBeatmapAudio | null>(async (resolve) => {
-            const audioInfo = await extractBpmInfo(info, beatmapZip);
+            const audioInfo = await extractBpmInfo(info, beatmapZip, path);
             itemDone++;
             itemSet.delete('audio/BPM data');
             if (audioInfo) {
@@ -166,7 +186,7 @@ export default async (type: LoadType) => {
             }
             resolve(audioInfo);
          }),
-         ...extractBeatmaps(info, beatmapZip).map(async (d, _, ary) => {
+         ...extractBeatmaps(info, beatmapZip, path).map(async (d, _, ary) => {
             const res = await d;
             itemDone++;
             diffCount++;

@@ -2,6 +2,7 @@ import { IFlag } from './types/flag';
 
 export default new (class Flag implements IFlag {
    loading = {
+      nested: false,
       info: false,
       difficulty: false,
       analysis: false,
@@ -12,6 +13,7 @@ export default new (class Flag implements IFlag {
    };
 
    resetLoad() {
+      this.loading.nested = false;
       this.loading.info = false;
       this.loading.difficulty = false;
       this.loading.analysis = false;

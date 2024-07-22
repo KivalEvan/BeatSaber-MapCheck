@@ -8,6 +8,7 @@ usage.
 ### Added
 
 -  Collider environment & color scheme
+-  Nested folder loading
 
 ### Changed
 

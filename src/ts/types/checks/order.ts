@@ -1,6 +1,7 @@
 export const enum ToolInputOrder {
    APRIL_FOOLS,
 
+   GENERAL_ZIP,
    GENERAL_AUDIO,
    GENERAL_COVER_IMAGE,
    GENERAL_PREVIEW_TIME,
@@ -46,6 +47,7 @@ export const enum ToolInputOrder {
 export const enum ToolOutputOrder {
    APRIL_FOOLS,
 
+   GENERAL_ZIP,
    GENERAL_AUDIO,
    GENERAL_COVER_IMAGE,
    GENERAL_PREVIEW_TIME,

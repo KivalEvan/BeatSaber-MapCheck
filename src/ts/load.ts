@@ -23,9 +23,13 @@ function tag(name: string) {
    return ['load', name];
 }
 
-export async function extractBpmInfo(info: IWrapInfo, zip: JSZip): Promise<IBeatmapAudio | null> {
+export async function extractBpmInfo(
+   info: IWrapInfo,
+   zip: JSZip,
+   path = '',
+): Promise<IBeatmapAudio | null> {
    if (info.version === 4) {
-      const audioFile = zip.file(info.audio.audioDataFilename);
+      const audioFile = zip.file(path + info.audio.audioDataFilename);
       logger.tInfo(tag('extractBPMInfo'), 'loading', info.audio.audioDataFilename);
       if (audioFile) {
          const bpmInfo = (await audioFile.async('string').then(JSON.parse)) as IAudio;
@@ -38,7 +42,7 @@ export async function extractBpmInfo(info: IWrapInfo, zip: JSZip): Promise<IBeat
          };
       }
    }
-   const bpmFile = zip.file('BPMInfo.dat');
+   const bpmFile = zip.file(path + 'BPMInfo.dat');
    logger.tInfo(tag('extractBPMInfo'), 'loading BPMInfo.dat');
    if (bpmFile) {
       const bpmInfo = (await bpmFile.async('string').then(JSON.parse)) as IBPMInfo;
@@ -56,12 +60,12 @@ export async function extractBpmInfo(info: IWrapInfo, zip: JSZip): Promise<IBeat
    return null;
 }
 
-export async function extractInfo(zip: JSZip) {
+export async function extractInfo(zip: JSZip, path = '') {
    const infoFile =
-      zip.file('Info.dat') ||
-      zip.file('info.dat') ||
-      zip.file('Info.json') ||
-      zip.file('info.json');
+      zip.file(path + 'Info.dat') ||
+      zip.file(path + 'info.dat') ||
+      zip.file(path + 'Info.json') ||
+      zip.file(path + 'info.json');
    if (!infoFile) {
       throw new Error("Couldn't find Info.dat");
    }
@@ -72,8 +76,9 @@ export async function extractInfo(zip: JSZip) {
 async function fetchLightshow(
    zip: JSZip,
    infoDiff: IWrapInfoBeatmap,
+   path = '',
 ): Promise<[any, IWrapBeatmap] | null> {
-   const file = zip.file(infoDiff.lightshowFilename);
+   const file = zip.file(path + infoDiff.lightshowFilename);
    if (!file) {
       logger.tError(
          tag('extractBeatmaps'),
@@ -100,11 +105,15 @@ async function fetchLightshow(
    return null;
 }
 
-export function extractBeatmaps(info: IWrapInfo, zip: JSZip): Promise<IBeatmapItem | null>[] {
+export function extractBeatmaps(
+   info: IWrapInfo,
+   zip: JSZip,
+   path = '',
+): Promise<IBeatmapItem | null>[] {
    const loaded: Record<string, Promise<[any, IWrapBeatmap] | null>> = {};
    return info.difficulties.map(async (d) => {
       const infoDiff = d;
-      const difficultyFile = zip.file(infoDiff.filename);
+      const difficultyFile = zip.file(path + infoDiff.filename);
       if (!difficultyFile) {
          logger.tError(
             tag('extractBeatmaps'),
@@ -155,7 +164,7 @@ export function extractBeatmaps(info: IWrapInfo, zip: JSZip): Promise<IBeatmapIt
       let jsonLightshow;
       if (jsonDifficultyVer === 4) {
          if (!loaded[infoDiff.lightshowFilename]) {
-            loaded[infoDiff.lightshowFilename] = fetchLightshow(zip, infoDiff);
+            loaded[infoDiff.lightshowFilename] = fetchLightshow(zip, infoDiff, path);
          }
          const res = await loaded[infoDiff.lightshowFilename];
          if (res) {
@@ -184,9 +193,11 @@ export function extractBeatmaps(info: IWrapInfo, zip: JSZip): Promise<IBeatmapIt
       return {
          settings: infoDiff,
          environment:
-            (infoDiff.environmentId > 0
-               ? info.environmentNames.at(infoDiff.environmentId)
-               : info.environmentNames[0]) || 'DefaultEnvironment',
+            info.environmentNames.at(infoDiff.environmentId) ||
+            (infoDiff.characteristic === '360Degree' || infoDiff.characteristic === '90Degree'
+               ? info.environmentBase.allDirections
+               : info.environmentBase.normal) ||
+            'DefaultEnvironment',
          timeProcessor,
          njs: new NoteJumpSpeed(timeProcessor.bpm, infoDiff.njs, infoDiff.njsOffset),
          data,
