@@ -31,7 +31,10 @@ const tool: ITool = {
    run,
 };
 
-function sufficientLight(events: types.wrapper.IWrapBasicEvent[], environment: types.EnvironmentAllName): boolean {
+function sufficientLight(
+   events: types.wrapper.IWrapBasicEvent[],
+   environment: types.EnvironmentAllName,
+): boolean {
    let count = 0;
    for (let i = events.length - 1; i >= 0; i--) {
       if (events[i].isLightEvent(environment) && !events[i].isOff()) {

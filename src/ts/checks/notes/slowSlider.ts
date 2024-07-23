@@ -1,4 +1,4 @@
-import { TimeProcessor, round } from 'bsmap';
+import { round, TimeProcessor } from 'bsmap';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import UIInput from '../../ui/helpers/input';
 

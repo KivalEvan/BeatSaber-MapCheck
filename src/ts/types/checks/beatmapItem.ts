@@ -1,6 +1,6 @@
 import { NoteJumpSpeed, TimeProcessor, types } from 'bsmap';
 import { IObjectContainer } from './container';
-import { swing } from 'bsmap/extensions';
+import { stats, swing } from 'bsmap/extensions';
 
 export interface IBeatmapAudio {
    readonly duration: number;
@@ -15,6 +15,19 @@ interface IBeatmapItemBase {
    readonly data: types.wrapper.IWrapBeatmap;
    readonly swingAnalysis: swing.types.ISwingAnalysis;
    readonly noteContainer: IObjectContainer[];
+   readonly score: number;
+   readonly stats: {
+      readonly basicEvents: stats.types.ICountEvent;
+      readonly lightColorEventBoxGroups: stats.types.ICountEventBoxGroup;
+      readonly lightRotationEventBoxGroups: stats.types.ICountEventBoxGroup;
+      readonly lightTranslationEventBoxGroups: stats.types.ICountEventBoxGroup;
+      readonly fxEventBoxGroups: stats.types.ICountEventBoxGroup;
+      readonly notes: stats.types.ICountNote;
+      readonly bombs: stats.types.ICountStatsNote;
+      readonly arcs: stats.types.ICountNote;
+      readonly chains: stats.types.ICountNote;
+      readonly obstacles: stats.types.IObstacleCount;
+   };
 }
 
 interface IBeatmapItemV1 extends IBeatmapItemBase {

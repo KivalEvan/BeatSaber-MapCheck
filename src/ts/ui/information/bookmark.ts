@@ -1,6 +1,6 @@
 import Settings from '../../settings';
 import UIPanel from '../helpers/panel';
-import { colorToHex, round, toMmss, TimeProcessor, types } from 'bsmap';
+import { colorToHex, round, TimeProcessor, toMmss, types } from 'bsmap';
 import { htmlTableBookmarks } from './constants';
 import { displayTableRow, hideTableRow } from './helpers';
 

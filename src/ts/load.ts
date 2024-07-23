@@ -3,16 +3,17 @@ import { IBeatmapAudio, IBeatmapItem } from './types/checks/beatmapItem';
 import settings from './settings';
 import { IObjectContainer, ObjectContainerType } from './types/checks/container';
 import {
-   types,
-   logger,
-   loadInfo,
    Beatmap,
+   calculateScore,
    loadDifficulty,
+   loadInfo,
    loadLightshow,
+   logger,
    NoteJumpSpeed,
    TimeProcessor,
+   types,
 } from 'bsmap';
-import { swing } from 'bsmap/extensions';
+import { stats, swing } from 'bsmap/extensions';
 
 function tag(name: string) {
    return ['load', name];
@@ -185,14 +186,15 @@ export function extractBeatmaps(
       );
       precalculateTimes(data, timeProcessor);
 
+      const env =
+         info.environmentNames.at(infoDiff.environmentId) ||
+         (infoDiff.characteristic === '360Degree' || infoDiff.characteristic === '90Degree'
+            ? info.environmentBase.allDirections
+            : info.environmentBase.normal) ||
+         'DefaultEnvironment';
       return {
          settings: infoDiff,
-         environment:
-            info.environmentNames.at(infoDiff.environmentId) ||
-            (infoDiff.characteristic === '360Degree' || infoDiff.characteristic === '90Degree'
-               ? info.environmentBase.allDirections
-               : info.environmentBase.normal) ||
-            'DefaultEnvironment',
+         environment: env,
          timeProcessor,
          njs: new NoteJumpSpeed(timeProcessor.bpm, infoDiff.njs, infoDiff.njsOffset),
          data,
@@ -203,6 +205,22 @@ export function extractBeatmaps(
             infoDiff.characteristic,
             infoDiff.difficulty,
          ),
+         score: calculateScore(data),
+         stats: {
+            basicEvents: stats.countEvent(data.basicEvents, data.colorBoostEvents, env),
+            lightColorEventBoxGroups: stats.countEbg(data.lightColorEventBoxGroups, env),
+            lightRotationEventBoxGroups: stats.countEbg(data.lightRotationEventBoxGroups, env),
+            lightTranslationEventBoxGroups: stats.countEbg(
+               data.lightTranslationEventBoxGroups,
+               env,
+            ),
+            fxEventBoxGroups: stats.countEbg(data.fxEventBoxGroups, env),
+            notes: stats.countNote(data.colorNotes),
+            bombs: stats.countBomb(data.bombNotes),
+            arcs: stats.countNote(data.arcs),
+            chains: stats.countNote(data.chains),
+            obstacles: stats.countObstacle(data.obstacles),
+         },
          rawVersion: jsonDifficultyVer as 4,
          rawData: jsonDifficulty,
          rawLightshow: jsonLightshow,

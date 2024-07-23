@@ -42,7 +42,11 @@ function deduplicateFilter<T extends types.wrapper.IWrapBaseObject>(obj: T, i: n
    return i === 0 || obj.time !== ary[i - 1].time;
 }
 
-export function printResultTime(label: string, timeAry: types.wrapper.IWrapBaseObject[], symbol?: OutputSymbol) {
+export function printResultTime(
+   label: string,
+   timeAry: types.wrapper.IWrapBaseObject[],
+   symbol?: OutputSymbol,
+) {
    const htmlContainer = document.createElement('div');
 
    if (settings.deduplicateTime) {

@@ -8,11 +8,7 @@ export function createEventCountTable(
    beatmap: IBeatmapItem,
 ): HTMLTableElement {
    const environment = beatmap.environment;
-   const eventCount = stats.countEvent(
-      beatmap.data.basicEvents,
-      beatmap.data.colorBoostEvents,
-      environment,
-   );
+   const eventCount = beatmap.stats.basicEvents;
    let chroma = 0;
    let chromaOld = 0;
    let noodleExtensions = 0;

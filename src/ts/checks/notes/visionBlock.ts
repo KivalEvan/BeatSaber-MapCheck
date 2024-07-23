@@ -1,4 +1,4 @@
-import { TimeProcessor, round, PosX, PosY } from 'bsmap';
+import { PosX, PosY, round, TimeProcessor } from 'bsmap';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import { IObjectContainer, ObjectContainerType } from '../../types/checks/container';
 import UIInput from '../../ui/helpers/input';

@@ -12,7 +12,7 @@ import LoadedData from './loadedData';
 import { extractBeatmaps, extractBpmInfo, extractInfo } from './load';
 import { downloadFromHash, downloadFromId, downloadFromUrl } from './download';
 import { sanitizeBeatSaverId, sanitizeUrl, sleep } from './utils/web';
-import { isHex, lerp, round, logger } from 'bsmap';
+import { isHex, lerp, logger, round } from 'bsmap';
 import { extractZip } from './extract';
 import { LoadType } from './types/main';
 import { IBeatmapAudio, IBeatmapItem } from './types';

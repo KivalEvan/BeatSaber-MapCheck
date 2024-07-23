@@ -163,13 +163,16 @@ function selectDifficultyHandler(ev: Event): void {
 
 export function getSelectedCharacteristic(): types.CharacteristicName | null {
    return (
-      (htmlLoadedCharacteristic.filter((elem) => elem.checked)[0]?.value as types.CharacteristicName) ??
-      null
+      (htmlLoadedCharacteristic.filter((elem) => elem.checked)[0]
+         ?.value as types.CharacteristicName) ?? null
    );
 }
 
 export function getSelectedDifficulty(): types.DifficultyName | null {
-   return (htmlLoadedDifficulty.filter((elem) => elem.checked)[0]?.value as types.DifficultyName) ?? null;
+   return (
+      (htmlLoadedDifficulty.filter((elem) => elem.checked)[0]?.value as types.DifficultyName) ??
+      null
+   );
 }
 
 function reset() {

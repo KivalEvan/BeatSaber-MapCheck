@@ -31,7 +31,7 @@ export function setLevelAuthor(mappers?: string[], lighters?: string[]): void {
    }
 }
 
-export function setEnvironment(envs?:types. EnvironmentAllName[]): void {
+export function setEnvironment(envs?: types.EnvironmentAllName[]): void {
    if (!envs) {
       htmlInfoEnvironment.textContent = '';
       return;

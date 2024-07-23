@@ -67,15 +67,19 @@ function check(args: ToolArgs) {
          if (
             ((currentNote.data.isHorizontal(compareTo.data) ||
                currentNote.data.isVertical(compareTo.data)) &&
-               placement.isIntersect(currentNote.data, compareTo.data, [
-                  [45, 1],
-                  [15, 2],
-               ]).some((b) => b)) ||
+               placement
+                  .isIntersect(currentNote.data, compareTo.data, [
+                     [45, 1],
+                     [15, 2],
+                  ])
+                  .some((b) => b)) ||
             (currentNote.data.isDiagonal(compareTo.data) &&
-               placement.isIntersect(currentNote.data, compareTo.data, [
-                  [45, 1],
-                  [15, 1.5],
-               ]).some((b) => b))
+               placement
+                  .isIntersect(currentNote.data, compareTo.data, [
+                     [45, 1],
+                     [15, 1.5],
+                  ])
+                  .some((b) => b))
          ) {
             result.push(currentNote.data);
             lastTime = currentNote.data.customData.__mapcheck_secondtime;

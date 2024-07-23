@@ -1,4 +1,4 @@
-import { TimeProcessor, round, toMmss, types } from 'bsmap';
+import { round, TimeProcessor, toMmss, types } from 'bsmap';
 import Settings from '../../settings';
 import { htmlTableCustomEvents } from './constants';
 import { displayTableRow, hideTableRow } from './helpers';

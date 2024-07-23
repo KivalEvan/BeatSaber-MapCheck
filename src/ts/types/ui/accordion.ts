@@ -1,4 +1,4 @@
-import { types } from "bsmap";
+import { types } from 'bsmap';
 
 export type UIBackgroundColorType = types.DifficultyName | 'none';
 

@@ -3,7 +3,10 @@ import LoadedData from '../../loadedData';
 import { IBeatmapItem } from '../../types';
 import { prefix } from './constants';
 
-export function createNPSTable(beatmapInfo: types.wrapper.IWrapInfo, beatmap: IBeatmapItem): HTMLTableElement {
+export function createNPSTable(
+   beatmapInfo: types.wrapper.IWrapInfo,
+   beatmap: IBeatmapItem,
+): HTMLTableElement {
    const timeProcessor = beatmap.timeProcessor;
    const duration = LoadedData.duration || 0;
    const mapDuration = timeProcessor.toRealTime(getLastInteractiveTime(beatmap.data));

@@ -9,7 +9,7 @@ import {
 } from '../../types';
 import { ObjectContainerType } from '../../types/checks/container';
 import UIInput from '../../ui/helpers/input';
-import { swing, placement } from 'bsmap/extensions';
+import { placement, swing } from 'bsmap/extensions';
 
 const name = 'Double-directional';
 const description = 'Check double-directional note swing (this may not mean parity break).';

@@ -1,4 +1,4 @@
-import { TimeProcessor, round, NoteColor, types } from 'bsmap';
+import { NoteColor, round, TimeProcessor, types } from 'bsmap';
 import { swing } from 'bsmap/extensions';
 import {
    IBeatmapItem,

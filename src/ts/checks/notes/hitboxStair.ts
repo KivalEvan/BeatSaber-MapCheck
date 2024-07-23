@@ -32,7 +32,11 @@ const tool: ITool = {
    run,
 };
 
-function isDouble(note: types.wrapper.IWrapColorNote, nc: types.wrapper.IWrapColorNote[], index: number): boolean {
+function isDouble(
+   note: types.wrapper.IWrapColorNote,
+   nc: types.wrapper.IWrapColorNote[],
+   index: number,
+): boolean {
    for (let i = index, len = nc.length; i < len; i++) {
       if (nc[i].time < note.time + 0.01 && nc[i].color !== note.color) {
          return true;

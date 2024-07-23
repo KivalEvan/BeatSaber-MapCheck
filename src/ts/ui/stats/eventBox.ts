@@ -1,7 +1,7 @@
 import { IBeatmapItem } from '../../types';
 import { prefix } from './constants';
 import { types } from 'bsmap';
-import { renamer, stats } from 'bsmap/extensions';
+import { renamer } from 'bsmap/extensions';
 
 function allPopulate(...d: Record<string, any>[]) {
    for (const r of d) {
@@ -19,12 +19,15 @@ function allPopulate(...d: Record<string, any>[]) {
    }
 }
 
-export function createEBGCountTable(mapInfo: types.wrapper.IWrapInfo, mapData: IBeatmapItem): HTMLDivElement {
+export function createEBGCountTable(
+   mapInfo: types.wrapper.IWrapInfo,
+   mapData: IBeatmapItem,
+): HTMLDivElement {
    const environment = mapData.environment;
-   const ebgColorCount = stats.countEbg(mapData.data.lightColorEventBoxGroups, environment);
-   const ebgRotationCount = stats.countEbg(mapData.data.lightRotationEventBoxGroups, environment);
-   const ebgTranslationCount = stats.countEbg(mapData.data.lightTranslationEventBoxGroups, environment);
-   const ebgFxCount = stats.countEbg(mapData.data.fxEventBoxGroups, environment);
+   const ebgColorCount = mapData.stats.lightColorEventBoxGroups;
+   const ebgRotationCount = mapData.stats.lightRotationEventBoxGroups;
+   const ebgTranslationCount = mapData.stats.lightTranslationEventBoxGroups;
+   const ebgFxCount = mapData.stats.fxEventBoxGroups;
 
    allPopulate(ebgColorCount, ebgRotationCount, ebgTranslationCount, ebgFxCount);
 

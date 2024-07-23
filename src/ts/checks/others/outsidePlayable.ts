@@ -31,7 +31,11 @@ const tool: ITool = {
    run,
 };
 
-function objectBeforeTime(tag: string, objects: types.wrapper.IWrapBaseObject[], results: IToolOutput[]) {
+function objectBeforeTime(
+   tag: string,
+   objects: types.wrapper.IWrapBaseObject[],
+   results: IToolOutput[],
+) {
    if (objects.length && objects[0].time < 0) {
       results.push({
          type: 'string',

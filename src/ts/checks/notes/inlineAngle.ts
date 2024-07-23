@@ -1,13 +1,13 @@
 import {
-   types,
-   TimeProcessor,
-   round,
+   ColorNote,
    NoteColor,
    NoteDirection,
-   ColorNote,
-   PosY,
-   PosX,
    NoteDirectionAngle,
+   PosX,
+   PosY,
+   round,
+   TimeProcessor,
+   types,
 } from 'bsmap';
 import { placement, swing } from 'bsmap/extensions';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';

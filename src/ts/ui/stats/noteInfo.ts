@@ -1,18 +1,18 @@
-import { types, calculateScore, round, formatNumber } from 'bsmap';
+import { formatNumber, round, types } from 'bsmap';
 import { IBeatmapItem } from '../../types';
 import { prefix } from './constants';
-import { stats, swing } from 'bsmap/extensions';
+import { swing } from 'bsmap/extensions';
 
 export function createNoteInfoTable(
    beatmapInfo: types.wrapper.IWrapInfo,
    beatmap: IBeatmapItem,
 ): HTMLTableElement {
-   const noteCount = stats.countNote(beatmap.data.colorNotes);
+   const noteCount = beatmap.stats.notes;
    let htmlString = `<caption class="${prefix}table-caption">Note Information:</caption><tr><th class="${prefix}table-header" colspan="2">R/B Ratio</th><td class="${prefix}table-element">${round(
       noteCount.red.total / noteCount.blue.total,
       2,
    )}</td></tr><tr><th class="${prefix}table-header" colspan="2">Max Score</th><td class="${prefix}table-element">${formatNumber(
-      calculateScore(beatmap.data),
+      beatmap.score,
    )}</td></tr><tr><th class="${prefix}table-header" colspan="2">Effective BPM</th><td class="${prefix}table-element">${round(
       swing.getMaxEffectiveBpm(beatmap.swingAnalysis.container),
       2,

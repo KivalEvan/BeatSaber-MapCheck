@@ -31,7 +31,9 @@ const tool: ITool = {
    run,
 };
 
-const envFilterID: { [key in types.EnvironmentV3Name]?: Record<number, number> } = {
+const envFilterID: {
+   [key in types.EnvironmentV3Name]?: Record<number, number>;
+} = {
    EDMEnvironment: {
       0: 24,
       1: 24,

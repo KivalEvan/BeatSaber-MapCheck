@@ -3,7 +3,7 @@ import UISelect from '../../ui/helpers/select';
 import { ObjectContainerType } from '../../types/checks/container';
 import UIInput from '../../ui/helpers/input';
 import { NoteColor, types } from 'bsmap';
-import { swing, parity } from 'bsmap/extensions';
+import { parity, swing } from 'bsmap/extensions';
 
 const name = 'Parity Check';
 const description = 'Perform parity check.';

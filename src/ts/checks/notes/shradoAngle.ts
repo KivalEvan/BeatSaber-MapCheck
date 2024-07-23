@@ -1,7 +1,7 @@
-import { TimeProcessor, round, NoteColor, NoteDirectionFlip, NoteDirection, types } from 'bsmap';
+import { NoteColor, NoteDirection, NoteDirectionFlip, round, TimeProcessor, types } from 'bsmap';
 import { swing } from 'bsmap/extensions';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import {  ObjectContainerType } from '../../types/checks/container';
+import { ObjectContainerType } from '../../types/checks/container';
 import UIInput from '../../ui/helpers/input';
 
 const name = 'shrado Angle';
