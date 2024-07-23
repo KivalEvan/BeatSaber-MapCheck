@@ -22,13 +22,14 @@
    },
    "homepage": "https://github.com/KivalEvan/BeatSaber-MapCheck#readme",
    "dependencies": {
+      "bsmap": "^2.0.2",
       "jszip": "^3.10.1"
    },
    "devDependencies": {
       "@types/node": "^20.14.11",
       "prettier": "^3.3.3",
       "sass": "^1.77.8",
-      "typescript": "^5.5.3",
+      "typescript": "^5.5.4",
       "vite": "^5.3.4"
    }
 }

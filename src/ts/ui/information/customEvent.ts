@@ -1,14 +1,11 @@
+import { TimeProcessor, round, toMmss, types } from 'bsmap';
 import Settings from '../../settings';
-import { round, toMmss } from '../../bsmap/utils/mod';
-import { TimeProcessor } from '../../bsmap/beatmap/helpers/timeProcessor';
-import { ICustomEvent as ICustomEventV2 } from '../../bsmap/types/beatmap/v2/custom/customEvent';
-import { ICustomEvent as ICustomEventV3 } from '../../bsmap/types/beatmap/v3/custom/customEvent';
 import { htmlTableCustomEvents } from './constants';
 import { displayTableRow, hideTableRow } from './helpers';
-import { NEDataAbbreviation } from '../../bsmap/extensions/renamer/customData';
+import { renamer } from 'bsmap/extensions';
 
 export function setCustomEvents(
-   arr?: Partial<ICustomEventV2 & ICustomEventV3>[],
+   arr?: Partial<types.v2.ICustomEvent & types.v3.ICustomEvent>[],
    bpm?: TimeProcessor | null,
 ): void {
    if (arr == null || !arr.length) {
@@ -38,8 +35,8 @@ export function setCustomEvents(
          ) {
             continue;
          }
-         const k = NEDataAbbreviation[key as keyof typeof NEDataAbbreviation];
-         if (data[key as keyof ICustomEventV3['d']] != null) {
+         const k = renamer.NEDataAbbreviation[key as keyof typeof renamer.NEDataAbbreviation];
+         if (data[key as keyof types.v3.ICustomEvent['d']] != null) {
             keyArr.push(k);
          }
       }

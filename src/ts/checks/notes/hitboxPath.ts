@@ -1,8 +1,8 @@
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import { isIntersect } from '../../bsmap/extensions/placement/note';
 import UIInput from '../../ui/helpers/input';
-import { IWrapColorNote } from '../../bsmap/types/beatmap/wrapper/colorNote';
 import { ObjectContainerType } from '../../types/checks/container';
+import { types } from 'bsmap';
+import { placement } from 'bsmap/extensions';
 
 const name = 'Hitbox Path';
 const description = 'Check for overlapping pre-swing note hitbox at same time.';
@@ -39,7 +39,7 @@ function check(args: ToolArgs) {
       (n) => n.type === ObjectContainerType.BOMB || n.type === ObjectContainerType.COLOR,
    );
 
-   const result: IWrapColorNote[] = [];
+   const result: types.wrapper.IWrapColorNote[] = [];
    // to avoid multiple of stack popping up, ignore anything within this time
    let lastTime: number = 0;
    for (let i = 0, len = noteContainer.length; i < len; i++) {
@@ -67,12 +67,12 @@ function check(args: ToolArgs) {
          if (
             ((currentNote.data.isHorizontal(compareTo.data) ||
                currentNote.data.isVertical(compareTo.data)) &&
-               isIntersect(currentNote.data, compareTo.data, [
+               placement.isIntersect(currentNote.data, compareTo.data, [
                   [45, 1],
                   [15, 2],
                ]).some((b) => b)) ||
             (currentNote.data.isDiagonal(compareTo.data) &&
-               isIntersect(currentNote.data, compareTo.data, [
+               placement.isIntersect(currentNote.data, compareTo.data, [
                   [45, 1],
                   [15, 1.5],
                ]).some((b) => b))

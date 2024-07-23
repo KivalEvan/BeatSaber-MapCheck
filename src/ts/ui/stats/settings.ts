@@ -1,12 +1,9 @@
-import { round } from '../../bsmap/utils/mod';
-import { TimeProcessor } from '../../bsmap/beatmap/helpers/timeProcessor';
-import { NoteJumpSpeed } from '../../bsmap/beatmap/helpers/njs';
-import { IWrapInfo } from '../../bsmap/types/beatmap/wrapper/info';
+import { NoteJumpSpeed, round, types } from 'bsmap';
 import { IBeatmapItem } from '../../types';
 import { prefix } from './constants';
 
 export function createSettingsTable(
-   beatmapInfo: IWrapInfo,
+   beatmapInfo: types.wrapper.IWrapInfo,
    beatmap: IBeatmapItem,
 ): HTMLTableElement {
    const njs = NoteJumpSpeed.create(

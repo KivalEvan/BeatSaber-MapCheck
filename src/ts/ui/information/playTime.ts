@@ -1,5 +1,5 @@
 import LoadedData from '../../loadedData';
-import { toMmss } from '../../bsmap/utils/time';
+import { toMmss } from 'bsmap';
 import { htmlTablePlayTime } from './constants';
 import { displayTableRow, hideTableRow } from './helpers';
 

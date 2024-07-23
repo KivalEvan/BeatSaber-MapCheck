@@ -1,11 +1,7 @@
 import LoadedData from '../loadedData';
 import UIInformation from './information';
-import { CharacteristicRename } from '../bsmap/beatmap/shared/characteristic';
-import { DifficultyRename } from '../bsmap/beatmap/shared/difficulty';
-import { CharacteristicName } from '../bsmap/types/beatmap/shared/characteristic';
-import { DifficultyName } from '../bsmap/types/beatmap/shared/difficulty';
-import { IWrapInfo } from '../bsmap/types/beatmap/wrapper/info';
 import { createTab } from './helpers/tab';
+import { CharacteristicRename, DifficultyRename, types } from 'bsmap';
 
 const htmlSelectCharacteristic: HTMLDivElement = document.querySelector('#select-characteristic')!;
 const htmlSelectDifficulty: HTMLDivElement = document.querySelector('#select-difficulty')!;
@@ -14,11 +10,11 @@ let htmlLoadedCharacteristic: HTMLInputElement[] = [];
 let htmlLoadedDifficulty: HTMLInputElement[] = [];
 
 export const selectionOnChangeHandlers: ((
-   characteristic?: CharacteristicName,
-   difficulty?: DifficultyName,
+   characteristic?: types.CharacteristicName,
+   difficulty?: types.DifficultyName,
 ) => void)[] = [];
 
-function populateSelectCharacteristic(beatmapInfo?: IWrapInfo): void {
+function populateSelectCharacteristic(beatmapInfo?: types.wrapper.IWrapInfo): void {
    while (htmlSelectCharacteristic.firstChild) {
       htmlSelectCharacteristic.removeChild(htmlSelectCharacteristic.firstChild);
    }
@@ -76,7 +72,7 @@ function populateSelectCharacteristic(beatmapInfo?: IWrapInfo): void {
    }
 }
 
-function populateSelectDifficulty(characteristic?: CharacteristicName): void {
+function populateSelectDifficulty(characteristic?: types.CharacteristicName): void {
    const beatmapInfo = LoadedData.beatmapInfo;
    let prevSelected = getSelectedDifficulty();
    while (htmlSelectDifficulty.firstChild) {
@@ -165,15 +161,15 @@ function selectDifficultyHandler(ev: Event): void {
    }
 }
 
-export function getSelectedCharacteristic(): CharacteristicName | null {
+export function getSelectedCharacteristic(): types.CharacteristicName | null {
    return (
-      (htmlLoadedCharacteristic.filter((elem) => elem.checked)[0]?.value as CharacteristicName) ??
+      (htmlLoadedCharacteristic.filter((elem) => elem.checked)[0]?.value as types.CharacteristicName) ??
       null
    );
 }
 
-export function getSelectedDifficulty(): DifficultyName | null {
-   return (htmlLoadedDifficulty.filter((elem) => elem.checked)[0]?.value as DifficultyName) ?? null;
+export function getSelectedDifficulty(): types.DifficultyName | null {
+   return (htmlLoadedDifficulty.filter((elem) => elem.checked)[0]?.value as types.DifficultyName) ?? null;
 }
 
 function reset() {

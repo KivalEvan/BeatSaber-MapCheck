@@ -1,4 +1,4 @@
-import { round, toMmssms } from '../bsmap/utils/mod';
+import { round, toMmssms } from 'bsmap';
 
 const htmlIntro: HTMLElement = document.querySelector('.intro')!;
 const htmlMetadata: HTMLElement = document.querySelector('.metadata')!;

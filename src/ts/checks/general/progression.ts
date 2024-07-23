@@ -1,17 +1,15 @@
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import { round } from '../../bsmap/utils/mod';
 import LoadedData from '../../loadedData';
-import * as swing from '../../bsmap/extensions/swing/mod';
 import UIInput from '../../ui/helpers/input';
-import { DifficultyRename } from '../../bsmap/beatmap/shared/difficulty';
-import { DifficultyName } from '../../bsmap/types/beatmap/shared/difficulty';
+import { DifficultyRename, round, types } from 'bsmap';
+import { swing } from 'bsmap/extensions';
 
 const name = 'Difficulty Progression';
 const description = 'For ranking purpose, check difficuly progression to fit rankability criteria.';
 const enabled = true;
 
 const htmlDifficultyList = document.createElement('ul');
-const diffList: DifficultyName[] = ['ExpertPlus', 'Expert', 'Hard', 'Normal', 'Easy'];
+const diffList: types.DifficultyName[] = ['ExpertPlus', 'Expert', 'Hard', 'Normal', 'Easy'];
 for (const diff of diffList) {
    htmlDifficultyList.appendChild(
       UIInput.createBlock(
@@ -27,7 +25,7 @@ for (const diff of diffList) {
    );
 }
 
-const tool: ITool<{ [k in DifficultyName]: boolean }> = {
+const tool: ITool<{ [k in types.DifficultyName]: boolean }> = {
    name,
    description,
    type: 'general',

@@ -1,9 +1,11 @@
-import { round } from '../../bsmap/utils/mod';
-import { IWrapInfo } from '../../bsmap/types/beatmap/wrapper/info';
+import { round, types } from 'bsmap';
 import { IBeatmapItem } from '../../types';
 import { prefix } from './constants';
 
-export function createSPSTable(mapInfo: IWrapInfo, mapData: IBeatmapItem): HTMLTableElement {
+export function createSPSTable(
+   mapInfo: types.wrapper.IWrapInfo,
+   mapData: IBeatmapItem,
+): HTMLTableElement {
    const swingInfo = mapData.swingAnalysis;
 
    const htmlTable = document.createElement('table');

@@ -1,6 +1,6 @@
-import { DifficultyName } from '../../bsmap/types/beatmap/shared/difficulty';
+import { types } from "bsmap";
 
-export type UIBackgroundColorType = DifficultyName | 'none';
+export type UIBackgroundColorType = types.DifficultyName | 'none';
 
 export enum UIBackgroundColor {
    'none' = '',

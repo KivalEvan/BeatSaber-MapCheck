@@ -1,17 +1,12 @@
+import { ColorScheme, colorToHex, CustomColorRename, EnvironmentSchemeName, types } from 'bsmap';
 import UIPanel from '../helpers/panel';
-import { colorToHex } from '../../bsmap/utils/mod';
-import { IColorScheme } from '../../bsmap/types/beatmap/v2/custom/colorScheme';
-import { EnvironmentName } from '../../bsmap/types/beatmap/shared/environment';
-import {
-   ColorScheme,
-   CustomColorRename,
-   EnvironmentSchemeName,
-} from '../../bsmap/beatmap/shared/colorScheme';
 import { htmlTableCustomColor } from './constants';
 import { displayTableRow, hideTableRow } from './helpers';
-import { IColor } from '../../bsmap/types/colors';
 
-export function setCustomColor(customColor?: IColorScheme, environment?: EnvironmentName): void {
+export function setCustomColor(
+   customColor?: types.v2.IColorScheme,
+   environment?: types.EnvironmentName,
+): void {
    if (
       !customColor ||
       (!customColor._colorLeft &&
@@ -30,7 +25,7 @@ export function setCustomColor(customColor?: IColorScheme, environment?: Environ
    if (!environment) {
       environment = 'DefaultEnvironment';
    }
-   const existColor: { [key: string]: Omit<IColor, 'a'> | null } = {
+   const existColor: { [key: string]: Omit<types.IColor, 'a'> | null } = {
       _colorLeft: ColorScheme[EnvironmentSchemeName[environment]]?._colorLeft || null,
       _colorRight: ColorScheme[EnvironmentSchemeName[environment]]?._colorRight || null,
       _envColorLeft: ColorScheme[EnvironmentSchemeName[environment]]?._envColorLeft || null,

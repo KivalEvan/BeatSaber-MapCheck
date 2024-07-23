@@ -1,10 +1,7 @@
 // i hate implementing these so much
 import UIPanel from '../helpers/panel';
 import LoadedData from '../../loadedData';
-import Settings from '../../settings';
-import { DifficultyRename } from '../../bsmap/beatmap/shared/difficulty';
-import { CharacteristicRename } from '../../bsmap/beatmap/shared/characteristic';
-import { logPrefix, prefix } from './constants';
+import { logPrefix } from './constants';
 import { createNPSTable } from './nps';
 import { createSettingsTable } from './settings';
 import { createSPSTable } from './sps';
@@ -15,13 +12,12 @@ import { createNoteInfoTable } from './noteInfo';
 import { createNoteCountTable } from './note';
 import { createNotePlacementTable } from './notePlacement';
 import { createObstacleCountTable } from './obstacle';
-import { CharacteristicName } from '../../bsmap/types/beatmap/shared/characteristic';
-import { IWrapInfoBeatmap } from '../../bsmap/types/beatmap/wrapper/info';
 import {
    getSelectedCharacteristic,
    getSelectedDifficulty,
    selectionOnChangeHandlers,
 } from '../selection';
+import { types } from 'bsmap';
 
 const htmlStats: HTMLElement = document.querySelector('.stats__content')!;
 
@@ -31,7 +27,7 @@ function populate(): void {
    }
    const mapInfo = LoadedData.beatmapInfo;
 
-   const diffSet: Partial<Record<CharacteristicName, IWrapInfoBeatmap[]>> = {};
+   const diffSet: Partial<Record<types.CharacteristicName, types.wrapper.IWrapInfoBeatmap[]>> = {};
    for (const difficulty of mapInfo.difficulties) {
       diffSet[difficulty.characteristic] ||= [];
       diffSet[difficulty.characteristic]!.push(difficulty);

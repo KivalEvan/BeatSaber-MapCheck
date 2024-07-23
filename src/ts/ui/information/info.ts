@@ -1,9 +1,7 @@
 import LoadedData from '../../loadedData';
 import { removeOptions } from '../../utils/web';
-import { EnvironmentAllName } from '../../bsmap/types/beatmap/shared/environment';
-import { IEditor, IEditorInfo } from '../../bsmap/types/beatmap/v2/custom/editor';
 import { IContributorB64 } from '../../types';
-import { EnvironmentRename } from '../../bsmap/beatmap/shared/environment';
+import { EnvironmentRename, types } from 'bsmap';
 
 const htmlInfoLevelAuthor: HTMLElement = document.querySelector('.info__level-author')!;
 const htmlInfoEnvironment: HTMLElement = document.querySelector('.info__environment')!;
@@ -33,7 +31,7 @@ export function setLevelAuthor(mappers?: string[], lighters?: string[]): void {
    }
 }
 
-export function setEnvironment(envs?: EnvironmentAllName[]): void {
+export function setEnvironment(envs?:types. EnvironmentAllName[]): void {
    if (!envs) {
       htmlInfoEnvironment.textContent = '';
       return;
@@ -43,7 +41,7 @@ export function setEnvironment(envs?: EnvironmentAllName[]): void {
       .join(', ');
 }
 
-export function setEditors(obj?: IEditor): void {
+export function setEditors(obj?: types.v2.IEditor): void {
    if (!obj || !obj._lastEditedBy) {
       htmlInfoEditors.classList.add('hidden');
       return;
@@ -52,7 +50,7 @@ export function setEditors(obj?: IEditor): void {
    const lastEdited = obj._lastEditedBy || 'Undefined';
    let text = 'Last edited on ' + lastEdited;
    if (obj[lastEdited]) {
-      const editor = obj[lastEdited] as IEditorInfo;
+      const editor = obj[lastEdited] as types.v2.IEditorInfo;
       text += ' v' + editor.version;
    }
    htmlInfoEditors.textContent = text;

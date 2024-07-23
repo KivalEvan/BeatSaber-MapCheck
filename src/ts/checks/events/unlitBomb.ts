@@ -1,10 +1,6 @@
+import { EventList, TimeProcessor, types } from 'bsmap';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import { EnvironmentAllName } from '../../bsmap/types/beatmap/shared/environment';
 import UIInput from '../../ui/helpers/input';
-import { TimeProcessor } from '../../bsmap/beatmap/helpers/timeProcessor';
-import { EventList } from '../../bsmap/beatmap/shared/environment';
-import { IWrapBasicEvent } from '../../bsmap/types/beatmap/wrapper/basicEvent';
-import { IWrapBombNote } from '../../bsmap/types/beatmap/wrapper/bombNote';
 
 const name = 'Unlit Bomb';
 const description = 'Check for lighting around bomb.';
@@ -37,19 +33,19 @@ const tool: ITool = {
 
 // omega scuffed clusterfuck help me pls im cryin rn
 const unlitBomb = (
-   bombs: IWrapBombNote[],
-   events: IWrapBasicEvent[],
+   bombs: types.wrapper.IWrapBombNote[],
+   events: types.wrapper.IWrapBasicEvent[],
    timeProcessor: TimeProcessor,
-   environment: EnvironmentAllName,
+   environment: types.EnvironmentAllName,
 ) => {
    if (!events.length) {
       return [];
    }
-   const result: IWrapBombNote[] = [];
+   const result: types.wrapper.IWrapBombNote[] = [];
    const commonEvent = EventList[environment]?.[0] ?? EventList['DefaultEnvironment'][0];
    const eventsLight = events
       .filter((ev) => ev.isLightEvent(environment) && commonEvent.includes(ev.type))
-      .sort((a, b) => a.type - b.type) as IWrapBasicEvent[];
+      .sort((a, b) => a.type - b.type) as types.wrapper.IWrapBasicEvent[];
    const eventState: {
       [key: number]: {
          state: 'off' | 'fading' | 'on';

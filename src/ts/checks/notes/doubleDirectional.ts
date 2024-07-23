@@ -1,3 +1,4 @@
+import { NoteColor, NoteDirection, NoteDirectionAngle, PosX, PosY, types } from 'bsmap';
 import {
    IBeatmapItem,
    ITool,
@@ -7,17 +8,8 @@ import {
    ToolOutputOrder,
 } from '../../types';
 import { ObjectContainerType } from '../../types/checks/container';
-import { checkDirection } from '../../bsmap/extensions/placement/note';
-import swing from '../../bsmap/extensions/swing/swing';
 import UIInput from '../../ui/helpers/input';
-import {
-   NoteColor,
-   NoteDirection,
-   NoteDirectionAngle,
-   PosX,
-   PosY,
-} from '../../bsmap/beatmap/shared/constants';
-import { IWrapColorNote } from '../../bsmap/types/beatmap/wrapper/colorNote';
+import { swing, placement } from 'bsmap/extensions';
 
 const name = 'Double-directional';
 const description = 'Check double-directional note swing (this may not mean parity break).';
@@ -51,15 +43,15 @@ const tool: ITool = {
 function check(beatmapItem: IBeatmapItem) {
    const timeProcessor = beatmapItem.timeProcessor;
    const noteContainer = beatmapItem.noteContainer;
-   const lastNote: { [key: number]: IWrapColorNote } = {};
+   const lastNote: { [key: number]: types.wrapper.IWrapColorNote } = {};
    const lastNoteAngle: { [key: number]: number } = {};
-   const startNoteDot: { [key: number]: IWrapColorNote | null } = {};
-   const swingNoteArray: { [key: number]: IWrapColorNote[] } = {
+   const startNoteDot: { [key: number]: types.wrapper.IWrapColorNote | null } = {};
+   const swingNoteArray: { [key: number]: types.wrapper.IWrapColorNote[] } = {
       [NoteColor.RED]: [],
       [NoteColor.BLUE]: [],
    };
 
-   const arr: IWrapColorNote[] = [];
+   const arr: types.wrapper.IWrapColorNote[] = [];
    for (let i = 0, len = noteContainer.length; i < len; i++) {
       const note = noteContainer[i];
       if (note.type === ObjectContainerType.COLOR && lastNote[note.data.color]) {
@@ -75,7 +67,7 @@ function check(beatmapItem: IBeatmapItem) {
                startNoteDot[note.data.color] = null;
                lastNoteAngle[note.data.color] = (lastNoteAngle[note.data.color] + 180) % 360;
             }
-            if (checkDirection(note.data, lastNoteAngle[note.data.color], 45, true)) {
+            if (placement.checkDirection(note.data, lastNoteAngle[note.data.color], 45, true)) {
                arr.push(note.data);
             }
             if (note.data.direction === NoteDirection.ANY) {
@@ -87,7 +79,7 @@ function check(beatmapItem: IBeatmapItem) {
          } else {
             if (
                startNoteDot[note.data.color] &&
-               checkDirection(note.data, lastNoteAngle[note.data.color], 45, true)
+               placement.checkDirection(note.data, lastNoteAngle[note.data.color], 45, true)
             ) {
                arr.push(note.data);
                startNoteDot[note.data.color] = null;

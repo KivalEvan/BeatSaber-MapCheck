@@ -3,7 +3,7 @@
       "target": "es6",
       "module": "es6",
       "lib": ["ESNext", "DOM"],
-      "moduleResolution": "node",
+      "moduleResolution": "Bundler",
       "strict": true,
       "sourceMap": true,
       "esModuleInterop": true,

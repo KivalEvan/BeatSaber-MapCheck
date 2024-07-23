@@ -1,6 +1,5 @@
 import Settings from '../../settings';
-import { round, toMmss } from '../../bsmap/utils/mod';
-import { TimeProcessor } from '../../bsmap/beatmap/helpers/timeProcessor';
+import { round, toMmss, TimeProcessor } from 'bsmap';
 import { htmlTableBPMChanges } from './constants';
 import { displayTableRow, hideTableRow } from './helpers';
 

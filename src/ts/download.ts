@@ -1,8 +1,7 @@
-import { isHex, round, sanitizeBeatSaverId, sanitizeUrl } from './bsmap/utils/mod';
 import { getZipHashURL, getZipIdURL } from './beatsaver';
 import UILoading from './ui/loading';
 import UIHeader from './ui/header';
-import logger from './bsmap/logger';
+import { isHex, round, sanitizeBeatSaverId, sanitizeUrl, logger } from 'bsmap';
 
 function tag(name: string) {
    return ['download', name];

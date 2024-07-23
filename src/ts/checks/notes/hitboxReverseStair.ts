@@ -1,14 +1,11 @@
+import { NoteColor, NoteDirection, types } from 'bsmap';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import {
-   IObjectContainer,
    IObjectContainerColor,
    ObjectContainerType,
 } from '../../types/checks/container';
-import { isIntersect } from '../../bsmap/extensions/placement/note';
-import swing from '../../bsmap/extensions/swing/swing';
 import UIInput from '../../ui/helpers/input';
-import { NoteColor, NoteDirection } from '../../bsmap/beatmap/shared/constants';
-import { IWrapColorNote } from '../../bsmap/types/beatmap/wrapper/colorNote';
+import { placement, swing } from 'bsmap/extensions';
 
 const name = 'Hitbox Reverse Staircase';
 const description = 'Check for overlapping pre-swing hitbox with note hitbox during swing.';
@@ -44,13 +41,13 @@ const constantDiagonal = 0.03414823529;
 function check(args: ToolArgs) {
    const { timeProcessor, njs, noteContainer } = args.beatmap;
 
-   const lastNote: { [key: number]: IWrapColorNote } = {};
-   const swingNoteArray: { [key: number]: IWrapColorNote[] } = {
+   const lastNote: { [key: number]: types.wrapper.IWrapColorNote } = {};
+   const swingNoteArray: { [key: number]: types.wrapper.IWrapColorNote[] } = {
       [NoteColor.RED]: [],
       [NoteColor.BLUE]: [],
    };
 
-   const result: IWrapColorNote[] = [];
+   const result: types.wrapper.IWrapColorNote[] = [];
    for (let i = 0, len = noteContainer.length; i < len; i++) {
       if (noteContainer[i].type !== ObjectContainerType.COLOR) {
          continue;
@@ -85,7 +82,7 @@ function check(args: ToolArgs) {
                   1.425 /
                      ((60 * (note.data.time - other.time)) / timeProcessor.bpm +
                         (isDiagonal ? constantDiagonal : constant)) &&
-               isIntersect(note.data, other, [[15, 1.5]])[1]
+               placement.isIntersect(note.data, other, [[15, 1.5]])[1]
             ) {
                result.push(other);
                break;

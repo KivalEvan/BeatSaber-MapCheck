@@ -1,30 +1,25 @@
 import JSZip from 'jszip';
-import * as swing from './bsmap/extensions/swing/mod';
-import { TimeProcessor } from './bsmap/beatmap/helpers/timeProcessor';
-import logger from './bsmap/logger';
-import { IWrapInfo, IWrapInfoBeatmap } from './bsmap/types/beatmap/wrapper/info';
 import { IBeatmapAudio, IBeatmapItem } from './types/checks/beatmapItem';
-import { IBPMInfo } from './bsmap/types/beatmap/v2/bpmInfo';
-import { IAudio } from './bsmap/types/beatmap/v4/audioData';
-import { IBPMEvent } from './bsmap/types/beatmap/v3/bpmEvent';
 import settings from './settings';
+import { IObjectContainer, ObjectContainerType } from './types/checks/container';
 import {
+   types,
+   logger,
+   loadInfo,
    Beatmap,
    loadDifficulty,
-   loadInfo,
    loadLightshow,
    NoteJumpSpeed,
-} from './bsmap/beatmap/mod';
-import { IWrapBeatmap } from './bsmap/types/beatmap/wrapper/beatmap';
-import { IObjectContainer, ObjectContainerType } from './types/checks/container';
-import { IWrapBaseObject } from './bsmap/types/beatmap/wrapper/baseObject';
+   TimeProcessor,
+} from 'bsmap';
+import { swing } from 'bsmap/extensions';
 
 function tag(name: string) {
    return ['load', name];
 }
 
 export async function extractBpmInfo(
-   info: IWrapInfo,
+   info: types.wrapper.IWrapInfo,
    zip: JSZip,
    path = '',
 ): Promise<IBeatmapAudio | null> {
@@ -32,7 +27,7 @@ export async function extractBpmInfo(
       const audioFile = zip.file(path + info.audio.audioDataFilename);
       logger.tInfo(tag('extractBPMInfo'), 'loading', info.audio.audioDataFilename);
       if (audioFile) {
-         const bpmInfo = (await audioFile.async('string').then(JSON.parse)) as IAudio;
+         const bpmInfo = (await audioFile.async('string').then(JSON.parse)) as types.v4.IAudio;
          return {
             duration: bpmInfo.songSampleCount / bpmInfo.songFrequency,
             bpm: bpmInfo.bpmData.map((r) => ({
@@ -45,7 +40,7 @@ export async function extractBpmInfo(
    const bpmFile = zip.file(path + 'BPMInfo.dat');
    logger.tInfo(tag('extractBPMInfo'), 'loading BPMInfo.dat');
    if (bpmFile) {
-      const bpmInfo = (await bpmFile.async('string').then(JSON.parse)) as IBPMInfo;
+      const bpmInfo = (await bpmFile.async('string').then(JSON.parse)) as types.v2.IBPMInfo;
       return {
          duration: bpmInfo._songSampleCount / bpmInfo._songFrequency,
          bpm: bpmInfo._regions.map((r) => ({
@@ -75,9 +70,9 @@ export async function extractInfo(zip: JSZip, path = '') {
 
 async function fetchLightshow(
    zip: JSZip,
-   infoDiff: IWrapInfoBeatmap,
+   infoDiff: types.wrapper.IWrapInfoBeatmap,
    path = '',
-): Promise<[any, IWrapBeatmap] | null> {
+): Promise<[any, types.wrapper.IWrapBeatmap] | null> {
    const file = zip.file(path + infoDiff.lightshowFilename);
    if (!file) {
       logger.tError(
@@ -106,11 +101,11 @@ async function fetchLightshow(
 }
 
 export function extractBeatmaps(
-   info: IWrapInfo,
+   info: types.wrapper.IWrapInfo,
    zip: JSZip,
    path = '',
 ): Promise<IBeatmapItem | null>[] {
-   const loaded: Record<string, Promise<[any, IWrapBeatmap] | null>> = {};
+   const loaded: Record<string, Promise<[any, types.wrapper.IWrapBeatmap] | null>> = {};
    return info.difficulties.map(async (d) => {
       const infoDiff = d;
       const difficultyFile = zip.file(path + infoDiff.filename);
@@ -179,7 +174,7 @@ export function extractBeatmaps(
          jsonDifficultyVer === 3
             ? [
                  ...(data.customData.BPMChanges ?? []),
-                 ...(jsonDifficulty.bpmEvents ?? []).map((be: IBPMEvent) => be),
+                 ...(jsonDifficulty.bpmEvents ?? []).map((be: types.v3.IBPMEvent) => be),
               ]
             : jsonDifficultyVer === 2
               ? (data.customData._BPMChanges ?? data.customData._bpmChanges)
@@ -215,7 +210,7 @@ export function extractBeatmaps(
    });
 }
 
-function getNoteContainer(beatmap: IWrapBeatmap): IObjectContainer[] {
+function getNoteContainer(beatmap: types.wrapper.IWrapBeatmap): IObjectContainer[] {
    return [
       ...beatmap.colorNotes.map((e) => ({
          data: e,
@@ -236,7 +231,7 @@ function getNoteContainer(beatmap: IWrapBeatmap): IObjectContainer[] {
    ].sort((a, b) => a.data.time - b.data.time) as IObjectContainer[];
 }
 
-function precalculateTimes(beatmap: IWrapBeatmap, timeProcessor: TimeProcessor) {
+function precalculateTimes(beatmap: types.wrapper.IWrapBeatmap, timeProcessor: TimeProcessor) {
    const fn = applyTime(timeProcessor);
    if (!beatmap.difficulty.customData.__mapcheck_precalculatetime) {
       beatmap.bpmEvents.forEach(fn);
@@ -262,7 +257,7 @@ function precalculateTimes(beatmap: IWrapBeatmap, timeProcessor: TimeProcessor) 
 }
 
 function applyTime(timeProcessor: TimeProcessor) {
-   return function (object: IWrapBaseObject) {
+   return function (object: types.wrapper.IWrapBaseObject) {
       object.customData.__mapcheck_secondtime = timeProcessor.toRealTime(object.time, true);
       object.customData.__mapcheck_beattime = timeProcessor.adjustTime(object.time);
    };

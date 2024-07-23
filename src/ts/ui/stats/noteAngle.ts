@@ -1,13 +1,10 @@
 import UISelect from '../helpers/select';
 import LoadedData from '../../loadedData';
-import { round } from '../../bsmap/utils/mod';
-import { IWrapInfo } from '../../bsmap/types/beatmap/wrapper/info';
 import { IBeatmapItem } from '../../types';
-import { IObjectContainer } from '../../types/checks/container';
-import { countDirection } from '../../bsmap/extensions/stats/note';
 import { logPrefix, prefix } from './constants';
 import { getFilteredContainer } from './helpers';
-import { IWrapBaseNote } from '../../bsmap/types/beatmap/wrapper/baseNote';
+import { stats } from 'bsmap/extensions';
+import { round, types } from 'bsmap';
 
 function noteAngleSelectHandler(ev: Event) {
    const target = ev.target as HTMLSelectElement;
@@ -31,14 +28,14 @@ function noteAngleSelectHandler(ev: Event) {
 }
 
 // TODO: use angle instead of cut direction
-function noteAngleTableString(notes: IWrapBaseNote[]): string {
+function noteAngleTableString(notes: types.wrapper.IWrapBaseNote[]): string {
    const totalNote = notes.length || 1;
    const cutOrder = [4, 0, 5, 2, 8, 3, 6, 1, 7];
    let htmlString = '';
    for (let i = 0; i < 3; i++) {
       htmlString += '<tr>';
       for (let j = 0; j < 3; j++) {
-         let count = countDirection(notes, cutOrder[i * 3 + j]);
+         let count = stats.countDirection(notes, cutOrder[i * 3 + j]);
          htmlString += `<td class="${prefix}table-element">${count}<br>(${round(
             (count / totalNote) * 100,
             1,
@@ -50,7 +47,7 @@ function noteAngleTableString(notes: IWrapBaseNote[]): string {
 }
 
 export function createNoteAngleTable(
-   beatmapInfo: IWrapInfo,
+   beatmapInfo: types.wrapper.IWrapInfo,
    beatmap: IBeatmapItem,
 ): HTMLTableElement {
    const htmlSelect = UISelect.create(

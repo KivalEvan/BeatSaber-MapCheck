@@ -1,16 +1,13 @@
-import { formatNumber, round } from '../../bsmap/utils/mod';
-import { IWrapInfo } from '../../bsmap/types/beatmap/wrapper/info';
+import { types, calculateScore, round, formatNumber } from 'bsmap';
 import { IBeatmapItem } from '../../types';
-import * as swing from '../../bsmap/extensions/swing/mod';
 import { prefix } from './constants';
-import { countNote } from '../../bsmap/extensions/stats/note';
-import { calculateScore } from '../../bsmap/beatmap/shared/score';
+import { stats, swing } from 'bsmap/extensions';
 
 export function createNoteInfoTable(
-   beatmapInfo: IWrapInfo,
+   beatmapInfo: types.wrapper.IWrapInfo,
    beatmap: IBeatmapItem,
 ): HTMLTableElement {
-   const noteCount = countNote(beatmap.data.colorNotes);
+   const noteCount = stats.countNote(beatmap.data.colorNotes);
    let htmlString = `<caption class="${prefix}table-caption">Note Information:</caption><tr><th class="${prefix}table-header" colspan="2">R/B Ratio</th><td class="${prefix}table-element">${round(
       noteCount.red.total / noteCount.blue.total,
       2,

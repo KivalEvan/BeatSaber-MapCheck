@@ -1,13 +1,13 @@
-import { IWrapInfo } from '../../bsmap/types/beatmap/wrapper/info';
+import { types } from 'bsmap';
 import { IBeatmapItem } from '../../types';
-import { countObstacle } from '../../bsmap/extensions/stats/obstacle';
 import { prefix } from './constants';
+import { stats } from 'bsmap/extensions';
 
 export function createObstacleCountTable(
-   mapInfo: IWrapInfo,
+   mapInfo: types.wrapper.IWrapInfo,
    mapData: IBeatmapItem,
 ): HTMLTableElement {
-   const obstacleCount = countObstacle(mapData.data.obstacles);
+   const obstacleCount = stats.countObstacle(mapData.data.obstacles);
 
    let htmlString = `<caption class="${prefix}table-caption">Obstacles: ${obstacleCount.total}</caption>`;
    if (obstacleCount.interactive) {

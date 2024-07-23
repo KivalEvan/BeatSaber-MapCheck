@@ -1,8 +1,6 @@
+import { Obstacle, PosY, PosX, types } from 'bsmap';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import UIInput from '../../ui/helpers/input';
-import { PosX, PosY } from '../../bsmap/beatmap/shared/constants';
-import { Obstacle } from '../../bsmap/beatmap/core/obstacle';
-import { IWrapObstacle } from '../../bsmap/types/beatmap/wrapper/obstacle';
 
 const name = '<15ms Obstacle';
 const description =
@@ -41,11 +39,11 @@ function check(args: ToolArgs) {
    const { timeProcessor } = args.beatmap;
    const { minDur: temp } = tool.input.params;
    const minDur = timeProcessor.toBeatTime(temp, false);
-   const ary: IWrapObstacle[] = [];
-   let obstacleLFull: IWrapObstacle = new Obstacle();
-   let obstacleRFull: IWrapObstacle = new Obstacle();
-   let obstacleLHalf: IWrapObstacle = new Obstacle();
-   let obstacleRHalf: IWrapObstacle = new Obstacle();
+   const ary: types.wrapper.IWrapObstacle[] = [];
+   let obstacleLFull: types.wrapper.IWrapObstacle = new Obstacle();
+   let obstacleRFull: types.wrapper.IWrapObstacle = new Obstacle();
+   let obstacleLHalf: types.wrapper.IWrapObstacle = new Obstacle();
+   let obstacleRHalf: types.wrapper.IWrapObstacle = new Obstacle();
    for (let i = 0; i < obstacles.length; i++) {
       const o = obstacles[i];
       if (o.posY === PosY.BOTTOM && o.height > 2 && o.duration > 0) {

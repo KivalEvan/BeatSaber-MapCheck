@@ -1,12 +1,9 @@
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import UISelect from '../../ui/helpers/select';
-import Parity from '../../bsmap/extensions/parity/parity';
-import swing from '../../bsmap/extensions/swing/swing';
-import { IObjectContainer, ObjectContainerType } from '../../types/checks/container';
+import { ObjectContainerType } from '../../types/checks/container';
 import UIInput from '../../ui/helpers/input';
-import { NoteColor } from '../../bsmap/beatmap/shared/constants';
-import { IWrapBombNote } from '../../bsmap/types/beatmap/wrapper/bombNote';
-import { IWrapColorNote } from '../../bsmap/types/beatmap/wrapper/colorNote';
+import { NoteColor, types } from 'bsmap';
+import { swing, parity } from 'bsmap/extensions';
 
 const name = 'Parity Check';
 const description = 'Perform parity check.';
@@ -87,22 +84,22 @@ function check(args: ToolArgs) {
       }
    >tool.input.params;
 
-   const lastNote: { [key: number]: IWrapColorNote } = {};
-   const swingNoteArray: { [key: number]: IWrapColorNote[] } = {
+   const lastNote: { [key: number]: types.wrapper.IWrapColorNote } = {};
+   const swingNoteArray: { [key: number]: types.wrapper.IWrapColorNote[] } = {
       [NoteColor.RED]: [],
       [NoteColor.BLUE]: [],
    };
-   const bombContext: { [key: number]: IWrapBombNote[] } = {
+   const bombContext: { [key: number]: types.wrapper.IWrapBombNote[] } = {
       [NoteColor.RED]: [],
       [NoteColor.BLUE]: [],
    };
-   const lastBombContext: { [key: number]: IWrapBombNote[] } = {
+   const lastBombContext: { [key: number]: types.wrapper.IWrapBombNote[] } = {
       [NoteColor.RED]: [],
       [NoteColor.BLUE]: [],
    };
 
-   const swingParity: { [key: number]: Parity } = {
-      [NoteColor.RED]: new Parity(
+   const swingParity: { [key: number]: parity.Parity } = {
+      [NoteColor.RED]: new parity.Parity(
          args.beatmap.data.colorNotes,
          args.beatmap.data.bombNotes,
          0,
@@ -110,7 +107,7 @@ function check(args: ToolArgs) {
          errorThres,
          allowedRot,
       ),
-      [NoteColor.BLUE]: new Parity(
+      [NoteColor.BLUE]: new parity.Parity(
          args.beatmap.data.colorNotes,
          args.beatmap.data.bombNotes,
          1,
@@ -119,7 +116,10 @@ function check(args: ToolArgs) {
          allowedRot,
       ),
    };
-   const parity: { warning: IWrapColorNote[]; error: IWrapColorNote[] } = {
+   const parityAry: {
+      warning: types.wrapper.IWrapColorNote[];
+      error: types.wrapper.IWrapColorNote[];
+   } = {
       warning: [],
       error: [],
    };
@@ -141,11 +141,11 @@ function check(args: ToolArgs) {
             );
             switch (parityStatus) {
                case 'warning': {
-                  parity.warning.push(swingNoteArray[note.data.color][0]);
+                  parityAry.warning.push(swingNoteArray[note.data.color][0]);
                   break;
                }
                case 'error': {
-                  parity.error.push(swingNoteArray[note.data.color][0]);
+                  parityAry.error.push(swingNoteArray[note.data.color][0]);
                   break;
                }
             }
@@ -173,17 +173,17 @@ function check(args: ToolArgs) {
          const parityStatus = swingParity[i].check(swingNoteArray[i], bombContext[i]);
          switch (parityStatus) {
             case 'warning': {
-               parity.warning.push(swingNoteArray[i][0]);
+               parityAry.warning.push(swingNoteArray[i][0]);
                break;
             }
             case 'error': {
-               parity.error.push(swingNoteArray[i][0]);
+               parityAry.error.push(swingNoteArray[i][0]);
                break;
             }
          }
       }
    }
-   return parity;
+   return parityAry;
 }
 
 function run(args: ToolArgs): IToolOutput[] {

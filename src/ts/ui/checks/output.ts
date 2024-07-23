@@ -1,8 +1,6 @@
+import { round, toMmss, toMmssms, types } from 'bsmap';
 import settings from '../../settings';
-import { round } from '../../bsmap/utils/math';
-import { toMmss, toMmssms } from '../../bsmap/utils/time';
 import { OutputSymbol } from '../../types/checks/check';
-import { IWrapBaseObject } from '../../bsmap/types/beatmap/wrapper/baseObject';
 
 function addLabel(str: string, symbol?: OutputSymbol): string {
    switch (symbol) {
@@ -40,11 +38,11 @@ export function printResult(label: string, text?: string, symbol?: OutputSymbol)
    return htmlContainer;
 }
 
-function deduplicateFilter<T extends IWrapBaseObject>(obj: T, i: number, ary: T[]) {
+function deduplicateFilter<T extends types.wrapper.IWrapBaseObject>(obj: T, i: number, ary: T[]) {
    return i === 0 || obj.time !== ary[i - 1].time;
 }
 
-export function printResultTime(label: string, timeAry: IWrapBaseObject[], symbol?: OutputSymbol) {
+export function printResultTime(label: string, timeAry: types.wrapper.IWrapBaseObject[], symbol?: OutputSymbol) {
    const htmlContainer = document.createElement('div');
 
    if (settings.deduplicateTime) {

@@ -1,8 +1,7 @@
+import { NoteDirection, types } from 'bsmap';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import { IObjectContainer, ObjectContainerType } from '../../types/checks/container';
+import { ObjectContainerType } from '../../types/checks/container';
 import UIInput from '../../ui/helpers/input';
-import { NoteDirection } from '../../bsmap/beatmap/shared/constants';
-import { IWrapArc } from '../../bsmap/types/beatmap/wrapper/arc';
 
 const name = 'Improper Arc';
 const description = 'Check for correct use of arc.';
@@ -41,7 +40,7 @@ function check(args: ToolArgs) {
       )
       .sort((a, b) => a.data.time - b.data.time);
 
-   const result: IWrapArc[] = [];
+   const result: types.wrapper.IWrapArc[] = [];
    for (let i = 0, potential = true, len = noteContainer.length; i < len; i++) {
       const arc = noteContainer[i];
       const lastTime = noteContainer.at(-1)!.data.time;

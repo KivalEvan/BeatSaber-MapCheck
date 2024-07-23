@@ -1,14 +1,12 @@
+import { colorFrom, ColorScheme, deltaE00, EnvironmentSchemeName, round, types } from 'bsmap';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import { ColorArray } from '../../bsmap/types/colors';
-import { colorFrom, deltaE00, round } from '../../bsmap/utils/mod';
 import UIInput from '../../ui/helpers/input';
-import { ColorScheme, EnvironmentSchemeName } from '../../bsmap/beatmap/shared/colorScheme';
 
 const name = 'Color Check';
 const description = 'Compare note color with other colored note and the arrow on itself.';
 const enabled = true;
 
-const arrowColor: ColorArray = [1, 1, 1];
+const arrowColor: types.ColorArray = [1, 1, 1];
 
 const deltaELevel: { [key: number]: string } = {
    1: 'Indistinguishable',

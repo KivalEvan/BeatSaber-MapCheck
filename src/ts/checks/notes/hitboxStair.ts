@@ -1,10 +1,7 @@
+import { ColorNote, NoteColor, NoteDirection, NoteDirectionSpace, types } from 'bsmap';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import { isEnd } from '../../bsmap/extensions/placement/note';
-import swing from '../../bsmap/extensions/swing/swing';
-import { ColorNote } from '../../bsmap/beatmap/core/colorNote';
 import UIInput from '../../ui/helpers/input';
-import { NoteColor, NoteDirection, NoteDirectionSpace } from '../../bsmap/beatmap/shared/constants';
-import { IWrapColorNote } from '../../bsmap/types/beatmap/wrapper/colorNote';
+import { placement, swing } from 'bsmap/extensions';
 
 const name = 'Hitbox Staircase';
 const description = 'Check for overlapping post-swing hitbox with note hitbox during swing.';
@@ -35,7 +32,7 @@ const tool: ITool = {
    run,
 };
 
-function isDouble(note: IWrapColorNote, nc: IWrapColorNote[], index: number): boolean {
+function isDouble(note: types.wrapper.IWrapColorNote, nc: types.wrapper.IWrapColorNote[], index: number): boolean {
    for (let i = index, len = nc.length; i < len; i++) {
       if (nc[i].time < note.time + 0.01 && nc[i].color !== note.color) {
          return true;
@@ -52,10 +49,10 @@ function check(args: ToolArgs) {
    const notes = args.beatmap.data.colorNotes;
    const hitboxTime = timeProcessor.toBeatTime(0.15, false);
 
-   const lastNote: { [key: number]: IWrapColorNote } = {};
+   const lastNote: { [key: number]: types.wrapper.IWrapColorNote } = {};
    const lastNoteDirection: { [key: number]: number } = {};
    const lastSpeed: { [key: number]: number } = {};
-   const swingNoteArray: { [key: number]: IWrapColorNote[] } = {
+   const swingNoteArray: { [key: number]: types.wrapper.IWrapColorNote[] } = {
       [NoteColor.RED]: [],
       [NoteColor.BLUE]: [],
    };
@@ -65,7 +62,7 @@ function check(args: ToolArgs) {
    };
 
    // FIXME: use new system
-   const result: IWrapColorNote[] = [];
+   const result: types.wrapper.IWrapColorNote[] = [];
    for (let i = 0, len = notes.length; i < len; i++) {
       const note = notes[i];
       const directionSpace = NoteDirectionSpace[note.direction as 0] || [0, 0];
@@ -81,7 +78,7 @@ function check(args: ToolArgs) {
             }
             swingNoteArray[note.color] = [];
             lastNoteDirection[note.color] = note.direction;
-         } else if (isEnd(note, lastNote[note.color], lastNoteDirection[note.color])) {
+         } else if (placement.isEnd(note, lastNote[note.color], lastNoteDirection[note.color])) {
             if (note.direction !== NoteDirection.ANY) {
                noteOccupy[note.color].posX = note.posX + directionSpace[0];
                noteOccupy[note.color].posY = note.posY + directionSpace[1];

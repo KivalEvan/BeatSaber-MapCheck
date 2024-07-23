@@ -1,13 +1,10 @@
 import UISelect from '../helpers/select';
 import LoadedData from '../../loadedData';
-import { round } from '../../bsmap/utils/mod';
-import { IWrapInfo } from '../../bsmap/types/beatmap/wrapper/info';
 import { IBeatmapItem } from '../../types';
-import { IObjectContainer } from '../../types/checks/container';
-import { countX, countXY, countY } from '../../bsmap/extensions/stats/note';
 import { logPrefix, prefix } from './constants';
 import { getFilteredContainer } from './helpers';
-import { IWrapGridObjectAttribute } from '../../bsmap/types/beatmap/wrapper/gridObject';
+import { round, types } from 'bsmap';
+import { stats } from 'bsmap/extensions';
 
 function notePlacementSelectHandler(ev: Event) {
    const target = ev.target as HTMLSelectElement;
@@ -30,38 +27,38 @@ function notePlacementSelectHandler(ev: Event) {
    htmlTableBody.innerHTML = notePlacementTableString(filteredContainer);
 }
 
-function notePlacementTableString(nc: IWrapGridObjectAttribute[]): string {
+function notePlacementTableString(nc: types.wrapper.IWrapGridObjectAttribute[]): string {
    const totalNote = nc.length || 1;
    let htmlString = '';
    for (let l = 2; l >= 0; l--) {
       htmlString += '<tr>';
       for (let i = 0; i <= 3; i++) {
-         htmlString += `<td class="${prefix}table-element">${countXY(nc, i, l)}</td>`;
+         htmlString += `<td class="${prefix}table-element">${stats.countXY(nc, i, l)}</td>`;
       }
       htmlString += `<td class="${prefix}table-element ${prefix}table--no-border">${round(
-         (countY(nc, l) / totalNote) * 100,
+         (stats.countY(nc, l) / totalNote) * 100,
          1,
       )}%</td>
         </tr>`;
    }
    htmlString += `<tr><td class="${prefix}table-element ${prefix}table--no-border">${round(
-      (countX(nc, 0) / totalNote) * 100,
+      (stats.countX(nc, 0) / totalNote) * 100,
       1,
    )}%</td><td class="${prefix}table-element ${prefix}table--no-border">${round(
-      (countX(nc, 1) / totalNote) * 100,
+      (stats.countX(nc, 1) / totalNote) * 100,
       1,
    )}%</td><td class="${prefix}table-element ${prefix}table--no-border">${round(
-      (countX(nc, 2) / totalNote) * 100,
+      (stats.countX(nc, 2) / totalNote) * 100,
       1,
    )}%</td><td class="${prefix}table-element ${prefix}table--no-border">${round(
-      (countX(nc, 3) / totalNote) * 100,
+      (stats.countX(nc, 3) / totalNote) * 100,
       1,
    )}%</td></tr>`;
    return htmlString;
 }
 
 export function createNotePlacementTable(
-   beatmapInfo: IWrapInfo,
+   beatmapInfo: types.wrapper.IWrapInfo,
    beatmap: IBeatmapItem,
 ): HTMLTableElement {
    const htmlSelect = UISelect.create(

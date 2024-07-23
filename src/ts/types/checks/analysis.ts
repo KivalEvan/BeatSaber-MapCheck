@@ -1,5 +1,4 @@
-import { CharacteristicName } from '../../bsmap/types/beatmap/shared/characteristic';
-import { DifficultyName } from '../../bsmap/types/beatmap/shared/difficulty';
+import { types } from 'bsmap';
 import { IToolOutput } from './check';
 
 interface IAnalysisBase {
@@ -7,8 +6,8 @@ interface IAnalysisBase {
 }
 
 export interface IAnalysisMap extends IAnalysisBase {
-   characteristic: CharacteristicName;
-   difficulty: DifficultyName;
+   characteristic: types.CharacteristicName;
+   difficulty: types.DifficultyName;
 }
 
 export interface IAnalysis {

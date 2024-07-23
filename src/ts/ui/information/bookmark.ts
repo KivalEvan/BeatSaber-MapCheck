@@ -1,14 +1,11 @@
 import Settings from '../../settings';
 import UIPanel from '../helpers/panel';
-import { colorToHex, round, toMmss } from '../../bsmap/utils/mod';
-import { TimeProcessor } from '../../bsmap/beatmap/helpers/timeProcessor';
-import { IBookmark as IBookmarkV2 } from '../../bsmap/types/beatmap/v2/custom/bookmark';
-import { IBookmark as IBookmarkV3 } from '../../bsmap/types/beatmap/v3/custom/bookmark';
+import { colorToHex, round, toMmss, TimeProcessor, types } from 'bsmap';
 import { htmlTableBookmarks } from './constants';
 import { displayTableRow, hideTableRow } from './helpers';
 
 export function setBookmarks(
-   arr?: Partial<IBookmarkV2 & IBookmarkV3>[],
+   arr?: Partial<types.v2.IBookmark & types.v3.IBookmark>[],
    bpm?: TimeProcessor | null,
 ): void {
    if (arr == null || !arr.length) {

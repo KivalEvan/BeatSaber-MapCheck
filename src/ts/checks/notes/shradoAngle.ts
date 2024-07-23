@@ -1,11 +1,8 @@
+import { TimeProcessor, round, NoteColor, NoteDirectionFlip, NoteDirection, types } from 'bsmap';
+import { swing } from 'bsmap/extensions';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import { round } from '../../bsmap/utils/mod';
-import { IObjectContainer, ObjectContainerType } from '../../types/checks/container';
-import swing from '../../bsmap/extensions/swing/swing';
+import {  ObjectContainerType } from '../../types/checks/container';
 import UIInput from '../../ui/helpers/input';
-import { TimeProcessor } from '../../bsmap/beatmap/helpers/timeProcessor';
-import { NoteColor, NoteDirection, NoteDirectionFlip } from '../../bsmap/beatmap/shared/constants';
-import { IWrapColorNote } from '../../bsmap/types/beatmap/wrapper/colorNote';
 
 const name = 'shrado Angle';
 const description = 'Look for common negative curvature pattern.';
@@ -104,19 +101,19 @@ function check(args: ToolArgs) {
    const { maxTime: temp, distance } = tool.input.params;
    const maxTime = timeProcessor.toBeatTime(temp, false) + 0.001;
 
-   const lastNote: { [key: number]: IWrapColorNote } = {};
+   const lastNote: { [key: number]: types.wrapper.IWrapColorNote } = {};
    const lastNoteDirection: { [key: number]: number } = {};
-   const startNoteDot: { [key: number]: IWrapColorNote | null } = {};
-   const swingNoteArray: { [key: number]: IWrapColorNote[] } = {
+   const startNoteDot: { [key: number]: types.wrapper.IWrapColorNote | null } = {};
+   const swingNoteArray: { [key: number]: types.wrapper.IWrapColorNote[] } = {
       [NoteColor.RED]: [],
       [NoteColor.BLUE]: [],
    };
-   const result: IWrapColorNote[] = [];
+   const result: types.wrapper.IWrapColorNote[] = [];
    for (let i = 0, len = noteContainer.length; i < len; i++) {
       if (noteContainer[i].type !== ObjectContainerType.COLOR) {
          continue;
       }
-      const note = noteContainer[i].data as IWrapColorNote;
+      const note = noteContainer[i].data as types.wrapper.IWrapColorNote;
       if (lastNote[note.color]) {
          if (swing.next(note, lastNote[note.color], timeProcessor, swingNoteArray[note.color])) {
             // FIXME: maybe fix rotation or something

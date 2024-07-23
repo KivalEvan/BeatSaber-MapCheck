@@ -1,3 +1,5 @@
+import { TimeProcessor, round, NoteColor, types } from 'bsmap';
+import { swing } from 'bsmap/extensions';
 import {
    IBeatmapItem,
    ITool,
@@ -6,17 +8,7 @@ import {
    ToolInputOrder,
    ToolOutputOrder,
 } from '../../types';
-import { round } from '../../bsmap/utils/mod';
-import swing from '../../bsmap/extensions/swing/swing';
 import UIInput from '../../ui/helpers/input';
-import { TimeProcessor } from '../../bsmap/beatmap/helpers/timeProcessor';
-import { NoteColor } from '../../bsmap/beatmap/shared/constants';
-import {
-   IObjectContainer,
-   IObjectContainerColor,
-   ObjectContainerType,
-} from '../../types/checks/container';
-import { IWrapColorNote } from '../../bsmap/types/beatmap/wrapper/colorNote';
 
 const name = 'Speed Pause';
 const description = 'Look for stream/burst containing timing gap causing sudden change of pace.';
@@ -102,18 +94,18 @@ function check(beatmapItem: IBeatmapItem) {
    const { maxTime: temp } = tool.input.params;
    const maxTime = timeProcessor.toBeatTime(temp, false) + 0.001;
 
-   const lastNote: { [key: number]: IWrapColorNote } = {};
-   const lastNotePause: { [key: number]: IWrapColorNote } = {};
+   const lastNote: { [key: number]: types.wrapper.IWrapColorNote } = {};
+   const lastNotePause: { [key: number]: types.wrapper.IWrapColorNote } = {};
    const maybePause: { [key: number]: boolean } = {
       [NoteColor.RED]: false,
       [NoteColor.BLUE]: false,
    };
-   const swingNoteArray: { [key: number]: IWrapColorNote[] } = {
+   const swingNoteArray: { [key: number]: types.wrapper.IWrapColorNote[] } = {
       [NoteColor.RED]: [],
       [NoteColor.BLUE]: [],
    };
 
-   const result: IWrapColorNote[] = [];
+   const result: types.wrapper.IWrapColorNote[] = [];
    for (let i = 0, len = colorNotes.length; i < len; i++) {
       const note = colorNotes[i];
       if (lastNote[note.color]) {

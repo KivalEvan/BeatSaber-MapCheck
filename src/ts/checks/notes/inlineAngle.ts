@@ -1,19 +1,18 @@
-import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import { round } from '../../bsmap/utils/mod';
-import { IObjectContainer, ObjectContainerType } from '../../types/checks/container';
-import { checkDirection } from '../../bsmap/extensions/placement/note';
-import swing from '../../bsmap/extensions/swing/swing';
-import { ColorNote } from '../../bsmap/beatmap/core/colorNote';
-import UIInput from '../../ui/helpers/input';
-import { TimeProcessor } from '../../bsmap/beatmap/helpers/timeProcessor';
 import {
+   types,
+   TimeProcessor,
+   round,
    NoteColor,
    NoteDirection,
-   NoteDirectionAngle,
-   PosX,
+   ColorNote,
    PosY,
-} from '../../bsmap/beatmap/shared/constants';
-import { IWrapColorNote } from '../../bsmap/types/beatmap/wrapper/colorNote';
+   PosX,
+   NoteDirectionAngle,
+} from 'bsmap';
+import { placement, swing } from 'bsmap/extensions';
+import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import { IObjectContainer, ObjectContainerType } from '../../types/checks/container';
+import UIInput from '../../ui/helpers/input';
 
 const name = 'Inline Sharp Angle';
 const description = 'Check for angle changes within inline note.';
@@ -101,14 +100,14 @@ function check(args: ToolArgs) {
    const { maxTime: temp } = tool.input.params;
    const maxTime = timeProcessor.toBeatTime(temp, false) + 0.001;
 
-   const lastNote: { [key: number]: IWrapColorNote } = {};
+   const lastNote: { [key: number]: types.wrapper.IWrapColorNote } = {};
    const lastNoteAngle: { [key: number]: number } = {};
-   const startNoteDot: { [key: number]: IWrapColorNote | null } = {};
-   const swingNoteArray: { [key: number]: IWrapColorNote[] } = {
+   const startNoteDot: { [key: number]: types.wrapper.IWrapColorNote | null } = {};
+   const swingNoteArray: { [key: number]: types.wrapper.IWrapColorNote[] } = {
       [NoteColor.RED]: [],
       [NoteColor.BLUE]: [],
    };
-   const result: IWrapColorNote[] = [];
+   const result: types.wrapper.IWrapColorNote[] = [];
    let lastTime = 0;
    let lastIndex = 0;
    for (let i = 0, len = noteContainer.length; i < len; i++) {
@@ -128,7 +127,7 @@ function check(args: ToolArgs) {
             }
             if (
                checkInline(note.data, noteContainer, lastIndex, maxTime) &&
-               checkDirection(note.data, lastNoteAngle[note.data.color], 90, true)
+               placement.checkDirection(note.data, lastNoteAngle[note.data.color], 90, true)
             ) {
                result.push(note.data);
             }
@@ -142,7 +141,7 @@ function check(args: ToolArgs) {
             if (
                startNoteDot[note.data.color] &&
                checkInline(note.data, noteContainer, lastIndex, maxTime) &&
-               checkDirection(note.data, lastNoteAngle[note.data.color], 90, true)
+               placement.checkDirection(note.data, lastNoteAngle[note.data.color], 90, true)
             ) {
                result.push(startNoteDot[note.data.color] as ColorNote);
                startNoteDot[note.data.color] = null;
@@ -190,7 +189,12 @@ function check(args: ToolArgs) {
    return result;
 }
 
-function checkInline(n: IWrapColorNote, notes: IObjectContainer[], index: number, maxTime: number) {
+function checkInline(
+   n: types.wrapper.IWrapColorNote,
+   notes: IObjectContainer[],
+   index: number,
+   maxTime: number,
+) {
    for (let i = index; notes[i].data.time < n.time; i++) {
       const note = notes[i];
       if (note.type !== ObjectContainerType.COLOR) {

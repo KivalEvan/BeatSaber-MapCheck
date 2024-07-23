@@ -1,7 +1,6 @@
+import { TimeProcessor, round } from 'bsmap';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import { round } from '../../bsmap/utils/mod';
 import UIInput from '../../ui/helpers/input';
-import { TimeProcessor } from '../../bsmap/beatmap/helpers/timeProcessor';
 
 const name = 'Slow Slider';
 const description = 'Look for slider that require slow swing.';

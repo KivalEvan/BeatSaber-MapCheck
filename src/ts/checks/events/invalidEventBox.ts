@@ -1,11 +1,4 @@
-import { IndexFilterType } from '../../bsmap/types/beatmap/shared/constants';
-import { EventList } from '../../bsmap/beatmap/shared/environment';
-import {
-   EnvironmentAllName,
-   EnvironmentV3Name,
-} from '../../bsmap/types/beatmap/shared/environment';
-import { IWrapEventBoxGroup } from '../../bsmap/types/beatmap/wrapper/eventBoxGroup';
-import { IWrapLightshow } from '../../bsmap/types/beatmap/wrapper/lightshow';
+import { EventList, IndexFilterType, types } from 'bsmap';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import UIInput from '../../ui/helpers/input';
 
@@ -38,7 +31,7 @@ const tool: ITool = {
    run,
 };
 
-const envFilterID: { [key in EnvironmentV3Name]?: Record<number, number> } = {
+const envFilterID: { [key in types.EnvironmentV3Name]?: Record<number, number> } = {
    EDMEnvironment: {
       0: 24,
       1: 24,
@@ -252,14 +245,14 @@ const envFilterID: { [key in EnvironmentV3Name]?: Record<number, number> } = {
 };
 
 // FIXME: EDMEnvironment special case 12 and 13 filter is 1 for rotation
-function check(map: IWrapLightshow, environment: EnvironmentAllName) {
-   const defectID: IWrapEventBoxGroup[] = [];
-   const defectFilter: IWrapEventBoxGroup[] = [];
+function check(map: types.wrapper.IWrapLightshow, environment: types.EnvironmentAllName) {
+   const defectID: types.wrapper.IWrapEventBoxGroup[] = [];
+   const defectFilter: types.wrapper.IWrapEventBoxGroup[] = [];
 
-   if (!envFilterID[environment as EnvironmentV3Name]) {
+   if (!envFilterID[environment as types.EnvironmentV3Name]) {
       return { defectID: [], defectFilter: [] };
    }
-   const envV3 = environment as EnvironmentV3Name;
+   const envV3 = environment as types.EnvironmentV3Name;
    const eventListEBG = EventList[envV3][1];
 
    const ebg = [

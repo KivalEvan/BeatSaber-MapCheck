@@ -5,8 +5,8 @@ import {
    hasMappingExtensionsNote,
    hasMappingExtensionsObstacle,
    hasMappingExtensionsObstacleV2,
-} from '../../bsmap/beatmap/mod';
-import { IWrapBaseObject } from '../../bsmap/types/beatmap/wrapper/baseObject';
+   types,
+} from 'bsmap';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import UIInput from '../../ui/helpers/input';
 
@@ -55,11 +55,11 @@ function run(args: ToolArgs): IToolOutput[] {
       fxEventBoxGroups,
    } = args.beatmap.data;
 
-   let noteResult: IWrapBaseObject[] = [];
-   let obstacleResult: IWrapBaseObject[] = [];
-   let bombResult: IWrapBaseObject[] = [];
-   let sliderResult: IWrapBaseObject[] = [];
-   let chainResult: IWrapBaseObject[] = [];
+   let noteResult: types.wrapper.IWrapBaseObject[] = [];
+   let obstacleResult: types.wrapper.IWrapBaseObject[] = [];
+   let bombResult: types.wrapper.IWrapBaseObject[] = [];
+   let sliderResult: types.wrapper.IWrapBaseObject[] = [];
+   let chainResult: types.wrapper.IWrapBaseObject[] = [];
    if (!args.beatmap.settings.customData._requirements?.includes('Mapping Extensions')) {
       if (args.beatmap.settings.customData._requirements?.includes('Noodle Extensions')) {
          const hasMEObstacle =

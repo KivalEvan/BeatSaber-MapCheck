@@ -1,12 +1,11 @@
-import { ChromaEnvironmentAbbreviation } from '../../bsmap/extensions/renamer/customData';
-import { IChromaEnvironment as IChromaEnvironmentV2 } from '../../bsmap/types/beatmap/v2/custom/chroma';
-import { IChromaEnvironment as IChromaEnvironmentV3 } from '../../bsmap/types/beatmap/v3/custom/chroma';
+import { renamer } from 'bsmap/extensions';
 import { htmlTableEnvironmentEnhancement } from './constants';
 import { displayTableRow, hideTableRow } from './helpers';
+import { types } from 'bsmap';
 
 // this implementation looks hideous but whatever
 export function setEnvironmentEnhancement(
-   arr?: Partial<IChromaEnvironmentV2 & IChromaEnvironmentV3>[],
+   arr?: Partial<types.v2.IChromaEnvironment & types.v3.IChromaEnvironment>[],
 ): void {
    if (arr == null || !arr.length) {
       hideTableRow(htmlTableEnvironmentEnhancement);
@@ -28,8 +27,11 @@ export function setEnvironmentEnhancement(
          ) {
             continue;
          }
-         const k = ChromaEnvironmentAbbreviation[key as keyof typeof ChromaEnvironmentAbbreviation];
-         if (elem[key as keyof IChromaEnvironmentV3] != null) {
+         const k =
+            renamer.ChromaEnvironmentAbbreviation[
+               key as keyof typeof renamer.ChromaEnvironmentAbbreviation
+            ];
+         if (elem[key as keyof types.v3.IChromaEnvironment] != null) {
             keyArr.push(k);
          }
       }

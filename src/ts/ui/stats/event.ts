@@ -1,15 +1,14 @@
-import { IWrapInfo } from '../../bsmap/types/beatmap/wrapper/info';
+import { renamer, stats } from 'bsmap/extensions';
 import { IBeatmapItem } from '../../types';
-import { countEvent } from '../../bsmap/extensions/stats/mod';
-import { eventTypeRename } from '../../bsmap/extensions/renamer/mod';
 import { prefix } from './constants';
+import { types } from 'bsmap';
 
 export function createEventCountTable(
-   beatmapInfo: IWrapInfo,
+   beatmapInfo: types.wrapper.IWrapInfo,
    beatmap: IBeatmapItem,
 ): HTMLTableElement {
    const environment = beatmap.environment;
-   const eventCount = countEvent(
+   const eventCount = stats.countEvent(
       beatmap.data.basicEvents,
       beatmap.data.colorBoostEvents,
       environment,
@@ -26,7 +25,7 @@ export function createEventCountTable(
    for (const key in eventCount) {
       chroma += eventCount[key].chroma;
       chromaOld += eventCount[key].chromaOld;
-      htmlString += `<tr><th class="${prefix}table-header">${key}</th><th class="${prefix}table-header" colspan="4">${eventTypeRename(
+      htmlString += `<tr><th class="${prefix}table-header">${key}</th><th class="${prefix}table-header" colspan="4">${renamer.eventTypeRename(
          parseInt(key),
          environment,
       )}</th><td class="${prefix}table-element">${eventCount[key].total}</td></tr>`;

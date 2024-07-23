@@ -1,3 +1,4 @@
+import { types } from 'bsmap';
 import {
    IBeatmapItem,
    ITool,
@@ -7,7 +8,6 @@ import {
    ToolOutputOrder,
 } from '../../types';
 import UIInput from '../../ui/helpers/input';
-import { IWrapBaseObject } from '../../bsmap/types/beatmap/wrapper/baseObject';
 
 const name = 'Stacked Note';
 const description = 'Look for stacked note.';
@@ -41,7 +41,7 @@ const tool: ITool = {
 function checkNote(map: IBeatmapItem) {
    const colorNotes = map.data.colorNotes;
 
-   const result: IWrapBaseObject[] = [];
+   const result: types.wrapper.IWrapBaseObject[] = [];
    // to avoid multiple of stack popping up, ignore anything within this time
    let lastTime: number = 0;
    for (let i = 0, len = colorNotes.length; i < len; i++) {
@@ -69,7 +69,7 @@ function checkBomb(map: IBeatmapItem) {
    const njs = map.njs;
    const bombNotes = map.data.bombNotes;
 
-   const result: IWrapBaseObject[] = [];
+   const result: types.wrapper.IWrapBaseObject[] = [];
    for (let i = 0, len = bombNotes.length; i < len; i++) {
       for (let j = i + 1; j < len; j++) {
          // arbitrary break after 1s to not loop too much often

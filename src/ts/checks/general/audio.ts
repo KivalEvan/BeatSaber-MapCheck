@@ -1,8 +1,8 @@
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import { toMmss } from '../../bsmap/utils/mod';
 import settings from '../../settings';
 import flag from '../../flag';
 import UIInput from '../../ui/helpers/input';
+import { toMmss } from 'bsmap';
 
 const name = 'Audio Duration';
 const description = 'For ranking purpose, check for audio duration.';

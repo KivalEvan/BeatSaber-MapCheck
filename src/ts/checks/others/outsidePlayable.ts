@@ -1,8 +1,6 @@
-import { TimeProcessor } from '../../bsmap/beatmap/helpers/timeProcessor';
-import { IWrapBaseObject } from '../../bsmap/types/beatmap/wrapper/baseObject';
+import { round, toMmss, types } from 'bsmap';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import UIInput from '../../ui/helpers/input';
-import { round, toMmss } from '../../bsmap/utils/mod';
 
 const name = 'Outside Playable Object';
 const description = 'Look for any object starting before and after song timer.';
@@ -33,7 +31,7 @@ const tool: ITool = {
    run,
 };
 
-function objectBeforeTime(tag: string, objects: IWrapBaseObject[], results: IToolOutput[]) {
+function objectBeforeTime(tag: string, objects: types.wrapper.IWrapBaseObject[], results: IToolOutput[]) {
    if (objects.length && objects[0].time < 0) {
       results.push({
          type: 'string',
@@ -48,7 +46,7 @@ function objectBeforeTime(tag: string, objects: IWrapBaseObject[], results: IToo
 
 function objectAfterTime(
    tag: string,
-   objects: IWrapBaseObject[],
+   objects: types.wrapper.IWrapBaseObject[],
    endTime: number,
    results: IToolOutput[],
 ) {

@@ -1,8 +1,7 @@
-import { IWrapInfo } from '../../bsmap/types/beatmap/wrapper/info';
 import { IBeatmapItem } from '../../types';
-import { countEbg } from '../../bsmap/extensions/stats/mod';
-import { eventGroupRename } from '../../bsmap/extensions/renamer/mod';
 import { prefix } from './constants';
+import { types } from 'bsmap';
+import { renamer, stats } from 'bsmap/extensions';
 
 function allPopulate(...d: Record<string, any>[]) {
    for (const r of d) {
@@ -20,12 +19,12 @@ function allPopulate(...d: Record<string, any>[]) {
    }
 }
 
-export function createEBGCountTable(mapInfo: IWrapInfo, mapData: IBeatmapItem): HTMLDivElement {
+export function createEBGCountTable(mapInfo: types.wrapper.IWrapInfo, mapData: IBeatmapItem): HTMLDivElement {
    const environment = mapData.environment;
-   const ebgColorCount = countEbg(mapData.data.lightColorEventBoxGroups, environment);
-   const ebgRotationCount = countEbg(mapData.data.lightRotationEventBoxGroups, environment);
-   const ebgTranslationCount = countEbg(mapData.data.lightTranslationEventBoxGroups, environment);
-   const ebgFxCount = countEbg(mapData.data.fxEventBoxGroups, environment);
+   const ebgColorCount = stats.countEbg(mapData.data.lightColorEventBoxGroups, environment);
+   const ebgRotationCount = stats.countEbg(mapData.data.lightRotationEventBoxGroups, environment);
+   const ebgTranslationCount = stats.countEbg(mapData.data.lightTranslationEventBoxGroups, environment);
+   const ebgFxCount = stats.countEbg(mapData.data.fxEventBoxGroups, environment);
 
    allPopulate(ebgColorCount, ebgRotationCount, ebgTranslationCount, ebgFxCount);
 
@@ -93,7 +92,7 @@ export function createEBGCountTable(mapInfo: IWrapInfo, mapData: IBeatmapItem): 
    let htmlStringID = `<caption class="${prefix}table-caption">Event Box Group ID:</caption>`;
 
    for (const key in ebgColorCount) {
-      htmlStringID += `<tr><th class="${prefix}table-header">${key}</th><th class="${prefix}table-header" colspan="5">${eventGroupRename(
+      htmlStringID += `<tr><th class="${prefix}table-header">${key}</th><th class="${prefix}table-header" colspan="5">${renamer.eventGroupRename(
          parseInt(key),
          environment,
       )}</th><td class="${prefix}table-element" title="${

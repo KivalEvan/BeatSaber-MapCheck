@@ -1,8 +1,6 @@
-import { TimeProcessor } from '../../bsmap/beatmap/helpers/timeProcessor';
-import { IWrapInfo } from '../../bsmap/types/beatmap/wrapper/info';
+import { TimeProcessor, types } from 'bsmap';
 import { IBeatmapItem } from './beatmapItem';
 import { ToolInputOrder, ToolOutputOrder } from './order';
-import { IWrapBaseObject } from '../../bsmap/types/beatmap/wrapper/baseObject';
 
 export type ToolType = 'note' | 'event' | 'obstacle' | 'other' | 'general';
 
@@ -35,7 +33,7 @@ export interface IToolOutputNumber extends IToolOutputBase {
 
 export interface IToolOutputTime extends IToolOutputBase {
    readonly type: 'time';
-   readonly value: IWrapBaseObject[];
+   readonly value: types.wrapper.IWrapBaseObject[];
 }
 
 export interface IToolOutputHTML extends IToolOutputBase {
@@ -49,7 +47,7 @@ export interface ToolArgs {
    readonly audioDuration: number | null;
    readonly mapDuration: number | null;
    readonly beatmap: IBeatmapItem;
-   readonly info: IWrapInfo;
+   readonly info: types.wrapper.IWrapInfo;
 }
 
 export type ToolRun = (args: ToolArgs) => IToolOutput[];

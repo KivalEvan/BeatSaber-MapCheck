@@ -1,9 +1,8 @@
+import { NoteColor, NoteDirection, types } from 'bsmap';
+import { swing } from 'bsmap/extensions';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import { ObjectContainerType } from '../../types/checks/container';
 import UIInput from '../../ui/helpers/input';
-import swing from '../../bsmap/extensions/swing/swing';
-import { NoteColor, NoteDirection } from '../../bsmap/beatmap/shared/constants';
-import { IWrapColorNote } from '../../bsmap/types/beatmap/wrapper/colorNote';
 
 const name = 'Improper Window Snap';
 const description = 'Check for slanted window snap timing.';
@@ -36,18 +35,18 @@ const tool: ITool = {
 
 function check(args: ToolArgs) {
    const { timeProcessor, noteContainer } = args.beatmap;
-   const lastNote: { [key: number]: IWrapColorNote } = {};
-   const swingNoteArray: { [key: number]: IWrapColorNote[] } = {
+   const lastNote: { [key: number]: types.wrapper.IWrapColorNote } = {};
+   const swingNoteArray: { [key: number]: types.wrapper.IWrapColorNote[] } = {
       [NoteColor.RED]: [],
       [NoteColor.BLUE]: [],
    };
 
-   const result: IWrapColorNote[] = [];
+   const result: types.wrapper.IWrapColorNote[] = [];
    for (let i = 0, len = noteContainer.length; i < len; i++) {
       if (noteContainer[i].type !== ObjectContainerType.COLOR) {
          continue;
       }
-      const note = noteContainer[i].data as IWrapColorNote;
+      const note = noteContainer[i].data as types.wrapper.IWrapColorNote;
       if (lastNote[note.color]) {
          if (swing.next(note, lastNote[note.color], timeProcessor, swingNoteArray[note.color])) {
             lastNote[note.color] = note;

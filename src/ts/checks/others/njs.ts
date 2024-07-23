@@ -1,7 +1,6 @@
-import { NoteJumpSpeed } from '../../bsmap/beatmap/helpers/njs';
+import { NoteJumpSpeed, round } from 'bsmap';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import UIInput from '../../ui/helpers/input';
-import { round } from '../../bsmap/utils/mod';
 
 const name = 'NJS Check';
 const description = 'Check note jump speed for suitable value.';

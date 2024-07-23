@@ -1,8 +1,5 @@
 import UIHeader from '../header';
-import LoadedData from '../../loadedData';
-import { IWrapInfo } from '../../bsmap/types/beatmap/wrapper/info';
 import { IBeatmapItem } from '../../types';
-import { TimeProcessor } from '../../bsmap/beatmap/helpers/timeProcessor';
 import {
    populateContributors,
    setContributors,
@@ -30,20 +27,16 @@ import { setPointDefinitions } from './pointDefinition';
 import { setTableHeight } from './helpers';
 import { setPlayTime } from './playTime';
 import { setColorScheme } from './colorScheme';
-import { EnvironmentAllName } from '../../bsmap/types/beatmap/shared/environment';
-import {
-   getFirstInteractiveTime,
-   getLastInteractiveTime,
-} from '../../bsmap/beatmap/helpers/beatmap';
+import { getFirstInteractiveTime, getLastInteractiveTime, types } from 'bsmap';
 
-function setInfo(info: IWrapInfo): void {
+function setInfo(info: types.wrapper.IWrapInfo): void {
    UIHeader.setSongName(info.song.title);
    UIHeader.setSongSubname(info.song.subTitle);
    UIHeader.setSongAuthor(info.song.author);
    UIHeader.setSongBPM(info.audio.bpm);
    const mapperSet = new Set<string>();
    const lighterSet = new Set<string>();
-   const envSet = new Set<EnvironmentAllName>([
+   const envSet = new Set<types.EnvironmentAllName>([
       info.environmentBase.normal!,
       info.environmentBase.allDirections!,
    ]);
@@ -53,11 +46,11 @@ function setInfo(info: IWrapInfo): void {
       envSet.add(info.environmentNames.at(d.environmentId)!);
    });
    setLevelAuthor([...mapperSet], [...lighterSet]);
-   setEnvironment([...envSet].filter((e) => e) as EnvironmentAllName[]);
+   setEnvironment([...envSet].filter((e) => e) as types.EnvironmentAllName[]);
    setEditors(info.customData._editors);
 }
 
-function setDiffInfoTable(info: IWrapInfo, mapData: IBeatmapItem): void {
+function setDiffInfoTable(info: types.wrapper.IWrapInfo, mapData: IBeatmapItem): void {
    setVersion((mapData.rawData as any)._version || (mapData.rawData as any).version || 'Unknown');
    setMappers(mapData.settings.authors.mappers);
    setLighters(mapData.settings.authors.lighters);

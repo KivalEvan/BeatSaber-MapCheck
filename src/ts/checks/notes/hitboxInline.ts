@@ -1,13 +1,7 @@
+import { NoteColor, types } from 'bsmap';
+import { swing } from 'bsmap/extensions';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import {
-   IObjectContainer,
-   IObjectContainerColor,
-   ObjectContainerType,
-} from '../../types/checks/container';
-import swing from '../../bsmap/extensions/swing/swing';
 import UIInput from '../../ui/helpers/input';
-import { NoteColor } from '../../bsmap/beatmap/shared/constants';
-import { IWrapColorNote } from '../../bsmap/types/beatmap/wrapper/colorNote';
 
 const name = 'Hitbox Inline';
 const description = 'Check for overlapping note hitbox for inline note.';
@@ -42,13 +36,13 @@ const constant = 0;
 function check(args: ToolArgs) {
    const { timeProcessor, njs } = args.beatmap;
 
-   const lastNote: { [key: number]: IWrapColorNote } = {};
-   const swingNoteArray: { [key: number]: IWrapColorNote[] } = {
+   const lastNote: { [key: number]: types.wrapper.IWrapColorNote } = {};
+   const swingNoteArray: { [key: number]: types.wrapper.IWrapColorNote[] } = {
       [NoteColor.RED]: [],
       [NoteColor.BLUE]: [],
    };
 
-   const arr: IWrapColorNote[] = [];
+   const arr: types.wrapper.IWrapColorNote[] = [];
    for (let i = 0, len = args.beatmap.data.colorNotes.length; i < len; i++) {
       const note = args.beatmap.data.colorNotes[i];
       if (lastNote[note.color]) {

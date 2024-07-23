@@ -1,5 +1,4 @@
-import { EnvironmentRename } from '../../bsmap/beatmap/shared/environment';
-import { toHhmmss } from '../../bsmap/utils/mod';
+import { EnvironmentRename, toHhmmss } from 'bsmap';
 import {
    htmlTableEnvironmentId,
    htmlTableInformation,

@@ -1,9 +1,10 @@
-import { IPointDefinition as IPointDefinitionV2 } from '../../bsmap/types/beatmap/v2/custom/pointDefinition';
-import { IPointDefinition as IPointDefinitionV3 } from '../../bsmap/types/beatmap/v3/custom/pointDefinition';
+import { types } from 'bsmap';
 import { htmlTablePointDefinitions } from './constants';
 import { displayTableRow, hideTableRow } from './helpers';
 
-export function setPointDefinitions(obj?: IPointDefinitionV2 | IPointDefinitionV3): void {
+export function setPointDefinitions(
+   obj?: types.v2.IPointDefinition | types.v3.IPointDefinition,
+): void {
    if (obj == null) {
       hideTableRow(htmlTablePointDefinitions);
       return;
@@ -19,7 +20,7 @@ export function setPointDefinitions(obj?: IPointDefinitionV2 | IPointDefinitionV
          );
       }
    } else {
-      obj = obj as IPointDefinitionV3;
+      obj = obj as types.v3.IPointDefinition;
       for (const elem in obj) {
          if (!obj[elem]) {
             pointDef.push(`Error parsing pointDefinitions[${elem}]`);

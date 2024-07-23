@@ -1,4 +1,4 @@
-import { sortObjectFn } from '../../bsmap/beatmap/mod';
+import { sortObjectFn } from 'bsmap';
 import {
    IBeatmapItem,
    ITool,

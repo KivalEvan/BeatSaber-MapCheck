@@ -1,12 +1,8 @@
 import AnalysisComponents from './components';
 import LoadedData from '../loadedData';
-import { TimeProcessor } from '../bsmap/beatmap/helpers/timeProcessor';
-import { NoteJumpSpeed } from '../bsmap/beatmap/helpers/njs';
-import { CharacteristicName, DifficultyName } from '../bsmap/types/beatmap/shared/mod';
 import { IToolOutput } from '../types/checks/check';
 import { IBeatmapItem, ITool } from '../types';
-import logger from '../bsmap/logger';
-import { getLastInteractiveTime } from '../bsmap/beatmap/helpers/beatmap';
+import { getLastInteractiveTime, logger, NoteJumpSpeed, TimeProcessor, types } from 'bsmap';
 
 function tag(name: string) {
    return ['analyzer', name];
@@ -70,8 +66,8 @@ export function checkGeneral(): IToolOutput[] {
 }
 
 export function checkDifficulty(
-   characteristic: CharacteristicName,
-   difficulty: DifficultyName,
+   characteristic: types.CharacteristicName,
+   difficulty: types.DifficultyName,
 ): IToolOutput[] {
    const mapInfo = LoadedData.beatmapInfo;
    if (!mapInfo) {

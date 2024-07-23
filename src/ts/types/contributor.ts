@@ -1,5 +1,5 @@
-import { IContributor } from '../bsmap/types/beatmap/shared/custom/contributor';
+import { types } from "bsmap";
 
-export interface IContributorB64 extends IContributor {
+export interface IContributorB64 extends types.IContributor {
    _base64: string | null;
 }

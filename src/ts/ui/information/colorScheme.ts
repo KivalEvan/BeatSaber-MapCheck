@@ -1,11 +1,9 @@
+import { ColorSchemeRename, colorToHex, types } from 'bsmap';
 import UIPanel from '../helpers/panel';
-import { colorToHex } from '../../bsmap/utils/mod';
-import { ColorSchemeRename } from '../../bsmap/beatmap/shared/colorScheme';
 import { htmlTableColorScheme } from './constants';
 import { displayTableRow, hideTableRow } from './helpers';
-import { IWrapInfoColorScheme } from '../../bsmap/types/beatmap/wrapper/info';
 
-export function setColorScheme(colorSch?: IWrapInfoColorScheme): void {
+export function setColorScheme(colorSch?: types.wrapper.IWrapInfoColorScheme): void {
    if (
       !colorSch ||
       (!colorSch.saberLeftColor &&

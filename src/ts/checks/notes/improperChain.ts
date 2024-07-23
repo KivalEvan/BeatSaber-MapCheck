@@ -1,7 +1,7 @@
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import { IObjectContainer, ObjectContainerType } from '../../types/checks/container';
 import UIInput from '../../ui/helpers/input';
-import { NoteDirection } from '../../bsmap/beatmap/shared/constants';
+import { NoteDirection } from 'bsmap';
 
 const name = 'Improper Chain';
 const description = 'Check for correct use of chain.';

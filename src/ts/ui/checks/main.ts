@@ -1,8 +1,6 @@
 import Analyser from '../../checks/main';
 import UILoading from '../loading';
-import { TimeProcessor } from '../../bsmap/beatmap/helpers/timeProcessor';
-import { CharacteristicName } from '../../bsmap/types/beatmap/shared/characteristic';
-import { DifficultyName } from '../../bsmap/types/beatmap/shared/difficulty';
+import { TimeProcessor, types } from 'bsmap';
 import LoadedData from '../../loadedData';
 import {
    getSelectedCharacteristic,
@@ -66,8 +64,8 @@ function displayOutputGeneral(): void {
 }
 
 function displayOutputDifficulty(
-   characteristic?: CharacteristicName | null,
-   difficulty?: DifficultyName | null,
+   characteristic?: types.CharacteristicName | null,
+   difficulty?: types.DifficultyName | null,
 ): void {
    if (!characteristic && !difficulty) {
       characteristic = getSelectedCharacteristic();

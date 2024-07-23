@@ -1,5 +1,5 @@
 import { ISettings } from './types/settings';
-import { deepCopy } from './bsmap/utils/mod';
+import { deepCopy } from 'bsmap';
 
 const settingsDefault: ISettings = {
    version: 5,

@@ -1,11 +1,9 @@
+import { calculateNps, calculateNpsPeak, getLastInteractiveTime, round, types } from 'bsmap';
 import LoadedData from '../../loadedData';
-import { round } from '../../bsmap/utils/mod';
-import { IWrapInfo } from '../../bsmap/types/beatmap/wrapper/info';
 import { IBeatmapItem } from '../../types';
 import { prefix } from './constants';
-import { calculateNps, calculateNpsPeak, getLastInteractiveTime } from '../../bsmap/beatmap/mod';
 
-export function createNPSTable(beatmapInfo: IWrapInfo, beatmap: IBeatmapItem): HTMLTableElement {
+export function createNPSTable(beatmapInfo: types.wrapper.IWrapInfo, beatmap: IBeatmapItem): HTMLTableElement {
    const timeProcessor = beatmap.timeProcessor;
    const duration = LoadedData.duration || 0;
    const mapDuration = timeProcessor.toRealTime(getLastInteractiveTime(beatmap.data));

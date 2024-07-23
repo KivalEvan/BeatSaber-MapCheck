@@ -229,6 +229,11 @@ braces@~3.0.2:
   dependencies:
     fill-range "^7.1.1"
 
+bsmap@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/bsmap/-/bsmap-2.0.2.tgz#efe81952fae94a0e64d9ca21ad43bfd1e0ebf2f8"
+  integrity sha512-eMbiqmlMGPywOOqYzWbs0sdAWzwGPuuOV8zMrL+plAces3IruV9683SmzhFxHb+AaFgV+0qVaSJeXZFC4vQG3w==
+
 "chokidar@>=3.0.0 <4.0.0":
   version "3.6.0"
   resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-3.6.0.tgz#197c6cc669ef2a8dc5e7b4d97ee4e092c3eb0d5b"
@@ -485,10 +490,10 @@ to-regex-range@^5.0.1:
   dependencies:
     is-number "^7.0.0"
 
-typescript@^5.5.3:
-  version "5.5.3"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.5.3.tgz#e1b0a3c394190838a0b168e771b0ad56a0af0faa"
-  integrity sha512-/hreyEujaB0w76zKo6717l3L0o/qEUtRgdvUBvlkhoWeOVMjMuHNHk0BRBzikzuGDqNmPQbg5ifMEqsHLiIUcQ==
+typescript@^5.5.4:
+  version "5.5.4"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.5.4.tgz#d9852d6c82bad2d2eda4fd74a5762a8f5909e9ba"
+  integrity sha512-Mtq29sKDAEYP7aljRgtPOpTvOfbwRWlS6dPRzwjdE+C0R4brX/GUyhHSecbHMFLNBLcJIPt9nl9yG5TZ1weH+Q==
 
 undici-types@~5.26.4:
   version "5.26.5"

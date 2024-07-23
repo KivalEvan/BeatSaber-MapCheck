@@ -42,7 +42,7 @@ error/problem or want an improvement.
 -  Avoid circular imports.
 
 Any beatmap related has to be done in
-[Beat Saber Deno](https://github.com/KivalEvan/BeatSaber-Deno) repository
+[Beat Saber JS Map](https://github.com/KivalEvan/BeatSaber-JSMap) repository
 instead.
 
 ## Planned

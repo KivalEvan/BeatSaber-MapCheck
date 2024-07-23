@@ -1,9 +1,7 @@
+import { TimeProcessor, round, PosX, PosY } from 'bsmap';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import { round } from '../../bsmap/utils/mod';
 import { IObjectContainer, ObjectContainerType } from '../../types/checks/container';
 import UIInput from '../../ui/helpers/input';
-import { TimeProcessor } from '../../bsmap/beatmap/helpers/timeProcessor';
-import { PosX, PosY } from '../../bsmap/beatmap/shared/constants';
 
 const name = 'Vision Block';
 const description = 'Check for vision block caused by center note.';

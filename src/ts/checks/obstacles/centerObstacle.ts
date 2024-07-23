@@ -1,10 +1,6 @@
+import { types, TimeProcessor, round, Obstacle, PosY, PosX } from 'bsmap';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import { round } from '../../bsmap/utils/mod';
 import UIInput from '../../ui/helpers/input';
-import { TimeProcessor } from '../../bsmap/beatmap/helpers/timeProcessor';
-import { PosX, PosY } from '../../bsmap/beatmap/shared/constants';
-import { Obstacle } from '../../bsmap/beatmap/core/obstacle';
-import { IWrapObstacle } from '../../bsmap/types/beatmap/wrapper/obstacle';
 
 const name = '2-wide Center Obstacle';
 const description =
@@ -90,9 +86,9 @@ function check(args: ToolArgs) {
    const { obstacles } = args.beatmap.data;
    const { timeProcessor } = args.beatmap;
    const { recovery } = tool.input.params;
-   const arr: IWrapObstacle[] = [];
-   let obstacleLeftFull: IWrapObstacle = new Obstacle();
-   let obstacleRightFull: IWrapObstacle = new Obstacle();
+   const arr: types.wrapper.IWrapObstacle[] = [];
+   let obstacleLeftFull: types.wrapper.IWrapObstacle = new Obstacle();
+   let obstacleRightFull: types.wrapper.IWrapObstacle = new Obstacle();
    for (let i = 0; i < obstacles.length; i++) {
       const o = obstacles[i];
       if (o.posY < PosY.TOP && o.height > 1) {
