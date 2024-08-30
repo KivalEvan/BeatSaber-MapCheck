@@ -17,7 +17,7 @@ import {
    getSelectedDifficulty,
    selectionOnChangeHandlers,
 } from '../selection';
-import { types } from 'bsmap';
+import * as types from 'bsmap/types';
 
 const htmlStats: HTMLElement = document.querySelector('.stats__content')!;
 

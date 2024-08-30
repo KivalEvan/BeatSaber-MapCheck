@@ -1,4 +1,6 @@
-import { NoteColor, NoteDirection, NoteDirectionFlip, round, TimeProcessor, types } from 'bsmap';
+import { NoteColor, NoteDirection, NoteDirectionFlip, TimeProcessor } from 'bsmap';
+import { round } from 'bsmap/utils';
+import * as types from 'bsmap/types';
 import { swing } from 'bsmap/extensions';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import { ObjectContainerType } from '../../types/checks/container';

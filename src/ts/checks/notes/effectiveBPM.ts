@@ -1,5 +1,6 @@
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import { round, TimeProcessor } from 'bsmap';
+import { TimeProcessor } from 'bsmap';
+import { round } from 'bsmap/utils';
 import UIInput from '../../ui/helpers/input';
 
 const name = 'Effective BPM';

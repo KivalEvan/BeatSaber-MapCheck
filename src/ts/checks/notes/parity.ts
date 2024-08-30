@@ -2,7 +2,8 @@ import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '.
 import UISelect from '../../ui/helpers/select';
 import { ObjectContainerType } from '../../types/checks/container';
 import UIInput from '../../ui/helpers/input';
-import { NoteColor, types } from 'bsmap';
+import { NoteColor } from 'bsmap';
+import * as types from 'bsmap/types';
 import { parity, swing } from 'bsmap/extensions';
 
 const name = 'Parity Check';

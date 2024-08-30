@@ -1,7 +1,8 @@
 import LoadedData from '../loadedData';
 import UIInformation from './information';
 import { createTab } from './helpers/tab';
-import { CharacteristicRename, DifficultyRename, types } from 'bsmap';
+import { CharacteristicRename, DifficultyRename } from 'bsmap';
+import * as types from 'bsmap/types';
 
 const htmlSelectCharacteristic: HTMLDivElement = document.querySelector('#select-characteristic')!;
 const htmlSelectDifficulty: HTMLDivElement = document.querySelector('#select-difficulty')!;

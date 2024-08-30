@@ -2,7 +2,7 @@ import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '.
 import settings from '../../settings';
 import flag from '../../flag';
 import UIInput from '../../ui/helpers/input';
-import { toMmss } from 'bsmap';
+import { secToMmss } from 'bsmap/utils';
 
 const name = 'Audio Duration';
 const description = 'For ranking purpose, check for audio duration.';
@@ -41,7 +41,7 @@ function run(args: ToolArgs): IToolOutput[] {
          {
             type: 'string',
             label: 'Unrankable audio length',
-            value: `too short (${toMmss(audioDuration)}s)`,
+            value: `too short (${secToMmss(audioDuration)}s)`,
             symbol: 'rank',
          },
       ];

@@ -1,7 +1,9 @@
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import LoadedData from '../../loadedData';
 import UIInput from '../../ui/helpers/input';
-import { DifficultyRename, round, types } from 'bsmap';
+import { DifficultyRename } from 'bsmap';
+import { round } from 'bsmap/utils';
+import * as types from 'bsmap/types';
 import { swing } from 'bsmap/extensions';
 
 const name = 'Difficulty Progression';
@@ -36,6 +38,7 @@ const tool: ITool<{ [k in types.DifficultyName]: boolean }> = {
    input: {
       enabled,
       params: {
+         'Expert+': true,
          ExpertPlus: true,
          Expert: true,
          Hard: true,
@@ -68,7 +71,7 @@ function run(args: ToolArgs): IToolOutput[] {
       .filter((a) => a.settings.characteristic === 'Standard')
       .map((d) => d.swingAnalysis)
       .filter((a) => tool.input.params[a.difficulty] && a.total.total > 0)
-      .sort((a, b) => b.total.average - a.total.average);
+      .sort((a, b) => b.total.perSecond - a.total.perSecond);
    if (!standardSpsAry.length) {
       return [];
    }
@@ -79,7 +82,7 @@ function run(args: ToolArgs): IToolOutput[] {
 
    const results: IToolOutput[] = [];
    if (audioDuration < 360 && swing.getSpsLowest(standardSpsAry) > targetMinSps) {
-      standardSpsAry.forEach((e) => e.total.average);
+      standardSpsAry.forEach((e) => e.total.perSecond);
       results.push({
          type: 'string',
          label: `Minimum SPS not met (<${targetMinSps})`,
@@ -97,14 +100,14 @@ function run(args: ToolArgs): IToolOutput[] {
          type: 'string',
          label: 'Violates progression',
          value: `${DifficultyRename[progMax.result.difficulty]} exceeded 40% SPS drop, ${round(
-            progMax.result.total.average,
+            progMax.result.total.perSecond,
             2,
-         )} from ${round(progMax.comparedTo?.total?.average || 0, 2)} ${
+         )} from ${round(progMax.comparedTo?.total?.perSecond || 0, 2)} ${
             DifficultyRename[progMax.comparedTo!.difficulty]
          }, acceptable range (${round(
-            (progMax.comparedTo?.total?.average || 0) * 0.6,
+            (progMax.comparedTo?.total?.perSecond || 0) * 0.6,
             2,
-         )}-${round((progMax.comparedTo?.total.average || 0) * 0.9, 2)})`,
+         )}-${round((progMax.comparedTo?.total.perSecond || 0) * 0.9, 2)})`,
          symbol: 'rank',
       });
    }
@@ -113,14 +116,14 @@ function run(args: ToolArgs): IToolOutput[] {
          type: 'string',
          label: 'Violates progression',
          value: `${DifficultyRename[progMin.result.difficulty]} has less than 10% SPS drop, ${round(
-            progMin.result.total.average,
+            progMin.result.total.perSecond,
             2,
-         )} from ${round(progMin.comparedTo?.total.average || 0, 2)} ${
+         )} from ${round(progMin.comparedTo?.total.perSecond || 0, 2)} ${
             DifficultyRename[progMin.comparedTo!.difficulty]
          }, acceptable range (${round(
-            (progMin.comparedTo?.total.average || 0) * 0.6,
+            (progMin.comparedTo?.total.perSecond || 0) * 0.6,
             2,
-         )}-${round((progMin.comparedTo?.total.average || 0) * 0.9, 2)})`,
+         )}-${round((progMin.comparedTo?.total.perSecond || 0) * 0.9, 2)})`,
          symbol: 'rank',
       });
    }

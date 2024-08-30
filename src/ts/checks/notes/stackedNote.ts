@@ -1,4 +1,4 @@
-import { types } from 'bsmap';
+import * as types from 'bsmap/types';
 import {
    IBeatmapItem,
    ITool,

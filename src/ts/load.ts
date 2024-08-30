@@ -11,8 +11,8 @@ import {
    logger,
    NoteJumpSpeed,
    TimeProcessor,
-   types,
 } from 'bsmap';
+import * as types from 'bsmap/types';
 import { stats, swing } from 'bsmap/extensions';
 
 function tag(name: string) {
@@ -89,7 +89,7 @@ async function fetchLightshow(
       const json = await file!.async('string').then(JSON.parse);
       const lightshow = loadLightshow(json, {
          sort: settings.sorting,
-         dataCheck: { enabled: settings.dataCheck },
+         schemaCheck: { enabled: settings.dataCheck },
       });
       return [json, lightshow];
    } catch (err) {
@@ -153,7 +153,7 @@ export function extractBeatmaps(
       }
       let data = loadDifficulty(jsonDifficulty, {
          sort: settings.sorting,
-         dataCheck: { enabled: settings.dataCheck },
+         schemaCheck: { enabled: settings.dataCheck },
       });
 
       let lightshow = jsonDifficultyVer === 4 ? new Beatmap() : data;

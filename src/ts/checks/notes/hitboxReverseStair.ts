@@ -1,4 +1,5 @@
-import { NoteColor, NoteDirection, types } from 'bsmap';
+import { NoteColor, NoteDirection } from 'bsmap';
+import * as types from 'bsmap/types';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import { IObjectContainerColor, ObjectContainerType } from '../../types/checks/container';
 import UIInput from '../../ui/helpers/input';

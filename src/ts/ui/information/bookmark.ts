@@ -1,6 +1,8 @@
 import Settings from '../../settings';
 import UIPanel from '../helpers/panel';
-import { colorToHex, round, TimeProcessor, toMmss, types } from 'bsmap';
+import { TimeProcessor } from 'bsmap';
+import { colorToHex, round, secToMmss } from 'bsmap/utils';
+import * as types from 'bsmap/types';
 import { htmlTableBookmarks } from './constants';
 import { displayTableRow, hideTableRow } from './helpers';
 
@@ -42,7 +44,7 @@ export function setBookmarks(
          : '#333333';
 
       textContainer.textContent = `${round(time, Settings.rounding)}${
-         rt ? ' | ' + toMmss(rt) : ''
+         rt ? ' | ' + secToMmss(rt) : ''
       } -- ${text != '' ? text : '**EMPTY NAME**'}`;
 
       panel.appendChild(container);

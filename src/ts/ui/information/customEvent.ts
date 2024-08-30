@@ -1,4 +1,6 @@
-import { round, TimeProcessor, toMmss, types } from 'bsmap';
+import { TimeProcessor } from 'bsmap';
+import { round, secToMmss } from 'bsmap/utils';
+import * as types from 'bsmap/types';
 import Settings from '../../settings';
 import { htmlTableCustomEvents } from './constants';
 import { displayTableRow, hideTableRow } from './helpers';
@@ -44,7 +46,7 @@ export function setCustomEvents(
       const type = elem.t ?? elem._type;
       const track = (elem.d as any)?.track ?? (elem._data as any)?._track;
       return `${round(time, Settings.rounding)}${
-         rt ? ' | ' + toMmss(rt) : ''
+         rt ? ' | ' + secToMmss(rt) : ''
       } -- ${type} -> [${keyArr.join('')}]${type !== 'AssignTrackParent' ? `(${track})` : ''}`;
    });
    displayTableRow(htmlTableCustomEvents, customEv);

@@ -1,5 +1,6 @@
 import Settings from '../../settings';
-import { round, TimeProcessor, toMmss } from 'bsmap';
+import { TimeProcessor } from 'bsmap';
+import { round, secToMmss } from 'bsmap/utils';
 import { htmlTableBPMChanges } from './constants';
 import { displayTableRow, hideTableRow } from './helpers';
 
@@ -11,7 +12,7 @@ export function setBPMChanges(bpm?: TimeProcessor | null): void {
    const bpmcText = bpm.change.map((bpmc) => {
       const time = round(bpmc.newTime, Settings.rounding);
       const rt = bpm.toRealTime(bpmc.time);
-      return `${time} | ${toMmss(rt)} -- ${bpmc.BPM}`;
+      return `${time} | ${secToMmss(rt)} -- ${bpmc.BPM}`;
    });
    displayTableRow(htmlTableBPMChanges, bpmcText);
 }

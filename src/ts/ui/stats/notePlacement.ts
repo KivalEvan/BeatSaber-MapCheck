@@ -3,7 +3,8 @@ import LoadedData from '../../loadedData';
 import { IBeatmapItem } from '../../types';
 import { logPrefix, prefix } from './constants';
 import { getFilteredContainer } from './helpers';
-import { round, types } from 'bsmap';
+import { round } from 'bsmap/utils';
+import * as types from 'bsmap/types';
 import { stats } from 'bsmap/extensions';
 
 function notePlacementSelectHandler(ev: Event) {
@@ -58,11 +59,11 @@ function notePlacementTableString(nc: types.wrapper.IWrapGridObjectAttribute[]):
 }
 
 export function createNotePlacementTable(
-   beatmapInfo: types.wrapper.IWrapInfo,
-   beatmap: IBeatmapItem,
+   info: types.wrapper.IWrapInfo,
+   beatmapItem: IBeatmapItem,
 ): HTMLTableElement {
    const htmlSelect = UISelect.create(
-      `${prefix}table-select-placement-${beatmap.settings.characteristic}-${beatmap.settings.difficulty}`,
+      `${prefix}table-select-placement-${beatmapItem.settings.characteristic}-${beatmapItem.settings.difficulty}`,
       'Note Placement: ',
       'caption',
       `${prefix}table-caption`,
@@ -82,8 +83,8 @@ export function createNotePlacementTable(
       .querySelector<HTMLSelectElement>('select')
       ?.addEventListener('change', notePlacementSelectHandler);
 
-   let htmlString = `<tbody id="${prefix}table-placement-${beatmap.settings.characteristic}-${beatmap.settings.difficulty}">${notePlacementTableString(
-      beatmap.noteContainer.map((e) => e.data),
+   let htmlString = `<tbody id="${prefix}table-placement-${beatmapItem.settings.characteristic}-${beatmapItem.settings.difficulty}">${notePlacementTableString(
+      beatmapItem.noteContainer.map((e) => e.data),
    )}</tbody>`;
 
    const htmlTable = document.createElement('table');

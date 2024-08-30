@@ -1,4 +1,5 @@
-import { TimeProcessor, types } from 'bsmap';
+import { TimeProcessor } from 'bsmap';
+import * as types from 'bsmap/types';
 import { IBeatmapItem } from './beatmapItem';
 import { ToolInputOrder, ToolOutputOrder } from './order';
 

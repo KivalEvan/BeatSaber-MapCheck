@@ -2,7 +2,8 @@ import AnalysisComponents from './components';
 import LoadedData from '../loadedData';
 import { IToolOutput } from '../types/checks/check';
 import { IBeatmapItem, ITool } from '../types';
-import { getLastInteractiveTime, logger, NoteJumpSpeed, TimeProcessor, types } from 'bsmap';
+import { getLastInteractiveTime, logger, NoteJumpSpeed, TimeProcessor } from 'bsmap';
+import * as types from 'bsmap/types';
 
 function tag(name: string) {
    return ['analyzer', name];

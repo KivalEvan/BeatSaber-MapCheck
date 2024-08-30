@@ -1,6 +1,7 @@
+import { round } from 'bsmap/utils';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import UIInput from '../../ui/helpers/input';
-import { getFirstInteractiveTime, round } from 'bsmap';
+import { getFirstInteractiveTime } from 'bsmap';
 
 const name = 'Hot Start';
 const description = 'Check for first interactive object starting from start time.';

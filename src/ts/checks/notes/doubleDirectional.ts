@@ -1,4 +1,5 @@
-import { NoteColor, NoteDirection, NoteDirectionAngle, PosX, PosY, types } from 'bsmap';
+import { NoteColor, NoteDirection, NoteDirectionAngle, PosX, PosY } from 'bsmap';
+import * as types from 'bsmap/types';
 import {
    IBeatmapItem,
    ITool,

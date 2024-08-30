@@ -1,7 +1,7 @@
 import { renamer } from 'bsmap/extensions';
 import { htmlTableEnvironmentEnhancement } from './constants';
 import { displayTableRow, hideTableRow } from './helpers';
-import { types } from 'bsmap';
+import * as types from 'bsmap/types';
 
 // this implementation looks hideous but whatever
 export function setEnvironmentEnhancement(

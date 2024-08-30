@@ -27,7 +27,8 @@ import { setPointDefinitions } from './pointDefinition';
 import { setTableHeight } from './helpers';
 import { setPlayTime } from './playTime';
 import { setColorScheme } from './colorScheme';
-import { getFirstInteractiveTime, getLastInteractiveTime, types } from 'bsmap';
+import { getFirstInteractiveTime, getLastInteractiveTime } from 'bsmap';
+import * as types from 'bsmap/types';
 
 function setInfo(info: types.wrapper.IWrapInfo): void {
    UIHeader.setSongName(info.song.title);

@@ -1,4 +1,5 @@
-import { NoteJumpSpeed, TimeProcessor, types } from 'bsmap';
+import { NoteJumpSpeed, TimeProcessor } from 'bsmap';
+import * as types from 'bsmap/types';
 import { IObjectContainer } from './container';
 import { stats, swing } from 'bsmap/extensions';
 

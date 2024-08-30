@@ -1,6 +1,7 @@
 import Analyser from '../../checks/main';
 import UILoading from '../loading';
-import { TimeProcessor, types } from 'bsmap';
+import { TimeProcessor } from 'bsmap';
+import * as types from 'bsmap/types';
 import LoadedData from '../../loadedData';
 import {
    getSelectedCharacteristic,

@@ -1,23 +1,24 @@
-import { round, types } from 'bsmap';
+import { round } from 'bsmap/utils';
+import * as types from 'bsmap/types';
 import { IBeatmapItem } from '../../types';
 import { prefix } from './constants';
 
 export function createSPSTable(
-   mapInfo: types.wrapper.IWrapInfo,
-   mapData: IBeatmapItem,
+   info: types.wrapper.IWrapInfo,
+   beatmapItem: IBeatmapItem,
 ): HTMLTableElement {
-   const swingInfo = mapData.swingAnalysis;
+   const swingInfo = beatmapItem.swingAnalysis;
 
    const htmlTable = document.createElement('table');
    htmlTable.className = prefix + 'table';
    htmlTable.innerHTML = `<caption class="${prefix}table-caption">Swing Per Seconds (SPS):</caption><tr><th class="${prefix}table-header"></th><th class="${prefix}table-header">Total</th><th class="${prefix}table-header">Red</th><th class="${prefix}table-header">Blue</th></tr><tr><th class="${prefix}table-header">Average</th><td class="${prefix}table-element">${round(
-      swingInfo.total.average,
+      swingInfo.total.perSecond,
       2,
    )}</td><td class="${prefix}table-element">${round(
-      swingInfo.red.average,
+      swingInfo.red.perSecond,
       2,
    )}</td><td class="${prefix}table-element">${round(
-      swingInfo.blue.average,
+      swingInfo.blue.perSecond,
       2,
    )}</td></tr><tr><th class="${prefix}table-header">Median</th><td class="${prefix}table-element">${round(
       swingInfo.total.median,

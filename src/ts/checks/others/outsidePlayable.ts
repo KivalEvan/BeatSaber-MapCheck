@@ -1,4 +1,5 @@
-import { round, toMmss, types } from 'bsmap';
+import { round, secToMmss } from 'bsmap/utils';
+import * as types from 'bsmap/types';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import UIInput from '../../ui/helpers/input';
 
@@ -40,7 +41,7 @@ function objectBeforeTime(
       results.push({
          type: 'string',
          label: tag + '(s) before start time',
-         value: `${round(objects[0].time, 3)} (${toMmss(
+         value: `${round(objects[0].time, 3)} (${secToMmss(
             objects[0].customData.__mapcheck_secondtime,
          )}`,
          symbol: 'error',
@@ -58,7 +59,7 @@ function objectAfterTime(
       results.push({
          type: 'string',
          label: tag + '(s) after end time',
-         value: `${round(objects[objects.length - 1].time, 3)} (${toMmss(
+         value: `${round(objects[objects.length - 1].time, 3)} (${secToMmss(
             objects[objects.length - 1].customData.__mapcheck_secondtime,
          )})`,
          symbol: 'error',

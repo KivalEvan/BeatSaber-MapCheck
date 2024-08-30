@@ -1,4 +1,4 @@
-import { types } from 'bsmap';
+import * as types from 'bsmap/types';
 import { htmlTablePointDefinitions } from './constants';
 import { displayTableRow, hideTableRow } from './helpers';
 

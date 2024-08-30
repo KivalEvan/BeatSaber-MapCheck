@@ -1,4 +1,6 @@
-import { colorFrom, ColorScheme, deltaE00, EnvironmentSchemeName, round, types } from 'bsmap';
+import { ColorScheme, EnvironmentSchemeName } from 'bsmap';
+import { colorFrom, deltaE00, round } from 'bsmap/utils';
+import * as types from 'bsmap/types';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import UIInput from '../../ui/helpers/input';
 

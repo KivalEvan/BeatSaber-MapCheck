@@ -1,7 +1,8 @@
 import LoadedData from '../../loadedData';
 import { removeOptions } from '../../utils/web';
 import { IContributorB64 } from '../../types';
-import { EnvironmentRename, types } from 'bsmap';
+import { EnvironmentRename } from 'bsmap';
+import * as types from 'bsmap/types';
 
 const htmlInfoLevelAuthor: HTMLElement = document.querySelector('.info__level-author')!;
 const htmlInfoEnvironment: HTMLElement = document.querySelector('.info__environment')!;

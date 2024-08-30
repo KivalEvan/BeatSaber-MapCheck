@@ -1,14 +1,14 @@
 import { renamer, stats } from 'bsmap/extensions';
 import { IBeatmapItem } from '../../types';
 import { prefix } from './constants';
-import { types } from 'bsmap';
+import * as types from 'bsmap/types';
 
 export function createEventCountTable(
-   beatmapInfo: types.wrapper.IWrapInfo,
-   beatmap: IBeatmapItem,
+   info: types.wrapper.IWrapInfo,
+   beatmapItem: IBeatmapItem,
 ): HTMLTableElement {
-   const environment = beatmap.environment;
-   const eventCount = beatmap.stats.basicEvents;
+   const environment = beatmapItem.environment;
+   const eventCount = beatmapItem.stats.basicEvents;
    let chroma = 0;
    let chromaOld = 0;
    let noodleExtensions = 0;

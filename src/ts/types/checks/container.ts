@@ -1,4 +1,4 @@
-import { types } from 'bsmap';
+import * as types from 'bsmap/types';
 
 export const enum ObjectContainerType {
    OBJECT = -1,

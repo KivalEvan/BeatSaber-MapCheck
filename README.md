@@ -21,9 +21,9 @@ Clone or fork the project and install dependencies with `npm` or `yarn`.
 
 ### Deploying
 
-Run the development server with `npm dev`, the URL will be given in the CLI.
+Run the development server with `npm run dev`, the URL will be given in the CLI.
 
-To run the app locally, `npm build` for the first time setup, then `npm serve`
+To run the app locally, `npm run build` for the first time setup, then `npm run serve`
 to run the server.
 
 ### Contributing

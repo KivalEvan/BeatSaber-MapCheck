@@ -3,10 +3,10 @@ import {
    hasMappingExtensionsBombNote,
    hasMappingExtensionsChain,
    hasMappingExtensionsNote,
-   hasMappingExtensionsObstacle,
+   hasMappingExtensionsObstacleV3,
    hasMappingExtensionsObstacleV2,
-   types,
 } from 'bsmap';
+import * as types from 'bsmap/types';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import UIInput from '../../ui/helpers/input';
 
@@ -65,7 +65,7 @@ function run(args: ToolArgs): IToolOutput[] {
          const hasMEObstacle =
             args.beatmap.rawVersion === 2
                ? hasMappingExtensionsObstacleV2
-               : hasMappingExtensionsObstacle;
+               : hasMappingExtensionsObstacleV3;
          noteResult = colorNotes.filter(hasMappingExtensionsNote);
          obstacleResult = obstacles.filter(hasMEObstacle);
          bombResult = bombNotes.filter(hasMappingExtensionsBombNote);

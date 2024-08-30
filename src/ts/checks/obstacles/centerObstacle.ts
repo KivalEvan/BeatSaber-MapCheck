@@ -1,4 +1,6 @@
-import { Obstacle, PosX, PosY, round, TimeProcessor, types } from 'bsmap';
+import { Obstacle, PosX, PosY, TimeProcessor } from 'bsmap';
+import { round } from 'bsmap/utils';
+import * as types from 'bsmap/types';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import UIInput from '../../ui/helpers/input';
 

@@ -1,15 +1,17 @@
-import { NoteJumpSpeed, round, types } from 'bsmap';
+import { NoteJumpSpeed } from 'bsmap';
+import { round } from 'bsmap/utils';
+import * as types from 'bsmap/types';
 import { IBeatmapItem } from '../../types';
 import { prefix } from './constants';
 
 export function createSettingsTable(
-   beatmapInfo: types.wrapper.IWrapInfo,
-   beatmap: IBeatmapItem,
+   info: types.wrapper.IWrapInfo,
+   beatmapItem: IBeatmapItem,
 ): HTMLTableElement {
    const njs = NoteJumpSpeed.create(
-      beatmapInfo.audio.bpm,
-      beatmap.settings.njs || NoteJumpSpeed.FallbackNJS[beatmap.settings.difficulty],
-      beatmap.settings.njsOffset,
+      info.audio.bpm,
+      beatmapItem.settings.njs || NoteJumpSpeed.FallbackNJS[beatmapItem.settings.difficulty],
+      beatmapItem.settings.njsOffset,
    );
 
    const htmlTable = document.createElement('table');

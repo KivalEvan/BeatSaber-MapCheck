@@ -1,4 +1,5 @@
-import { NoteDirection, types } from 'bsmap';
+import { NoteDirection } from 'bsmap';
+import * as types from 'bsmap/types';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import { ObjectContainerType } from '../../types/checks/container';
 import UIInput from '../../ui/helpers/input';

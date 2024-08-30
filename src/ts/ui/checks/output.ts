@@ -1,4 +1,5 @@
-import { round, toMmss, toMmssms, types } from 'bsmap';
+import { round, secToMmss, secToMmssms } from 'bsmap/utils';
+import * as types from 'bsmap/types';
 import settings from '../../settings';
 import { OutputSymbol } from '../../types/checks/check';
 
@@ -61,20 +62,20 @@ export function printResultTime(
                return `<span title="Beat ${round(
                   n.customData.__mapcheck_beattime,
                   settings.rounding,
-               )}">${toMmss(n.customData.__mapcheck_secondtime)}</span>`;
+               )}">${secToMmss(n.customData.__mapcheck_secondtime)}</span>`;
             case 'realtimems':
                return `<span title="Beat ${round(
                   n.customData.__mapcheck_beattime,
                   settings.rounding,
-               )}">${toMmssms(n.customData.__mapcheck_secondtime)}</span>`;
+               )}">${secToMmssms(n.customData.__mapcheck_secondtime)}</span>`;
             case 'jsontime':
-               return `<span title="Time ${toMmssms(n.customData.__mapcheck_secondtime)}">${round(
+               return `<span title="Time ${secToMmssms(n.customData.__mapcheck_secondtime)}">${round(
                   n.time,
                   settings.rounding,
                )}</span>`;
             case 'beattime':
             default:
-               return `<span title="Time ${toMmssms(n.customData.__mapcheck_secondtime)}">${round(
+               return `<span title="Time ${secToMmssms(n.customData.__mapcheck_secondtime)}">${round(
                   n.customData.__mapcheck_beattime,
                   settings.rounding,
                )}</span>`;

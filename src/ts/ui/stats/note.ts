@@ -1,15 +1,15 @@
 import { IBeatmapItem } from '../../types';
 import { prefix } from './constants';
-import { types } from 'bsmap';
+import * as types from 'bsmap/types';
 
 export function createNoteCountTable(
-   mapInfo: types.wrapper.IWrapInfo,
-   mapData: IBeatmapItem,
+   info: types.wrapper.IWrapInfo,
+   beatmapItem: IBeatmapItem,
 ): HTMLTableElement {
-   const noteCount = mapData.stats.notes;
-   const arcCount = mapData.stats.arcs;
-   const chainCount = mapData.stats.chains;
-   const bombCount = mapData.stats.bombs;
+   const noteCount = beatmapItem.stats.notes;
+   const arcCount = beatmapItem.stats.arcs;
+   const chainCount = beatmapItem.stats.chains;
+   const bombCount = beatmapItem.stats.bombs;
 
    let htmlString = `<caption class="${prefix}table-caption">Note Count:</caption><tr><th class="${prefix}table-header"></th><th class="${prefix}table-header">Note</th><th class="${prefix}table-header">Arc</th><th class="${prefix}table-header">Chain</th><th class="${prefix}table-header">Bomb</th></tr><tr><th class="${prefix}table-header">Total</th><td class="${prefix}table-element">${
       noteCount.red.total + noteCount.blue.total

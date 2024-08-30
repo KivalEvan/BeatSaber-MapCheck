@@ -5,10 +5,10 @@ import {
    NoteDirectionAngle,
    PosX,
    PosY,
-   round,
    TimeProcessor,
-   types,
 } from 'bsmap';
+import { round } from 'bsmap/utils';
+import * as types from 'bsmap/types';
 import { placement, swing } from 'bsmap/extensions';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import { IObjectContainer, ObjectContainerType } from '../../types/checks/container';

@@ -1,4 +1,4 @@
-import { types } from 'bsmap';
+import type { CharacteristicName, DifficultyName } from 'bsmap/types';
 import { IToolOutput } from './check';
 
 interface IAnalysisBase {
@@ -6,8 +6,8 @@ interface IAnalysisBase {
 }
 
 export interface IAnalysisMap extends IAnalysisBase {
-   characteristic: types.CharacteristicName;
-   difficulty: types.DifficultyName;
+   characteristic: CharacteristicName;
+   difficulty: DifficultyName;
 }
 
 export interface IAnalysis {

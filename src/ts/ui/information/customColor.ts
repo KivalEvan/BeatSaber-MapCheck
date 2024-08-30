@@ -1,4 +1,6 @@
-import { ColorScheme, colorToHex, CustomColorRename, EnvironmentSchemeName, types } from 'bsmap';
+import { ColorScheme, CustomColorRename, EnvironmentSchemeName } from 'bsmap';
+import { colorToHex } from 'bsmap/utils';
+import * as types from 'bsmap/types';
 import UIPanel from '../helpers/panel';
 import { htmlTableCustomColor } from './constants';
 import { displayTableRow, hideTableRow } from './helpers';

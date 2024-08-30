@@ -1,4 +1,4 @@
-import { round, toMmssms } from 'bsmap';
+import { round, secToMmssms } from 'bsmap/utils';
 
 const htmlIntro: HTMLElement = document.querySelector('.intro')!;
 const htmlMetadata: HTMLElement = document.querySelector('.metadata')!;
@@ -72,7 +72,7 @@ function setSongBPM(num: number, minBPM?: number, maxBPM?: number): void {
 
 function setSongDuration(num?: string | number): void {
    if (typeof num === 'number') {
-      htmlMetadataSongDuration.textContent = toMmssms(num);
+      htmlMetadataSongDuration.textContent = secToMmssms(num);
    } else if (typeof num === 'string') {
       htmlMetadataSongDuration.textContent = num;
    } else {

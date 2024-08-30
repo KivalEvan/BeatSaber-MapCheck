@@ -1,4 +1,5 @@
-import { EventList, TimeProcessor, types } from 'bsmap';
+import { EventList, TimeProcessor } from 'bsmap';
+import * as types from 'bsmap/types';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import UIInput from '../../ui/helpers/input';
 

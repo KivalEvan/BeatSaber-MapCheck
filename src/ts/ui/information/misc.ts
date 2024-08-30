@@ -1,4 +1,5 @@
-import { EnvironmentRename, toHhmmss } from 'bsmap';
+import { EnvironmentRename } from 'bsmap';
+import { minToHhmmss } from 'bsmap/utils';
 import {
    htmlTableEnvironmentId,
    htmlTableInformation,
@@ -56,7 +57,7 @@ export function setTimeSpend(num?: number): void {
       hideTableRow(htmlTableTimeSpend);
       return;
    }
-   displayTableRow(htmlTableTimeSpend, toHhmmss(num));
+   displayTableRow(htmlTableTimeSpend, minToHhmmss(num));
 }
 
 export function setRequirements(arr?: string[]): void {
