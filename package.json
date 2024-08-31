@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/KivalEvan/BeatSaber-MapCheck#readme",
   "dependencies": {
-    "bsmap": "^2.1.0",
+    "bsmap": "^2.1.2",
     "jszip": "^3.10.1"
   },
   "devDependencies": {
