@@ -65,7 +65,7 @@ export function setRequirements(arr?: string[]): void {
       hideTableRow(htmlTableRequirements);
       return;
    }
-   displayTableRow(htmlTableRequirements, arr.join(', '));
+   displayTableRow(htmlTableRequirements, arr, 'requirements');
 }
 
 export function setSuggestions(arr?: string[]): void {
@@ -73,7 +73,7 @@ export function setSuggestions(arr?: string[]): void {
       hideTableRow(htmlTableSuggestions);
       return;
    }
-   displayTableRow(htmlTableSuggestions, arr.join(', '));
+   displayTableRow(htmlTableSuggestions, arr, 'suggestions');
 }
 
 export function setInformation(arr?: string[]): void {
@@ -81,7 +81,7 @@ export function setInformation(arr?: string[]): void {
       hideTableRow(htmlTableInformation);
       return;
    }
-   displayTableRow(htmlTableInformation, arr);
+   displayTableRow(htmlTableInformation, arr, 'informations');
 }
 
 export function setWarnings(arr?: string[]): void {
@@ -89,5 +89,5 @@ export function setWarnings(arr?: string[]): void {
       hideTableRow(htmlTableWarnings);
       return;
    }
-   displayTableRow(htmlTableWarnings, arr);
+   displayTableRow(htmlTableWarnings, arr, 'warnings');
 }

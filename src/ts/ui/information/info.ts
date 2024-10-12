@@ -1,5 +1,3 @@
-import LoadedData from '../../loadedData';
-import { removeOptions } from '../../utils/web';
 import { IContributorB64 } from '../../types';
 import { EnvironmentRename } from 'bsmap';
 import * as types from 'bsmap/types';
@@ -8,16 +6,12 @@ const htmlInfoLevelAuthor: HTMLElement = document.querySelector('.info__level-au
 const htmlInfoEnvironment: HTMLElement = document.querySelector('.info__environment')!;
 const htmlInfoEditors: HTMLElement = document.querySelector('.info__editors')!;
 const htmlInfoContributors: HTMLElement = document.querySelector('.info__contributors')!;
-const htmlInfoContributorsSelect: HTMLSelectElement = document.querySelector(
-   '.info__contributors-select',
-)!;
 const htmlInfoContributorsImage: HTMLImageElement = document.querySelector(
    '.info__contributors-image',
 )!;
 const htmlInfoContributorsName: HTMLElement = document.querySelector('.info__contributors-name')!;
 const htmlInfoContributorsRole: HTMLElement = document.querySelector('.info__contributors-role')!;
-
-htmlInfoContributorsSelect.addEventListener('change', contributorsSelectHandler);
+const htmlInfoContributorsList: HTMLElement = document.querySelector('.info__contributors-list')!;
 
 export function setLevelAuthor(mappers?: string[], lighters?: string[]): void {
    if (!mappers) {
@@ -76,26 +70,41 @@ export function setContributors(obj: IContributorB64): void {
 }
 
 export function populateContributors(arr?: IContributorB64[]): void {
+   while (htmlInfoContributorsList.firstChild) {
+      htmlInfoContributorsList.removeChild(htmlInfoContributorsList.firstChild);
+   }
    if (!arr || !arr.length) {
       htmlInfoContributors.classList.add('hidden');
-      removeOptions(htmlInfoContributorsSelect);
+      // removeOptions(htmlInfoContributorsSelect);
       return;
    }
    htmlInfoContributors.classList.remove('hidden');
-   let first = true;
    arr.forEach((el, index) => {
-      if (first) {
-         first = false;
-         setContributors(el);
-      }
-      const optCont = document.createElement('option');
-      optCont.value = index.toString();
-      optCont.text = el._name + ' -- ' + el._role;
-      htmlInfoContributorsSelect.add(optCont);
-   });
-}
+      const htmlCard = document.createElement('div');
+      htmlCard.classList.add('info__contributors-card');
 
-function contributorsSelectHandler(ev: Event): void {
-   const target = ev.target as HTMLSelectElement;
-   setContributors(LoadedData.contributors[parseInt(target.value)]);
+      const htmlImg = document.createElement('img');
+      htmlImg.classList.add('info__contributors-image');
+      htmlImg.src = el._base64 ? 'data:image;base64,' + el._base64 : './img/unknown.jpg';
+      htmlImg.alt = 'contributor image: ' + el._name;
+
+      const htmlContent = document.createElement('div');
+      htmlContent.classList.add('info__contributors-content');
+
+      const htmlName = document.createElement('span');
+      htmlName.classList.add('info__contributors-name');
+      htmlName.textContent = el._name;
+
+      const htmlRole = document.createElement('span');
+      htmlRole.classList.add('info__contributors-role');
+      htmlRole.textContent = el._role;
+
+      htmlContent.appendChild(htmlName);
+      htmlContent.appendChild(document.createElement('br'));
+      htmlContent.appendChild(htmlRole);
+      htmlCard.appendChild(htmlImg);
+      htmlCard.appendChild(htmlContent);
+      htmlInfoContributorsList.appendChild(htmlCard);
+      // htmlInfoContributorsSelect.add(optCont);
+   });
 }

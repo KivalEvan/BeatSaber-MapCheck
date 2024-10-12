@@ -1,7 +1,6 @@
 import { ColorSchemeRename } from 'bsmap';
 import { colorToHex } from 'bsmap/utils';
 import * as types from 'bsmap/types';
-import UIPanel from '../helpers/panel';
 import { htmlTableColorScheme } from './constants';
 import { displayTableRow, hideTableRow } from './helpers';
 
@@ -39,7 +38,7 @@ export function setColorScheme(colorSch?: types.wrapper.IWrapInfoColorScheme): v
       hexColor.environmentWColorBoost = colorToHex(colorSch.environmentWColorBoost);
    }
 
-   const panel = UIPanel.create('max', 'none', true);
+   const content: HTMLElement[] = []
    for (const key in hexColor) {
       if (!hexColor[key]) {
          continue;
@@ -48,6 +47,8 @@ export function setColorScheme(colorSch?: types.wrapper.IWrapInfoColorScheme): v
       const colorContainer = document.createElement('div');
       const textMonoContainer = document.createElement('div');
       const textContainer = document.createElement('div');
+
+      container.className = 'info__color';
 
       colorContainer.className = 'info__color-dot';
       colorContainer.style.backgroundColor = hexColor[key] || '#000000';
@@ -62,7 +63,7 @@ export function setColorScheme(colorSch?: types.wrapper.IWrapInfoColorScheme): v
       container.appendChild(textMonoContainer);
       container.appendChild(textContainer);
 
-      panel.appendChild(container);
+      content.push(container);
    }
-   displayTableRow(htmlTableColorScheme, [panel]);
+   displayTableRow(htmlTableColorScheme, content);
 }

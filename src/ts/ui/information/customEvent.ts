@@ -49,5 +49,5 @@ export function setCustomEvents(
          rt ? ' | ' + secToMmss(rt) : ''
       } -- ${type} -> [${keyArr.join('')}]${type !== 'AssignTrackParent' ? `(${track})` : ''}`;
    });
-   displayTableRow(htmlTableCustomEvents, customEv);
+   displayTableRow(htmlTableCustomEvents, customEv, 'customEvents');
 }

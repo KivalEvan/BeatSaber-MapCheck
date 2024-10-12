@@ -14,5 +14,5 @@ export function setBPMChanges(bpm?: TimeProcessor | null): void {
       const rt = bpm.toRealTime(bpmc.time);
       return `${time} | ${secToMmss(rt)} -- ${bpmc.BPM}`;
    });
-   displayTableRow(htmlTableBPMChanges, bpmcText);
+   displayTableRow(htmlTableBPMChanges, bpmcText, 'bpmChanges');
 }

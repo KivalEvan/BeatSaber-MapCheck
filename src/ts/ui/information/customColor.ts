@@ -137,7 +137,7 @@ export function setCustomColor(
       hexColor._obstacleColor = null;
    }
 
-   const panel = UIPanel.create('max', 'none', true);
+   const content: HTMLElement[] = [];
    for (const key in hexColor) {
       if (!hexColor[key]) {
          continue;
@@ -146,6 +146,8 @@ export function setCustomColor(
       const colorContainer = document.createElement('div');
       const textMonoContainer = document.createElement('div');
       const textContainer = document.createElement('div');
+
+      container.className = 'info__color';
 
       colorContainer.className = 'info__color-dot';
       colorContainer.style.backgroundColor = hexColor[key] || '#000000';
@@ -160,7 +162,7 @@ export function setCustomColor(
       container.appendChild(textMonoContainer);
       container.appendChild(textContainer);
 
-      panel.appendChild(container);
+      content.push(container);
    }
-   displayTableRow(htmlTableCustomColor, [panel]);
+   displayTableRow(htmlTableCustomColor, content);
 }

@@ -45,5 +45,5 @@ export function setEnvironmentEnhancement(
          geometry ? (geometry as any).type || (geometry as any)._type : id
       }`;
    });
-   displayTableRow(htmlTableEnvironmentEnhancement, envEnhance);
+   displayTableRow(htmlTableEnvironmentEnhancement, envEnhance, 'environments');
 }

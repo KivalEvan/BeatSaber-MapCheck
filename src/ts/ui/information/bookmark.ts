@@ -14,7 +14,7 @@ export function setBookmarks(
       hideTableRow(htmlTableBookmarks);
       return;
    }
-   const panel = UIPanel.create('max', 'none', true);
+   const content: HTMLElement[] = [];
    arr.forEach((elem, i) => {
       let time = elem.b ?? elem._time ?? 0;
       let rt!: number;
@@ -24,6 +24,7 @@ export function setBookmarks(
       container.appendChild(colorContainer);
       container.appendChild(textContainer);
 
+      container.className = 'info__color';
       colorContainer.className = 'info__color-dot';
       colorContainer.style.backgroundColor = '#000000';
       textContainer.className = 'info__color-text';
@@ -31,7 +32,7 @@ export function setBookmarks(
       const text = elem.n ?? elem._name;
       if (typeof text !== 'string') {
          textContainer.textContent = `Error parsing bookmarks[${i}]`;
-         panel.appendChild(container);
+         content.push(container);
       }
       if (bpm) {
          time = bpm.adjustTime(time);
@@ -47,7 +48,7 @@ export function setBookmarks(
          rt ? ' | ' + secToMmss(rt) : ''
       } -- ${text != '' ? text : '**EMPTY NAME**'}`;
 
-      panel.appendChild(container);
+      content.push(container);
    });
-   displayTableRow(htmlTableBookmarks, [panel]);
+   displayTableRow(htmlTableBookmarks, content, 'bookmarks');
 }

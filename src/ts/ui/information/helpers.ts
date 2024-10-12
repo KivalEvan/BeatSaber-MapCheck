@@ -1,44 +1,155 @@
-import { htmlTableElements } from './constants';
+import settings from '../../settings';
+import { htmlTableContents } from './constants';
 
 export function hideTableRow<T extends HTMLElement>(elem: T): void {
    const tableElem = elem.querySelector('.info__table-element');
-   if (tableElem) {
-      tableElem.innerHTML = '';
+   const tableContent = tableElem?.querySelector('.info__table-content');
+   if (tableContent) {
+      tableContent.innerHTML = '';
    }
    elem.classList.add('hidden');
 }
 
+let paginatedContent: {
+   [key: string]: {
+      content: (string | HTMLElement)[];
+      html: HTMLElement;
+      page: number;
+      nextCb: (() => void) | null;
+      prevCb: (() => void) | null;
+      cb: (() => void) | null;
+   };
+} = {};
+export function clearPaginatedTable(): void {
+   paginatedContent = {};
+}
+
+function updatePageNumber(html: HTMLElement, str: string) {
+   html.textContent = str;
+}
+
+function updateNextPageClosure(identifier: string, callback: () => void) {
+   const item = paginatedContent[identifier];
+   return function updateNextPageCallback() {
+      item.page++;
+      if (item.page * settings.infoRowCount >= item.content.length) {
+         item.page = 0;
+      }
+      callback();
+   };
+}
+
+function updatePrevPageClosure(identifier: string, callback: () => void) {
+   const item = paginatedContent[identifier];
+   return function updateNextPageCallback() {
+      item.page--;
+      if (item.page < 0) {
+         item.page = Math.ceil(item.content.length / settings.infoRowCount) - 1;
+      }
+      callback();
+   };
+}
+
+function updateTableClosure(identifier: string, htmlPage: HTMLElement) {
+   const item = paginatedContent[identifier];
+   return function updateTableCallback() {
+      const filtered = item.content.slice(item.page * settings.infoRowCount, item.page * settings.infoRowCount + settings.infoRowCount);
+      updatePageNumber(htmlPage, `${item.page + 1} / ${Math.ceil(item.content.length / settings.infoRowCount)}`);
+      while (item.html.firstChild) {
+         item.html.removeChild(item.html.firstChild);
+      }
+      filtered.forEach((c: string | HTMLElement) => {
+         if (typeof c === 'string') {
+            const temp = document.createElement('div');
+            temp.textContent = c;
+            item.html.appendChild(temp);
+         } else {
+            item.html.appendChild(c);
+         }
+      });
+   };
+}
 export function displayTableRow<T extends HTMLElement>(
    elem: T,
    content: string | string[] | HTMLElement[],
+   identifier = '',
 ): void {
-   const tableElem = elem.querySelector('.info__table-element');
-   if (tableElem) {
-      while (tableElem.firstChild) {
-         tableElem.removeChild(tableElem.firstChild);
+   const tableElem = elem.querySelector<HTMLDivElement>('.info__table-element');
+   if (!tableElem) {
+      return;
+   }
+   const tableContent = tableElem.querySelector<HTMLDivElement>('.info__table-content');
+   if (tableContent) {
+      while (tableContent.firstChild) {
+         tableContent.removeChild(tableContent.firstChild);
       }
       if (typeof content === 'string') {
-         tableElem.textContent = content;
+         tableContent.textContent = content;
+      } else if (identifier) {
+         const paginateNext = tableElem.querySelector<HTMLButtonElement>(
+            '.info__table-paginate-button--next',
+         )!;
+         const paginatePrev = tableElem.querySelector<HTMLButtonElement>(
+            '.info__table-paginate-button--prev',
+         )!;
+         const paginateCount = tableElem.querySelector<HTMLDivElement>(
+            '.info__table-paginate-total',
+         )!;
+         paginateCount.textContent = `${content.length}`;
+         const paginatePage = tableElem.querySelector<HTMLDivElement>(
+            '.info__table-paginate-page',
+         )!;
+         if (identifier in paginatedContent) {
+            paginateNext.removeEventListener('click', paginatedContent[identifier].nextCb!);
+            paginatePrev.removeEventListener('click', paginatedContent[identifier].prevCb!);
+         }
+         paginatedContent[identifier] = {
+            content: content,
+            html: tableContent,
+            page: 0,
+            nextCb: null,
+            prevCb: null,
+            cb: null,
+         };
+         paginatedContent[identifier].cb = updateTableClosure(identifier, paginatePage);
+         const updateNextPageCb = updateNextPageClosure(
+            identifier,
+            paginatedContent[identifier].cb,
+         );
+         const updatePrevPageCb = updatePrevPageClosure(
+            identifier,
+            paginatedContent[identifier].cb,
+         );
+         if (paginateNext) {
+            paginateNext.addEventListener('click', updateNextPageCb);
+            paginatedContent[identifier].nextCb = updateNextPageCb;
+         }
+         if (paginatePrev) {
+            paginatePrev.addEventListener('click', updatePrevPageCb);
+            paginatedContent[identifier].prevCb = updatePrevPageCb;
+         }
+         paginatedContent[identifier].cb();
       } else {
+         while (tableContent.firstChild) {
+            tableContent.removeChild(tableContent.firstChild);
+         }
          content.forEach((c: string | HTMLElement) => {
             if (typeof c === 'string') {
-               const temp = document.createElement('span');
+               const temp = document.createElement('div');
                temp.textContent = c;
-               tableElem.appendChild(temp);
-               tableElem.appendChild(document.createElement('br'));
+               tableContent.appendChild(temp);
             } else {
-               tableElem.appendChild(c);
-               tableElem.appendChild(document.createElement('br'));
+               tableContent.appendChild(c);
             }
          });
-         if (tableElem.lastChild) {
-            tableElem.removeChild(tableElem.lastChild);
-         }
       }
    }
    elem.classList.remove('hidden');
 }
 
-export function setTableHeight(height: number): void {
-   htmlTableElements.forEach((tr) => (tr.style.maxHeight = `${height}rem`));
+export function updateTableRow(): void {
+   Object.keys(paginatedContent).forEach((k) => {
+      paginatedContent[k].page = 0;
+      paginatedContent[k].cb?.();
+   });
 }

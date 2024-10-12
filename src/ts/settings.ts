@@ -2,7 +2,7 @@ import { ISettings } from './types/settings';
 import { deepCopy } from 'bsmap/utils';
 
 const settingsDefault: ISettings = {
-   version: 5,
+   version: 6,
    load: {
       audio: true,
       imageCover: true,
@@ -10,17 +10,12 @@ const settingsDefault: ISettings = {
    },
    sorting: true,
    beatNumbering: 'beattime',
-   infoRowHeight: 4,
+   infoRowCount: 5,
    rounding: 3,
    dataCheck: true,
    deduplicateTime: true,
    theme: 'Dark',
-   show: {
-      info: false,
-      checks: false,
-      stats: false,
-      settings: false,
-   },
+   show: 'info',
    aprilFooled: false,
 };
 
@@ -50,11 +45,11 @@ export default new (class Settings implements ISettings {
    set beatNumbering(val: ISettings['beatNumbering']) {
       this.property.beatNumbering = val;
    }
-   get infoRowHeight(): number {
-      return this.property.infoRowHeight;
+   get infoRowCount(): number {
+      return this.property.infoRowCount;
    }
-   set infoRowHeight(val: number) {
-      this.property.infoRowHeight = val;
+   set infoRowCount(val: number) {
+      this.property.infoRowCount = val;
    }
    get rounding(): number {
       return this.property.rounding;
@@ -82,6 +77,9 @@ export default new (class Settings implements ISettings {
    }
    get show(): ISettings['show'] {
       return this.property.show;
+   }
+   set show(val: ISettings['show']) {
+      this.property.show = val;
    }
    get aprilFooled() {
       return this.property.aprilFooled;

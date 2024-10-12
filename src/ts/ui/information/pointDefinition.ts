@@ -34,5 +34,5 @@ export function setPointDefinitions(
          );
       }
    }
-   displayTableRow(htmlTablePointDefinitions, pointDef);
+   displayTableRow(htmlTablePointDefinitions, pointDef, 'pointDefinitions');
 }

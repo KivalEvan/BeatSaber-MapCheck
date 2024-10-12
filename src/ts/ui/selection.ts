@@ -110,6 +110,7 @@ function populateSelectDifficulty(characteristic?: types.CharacteristicName): vo
       );
       htmlLoadedDifficulty.push(htmlSelect.firstChild as HTMLInputElement);
       htmlSelectDifficulty.appendChild(htmlSelect);
+      // FIXME: this should only run once
       if (targetIdx === -1 || i === targetIdx) {
          const diffData = LoadedData.beatmaps.find(
             (bm) =>

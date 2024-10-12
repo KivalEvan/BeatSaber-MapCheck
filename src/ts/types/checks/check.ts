@@ -5,6 +5,7 @@ import { ToolInputOrder, ToolOutputOrder } from './order';
 
 export type ToolType = 'note' | 'event' | 'obstacle' | 'other' | 'general';
 
+// TODO: refactor to delegate HTML to be processed elsewhere
 export interface IToolInput<TParam extends Record<string, unknown>> {
    enabled: boolean;
    params: TParam;

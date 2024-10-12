@@ -24,7 +24,6 @@ import {
    setWarnings,
 } from './misc';
 import { setPointDefinitions } from './pointDefinition';
-import { setTableHeight } from './helpers';
 import { setPlayTime } from './playTime';
 import { setColorScheme } from './colorScheme';
 import { getFirstInteractiveTime, getLastInteractiveTime } from 'bsmap';
@@ -135,7 +134,6 @@ export {
    setPointDefinitions,
    setRequirements,
    setSuggestions,
-   setTableHeight,
    setTimeSpend,
    setVersion,
    setWarnings,

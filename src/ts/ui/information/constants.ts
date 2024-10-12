@@ -21,3 +21,5 @@ export const htmlTablePointDefinitions: HTMLElement = document.querySelector(
 export const htmlTableCustomEvents: HTMLElement = document.querySelector('.info__custom-events')!;
 export const htmlTableElements: NodeListOf<HTMLElement> =
    document.querySelectorAll('.info__table-element')!;
+   export const htmlTableContents: NodeListOf<HTMLElement> =
+   document.querySelectorAll('.info__table-contents')!;

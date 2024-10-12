@@ -10,19 +10,14 @@ interface ISettingsLoad extends SettingsFlag {
    imageContributor: boolean;
 }
 
-interface ISettingsShow extends SettingsFlag {
-   info: boolean;
-   checks: boolean;
-   stats: boolean;
-   settings: boolean;
-}
+type ISettingsShow = 'info' | 'checks' | 'stats' | 'settings';
 
 export interface ISettings {
    version: number;
    load: ISettingsLoad;
    sorting: boolean;
    beatNumbering: BeatNumbering;
-   infoRowHeight: number;
+   infoRowCount: number;
    rounding: number;
    dataCheck: boolean;
    deduplicateTime: boolean;

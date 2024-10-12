@@ -2,15 +2,15 @@
 import { UIThemeName } from '../../types/ui';
 import UITheme from '../theme';
 import Settings from '../../settings';
-import { BeatNumbering } from '../../types/settings';
-import { setTableHeight } from '../information/helpers';
+import { BeatNumbering, ISettings } from '../../types/settings';
+import { updateTableRow } from '../information/helpers';
 
 const htmlSettingsTheme: HTMLSelectElement = document.querySelector('.settings__theme')!;
 const htmlSettingsBeatNumbering: HTMLSelectElement = document.querySelector(
    '.settings__beat-numbering',
 )!;
 const htmlSettingsRounding: HTMLInputElement = document.querySelector('.settings__rounding')!;
-const htmlSettingsInfoHeight: HTMLInputElement = document.querySelector('.settings__info-height')!;
+const htmlSettingsInfoCount: HTMLInputElement = document.querySelector('.settings__info-count')!;
 const htmlSettingsDataCheck: HTMLInputElement = document.querySelector('.settings__data-check')!;
 const htmlSettingsLoad: NodeListOf<HTMLInputElement> = document.querySelectorAll('.settings__load');
 const htmlSettingsSort: HTMLInputElement = document.querySelector('.settings__sort')!;
@@ -26,7 +26,7 @@ UITheme.list.forEach((th) => {
 });
 htmlSettingsBeatNumbering.addEventListener('change', beatNumberingChangeHandler);
 htmlSettingsRounding.addEventListener('change', roundingChangeHandler);
-htmlSettingsInfoHeight.addEventListener('change', infoHeightChangeHandler);
+htmlSettingsInfoCount.addEventListener('change', infoCountChangeHandler);
 htmlSettingsDataCheck.addEventListener('change', dataCheckChangeHandler);
 htmlSettingsLoad.forEach((elem) => elem.addEventListener('change', loadCheckHandler));
 htmlSettingsSort.addEventListener('change', sortCheckHandler);
@@ -52,10 +52,10 @@ function roundingChangeHandler(ev: Event): void {
    Settings.save();
 }
 
-function infoHeightChangeHandler(ev: Event): void {
+function infoCountChangeHandler(ev: Event): void {
    const target = ev.target as HTMLInputElement;
-   Settings.infoRowHeight = parseInt(target.value);
-   setTableHeight(Settings.infoRowHeight);
+   Settings.infoRowCount = parseInt(target.value);
+   updateTableRow();
    Settings.save();
 }
 
@@ -67,18 +67,15 @@ function dataCheckChangeHandler(ev: Event): void {
 
 function showCheckHandler(ev: Event): void {
    const target = ev.target as HTMLInputElement;
-   const id = target.id.replace('settings__show-', '');
-   for (const k of Object.keys(Settings.show)) {
-      Settings.show[k] = false;
-   }
-   Settings.show[id] = target.checked;
+   const id = target.id.replace('settings__show-', '') as ISettings['show'];
+   Settings.show = id;
    Settings.save();
 }
 
-function setShowCheck(id: string, bool: boolean): void {
+function setShowCheck(id: string): void {
    htmlSettingsShow.forEach((elem) => {
       if (elem.id.endsWith(id)) {
-         elem.checked = bool;
+         elem.checked = true;
       }
    });
 }
@@ -122,9 +119,9 @@ function setRounding(num: number): void {
    htmlSettingsRounding.value = num.toString();
 }
 
-function setInfoHeight(num: number): void {
-   htmlSettingsInfoHeight.value = num.toString();
-   setTableHeight(Settings.infoRowHeight);
+function setInfoRow(num: number): void {
+   htmlSettingsInfoCount.value = num.toString();
+   updateTableRow();
 }
 
 function setDataCheck(bool: boolean): void {
@@ -144,7 +141,7 @@ export default {
    setTheme,
    setBeatNumbering,
    setRounding,
-   setInfoHeight,
+   setInfoRow,
    setDataCheck,
    clear,
 };
