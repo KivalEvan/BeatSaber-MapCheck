@@ -16,38 +16,38 @@ htmlInputFile.addEventListener('change', inputFileHandler);
 htmlInputFileZone.addEventListener('drop', inputFileDropHandler);
 htmlInputFileZone.addEventListener('dragover', dragOverHandler);
 
-function introInputTextHandler(ev: KeyboardEvent): void {
+async function introInputTextHandler(ev: KeyboardEvent): Promise<void> {
    const target = ev.target as HTMLInputElement;
    if (ev.key === 'Enter' && target.value !== '') {
       if (target.classList.contains('input__intro-url')) {
-         main({ link: target.value });
+         await main({ link: target.value });
       }
       if (target.classList.contains('input__intro-id')) {
-         main({ id: target.value });
+         await main({ id: target.value });
       }
       if (target.classList.contains('input__intro-hash')) {
-         main({ hash: target.value });
+         await main({ hash: target.value });
       }
    }
 }
 
-function introButtonTextHandler(ev: Event): void {
+async function introButtonTextHandler(ev: Event): Promise<void> {
    if (htmlInputURL && htmlInputURL.value !== '') {
-      main({ link: htmlInputURL.value });
+      await main({ link: htmlInputURL.value });
       return;
    }
    if (htmlInputID && htmlInputID.value !== '') {
-      main({ id: htmlInputID.value });
+      await main({ id: htmlInputID.value });
       return;
    }
    if (htmlInputHash && htmlInputHash.value !== '') {
-      main({ hash: htmlInputHash.value });
+      await main({ hash: htmlInputHash.value });
       return;
    }
 }
 
 // TODO: maybe break up into individual function
-function inputFileHandler(ev: Event): void {
+async function inputFileHandler(ev: Event): Promise<void> {
    const target = ev.target as HTMLInputElement;
    UILoading.status('info', 'Reading file input', 0);
    const file = target.files ? target.files[0] : null;
@@ -59,8 +59,8 @@ function inputFileHandler(ev: Event): void {
       if (file && (file.name.substr(-4) === '.zip' || file.name.substr(-4) === '.bsl')) {
          const fr = new FileReader();
          fr.readAsArrayBuffer(file);
-         fr.addEventListener('load', () => {
-            main({ file });
+         fr.addEventListener('load', async () => {
+            await main({ file });
          });
       } else {
          throw new Error('Unsupported file format, please enter zip file');
@@ -71,7 +71,7 @@ function inputFileHandler(ev: Event): void {
    }
 }
 
-function inputFileDropHandler(ev: DragEvent): void {
+async function inputFileDropHandler(ev: DragEvent): Promise<void> {
    ev.preventDefault();
    ev.stopPropagation();
    try {
@@ -91,8 +91,8 @@ function inputFileDropHandler(ev: DragEvent): void {
             ) {
                const fr = new FileReader();
                fr.readAsArrayBuffer(file);
-               fr.addEventListener('load', () => {
-                  main({ file });
+               fr.addEventListener('load', async () => {
+                  await main({ file });
                });
             } else {
                throw new Error('Unsupported file format, please enter zip file');
@@ -105,7 +105,7 @@ function inputFileDropHandler(ev: DragEvent): void {
    }
 }
 
-function dragOverHandler(ev: Event): void {
+async function dragOverHandler(ev: Event): Promise<void> {
    ev.preventDefault();
    ev.stopPropagation();
 }

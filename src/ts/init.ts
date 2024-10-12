@@ -1,7 +1,7 @@
 import * as ui from './ui';
 import main from './main';
 
-export default (function () {
+export default (async function () {
    ui.init();
 
    const url = new URL(location.href);
@@ -10,6 +10,6 @@ export default (function () {
    const hash = url.searchParams.get('hash');
 
    if (id || link || hash) {
-      main({ link, id, hash });
+      await main({ link, id, hash });
    }
 })();
