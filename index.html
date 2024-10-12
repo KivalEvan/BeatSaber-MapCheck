@@ -8,8 +8,8 @@
   <meta name="theme-color" content="#dd0000">
   <link rel="shortcut icon" type="image/png" href="/BeatSaber-MapCheck/img/favicon.png">
   <title>BS Map Check</title>
-  <script type="module" crossorigin src="/BeatSaber-MapCheck/assets/index-JX1TVnT6.js"></script>
-  <link rel="stylesheet" crossorigin href="/BeatSaber-MapCheck/assets/index-DnjbOt8Z.css">
+  <script type="module" crossorigin src="/BeatSaber-MapCheck/assets/index-BTXjWcdt.js"></script>
+  <link rel="stylesheet" crossorigin href="/BeatSaber-MapCheck/assets/index-BmhKNVSM.css">
 </head>
 
 <body>
@@ -77,16 +77,16 @@
             <div class="info__tags hidden">Tag</div>
             <div class="info__editors hidden">Editors</div>
             <div class="info__contributors hidden">
-              <label class="info__label" for="info__contributors-select">
+              <div class="info__label" for="info__contributors-select">
                 <span>Contributors:</span>
-              </label>
-              <select class="info__select info__contributors-select" id="info__contributors-select">
-              </select>
-              <div class="info__contributors-card">
-                <img class="info__contributors-image" src="/BeatSaber-MapCheck/img/unknown.jpg" alt="contributor image">
-                <div class="info__contributors-content">
-                  <span class="info__contributors-name">Name</span><br>
-                  <span class="info__contributors-role">Role</span>
+              </div>
+              <div class="info__contributors-list">
+                <div class="info__contributors-card">
+                  <img class="info__contributors-image" src="/BeatSaber-MapCheck/img/unknown.jpg" alt="contributor image">
+                  <div class="info__contributors-content">
+                    <span class="info__contributors-name">Name</span><br>
+                    <span class="info__contributors-role">Role</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -97,71 +97,159 @@
                 <tbody>
                   <tr class="info__table-row info__version hidden">
                     <th class="info__table-header">Version</th>
-                    <td class="info__table-element"></td>
+                    <td class="info__table-element">
+                      <div class="info__table-content"></div>
+                    </td>
                   </tr>
                   <tr class="info__table-row info__mappers hidden">
                     <th class="info__table-header">Mappers</th>
-                    <td class="info__table-element"></td>
+                    <td class="info__table-element">
+                      <div class="info__table-content"></div>
+                    </td>
                   </tr>
                   <tr class="info__table-row info__lighters hidden">
                     <th class="info__table-header">Lighters</th>
-                    <td class="info__table-element"></td>
+                    <td class="info__table-element">
+                      <div class="info__table-content"></div>
+                    </td>
                   </tr>
                   <tr class="info__table-row info__environmentId hidden">
                     <th class="info__table-header">Environment</th>
-                    <td class="info__table-element"></td>
+                    <td class="info__table-element">
+                      <div class="info__table-content"></div>
+                    </td>
                   </tr>
                   <tr class="info__table-row info__play-time hidden">
                     <th class="info__table-header">Play Time</th>
-                    <td class="info__table-element"></td>
+                    <td class="info__table-element">
+                      <div class="info__table-content"></div>
+                    </td>
                   </tr>
                   <tr class="info__table-row info__time-spend hidden">
                     <th class="info__table-header">Time Spent</th>
-                    <td class="info__table-element"></td>
+                    <td class="info__table-element">
+                      <div class="info__table-content"></div>
+                    </td>
                   </tr>
                   <tr class="info__table-row info__color-scheme hidden">
                     <th class="info__table-header">Color Scheme</th>
-                    <td class="info__table-element"></td>
+                    <td class="info__table-element">
+                      <div class="info__table-content"></div>
+                    </td>
                   </tr>
                   <tr class="info__table-row info__custom-color hidden">
                     <th class="info__table-header">Custom Color</th>
-                    <td class="info__table-element"></td>
+                    <td class="info__table-element">
+                      <div class="info__table-content"></div>
+                    </td>
                   </tr>
                   <tr class="info__table-row info__requirements hidden">
                     <th class="info__table-header">Requirements</th>
-                    <td class="info__table-element"></td>
+                    <td class="info__table-element">
+                      <div class="info__table-paginate">
+                        <button class="info__table-paginate-button info__table-paginate-button--prev">Prev</button>
+                        <span class="info__table-paginate-page">0 / 0</span>
+                        <button class="info__table-paginate-button info__table-paginate-button--next">Next</button>
+                        <span class="info__table-paginate-total">0</span> element(s)
+                      </div>
+                      <div class="info__table-content"></div>
+                    </td>
                   </tr>
                   <tr class="info__table-row info__suggestions hidden">
                     <th class="info__table-header">Suggestions</th>
-                    <td class="info__table-element"></td>
+                    <td class="info__table-element">
+                      <div class="info__table-paginate">
+                        <button class="info__table-paginate-button info__table-paginate-button--prev">Prev</button>
+                        <span class="info__table-paginate-page">0 / 0</span>
+                        <button class="info__table-paginate-button info__table-paginate-button--next">Next</button>
+                        <span class="info__table-paginate-total">0</span> element(s)
+                      </div>
+                      <div class="info__table-content"></div>
+                    </td>
                   </tr>
                   <tr class="info__table-row info__information hidden">
                     <th class="info__table-header">Information</th>
-                    <td class="info__table-element"></td>
+                    <td class="info__table-element">
+                      <div class="info__table-paginate">
+                        <button class="info__table-paginate-button info__table-paginate-button--prev">Prev</button>
+                        <span class="info__table-paginate-page">0 / 0</span>
+                        <button class="info__table-paginate-button info__table-paginate-button--next">Next</button>
+                        <span class="info__table-paginate-total">0</span> element(s)
+                      </div>
+                      <div class="info__table-content"></div>
+                    </td>
                   </tr>
                   <tr class="info__table-row info__warnings hidden">
                     <th class="info__table-header">Warnings</th>
-                    <td class="info__table-element"></td>
+                    <td class="info__table-element">
+                      <div class="info__table-paginate">
+                        <button class="info__table-paginate-button info__table-paginate-button--prev">Prev</button>
+                        <span class="info__table-paginate-page">0 / 0</span>
+                        <button class="info__table-paginate-button info__table-paginate-button--next">Next</button>
+                        <span class="info__table-paginate-total">0</span> element(s)
+                      </div>
+                      <div class="info__table-content"></div>
+                    </td>
                   </tr>
                   <tr class="info__table-row info__bookmarks hidden">
                     <th class="info__table-header">Bookmarks</th>
-                    <td class="info__table-element"></td>
+                    <td class="info__table-element">
+                      <div class="info__table-paginate">
+                        <button class="info__table-paginate-button info__table-paginate-button--prev">Prev</button>
+                        <span class="info__table-paginate-page">0 / 0</span>
+                        <button class="info__table-paginate-button info__table-paginate-button--next">Next</button>
+                        <span class="info__table-paginate-total">0</span> element(s)
+                      </div>
+                      <div class="info__table-content"></div>
+                    </td>
                   </tr>
                   <tr class="info__table-row info__bpm-changes hidden">
                     <th class="info__table-header">BPM Changes</th>
-                    <td class="info__table-element"></td>
+                    <td class="info__table-element">
+                      <div class="info__table-paginate">
+                        <button class="info__table-paginate-button info__table-paginate-button--prev">Prev</button>
+                        <span class="info__table-paginate-page">0 / 0</span>
+                        <button class="info__table-paginate-button info__table-paginate-button--next">Next</button>
+                        <span class="info__table-paginate-total">0</span> element(s)
+                      </div>
+                      <div class="info__table-content"></div>
+                    </td>
                   </tr>
                   <tr class="info__table-row info__environment-enhancement hidden">
                     <th class="info__table-header">Environment</th>
-                    <td class="info__table-element"></td>
+                    <td class="info__table-element">
+                      <div class="info__table-paginate">
+                        <button class="info__table-paginate-button info__table-paginate-button--prev">Prev</button>
+                        <span class="info__table-paginate-page">0 / 0</span>
+                        <button class="info__table-paginate-button info__table-paginate-button--next">Next</button>
+                        <span class="info__table-paginate-total">0</span> element(s)
+                      </div>
+                      <div class="info__table-content"></div>
+                    </td>
                   </tr>
                   <tr class="info__table-row info__point-definitions hidden">
                     <th class="info__table-header">Point Definitions</th>
-                    <td class="info__table-element"></td>
+                    <td class="info__table-element">
+                      <div class="info__table-paginate">
+                        <button class="info__table-paginate-button info__table-paginate-button--prev">Prev</button>
+                        <span class="info__table-paginate-page">0 / 0</span>
+                        <button class="info__table-paginate-button info__table-paginate-button--next">Next</button>
+                        <span class="info__table-paginate-total">0</span> element(s)
+                      </div>
+                      <div class="info__table-content"></div>
+                    </td>
                   </tr>
                   <tr class="info__table-row info__custom-events hidden">
                     <th class="info__table-header">Custom Events</th>
-                    <td class="info__table-element"></td>
+                    <td class="info__table-element">
+                      <div class="info__table-paginate">
+                        <button class="info__table-paginate-button info__table-paginate-button--prev">Prev</button>
+                        <span class="info__table-paginate-page">0 / 0</span>
+                        <button class="info__table-paginate-button info__table-paginate-button--next">Next</button>
+                        <span class="info__table-paginate-total">0</span> element(s)
+                      </div>
+                      <div class="info__table-content"></div>
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -288,10 +376,10 @@
               <span>Theme:</span>
             </label>
             <select class="settings__theme" id="settings__theme"></select><br>
-            <label for="settings__info-height">
-              <span>Info Row Height:</span>
+            <label for="settings__info-count">
+              <span>Info Row Count:</span>
             </label>
-            <input type="number" class="settings__info-height input-toggle input--small" id="settings__info-height"
+            <input type="number" class="settings__info-count input-toggle input--small" id="settings__info-height"
               step="1" min="1"><br>
             <label for="settings__beat-numbering">
               <span>Beat Numbering:</span>
