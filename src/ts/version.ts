@@ -3,7 +3,7 @@ import { version } from '../../package.json';
 const watermark: string = 'Kival Evan';
 
 export default new (class Version {
-   private _version: string = version + '-beta-b';
+   private _version: string = version + '-beta-c';
    private _wm: string = watermark;
 
    get value(): string {
