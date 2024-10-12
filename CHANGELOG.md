@@ -7,7 +7,7 @@ usage.
 
 ### Added
 
-- Collider environment & color scheme
+- Collider and Britney Spears environment & color scheme
 - Nested folder loading
 
 ### Changed
