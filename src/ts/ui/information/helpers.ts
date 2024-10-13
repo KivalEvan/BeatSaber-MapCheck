@@ -53,8 +53,14 @@ function updatePrevPageClosure(identifier: string, callback: () => void) {
 function updateTableClosure(identifier: string, htmlPage: HTMLElement) {
    const item = paginatedContent[identifier];
    return function updateTableCallback() {
-      const filtered = item.content.slice(item.page * settings.infoRowCount, item.page * settings.infoRowCount + settings.infoRowCount);
-      updatePageNumber(htmlPage, `${item.page + 1} / ${Math.ceil(item.content.length / settings.infoRowCount)}`);
+      const filtered = item.content.slice(
+         item.page * settings.infoRowCount,
+         item.page * settings.infoRowCount + settings.infoRowCount,
+      );
+      updatePageNumber(
+         htmlPage,
+         `${item.page + 1} / ${Math.ceil(item.content.length / settings.infoRowCount)}`,
+      );
       while (item.html.firstChild) {
          item.html.removeChild(item.html.firstChild);
       }

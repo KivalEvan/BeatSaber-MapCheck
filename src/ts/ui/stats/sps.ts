@@ -1,44 +1,39 @@
 import { round } from 'bsmap/utils';
 import * as types from 'bsmap/types';
 import { IBeatmapItem } from '../../types';
-import { prefix } from './constants';
 
-export function createSPSTable(
-   info: types.wrapper.IWrapInfo,
-   beatmapItem: IBeatmapItem,
-): HTMLTableElement {
+const htmlSpsAvgTotal = document.getElementById('stats__table-sps-avg-total') as HTMLTableElement;
+const htmlSpsAvgRed = document.getElementById('stats__table-sps-avg-red') as HTMLTableElement;
+const htmlSpsAvgBlue = document.getElementById('stats__table-sps-avg-blue') as HTMLTableElement;
+const htmlSpsMedianTotal = document.getElementById(
+   'stats__table-sps-median-total',
+) as HTMLTableElement;
+const htmlSpsMedianRed = document.getElementById('stats__table-sps-median-red') as HTMLTableElement;
+const htmlSpsMedianBlue = document.getElementById(
+   'stats__table-sps-median-blue',
+) as HTMLTableElement;
+const htmlSpsPeakTotal = document.getElementById('stats__table-sps-peak-total') as HTMLTableElement;
+const htmlSpsPeakRed = document.getElementById('stats__table-sps-peak-red') as HTMLTableElement;
+const htmlSpsPeakBlue = document.getElementById('stats__table-sps-peak-blue') as HTMLTableElement;
+const htmlSpsTotalTotal = document.getElementById(
+   'stats__table-sps-total-total',
+) as HTMLTableElement;
+const htmlSpsTotalRed = document.getElementById('stats__table-sps-total-red') as HTMLTableElement;
+const htmlSpsTotalBlue = document.getElementById('stats__table-sps-total-blue') as HTMLTableElement;
+
+export function updateSPSTable(_: types.wrapper.IWrapInfo, beatmapItem: IBeatmapItem): void {
    const swingInfo = beatmapItem.swingAnalysis;
 
-   const htmlTable = document.createElement('table');
-   htmlTable.className = prefix + 'table';
-   htmlTable.innerHTML = `<caption class="${prefix}table-caption">Swing Per Seconds (SPS):</caption><tr><th class="${prefix}table-header"></th><th class="${prefix}table-header">Total</th><th class="${prefix}table-header">Red</th><th class="${prefix}table-header">Blue</th></tr><tr><th class="${prefix}table-header">Average</th><td class="${prefix}table-element">${round(
-      swingInfo.total.perSecond,
-      2,
-   )}</td><td class="${prefix}table-element">${round(
-      swingInfo.red.perSecond,
-      2,
-   )}</td><td class="${prefix}table-element">${round(
-      swingInfo.blue.perSecond,
-      2,
-   )}</td></tr><tr><th class="${prefix}table-header">Median</th><td class="${prefix}table-element">${round(
-      swingInfo.total.median,
-      2,
-   )}</td><td class="${prefix}table-element">${round(
-      swingInfo.red.median,
-      2,
-   )}</td><td class="${prefix}table-element">${round(
-      swingInfo.blue.median,
-      2,
-   )}</td></tr><tr><th class="${prefix}table-header">Peak</th><td class="${prefix}table-element">${round(
-      swingInfo.total.peak,
-      2,
-   )}</td><td class="${prefix}table-element">${round(
-      swingInfo.red.peak,
-      2,
-   )}</td><td class="${prefix}table-element">${round(
-      swingInfo.blue.peak,
-      2,
-   )}</td></tr><tr><th class="${prefix}table-header">Total</th><td class="${prefix}table-element">${swingInfo.total.total}</td><td class="${prefix}table-element">${swingInfo.red.total}</td><td class="${prefix}table-element">${swingInfo.blue.total}</td></tr>`;
-
-   return htmlTable;
+   htmlSpsAvgTotal.innerText = round(swingInfo.total.perSecond, 2).toString();
+   htmlSpsAvgRed.innerText = round(swingInfo.red.perSecond, 2).toString();
+   htmlSpsAvgBlue.innerText = round(swingInfo.blue.perSecond, 2).toString();
+   htmlSpsMedianTotal.innerText = round(swingInfo.total.median, 2).toString();
+   htmlSpsMedianRed.innerText = round(swingInfo.red.median, 2).toString();
+   htmlSpsMedianBlue.innerText = round(swingInfo.blue.median, 2).toString();
+   htmlSpsPeakTotal.innerText = round(swingInfo.total.peak, 2).toString();
+   htmlSpsPeakRed.innerText = round(swingInfo.red.peak, 2).toString();
+   htmlSpsPeakBlue.innerText = round(swingInfo.blue.peak, 2).toString();
+   htmlSpsTotalTotal.innerText = round(swingInfo.total.total, 2).toString();
+   htmlSpsTotalRed.innerText = round(swingInfo.red.total, 2).toString();
+   htmlSpsTotalBlue.innerText = round(swingInfo.blue.total, 2).toString();
 }

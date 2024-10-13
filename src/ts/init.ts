@@ -1,7 +1,11 @@
 import * as ui from './ui';
 import main from './main';
+import { logger } from 'bsmap';
 
 export default (async function () {
+   logger.tagPrint = (tag: string[], level: number): string => {
+      return `[${tag.join('::')}]`;
+   };
    ui.init();
 
    const url = new URL(location.href);

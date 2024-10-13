@@ -308,7 +308,355 @@
       <input type="radio" class="tabs__radio" id="tabs__stats" name="tabs__nav" value="stats">
       <div class="tabs__tab" id="stats">
         <div class="panel panel--flex stats__content">
-          Map not loaded.
+          <div class="panel panel--small panel--offset-half">
+            <table class="stats__table">
+              <caption class="stats__table-caption">Map Settings:</caption>
+              <tbody>
+                <tr>
+                  <th class="stats__table-header" colspan="2">Version</th>
+                  <td class="stats__table-element" id="stats__table-settings-version"></td>
+                </tr>
+                <tr>
+                  <th class="stats__table-header" colspan="2">Note Jump Speed</th>
+                  <td class="stats__table-element" id="stats__table-settings-njs"></td>
+                </tr>
+                <tr>
+                  <th class="stats__table-header" colspan="2">Spawn Distance Modifier</th>
+                  <td class="stats__table-element" id="stats__table-settings-sdm"></td>
+                </tr>
+                <tr>
+                  <th class="stats__table-header" colspan="2">Half Jump Duration</th>
+                  <td class="stats__table-element" id="stats__table-settings-hjd"></td>
+                </tr>
+                <tr>
+                  <th class="stats__table-header" colspan="2">Jump Distance</th>
+                  <td class="stats__table-element" id="stats__table-settings-jd"></td>
+                </tr>
+                <tr>
+                  <th class="stats__table-header" colspan="2">Reaction Time</th>
+                  <td class="stats__table-element" id="stats__table-settings-rt"></td>
+                </tr>
+              </tbody>
+            </table>
+            <br>
+            <table class="stats__table">
+              <caption class="stats__table-caption">Note Per Seconds (NPS):</caption>
+              <tbody>
+                <tr>
+                  <th class="stats__table-header" colspan="2">Overall</th>
+                  <td class="stats__table-element" id="stats__table-nps-overall"></td>
+                </tr>
+                <tr>
+                  <th class="stats__table-header" colspan="2">Mapped</th>
+                  <td class="stats__table-element" id="stats__table-nps-mapped"></td>
+                </tr>
+                <tr>
+                  <th class="stats__table-header" rowspan="3">Peak</th>
+                  <th class="stats__table-header">16-beat</th>
+                  <td class="stats__table-element" id="stats__table-nps-peak-16"></td>
+                </tr>
+                <tr>
+                  <th class="stats__table-header">8-beat</th>
+                  <td class="stats__table-element" id="stats__table-nps-peak-8"></td>
+                </tr>
+                <tr>
+                  <th class="stats__table-header">4-beat</th>
+                  <td class="stats__table-element" id="stats__table-nps-peak-4"></td>
+                </tr>
+              </tbody>
+            </table>
+            <br>
+            <table class="stats__table">
+              <caption class="stats__table-caption">Swing Per Seconds (SPS):</caption>
+              <tbody>
+                <tr>
+                  <th class="stats__table-header"></th>
+                  <th class="stats__table-header">Total</th>
+                  <th class="stats__table-header">Red</th>
+                  <th class="stats__table-header">Blue</th>
+                </tr>
+                <tr>
+                  <th class="stats__table-header">Calculated</th>
+                  <td class="stats__table-element" id="stats__table-sps-avg-total"></td>
+                  <td class="stats__table-element" id="stats__table-sps-avg-red"></td>
+                  <td class="stats__table-element" id="stats__table-sps-avg-blue"></td>
+                </tr>
+                <tr>
+                  <th class="stats__table-header">Median</th>
+                  <td class="stats__table-element" id="stats__table-sps-median-total"></td>
+                  <td class="stats__table-element" id="stats__table-sps-median-red"></td>
+                  <td class="stats__table-element" id="stats__table-sps-median-blue"></td>
+                </tr>
+                <tr>
+                  <th class="stats__table-header">Peak</th>
+                  <td class="stats__table-element" id="stats__table-sps-peak-total"></td>
+                  <td class="stats__table-element" id="stats__table-sps-peak-red"></td>
+                  <td class="stats__table-element" id="stats__table-sps-peak-blue"></td>
+                </tr>
+                <tr>
+                  <th class="stats__table-header">Total</th>
+                  <td class="stats__table-element" id="stats__table-sps-total-total"></td>
+                  <td class="stats__table-element" id="stats__table-sps-total-red"></td>
+                  <td class="stats__table-element" id="stats__table-sps-total-blue"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="panel panel--small panel--offset-half">
+            <table class="stats__table">
+              <caption class="stats__table-caption">Note Information:</caption>
+              <tbody>
+                <tr>
+                  <th class="stats__table-header" colspan="2">R/B Ratio</th>
+                  <td class="stats__table-element" id="stats__table-ni-ratio"></td>
+                </tr>
+                <tr>
+                  <th class="stats__table-header" colspan="2">Max Score</th>
+                  <td class="stats__table-element" id="stats__table-ni-maxscore"></td>
+                </tr>
+                <tr>
+                  <th class="stats__table-header" colspan="2">Effective BPM</th>
+                  <td class="stats__table-element" id="stats__table-ni-ebpm"></td>
+                </tr>
+                <tr>
+                  <th class="stats__table-header" colspan="2">Effective BPM (swing)</th>
+                  <td class="stats__table-element" id="stats__table-ni-ebpm-swing"></td>
+                </tr>
+                <tr class="hidden">
+                  <th class="stats__table-header" colspan="2">Min Slider Speed</th>
+                  <td class="stats__table-element" id="stats__table-ni-minspeed"></td>
+                </tr>
+                <tr class="hidden">
+                  <th class="stats__table-header" colspan="2">Max Slider Speed</th>
+                  <td class="stats__table-element" id="stats__table-ni-maxspeed"></td>
+                </tr>
+              </tbody>
+            </table><br>
+            <table class="stats__table">
+              <caption class="stats__table-caption">Note Count:</caption>
+              <tbody>
+                <tr>
+                  <th class="stats__table-header"></th>
+                  <th class="stats__table-header">Note</th>
+                  <th class="stats__table-header">Arc</th>
+                  <th class="stats__table-header">Chain</th>
+                  <th class="stats__table-header">Bomb</th>
+                </tr>
+                <tr>
+                  <th class="stats__table-header">Total</th>
+                  <td class="stats__table-element" id="stats__table-nc-total"></td>
+                  <td class="stats__table-element" id="stats__table-nc-arc"></td>
+                  <td class="stats__table-element" id="stats__table-nc-chain"></td>
+                  <td class="stats__table-element" id="stats__table-nc-bomb"></td>
+                </tr>
+                <tr>
+                  <th class="stats__table-header">Red</th>
+                  <td class="stats__table-element" id="stats__table-nc-red"></td>
+                  <td class="stats__table-element" id="stats__table-nc-arc-red"></td>
+                  <td class="stats__table-element" id="stats__table-nc-chain-red"></td>
+                  <td class="stats__table-element" id="stats__table-nc-bomb-red">0</td>
+                </tr>
+                <tr>
+                  <th class="stats__table-header">Blue</th>
+                  <td class="stats__table-element" id="stats__table-nc-blue"></td>
+                  <td class="stats__table-element" id="stats__table-nc-arc-blue"></td>
+                  <td class="stats__table-element" id="stats__table-nc-chain-blue"></td>
+                  <td class="stats__table-element" id="stats__table-nc-bomb-blue">0</td>
+                </tr>
+                <tr class="hidden">
+                  <th class="stats__table-header">Chroma</th>
+                  <td class="stats__table-element" id="stats__table-nc-chroma"></td>
+                  <td class="stats__table-element" id="stats__table-nc-arc-chroma"></td>
+                  <td class="stats__table-element" id="stats__table-nc-chain-chroma"></td></td>
+                  <td class="stats__table-element" id="stats__table-nc-bomb-chroma"></td>
+                </tr>
+                <tr class="hidden">
+                  <th class="stats__table-header">Noodle</th>
+                  <td class="stats__table-element" id="stats__table-nc-noodle"></td>
+                  <td class="stats__table-element" id="stats__table-nc-arc-noodle"></td>
+                  <td class="stats__table-element" id="stats__table-nc-chain-noodle"></td></td>
+                  <td class="stats__table-element" id="stats__table-nc-bomb-noodle"></td>
+                </tr>
+                <tr class="hidden">
+                  <th class="stats__table-header">ME</th>
+                  <td class="stats__table-element" id="stats__table-nc-me"></td>
+                  <td class="stats__table-element" id="stats__table-nc-arc-me"></td>
+                  <td class="stats__table-element" id="stats__table-nc-chain-me"></td>
+                  <td class="stats__table-element" id="stats__table-nc-bomb-me"></td>
+                </tr>
+              </tbody>
+            </table><br>
+            <table class="stats__table">
+              <caption class="stats__table-caption">
+                <span>Note Placement: </span>
+                <br>
+                <span>Type: </span>
+                <input type="checkbox" id="stats__table-placement-note" class="stats__table-select" checked>
+                <label for="stats__table-placement-note">Note</label>
+                <input type="checkbox" id="stats__table-placement-arc" class="stats__table-select" checked>
+                <label for="stats__table-placement-arc">Arc</label>
+                <input type="checkbox" id="stats__table-placement-chain" class="stats__table-select" checked>
+                <label for="stats__table-placement-chain">Chain</label>
+                <input type="checkbox" id="stats__table-placement-bomb" class="stats__table-select" checked>
+                <label for="stats__table-placement-bomb">Bomb</label>
+                <br>
+                <span>Color: </span>
+                <input type="checkbox" id="stats__table-placement-red" class="stats__table-select" checked>
+                <label for="stats__table-placement-red">Red</label>
+                <input type="checkbox" id="stats__table-placement-blue" class="stats__table-select" checked>
+                <label for="stats__table-placement-blue">Blue</label>
+              </caption>
+              <tbody id="stats__table-placement">
+                <tr>
+                  <td class="stats__table-element"></td>
+                  <td class="stats__table-element"></td>
+                  <td class="stats__table-element"></td>
+                  <td class="stats__table-element"></td>
+                  <td class="stats__table-element stats__table--no-border"></td>
+                </tr>
+                <tr>
+                  <td class="stats__table-element"></td>
+                  <td class="stats__table-element"></td>
+                  <td class="stats__table-element"></td>
+                  <td class="stats__table-element"></td>
+                  <td class="stats__table-element stats__table--no-border"></td>
+                </tr>
+                <tr>
+                  <td class="stats__table-element"></td>
+                  <td class="stats__table-element"></td>
+                  <td class="stats__table-element"></td>
+                  <td class="stats__table-element"></td>
+                  <td class="stats__table-element stats__table--no-border"></td>
+                </tr>
+                <tr>
+                  <td class="stats__table-element stats__table--no-border"></td>
+                  <td class="stats__table-element stats__table--no-border"></td>
+                  <td class="stats__table-element stats__table--no-border"></td>
+                  <td class="stats__table-element stats__table--no-border"></td>
+                </tr>
+              </tbody>
+            </table><br>
+            <table class="stats__table">
+              <caption class="stats__table-caption">
+                <span>Note Angle: </span>
+                <br>
+                <span>Type: </span>
+                <input type="checkbox" id="stats__table-angle-note" class="stats__table-select" checked>
+                <label for="stats__table-angle-note">Note</label>
+                <input type="checkbox" id="stats__table-angle-arc" class="stats__table-select" checked>
+                <label for="stats__table-angle-arc">Arc</label>
+                <input type="checkbox" id="stats__table-angle-chain" class="stats__table-select" checked>
+                <label for="stats__table-angle-chain">Chain</label>
+                <br>
+                <span>Color: </span>
+                <input type="checkbox" id="stats__table-angle-red" class="stats__table-select" checked>
+                <label for="stats__table-angle-red">Red</label>
+                <input type="checkbox" id="stats__table-angle-blue" class="stats__table-select" checked>
+                <label for="stats__table-angle-blue">Blue</label>
+              </caption>
+              <tbody id="stats__table-angle">
+                <tr>
+                  <td class="stats__table-element"></td>
+                  <td class="stats__table-element"></td>
+                  <td class="stats__table-element"></td>
+                </tr>
+                <tr>
+                  <td class="stats__table-element"></td>
+                  <td class="stats__table-element"></td>
+                  <td class="stats__table-element"></td>
+                </tr>
+                <tr>
+                  <td class="stats__table-element"></td>
+                  <td class="stats__table-element"></td>
+                  <td class="stats__table-element"></td>
+                </tr>
+              </tbody>
+            </table><br>
+            <table class="stats__table">
+              <caption class="stats__table-caption">Obstacles:</caption>
+              <tbody>
+                <tr>
+                  <th class="stats__table-header" colspan="2">Total</th>
+                  <td class="stats__table-element" id="stats__table-obstacles-total"></td>
+                </tr>
+                <tr>
+                  <th class="stats__table-header" colspan="2">Interactive</th>
+                  <td class="stats__table-element" id="stats__table-obstacles-interactive"></td>
+                </tr>
+                <tr class="hidden">
+                  <th class="stats__table-header" colspan="2">Chroma</th>
+                  <td class="stats__table-element" id="stats__table-obstacles-chroma"></td>
+                </tr>
+                <tr class="hidden">
+                  <th class="stats__table-header" colspan="2">Noodle</th>
+                  <td class="stats__table-element" id="stats__table-obstacles-noodle"></td>
+                </tr>
+                <tr class="hidden">
+                  <th class="stats__table-header" colspan="2">ME</th>
+                  <td class="stats__table-element" id="stats__table-obstacles-me"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="panel panel--small panel--offset-half">
+            <table class="stats__table">
+              <caption class="stats__table-caption">Events:</caption>
+              <tbody id="stats__table-events-content">
+                <tr>
+                  <th class="stats__table-header" colspan="5">Total</th>
+                  <td class="stats__table-element"></td>
+                </tr>
+              </tbody>
+            </table><br>
+            <div>
+              <table class="stats__table">
+                <caption class="stats__table-caption">Event Box Group:</caption>
+                <tbody>
+                  <tr>
+                    <th class="stats__table-header"></th>
+                    <th class="stats__table-header">Group</th>
+                    <th class="stats__table-header">Box</th>
+                    <th class="stats__table-header">Base</th>
+                  </tr>
+                  <tr>
+                    <th class="stats__table-header">Total</th>
+                    <td class="stats__table-element" id="stats__table-ebg-group-total"></td>
+                    <td class="stats__table-element" id="stats__table-ebg-box-total"></td>
+                    <td class="stats__table-element" id="stats__table-ebg-base-total"></td>
+                  </tr>
+                  <tr>
+                    <th class="stats__table-header">Color</th>
+                    <td class="stats__table-element" id="stats__table-ebg-group-color"></td>
+                    <td class="stats__table-element" id="stats__table-ebg-box-color"></td>
+                    <td class="stats__table-element" id="stats__table-ebg-base-color"></td>
+                  </tr>
+                  <tr>
+                    <th class="stats__table-header">Rotate</th>
+                    <td class="stats__table-element" id="stats__table-ebg-group-rotate"></td>
+                    <td class="stats__table-element" id="stats__table-ebg-box-rotate"></td>
+                    <td class="stats__table-element" id="stats__table-ebg-base-rotate"></td>
+                  </tr>
+                  <tr>
+                    <th class="stats__table-header">Translate</th>
+                    <td class="stats__table-element" id="stats__table-ebg-group-translate"></td>
+                    <td class="stats__table-element" id="stats__table-ebg-box-translate"></td>
+                    <td class="stats__table-element" id="stats__table-ebg-base-translate"></td>
+                  </tr>
+                  <tr>
+                    <th class="stats__table-header">FX</th>
+                    <td class="stats__table-element" id="stats__table-ebg-group-fx"></td>
+                    <td class="stats__table-element" id="stats__table-ebg-box-fx"></td>
+                    <td class="stats__table-element" id="stats__table-ebg-base-fx"></td>
+                  </tr>
+                </tbody>
+              </table><br>
+              <table class="stats__table">
+                <caption class="stats__table-caption">Event Box Group ID:</caption>
+                <tbody id="stats__table-ebg-content">
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
       <input type="radio" class="tabs__radio" id="tabs__settings" name="tabs__nav" value="settings">

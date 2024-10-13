@@ -1,30 +1,46 @@
 import * as types from 'bsmap/types';
 import { IBeatmapItem } from '../../types';
-import { prefix } from './constants';
 
-export function createObstacleCountTable(
-   info: types.wrapper.IWrapInfo,
+const htmlObstacleTotal = document.getElementById(
+   'stats__table-obstacles-total',
+) as HTMLTableElement;
+const htmlObstacleInteractive = document.getElementById(
+   'stats__table-obstacles-interactive',
+) as HTMLTableElement;
+const htmlObstacleChroma = document.getElementById(
+   'stats__table-obstacles-chroma',
+) as HTMLTableElement;
+const htmlObstacleNoodleExtensions = document.getElementById(
+   'stats__table-obstacles-noodle',
+) as HTMLTableElement;
+const htmlObstacleMappingExtensions = document.getElementById(
+   'stats__table-obstacles-me',
+) as HTMLTableElement;
+
+export function updateObstacleCountTable(
+   _: types.wrapper.IWrapInfo,
    beatmapItem: IBeatmapItem,
-): HTMLTableElement {
+): void {
    const obstacleCount = beatmapItem.stats.obstacles;
 
-   let htmlString = `<caption class="${prefix}table-caption">Obstacles: ${obstacleCount.total}</caption>`;
-   if (obstacleCount.interactive) {
-      htmlString += `<tr><th class="${prefix}table-header" colspan="2">Interactive</th><td class="${prefix}table-element">${obstacleCount.interactive}</td></tr>`;
-   }
+   htmlObstacleTotal.textContent = obstacleCount.total.toString();
+   htmlObstacleInteractive.textContent = obstacleCount.interactive.toString();
    if (obstacleCount.chroma) {
-      htmlString += `<tr><th class="${prefix}table-header" colspan="2">Chroma</th><td class="${prefix}table-element">${obstacleCount.chroma}</td></tr>`;
+      htmlObstacleChroma.textContent = obstacleCount.chroma.toString();
+      (htmlObstacleChroma.parentNode as HTMLElement).classList.remove('hidden');
+   } else {
+      (htmlObstacleChroma.parentNode as HTMLElement).classList.add('hidden');
    }
    if (obstacleCount.noodleExtensions) {
-      htmlString += `<tr><th class="${prefix}table-header" colspan="2">Noodle Extensions</th><td class="${prefix}table-element">${obstacleCount.noodleExtensions}</td></tr>`;
+      htmlObstacleNoodleExtensions.textContent = obstacleCount.noodleExtensions.toString();
+      (htmlObstacleNoodleExtensions.parentNode as HTMLElement).classList.remove('hidden');
+   } else {
+      (htmlObstacleNoodleExtensions.parentNode as HTMLElement).classList.add('hidden');
    }
    if (obstacleCount.mappingExtensions) {
-      htmlString += `<tr><th class="${prefix}table-header" colspan="2">Mapping Extensions</th><td class="${prefix}table-element">${obstacleCount.mappingExtensions}</td></tr>`;
+      htmlObstacleMappingExtensions.textContent = obstacleCount.mappingExtensions.toString();
+      (htmlObstacleMappingExtensions.parentNode as HTMLElement).classList.remove('hidden');
+   } else {
+      (htmlObstacleMappingExtensions.parentNode as HTMLElement).classList.add('hidden');
    }
-
-   const htmlTable = document.createElement('table');
-   htmlTable.className = prefix + 'table';
-   htmlTable.innerHTML = htmlString;
-
-   return htmlTable;
 }

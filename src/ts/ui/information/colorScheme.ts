@@ -38,7 +38,7 @@ export function setColorScheme(colorSch?: types.wrapper.IWrapInfoColorScheme): v
       hexColor.environmentWColorBoost = colorToHex(colorSch.environmentWColorBoost);
    }
 
-   const content: HTMLElement[] = []
+   const content: HTMLElement[] = [];
    for (const key in hexColor) {
       if (!hexColor[key]) {
          continue;

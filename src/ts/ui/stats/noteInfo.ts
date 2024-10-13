@@ -1,36 +1,50 @@
 import { round, formatNumber } from 'bsmap/utils';
 import * as types from 'bsmap/types';
 import { IBeatmapItem } from '../../types';
-import { prefix } from './constants';
 import { swing } from 'bsmap/extensions';
 
-export function createNoteInfoTable(
-   info: types.wrapper.IWrapInfo,
-   beatmapItem: IBeatmapItem,
-): HTMLTableElement {
+const htmlNiRatio = document.getElementById('stats__table-ni-ratio') as HTMLTableCellElement;
+const htmlNiMaxScore = document.getElementById('stats__table-ni-maxscore') as HTMLTableCellElement;
+const htmlNiEffectiveBpm = document.getElementById('stats__table-ni-ebpm') as HTMLTableCellElement;
+const htmlNiEffectiveBpmSwing = document.getElementById(
+   'stats__table-ni-ebpm-swing',
+) as HTMLTableCellElement;
+const htmlNiMinSliderSpeed = document.getElementById(
+   'stats__table-ni-minspeed',
+) as HTMLTableCellElement;
+const htmlNiMaxSliderSpeed = document.getElementById(
+   'stats__table-ni-maxspeed',
+) as HTMLTableCellElement;
+
+export function updateNoteInfoTable(_: types.wrapper.IWrapInfo, beatmapItem: IBeatmapItem): void {
    const noteCount = beatmapItem.stats.notes;
-   let htmlString = `<caption class="${prefix}table-caption">Note Information:</caption><tr><th class="${prefix}table-header" colspan="2">R/B Ratio</th><td class="${prefix}table-element">${round(
-      noteCount.red.total / noteCount.blue.total,
-      2,
-   )}</td></tr><tr><th class="${prefix}table-header" colspan="2">Max Score</th><td class="${prefix}table-element">${formatNumber(
-      beatmapItem.score,
-   )}</td></tr><tr><th class="${prefix}table-header" colspan="2">Effective BPM</th><td class="${prefix}table-element">${round(
+
+   htmlNiRatio.textContent = round(noteCount.red.total / noteCount.blue.total, 2).toString();
+   htmlNiMaxScore.textContent = formatNumber(beatmapItem.score);
+   htmlNiEffectiveBpm.textContent = round(
       swing.getMaxEffectiveBpm(beatmapItem.swingAnalysis.container),
       2,
-   )}</td></tr><tr><th class="${prefix}table-header" colspan="2">Effective BPM (swing)</th><td class="${prefix}table-element">${round(
+   ).toString();
+   htmlNiEffectiveBpmSwing.textContent = round(
       swing.getMaxEffectiveBpmSwing(beatmapItem.swingAnalysis.container),
       2,
-   )}</td></tr>`;
+   ).toString();
 
-   let minSpeed = round(swing.getMinSliderSpeed(beatmapItem.swingAnalysis.container) * 1000, 1);
-   let maxSpeed = round(swing.getMaxSliderSpeed(beatmapItem.swingAnalysis.container) * 1000, 1);
-   if (minSpeed && maxSpeed) {
-      htmlString += `<tr><th class="${prefix}table-header" colspan="2">Min. Slider Speed</th><td class="${prefix}table-element">${minSpeed}ms</td></tr><tr><th class="${prefix}table-header" colspan="2">Max. Slider Speed</th><td class="${prefix}table-element">${maxSpeed}ms</td></tr>`;
+   const minSliderSpeed = round(
+      swing.getMinSliderSpeed(beatmapItem.swingAnalysis.container) * 1000,
+      1,
+   );
+   const maxSliderSpeed = round(
+      swing.getMaxSliderSpeed(beatmapItem.swingAnalysis.container) * 1000,
+      1,
+   );
+   if (minSliderSpeed || maxSliderSpeed) {
+      htmlNiMinSliderSpeed.textContent = minSliderSpeed.toString() + 'ms';
+      htmlNiMaxSliderSpeed.textContent = minSliderSpeed.toString() + 'ms';
+      (htmlNiMinSliderSpeed.parentNode as HTMLElement).classList.remove('hidden');
+      (htmlNiMaxSliderSpeed.parentNode as HTMLElement).classList.remove('hidden');
+   } else {
+      (htmlNiMinSliderSpeed.parentNode as HTMLElement).classList.add('hidden');
+      (htmlNiMaxSliderSpeed.parentNode as HTMLElement).classList.add('hidden');
    }
-
-   const htmlTable = document.createElement('table');
-   htmlTable.className = prefix + 'table';
-   htmlTable.innerHTML = htmlString;
-
-   return htmlTable;
 }

@@ -3,20 +3,23 @@ import { IBeatmapItem } from '../../types';
 import { prefix } from './constants';
 import * as types from 'bsmap/types';
 
-export function createEventCountTable(
-   info: types.wrapper.IWrapInfo,
-   beatmapItem: IBeatmapItem,
-): HTMLTableElement {
+const htmlEventsContent = document.getElementById(
+   'stats__table-events-content',
+) as HTMLTableElement;
+
+export function updateEventCountTable(_: types.wrapper.IWrapInfo, beatmapItem: IBeatmapItem): void {
    const environment = beatmapItem.environment;
    const eventCount = beatmapItem.stats.basicEvents;
+   let total = 0;
    let chroma = 0;
    let chromaOld = 0;
    let noodleExtensions = 0;
    let mappingExtensions = 0;
 
-   let htmlString = `<caption class="${prefix}table-caption">Events: ${Object.values(
-      eventCount,
-   ).reduce((t, { total }) => t + total, 0)}</caption>`;
+   for (const key in eventCount) {
+      total += eventCount[key].total;
+   }
+   let htmlString = `<tr><th class="${prefix}table-header" colspan="5">Total</th><td class="${prefix}table-element">${total}</td></tr>`;
 
    for (const key in eventCount) {
       chroma += eventCount[key].chroma;
@@ -39,9 +42,5 @@ export function createEventCountTable(
       htmlString += `<tr><th class="${prefix}table-header" colspan="5">Mapping Extensions</th><td class="${prefix}table-element">${mappingExtensions}</td></tr>`;
    }
 
-   const htmlTable = document.createElement('table');
-   htmlTable.className = prefix + 'table';
-   htmlTable.innerHTML = htmlString;
-
-   return htmlTable;
+   htmlEventsContent.innerHTML = htmlString;
 }
