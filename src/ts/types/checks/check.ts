@@ -7,10 +7,12 @@ export type ToolType = 'note' | 'event' | 'obstacle' | 'other' | 'general';
 
 // TODO: refactor to delegate HTML to be processed elsewhere
 export interface IToolInput<TParam extends Record<string, unknown>> {
-   enabled: boolean;
-   params: TParam;
+   params: TParam & {
+      enabled: boolean;
+   };
    html?: HTMLElement;
    adjustTime?: (timeProcessor: TimeProcessor) => void;
+   update?: () => void;
 }
 
 export type OutputType = 'string' | 'number' | 'time' | 'html';

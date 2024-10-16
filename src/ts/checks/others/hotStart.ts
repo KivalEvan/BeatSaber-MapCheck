@@ -17,14 +17,11 @@ const tool: ITool<{ time: number }> = {
       output: ToolOutputOrder.OTHERS_HOT_START,
    },
    input: {
-      enabled,
-      params: {
-         time: defaultTime,
-      },
+      params: { enabled, time: defaultTime },
       html: UIInput.createBlock(
          UIInput.createCheckbox(
             function (this: HTMLInputElement) {
-               tool.input.enabled = this.checked;
+               tool.input.params.enabled = this.checked;
             },
             name + ' (s): ',
             description,

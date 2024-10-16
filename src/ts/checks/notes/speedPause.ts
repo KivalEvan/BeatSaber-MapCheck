@@ -58,14 +58,14 @@ const tool: ITool<{ maxTime: number }> = {
       output: ToolOutputOrder.NOTES_SPEED_PAUSE,
    },
    input: {
-      enabled,
       params: {
+         enabled,
          maxTime: defaultMaxTime,
       },
       html: UIInput.createBlock(
          UIInput.createCheckbox(
             function (this: HTMLInputElement) {
-               tool.input.enabled = this.checked;
+               tool.input.params.enabled = this.checked;
             },
             name,
             description,

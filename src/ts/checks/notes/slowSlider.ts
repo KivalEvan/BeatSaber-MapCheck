@@ -50,14 +50,14 @@ const tool: ITool<{ minSpeed: number }> = {
       output: ToolOutputOrder.NOTES_SLOW_SLIDER,
    },
    input: {
-      enabled,
       params: {
+         enabled,
          minSpeed: defaultSpeed,
       },
       html: UIInput.createBlock(
          UIInput.createCheckbox(
             function (this: HTMLInputElement) {
-               tool.input.enabled = this.checked;
+               tool.input.params.enabled = this.checked;
             },
             name,
             description,

@@ -52,14 +52,11 @@ const tool: ITool<{ recovery: number }> = {
       output: ToolOutputOrder.OBSTACLES_CENTER,
    },
    input: {
-      enabled,
-      params: {
-         recovery: defaultMaxTime,
-      },
+      params: { enabled, recovery: defaultMaxTime },
       html: UIInput.createBlock(
          UIInput.createCheckbox(
             function (this: HTMLInputElement) {
-               tool.input.enabled = this.checked;
+               tool.input.params.enabled = this.checked;
             },
             name,
             description,

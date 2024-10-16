@@ -55,15 +55,15 @@ const tool: ITool<{ distance: number; maxTime: number }> = {
       output: ToolOutputOrder.NOTES_SHRADO_ANGLE,
    },
    input: {
-      enabled,
       params: {
+         enabled,
          distance: defaultDistance,
          maxTime: defaultMaxTime,
       },
       html: UIInput.createBlock(
          UIInput.createCheckbox(
             function (this: HTMLInputElement) {
-               tool.input.enabled = this.checked;
+               tool.input.params.enabled = this.checked;
             },
             name,
             description,

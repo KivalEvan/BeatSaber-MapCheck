@@ -29,6 +29,7 @@ export default (function () {
          UITabs.showMain(Settings.show);
          UISettings.setShowCheck(Settings.show);
          UITheme.set(Settings.theme);
+         UIChecks.init();
          logger.tInfo(['init'], 'User interface initialised');
       }
    };

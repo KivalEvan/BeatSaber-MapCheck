@@ -139,8 +139,8 @@ const tool: ITool<{ specific: 'difficulty' | 'time'; minTime: number; maxTime: n
       output: ToolOutputOrder.NOTES_VISION_BLOCK,
    },
    input: {
-      enabled,
       params: {
+         enabled,
          specific: 'difficulty',
          minTime: defaultMinTime,
          maxTime: defaultMaxTime,
@@ -148,7 +148,7 @@ const tool: ITool<{ specific: 'difficulty' | 'time'; minTime: number; maxTime: n
       html: UIInput.createBlock(
          UIInput.createCheckbox(
             function (this: HTMLInputElement) {
-               tool.input.enabled = this.checked;
+               tool.input.params.enabled = this.checked;
             },
             name,
             description,

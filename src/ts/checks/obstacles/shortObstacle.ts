@@ -17,14 +17,11 @@ const tool: ITool<{ minDur: number }> = {
       output: ToolOutputOrder.OBSTACLES_SHORT,
    },
    input: {
-      enabled,
-      params: {
-         minDur: 0.015,
-      },
+      params: { enabled, minDur: 0.015 },
       html: UIInput.createBlock(
          UIInput.createCheckbox(
             function (this: HTMLInputElement) {
-               tool.input.enabled = this.checked;
+               tool.input.params.enabled = this.checked;
             },
             name,
             description,

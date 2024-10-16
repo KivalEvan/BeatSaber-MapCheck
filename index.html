@@ -280,28 +280,52 @@
             </div>
           </div>
           <div class="panel panel--medium panel--offset-half">
-            <div class="checks__apply panel">
+            <div class="panel">
+              <label for="checks__preset">Preset:</label>
+              <select class="checks__preset">
+                <option value="Default">Default</option>
+                <option value="Beginner">Beginner</option>
+                <option value="ScoreSaber">ScoreSaber</option>
+                <option value="BeatLeader">BeatLeader</option>
+                <option value="Custom">Custom</option>
+              </select>
+              <input type="button" class="checks__preset-reset input-toggle" value="Reset">
+              <input type="button" class="checks__preset-save" value="Save">
+            </div>
+            <div class="panel">
               <span>Apply changes to:</span>
               <input type="button" class="checks__apply-this input-toggle" value="Selected">
               <input type="button" class="checks__apply-all input-toggle" value="All">
               <input type="button" class="checks__apply-general input-toggle" value="General">
+              <br>
             </div>
             <hr>
-            <span class="checks__output-text">Beatmap Issue(s):</span><br>
-            <div class="checks__output-box checks__output-diff">
-              No output.
+            <div class="panel">
+              <span>Beatmap Issue(s):</span><br>
+              <div class="checks__output-box checks__output-diff">
+                No output.
+              </div>
             </div>
-            <span class="checks__output-text">General Issue(s):</span><br>
-            <div class="checks__output-box checks__output-general">
-              No output.
+            <div class="panel">
+              <span>General Issue(s):</span><br>
+              <div class="checks__output-box checks__output-general">
+                No output.
+              </div>
             </div>
-            <span class="checks__output-text">Legend:</span><br>
-            <span class="checks__output-text">🚧 <b>Ranking:</b> for rankability reason.</span><br>
-            <span class="checks__output-text">❌ <b>Error:</b> should be fixed unless you know what you are
-              doing.</span><br>
-            <span class="checks__output-text">❗ <b>Warning:</b> not necessarily needed to be fixed, worth
-              considering.</span><br>
-            <span class="checks__output-text">⚠️ <b>Info:</b> no action necessary, take note.</span><br>
+            <div class="panel">
+              <span>Legend:</span><br>
+              <span>🚧 <b>Ranking:</b> for rankability reason.</span><br>
+              <span>❌ <b>Error:</b> should be fixed unless you know what you are
+                doing.</span><br>
+              <span>❗ <b>Warning:</b> not necessarily needed to be fixed, worth
+                considering.</span><br>
+              <span>⚠️ <b>Info:</b> no action necessary, take note.</span>
+            </div>
+            <div class="panel">
+              <br>
+              <span>Export to Editor Bookmark:</span>
+              <input type="button" class="checks__output-button input-toggle" value="Selected">
+            </div>
           </div>
         </div>
       </div>
@@ -741,6 +765,10 @@
             </label>
             <input type="number" class="settings__rounding input-toggle input--small" id="settings__rounding" step="1"
               min="0"><br>
+            <input type="checkbox" class="settings__checkbox settings__checks-persistent" id="settings__checks-persistent">
+            <label for="settings__checks-persistent">
+              <span>Persistent Checks Preset</span>
+            </label><br>
             <br>
             <input type="button" class="settings__clear-button input-toggle" id="settings__clear-button"
               value="Clear Settings">

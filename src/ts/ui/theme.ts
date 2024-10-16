@@ -1,7 +1,7 @@
 import { UIThemeName } from '../types/ui';
 
 const htmlBody = document.querySelector<HTMLBodyElement>('body');
-const list: ReadonlyArray<UIThemeName> = ['Dark', 'Light', 'Monochrome'];
+const list: ReadonlyArray<UIThemeName> = ['Dark', 'Light'];
 
 export default {
    list,

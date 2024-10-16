@@ -10,6 +10,7 @@ import {
 } from '../selection';
 import { IToolOutput } from '../../types/checks/check';
 import { printResult, printResultTime } from './output';
+import { init } from './presets';
 
 const logPrefix = 'UI Checks: ';
 
@@ -194,4 +195,5 @@ export default {
    adjustBeatTime,
    populateTool,
    reset,
+   init,
 };

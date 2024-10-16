@@ -6,6 +6,19 @@ const name = 'Insufficient Lighting Event';
 const description = 'Check if there is enough light event.';
 const enabled = true;
 
+const [htmlInput, htmlLabel] = UIInput.createCheckbox(
+   function (this: HTMLInputElement) {
+      tool.input.params.enabled = this.checked;
+   },
+   name,
+   description,
+   enabled,
+);
+
+function update() {
+   htmlInput.checked = tool.input.params.enabled;
+}
+
 const tool: ITool = {
    name,
    description,
@@ -15,18 +28,9 @@ const tool: ITool = {
       output: ToolOutputOrder.EVENTS_INSUFFICIENT_LIGHT,
    },
    input: {
-      enabled,
-      params: {},
-      html: UIInput.createBlock(
-         UIInput.createCheckbox(
-            function (this: HTMLInputElement) {
-               tool.input.enabled = this.checked;
-            },
-            name,
-            description,
-            enabled,
-         ),
-      ),
+      params: { enabled },
+      html: UIInput.createBlock(htmlInput, htmlLabel),
+      update,
    },
    run,
 };

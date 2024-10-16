@@ -36,8 +36,8 @@ const tool: ITool<{ [k in types.DifficultyName]: boolean }> = {
       output: ToolOutputOrder.GENERAL_PROGRESSION,
    },
    input: {
-      enabled,
       params: {
+         enabled,
          'Expert+': true,
          ExpertPlus: true,
          Expert: true,
@@ -49,7 +49,7 @@ const tool: ITool<{ [k in types.DifficultyName]: boolean }> = {
          UIInput.createBlock(
             UIInput.createCheckbox(
                function (this: HTMLInputElement) {
-                  tool.input.enabled = this.checked;
+                  tool.input.params.enabled = this.checked;
                },
                name,
                description,

@@ -35,12 +35,11 @@ const tool: ITool = {
       output: ToolOutputOrder.NOTES_COLOR_CHECK,
    },
    input: {
-      enabled,
-      params: {},
+      params: { enabled },
       html: UIInput.createBlock(
          UIInput.createCheckbox(
             function (this: HTMLInputElement) {
-               tool.input.enabled = this.checked;
+               tool.input.params.enabled = this.checked;
             },
             name + ' (EXPERIMENTAL)',
             description,

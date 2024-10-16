@@ -49,8 +49,6 @@ instead.
 
 -  Pre-render page for higher performance
 -  Rewrite swing detection
--  Save tool parameters
--  Tool presets
 -  Localization
 
 ## Note

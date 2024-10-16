@@ -14,8 +14,7 @@ const tool: ITool = {
       output: ToolOutputOrder.APRIL_FOOLS,
    },
    input: {
-      enabled,
-      params: {},
+      params: { enabled },
    },
    run,
 };
@@ -32,7 +31,7 @@ function run(args: ToolArgs): IToolOutput[] {
       htmlLink.text = 'this link for more info.';
       htmlLink.href = 'https://youtu.be/dQw4w9WgXcQ';
       htmlLink.addEventListener('click', function () {
-         settings.aprilFooled = true;
+         settings.aprilFooled = 1;
          settings.save();
       });
       htmlContainer.innerHTML = `<b><span title="Info: no action necessary, take note."> ⚠️ </span>AI generated content detected:</b> this may violate TOS, please refer to `;

@@ -16,84 +16,88 @@ const settingsDefault: ISettings = {
    deduplicateTime: true,
    theme: 'Dark',
    show: 'info',
-   aprilFooled: false,
+   checks: {
+      persistent: true,
+      preset: 'Default',
+   },
+   aprilFooled: 1,
 };
 
-// TODO: validate settings
 export default new (class Settings implements ISettings {
-   private property: ISettings = deepCopy(settingsDefault);
+   private props: ISettings = deepCopy(settingsDefault);
 
    constructor() {
       this.init();
    }
 
    get version(): ISettings['version'] {
-      return this.property.version;
+      return this.props.version;
    }
    get load(): ISettings['load'] {
-      return this.property.load;
+      return this.props.load;
    }
    get sorting(): boolean {
-      return this.property.sorting;
+      return this.props.sorting;
    }
    set sorting(val: boolean) {
-      this.property.sorting = val;
+      this.props.sorting = val;
    }
    get beatNumbering(): ISettings['beatNumbering'] {
-      return this.property.beatNumbering;
+      return this.props.beatNumbering;
    }
    set beatNumbering(val: ISettings['beatNumbering']) {
-      this.property.beatNumbering = val;
+      this.props.beatNumbering = val;
    }
    get infoRowCount(): number {
-      return this.property.infoRowCount;
+      return this.props.infoRowCount;
    }
    set infoRowCount(val: number) {
-      this.property.infoRowCount = val;
+      this.props.infoRowCount = val;
    }
    get rounding(): number {
-      return this.property.rounding;
+      return this.props.rounding;
    }
    set rounding(val: number) {
-      this.property.rounding = val;
+      this.props.rounding = val;
    }
    get dataCheck(): boolean {
-      return this.property.dataCheck;
+      return this.props.dataCheck;
    }
    set dataCheck(val: boolean) {
-      this.property.dataCheck = val;
+      this.props.dataCheck = val;
    }
    get deduplicateTime(): boolean {
-      return this.property.deduplicateTime;
+      return this.props.deduplicateTime;
    }
    set deduplicateTime(val: boolean) {
-      this.property.deduplicateTime = val;
+      this.props.deduplicateTime = val;
    }
    get theme(): ISettings['theme'] {
-      return this.property.theme;
+      return this.props.theme;
    }
    set theme(val: ISettings['theme']) {
-      this.property.theme = val;
+      this.props.theme = val;
    }
    get show(): ISettings['show'] {
-      return this.property.show;
+      return this.props.show;
    }
    set show(val: ISettings['show']) {
-      this.property.show = val;
+      this.props.show = val;
+   }
+   get checks(): ISettings['checks'] {
+      return this.props.checks;
+   }
+   set checks(val: ISettings['checks']) {
+      this.props.checks = val;
    }
    get aprilFooled() {
-      return this.property.aprilFooled;
+      return this.props.aprilFooled;
    }
-   set aprilFooled(value: boolean) {
-      this.property.aprilFooled = value;
+   set aprilFooled(value: number) {
+      this.props.aprilFooled = value;
    }
 
-   private stringify = (): string => {
-      return JSON.stringify({
-         settings: this.property,
-      });
-   };
-   private init = (): void => {
+   private init(): void {
       if (localStorage == null) {
          return;
       }
@@ -104,28 +108,28 @@ export default new (class Settings implements ISettings {
             this.clear();
             return;
          }
-         this.property = temp.settings ?? this.property;
+         this.props = temp.settings ?? this.props;
          for (const key in settingsDefault) {
-            if (typeof this.property[key as keyof ISettings] === 'undefined') {
-               (this.property as any)[key as keyof ISettings] =
-                  settingsDefault[key as keyof ISettings];
+            const k = key as keyof ISettings;
+            if (typeof this.props[k] !== typeof settingsDefault[k]) {
+               (this.props as any)[k] = settingsDefault[k];
             }
          }
-         this.property.version = settingsDefault.version;
+         this.props.version = settingsDefault.version;
          this.save();
       }
-   };
-   save = (): void => {
+   }
+   save(): void {
       if (localStorage) {
-         localStorage.setItem('settings', this.stringify());
+         localStorage.setItem('settings', JSON.stringify({ settings: this.props }));
       }
-   };
-   clear = (): void => {
+   }
+   clear(): void {
       if (localStorage) {
          localStorage.clear();
       }
-   };
-   reset = (): void => {
-      this.property = deepCopy(settingsDefault);
-   };
+   }
+   reset(): void {
+      this.props = deepCopy(settingsDefault);
+   }
 })();

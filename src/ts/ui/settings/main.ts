@@ -16,6 +16,9 @@ const htmlSettingsLoad: NodeListOf<HTMLInputElement> = document.querySelectorAll
 const htmlSettingsSort: HTMLInputElement = document.querySelector('.settings__sort')!;
 const htmlSettingsShow: NodeListOf<HTMLInputElement> = document.querySelectorAll('.settings__show');
 const htmlSettingsClear: HTMLInputElement = document.querySelector('.settings__clear-button')!;
+const htmlSettingsChecksPersistent: HTMLInputElement = document.querySelector(
+   '.settings__checks-persistent',
+)!;
 
 htmlSettingsTheme.addEventListener('change', themeChangeHandler);
 UITheme.list.forEach((th) => {
@@ -31,6 +34,7 @@ htmlSettingsDataCheck.addEventListener('change', dataCheckChangeHandler);
 htmlSettingsLoad.forEach((elem) => elem.addEventListener('change', loadCheckHandler));
 htmlSettingsSort.addEventListener('change', sortCheckHandler);
 htmlSettingsShow.forEach((elem) => elem.addEventListener('change', showCheckHandler));
+htmlSettingsChecksPersistent.addEventListener('click', checksPersistCheckHandler);
 htmlSettingsClear.addEventListener('click', clear);
 
 function themeChangeHandler(ev: Event): void {
@@ -69,6 +73,12 @@ function showCheckHandler(ev: Event): void {
    const target = ev.target as HTMLInputElement;
    const id = target.id.replace('settings__show-', '') as ISettings['show'];
    Settings.show = id;
+   Settings.save();
+}
+
+function checksPersistCheckHandler(ev: Event): void {
+   const target = ev.target as HTMLInputElement;
+   Settings.checks.persistent = target.checked;
    Settings.save();
 }
 
@@ -126,6 +136,10 @@ function setInfoRow(num: number): void {
 
 function setDataCheck(bool: boolean): void {
    htmlSettingsDataCheck.checked = bool;
+}
+
+function setChecksPersistent(bool: boolean): void {
+   htmlSettingsChecksPersistent.checked = bool;
 }
 
 function clear(): void {

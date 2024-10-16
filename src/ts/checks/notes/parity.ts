@@ -43,7 +43,7 @@ htmlContainer.appendChild(
    UIInput.createBlock(
       UIInput.createCheckbox(
          function (this: HTMLInputElement) {
-            tool.input.enabled = this.checked;
+            tool.input.params.enabled = this.checked;
          },
          name + ' (EXPERIMENTAL)',
          description,
@@ -61,8 +61,8 @@ const tool: ITool<{ warningThres: number; errorThres: number; allowedRot: number
       output: ToolOutputOrder.NOTES_PARITY,
    },
    input: {
-      enabled,
       params: {
+         enabled,
          warningThres: 90,
          errorThres: 45,
          allowedRot: 90,

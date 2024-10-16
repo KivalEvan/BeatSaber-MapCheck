@@ -1,15 +1,17 @@
-import AnalysisComponents from './components';
+import { cachedKeyedComponents, getComponentsAll, getComponentsDifficulty } from './components';
+export * from './presets';
 import LoadedData from '../loadedData';
 import { IToolOutput } from '../types/checks/check';
 import { IBeatmapItem, ITool } from '../types';
 import { getLastInteractiveTime, logger, NoteJumpSpeed, TimeProcessor } from 'bsmap';
 import * as types from 'bsmap/types';
+import { InputParamsList as PresetParamsList } from './presets/_type';
 
 function tag(name: string) {
-   return ['analyzer', name];
+   return ['checks', name];
 }
 
-const toolListInput: ReadonlyArray<ITool> = AnalysisComponents.getAll().sort(
+const toolListInput: ReadonlyArray<ITool> = getComponentsAll().sort(
    (a, b) => a.order.input - b.order.input,
 );
 
@@ -26,10 +28,18 @@ function init(): void {
    };
 }
 
+export function updateChecksPreset(preset: PresetParamsList): void {
+   for (const k in preset) {
+      const key = k as keyof PresetParamsList;
+      cachedKeyedComponents[key].input.params = preset[key].params;
+      cachedKeyedComponents[key].input.update?.();
+   }
+}
+
 export function checkGeneral(): IToolOutput[] {
    const mapInfo = LoadedData.beatmapInfo;
    if (!mapInfo) {
-      logger.tError(tag('runGeneral'), 'Could not analyse, missing map info');
+      logger.tError(tag('checkGeneral'), 'Could not analyse, missing map info');
       return [];
    }
 
@@ -39,12 +49,12 @@ export function checkGeneral(): IToolOutput[] {
 
    const analysisExist = LoadedData.analysis?.general;
 
-   logger.tInfo(tag('runGeneral'), `Analysing general`);
+   logger.tInfo(tag('checkGeneral'), `Analysing general`);
    const collections: IToolOutput[] = [];
    toolListOutput
       .filter((tool) => tool.type === 'general')
       .forEach((tool) => {
-         if (tool.input.enabled) {
+         if (tool.input.params.enabled) {
             try {
                const results = tool.run({
                   audioDuration: LoadedData.duration ?? null,
@@ -54,7 +64,7 @@ export function checkGeneral(): IToolOutput[] {
                });
                collections.push(...results);
             } catch (err) {
-               logger.tError(tag('runGeneral'), err);
+               logger.tError(tag('checkGeneral'), err);
             }
          }
       });
@@ -72,7 +82,7 @@ export function checkDifficulty(
 ): IToolOutput[] {
    const mapInfo = LoadedData.beatmapInfo;
    if (!mapInfo) {
-      logger.tError(tag('runDifficulty'), 'Could not analyse, missing map info');
+      logger.tError(tag('checkDifficulty'), 'Could not analyse, missing map info');
       return [];
    }
 
@@ -85,7 +95,7 @@ export function checkDifficulty(
          bm.settings.characteristic === characteristic && bm.settings.difficulty === difficulty,
    );
    if (!beatmap) {
-      logger.tError(tag('runDifficulty'), 'Could not analyse, missing map data');
+      logger.tError(tag('checkDifficulty'), 'Could not analyse, missing map data');
       return [];
    }
 
@@ -93,18 +103,12 @@ export function checkDifficulty(
       (set) => set.difficulty === difficulty && set.characteristic === characteristic,
    );
 
-   const njs = NoteJumpSpeed.create(
-      beatmap.timeProcessor.bpm,
-      beatmap.settings.njs || NoteJumpSpeed.FallbackNJS[beatmap.settings.difficulty],
-      beatmap.settings.njsOffset,
-   );
-
-   logger.tInfo(tag('runDifficulty'), `Analysing ${characteristic} ${difficulty}`);
+   logger.tInfo(tag('checkDifficulty'), `Analysing ${characteristic} ${difficulty}`);
    const collections: IToolOutput[] = [];
    toolListOutput
       .filter((tool) => tool.type !== 'general')
       .forEach((tool) => {
-         if (tool.input.enabled) {
+         if (tool.input.params.enabled) {
             try {
                const results = tool.run({
                   audioDuration: LoadedData.duration ?? null,
@@ -135,9 +139,7 @@ export function checkDifficulty(
 }
 
 function adjustTime(bpm: TimeProcessor): void {
-   const toolList = AnalysisComponents.getDifficulty().sort(
-      (a, b) => a.order.output - b.order.output,
-   );
+   const toolList = getComponentsDifficulty().sort((a, b) => a.order.output - b.order.output);
    toolList.forEach((tool) => {
       if (tool.input.adjustTime) {
          tool.input.adjustTime(bpm);

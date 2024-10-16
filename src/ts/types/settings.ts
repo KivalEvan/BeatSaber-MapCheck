@@ -10,6 +10,11 @@ interface ISettingsLoad extends SettingsFlag {
    imageContributor: boolean;
 }
 
+interface ISettingsChecks {
+   persistent: boolean;
+   preset: string;
+}
+
 type ISettingsShow = 'info' | 'checks' | 'stats' | 'settings';
 
 export interface ISettings {
@@ -23,5 +28,6 @@ export interface ISettings {
    deduplicateTime: boolean;
    theme: UIThemeName;
    show: ISettingsShow;
-   aprilFooled: boolean;
+   checks: ISettingsChecks;
+   aprilFooled: number;
 }

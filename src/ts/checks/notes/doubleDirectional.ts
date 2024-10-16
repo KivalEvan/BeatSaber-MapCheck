@@ -25,12 +25,11 @@ const tool: ITool = {
       output: ToolOutputOrder.NOTES_DOUBLE_DIRECTIONAL,
    },
    input: {
-      enabled,
-      params: {},
+      params: { enabled },
       html: UIInput.createBlock(
          UIInput.createCheckbox(
             function (this: HTMLInputElement) {
-               tool.input.enabled = this.checked;
+               tool.input.params.enabled = this.checked;
             },
             name,
             description,

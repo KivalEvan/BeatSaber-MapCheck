@@ -38,15 +38,15 @@ const tool: ITool<{ ebpmThres: number; ebpmsThres: number }> = {
       output: ToolOutputOrder.NOTES_EFFECTIVE_BPM,
    },
    input: {
-      enabled,
       params: {
+         enabled,
          ebpmThres: defaultEBPM,
          ebpmsThres: defaultEBPMS,
       },
       html: UIInput.createBlock(
          UIInput.createCheckbox(
             function (this: HTMLInputElement) {
-               tool.input.enabled = this.checked;
+               tool.input.params.enabled = this.checked;
             },
             name + ' threshold',
             description,
