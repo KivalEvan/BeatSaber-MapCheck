@@ -12,7 +12,7 @@ export interface IToolInput<TParam extends Record<string, unknown>> {
    };
    html?: HTMLElement;
    adjustTime?: (timeProcessor: TimeProcessor) => void;
-   update?: () => void;
+   update?: (timeProcessor?: TimeProcessor) => void;
 }
 
 export type OutputType = 'string' | 'number' | 'time' | 'html';

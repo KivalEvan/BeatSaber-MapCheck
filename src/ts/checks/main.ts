@@ -6,6 +6,7 @@ import { IBeatmapItem, ITool } from '../types';
 import { getLastInteractiveTime, logger, NoteJumpSpeed, TimeProcessor } from 'bsmap';
 import * as types from 'bsmap/types';
 import { InputParamsList as PresetParamsList } from './presets/_type';
+import { getSelectedCharacteristic, getSelectedDifficulty } from '../ui/selection';
 
 function tag(name: string) {
    return ['checks', name];
@@ -29,10 +30,16 @@ function init(): void {
 }
 
 export function updateChecksPreset(preset: PresetParamsList): void {
+   const characteristic = getSelectedCharacteristic();
+   const difficulty = getSelectedDifficulty();
+   const beatmap = LoadedData.beatmaps?.find(
+      (bm) =>
+         bm.settings.characteristic === characteristic && bm.settings.difficulty === difficulty,
+   );
    for (const k in preset) {
       const key = k as keyof PresetParamsList;
       cachedKeyedComponents[key].input.params = preset[key].params;
-      cachedKeyedComponents[key].input.update?.();
+      cachedKeyedComponents[key].input.update?.(beatmap?.timeProcessor);
    }
 }
 

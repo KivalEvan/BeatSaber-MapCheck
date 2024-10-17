@@ -129,6 +129,28 @@ const [htmlLabelMaxBeat, htmlInputMaxBeat] = UIInput.createNumber(
    null,
    0.1,
 );
+const htmlEnabled = UIInput.createCheckbox(
+   function (this: HTMLInputElement) {
+      tool.input.params.enabled = this.checked;
+   },
+   name,
+   description,
+   enabled,
+);
+
+function update(timeProcessor?: TimeProcessor) {
+   htmlEnabled[0].checked = tool.input.params.enabled;
+   if (tool.input.params.specific === 'difficulty') {
+      htmlInputDiffCheck.checked = true;
+      htmlInputTimeCheck.checked = false;
+   } else {
+      htmlInputDiffCheck.checked = false;
+      htmlInputTimeCheck.checked = true;
+   }
+   htmlInputMinTime.value = (tool.input.params.minTime * 1000).toString();
+   htmlInputMaxTime.value = (tool.input.params.maxTime * 1000).toString();
+   if (timeProcessor) adjustTimeHandler(timeProcessor);
+}
 
 const tool: ITool<{ specific: 'difficulty' | 'time'; minTime: number; maxTime: number }> = {
    name,
@@ -146,14 +168,7 @@ const tool: ITool<{ specific: 'difficulty' | 'time'; minTime: number; maxTime: n
          maxTime: defaultMaxTime,
       },
       html: UIInput.createBlock(
-         UIInput.createCheckbox(
-            function (this: HTMLInputElement) {
-               tool.input.params.enabled = this.checked;
-            },
-            name,
-            description,
-            enabled,
-         ),
+         htmlEnabled,
          document.createElement('br'),
          htmlInputTimeCheck,
          htmlLabelTimeCheck,
@@ -170,6 +185,7 @@ const tool: ITool<{ specific: 'difficulty' | 'time'; minTime: number; maxTime: n
          htmlLabelMaxBeat,
          htmlInputMaxBeat,
       ),
+      update,
       adjustTime: adjustTimeHandler,
    },
    run,

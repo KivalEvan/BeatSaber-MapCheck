@@ -7,6 +7,19 @@ const name = 'Unlit Bomb';
 const description = 'Check for lighting around bomb.';
 const enabled = true;
 
+const [htmlInput, htmlLabel] = UIInput.createCheckbox(
+   function (this: HTMLInputElement) {
+      tool.input.params.enabled = this.checked;
+   },
+   name,
+   description,
+   enabled,
+);
+
+function update() {
+   htmlInput.checked = tool.input.params.enabled;
+}
+
 const tool: ITool = {
    name,
    description,
@@ -17,16 +30,8 @@ const tool: ITool = {
    },
    input: {
       params: { enabled },
-      html: UIInput.createBlock(
-         UIInput.createCheckbox(
-            function (this: HTMLInputElement) {
-               tool.input.params.enabled = this.checked;
-            },
-            name,
-            description,
-            enabled,
-         ),
-      ),
+      html: UIInput.createBlock(htmlInput, htmlLabel),
+      update,
    },
    run,
 };

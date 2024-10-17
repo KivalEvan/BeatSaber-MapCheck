@@ -1,124 +1,122 @@
+import * as general from '../general/index.ts';
+import * as notes from '../notes/index.ts';
+import * as obstacles from '../obstacles/index.ts';
+import * as events from '../events/index.ts';
+import * as others from '../others/index.ts';
 import type { InputParamsList } from './_type';
+import { deepCopy } from 'bsmap/utils';
 
 const preset: InputParamsList = {
    aprilFools: {
-      params: { enabled: true },
+      params: deepCopy(general.aprilFools.input.params),
    },
    audio: {
-      params: { enabled: true },
+      params: deepCopy(general.audio.input.params),
    },
    coverImage: {
-      params: { enabled: true },
+      params: deepCopy(general.coverImage.input.params),
    },
    previewTime: {
-      params: { enabled: true },
+      params: deepCopy(general.previewTime.input.params),
    },
    progression: {
-      params: {
-         enabled: true,
-         'Expert+': true,
-         ExpertPlus: true,
-         Expert: true,
-         Hard: true,
-         Normal: true,
-         Easy: true,
-      },
+      params: deepCopy(general.progression.input.params),
    },
    zip: {
-      params: { enabled: true },
+      params: deepCopy(general.zip.input.params),
    },
    acceptablePrec: {
-      params: { enabled: true, prec: [8, 6] },
+      params: deepCopy(notes.acceptablePrec.input.params),
    },
    colorCheck: {
-      params: { enabled: true },
+      params: deepCopy(notes.colorCheck.input.params),
    },
    doubleDirectional: {
-      params: { enabled: true },
+      params: deepCopy(notes.doubleDirectional.input.params),
    },
    effectiveBPM: {
-      params: { enabled: true, ebpmThres: 450, ebpmsThres: 350 },
+      params: deepCopy(notes.effectiveBPM.input.params),
    },
    hitboxInline: {
-      params: { enabled: true },
+      params: deepCopy(notes.hitboxInline.input.params),
    },
    hitboxPath: {
-      params: { enabled: true },
+      params: deepCopy(notes.hitboxPath.input.params),
    },
    hitboxReverseStair: {
-      params: { enabled: true },
+      params: deepCopy(notes.hitboxReverseStair.input.params),
    },
    hitboxStair: {
-      params: { enabled: true },
+      params: deepCopy(notes.hitboxStair.input.params),
    },
    improperArc: {
-      params: { enabled: true },
+      params: deepCopy(notes.improperArc.input.params),
    },
    improperChain: {
-      params: { enabled: true },
+      params: deepCopy(notes.improperChain.input.params),
    },
    improperWindow: {
-      params: { enabled: true },
+      params: deepCopy(notes.improperWindow.input.params),
    },
    inlineAngle: {
-      params: { enabled: true, maxTime: 0.15 },
+      params: deepCopy(notes.inlineAngle.input.params),
    },
    oneSaber: {
-      params: { enabled: true },
+      params: deepCopy(notes.oneSaber.input.params),
    },
    parity: {
-      params: { enabled: true, allowedRot: 90, errorThres: 0, warningThres: 0 },
+      params: deepCopy(notes.parity.input.params),
    },
    shradoAngle: {
-      params: { enabled: true, distance: 0, maxTime: 0 },
+      params: deepCopy(notes.shradoAngle.input.params),
    },
    slowSlider: {
-      params: { enabled: true, minSpeed: 0.025 },
+      params: deepCopy(notes.slowSlider.input.params),
    },
    speedPause: {
-      params: { enabled: true, maxTime: 0.075 },
+      params: deepCopy(notes.speedPause.input.params),
    },
    stackedNote: {
-      params: { enabled: true },
+      params: deepCopy(notes.stackedNote.input.params),
    },
    varySwing: {
-      params: { enabled: true },
+      params: deepCopy(notes.varySwing.input.params),
    },
    visionBlock: {
-      params: { enabled: true, maxTime: 0.15, minTime: 0.075, specific: 'time' },
+      params: deepCopy(notes.visionBlock.input.params),
    },
    centerObstacle: {
-      params: { enabled: true, recovery: 0.25 },
+      params: deepCopy(obstacles.centerObstacle.input.params),
    },
    shortObstacle: {
-      params: { enabled: true, minDur: 0.015 },
+      params: deepCopy(obstacles.shortObstacle.input.params),
    },
    zeroObstacle: {
-      params: { enabled: true },
+      params: deepCopy(obstacles.zeroObstacle.input.params),
    },
    insufficientLight: {
-      params: { enabled: true },
+      params: deepCopy(events.insufficientLight.input.params),
    },
    invalidEventBox: {
-      params: { enabled: true },
+      params: deepCopy(events.invalidEventBox.input.params),
    },
    unlitBomb: {
-      params: { enabled: true },
+      params: deepCopy(events.unlitBomb.input.params),
    },
    difficultyLabel: {
-      params: { enabled: true },
+      params: deepCopy(others.difficultyLabel.input.params),
    },
    hotStart: {
-      params: { enabled: true, time: 1.5 },
+      params: deepCopy(others.hotStart.input.params),
    },
    invalidObject: {
-      params: { enabled: true },
+      params: deepCopy(others.invalidObject.input.params),
    },
    njs: {
-      params: { enabled: true },
+      params: deepCopy(others.njs.input.params),
    },
    outsidePlayable: {
-      params: { enabled: true },
+      params: deepCopy(others.outsidePlayable.input.params),
    },
 };
 

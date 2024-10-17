@@ -39,18 +39,20 @@ const htmlSelectParityRight = UISelect.create(
    { text: 'Backhand', value: 'backhand' },
 );
 
-htmlContainer.appendChild(
-   UIInput.createBlock(
-      UIInput.createCheckbox(
-         function (this: HTMLInputElement) {
-            tool.input.params.enabled = this.checked;
-         },
-         name + ' (EXPERIMENTAL)',
-         description,
-         enabled,
-      ),
-   ),
+const [htmlInput, htmlLabel] = UIInput.createCheckbox(
+   function (this: HTMLInputElement) {
+      tool.input.params.enabled = this.checked;
+   },
+   name,
+   description,
+   enabled,
 );
+
+htmlContainer.appendChild(UIInput.createBlock(htmlInput, htmlLabel));
+
+function update() {
+   htmlInput.checked = tool.input.params.enabled;
+}
 
 const tool: ITool<{ warningThres: number; errorThres: number; allowedRot: number }> = {
    name,
@@ -68,6 +70,7 @@ const tool: ITool<{ warningThres: number; errorThres: number; allowedRot: number
          allowedRot: 90,
       },
       html: htmlContainer,
+      update,
    },
    run,
 };

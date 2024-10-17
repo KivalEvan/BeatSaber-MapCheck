@@ -42,6 +42,20 @@ const [htmlLabelMaxBeat, htmlInputMaxBeat] = UIInput.createNumber(
    0,
    0.1,
 );
+const htmlEnabled = UIInput.createCheckbox(
+   function (this: HTMLInputElement) {
+      tool.input.params.enabled = this.checked;
+   },
+   name,
+   description,
+   enabled,
+);
+
+function update(timeProcessor?: TimeProcessor) {
+   htmlEnabled[0].checked = tool.input.params.enabled;
+   htmlInputMaxTime.value = (tool.input.params.recovery * 1000).toString();
+   if (timeProcessor) adjustTimeHandler(timeProcessor);
+}
 
 const tool: ITool<{ recovery: number }> = {
    name,
@@ -54,20 +68,14 @@ const tool: ITool<{ recovery: number }> = {
    input: {
       params: { enabled, recovery: defaultMaxTime },
       html: UIInput.createBlock(
-         UIInput.createCheckbox(
-            function (this: HTMLInputElement) {
-               tool.input.params.enabled = this.checked;
-            },
-            name,
-            description,
-            enabled,
-         ),
+         htmlEnabled,
          document.createElement('br'),
          htmlLabelMaxTime,
          htmlInputMaxTime,
          htmlLabelMaxBeat,
          htmlInputMaxBeat,
       ),
+      update,
       adjustTime: adjustTimeHandler,
    },
    run,

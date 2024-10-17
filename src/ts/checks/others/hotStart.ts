@@ -8,6 +8,31 @@ const description = 'Check for first interactive object starting from start time
 const enabled = true;
 const defaultTime = 1.5;
 
+const [htmlInput, htmlLabel] = UIInput.createCheckbox(
+   function (this: HTMLInputElement) {
+      tool.input.params.enabled = this.checked;
+   },
+   name + ' (s): ',
+   description,
+   enabled,
+);
+const [htmlTimeLabel, htmlTime] = UIInput.createNumber(
+   function (this: HTMLInputElement) {
+      tool.input.params.time = round(Math.abs(parseFloat(this.value)), 3);
+      this.value = tool.input.params.time.toString();
+   },
+   '',
+   defaultTime,
+   0,
+   null,
+   0.1,
+);
+
+function update() {
+   htmlInput.checked = tool.input.params.enabled;
+   htmlTime.value = tool.input.params.time.toString();
+}
+
 const tool: ITool<{ time: number }> = {
    name,
    description,
@@ -18,27 +43,8 @@ const tool: ITool<{ time: number }> = {
    },
    input: {
       params: { enabled, time: defaultTime },
-      html: UIInput.createBlock(
-         UIInput.createCheckbox(
-            function (this: HTMLInputElement) {
-               tool.input.params.enabled = this.checked;
-            },
-            name + ' (s): ',
-            description,
-            enabled,
-         ),
-         UIInput.createNumber(
-            function (this: HTMLInputElement) {
-               tool.input.params.time = round(Math.abs(parseFloat(this.value)), 3);
-               this.value = tool.input.params.time.toString();
-            },
-            '',
-            defaultTime,
-            0,
-            null,
-            0.1,
-         ),
-      ),
+      html: UIInput.createBlock(htmlInput, htmlLabel, htmlTimeLabel, htmlTime),
+      update,
    },
    run,
 };

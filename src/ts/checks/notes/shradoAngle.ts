@@ -45,6 +45,30 @@ const [htmlLabelMaxBeat, htmlInputMaxBeat] = UIInput.createNumber(
    null,
    0.1,
 );
+const htmlDistance = UIInput.createNumber(
+   function (this: HTMLInputElement) {
+      tool.input.params.distance = Math.max(parseInt(this.value), 0);
+      this.value = tool.input.params.distance.toString();
+   },
+   'min distance: ',
+   defaultDistance,
+   0,
+);
+const htmlEnabled = UIInput.createCheckbox(
+   function (this: HTMLInputElement) {
+      tool.input.params.enabled = this.checked;
+   },
+   name,
+   description,
+   enabled,
+);
+
+function update(timeProcessor?: TimeProcessor) {
+   htmlEnabled[0].checked = tool.input.params.enabled;
+   htmlDistance[1].value = tool.input.params.distance.toString();
+   htmlInputMaxTime.value = (tool.input.params.maxTime * 1000).toString();
+   if (timeProcessor) adjustTimeHandler(timeProcessor);
+}
 
 const tool: ITool<{ distance: number; maxTime: number }> = {
    name,
@@ -61,30 +85,16 @@ const tool: ITool<{ distance: number; maxTime: number }> = {
          maxTime: defaultMaxTime,
       },
       html: UIInput.createBlock(
-         UIInput.createCheckbox(
-            function (this: HTMLInputElement) {
-               tool.input.params.enabled = this.checked;
-            },
-            name,
-            description,
-            enabled,
-         ),
+         htmlEnabled,
          document.createElement('br'),
-         UIInput.createNumber(
-            function (this: HTMLInputElement) {
-               tool.input.params.distance = Math.max(parseInt(this.value), 0);
-               this.value = tool.input.params.distance.toString();
-            },
-            'min distance: ',
-            0,
-            0,
-         ),
+         htmlDistance,
          document.createElement('br'),
          htmlLabelMaxTime,
          htmlInputMaxTime,
          htmlLabelMaxBeat,
          htmlInputMaxBeat,
       ),
+      update,
       adjustTime: adjustTimeHandler,
    },
    run,

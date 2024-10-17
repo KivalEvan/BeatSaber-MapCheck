@@ -15,7 +15,7 @@ export function init() {
    if (settings.checks.persistent) {
       htmlChecksPreset.value = settings.checks.preset;
    } else {
-      htmlChecksPreset.value = 'Default';
+      htmlChecksPreset.value = htmlChecksPreset.options[0].value;
    }
    presetChangeHandler();
 }
@@ -32,7 +32,11 @@ function presetChangeHandler(): void {
 
 function presetResetHandler(): void {
    const preset = htmlChecksPreset.value as keyof typeof presets;
-   presets[preset] = deepCopy(original[preset]);
+   if (preset === 'Custom') {
+      presets[preset] = deepCopy(original.Default);
+   } else {
+      presets[preset] = deepCopy(original[preset]);
+   }
    presetChangeHandler();
 }
 
@@ -45,6 +49,6 @@ function presetSaveHandler(): void {
 
 function saveCustom(): void {
    if (localStorage) {
-      localStorage.setItem('checks', JSON.stringify({ checks: presets.Custom }));
+      localStorage.setItem('checks', JSON.stringify(presets.Custom));
    }
 }

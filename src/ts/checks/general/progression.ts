@@ -10,21 +10,44 @@ const name = 'Difficulty Progression';
 const description = 'For ranking purpose, check difficuly progression to fit rankability criteria.';
 const enabled = true;
 
+const cachedHtmlDiff: { [key in types.DifficultyName]: HTMLInputElement | null } = {
+   'Expert+': null,
+   ExpertPlus: null,
+   Expert: null,
+   Hard: null,
+   Normal: null,
+   Easy: null,
+};
+
 const htmlDifficultyList = document.createElement('ul');
 const diffList: types.DifficultyName[] = ['ExpertPlus', 'Expert', 'Hard', 'Normal', 'Easy'];
 for (const diff of diffList) {
-   htmlDifficultyList.appendChild(
-      UIInput.createBlock(
-         UIInput.createCheckbox(
-            function (this: HTMLInputElement) {
-               tool.input.params[diff] = this.checked;
-            },
-            DifficultyRename[diff],
-            `Toggle check progression for Standard ${DifficultyRename[diff]}`,
-            true,
-         ),
-      ),
+   const [htmlInput, htmlLabel] = UIInput.createCheckbox(
+      function (this: HTMLInputElement) {
+         tool.input.params[diff] = this.checked;
+      },
+      DifficultyRename[diff],
+      `Toggle check progression for Standard ${DifficultyRename[diff]}`,
+      true,
    );
+   cachedHtmlDiff[diff] = htmlInput;
+   htmlDifficultyList.appendChild(UIInput.createBlock(htmlInput, htmlLabel));
+}
+
+const [htmlInput, htmlLabel] = UIInput.createCheckbox(
+   function (this: HTMLInputElement) {
+      tool.input.params.enabled = this.checked;
+   },
+   name,
+   description,
+   enabled,
+);
+
+function update() {
+   htmlInput.checked = tool.input.params.enabled;
+   for (const diff of diffList) {
+      if (cachedHtmlDiff[diff]) cachedHtmlDiff[diff].checked = tool.input.params[diff];
+   }
 }
 
 const tool: ITool<{ [k in types.DifficultyName]: boolean }> = {
@@ -45,19 +68,8 @@ const tool: ITool<{ [k in types.DifficultyName]: boolean }> = {
          Normal: true,
          Easy: true,
       },
-      html: UIInput.createBlock(
-         UIInput.createBlock(
-            UIInput.createCheckbox(
-               function (this: HTMLInputElement) {
-                  tool.input.params.enabled = this.checked;
-               },
-               name,
-               description,
-               enabled,
-            ),
-         ),
-         htmlDifficultyList,
-      ),
+      html: UIInput.createBlock(UIInput.createBlock(htmlInput, htmlLabel), htmlDifficultyList),
+      update,
    },
    run,
 };

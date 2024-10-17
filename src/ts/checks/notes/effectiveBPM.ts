@@ -10,6 +10,14 @@ const enabled = true;
 const defaultEBPM = 450;
 const defaultEBPMS = 350;
 
+const htmlEnabled = UIInput.createCheckbox(
+   function (this: HTMLInputElement) {
+      tool.input.params.enabled = this.checked;
+   },
+   name + ' threshold',
+   description,
+   enabled,
+);
 const htmlEBPM = UIInput.createNumber(
    function (this: HTMLInputElement) {
       tool.input.params.ebpmThres = round(Math.abs(parseFloat(this.value)), 1);
@@ -29,6 +37,11 @@ const htmlEBPMS = UIInput.createNumber(
    0,
 );
 
+function update(timeProcessor?: TimeProcessor) {
+   htmlEnabled[0].checked = tool.input.params.enabled;
+   if (timeProcessor) adjustTimeHandler(timeProcessor);
+}
+
 const tool: ITool<{ ebpmThres: number; ebpmsThres: number }> = {
    name,
    description,
@@ -43,18 +56,8 @@ const tool: ITool<{ ebpmThres: number; ebpmsThres: number }> = {
          ebpmThres: defaultEBPM,
          ebpmsThres: defaultEBPMS,
       },
-      html: UIInput.createBlock(
-         UIInput.createCheckbox(
-            function (this: HTMLInputElement) {
-               tool.input.params.enabled = this.checked;
-            },
-            name + ' threshold',
-            description,
-            enabled,
-         ),
-         htmlEBPM,
-         htmlEBPMS,
-      ),
+      html: UIInput.createBlock(htmlEnabled, htmlEBPM, htmlEBPMS),
+      update,
       adjustTime: adjustTimeHandler,
    },
    run,

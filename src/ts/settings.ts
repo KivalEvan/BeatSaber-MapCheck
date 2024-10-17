@@ -104,11 +104,11 @@ export default new (class Settings implements ISettings {
       const storage = localStorage.getItem('settings');
       if (storage) {
          const temp = JSON.parse(storage);
-         if (!temp.settings?.version) {
+         if (!temp.version) {
             this.clear();
             return;
          }
-         this.props = temp.settings ?? this.props;
+         this.props = temp ?? this.props;
          for (const key in settingsDefault) {
             const k = key as keyof ISettings;
             if (typeof this.props[k] !== typeof settingsDefault[k]) {
@@ -121,7 +121,7 @@ export default new (class Settings implements ISettings {
    }
    save(): void {
       if (localStorage) {
-         localStorage.setItem('settings', JSON.stringify({ settings: this.props }));
+         localStorage.setItem('settings', JSON.stringify(this.props));
       }
    }
    clear(): void {

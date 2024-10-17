@@ -8,6 +8,7 @@ usage.
 ### Added
 
 - Collider and Britney Spears environment & color scheme
+- Checks preset
 - Nested folder loading
 
 ### Changed
@@ -22,6 +23,10 @@ usage.
 
 - Mappers and lighters information does not reset upon reset
 - BPM change shows even if the minimum and maximum are equal
+
+### Removed
+
+- Monochrome theme (bugged)
 
 ## 2.6.1 [2024-03-25]
 

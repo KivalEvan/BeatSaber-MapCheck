@@ -15,6 +15,32 @@ const enabled = true;
 
 const defaultPrec = [8, 6];
 
+const [htmlInput, htmlLabel] = UIInput.createCheckbox(
+   function (this: HTMLInputElement) {
+      tool.input.params.enabled = this.checked;
+   },
+   name + ': ',
+   description,
+   enabled,
+);
+const [htmlPrec, htmlPrecLabel] = UIInput.createText(
+   function (this: HTMLInputElement) {
+      tool.input.params.prec = this.value
+         .trim()
+         .split(' ')
+         .map((x) => parseInt(x))
+         .filter((x) => (x > 0 ? !Number.isNaN(x) : false));
+      this.value = tool.input.params.prec.join(' ');
+   },
+   '',
+   defaultPrec.join(' '),
+);
+
+function update() {
+   htmlInput.checked = tool.input.params.enabled;
+   htmlPrec.value = tool.input.params.prec.join(' ');
+}
+
 const tool: ITool<{ prec: number[] }> = {
    name,
    description,
@@ -28,28 +54,8 @@ const tool: ITool<{ prec: number[] }> = {
          enabled,
          prec: [...defaultPrec],
       },
-      html: UIInput.createBlock(
-         UIInput.createCheckbox(
-            function (this: HTMLInputElement) {
-               tool.input.params.enabled = this.checked;
-            },
-            name + ': ',
-            description,
-            enabled,
-         ),
-         UIInput.createText(
-            function (this: HTMLInputElement) {
-               tool.input.params.prec = this.value
-                  .trim()
-                  .split(' ')
-                  .map((x) => parseInt(x))
-                  .filter((x) => (x > 0 ? !Number.isNaN(x) : false));
-               this.value = tool.input.params.prec.join(' ');
-            },
-            '',
-            defaultPrec.join(' '),
-         ),
-      ),
+      html: UIInput.createBlock(htmlInput, htmlLabel, htmlPrec, htmlPrecLabel),
+      update,
    },
    run,
 };
