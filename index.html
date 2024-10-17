@@ -323,8 +323,12 @@
             </div>
             <div class="panel">
               <br>
-              <span>Export to Editor Bookmark:</span>
+              <span>Export to Official Editor Bookmark:</span>
               <input type="button" class="checks__output-button input-toggle" value="Selected">
+              <br>
+              <span>Copy file to "/CustomLevels/BEATMAP_PATH/Bookmarks"</span>
+              <br>
+              <span>Create Bookmarks folder if does not exist.</span>
             </div>
           </div>
         </div>
@@ -491,14 +495,16 @@
                   <th class="stats__table-header">Chroma</th>
                   <td class="stats__table-element" id="stats__table-nc-chroma"></td>
                   <td class="stats__table-element" id="stats__table-nc-arc-chroma"></td>
-                  <td class="stats__table-element" id="stats__table-nc-chain-chroma"></td></td>
+                  <td class="stats__table-element" id="stats__table-nc-chain-chroma"></td>
+                  </td>
                   <td class="stats__table-element" id="stats__table-nc-bomb-chroma"></td>
                 </tr>
                 <tr class="hidden">
                   <th class="stats__table-header">Noodle</th>
                   <td class="stats__table-element" id="stats__table-nc-noodle"></td>
                   <td class="stats__table-element" id="stats__table-nc-arc-noodle"></td>
-                  <td class="stats__table-element" id="stats__table-nc-chain-noodle"></td></td>
+                  <td class="stats__table-element" id="stats__table-nc-chain-noodle"></td>
+                  </td>
                   <td class="stats__table-element" id="stats__table-nc-bomb-noodle"></td>
                 </tr>
                 <tr class="hidden">
@@ -765,7 +771,8 @@
             </label>
             <input type="number" class="settings__rounding input-toggle input--small" id="settings__rounding" step="1"
               min="0"><br>
-            <input type="checkbox" class="settings__checkbox settings__checks-persistent" id="settings__checks-persistent">
+            <input type="checkbox" class="settings__checkbox settings__checks-persistent"
+              id="settings__checks-persistent">
             <label for="settings__checks-persistent">
               <span>Persistent Checks Preset</span>
             </label><br>

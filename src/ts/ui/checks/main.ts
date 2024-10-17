@@ -11,7 +11,9 @@ import {
 import { IToolOutput } from '../../types/checks/check';
 import { printResult, printResultTime } from './output';
 import { init } from './presets';
+import { funnyInit } from './bookmark';
 
+funnyInit();
 const logPrefix = 'UI Checks: ';
 
 const htmlChecksDifficultyLabel: NodeListOf<HTMLElement> =

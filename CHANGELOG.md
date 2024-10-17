@@ -9,6 +9,7 @@ usage.
 
 - Collider and Britney Spears environment & color scheme
 - Checks preset
+- Bookmark export
 - Nested folder loading
 
 ### Changed
