@@ -7,6 +7,8 @@ import { getLastInteractiveTime, logger, NoteJumpSpeed, TimeProcessor } from 'bs
 import * as types from 'bsmap/types';
 import { InputParamsList as PresetParamsList } from './presets/_type';
 import { getSelectedCharacteristic, getSelectedDifficulty } from '../ui/selection';
+import { presets } from './presets';
+import { deepCopy } from 'bsmap/utils';
 
 function tag(name: string) {
    return ['checks', name];
@@ -38,7 +40,10 @@ export function updateChecksPreset(preset: PresetParamsList): void {
    );
    for (const k in preset) {
       const key = k as keyof PresetParamsList;
-      cachedKeyedComponents[key].input.params = preset[key].params;
+      cachedKeyedComponents[key].input.params =
+         preset[key].params ??
+         deepCopy(presets.Default[key].params) ??
+         cachedKeyedComponents[key].input.params;
       cachedKeyedComponents[key].input.update?.(beatmap?.timeProcessor);
    }
 }

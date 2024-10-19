@@ -1,5 +1,4 @@
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import { ObjectContainerType } from '../../types/checks/container';
 import UIInput from '../../ui/helpers/input';
 
 const name = 'One Saber';
@@ -46,7 +45,7 @@ function run(args: ToolArgs): IToolOutput[] {
    } else {
       const hasBlueNote = args.beatmap.data.colorNotes.filter((n) => n.isBlue()).length > 0;
       const hasRedNote = args.beatmap.data.colorNotes.filter((n) => n.isRed()).length > 0;
-      whyisthisonesaber = hasBlueNote ? !hasRedNote : hasRedNote;
+      whyisthisonesaber = hasBlueNote !== hasRedNote;
    }
 
    if (notOneSaberNote!?.length) {

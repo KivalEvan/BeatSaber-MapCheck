@@ -11,6 +11,7 @@ usage.
 - Checks preset
 - Bookmark export
 - Nested folder loading
+- Excessive double check
 
 ### Changed
 
@@ -24,6 +25,7 @@ usage.
 
 - Mappers and lighters information does not reset upon reset
 - BPM change shows even if the minimum and maximum are equal
+- Fallback NJS not being used
 
 ### Removed
 

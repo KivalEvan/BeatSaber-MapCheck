@@ -196,7 +196,11 @@ export function extractBeatmaps(
          settings: infoDiff,
          environment: env,
          timeProcessor,
-         njs: new NoteJumpSpeed(timeProcessor.bpm, infoDiff.njs, infoDiff.njsOffset),
+         njs: new NoteJumpSpeed(
+            timeProcessor.bpm,
+            infoDiff.njs || NoteJumpSpeed.FallbackNJS[infoDiff.difficulty] || 0,
+            infoDiff.njsOffset,
+         ),
          data,
          noteContainer: getNoteContainer(data),
          swingAnalysis: swing.info(

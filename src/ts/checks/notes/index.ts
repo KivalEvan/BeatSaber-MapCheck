@@ -2,6 +2,7 @@ export { default as acceptablePrec } from './acceptablePrec';
 export { default as colorCheck } from './colorCheck';
 export { default as doubleDirectional } from './doubleDirectional';
 export { default as effectiveBPM } from './effectiveBPM';
+export { default as excessiveDouble } from './excessiveDouble';
 export { default as hitboxInline } from './hitboxInline';
 export { default as hitboxPath } from './hitboxPath';
 export { default as hitboxReverseStair } from './hitboxReverseStair';
