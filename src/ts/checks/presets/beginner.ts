@@ -21,6 +21,7 @@ const preset: InputParamsList = {
    colorCheck: { params: { enabled: true } },
    doubleDirectional: { params: { enabled: true } },
    effectiveBPM: { params: { enabled: true, ebpmThres: 450, ebpmsThres: 350 } },
+   excessiveDouble: { params: { enabled: true, threshold: 0.6 } },
    hitboxInline: { params: { enabled: true } },
    hitboxPath: { params: { enabled: true } },
    hitboxReverseStair: { params: { enabled: true } },

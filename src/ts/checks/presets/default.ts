@@ -37,6 +37,9 @@ const preset: InputParamsList = {
    effectiveBPM: {
       params: deepCopy(notes.effectiveBPM.input.params),
    },
+   excessiveDouble: {
+      params: deepCopy(notes.excessiveDouble.input.params),
+   },
    hitboxInline: {
       params: deepCopy(notes.hitboxInline.input.params),
    },

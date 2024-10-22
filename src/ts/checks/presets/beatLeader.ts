@@ -7,7 +7,7 @@ const preset: InputParamsList = {
    previewTime: { params: { enabled: true } },
    progression: {
       params: {
-         enabled: true,
+         enabled: false,
          'Expert+': true,
          ExpertPlus: true,
          Expert: true,
@@ -21,6 +21,7 @@ const preset: InputParamsList = {
    colorCheck: { params: { enabled: true } },
    doubleDirectional: { params: { enabled: true } },
    effectiveBPM: { params: { enabled: true, ebpmThres: 450, ebpmsThres: 350 } },
+   excessiveDouble: { params: { enabled: true, threshold: 0.6 } },
    hitboxInline: { params: { enabled: true } },
    hitboxPath: { params: { enabled: true } },
    hitboxReverseStair: { params: { enabled: true } },
