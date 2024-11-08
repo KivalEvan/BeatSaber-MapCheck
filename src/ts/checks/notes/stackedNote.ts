@@ -85,7 +85,10 @@ function checkBomb(map: IBeatmapItem) {
          }
          if (
             bombNotes[i].isInline(bombNotes[j]) &&
-            (njs.value < timeProcessor.bpm / (120 * (bombNotes[j].time - bombNotes[i].time)) ||
+            (njs.value <
+               (bombNotes[j].customData.__mapcheck_secondtime -
+                  bombNotes[i].customData.__mapcheck_secondtime) *
+                  2 ||
                bombNotes[j].customData.__mapcheck_secondtime <
                   bombNotes[i].customData.__mapcheck_secondtime + 0.02)
          ) {

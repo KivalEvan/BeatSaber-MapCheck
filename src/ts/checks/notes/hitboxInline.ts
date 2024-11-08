@@ -57,8 +57,13 @@ function check(args: ToolArgs) {
       }
       for (const other of swingNoteArray[(note.color + 1) % 2]) {
          // magic number 1.425 from saber length + good/bad hitbox
+         // i wished i remembered what this was
          if (
-            njs.value < 1.425 / ((60 * (note.time - other.time)) / timeProcessor.bpm + constant) &&
+            njs.value <
+               1.425 /
+                  (note.customData.__mapcheck_secondtime -
+                     other.customData.__mapcheck_secondtime +
+                     constant) &&
             note.isInline(other)
          ) {
             arr.push(note);

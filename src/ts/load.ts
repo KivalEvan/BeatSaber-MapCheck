@@ -3,6 +3,7 @@ import { IBeatmapAudio, IBeatmapItem } from './types/checks/beatmapItem';
 import settings from './settings';
 import { IObjectContainer, ObjectContainerType } from './types/checks/container';
 import {
+   BaseSlider,
    Beatmap,
    calculateScore,
    loadDifficulty,
@@ -10,6 +11,7 @@ import {
    loadLightshow,
    logger,
    NoteJumpSpeed,
+   Obstacle,
    TimeProcessor,
 } from 'bsmap';
 import * as types from 'bsmap/types';
@@ -282,5 +284,19 @@ function applyTime(timeProcessor: TimeProcessor) {
    return function (object: types.wrapper.IWrapBaseObject) {
       object.customData.__mapcheck_secondtime = timeProcessor.toRealTime(object.time, true);
       object.customData.__mapcheck_beattime = timeProcessor.adjustTime(object.time);
+      if (object instanceof BaseSlider) {
+         object.customData.__mapcheck_tail_secondtime = timeProcessor.toRealTime(
+            object.tailTime,
+            true,
+         );
+         object.customData.__mapcheck_tail_beattime = timeProcessor.adjustTime(object.tailTime);
+      }
+      if (object instanceof Obstacle) {
+         object.customData.__mapcheck_duration_secondtime = timeProcessor.toRealTime(
+            object.duration,
+            true,
+         );
+         object.customData.__mapcheck_duration_beattime = timeProcessor.adjustTime(object.duration);
+      }
    };
 }

@@ -37,43 +37,55 @@ const tool: ITool<{ minDur: number }> = {
    run,
 };
 
+function customIsLonger(
+   o: types.wrapper.IWrapObstacle,
+   compareTo: types.wrapper.IWrapObstacle,
+   prevOffset = 0,
+) {
+   return (
+      o.customData.__mapcheck_secondtime + o.customData.__mapcheck_duration_secondtime >
+      compareTo.customData.__mapcheck_secondtime +
+         compareTo.customData.__mapcheck_duration_secondtime +
+         prevOffset
+   );
+}
+
 function check(args: ToolArgs) {
    const { obstacles } = args.beatmap.data;
-   const { timeProcessor } = args.beatmap;
-   const { minDur: temp } = tool.input.params;
-   const minDur = timeProcessor.toBeatTime(temp, false);
+   const { minDur } = tool.input.params;
    const ary: types.wrapper.IWrapObstacle[] = [];
-   let obstacleLFull: types.wrapper.IWrapObstacle = new Obstacle();
-   let obstacleRFull: types.wrapper.IWrapObstacle = new Obstacle();
-   let obstacleLHalf: types.wrapper.IWrapObstacle = new Obstacle();
-   let obstacleRHalf: types.wrapper.IWrapObstacle = new Obstacle();
+   let obstacleLFull: types.wrapper.IWrapObstacle = new Obstacle({ time: Number.MIN_SAFE_INTEGER });
+   let obstacleRFull: types.wrapper.IWrapObstacle = new Obstacle({ time: Number.MIN_SAFE_INTEGER });
+   let obstacleLHalf: types.wrapper.IWrapObstacle = new Obstacle({ time: Number.MIN_SAFE_INTEGER });
+   let obstacleRHalf: types.wrapper.IWrapObstacle = new Obstacle({ time: Number.MIN_SAFE_INTEGER });
    for (let i = 0; i < obstacles.length; i++) {
       const o = obstacles[i];
-      if (o.posY === PosY.BOTTOM && o.height > 2 && o.duration > 0) {
+      const wallDur = o.customData.__mapcheck_duration_secondtime;
+      if (o.posY === PosY.BOTTOM && o.height > 2 && wallDur > 0) {
          if (o.width > 2 || (o.width > 1 && o.posX === 1)) {
-            if (o.isLonger(obstacleLFull)) {
-               if (o.duration < minDur) {
+            if (customIsLonger(o, obstacleLFull)) {
+               if (wallDur < minDur) {
                   ary.push(o);
                }
                obstacleLFull = o;
             }
-            if (o.isLonger(obstacleRFull)) {
-               if (o.duration < minDur) {
+            if (customIsLonger(o, obstacleRFull)) {
+               if (wallDur < minDur) {
                   ary.push(o);
                }
                obstacleRFull = o;
             }
          } else if (o.width === 2) {
             if (o.posX === PosX.LEFT) {
-               if (o.isLonger(obstacleLFull)) {
-                  if (o.duration < minDur) {
+               if (customIsLonger(o, obstacleLFull)) {
+                  if (wallDur < minDur) {
                      ary.push(o);
                   }
                   obstacleLFull = o;
                }
             } else if (o.posX === PosX.MIDDLE_RIGHT) {
-               if (o.isLonger(obstacleRFull)) {
-                  if (o.duration < minDur) {
+               if (customIsLonger(o, obstacleRFull)) {
+                  if (wallDur < minDur) {
                      ary.push(o);
                   }
                   obstacleRFull = o;
@@ -81,38 +93,38 @@ function check(args: ToolArgs) {
             }
          } else if (o.width === 1) {
             if (o.posX === PosX.MIDDLE_LEFT) {
-               if (o.isLonger(obstacleLFull)) {
-                  if (o.duration < minDur) {
+               if (customIsLonger(o, obstacleLFull)) {
+                  if (wallDur < minDur) {
                      ary.push(o);
                   }
                   obstacleLFull = o;
                }
             } else if (o.posX === PosX.MIDDLE_RIGHT) {
-               if (o.isLonger(obstacleRFull)) {
-                  if (o.duration < minDur) {
+               if (customIsLonger(o, obstacleRFull)) {
+                  if (wallDur < minDur) {
                      ary.push(o);
                   }
                   obstacleRFull = o;
                }
             }
          }
-      } else if (o.posY === PosY.TOP && o.height > 2 && o.duration > 0) {
+      } else if (o.posY === PosY.TOP && o.height > 2 && wallDur > 0) {
          if (o.width > 2 || (o.width > 1 && o.posX === PosX.MIDDLE_LEFT)) {
-            if (o.isLonger(obstacleLHalf)) {
+            if (customIsLonger(o, obstacleLHalf)) {
                if (
-                  o.duration < minDur &&
-                  o.isLonger(obstacleLFull, minDur) &&
-                  o.isLonger(obstacleLHalf, minDur)
+                  wallDur < minDur &&
+                  customIsLonger(o, obstacleLFull, minDur) &&
+                  customIsLonger(o, obstacleLHalf, minDur)
                ) {
                   ary.push(o);
                }
                obstacleLHalf = o;
             }
-            if (o.isLonger(obstacleRHalf)) {
+            if (customIsLonger(o, obstacleRHalf)) {
                if (
-                  o.duration < minDur &&
-                  o.isLonger(obstacleRFull, minDur) &&
-                  o.isLonger(obstacleRHalf, minDur)
+                  wallDur < minDur &&
+                  customIsLonger(o, obstacleRFull, minDur) &&
+                  customIsLonger(o, obstacleRHalf, minDur)
                ) {
                   ary.push(o);
                }
@@ -120,22 +132,22 @@ function check(args: ToolArgs) {
             }
          } else if (o.width === 2) {
             if (o.posX === PosX.LEFT) {
-               if (o.isLonger(obstacleLHalf)) {
+               if (customIsLonger(o, obstacleLHalf)) {
                   if (
-                     o.duration < minDur &&
-                     o.isLonger(obstacleLFull, minDur) &&
-                     o.isLonger(obstacleLHalf, minDur)
+                     wallDur < minDur &&
+                     customIsLonger(o, obstacleLFull, minDur) &&
+                     customIsLonger(o, obstacleLHalf, minDur)
                   ) {
                      ary.push(o);
                   }
                   obstacleLHalf = o;
                }
             } else if (o.posX === PosX.MIDDLE_RIGHT) {
-               if (o.isLonger(obstacleRHalf)) {
+               if (customIsLonger(o, obstacleRHalf)) {
                   if (
-                     o.duration < minDur &&
-                     o.isLonger(obstacleRFull, minDur) &&
-                     o.isLonger(obstacleRHalf, minDur)
+                     wallDur < minDur &&
+                     customIsLonger(o, obstacleRFull, minDur) &&
+                     customIsLonger(o, obstacleRHalf, minDur)
                   ) {
                      ary.push(o);
                   }
@@ -144,22 +156,22 @@ function check(args: ToolArgs) {
             }
          } else if (o.width === 1) {
             if (o.posX === PosX.MIDDLE_LEFT) {
-               if (o.isLonger(obstacleLHalf)) {
+               if (customIsLonger(o, obstacleLHalf)) {
                   if (
-                     o.duration < minDur &&
-                     o.isLonger(obstacleLFull, minDur) &&
-                     o.isLonger(obstacleLHalf, minDur)
+                     wallDur < minDur &&
+                     customIsLonger(o, obstacleLFull, minDur) &&
+                     customIsLonger(o, obstacleLHalf, minDur)
                   ) {
                      ary.push(o);
                   }
                   obstacleLHalf = o;
                }
             } else if (o.posX === PosX.MIDDLE_RIGHT) {
-               if (o.isLonger(obstacleRHalf)) {
+               if (customIsLonger(o, obstacleRHalf)) {
                   if (
-                     o.duration < minDur &&
-                     o.isLonger(obstacleRFull, minDur) &&
-                     o.isLonger(obstacleRHalf, minDur)
+                     wallDur < minDur &&
+                     customIsLonger(o, obstacleRFull, minDur) &&
+                     customIsLonger(o, obstacleRHalf, minDur)
                   ) {
                      ary.push(o);
                   }

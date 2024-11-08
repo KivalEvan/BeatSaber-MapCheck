@@ -82,7 +82,8 @@ function check(args: ToolArgs) {
             if (
                njs.value <
                   1.425 /
-                     ((60 * (note.data.time - other.time)) / timeProcessor.bpm +
+                     (note.data.customData.__mapcheck_secondtime -
+                        other.customData.__mapcheck_secondtime +
                         (isDiagonal ? constantDiagonal : constant)) &&
                placement.isIntersect(note.data, other, [[15, 1.5]])[1]
             ) {
