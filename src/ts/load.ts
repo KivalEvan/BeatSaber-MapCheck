@@ -282,21 +282,17 @@ function precalculateTimes(beatmap: types.wrapper.IWrapBeatmap, timeProcessor: T
 
 function applyTime(timeProcessor: TimeProcessor) {
    return function (object: types.wrapper.IWrapBaseObject) {
-      object.customData.__mapcheck_secondtime = timeProcessor.toRealTime(object.time, true);
+      object.customData.__mapcheck_secondtime = timeProcessor.toRealTime(object.time);
       object.customData.__mapcheck_beattime = timeProcessor.adjustTime(object.time);
       if (object instanceof BaseSlider) {
-         object.customData.__mapcheck_tail_secondtime = timeProcessor.toRealTime(
-            object.tailTime,
-            true,
-         );
+         object.customData.__mapcheck_tail_secondtime = timeProcessor.toRealTime(object.tailTime);
          object.customData.__mapcheck_tail_beattime = timeProcessor.adjustTime(object.tailTime);
       }
       if (object instanceof Obstacle) {
-         object.customData.__mapcheck_duration_secondtime = timeProcessor.toRealTime(
-            object.duration,
-            true,
-         );
-         object.customData.__mapcheck_duration_beattime = timeProcessor.adjustTime(object.duration);
+         object.customData.__mapcheck_duration_secondtime =
+            timeProcessor.toRealTime(object.time + object.duration) -
+            object.customData.__mapcheck_secondtime;
+         object.customData.__mapcheck_duration_beattime = object.duration;
       }
    };
 }

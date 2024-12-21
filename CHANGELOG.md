@@ -1,17 +1,22 @@
 # Changelog
 
-## 2.7.0 [2024-11-xx]
+## 2.7.0 [2024-12-22]
 
 Major changes here should result in better QoL, faster loading, and less memory
 usage.
 
 ### Added
 
--  Collider and Britney Spears environment & color scheme
+-  Add environment & color scheme
+   -  Collider
+   -  Britney Spears
+   -  Monstercat 2.0
+   -  Metallica
 -  Checks preset
 -  Bookmark export
 -  Nested folder loading
 -  Excessive double check
+-  NJS event check
 
 ### Changed
 
