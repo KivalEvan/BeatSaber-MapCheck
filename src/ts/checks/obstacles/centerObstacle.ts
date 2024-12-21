@@ -89,6 +89,19 @@ function adjustTimeHandler(bpm: TimeProcessor) {
    ).toString();
 }
 
+function customIsLonger(
+   o: types.wrapper.IWrapObstacle,
+   compareTo: types.wrapper.IWrapObstacle,
+   prevOffset = 0,
+) {
+   return (
+      o.customData.__mapcheck_secondtime + o.customData.__mapcheck_duration_secondtime >
+      compareTo.customData.__mapcheck_secondtime +
+         compareTo.customData.__mapcheck_duration_secondtime +
+         prevOffset
+   );
+}
+
 function check(args: ToolArgs) {
    const { obstacles } = args.beatmap.data;
    const { timeProcessor } = args.beatmap;
@@ -101,16 +114,16 @@ function check(args: ToolArgs) {
       if (o.posY < PosY.TOP && o.height > 1) {
          if (o.width > 2) {
             arr.push(o);
-            if (o.isLonger(obstacleLeftFull)) {
+            if (customIsLonger(o, obstacleLeftFull)) {
                obstacleLeftFull = o;
             }
-            if (o.isLonger(obstacleRightFull)) {
+            if (customIsLonger(o, obstacleRightFull)) {
                obstacleRightFull = o;
             }
          }
          if (o.width === 2) {
             if (o.posX === PosX.LEFT) {
-               if (o.isLonger(obstacleLeftFull)) {
+               if (customIsLonger(o, obstacleLeftFull)) {
                   if (
                      o.customData.__mapcheck_secondtime >
                         obstacleRightFull.customData.__mapcheck_secondtime - recovery &&
@@ -126,15 +139,15 @@ function check(args: ToolArgs) {
             }
             if (o.posX === PosX.MIDDLE_LEFT) {
                arr.push(o);
-               if (o.isLonger(obstacleLeftFull)) {
+               if (customIsLonger(o, obstacleLeftFull)) {
                   obstacleLeftFull = o;
                }
-               if (o.isLonger(obstacleRightFull)) {
+               if (customIsLonger(o, obstacleRightFull)) {
                   obstacleRightFull = o;
                }
             }
             if (o.posX === PosX.MIDDLE_RIGHT) {
-               if (o.isLonger(obstacleRightFull)) {
+               if (customIsLonger(o, obstacleRightFull)) {
                   if (
                      o.customData.__mapcheck_secondtime >
                         obstacleLeftFull.customData.__mapcheck_secondtime - recovery &&
@@ -151,7 +164,7 @@ function check(args: ToolArgs) {
          }
          if (o.width === 1) {
             if (o.posX === PosX.MIDDLE_LEFT) {
-               if (o.isLonger(obstacleLeftFull)) {
+               if (customIsLonger(o, obstacleLeftFull)) {
                   if (
                      o.customData.__mapcheck_secondtime >
                         obstacleRightFull.customData.__mapcheck_secondtime - recovery &&
@@ -166,7 +179,7 @@ function check(args: ToolArgs) {
                }
             }
             if (o.posX === PosX.MIDDLE_RIGHT) {
-               if (o.isLonger(obstacleRightFull)) {
+               if (customIsLonger(o, obstacleRightFull)) {
                   if (
                      o.customData.__mapcheck_secondtime >
                         obstacleLeftFull.customData.__mapcheck_secondtime - recovery &&

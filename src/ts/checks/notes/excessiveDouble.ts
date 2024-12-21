@@ -52,7 +52,6 @@ function run(args: ToolArgs): IToolOutput[] {
    const max = Math.max(blueSet.size, redSet.size);
    const perc =
       Math.max(blueSet.intersection(redSet).size, redSet.intersection(blueSet).size) / max;
-   console.log('double count', perc);
 
    if (perc > tool.input.params.threshold) {
       return [
