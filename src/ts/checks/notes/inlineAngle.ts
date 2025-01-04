@@ -42,7 +42,7 @@ const [htmlLabelMaxBeat, htmlInputMaxBeat] = UIInput.createNumber(
          return;
       }
       let val = round(Math.abs(parseFloat(this.value)), 2) || 1;
-      tool.input.params.maxTime = localBPM.toRealTime(val);
+      tool.input.params.maxTime = localBPM.toRealTime(val, false);
       htmlInputMaxTime.value = round(tool.input.params.maxTime * 1000, 1).toString();
       this.value = val.toString();
    },

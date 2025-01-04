@@ -33,7 +33,7 @@ const [htmlLabelMaxBeat, htmlInputMaxBeat] = UIInput.createNumber(
          return;
       }
       let val = round(Math.abs(parseFloat(this.value)), 2) || 1;
-      tool.input.params.recovery = localBPM.toRealTime(val, true);
+      tool.input.params.recovery = localBPM.toRealTime(val, false);
       htmlInputMaxTime.value = round(tool.input.params.recovery * 1000, 1).toString();
       this.value = val.toString();
    },
@@ -129,7 +129,7 @@ function check(args: ToolArgs) {
                         obstacleRightFull.customData.__mapcheck_secondtime - recovery &&
                      o.customData.__mapcheck_secondtime <
                         obstacleRightFull.customData.__mapcheck_secondtime +
-                           timeProcessor.toRealTime(obstacleRightFull.duration) +
+                           obstacleRightFull.customData.__mapcheck_duration_secondtime +
                            recovery
                   ) {
                      arr.push(o);
@@ -153,7 +153,7 @@ function check(args: ToolArgs) {
                         obstacleLeftFull.customData.__mapcheck_secondtime - recovery &&
                      o.customData.__mapcheck_secondtime <
                         obstacleLeftFull.customData.__mapcheck_secondtime +
-                           timeProcessor.toRealTime(obstacleLeftFull.duration) +
+                           obstacleLeftFull.customData.__mapcheck_duration_secondtime +
                            recovery
                   ) {
                      arr.push(o);
@@ -170,7 +170,7 @@ function check(args: ToolArgs) {
                         obstacleRightFull.customData.__mapcheck_secondtime - recovery &&
                      o.customData.__mapcheck_secondtime <
                         obstacleRightFull.customData.__mapcheck_secondtime +
-                           timeProcessor.toRealTime(obstacleRightFull.duration) +
+                           obstacleRightFull.customData.__mapcheck_duration_secondtime +
                            recovery
                   ) {
                      arr.push(o);
@@ -185,7 +185,7 @@ function check(args: ToolArgs) {
                         obstacleLeftFull.customData.__mapcheck_secondtime - recovery &&
                      o.customData.__mapcheck_secondtime <
                         obstacleLeftFull.customData.__mapcheck_secondtime +
-                           timeProcessor.toRealTime(obstacleLeftFull.duration) +
+                           obstacleLeftFull.customData.__mapcheck_duration_secondtime +
                            recovery
                   ) {
                      arr.push(o);

@@ -79,7 +79,7 @@ const [htmlLabelMinBeat, htmlInputMinBeat] = UIInput.createNumber(
          return;
       }
       const val = Math.abs(parseFloat(this.value)) || 1;
-      tool.input.params.minTime = localBPM.toRealTime(val);
+      tool.input.params.minTime = localBPM.toRealTime(val, false);
       htmlInputMinTime.value = round(tool.input.params.minTime * 1000, 1).toString();
       this.value = round(val, 2).toString();
       if (tool.input.params.minTime > tool.input.params.maxTime) {
@@ -119,7 +119,7 @@ const [htmlLabelMaxBeat, htmlInputMaxBeat] = UIInput.createNumber(
          return;
       }
       const val = Math.abs(parseFloat(this.value)) || 1;
-      tool.input.params.maxTime = localBPM.toRealTime(val);
+      tool.input.params.maxTime = localBPM.toRealTime(val, false);
       htmlInputMaxTime.value = round(tool.input.params.maxTime * 1000, 1).toString();
       this.value = round(val, 2).toString();
    },

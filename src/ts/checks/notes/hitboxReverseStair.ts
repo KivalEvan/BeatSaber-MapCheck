@@ -71,8 +71,8 @@ function check(args: ToolArgs) {
          if (other.direction !== NoteDirection.ANY) {
             if (
                !(
-                  timeProcessor.toRealTime(note.data.time) >
-                  timeProcessor.toRealTime(other.time) + 0.01
+                  note.data.customData.__mapcheck_secondtime >
+                  other.customData.__mapcheck_secondtime + 0.01
                )
             ) {
                continue;

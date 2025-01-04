@@ -32,7 +32,7 @@ const [htmlLabelMinPrec, htmlInputMinPrec] = UIInput.createNumber(
          return;
       }
       let val = round(Math.abs(parseFloat(this.value)), 2) || 1;
-      tool.input.params.minSpeed = localBPM.toRealTime(1 / val);
+      tool.input.params.minSpeed = localBPM.toRealTime(1 / val, false);
       htmlInputMinTime.value = round(tool.input.params.minSpeed * 1000, 1).toString();
       this.value = val.toString();
    },
