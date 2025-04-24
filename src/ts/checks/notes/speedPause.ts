@@ -100,7 +100,7 @@ function adjustTimeHandler(bpm: TimeProcessor) {
 
 function check(beatmapItem: IBeatmapItem) {
    const timeProcessor = beatmapItem.timeProcessor;
-   const colorNotes = beatmapItem.data.colorNotes;
+   const colorNotes = beatmapItem.data.difficulty.colorNotes;
    const { maxTime: temp } = tool.input.params;
    const maxTime = timeProcessor.toBeatTime(temp, false) + 0.001;
 

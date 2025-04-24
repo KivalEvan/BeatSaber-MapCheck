@@ -1,4 +1,4 @@
-import { NoteColor, NoteDirection } from 'bsmap';
+import { NoteColor, NoteDirection, resolveNoteAngle } from 'bsmap';
 import * as types from 'bsmap/types';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import { IObjectContainerColor, ObjectContainerType } from '../../types/checks/container';
@@ -77,7 +77,9 @@ function check(args: ToolArgs) {
             ) {
                continue;
             }
-            const isDiagonal = other.getAngle() % 90 > 15 && other.getAngle() % 90 < 75;
+            const isDiagonal =
+               resolveNoteAngle(other.direction) % 90 > 15 &&
+               resolveNoteAngle(other.direction) % 90 < 75;
             // magic number 1.425 from saber length + good/bad hitbox
             if (
                njs.value <
@@ -85,7 +87,7 @@ function check(args: ToolArgs) {
                      (note.data.customData.__mapcheck_secondtime -
                         other.customData.__mapcheck_secondtime +
                         (isDiagonal ? constantDiagonal : constant)) &&
-               placement.isIntersect(note.data, other, [[15, 1.5]])[1]
+               placement.isIntersectNote(note.data, other, [[15, 1.5]])[1]
             ) {
                result.push(other);
                break;

@@ -3,6 +3,7 @@ import UIInput from '../../ui/helpers/input';
 import { ObjectContainerType } from '../../types/checks/container';
 import * as types from 'bsmap/types';
 import { placement } from 'bsmap/extensions';
+import { isHorizontal, isVertical, isDiagonal } from 'bsmap';
 
 const name = 'Hitbox Path';
 const description = 'Check for overlapping pre-swing note hitbox at same time.';
@@ -38,7 +39,6 @@ const tool: ITool = {
 };
 
 function check(args: ToolArgs) {
-   const timeProcessor = args.beatmap.timeProcessor;
    const noteContainer = args.beatmap.noteContainer.filter(
       (n) => n.type === ObjectContainerType.BOMB || n.type === ObjectContainerType.COLOR,
    );
@@ -69,17 +69,17 @@ function check(args: ToolArgs) {
             continue;
          }
          if (
-            ((currentNote.data.isHorizontal(compareTo.data) ||
-               currentNote.data.isVertical(compareTo.data)) &&
+            ((isHorizontal(currentNote.data, compareTo.data) ||
+               isVertical(currentNote.data, compareTo.data)) &&
                placement
-                  .isIntersect(currentNote.data, compareTo.data, [
+                  .isIntersectNote(currentNote.data, compareTo.data, [
                      [45, 1],
                      [15, 2],
                   ])
                   .some((b) => b)) ||
-            (currentNote.data.isDiagonal(compareTo.data) &&
+            (isDiagonal(currentNote.data, compareTo.data) &&
                placement
-                  .isIntersect(currentNote.data, compareTo.data, [
+                  .isIntersectNote(currentNote.data, compareTo.data, [
                      [45, 1],
                      [15, 1.5],
                   ])

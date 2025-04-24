@@ -214,7 +214,7 @@ export default async (type: LoadType) => {
             d.timeProcessor.timescale = audioData!.bpm;
          }
          const bpm = d.timeProcessor.change.map((b) => b.BPM);
-         const bpme = d.timeProcessor.timescale.map((b) => d.timeProcessor.bpm / b.scale);
+         const bpme = d.timeProcessor.timescale.map((b) => d.timeProcessor.bpm / b.scale!);
          minBPM = Math.min(minBPM, ...bpm, ...bpme);
          maxBPM = Math.max(maxBPM, ...bpm, ...bpme);
       });

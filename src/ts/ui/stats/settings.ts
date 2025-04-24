@@ -36,7 +36,7 @@ export function updateSettingsTable(
       beatmapItem.settings.njs || NoteJumpSpeed.FallbackNJS[beatmapItem.settings.difficulty],
       beatmapItem.settings.njsOffset,
    );
-   const njsEvents = beatmapItem.data.njsEvents.toSorted((a, b) => a.value - b.value);
+   const njsEvents = beatmapItem.data.difficulty.njsEvents.toSorted((a, b) => a.value - b.value);
 
    htmlSettingsVersion.textContent =
       (beatmapItem.rawData as any).version || (beatmapItem.rawData as any)._version || 'N/A';

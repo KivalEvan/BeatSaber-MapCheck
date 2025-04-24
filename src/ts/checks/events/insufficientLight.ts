@@ -1,6 +1,7 @@
 import * as types from 'bsmap/types';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import UIInput from '../../ui/helpers/input';
+import { isLightEventType, isOffEventValue } from 'bsmap';
 
 const name = 'Insufficient Lighting Event';
 const description = 'Check if there is enough light event.';
@@ -27,11 +28,7 @@ const tool: ITool = {
       input: ToolInputOrder.EVENTS_INSUFFICIENT_LIGHT,
       output: ToolOutputOrder.EVENTS_INSUFFICIENT_LIGHT,
    },
-   input: {
-      params: { enabled },
-      html: UIInput.createBlock(htmlInput, htmlLabel),
-      update,
-   },
+   input: { params: { enabled }, html: UIInput.createBlock(htmlInput, htmlLabel), update },
    run,
 };
 
@@ -41,7 +38,7 @@ function sufficientLight(
 ): boolean {
    let count = 0;
    for (let i = events.length - 1; i >= 0; i--) {
-      if (events[i].isLightEvent(environment) && !events[i].isOff()) {
+      if (isLightEventType(events[i].type, environment) && !isOffEventValue(events[i].value)) {
          count++;
          if (count > 10) {
             return true;
@@ -53,7 +50,7 @@ function sufficientLight(
 
 function run(args: ToolArgs): IToolOutput[] {
    const env = args.beatmap.environment;
-   const result = sufficientLight(args.beatmap.data.basicEvents, env);
+   const result = sufficientLight(args.beatmap.data.lightshow.basicEvents, env);
 
    if (!result) {
       switch (env) {
@@ -82,12 +79,7 @@ function run(args: ToolArgs): IToolOutput[] {
          case 'GagaEnvironment':
          case 'GlassDesertEnvironment':
             return [
-               {
-                  type: 'string',
-                  label: 'Insufficient light event',
-                  value: '',
-                  symbol: 'rank',
-               },
+               { type: 'string', label: 'Insufficient light event', value: '', symbol: 'rank' },
             ];
          default:
             return [

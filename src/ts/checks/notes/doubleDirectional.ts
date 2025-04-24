@@ -1,4 +1,4 @@
-import { NoteColor, NoteDirection, NoteDirectionAngle, PosX, PosY } from 'bsmap';
+import { NoteColor, NoteDirection, NoteDirectionAngle, PosX, PosY, resolveNoteAngle } from 'bsmap';
 import * as types from 'bsmap/types';
 import {
    IBeatmapItem,
@@ -78,7 +78,7 @@ function check(beatmapItem: IBeatmapItem) {
             if (note.data.direction === NoteDirection.ANY) {
                startNoteDot[note.data.color] = note.data;
             } else {
-               lastNoteAngle[note.data.color] = note.data.getAngle();
+               lastNoteAngle[note.data.color] = resolveNoteAngle(note.data.direction);
             }
             swingNoteArray[note.data.color] = [];
          } else {
@@ -88,15 +88,15 @@ function check(beatmapItem: IBeatmapItem) {
             ) {
                arr.push(note.data);
                startNoteDot[note.data.color] = null;
-               lastNoteAngle[note.data.color] = note.data.getAngle();
+               lastNoteAngle[note.data.color] = resolveNoteAngle(note.data.direction);
             }
             if (note.data.direction !== NoteDirection.ANY) {
                startNoteDot[note.data.color] = null;
-               lastNoteAngle[note.data.color] = note.data.getAngle();
+               lastNoteAngle[note.data.color] = resolveNoteAngle(note.data.direction);
             }
          }
       } else if (note.type === ObjectContainerType.COLOR) {
-         lastNoteAngle[note.data.color] = note.data.getAngle();
+         lastNoteAngle[note.data.color] = resolveNoteAngle(note.data.direction);
       }
       if (note.type === ObjectContainerType.COLOR) {
          lastNote[note.data.color] = note.data;

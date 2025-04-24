@@ -74,12 +74,8 @@ function objectAfterTime(
 function run(args: ToolArgs): IToolOutput[] {
    const duration = args.audioDuration;
    const timeProcessor = args.beatmap.timeProcessor;
+   const { colorNotes, bombNotes, obstacles, arcs, chains } = args.beatmap.data.difficulty;
    const {
-      colorNotes,
-      bombNotes,
-      obstacles,
-      arcs,
-      chains,
       basicEvents,
       colorBoostEvents,
       waypoints,
@@ -87,7 +83,7 @@ function run(args: ToolArgs): IToolOutput[] {
       lightRotationEventBoxGroups,
       lightTranslationEventBoxGroups,
       fxEventBoxGroups,
-   } = args.beatmap.data;
+   } = args.beatmap.data.lightshow;
 
    const results: IToolOutput[] = [];
    if (duration) {

@@ -288,7 +288,7 @@ function check(map: types.wrapper.IWrapLightshow, environment: types.Environment
 }
 
 function run(args: ToolArgs): IToolOutput[] {
-   const result = check(args.beatmap.data, args.beatmap.environment);
+   const result = check(args.beatmap.data.lightshow, args.beatmap.environment);
 
    const results: IToolOutput[] = [];
    if (result.defectID.length) {

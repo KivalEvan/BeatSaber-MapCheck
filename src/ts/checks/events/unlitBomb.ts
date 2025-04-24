@@ -1,4 +1,12 @@
-import { EventList, TimeProcessor } from 'bsmap';
+import {
+   EventList,
+   isFadeEventValue,
+   isFlashEventValue,
+   isLightEventType,
+   isOffEventValue,
+   isOnEventValue,
+   TimeProcessor,
+} from 'bsmap';
 import * as types from 'bsmap/types';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import UIInput from '../../ui/helpers/input';
@@ -49,7 +57,7 @@ const unlitBomb = (
    const result: types.wrapper.IWrapBombNote[] = [];
    const commonEvent = EventList[environment]?.[0] ?? EventList['DefaultEnvironment'][0];
    const eventsLight = events
-      .filter((ev) => ev.isLightEvent(environment) && commonEvent.includes(ev.type))
+      .filter((ev) => isLightEventType(ev.type, environment) && commonEvent.includes(ev.type))
       .sort((a, b) => a.type - b.type) as types.wrapper.IWrapBasicEvent[];
    const eventState: {
       [key: number]: {
@@ -76,7 +84,10 @@ const unlitBomb = (
    const reactTime = timeProcessor.toBeatTime(0.25, false);
    for (let i = 0, len = eventsLight.length; i < len; i++) {
       const ev = eventsLight[i];
-      if ((ev.isOn() || ev.isFlash()) && eventState[ev.type].state !== 'on') {
+      if (
+         (isOnEventValue(ev.value) || isFlashEventValue(ev.value)) &&
+         eventState[ev.type].state !== 'on'
+      ) {
          eventState[ev.type] = {
             state: 'on',
             time: ev.time,
@@ -90,7 +101,7 @@ const unlitBomb = (
             eventLitTime[ev.type].push([ev.time, true]);
          }
       }
-      if (ev.isFade()) {
+      if (isFadeEventValue(ev.value)) {
          eventState[ev.type] = {
             state: 'off',
             time: ev.time,
@@ -107,7 +118,7 @@ const unlitBomb = (
       }
       if (
          ((ev?.floatValue ?? 1) < 0.25 ||
-            ev.isOff() ||
+            isOffEventValue(ev.value) ||
             (ev.customData._color &&
                ((typeof ev.customData._color[3] === 'number' && ev.customData._color[3] < 0.25) ||
                   Math.max(
@@ -160,8 +171,8 @@ const unlitBomb = (
 
 function run(args: ToolArgs): IToolOutput[] {
    const result = unlitBomb(
-      args.beatmap.data.bombNotes,
-      args.beatmap.data.basicEvents,
+      args.beatmap.data.difficulty.bombNotes,
+      args.beatmap.data.lightshow.basicEvents,
       args.beatmap.timeProcessor,
       args.beatmap.environment,
    );

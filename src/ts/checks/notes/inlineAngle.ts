@@ -1,10 +1,12 @@
 import {
    ColorNote,
+   isInline,
    NoteColor,
    NoteDirection,
    NoteDirectionAngle,
    PosX,
    PosY,
+   resolveNoteAngle,
    TimeProcessor,
 } from 'bsmap';
 import { round } from 'bsmap/utils';
@@ -142,7 +144,7 @@ function check(args: ToolArgs) {
             if (note.data.direction === NoteDirection.ANY) {
                startNoteDot[note.data.color] = note.data;
             } else {
-               lastNoteAngle[note.data.color] = note.data.getAngle();
+               lastNoteAngle[note.data.color] = resolveNoteAngle(note.data.direction);
             }
             swingNoteArray[note.data.color] = [];
          } else {
@@ -155,11 +157,11 @@ function check(args: ToolArgs) {
                startNoteDot[note.data.color] = null;
             }
             if (note.data.direction !== NoteDirection.ANY) {
-               lastNoteAngle[note.data.color] = note.data.getAngle();
+               lastNoteAngle[note.data.color] = resolveNoteAngle(note.data.direction);
             }
          }
       } else if (note.type === ObjectContainerType.COLOR) {
-         lastNoteAngle[note.data.color] = note.data.getAngle();
+         lastNoteAngle[note.data.color] = resolveNoteAngle(note.data.direction);
       }
       if (note.type === ObjectContainerType.COLOR) {
          lastNote[note.data.color] = note.data;
@@ -208,7 +210,7 @@ function checkInline(
       if (note.type !== ObjectContainerType.COLOR) {
          continue;
       }
-      if (n.isInline(note.data) && n.time - notes[i].data.time <= maxTime) {
+      if (isInline(n, note.data) && n.time - notes[i].data.time <= maxTime) {
          return true;
       }
    }

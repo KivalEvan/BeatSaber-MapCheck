@@ -49,7 +49,7 @@ function notePlacementCheckboxHandler(ev: Event): void {
    updateNotePlacementTable(beatmapInfo, beatmapItem);
 }
 
-function notePlacementTableString(nc: types.wrapper.IWrapGridObjectAttribute[]): string {
+function notePlacementTableString(nc: types.wrapper.IWrapGridObject[]): string {
    const totalNote = nc.length || 1;
    let htmlString = '';
    for (let l = 2; l >= 0; l--) {

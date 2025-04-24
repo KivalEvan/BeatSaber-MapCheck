@@ -1,3 +1,4 @@
+import { isZeroValueObstacle } from 'bsmap';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import UIInput from '../../ui/helpers/input';
 
@@ -35,8 +36,8 @@ const tool: ITool = {
 };
 
 function check(args: ToolArgs) {
-   const { obstacles } = args.beatmap.data;
-   return obstacles.filter((o) => o.hasZero());
+   const { obstacles } = args.beatmap.data.difficulty;
+   return obstacles.filter(isZeroValueObstacle);
 }
 
 function run(args: ToolArgs): IToolOutput[] {

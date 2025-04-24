@@ -8,6 +8,7 @@ import {
    ToolOutputOrder,
 } from '../../types';
 import UIInput from '../../ui/helpers/input';
+import { isInline } from 'bsmap';
 
 const name = 'Stacked Note';
 const description = 'Look for stacked note.';
@@ -30,20 +31,13 @@ const tool: ITool = {
    name,
    description,
    type: 'note',
-   order: {
-      input: ToolInputOrder.NOTES_STACKED_NOTE,
-      output: ToolOutputOrder.NOTES_STACKED_NOTE,
-   },
-   input: {
-      params: { enabled },
-      html: UIInput.createBlock(htmlInput, htmlLabel),
-      update,
-   },
+   order: { input: ToolInputOrder.NOTES_STACKED_NOTE, output: ToolOutputOrder.NOTES_STACKED_NOTE },
+   input: { params: { enabled }, html: UIInput.createBlock(htmlInput, htmlLabel), update },
    run,
 };
 
 function checkNote(map: IBeatmapItem) {
-   const colorNotes = map.data.colorNotes;
+   const colorNotes = map.data.difficulty.colorNotes;
 
    const result: types.wrapper.IWrapBaseObject[] = [];
    // to avoid multiple of stack popping up, ignore anything within this time
@@ -59,7 +53,7 @@ function checkNote(map: IBeatmapItem) {
          ) {
             break;
          }
-         if (colorNotes[j].isInline(colorNotes[i])) {
+         if (isInline(colorNotes[j], colorNotes[i])) {
             result.push(colorNotes[i]);
             lastTime = colorNotes[i].customData.__mapcheck_secondtime;
          }
@@ -71,7 +65,7 @@ function checkNote(map: IBeatmapItem) {
 function checkBomb(map: IBeatmapItem) {
    const timeProcessor = map.timeProcessor;
    const njs = map.njs;
-   const bombNotes = map.data.bombNotes;
+   const bombNotes = map.data.difficulty.bombNotes;
 
    const result: types.wrapper.IWrapBaseObject[] = [];
    for (let i = 0, len = bombNotes.length; i < len; i++) {
@@ -84,7 +78,7 @@ function checkBomb(map: IBeatmapItem) {
             break;
          }
          if (
-            bombNotes[i].isInline(bombNotes[j]) &&
+            isInline(bombNotes[i], bombNotes[j]) &&
             (njs.value <
                (bombNotes[j].customData.__mapcheck_secondtime -
                   bombNotes[i].customData.__mapcheck_secondtime) *
@@ -105,20 +99,10 @@ function run(args: ToolArgs): IToolOutput[] {
 
    const results: IToolOutput[] = [];
    if (resultNote.length) {
-      results.push({
-         type: 'time',
-         label: 'Stacked note',
-         value: resultNote,
-         symbol: 'error',
-      });
+      results.push({ type: 'time', label: 'Stacked note', value: resultNote, symbol: 'error' });
    }
    if (resultBomb.length) {
-      results.push({
-         type: 'time',
-         label: 'Stacked bomb',
-         value: resultBomb,
-         symbol: 'error',
-      });
+      results.push({ type: 'time', label: 'Stacked bomb', value: resultBomb, symbol: 'error' });
    }
 
    return results;

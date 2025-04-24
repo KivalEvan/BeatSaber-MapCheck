@@ -58,17 +58,9 @@ const tool: ITool<{ warningThres: number; errorThres: number; allowedRot: number
    name,
    description,
    type: 'note',
-   order: {
-      input: ToolInputOrder.NOTES_PARITY,
-      output: ToolOutputOrder.NOTES_PARITY,
-   },
+   order: { input: ToolInputOrder.NOTES_PARITY, output: ToolOutputOrder.NOTES_PARITY },
    input: {
-      params: {
-         enabled,
-         warningThres: 90,
-         errorThres: 45,
-         allowedRot: 90,
-      },
+      params: { enabled, warningThres: 90, errorThres: 45, allowedRot: 90 },
       html: htmlContainer,
       update,
    },
@@ -80,13 +72,7 @@ function inputSelectParityHandler(this: HTMLInputElement) {}
 
 function check(args: ToolArgs) {
    const { timeProcessor, noteContainer } = args.beatmap;
-   const { warningThres, errorThres, allowedRot } = <
-      {
-         warningThres: number;
-         errorThres: number;
-         allowedRot: number;
-      }
-   >tool.input.params;
+   const { warningThres, errorThres, allowedRot } = tool.input.params;
 
    const lastNote: { [key: number]: types.wrapper.IWrapColorNote } = {};
    const swingNoteArray: { [key: number]: types.wrapper.IWrapColorNote[] } = {
@@ -102,18 +88,20 @@ function check(args: ToolArgs) {
       [NoteColor.BLUE]: [],
    };
 
-   const swingParity: { [key: number]: parity.Parity } = {
+   const swingParity: {
+      [key: number]: parity.Parity<types.wrapper.IWrapColorNote, types.wrapper.IWrapBombNote>;
+   } = {
       [NoteColor.RED]: new parity.Parity(
-         args.beatmap.data.colorNotes,
-         args.beatmap.data.bombNotes,
+         args.beatmap.data.difficulty.colorNotes,
+         args.beatmap.data.difficulty.bombNotes,
          0,
          warningThres,
          errorThres,
          allowedRot,
       ),
       [NoteColor.BLUE]: new parity.Parity(
-         args.beatmap.data.colorNotes,
-         args.beatmap.data.bombNotes,
+         args.beatmap.data.difficulty.colorNotes,
+         args.beatmap.data.difficulty.bombNotes,
          1,
          warningThres,
          errorThres,
@@ -123,10 +111,7 @@ function check(args: ToolArgs) {
    const parityAry: {
       warning: types.wrapper.IWrapColorNote[];
       error: types.wrapper.IWrapColorNote[];
-   } = {
-      warning: [],
-      error: [],
-   };
+   } = { warning: [], error: [] };
    for (let i = 0, len = noteContainer.length; i < len; i++) {
       const note = noteContainer[i];
       if (note.type === ObjectContainerType.COLOR && lastNote[note.data.color]) {
@@ -205,12 +190,7 @@ function run(args: ToolArgs): IToolOutput[] {
       });
    }
    if (result.error.length) {
-      results.push({
-         type: 'time',
-         label: 'Parity error',
-         value: result.error,
-         symbol: 'error',
-      });
+      results.push({ type: 'time', label: 'Parity error', value: result.error, symbol: 'error' });
    }
    return results;
 }

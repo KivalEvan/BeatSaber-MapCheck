@@ -68,7 +68,12 @@ export async function extractInfo(zip: JSZip, path = '') {
       throw new Error("Couldn't find Info.dat");
    }
    logger.tInfo(tag('extractInfo'), `loading info`);
-   return infoFile.async('string').then(JSON.parse).then(loadInfo);
+   return infoFile
+      .async('string')
+      .then(JSON.parse)
+      .then((x) => {
+         return loadInfo(x);
+      });
 }
 
 async function fetchLightshow(
@@ -213,19 +218,26 @@ export function extractBeatmaps(
          ),
          score: calculateScore(data),
          stats: {
-            basicEvents: stats.countEvent(data.basicEvents, data.colorBoostEvents, env),
-            lightColorEventBoxGroups: stats.countEbg(data.lightColorEventBoxGroups, env),
-            lightRotationEventBoxGroups: stats.countEbg(data.lightRotationEventBoxGroups, env),
-            lightTranslationEventBoxGroups: stats.countEbg(
-               data.lightTranslationEventBoxGroups,
+            basicEvents: stats.countEvent(
+               data.lightshow.basicEvents,
+               data.lightshow.colorBoostEvents,
                env,
             ),
-            fxEventBoxGroups: stats.countEbg(data.fxEventBoxGroups, env),
-            notes: stats.countNote(data.colorNotes),
-            bombs: stats.countBomb(data.bombNotes),
-            arcs: stats.countNote(data.arcs),
-            chains: stats.countNote(data.chains),
-            obstacles: stats.countObstacle(data.obstacles),
+            lightColorEventBoxGroups: stats.countEbg(data.lightshow.lightColorEventBoxGroups, env),
+            lightRotationEventBoxGroups: stats.countEbg(
+               data.lightshow.lightRotationEventBoxGroups,
+               env,
+            ),
+            lightTranslationEventBoxGroups: stats.countEbg(
+               data.lightshow.lightTranslationEventBoxGroups,
+               env,
+            ),
+            fxEventBoxGroups: stats.countEbg(data.lightshow.fxEventBoxGroups, env),
+            notes: stats.countNote(data.difficulty.colorNotes),
+            bombs: stats.countBomb(data.difficulty.bombNotes),
+            arcs: stats.countNote(data.difficulty.arcs),
+            chains: stats.countNote(data.difficulty.chains),
+            obstacles: stats.countObstacle(data.difficulty.obstacles),
          },
          rawVersion: jsonDifficultyVer as 4,
          rawData: jsonDifficulty,
@@ -236,46 +248,34 @@ export function extractBeatmaps(
 
 function getNoteContainer(beatmap: types.wrapper.IWrapBeatmap): IObjectContainer[] {
    return [
-      ...beatmap.colorNotes.map((e) => ({
-         data: e,
-         type: ObjectContainerType.COLOR,
-      })),
-      ...beatmap.bombNotes.map((e) => ({
-         data: e,
-         type: ObjectContainerType.BOMB,
-      })),
-      ...beatmap.chains.map((e) => ({
-         data: e,
-         type: ObjectContainerType.CHAIN,
-      })),
-      ...beatmap.arcs.map((e) => ({
-         data: e,
-         type: ObjectContainerType.ARC,
-      })),
+      ...beatmap.difficulty.colorNotes.map((e) => ({ data: e, type: ObjectContainerType.COLOR })),
+      ...beatmap.difficulty.bombNotes.map((e) => ({ data: e, type: ObjectContainerType.BOMB })),
+      ...beatmap.difficulty.chains.map((e) => ({ data: e, type: ObjectContainerType.CHAIN })),
+      ...beatmap.difficulty.arcs.map((e) => ({ data: e, type: ObjectContainerType.ARC })),
    ].sort((a, b) => a.data.time - b.data.time) as IObjectContainer[];
 }
 
 function precalculateTimes(beatmap: types.wrapper.IWrapBeatmap, timeProcessor: TimeProcessor) {
    const fn = applyTime(timeProcessor);
    if (!beatmap.difficulty.customData.__mapcheck_precalculatetime) {
-      beatmap.bpmEvents.forEach(fn);
-      beatmap.rotationEvents.forEach(fn);
-      beatmap.colorNotes.forEach(fn);
-      beatmap.bombNotes.forEach(fn);
-      beatmap.obstacles.forEach(fn);
-      beatmap.arcs.forEach(fn);
-      beatmap.chains.forEach(fn);
+      beatmap.difficulty.bpmEvents.forEach(fn);
+      beatmap.difficulty.rotationEvents.forEach(fn);
+      beatmap.difficulty.colorNotes.forEach(fn);
+      beatmap.difficulty.bombNotes.forEach(fn);
+      beatmap.difficulty.obstacles.forEach(fn);
+      beatmap.difficulty.arcs.forEach(fn);
+      beatmap.difficulty.chains.forEach(fn);
       beatmap.difficulty.customData.__mapcheck_precalculatetime = true;
    }
 
    if (!beatmap.lightshow.customData.__mapcheck_precalculatetimelightshow) {
-      beatmap.waypoints.forEach(fn);
-      beatmap.basicEvents.forEach(fn);
-      beatmap.colorBoostEvents.forEach(fn);
-      beatmap.lightColorEventBoxGroups.forEach(fn);
-      beatmap.lightRotationEventBoxGroups.forEach(fn);
-      beatmap.lightTranslationEventBoxGroups.forEach(fn);
-      beatmap.fxEventBoxGroups.forEach(fn);
+      beatmap.lightshow.waypoints.forEach(fn);
+      beatmap.lightshow.basicEvents.forEach(fn);
+      beatmap.lightshow.colorBoostEvents.forEach(fn);
+      beatmap.lightshow.lightColorEventBoxGroups.forEach(fn);
+      beatmap.lightshow.lightRotationEventBoxGroups.forEach(fn);
+      beatmap.lightshow.lightTranslationEventBoxGroups.forEach(fn);
+      beatmap.lightshow.fxEventBoxGroups.forEach(fn);
       beatmap.lightshow.customData.__mapcheck_precalculatetimelightshow = true;
    }
 }

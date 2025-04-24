@@ -55,7 +55,7 @@ function isDouble(
 
 function check(args: ToolArgs) {
    const { timeProcessor } = args.beatmap;
-   const notes = args.beatmap.data.colorNotes;
+   const notes = args.beatmap.data.difficulty.colorNotes;
    const hitboxTime = timeProcessor.toBeatTime(0.15, false);
 
    const lastNote: { [key: number]: types.wrapper.IWrapColorNote } = {};
@@ -87,7 +87,9 @@ function check(args: ToolArgs) {
             }
             swingNoteArray[note.color] = [];
             lastNoteDirection[note.color] = note.direction;
-         } else if (placement.isEnd(note, lastNote[note.color], lastNoteDirection[note.color])) {
+         } else if (
+            placement.isEndNote(note, lastNote[note.color], lastNoteDirection[note.color])
+         ) {
             if (note.direction !== NoteDirection.ANY) {
                noteOccupy[note.color].posX = note.posX + directionSpace[0];
                noteOccupy[note.color].posY = note.posY + directionSpace[1];
@@ -108,7 +110,7 @@ function check(args: ToolArgs) {
             if (
                note.posX === noteOccupy[(note.color + 1) % 2].posX &&
                note.posY === noteOccupy[(note.color + 1) % 2].posY &&
-               !isDouble(note, args.beatmap.data.colorNotes, i)
+               !isDouble(note, args.beatmap.data.difficulty.colorNotes, i)
             ) {
                result.push(note);
             }

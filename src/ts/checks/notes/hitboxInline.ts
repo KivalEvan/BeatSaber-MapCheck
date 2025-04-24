@@ -1,4 +1,4 @@
-import { NoteColor } from 'bsmap';
+import { isInline, NoteColor } from 'bsmap';
 import * as types from 'bsmap/types';
 import { swing } from 'bsmap/extensions';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
@@ -48,8 +48,8 @@ function check(args: ToolArgs) {
    };
 
    const arr: types.wrapper.IWrapColorNote[] = [];
-   for (let i = 0, len = args.beatmap.data.colorNotes.length; i < len; i++) {
-      const note = args.beatmap.data.colorNotes[i];
+   for (let i = 0, len = args.beatmap.data.difficulty.colorNotes.length; i < len; i++) {
+      const note = args.beatmap.data.difficulty.colorNotes[i];
       if (lastNote[note.color]) {
          if (swing.next(note, lastNote[note.color], timeProcessor, swingNoteArray[note.color])) {
             swingNoteArray[note.color] = [];
@@ -64,7 +64,7 @@ function check(args: ToolArgs) {
                   (note.customData.__mapcheck_secondtime -
                      other.customData.__mapcheck_secondtime +
                      constant) &&
-            note.isInline(other)
+            isInline(note, other)
          ) {
             arr.push(note);
             break;

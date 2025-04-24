@@ -51,7 +51,7 @@ function customIsLonger(
 }
 
 function check(args: ToolArgs) {
-   const { obstacles } = args.beatmap.data;
+   const { obstacles } = args.beatmap.data.difficulty;
    const { minDur } = tool.input.params;
    const ary: types.wrapper.IWrapObstacle[] = [];
    let obstacleLFull: types.wrapper.IWrapObstacle = new Obstacle({ time: Number.MIN_SAFE_INTEGER });

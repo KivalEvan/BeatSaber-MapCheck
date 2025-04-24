@@ -1,3 +1,4 @@
+import { isBlueNoteColor, isRedNoteColor } from 'bsmap';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import UIInput from '../../ui/helpers/input';
 
@@ -22,15 +23,8 @@ const tool: ITool = {
    name,
    description,
    type: 'note',
-   order: {
-      input: ToolInputOrder.NOTES_ONE_SABER,
-      output: ToolOutputOrder.NOTES_ONE_SABER,
-   },
-   input: {
-      params: { enabled },
-      html: UIInput.createBlock(htmlInput, htmlLabel),
-      update,
-   },
+   order: { input: ToolInputOrder.NOTES_ONE_SABER, output: ToolOutputOrder.NOTES_ONE_SABER },
+   input: { params: { enabled }, html: UIInput.createBlock(htmlInput, htmlLabel), update },
    run,
 };
 
@@ -41,21 +35,20 @@ function run(args: ToolArgs): IToolOutput[] {
       args.beatmap.settings.characteristic === 'OneSaber' ||
       args.beatmap.settings.customData.oneSaber;
    if (isOneSaber) {
-      notOneSaberNote = args.beatmap.data.colorNotes.filter((n) => n.isRed());
+      notOneSaberNote = args.beatmap.data.difficulty.colorNotes.filter((n) =>
+         isRedNoteColor(n.color),
+      );
    } else {
-      const hasBlueNote = args.beatmap.data.colorNotes.filter((n) => n.isBlue()).length > 0;
-      const hasRedNote = args.beatmap.data.colorNotes.filter((n) => n.isRed()).length > 0;
+      const hasBlueNote =
+         args.beatmap.data.difficulty.colorNotes.filter((n) => isBlueNoteColor(n.color)).length > 0;
+      const hasRedNote =
+         args.beatmap.data.difficulty.colorNotes.filter((n) => isRedNoteColor(n.color)).length > 0;
       whyisthisonesaber = hasBlueNote !== hasRedNote;
    }
 
    if (notOneSaberNote!?.length) {
       return [
-         {
-            type: 'time',
-            label: 'Wrong One Saber Note',
-            value: notOneSaberNote!,
-            symbol: 'error',
-         },
+         { type: 'time', label: 'Wrong One Saber Note', value: notOneSaberNote!, symbol: 'error' },
       ];
    } else if (whyisthisonesaber) {
       return [

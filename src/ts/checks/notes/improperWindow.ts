@@ -1,4 +1,4 @@
-import { NoteColor, NoteDirection } from 'bsmap';
+import { isSlantedWindow, NoteColor, NoteDirection } from 'bsmap';
 import * as types from 'bsmap/types';
 import { swing } from 'bsmap/extensions';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
@@ -57,7 +57,7 @@ function check(args: ToolArgs) {
             lastNote[note.color] = note;
             swingNoteArray[note.color] = [];
          } else if (
-            note.isSlantedWindow(lastNote[note.color]) &&
+            isSlantedWindow(note, lastNote[note.color]) &&
             note.time - lastNote[note.color].time >= 0.001 &&
             note.direction === lastNote[note.color].direction &&
             note.direction !== NoteDirection.ANY &&

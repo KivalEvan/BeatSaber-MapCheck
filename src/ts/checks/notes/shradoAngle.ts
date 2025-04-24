@@ -1,4 +1,10 @@
-import { NoteColor, NoteDirection, NoteDirectionFlip, TimeProcessor } from 'bsmap';
+import {
+   NoteColor,
+   NoteDirection,
+   NoteDirectionFlip,
+   resolveGridDistance,
+   TimeProcessor,
+} from 'bsmap';
 import { round } from 'bsmap/utils';
 import * as types from 'bsmap/types';
 import { swing } from 'bsmap/extensions';
@@ -74,16 +80,9 @@ const tool: ITool<{ distance: number; maxTime: number }> = {
    name,
    description,
    type: 'note',
-   order: {
-      input: ToolInputOrder.NOTES_SHRADO_ANGLE,
-      output: ToolOutputOrder.NOTES_SHRADO_ANGLE,
-   },
+   order: { input: ToolInputOrder.NOTES_SHRADO_ANGLE, output: ToolOutputOrder.NOTES_SHRADO_ANGLE },
    input: {
-      params: {
-         enabled,
-         distance: defaultDistance,
-         maxTime: defaultMaxTime,
-      },
+      params: { enabled, distance: defaultDistance, maxTime: defaultMaxTime },
       html: UIInput.createBlock(
          htmlEnabled,
          document.createElement('br'),
@@ -135,7 +134,7 @@ function check(args: ToolArgs) {
                   NoteDirectionFlip[lastNoteDirection[note.color] as 0] ?? 8;
             }
             if (
-               note.getDistance(lastNote[note.color]) >= distance &&
+               resolveGridDistance(note, lastNote[note.color]) >= distance &&
                checkShrAngle(note.direction, lastNoteDirection[note.color], note.color) &&
                note.time - lastNote[note.color].time <= maxTime
             ) {
@@ -150,7 +149,7 @@ function check(args: ToolArgs) {
          } else {
             if (
                startNoteDot[note.color] &&
-               note.getDistance(lastNote[note.color]) >= distance &&
+               resolveGridDistance(note, lastNote[note.color]) >= distance &&
                checkShrAngle(note.direction, lastNoteDirection[note.color], note.color) &&
                note.time - lastNote[note.color].time <= maxTime
             ) {
@@ -184,14 +183,7 @@ function run(args: ToolArgs): IToolOutput[] {
    const result = check(args);
 
    if (result.length) {
-      return [
-         {
-            type: 'time',
-            label: 'Shrado angle',
-            value: result,
-            symbol: 'warning',
-         },
-      ];
+      return [{ type: 'time', label: 'Shrado angle', value: result, symbol: 'warning' }];
    }
    return [];
 }

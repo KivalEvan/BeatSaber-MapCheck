@@ -103,7 +103,7 @@ function customIsLonger(
 }
 
 function check(args: ToolArgs) {
-   const { obstacles } = args.beatmap.data;
+   const { obstacles } = args.beatmap.data.difficulty;
    const { timeProcessor } = args.beatmap;
    const { recovery } = tool.input.params;
    const arr: types.wrapper.IWrapObstacle[] = [];
