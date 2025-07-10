@@ -2,7 +2,7 @@ import { PosX, PosY, TimeProcessor } from 'bsmap';
 import { round } from 'bsmap/utils';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import { IObjectContainer, ObjectContainerType } from '../../types/checks/container';
-import UIInput from '../../ui/helpers/input';
+import { UIInput } from '../../ui/helpers/input';
 
 const name = 'Vision Block';
 const description = 'Check for vision block caused by center note.';
@@ -217,13 +217,13 @@ function check(args: ToolArgs) {
    const minTime =
       vbSpecific === 'time'
          ? timeProcessor.toBeatTime(temp1, false)
-         : timeProcessor.toBeatTime(vbDiff[args.beatmap.settings.difficulty].min, false);
+         : timeProcessor.toBeatTime(vbDiff[args.beatmap.info.difficulty].min, false);
    const maxTime =
       vbSpecific === 'time'
          ? timeProcessor.toBeatTime(temp2, false)
          : Math.min(
               njs.hjd,
-              timeProcessor.toBeatTime(vbDiff[args.beatmap.settings.difficulty].max, false),
+              timeProcessor.toBeatTime(vbDiff[args.beatmap.info.difficulty].max, false),
            );
 
    let lastMidL: IObjectContainer | null = null;

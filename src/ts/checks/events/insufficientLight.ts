@@ -1,6 +1,6 @@
 import * as types from 'bsmap/types';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import UIInput from '../../ui/helpers/input';
+import { UIInput } from '../../ui/helpers/input';
 import { isLightEventType, isOffEventValue } from 'bsmap';
 
 const name = 'Insufficient Lighting Event';

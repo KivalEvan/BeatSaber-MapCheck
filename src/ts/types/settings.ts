@@ -1,4 +1,4 @@
-import { UIThemeName } from './ui';
+import { ThemeName } from '../ui/theme';
 
 type SettingsFlag = { [key: string]: boolean };
 
@@ -17,7 +17,7 @@ interface ISettingsChecks {
 
 type ISettingsShow = 'info' | 'checks' | 'stats' | 'settings';
 
-export interface ISettings {
+export interface ISettingsProps {
    version: number;
    load: ISettingsLoad;
    sorting: boolean;
@@ -26,7 +26,7 @@ export interface ISettings {
    rounding: number;
    dataCheck: boolean;
    deduplicateTime: boolean;
-   theme: UIThemeName;
+   theme: ThemeName;
    show: ISettingsShow;
    checks: ISettingsChecks;
    aprilFooled: number;

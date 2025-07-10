@@ -14,7 +14,7 @@ import * as types from 'bsmap/types';
 import { placement, swing } from 'bsmap/extensions';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import { IObjectContainer, ObjectContainerType } from '../../types/checks/container';
-import UIInput from '../../ui/helpers/input';
+import { UIInput } from '../../ui/helpers/input';
 
 const name = 'Inline Sharp Angle';
 const description = 'Check for angle changes within inline note.';

@@ -1,6 +1,6 @@
-import flag from '../../flag';
+import { State } from '../../state';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import UIInput from '../../ui/helpers/input';
+import { UIInput } from '../../ui/helpers/input';
 
 const name = 'Beatmap ZIP';
 const description = 'Entrypoint not in root directory.';
@@ -36,7 +36,7 @@ const tool: ITool = {
 };
 
 function run(args: ToolArgs): IToolOutput[] {
-   if (flag.loading.nested) {
+   if (State.flag.nested) {
       return [
          {
             type: 'string',

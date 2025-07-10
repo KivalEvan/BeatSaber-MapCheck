@@ -1,7 +1,7 @@
 import { EventList, IndexFilterType } from 'bsmap';
 import * as types from 'bsmap/types';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import UIInput from '../../ui/helpers/input';
+import { UIInput } from '../../ui/helpers/input';
 
 const name = 'Invalid Event Box';
 const description = 'Check for valid event box group usage.';

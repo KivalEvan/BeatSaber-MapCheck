@@ -1,7 +1,7 @@
 import { Obstacle, PosX, PosY } from 'bsmap';
 import * as types from 'bsmap/types';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import UIInput from '../../ui/helpers/input';
+import { UIInput } from '../../ui/helpers/input';
 
 const name = '<15ms Obstacle';
 const description =

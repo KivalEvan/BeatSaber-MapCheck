@@ -1,11 +1,10 @@
-import { UIThemeName } from '../types/ui';
+import { State } from '../state';
 
-const htmlBody = document.querySelector<HTMLBodyElement>('body');
-const list: ReadonlyArray<UIThemeName> = ['Dark', 'Light'];
+export type ThemeName = 'Dark' | 'Light' | 'Monochrome';
 
-export default {
-   list,
-   set(str: UIThemeName): void {
-      htmlBody!.className = 'theme-' + str.toLowerCase().replace(' ', '');
-   },
-};
+export class UITheme {
+   static list: ReadonlyArray<ThemeName> = ['Dark', 'Light'];
+   static set(theme: ThemeName): void {
+      document.body.className = 'theme-' + theme.toLowerCase().replace(' ', '');
+   }
+}

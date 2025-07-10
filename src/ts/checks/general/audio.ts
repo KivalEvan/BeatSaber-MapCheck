@@ -1,7 +1,7 @@
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import settings from '../../settings';
-import flag from '../../flag';
-import UIInput from '../../ui/helpers/input';
+import { Settings } from '../../settings';
+import { State } from '../../state';
+import { UIInput } from '../../ui/helpers/input';
 import { secToMmss } from 'bsmap/utils';
 
 const name = 'Audio Duration';
@@ -49,12 +49,12 @@ function run(args: ToolArgs): IToolOutput[] {
             symbol: 'rank',
          },
       ];
-   } else if (!flag.loading.audio) {
+   } else if (!State.flag.audio) {
       return [
          {
             type: 'string',
             label: 'No audio',
-            value: settings.load.audio
+            value: Settings.props.load.audio
                ? 'could not be loaded or not found'
                : 'no audio mode is enabled',
          },

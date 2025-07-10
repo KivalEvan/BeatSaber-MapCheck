@@ -1,6 +1,6 @@
 import { round } from 'bsmap/utils';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import UIInput from '../../ui/helpers/input';
+import { UIInput } from '../../ui/helpers/input';
 import { getFirstInteractiveTime } from 'bsmap';
 
 const name = 'Hot Start';

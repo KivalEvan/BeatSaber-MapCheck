@@ -1,6 +1,6 @@
 import { NoteColor } from 'bsmap/types';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import UIInput from '../../ui/helpers/input';
+import { UIInput } from '../../ui/helpers/input';
 import { round } from 'bsmap/utils';
 
 const name = 'Excessive Double';

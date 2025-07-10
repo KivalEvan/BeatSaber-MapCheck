@@ -1,5 +1,4 @@
-import settings from '../../settings';
-import { htmlTableContents } from './constants';
+import { Settings } from '../../settings';
 
 export function hideTableRow<T extends HTMLElement>(elem: T): void {
    const tableElem = elem.querySelector('.info__table-element');
@@ -32,7 +31,7 @@ function updateNextPageClosure(identifier: string, callback: () => void) {
    const item = paginatedContent[identifier];
    return function updateNextPageCallback() {
       item.page++;
-      if (item.page * settings.infoRowCount >= item.content.length) {
+      if (item.page * Settings.props.infoRowCount >= item.content.length) {
          item.page = 0;
       }
       callback();
@@ -44,7 +43,7 @@ function updatePrevPageClosure(identifier: string, callback: () => void) {
    return function updateNextPageCallback() {
       item.page--;
       if (item.page < 0) {
-         item.page = Math.ceil(item.content.length / settings.infoRowCount) - 1;
+         item.page = Math.ceil(item.content.length / Settings.props.infoRowCount) - 1;
       }
       callback();
    };
@@ -54,12 +53,12 @@ function updateTableClosure(identifier: string, htmlPage: HTMLElement) {
    const item = paginatedContent[identifier];
    return function updateTableCallback() {
       const filtered = item.content.slice(
-         item.page * settings.infoRowCount,
-         item.page * settings.infoRowCount + settings.infoRowCount,
+         item.page * Settings.props.infoRowCount,
+         item.page * Settings.props.infoRowCount + Settings.props.infoRowCount,
       );
       updatePageNumber(
          htmlPage,
-         `${item.page + 1} / ${Math.ceil(item.content.length / settings.infoRowCount)}`,
+         `${item.page + 1} / ${Math.ceil(item.content.length / Settings.props.infoRowCount)}`,
       );
       while (item.html.firstChild) {
          item.html.removeChild(item.html.firstChild);

@@ -1,2 +1,2 @@
 import '../scss/_main.scss';
-import './init';
+import './main.ts';

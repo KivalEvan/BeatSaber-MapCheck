@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.7.0 [2024-12-22]
+## 2.7.0 [2025-05-05]
 
 Major changes here should result in better QoL, faster loading, and less memory
 usage.

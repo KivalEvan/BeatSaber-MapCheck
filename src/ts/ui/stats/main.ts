@@ -1,48 +1,64 @@
 // i hate implementing these so much
-import LoadedData from '../../loadedData';
+import { State } from '../../state';
 import { logPrefix } from './constants';
-import { updateNPSTable } from './nps';
-import { updateSettingsTable } from './settings';
-import { updateSPSTable } from './sps';
-import { updateNoteAngleTable } from './noteAngle';
-import { updateEventCountTable } from './event';
-import { updateEBGCountTable } from './eventBox';
-import { updateNoteInfoTable } from './noteInfo';
-import { updateNoteCountTable } from './note';
-import { updateNotePlacementTable } from './notePlacement';
-import { updateObstacleCountTable } from './obstacle';
-import { selectionOnChangeHandlers } from '../selection';
+import { UIStatsNPS } from './nps';
+import { UIStatsSettings } from './settings';
+import { UIStatsSPS } from './sps';
+import { UIStatsEvent } from './event';
+import { UIStatsEventBox } from './eventBox';
+import { UIStatsNoteInfo } from './noteInfo';
+import { UIStatsNote } from './note';
+import { UIStatsNoteAngle } from './noteAngle';
+import { UIStatsNotePlacement } from './notePlacement';
+import { UIStatsObstacle } from './obstacle';
+import { UISelection } from '../selection';
 import * as types from 'bsmap/types';
 
-function updateStats(
-   characteristic?: types.CharacteristicName,
-   difficulty?: types.DifficultyName,
-): void {
-   if (!LoadedData.beatmapInfo) {
-      throw new Error(logPrefix + 'map info could not be found in loadedData');
+export class UIStats {
+   static init(): void {
+      UIStatsSettings.init();
+      UIStatsNPS.init();
+      UIStatsSPS.init();
+
+      UIStatsNoteInfo.init();
+      UIStatsNote.init();
+      UIStatsNoteAngle.init();
+      UIStatsNotePlacement.init();
+
+      UIStatsEvent.init();
+      UIStatsEventBox.init();
+      UIStatsObstacle.init();
+
+      UISelection.selectionOnChangeHandlers.push(UIStats.updateStats);
    }
-   const beatmapInfo = LoadedData.beatmapInfo;
 
-   const beatmapItem = LoadedData.beatmaps.find(
-      (bm) =>
-         bm.settings.characteristic === characteristic && bm.settings.difficulty === difficulty,
-   );
-   if (!beatmapItem) {
-      throw new Error(logPrefix + 'Could not find map data');
+   static updateStats(
+      characteristic?: types.CharacteristicName,
+      difficulty?: types.DifficultyName,
+   ): void {
+      if (!State.data.info) {
+         throw new Error(logPrefix + 'map info could not be found');
+      }
+      const beatmapInfo = State.data.info;
+
+      const beatmapItem = State.data.beatmaps.find(
+         (bm) => bm.info.characteristic === characteristic && bm.info.difficulty === difficulty,
+      );
+      if (!beatmapItem) {
+         throw new Error(logPrefix + 'Could not find map data');
+      }
+
+      UIStatsSettings.updateTable(beatmapInfo, beatmapItem);
+      UIStatsNPS.updateTable(beatmapInfo, beatmapItem);
+      UIStatsSPS.updateTable(beatmapInfo, beatmapItem);
+
+      UIStatsNoteInfo.updateTable(beatmapInfo, beatmapItem);
+      UIStatsNote.updateTable(beatmapInfo, beatmapItem);
+      UIStatsNotePlacement.updateTable(beatmapInfo, beatmapItem);
+      UIStatsNoteAngle.updateTable(beatmapInfo, beatmapItem);
+
+      UIStatsEvent.updateTable(beatmapInfo, beatmapItem);
+      UIStatsEventBox.updateTable(beatmapInfo, beatmapItem);
+      UIStatsObstacle.updateTable(beatmapInfo, beatmapItem);
    }
-
-   updateSettingsTable(beatmapInfo, beatmapItem);
-   updateNPSTable(beatmapInfo, beatmapItem);
-   updateSPSTable(beatmapInfo, beatmapItem);
-
-   updateNoteInfoTable(beatmapInfo, beatmapItem);
-   updateNoteCountTable(beatmapInfo, beatmapItem);
-   updateNotePlacementTable(beatmapInfo, beatmapItem);
-   updateNoteAngleTable(beatmapInfo, beatmapItem);
-
-   updateEventCountTable(beatmapInfo, beatmapItem);
-   updateEBGCountTable(beatmapInfo, beatmapItem);
-   updateObstacleCountTable(beatmapInfo, beatmapItem);
 }
-
-selectionOnChangeHandlers.push(updateStats);

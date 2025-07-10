@@ -1,14 +1,14 @@
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import UISelect from '../../ui/helpers/select';
+import { UISelect } from '../../ui/helpers/select';
 import { ObjectContainerType } from '../../types/checks/container';
-import UIInput from '../../ui/helpers/input';
+import { UIInput } from '../../ui/helpers/input';
 import { NoteColor } from 'bsmap';
 import * as types from 'bsmap/types';
 import { parity, swing } from 'bsmap/extensions';
 
 const name = 'Parity Check';
 const description = 'Perform parity check.';
-const enabled = false;
+const enabled = true;
 
 const htmlContainer = document.createElement('div');
 const htmlSelectRotation = UISelect.create(

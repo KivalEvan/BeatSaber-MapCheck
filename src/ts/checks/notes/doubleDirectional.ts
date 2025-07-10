@@ -1,7 +1,7 @@
 import { NoteColor, NoteDirection, NoteDirectionAngle, PosX, PosY, resolveNoteAngle } from 'bsmap';
 import * as types from 'bsmap/types';
 import {
-   IBeatmapItem,
+   IBeatmapContainer,
    ITool,
    IToolOutput,
    ToolArgs,
@@ -9,7 +9,7 @@ import {
    ToolOutputOrder,
 } from '../../types';
 import { ObjectContainerType } from '../../types/checks/container';
-import UIInput from '../../ui/helpers/input';
+import { UIInput } from '../../ui/helpers/input';
 import { placement, swing } from 'bsmap/extensions';
 
 const name = 'Double-directional';
@@ -45,7 +45,7 @@ const tool: ITool = {
    run,
 };
 
-function check(beatmapItem: IBeatmapItem) {
+function check(beatmapItem: IBeatmapContainer) {
    const timeProcessor = beatmapItem.timeProcessor;
    const noteContainer = beatmapItem.noteContainer;
    const lastNote: { [key: number]: types.wrapper.IWrapColorNote } = {};

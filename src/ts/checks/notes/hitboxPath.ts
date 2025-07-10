@@ -1,5 +1,5 @@
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import UIInput from '../../ui/helpers/input';
+import { UIInput } from '../../ui/helpers/input';
 import { ObjectContainerType } from '../../types/checks/container';
 import * as types from 'bsmap/types';
 import { placement } from 'bsmap/extensions';

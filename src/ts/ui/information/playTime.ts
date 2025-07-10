@@ -1,18 +1,18 @@
-import LoadedData from '../../loadedData';
+import { State } from '../../state';
 import { secToMmss } from 'bsmap/utils';
-import { htmlTablePlayTime } from './constants';
+import { UIInfoHTML } from './html';
 import { displayTableRow, hideTableRow } from './helpers';
 
 export function setPlayTime(start?: number, end?: number): void {
    if (start == null || end == null) {
-      hideTableRow(htmlTablePlayTime);
+      hideTableRow(UIInfoHTML.htmlTablePlayTime);
       return;
    }
    displayTableRow(
-      htmlTablePlayTime,
+      UIInfoHTML.htmlTablePlayTime,
       `${secToMmss(start)} to ${secToMmss(end)}${
-         LoadedData.duration
-            ? ` -- [ ${secToMmss(end - start)} / ${secToMmss(LoadedData.duration)} ]`
+         State.data.duration
+            ? ` -- [ ${secToMmss(end - start)} / ${secToMmss(State.data.duration)} ]`
             : ''
       }`,
    );

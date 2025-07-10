@@ -1,6 +1,6 @@
 import { round, secToMmss, secToMmssms } from 'bsmap/utils';
 import * as types from 'bsmap/types';
-import settings from '../../settings';
+import { Settings } from '../../settings';
 import { OutputSymbol } from '../../types/checks/check';
 
 function addLabel(str: string, symbol?: OutputSymbol): string {
@@ -50,34 +50,34 @@ export function printResultTime(
 ) {
    const htmlContainer = document.createElement('div');
 
-   if (settings.deduplicateTime) {
+   if (Settings.props.deduplicateTime) {
       timeAry = timeAry.filter(deduplicateFilter);
    }
 
    label = addLabel(label, symbol);
    htmlContainer.innerHTML = `<b>${label} [${timeAry.length}]:</b> ${timeAry
       .map((n) => {
-         switch (settings.beatNumbering) {
+         switch (Settings.props.beatNumbering) {
             case 'realtime':
                return `<span title="Beat ${round(
                   n.customData.__mapcheck_beattime,
-                  settings.rounding,
+                  Settings.props.rounding,
                )}">${secToMmss(n.customData.__mapcheck_secondtime)}</span>`;
             case 'realtimems':
                return `<span title="Beat ${round(
                   n.customData.__mapcheck_beattime,
-                  settings.rounding,
+                  Settings.props.rounding,
                )}">${secToMmssms(n.customData.__mapcheck_secondtime)}</span>`;
             case 'jsontime':
                return `<span title="Time ${secToMmssms(n.customData.__mapcheck_secondtime)}">${round(
                   n.time,
-                  settings.rounding,
+                  Settings.props.rounding,
                )}</span>`;
             case 'beattime':
             default:
                return `<span title="Time ${secToMmssms(n.customData.__mapcheck_secondtime)}">${round(
                   n.customData.__mapcheck_beattime,
-                  settings.rounding,
+                  Settings.props.rounding,
                )}</span>`;
          }
       })

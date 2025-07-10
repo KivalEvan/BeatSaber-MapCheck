@@ -2,7 +2,7 @@ import { isInline, NoteColor } from 'bsmap';
 import * as types from 'bsmap/types';
 import { swing } from 'bsmap/extensions';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import UIInput from '../../ui/helpers/input';
+import { UIInput } from '../../ui/helpers/input';
 
 const name = 'Hitbox Inline';
 const description = 'Check for overlapping note hitbox for inline note.';

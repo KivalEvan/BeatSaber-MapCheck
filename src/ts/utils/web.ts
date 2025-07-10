@@ -30,7 +30,7 @@ export function removeOptions(selectElement: HTMLSelectElement): void {
    }
 }
 
-// this is needed just to offset and sync the UI somehow
+// this is needed just to offset and sync the ui somehow
 export function sleep(ms: number): Promise<void> {
    return new Promise((resolve) => setTimeout(resolve, ms));
 }

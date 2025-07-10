@@ -28,7 +28,7 @@ import {
 } from 'bsmap';
 import * as types from 'bsmap/types';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import UIInput from '../../ui/helpers/input';
+import { UIInput } from '../../ui/helpers/input';
 
 const name = 'Invalid Object';
 const description = 'Validate beatmap object to be compatible with vanilla (ignores for modded).';
@@ -236,8 +236,8 @@ function run(args: ToolArgs): IToolOutput[] {
    let arcResult: types.wrapper.IWrapBaseObject[] = [];
    let chainResult: types.wrapper.IWrapBaseObject[] = [];
    let rotationEventResult: types.wrapper.IWrapBaseObject[] = [];
-   if (!args.beatmap.settings.customData._requirements?.includes('Mapping Extensions')) {
-      if (args.beatmap.settings.customData._requirements?.includes('Noodle Extensions')) {
+   if (!args.beatmap.info.customData._requirements?.includes('Mapping Extensions')) {
+      if (args.beatmap.info.customData._requirements?.includes('Noodle Extensions')) {
          const hasMEObstacle =
             args.beatmap.rawVersion === 2
                ? hasMappingExtensionsObstacleV2

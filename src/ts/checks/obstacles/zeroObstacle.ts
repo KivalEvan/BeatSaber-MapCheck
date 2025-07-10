@@ -1,6 +1,6 @@
 import { isZeroValueObstacle } from 'bsmap';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import UIInput from '../../ui/helpers/input';
+import { UIInput } from '../../ui/helpers/input';
 
 const name = 'Zero Obstacle';
 const description = 'Look for obstacle with zero value.';

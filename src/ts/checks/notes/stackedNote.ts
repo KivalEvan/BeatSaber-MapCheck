@@ -1,13 +1,13 @@
 import * as types from 'bsmap/types';
 import {
-   IBeatmapItem,
+   IBeatmapContainer,
    ITool,
    IToolOutput,
    ToolArgs,
    ToolInputOrder,
    ToolOutputOrder,
 } from '../../types';
-import UIInput from '../../ui/helpers/input';
+import { UIInput } from '../../ui/helpers/input';
 import { isInline } from 'bsmap';
 
 const name = 'Stacked Note';
@@ -36,7 +36,7 @@ const tool: ITool = {
    run,
 };
 
-function checkNote(map: IBeatmapItem) {
+function checkNote(map: IBeatmapContainer) {
    const colorNotes = map.data.difficulty.colorNotes;
 
    const result: types.wrapper.IWrapBaseObject[] = [];
@@ -62,7 +62,7 @@ function checkNote(map: IBeatmapItem) {
    return result;
 }
 
-function checkBomb(map: IBeatmapItem) {
+function checkBomb(map: IBeatmapContainer) {
    const timeProcessor = map.timeProcessor;
    const njs = map.njs;
    const bombNotes = map.data.difficulty.bombNotes;

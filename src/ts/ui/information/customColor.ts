@@ -1,8 +1,8 @@
 import { ColorScheme, CustomColorRename, EnvironmentSchemeName } from 'bsmap';
 import { colorToHex } from 'bsmap/utils';
 import * as types from 'bsmap/types';
-import UIPanel from '../helpers/panel';
-import { htmlTableCustomColor } from './constants';
+import uiPanel from '../helpers/panel';
+import { UIInfoHTML } from './html';
 import { displayTableRow, hideTableRow } from './helpers';
 
 export function setCustomColor(
@@ -21,7 +21,7 @@ export function setCustomColor(
          !customColor._envColorWhiteBoost &&
          !customColor._obstacleColor)
    ) {
-      hideTableRow(htmlTableCustomColor);
+      hideTableRow(UIInfoHTML.htmlTableCustomColor);
       return;
    }
    if (!environment) {
@@ -164,5 +164,5 @@ export function setCustomColor(
 
       content.push(container);
    }
-   displayTableRow(htmlTableCustomColor, content);
+   displayTableRow(UIInfoHTML.htmlTableCustomColor, content);
 }

@@ -9,7 +9,7 @@ import {
 } from 'bsmap';
 import * as types from 'bsmap/types';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import UIInput from '../../ui/helpers/input';
+import { UIInput } from '../../ui/helpers/input';
 
 const name = 'Unlit Bomb';
 const description = 'Check for lighting around bomb.';

@@ -1,21 +1,20 @@
-import Settings from '../../settings';
-import UIPanel from '../helpers/panel';
+import { Settings } from '../../settings';
 import { TimeProcessor } from 'bsmap';
 import { colorToHex, round, secToMmss } from 'bsmap/utils';
 import * as types from 'bsmap/types';
-import { htmlTableBookmarks } from './constants';
+import { UIInfoHTML } from './html';
 import { displayTableRow, hideTableRow } from './helpers';
 
 export function setBookmarks(
-   arr?: Partial<types.v2.IBookmark & types.v3.IBookmark>[],
+   ary?: Partial<types.v2.IBookmark & types.v3.IBookmark>[],
    bpm?: TimeProcessor | null,
 ): void {
-   if (arr == null || !arr.length) {
-      hideTableRow(htmlTableBookmarks);
+   if (ary == null || !ary.length) {
+      hideTableRow(UIInfoHTML.htmlTableBookmarks);
       return;
    }
    const content: HTMLElement[] = [];
-   arr.forEach((elem, i) => {
+   ary.forEach((elem, i) => {
       let time = elem.b ?? elem._time ?? 0;
       let rt!: number;
       const container = document.createElement('div');
@@ -44,11 +43,11 @@ export function setBookmarks(
          ? colorToHex({ r: color[0], g: color[1], b: color[2] })
          : '#333333';
 
-      textContainer.textContent = `${round(time, Settings.rounding)}${
+      textContainer.textContent = `${round(time, Settings.props.rounding)}${
          rt ? ' | ' + secToMmss(rt) : ''
       } -- ${text != '' ? text : '**EMPTY NAME**'}`;
 
       content.push(container);
    });
-   displayTableRow(htmlTableBookmarks, content, 'bookmarks');
+   displayTableRow(UIInfoHTML.htmlTableBookmarks, content, 'bookmarks');
 }

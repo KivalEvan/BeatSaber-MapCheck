@@ -1,6 +1,6 @@
 import { TimeProcessor } from 'bsmap';
 import * as types from 'bsmap/types';
-import { IBeatmapItem } from './beatmapItem';
+import { IBeatmapContainer } from './container';
 import { ToolInputOrder, ToolOutputOrder } from './order';
 
 export type ToolType = 'note' | 'event' | 'obstacle' | 'other' | 'general';
@@ -50,7 +50,7 @@ export type IToolOutput = IToolOutputString | IToolOutputNumber | IToolOutputTim
 export interface ToolArgs {
    readonly audioDuration: number | null;
    readonly mapDuration: number | null;
-   readonly beatmap: IBeatmapItem;
+   readonly beatmap: IBeatmapContainer;
    readonly info: types.wrapper.IWrapInfo;
 }
 

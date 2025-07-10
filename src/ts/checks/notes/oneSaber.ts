@@ -1,6 +1,6 @@
 import { isBlueNoteColor, isRedNoteColor } from 'bsmap';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import UIInput from '../../ui/helpers/input';
+import { UIInput } from '../../ui/helpers/input';
 
 const name = 'One Saber';
 const description = 'Check for one saber.';
@@ -32,8 +32,7 @@ function run(args: ToolArgs): IToolOutput[] {
    let notOneSaberNote;
    let whyisthisonesaber = false;
    let isOneSaber =
-      args.beatmap.settings.characteristic === 'OneSaber' ||
-      args.beatmap.settings.customData.oneSaber;
+      args.beatmap.info.characteristic === 'OneSaber' || args.beatmap.info.customData.oneSaber;
    if (isOneSaber) {
       notOneSaberNote = args.beatmap.data.difficulty.colorNotes.filter((n) =>
          isRedNoteColor(n.color),

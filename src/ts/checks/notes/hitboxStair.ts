@@ -1,7 +1,7 @@
 import { ColorNote, NoteColor, NoteDirection, NoteDirectionSpace } from 'bsmap';
 import * as types from 'bsmap/types';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import UIInput from '../../ui/helpers/input';
+import { UIInput } from '../../ui/helpers/input';
 import { placement, swing } from 'bsmap/extensions';
 
 const name = 'Hitbox Staircase';

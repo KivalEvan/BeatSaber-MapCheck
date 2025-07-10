@@ -1,55 +1,64 @@
-import { ISettings } from '../../types';
+import { ISettingsProps } from '../../types';
 
-export function createTab(
-   id: string,
-   label: string,
-   group: string,
-   value: string,
-   selected: boolean,
-   callback: EventListener,
-): HTMLDivElement {
-   const htmlTab = document.createElement('div');
-   htmlTab.className = 'tabs__container';
+export class UITab {
+   static #htmlTabsInfo: HTMLInputElement;
+   static #htmlTabsChecks: HTMLInputElement;
+   static #htmlTabsStats: HTMLInputElement;
+   static #htmlTabsSettings: HTMLInputElement;
 
-   const radio = document.createElement('input');
-   radio.className = 'tabs__radio';
-   radio.type = 'radio';
-   radio.id = id;
-   radio.name = group;
-   radio.value = value;
-   radio.checked = selected;
-   radio.addEventListener('change', callback);
-
-   htmlTab.appendChild(radio);
-
-   const htmlLabel = document.createElement('label');
-   htmlLabel.className = 'tabs__label tabs__label-block unselectable';
-   htmlLabel.htmlFor = id;
-
-   const htmlPad = document.createElement('div');
-   const str = label.split('\n');
-   for (let i = 0; i < str.length; i++) {
-      const s = str[i];
-      const htmlSpan = document.createElement('span');
-      htmlSpan.textContent = s;
-      htmlPad.appendChild(htmlSpan);
-      if (i !== str.length - 1) htmlPad.appendChild(document.createElement('br'));
+   static init(): void {
+      UITab.#htmlTabsInfo = document.querySelector('#tabs__info')!;
+      UITab.#htmlTabsChecks = document.querySelector('#tabs__checks')!;
+      UITab.#htmlTabsStats = document.querySelector('#tabs__stats')!;
+      UITab.#htmlTabsSettings = document.querySelector('#tabs__settings')!;
    }
 
-   htmlLabel.appendChild(htmlPad);
-   htmlTab.appendChild(htmlLabel);
+   static showMain(id: ISettingsProps['show']): void {
+      UITab.#htmlTabsInfo.checked = id === 'info';
+      UITab.#htmlTabsChecks.checked = id === 'checks';
+      UITab.#htmlTabsStats.checked = id === 'stats';
+      UITab.#htmlTabsSettings.checked = id === 'settings';
+   }
 
-   return htmlTab;
-}
+   static create(
+      id: string,
+      label: string,
+      group: string,
+      value: string,
+      selected: boolean,
+      callback: EventListener,
+   ): HTMLDivElement {
+      const htmlTab = document.createElement('div');
+      htmlTab.className = 'tabs__container';
 
-const htmlTabsInfo = document.getElementById('tabs__info') as HTMLInputElement;
-const htmlTabsChecks = document.getElementById('tabs__checks') as HTMLInputElement;
-const htmlTabsStats = document.getElementById('tabs__stats') as HTMLInputElement;
-const htmlTabsSettings = document.getElementById('tabs__settings') as HTMLInputElement;
+      const radio = document.createElement('input');
+      radio.className = 'tabs__radio';
+      radio.type = 'radio';
+      radio.id = id;
+      radio.name = group;
+      radio.value = value;
+      radio.checked = selected;
+      radio.addEventListener('change', callback);
 
-export function showMain(id: ISettings['show']): void {
-   htmlTabsInfo.checked = id === 'info';
-   htmlTabsChecks.checked = id === 'checks';
-   htmlTabsStats.checked = id === 'stats';
-   htmlTabsSettings.checked = id === 'settings';
+      htmlTab.appendChild(radio);
+
+      const htmlLabel = document.createElement('label');
+      htmlLabel.className = 'tabs__label tabs__label-block unselectable';
+      htmlLabel.htmlFor = id;
+
+      const htmlPad = document.createElement('div');
+      const str = label.split('\n');
+      for (let i = 0; i < str.length; i++) {
+         const s = str[i];
+         const htmlSpan = document.createElement('span');
+         htmlSpan.textContent = s;
+         htmlPad.appendChild(htmlSpan);
+         if (i !== str.length - 1) htmlPad.appendChild(document.createElement('br'));
+      }
+
+      htmlLabel.appendChild(htmlPad);
+      htmlTab.appendChild(htmlLabel);
+
+      return htmlTab;
+   }
 }

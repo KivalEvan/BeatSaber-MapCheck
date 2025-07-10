@@ -26,10 +26,11 @@
     "jszip": "^3.10.1"
   },
   "devDependencies": {
-    "@types/node": "^22.14.1",
+    "@types/node": "^22.15.3",
     "prettier": "^3.5.3",
     "sass": "^1.87.0",
     "typescript": "^5.8.3",
-    "vite": "^6.3.2"
+    "vite": "^6.3.3",
+    "vitest": "^3.1.2"
   }
 }

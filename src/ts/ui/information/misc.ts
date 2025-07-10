@@ -1,47 +1,37 @@
 import { EnvironmentRename } from 'bsmap';
 import { minToHhmmss } from 'bsmap/utils';
-import {
-   htmlTableEnvironmentId,
-   htmlTableInformation,
-   htmlTableLighters,
-   htmlTableMappers,
-   htmlTableRequirements,
-   htmlTableSuggestions,
-   htmlTableTimeSpend,
-   htmlTableVersion,
-   htmlTableWarnings,
-} from './constants';
+import { UIInfoHTML } from './html';
 import { displayTableRow, hideTableRow } from './helpers';
 
 export function setVersion(ver?: string): void {
    if (ver == null) {
-      hideTableRow(htmlTableVersion);
+      hideTableRow(UIInfoHTML.htmlTableVersion);
       return;
    }
-   displayTableRow(htmlTableVersion, ver);
+   displayTableRow(UIInfoHTML.htmlTableVersion, ver);
 }
 
 export function setMappers(mappers?: string[]): void {
    if (mappers == null || !mappers.length) {
-      hideTableRow(htmlTableMappers);
+      hideTableRow(UIInfoHTML.htmlTableMappers);
       return;
    }
    let textContent = mappers.join(', ');
-   displayTableRow(htmlTableMappers, textContent);
+   displayTableRow(UIInfoHTML.htmlTableMappers, textContent);
 }
 
 export function setLighters(lighters?: string[]): void {
    if (lighters == null || !lighters.length) {
-      hideTableRow(htmlTableLighters);
+      hideTableRow(UIInfoHTML.htmlTableLighters);
       return;
    }
    let textContent = lighters.join(', ');
-   displayTableRow(htmlTableLighters, textContent);
+   displayTableRow(UIInfoHTML.htmlTableLighters, textContent);
 }
 
 export function setEnvironmentId(env?: string): void {
    if (env == null) {
-      hideTableRow(htmlTableEnvironmentId);
+      hideTableRow(UIInfoHTML.htmlTableEnvironmentId);
       return;
    }
    let textContent =
@@ -49,45 +39,45 @@ export function setEnvironmentId(env?: string): void {
    if (!EnvironmentRename[env as keyof typeof EnvironmentRename]) {
       textContent += ` (${env})`;
    }
-   displayTableRow(htmlTableEnvironmentId, textContent);
+   displayTableRow(UIInfoHTML.htmlTableEnvironmentId, textContent);
 }
 
 export function setTimeSpend(num?: number): void {
    if (num == null) {
-      hideTableRow(htmlTableTimeSpend);
+      hideTableRow(UIInfoHTML.htmlTableTimeSpend);
       return;
    }
-   displayTableRow(htmlTableTimeSpend, minToHhmmss(num));
+   displayTableRow(UIInfoHTML.htmlTableTimeSpend, minToHhmmss(num));
 }
 
 export function setRequirements(arr?: string[]): void {
    if (arr == null || !arr.length) {
-      hideTableRow(htmlTableRequirements);
+      hideTableRow(UIInfoHTML.htmlTableRequirements);
       return;
    }
-   displayTableRow(htmlTableRequirements, arr, 'requirements');
+   displayTableRow(UIInfoHTML.htmlTableRequirements, arr, 'requirements');
 }
 
 export function setSuggestions(arr?: string[]): void {
    if (arr == null || !arr.length) {
-      hideTableRow(htmlTableSuggestions);
+      hideTableRow(UIInfoHTML.htmlTableSuggestions);
       return;
    }
-   displayTableRow(htmlTableSuggestions, arr, 'suggestions');
+   displayTableRow(UIInfoHTML.htmlTableSuggestions, arr, 'suggestions');
 }
 
 export function setInformation(arr?: string[]): void {
    if (arr == null || !arr.length) {
-      hideTableRow(htmlTableInformation);
+      hideTableRow(UIInfoHTML.htmlTableInformation);
       return;
    }
-   displayTableRow(htmlTableInformation, arr, 'informations');
+   displayTableRow(UIInfoHTML.htmlTableInformation, arr, 'informations');
 }
 
 export function setWarnings(arr?: string[]): void {
    if (arr == null || !arr.length) {
-      hideTableRow(htmlTableWarnings);
+      hideTableRow(UIInfoHTML.htmlTableWarnings);
       return;
    }
-   displayTableRow(htmlTableWarnings, arr, 'warnings');
+   displayTableRow(UIInfoHTML.htmlTableWarnings, arr, 'warnings');
 }

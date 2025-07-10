@@ -1,8 +1,8 @@
 import { ITool, IToolOutput, ToolInputOrder, ToolOutputOrder } from '../../types';
-import uiHeader from '../../ui/header';
-import flag from '../../flag';
-import settings from '../../settings';
-import UIInput from '../../ui/helpers/input';
+import { UIHeader } from '../../ui/header';
+import { State } from '../../state';
+import { Settings } from '../../settings';
+import { UIInput } from '../../ui/helpers/input';
 
 const name = 'Validate Cover Image';
 const description = 'Validate cover image.';
@@ -39,10 +39,10 @@ const tool: ITool = {
 
 function run(): IToolOutput[] {
    const img = new Image();
-   const src = uiHeader.getCoverImage();
+   const src = UIHeader.getCoverImage();
 
    const results: IToolOutput[] = [];
-   if (flag.loading.coverImage && src !== null) {
+   if (State.flag.coverImage && src !== null) {
       img.src = src;
       if (img.width !== img.height) {
          results.push({
@@ -64,7 +64,7 @@ function run(): IToolOutput[] {
       results.push({
          type: 'string',
          label: 'No cover image',
-         value: settings.load.imageCover
+         value: Settings.props.load.imageCover
             ? 'could not be loaded or found'
             : 'no cover image option is enabled',
       });

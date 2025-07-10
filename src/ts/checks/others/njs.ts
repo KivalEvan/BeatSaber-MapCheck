@@ -1,7 +1,7 @@
 import { NoteJumpSpeed } from 'bsmap';
 import { round } from 'bsmap/utils';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import UIInput from '../../ui/helpers/input';
+import { UIInput } from '../../ui/helpers/input';
 
 const name = 'NJS Check';
 const description = 'Check note jump speed for suitable value.';
@@ -40,7 +40,7 @@ function run(args: ToolArgs): IToolOutput[] {
    const { njs, timeProcessor } = args.beatmap;
 
    const results: IToolOutput[] = [];
-   if (args.beatmap.settings.njs === 0) {
+   if (args.beatmap.info.njs === 0) {
       results.push({
          type: 'string',
          label: 'Unset NJS',

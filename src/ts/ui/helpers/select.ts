@@ -1,11 +1,11 @@
-export default {
-   create: (
+export class UISelect {
+   static create(
       id: string,
       label: string,
       containerTag: string,
       containerClass: string,
       ...options: { text: string; value: string }[]
-   ): HTMLElement => {
+   ): HTMLElement {
       const htmlContainer = document.createElement(containerTag);
       htmlContainer.className = containerClass;
 
@@ -28,5 +28,5 @@ export default {
       htmlContainer.append(htmlSelect);
 
       return htmlContainer;
-   },
-};
+   }
+}

@@ -2,7 +2,7 @@ import { NoteColor, NoteDirection, resolveNoteAngle } from 'bsmap';
 import * as types from 'bsmap/types';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import { IObjectContainerColor, ObjectContainerType } from '../../types/checks/container';
-import UIInput from '../../ui/helpers/input';
+import { UIInput } from '../../ui/helpers/input';
 import { placement, swing } from 'bsmap/extensions';
 
 const name = 'Hitbox Reverse Staircase';

@@ -1,39 +1,50 @@
 import { round } from 'bsmap/utils';
 import * as types from 'bsmap/types';
-import { IBeatmapItem } from '../../types';
+import { IBeatmapContainer } from '../../types';
 
-const htmlSpsAvgTotal = document.getElementById('stats__table-sps-avg-total') as HTMLTableElement;
-const htmlSpsAvgRed = document.getElementById('stats__table-sps-avg-red') as HTMLTableElement;
-const htmlSpsAvgBlue = document.getElementById('stats__table-sps-avg-blue') as HTMLTableElement;
-const htmlSpsMedianTotal = document.getElementById(
-   'stats__table-sps-median-total',
-) as HTMLTableElement;
-const htmlSpsMedianRed = document.getElementById('stats__table-sps-median-red') as HTMLTableElement;
-const htmlSpsMedianBlue = document.getElementById(
-   'stats__table-sps-median-blue',
-) as HTMLTableElement;
-const htmlSpsPeakTotal = document.getElementById('stats__table-sps-peak-total') as HTMLTableElement;
-const htmlSpsPeakRed = document.getElementById('stats__table-sps-peak-red') as HTMLTableElement;
-const htmlSpsPeakBlue = document.getElementById('stats__table-sps-peak-blue') as HTMLTableElement;
-const htmlSpsTotalTotal = document.getElementById(
-   'stats__table-sps-total-total',
-) as HTMLTableElement;
-const htmlSpsTotalRed = document.getElementById('stats__table-sps-total-red') as HTMLTableElement;
-const htmlSpsTotalBlue = document.getElementById('stats__table-sps-total-blue') as HTMLTableElement;
+export class UIStatsSPS {
+   static #htmlSpsAvgTotal: HTMLTableElement;
+   static #htmlSpsAvgRed: HTMLTableElement;
+   static #htmlSpsAvgBlue: HTMLTableElement;
+   static #htmlSpsMedianTotal: HTMLTableElement;
+   static #htmlSpsMedianRed: HTMLTableElement;
+   static #htmlSpsMedianBlue: HTMLTableElement;
+   static #htmlSpsPeakTotal: HTMLTableElement;
+   static #htmlSpsPeakRed: HTMLTableElement;
+   static #htmlSpsPeakBlue: HTMLTableElement;
+   static #htmlSpsTotalTotal: HTMLTableElement;
+   static #htmlSpsTotalRed: HTMLTableElement;
+   static #htmlSpsTotalBlue: HTMLTableElement;
 
-export function updateSPSTable(_: types.wrapper.IWrapInfo, beatmapItem: IBeatmapItem): void {
-   const swingInfo = beatmapItem.swingAnalysis;
+   static init(): void {
+      UIStatsSPS.#htmlSpsAvgTotal = document.querySelector('#stats__table-sps-avg-total')!;
+      UIStatsSPS.#htmlSpsAvgRed = document.querySelector('#stats__table-sps-avg-red')!;
+      UIStatsSPS.#htmlSpsAvgBlue = document.querySelector('#stats__table-sps-avg-blue')!;
+      UIStatsSPS.#htmlSpsMedianTotal = document.querySelector('#stats__table-sps-median-total')!;
+      UIStatsSPS.#htmlSpsMedianRed = document.querySelector('#stats__table-sps-median-red')!;
+      UIStatsSPS.#htmlSpsMedianBlue = document.querySelector('#stats__table-sps-median-blue')!;
+      UIStatsSPS.#htmlSpsPeakTotal = document.querySelector('#stats__table-sps-peak-total')!;
+      UIStatsSPS.#htmlSpsPeakRed = document.querySelector('#stats__table-sps-peak-red')!;
+      UIStatsSPS.#htmlSpsPeakBlue = document.querySelector('#stats__table-sps-peak-blue')!;
+      UIStatsSPS.#htmlSpsTotalTotal = document.querySelector('#stats__table-sps-total-total')!;
+      UIStatsSPS.#htmlSpsTotalRed = document.querySelector('#stats__table-sps-total-red')!;
+      UIStatsSPS.#htmlSpsTotalBlue = document.querySelector('#stats__table-sps-total-blue')!;
+   }
 
-   htmlSpsAvgTotal.innerText = round(swingInfo.total.perSecond, 2).toString();
-   htmlSpsAvgRed.innerText = round(swingInfo.red.perSecond, 2).toString();
-   htmlSpsAvgBlue.innerText = round(swingInfo.blue.perSecond, 2).toString();
-   htmlSpsMedianTotal.innerText = round(swingInfo.total.median, 2).toString();
-   htmlSpsMedianRed.innerText = round(swingInfo.red.median, 2).toString();
-   htmlSpsMedianBlue.innerText = round(swingInfo.blue.median, 2).toString();
-   htmlSpsPeakTotal.innerText = round(swingInfo.total.peak, 2).toString();
-   htmlSpsPeakRed.innerText = round(swingInfo.red.peak, 2).toString();
-   htmlSpsPeakBlue.innerText = round(swingInfo.blue.peak, 2).toString();
-   htmlSpsTotalTotal.innerText = round(swingInfo.total.total, 2).toString();
-   htmlSpsTotalRed.innerText = round(swingInfo.red.total, 2).toString();
-   htmlSpsTotalBlue.innerText = round(swingInfo.blue.total, 2).toString();
+   static updateTable(_: types.wrapper.IWrapInfo, beatmap: IBeatmapContainer): void {
+      const swingInfo = beatmap.swingAnalysis;
+
+      UIStatsSPS.#htmlSpsAvgTotal.innerText = round(swingInfo.total.perSecond, 2).toString();
+      UIStatsSPS.#htmlSpsAvgRed.innerText = round(swingInfo.red.perSecond, 2).toString();
+      UIStatsSPS.#htmlSpsAvgBlue.innerText = round(swingInfo.blue.perSecond, 2).toString();
+      UIStatsSPS.#htmlSpsMedianTotal.innerText = round(swingInfo.total.median, 2).toString();
+      UIStatsSPS.#htmlSpsMedianRed.innerText = round(swingInfo.red.median, 2).toString();
+      UIStatsSPS.#htmlSpsMedianBlue.innerText = round(swingInfo.blue.median, 2).toString();
+      UIStatsSPS.#htmlSpsPeakTotal.innerText = round(swingInfo.total.peak, 2).toString();
+      UIStatsSPS.#htmlSpsPeakRed.innerText = round(swingInfo.red.peak, 2).toString();
+      UIStatsSPS.#htmlSpsPeakBlue.innerText = round(swingInfo.blue.peak, 2).toString();
+      UIStatsSPS.#htmlSpsTotalTotal.innerText = round(swingInfo.total.total, 2).toString();
+      UIStatsSPS.#htmlSpsTotalRed.innerText = round(swingInfo.red.total, 2).toString();
+      UIStatsSPS.#htmlSpsTotalBlue.innerText = round(swingInfo.blue.total, 2).toString();
+   }
 }

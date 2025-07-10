@@ -1,8 +1,8 @@
 import { TimeProcessor } from 'bsmap';
 import { round, secToMmss } from 'bsmap/utils';
 import * as types from 'bsmap/types';
-import Settings from '../../settings';
-import { htmlTableCustomEvents } from './constants';
+import { Settings } from '../../settings';
+import { UIInfoHTML } from './html';
 import { displayTableRow, hideTableRow } from './helpers';
 import { renamer } from 'bsmap/extensions';
 
@@ -11,7 +11,7 @@ export function setCustomEvents(
    bpm?: TimeProcessor | null,
 ): void {
    if (arr == null || !arr.length) {
-      hideTableRow(htmlTableCustomEvents);
+      hideTableRow(UIInfoHTML.htmlTableCustomEvents);
       return;
    }
    const customEv = arr.map((elem, i) => {
@@ -45,9 +45,9 @@ export function setCustomEvents(
 
       const type = elem.t ?? elem._type;
       const track = (elem.d as any)?.track ?? (elem._data as any)?._track;
-      return `${round(time, Settings.rounding)}${
+      return `${round(time, Settings.props.rounding)}${
          rt ? ' | ' + secToMmss(rt) : ''
       } -- ${type} -> [${keyArr.join('')}]${type !== 'AssignTrackParent' ? `(${track})` : ''}`;
    });
-   displayTableRow(htmlTableCustomEvents, customEv, 'customEvents');
+   displayTableRow(UIInfoHTML.htmlTableCustomEvents, customEv, 'customEvents');
 }

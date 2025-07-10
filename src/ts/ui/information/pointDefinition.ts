@@ -1,12 +1,12 @@
 import * as types from 'bsmap/types';
-import { htmlTablePointDefinitions } from './constants';
+import { UIInfoHTML } from './html';
 import { displayTableRow, hideTableRow } from './helpers';
 
 export function setPointDefinitions(
    obj?: types.v2.IPointDefinition | types.v3.IPointDefinition,
 ): void {
    if (obj == null) {
-      hideTableRow(htmlTablePointDefinitions);
+      hideTableRow(UIInfoHTML.htmlTablePointDefinitions);
       return;
    }
    const pointDef = [];
@@ -34,5 +34,5 @@ export function setPointDefinitions(
          );
       }
    }
-   displayTableRow(htmlTablePointDefinitions, pointDef, 'pointDefinitions');
+   displayTableRow(UIInfoHTML.htmlTablePointDefinitions, pointDef, 'pointDefinitions');
 }

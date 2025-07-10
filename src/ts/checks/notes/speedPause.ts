@@ -3,14 +3,14 @@ import { round } from 'bsmap/utils';
 import * as types from 'bsmap/types';
 import { swing } from 'bsmap/extensions';
 import {
-   IBeatmapItem,
+   IBeatmapContainer,
    ITool,
    IToolOutput,
    ToolArgs,
    ToolInputOrder,
    ToolOutputOrder,
 } from '../../types';
-import UIInput from '../../ui/helpers/input';
+import { UIInput } from '../../ui/helpers/input';
 
 const name = 'Speed Pause';
 const description = 'Look for stream/burst containing timing gap causing sudden change of pace.';
@@ -98,7 +98,7 @@ function adjustTimeHandler(bpm: TimeProcessor) {
    ).toString();
 }
 
-function check(beatmapItem: IBeatmapItem) {
+function check(beatmapItem: IBeatmapContainer) {
    const timeProcessor = beatmapItem.timeProcessor;
    const colorNotes = beatmapItem.data.difficulty.colorNotes;
    const { maxTime: temp } = tool.input.params;

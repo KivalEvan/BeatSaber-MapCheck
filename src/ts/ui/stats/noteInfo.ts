@@ -1,50 +1,64 @@
 import { round, formatNumber } from 'bsmap/utils';
 import * as types from 'bsmap/types';
-import { IBeatmapItem } from '../../types';
+import { IBeatmapContainer } from '../../types';
 import { swing } from 'bsmap/extensions';
 
-const htmlNiRatio = document.getElementById('stats__table-ni-ratio') as HTMLTableCellElement;
-const htmlNiMaxScore = document.getElementById('stats__table-ni-maxscore') as HTMLTableCellElement;
-const htmlNiEffectiveBpm = document.getElementById('stats__table-ni-ebpm') as HTMLTableCellElement;
-const htmlNiEffectiveBpmSwing = document.getElementById(
-   'stats__table-ni-ebpm-swing',
-) as HTMLTableCellElement;
-const htmlNiMinSliderSpeed = document.getElementById(
-   'stats__table-ni-minspeed',
-) as HTMLTableCellElement;
-const htmlNiMaxSliderSpeed = document.getElementById(
-   'stats__table-ni-maxspeed',
-) as HTMLTableCellElement;
+export class UIStatsNoteInfo {
+   static #htmlNiRatio: HTMLTableCellElement;
+   static #htmlNiMaxScore: HTMLTableCellElement;
+   static #htmlNiEffectiveBpm: HTMLTableCellElement;
+   static #htmlNiEffectiveBpmSwing: HTMLTableCellElement;
+   static #htmlNiMinSliderSpeed: HTMLTableCellElement;
+   static #htmlNiMaxSliderSpeed: HTMLTableCellElement;
 
-export function updateNoteInfoTable(_: types.wrapper.IWrapInfo, beatmapItem: IBeatmapItem): void {
-   const noteCount = beatmapItem.stats.notes;
+   static init(): void {
+      UIStatsNoteInfo.#htmlNiRatio = document.querySelector('#stats__table-ni-ratio')!;
+      UIStatsNoteInfo.#htmlNiMaxScore = document.querySelector('#stats__table-ni-maxscore')!;
+      UIStatsNoteInfo.#htmlNiEffectiveBpm = document.querySelector('#stats__table-ni-ebpm')!;
+      UIStatsNoteInfo.#htmlNiEffectiveBpmSwing = document.querySelector(
+         '#stats__table-ni-ebpm-swing',
+      )!;
+      UIStatsNoteInfo.#htmlNiMinSliderSpeed = document.querySelector('#stats__table-ni-minspeed')!;
+      UIStatsNoteInfo.#htmlNiMaxSliderSpeed = document.querySelector('#stats__table-ni-maxspeed')!;
+   }
 
-   htmlNiRatio.textContent = round(noteCount.red.total / noteCount.blue.total, 2).toString();
-   htmlNiMaxScore.textContent = formatNumber(beatmapItem.score);
-   htmlNiEffectiveBpm.textContent = round(
-      swing.getMaxEffectiveBpm(beatmapItem.swingAnalysis.container),
-      2,
-   ).toString();
-   htmlNiEffectiveBpmSwing.textContent = round(
-      swing.getMaxEffectiveBpmSwing(beatmapItem.swingAnalysis.container),
-      2,
-   ).toString();
+   static updateTable(_: types.wrapper.IWrapInfo, beatmap: IBeatmapContainer): void {
+      const noteCount = beatmap.stats.notes;
 
-   const minSliderSpeed = round(
-      swing.getMinSliderSpeed(beatmapItem.swingAnalysis.container) * 1000,
-      1,
-   );
-   const maxSliderSpeed = round(
-      swing.getMaxSliderSpeed(beatmapItem.swingAnalysis.container) * 1000,
-      1,
-   );
-   if (minSliderSpeed || maxSliderSpeed) {
-      htmlNiMinSliderSpeed.textContent = minSliderSpeed.toString() + 'ms';
-      htmlNiMaxSliderSpeed.textContent = minSliderSpeed.toString() + 'ms';
-      (htmlNiMinSliderSpeed.parentNode as HTMLElement).classList.remove('hidden');
-      (htmlNiMaxSliderSpeed.parentNode as HTMLElement).classList.remove('hidden');
-   } else {
-      (htmlNiMinSliderSpeed.parentNode as HTMLElement).classList.add('hidden');
-      (htmlNiMaxSliderSpeed.parentNode as HTMLElement).classList.add('hidden');
+      UIStatsNoteInfo.#htmlNiRatio.textContent = round(
+         noteCount.red.total / noteCount.blue.total,
+         2,
+      ).toString();
+      UIStatsNoteInfo.#htmlNiMaxScore.textContent = formatNumber(beatmap.score);
+      UIStatsNoteInfo.#htmlNiEffectiveBpm.textContent = round(
+         swing.getMaxEffectiveBpm(beatmap.swingAnalysis.container),
+         2,
+      ).toString();
+      UIStatsNoteInfo.#htmlNiEffectiveBpmSwing.textContent = round(
+         swing.getMaxEffectiveBpmSwing(beatmap.swingAnalysis.container),
+         2,
+      ).toString();
+
+      const minSliderSpeed = round(
+         swing.getMinSliderSpeed(beatmap.swingAnalysis.container) * 1000,
+         1,
+      );
+      const maxSliderSpeed = round(
+         swing.getMaxSliderSpeed(beatmap.swingAnalysis.container) * 1000,
+         1,
+      );
+      if (minSliderSpeed || maxSliderSpeed) {
+         UIStatsNoteInfo.#htmlNiMinSliderSpeed.textContent = minSliderSpeed.toString() + 'ms';
+         UIStatsNoteInfo.#htmlNiMaxSliderSpeed.textContent = minSliderSpeed.toString() + 'ms';
+         (UIStatsNoteInfo.#htmlNiMinSliderSpeed.parentNode as HTMLElement).classList.remove(
+            'hidden',
+         );
+         (UIStatsNoteInfo.#htmlNiMaxSliderSpeed.parentNode as HTMLElement).classList.remove(
+            'hidden',
+         );
+      } else {
+         (UIStatsNoteInfo.#htmlNiMinSliderSpeed.parentNode as HTMLElement).classList.add('hidden');
+         (UIStatsNoteInfo.#htmlNiMaxSliderSpeed.parentNode as HTMLElement).classList.add('hidden');
+      }
    }
 }

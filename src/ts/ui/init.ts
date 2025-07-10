@@ -1,36 +1,42 @@
 // idk i just needed init just so this shit fukin import
 // but at the same time i need some way to initialise some variable like watermark, version, etc.
-import Settings from '../settings';
-import Version from '../version';
-import UIFooter from './footer';
-import UISettings from './settings/main';
-import * as UITabs from './helpers/tab';
-import UITheme from './theme';
-import UIChecks from './checks/main';
+import { Settings } from '../settings.ts';
+import { UIFooter } from './footer.ts';
+import { UISettings } from './settings/main.ts';
+import { UITab } from './helpers/tab.ts';
+import { UITheme } from './theme.ts';
+import { UIChecks } from './checks/main.ts';
 import { logger } from 'bsmap';
+import { UIHeader } from './header.ts';
+import { UIIntro } from './intro.ts';
+import { UIStats } from './stats/main.ts';
+import { UIInfo } from './information/main.ts';
+import { UILoading } from './loading.ts';
+import { UISelection } from './selection.ts';
 
-export default (function () {
-   let executed = false;
-   return function () {
-      if (!executed) {
-         executed = true;
-         UIFooter.setWatermark(Version.watermark);
-         UIFooter.setVersion(Version.value);
-         UIChecks.populateTool();
-         UISettings.setTheme(Settings.theme);
-         UISettings.setBeatNumbering(Settings.beatNumbering);
-         UISettings.setRounding(Settings.rounding);
-         UISettings.setInfoRow(Settings.infoRowCount);
-         UISettings.setDataCheck(Settings.dataCheck);
-         for (const id in Settings.load) {
-            UISettings.setLoadCheck(id, Settings.load[id]);
-         }
-         UISettings.setSortCheck(Settings.sorting);
-         UITabs.showMain(Settings.show);
-         UISettings.setShowCheck(Settings.show);
-         UITheme.set(Settings.theme);
-         UIChecks.init();
-         logger.tInfo(['init'], 'User interface initialised');
-      }
-   };
-})();
+let executed = false;
+export function uiInit(): void {
+   if (executed) {
+      return;
+   }
+   executed = true;
+
+   UITab.init();
+   UILoading.init();
+   UISelection.init();
+
+   UIHeader.init();
+   UIFooter.init();
+
+   UIIntro.init();
+
+   UIInfo.init();
+   UIChecks.init();
+   UIStats.init();
+   UISettings.init();
+
+   UITheme.set(Settings.props.theme);
+   UITab.showMain(Settings.props.show);
+
+   logger.tInfo(['UI', 'init'], 'User interface initialised');
+}

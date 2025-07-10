@@ -2,7 +2,7 @@ import { ColorScheme, EnvironmentSchemeName } from 'bsmap';
 import { colorFrom, deltaE00, round } from 'bsmap/utils';
 import * as types from 'bsmap/types';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import UIInput from '../../ui/helpers/input';
+import { UIInput } from '../../ui/helpers/input';
 
 const name = 'Color Check';
 const description = 'Compare note color with other colored note and the arrow on itself.';
@@ -56,13 +56,13 @@ const tool: ITool = {
 };
 
 function customColorSimilarity(map: ToolArgs) {
-   const colorScheme = map.info.colorSchemes[map.beatmap.settings.colorSchemeId];
+   const colorScheme = map.info.colorSchemes[map.beatmap.info.colorSchemeId];
    const checkColorLeft =
-      map.beatmap?.settings.customData?._colorLeft ??
+      map.beatmap?.info.customData?._colorLeft ??
       colorScheme.saberLeftColor ??
       ColorScheme[EnvironmentSchemeName[map.beatmap!.environment] ?? 'The First']._colorLeft;
    const checkColorRight =
-      map.beatmap?.settings.customData?._colorRight ??
+      map.beatmap?.info.customData?._colorRight ??
       colorScheme.saberRightColor ??
       ColorScheme[EnvironmentSchemeName[map.beatmap!.environment] ?? 'The First']._colorRight;
    if (checkColorLeft && checkColorRight) {
@@ -72,15 +72,15 @@ function customColorSimilarity(map: ToolArgs) {
 }
 
 function customColorArrowSimilarity(map: ToolArgs) {
-   const colorScheme = map.info.colorSchemes[map.beatmap.settings.colorSchemeId];
+   const colorScheme = map.info.colorSchemes[map.beatmap.info.colorSchemeId];
    let deltaELeft = 100,
       deltaERight = 100;
    const checkColorLeft =
-      map.beatmap?.settings.customData?._colorLeft ??
+      map.beatmap?.info.customData?._colorLeft ??
       colorScheme.saberLeftColor ??
       ColorScheme[EnvironmentSchemeName[map.beatmap!.environment] ?? 'The First']._colorLeft;
    const checkColorRight =
-      map.beatmap?.settings.customData?._colorRight ??
+      map.beatmap?.info.customData?._colorRight ??
       colorScheme.saberRightColor ??
       ColorScheme[EnvironmentSchemeName[map.beatmap!.environment] ?? 'The First']._colorRight;
    if (checkColorLeft) {
@@ -93,10 +93,10 @@ function customColorArrowSimilarity(map: ToolArgs) {
 }
 
 function run(args: ToolArgs): IToolOutput[] {
-   const colorScheme = args.info.colorSchemes[args.beatmap.settings.colorSchemeId];
+   const colorScheme = args.info.colorSchemes[args.beatmap.info.colorSchemeId];
    if (
-      !args.beatmap.settings.customData?._colorLeft &&
-      !args.beatmap.settings.customData?._colorRight &&
+      !args.beatmap.info.customData?._colorLeft &&
+      !args.beatmap.info.customData?._colorRight &&
       !colorScheme
    ) {
       return [];

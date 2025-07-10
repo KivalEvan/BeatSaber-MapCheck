@@ -1,12 +1,12 @@
 import {
-   IBeatmapItem,
+   IBeatmapContainer,
    ITool,
    IToolOutput,
    ToolArgs,
    ToolInputOrder,
    ToolOutputOrder,
 } from '../../types';
-import UIInput from '../../ui/helpers/input';
+import { UIInput } from '../../ui/helpers/input';
 
 const name = 'Varying Swing Speed';
 const description = 'Check for varying swing speed due to changes in slider distance.';
@@ -41,7 +41,7 @@ const tool: ITool = {
    run,
 };
 
-function check(difficulty: IBeatmapItem) {
+function check(difficulty: IBeatmapContainer) {
    const { swingAnalysis } = difficulty;
    return swingAnalysis.container.filter((n) => Math.abs(n.minSpeed - n.maxSpeed) > 0.002);
 }

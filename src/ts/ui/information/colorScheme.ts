@@ -1,7 +1,7 @@
 import { ColorSchemeRename } from 'bsmap';
 import { colorToHex } from 'bsmap/utils';
 import * as types from 'bsmap/types';
-import { htmlTableColorScheme } from './constants';
+import { UIInfoHTML } from './html';
 import { displayTableRow, hideTableRow } from './helpers';
 
 export function setColorScheme(colorSch?: types.wrapper.IWrapInfoColorScheme): void {
@@ -17,7 +17,7 @@ export function setColorScheme(colorSch?: types.wrapper.IWrapInfoColorScheme): v
          !colorSch.environmentWColorBoost &&
          !colorSch.obstaclesColor)
    ) {
-      hideTableRow(htmlTableColorScheme);
+      hideTableRow(UIInfoHTML.htmlTableColorScheme);
       return;
    }
 
@@ -65,5 +65,5 @@ export function setColorScheme(colorSch?: types.wrapper.IWrapInfoColorScheme): v
 
       content.push(container);
    }
-   displayTableRow(htmlTableColorScheme, content);
+   displayTableRow(UIInfoHTML.htmlTableColorScheme, content);
 }

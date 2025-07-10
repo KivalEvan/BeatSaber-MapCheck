@@ -3,7 +3,7 @@ import * as types from 'bsmap/types';
 import { swing } from 'bsmap/extensions';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 import { ObjectContainerType } from '../../types/checks/container';
-import UIInput from '../../ui/helpers/input';
+import { UIInput } from '../../ui/helpers/input';
 
 const name = 'Improper Window Snap';
 const description = 'Check for slanted window snap timing.';

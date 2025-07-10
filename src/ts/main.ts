@@ -1,53 +1,53 @@
-import UIHeader from './ui/header';
-import UILoading from './ui/loading';
-import UIInfo from './ui/information';
-import UIChecks from './ui/checks/main';
-import UIStats from './ui/stats';
-import UISelection from './ui/selection';
-import UIInput from './ui/input';
-import Analyser from './checks/main';
-import Settings from './settings';
-import flag from './flag';
-import LoadedData from './loadedData';
-import { extractBeatmaps, extractBpmInfo, extractInfo } from './load';
-import { downloadFromHash, downloadFromId, downloadFromUrl } from './download';
-import { sanitizeBeatSaverId, sanitizeUrl, sleep } from './utils/web';
+import { UIHeader } from './ui/header.ts';
+import { LoadStatus, UILoading } from './ui/loading.ts';
+import { UIInfo } from './ui/information/main.ts';
+import { UIChecks } from './ui/checks/main.ts';
+import { UISelection } from './ui/selection.ts';
+import { toggleInputs } from './ui/input.ts';
+import Analyser from './checks/main.ts';
+import { Settings } from './settings.ts';
+import { State } from './state.ts';
+import { extractBeatmaps, extractBpmInfo, extractInfo } from './load/index.ts';
+import { downloadFromHash, downloadFromId, downloadFromUrl } from './download.ts';
+import { sanitizeBeatSaverId, sanitizeUrl, sleep } from './utils/web.ts';
 import { logger } from 'bsmap';
-import { isHex, lerp, round } from 'bsmap/utils';
-import { extractZip } from './extract';
-import { LoadType } from './types/main';
-import { IBeatmapAudio, IBeatmapItem } from './types';
+import { lerp, round } from 'bsmap/utils';
+import { Payload, PayloadType } from './types/main';
+import { IBeatmapAudio, IBeatmapContainer } from './types';
+import { init } from './init';
+import JSZip from 'jszip';
+import { UIInfoMetadata } from './ui/information/metadata.ts';
 
 function tag() {
    return ['main'];
 }
 
-async function getFileInput(type: LoadType): Promise<ArrayBuffer | File> {
-   if (type.file) {
-      return type.file;
+async function getInputData(payload: Payload): Promise<ArrayBuffer | File> {
+   switch (payload.type) {
+      case PayloadType.Url:
+         return downloadFromUrl(sanitizeUrl(decodeURI(payload.data)));
+      case PayloadType.Id:
+         return downloadFromId(sanitizeBeatSaverId(decodeURI(payload.data)));
+      case PayloadType.Hash:
+         return downloadFromHash(decodeURI(payload.data).trim());
+      case PayloadType.File:
+         return payload.data;
+      default:
+         throw new Error('Invalid payload.');
    }
-   if (type.link) {
-      return downloadFromUrl(sanitizeUrl(decodeURI(type.link)));
-   }
-   if (type.id) {
-      return downloadFromId(sanitizeBeatSaverId(decodeURI(type.id)));
-   }
-   if (type.hash && isHex(decodeURI(type.hash).trim())) {
-      return downloadFromHash(decodeURI(type.hash).trim());
-   }
-   throw new Error('Could not search for file.');
 }
 
-export default async (type: LoadType) => {
+export async function main(payload: Payload): Promise<void> {
    let start = 0;
    try {
       console.time('loading time');
       start = performance.now();
-      UIInput.enable(false);
-      let file = await getFileInput(type);
-      UILoading.status('info', 'Extracting zip', 0);
-      UIHeader.switchHeader(false);
-      const beatmapZip = await extractZip(file);
+      toggleInputs(false);
+
+      let rawData = await getInputData(payload);
+      UILoading.status(LoadStatus.INFO, 'Extracting zip', 0);
+      UIHeader.switchToMetadata();
+      const beatmapZip = await JSZip.loadAsync(rawData);
 
       const entries = beatmapZip
          .filter(
@@ -65,19 +65,19 @@ export default async (type: LoadType) => {
       }
       let path = entries[0].slice(0, -1).join('/');
       if (path) {
-         flag.loading.nested = true;
+         State.flag.nested = true;
          path += '/';
       }
 
-      UIInput.enable(false);
-      UILoading.status('info', 'Parsing map info...', 10);
+      toggleInputs(false);
+      UILoading.status(LoadStatus.INFO, 'Parsing map info...', 10);
       logger.tInfo(tag(), 'Parsing map info');
       const info = await extractInfo(beatmapZip, path);
-      LoadedData.beatmapInfo = info;
+      State.data.info = info;
       UIInfo.setInfo(info);
 
       if (info.audio.duration) {
-         LoadedData.duration = info.audio.duration;
+         State.data.duration = info.audio.duration;
          UIHeader.setSongDuration(info.audio.duration);
       }
 
@@ -94,7 +94,7 @@ export default async (type: LoadType) => {
       ]);
       function updateStatus() {
          UILoading.status(
-            'info',
+            LoadStatus.INFO,
             `Loading ${[...itemSet].join(', ')}... [${itemDone}/${maxItem - 2}]`,
             lerp(itemDone / maxItem, 15, 80),
          );
@@ -103,10 +103,10 @@ export default async (type: LoadType) => {
          new Promise(async (resolve) => {
             logger.tInfo(tag(), 'Loading cover image');
             const imageFile = beatmapZip.file(info.coverImageFilename);
-            if (Settings.load.imageCover && imageFile) {
+            if (Settings.props.load.imageCover && imageFile) {
                let imgBase64 = await imageFile.async('base64');
                UIHeader.setCoverImage('data:image;base64,' + imgBase64);
-               flag.loading.coverImage = true;
+               State.flag.coverImage = true;
             } else {
                logger.tError(tag(), `${info.coverImageFilename} does not exists.`);
             }
@@ -116,21 +116,21 @@ export default async (type: LoadType) => {
             resolve(null);
          }),
          new Promise(async (resolve) => {
-            LoadedData.contributors = [];
+            State.data.contributors = [];
             if (info.customData._contributors) {
                for (const contr of info.customData._contributors) {
                   logger.tInfo(tag(), 'Loading contributor image ' + contr._name);
                   const imageFile = beatmapZip.file(contr._iconPath);
                   let _base64 = null;
-                  if (Settings.load.imageContributor && imageFile) {
+                  if (Settings.props.load.imageContributor && imageFile) {
                      _base64 = await imageFile.async('base64');
                   } else {
                      logger.tError(tag(), `${contr._iconPath} does not exists.`);
                   }
-                  LoadedData.contributors.push({ ...contr, _base64 });
+                  State.data.contributors.push({ ...contr, _base64 });
                }
             }
-            UIInfo.populateContributors(LoadedData.contributors);
+            UIInfoMetadata.populateContributors(State.data.contributors);
             itemDone++;
             itemSet.delete('contributors image');
             updateStatus();
@@ -139,12 +139,12 @@ export default async (type: LoadType) => {
          new Promise(async (resolve) => {
             logger.tInfo(tag(), 'Loading audio');
             let audioFile = beatmapZip.file(info.audio.filename);
-            if (Settings.load.audio && audioFile) {
+            if (Settings.props.load.audio && audioFile) {
                let loaded = false;
                setTimeout(() => {
-                  if (!loaded && !flag.loading.finished) {
+                  if (!loaded && !State.flag.finished) {
                      UILoading.status(
-                        'info',
+                        LoadStatus.INFO,
                         'Loading audio... (this may take a while)',
                         lerp(itemDone / maxItem, 15, 80),
                      );
@@ -158,16 +158,16 @@ export default async (type: LoadType) => {
                   .then((buffer) => {
                      loaded = true;
                      let duration = buffer.duration;
-                     LoadedData.duration = duration;
+                     State.data.duration = duration;
                      UIHeader.setSongDuration(duration);
-                     flag.loading.audio = true;
+                     State.flag.audio = true;
                   })
                   .catch(function (err) {
                      UIHeader.setSongDuration();
                      logger.tError(tag(), err);
                   });
             } else {
-               if (!LoadedData.duration) UIHeader.setSongDuration();
+               if (!State.data.duration) UIHeader.setSongDuration();
                logger.tError(tag(), `${info.audio.filename} does not exist.`);
             }
             itemDone += 2;
@@ -180,19 +180,16 @@ export default async (type: LoadType) => {
             itemDone++;
             itemSet.delete('audio/BPM data');
             if (audioInfo) {
-               if (!flag.loading.audio) LoadedData.duration = audioInfo.duration;
+               if (!State.flag.audio) State.data.duration = audioInfo.duration;
                UIHeader.setSongDuration(audioInfo.duration);
                updateStatus();
             }
             resolve(audioInfo);
          }),
          ...extractBeatmaps(info, beatmapZip, path).map(async (d, _, ary) => {
-            const res = await d;
+            const res = d.then((v) => v).catch(console.error);
             itemDone++;
             diffCount++;
-            if (res === null) {
-               return null;
-            }
             if (ary.length === diffCount) itemSet.delete('map');
             updateStatus();
             return res;
@@ -201,15 +198,15 @@ export default async (type: LoadType) => {
       maxItem = toPromise.length + 2;
       updateStatus();
       const promises = await Promise.allSettled(toPromise);
-      LoadedData.beatmaps = promises
+      State.data.beatmaps = promises
          .slice(4)
          .map((v) => (v.status === 'fulfilled' ? v.value : null))
-         .filter((v) => v) as IBeatmapItem[];
+         .filter((v) => v !== null) as IBeatmapContainer[];
 
       const audioData = promises[3].status === 'fulfilled' ? promises[3].value : null;
       let minBPM = Math.min(info.audio.bpm, ...(audioData?.bpm ?? []).map((b) => b.bpm));
       let maxBPM = Math.max(info.audio.bpm, ...(audioData?.bpm ?? []).map((b) => b.bpm));
-      LoadedData.beatmaps.forEach((d) => {
+      State.data.beatmaps.forEach((d) => {
          if (d.rawVersion === 4) {
             d.timeProcessor.timescale = audioData!.bpm;
          }
@@ -226,26 +223,27 @@ export default async (type: LoadType) => {
       UISelection.populateSelectCharacteristic(info);
 
       logger.tInfo(tag(), 'Analysing map');
-      UILoading.status('info', 'Analysing general...', 85);
+      UILoading.status(LoadStatus.INFO, 'Analysing general...', 85);
       Analyser.runGeneral();
       UIChecks.displayOutputGeneral();
       await sleep(5);
 
-      UILoading.status('info', 'Analysing difficulty...', 90);
+      UILoading.status(LoadStatus.INFO, 'Analysing difficulty...', 90);
       Analyser.applyAll();
       UIChecks.displayOutputDifficulty();
       await sleep(5);
 
-      UIInput.enable(true);
       let end = performance.now();
-      UILoading.status('info', `Completed! (took ${round((end - start) / 1000, 2)}s)`);
+      UILoading.status(LoadStatus.INFO, `Completed! (took ${round((end - start) / 1000, 2)}s)`);
    } catch (err) {
-      UILoading.status('error', err);
+      UILoading.status(LoadStatus.ERROR, err);
       logger.tError(tag(), err);
-      LoadedData.clear();
-      UIInput.enable(true);
-      UIHeader.switchHeader(true);
+      State.clear();
+      UIHeader.switchToIntro();
    } finally {
+      toggleInputs(true);
       console.timeEnd('loading time');
    }
-};
+}
+
+init();

@@ -1,7 +1,7 @@
 let counter = 0;
 
-export default {
-   createBlock: function (...childs: (HTMLElement[] | HTMLElement)[]): HTMLDivElement {
+export class UIInput {
+   static createBlock(...childs: (HTMLElement[] | HTMLElement)[]): HTMLDivElement {
       const div = document.createElement('div');
       for (const child of childs) {
          if (Array.isArray(child)) {
@@ -9,8 +9,9 @@ export default {
          } else div.appendChild(child);
       }
       return div;
-   },
-   createText: function (
+   }
+
+   static createText(
       callback: EventListener,
       label: string,
       value: string,
@@ -30,8 +31,9 @@ export default {
       }
 
       return [htmlInput, htmlLabel];
-   },
-   createNumber: function (
+   }
+
+   static createNumber(
       callback: EventListener,
       label: string,
       value: number,
@@ -57,8 +59,9 @@ export default {
       if (typeof step === 'number') htmlInput.step = step.toString();
 
       return [htmlLabel, htmlInput];
-   },
-   createCheckbox: function (
+   }
+
+   static createCheckbox(
       callback: EventListener,
       label: string,
       title: string,
@@ -78,8 +81,9 @@ export default {
       htmlInput.addEventListener('change', callback);
 
       return [htmlInput, htmlLabel];
-   },
-   createRadio: function (
+   }
+
+   static createRadio(
       callback: EventListener,
       label: string,
       group: string,
@@ -101,5 +105,5 @@ export default {
       htmlInput.addEventListener('change', callback);
 
       return [htmlLabel, htmlInput];
-   },
-};
+   }
+}

@@ -1,161 +1,196 @@
 // TODO: generate options instead of hardcoded in HTML
-import { UIThemeName } from '../../types/ui';
-import UITheme from '../theme';
-import Settings from '../../settings';
-import { BeatNumbering, ISettings } from '../../types/settings';
+import { UITheme, ThemeName } from '../theme';
+import { Settings } from '../../settings';
+import { BeatNumbering, ISettingsProps } from '../../types/settings';
 import { updateTableRow } from '../information/helpers';
 
-const htmlSettingsTheme: HTMLSelectElement = document.querySelector('.settings__theme')!;
-const htmlSettingsBeatNumbering: HTMLSelectElement = document.querySelector(
-   '.settings__beat-numbering',
-)!;
-const htmlSettingsRounding: HTMLInputElement = document.querySelector('.settings__rounding')!;
-const htmlSettingsInfoCount: HTMLInputElement = document.querySelector('.settings__info-count')!;
-const htmlSettingsDataCheck: HTMLInputElement = document.querySelector('.settings__data-check')!;
-const htmlSettingsLoad: NodeListOf<HTMLInputElement> = document.querySelectorAll('.settings__load');
-const htmlSettingsSort: HTMLInputElement = document.querySelector('.settings__sort')!;
-const htmlSettingsShow: NodeListOf<HTMLInputElement> = document.querySelectorAll('.settings__show');
-const htmlSettingsClear: HTMLInputElement = document.querySelector('.settings__clear-button')!;
-const htmlSettingsChecksPersistent: HTMLInputElement = document.querySelector(
-   '.settings__checks-persistent',
-)!;
+export class UISettings {
+   static #htmlSettingsTheme: HTMLSelectElement;
+   static #htmlSettingsBeatNumbering: HTMLSelectElement;
+   static #htmlSettingsRounding: HTMLInputElement;
+   static #htmlSettingsInfoCount: HTMLInputElement;
+   static #htmlSettingsDataCheck: HTMLInputElement;
+   static #htmlSettingsLoad: NodeListOf<HTMLInputElement>;
+   static #htmlSettingsSort: HTMLInputElement;
+   static #htmlSettingsShow: NodeListOf<HTMLInputElement>;
+   static #htmlSettingsClear: HTMLInputElement;
+   static #htmlSettingsChecksPersistent: HTMLInputElement;
 
-htmlSettingsTheme.addEventListener('change', themeChangeHandler);
-UITheme.list.forEach((th) => {
-   const optTheme = document.createElement('option');
-   optTheme.value = th;
-   optTheme.textContent = th;
-   htmlSettingsTheme.add(optTheme);
-});
-htmlSettingsBeatNumbering.addEventListener('change', beatNumberingChangeHandler);
-htmlSettingsRounding.addEventListener('change', roundingChangeHandler);
-htmlSettingsInfoCount.addEventListener('change', infoCountChangeHandler);
-htmlSettingsDataCheck.addEventListener('change', dataCheckChangeHandler);
-htmlSettingsLoad.forEach((elem) => elem.addEventListener('change', loadCheckHandler));
-htmlSettingsSort.addEventListener('change', sortCheckHandler);
-htmlSettingsShow.forEach((elem) => elem.addEventListener('change', showCheckHandler));
-htmlSettingsChecksPersistent.addEventListener('click', checksPersistCheckHandler);
-htmlSettingsClear.addEventListener('click', clear);
+   static init(): void {
+      UISettings.#htmlSettingsTheme = document.querySelector('.settings__theme')!;
+      UISettings.#htmlSettingsBeatNumbering = document.querySelector('.settings__beat-numbering')!;
+      UISettings.#htmlSettingsRounding = document.querySelector('.settings__rounding')!;
+      UISettings.#htmlSettingsInfoCount = document.querySelector('.settings__info-count')!;
+      UISettings.#htmlSettingsDataCheck = document.querySelector('.settings__data-check')!;
+      UISettings.#htmlSettingsLoad = document.querySelectorAll('.settings__load');
+      UISettings.#htmlSettingsSort = document.querySelector('.settings__sort')!;
+      UISettings.#htmlSettingsShow = document.querySelectorAll('.settings__show');
+      UISettings.#htmlSettingsClear = document.querySelector('.settings__clear-button')!;
+      UISettings.#htmlSettingsChecksPersistent = document.querySelector(
+         '.settings__checks-persistent',
+      )!;
 
-function themeChangeHandler(ev: Event): void {
-   const target = ev.target as HTMLSelectElement;
-   Settings.theme = target.options[target.options.selectedIndex].value as UIThemeName;
-   UITheme.set(Settings.theme);
-   Settings.save();
-}
+      UISettings.#htmlSettingsTheme.addEventListener('change', UISettings.#themeChangeHandler);
+      UITheme.list.forEach((th) => {
+         const optTheme = document.createElement('option');
+         optTheme.value = th;
+         optTheme.textContent = th;
+         UISettings.#htmlSettingsTheme.add(optTheme);
+      });
+      UISettings.#htmlSettingsBeatNumbering.addEventListener(
+         'change',
+         UISettings.#beatNumberingChangeHandler,
+      );
+      UISettings.#htmlSettingsRounding.addEventListener(
+         'change',
+         UISettings.#roundingChangeHandler,
+      );
+      UISettings.#htmlSettingsInfoCount.addEventListener(
+         'change',
+         UISettings.#infoCountChangeHandler,
+      );
+      UISettings.#htmlSettingsDataCheck.addEventListener(
+         'change',
+         UISettings.#dataCheckChangeHandler,
+      );
+      UISettings.#htmlSettingsLoad.forEach((elem) =>
+         elem.addEventListener('change', UISettings.#loadCheckHandler),
+      );
+      UISettings.#htmlSettingsSort.addEventListener('change', UISettings.#sortCheckHandler);
+      UISettings.#htmlSettingsShow.forEach((elem) =>
+         elem.addEventListener('change', UISettings.#showCheckHandler),
+      );
+      UISettings.#htmlSettingsChecksPersistent.addEventListener(
+         'click',
+         UISettings.#checksPersistCheckHandler,
+      );
+      UISettings.#htmlSettingsClear.addEventListener('click', UISettings.clearHandler);
 
-function beatNumberingChangeHandler(ev: Event): void {
-   const target = ev.target as HTMLSelectElement;
-   Settings.beatNumbering = target.options[target.options.selectedIndex].value as BeatNumbering;
-   Settings.save();
-}
+      UISettings.reset();
+   }
 
-function roundingChangeHandler(ev: Event): void {
-   const target = ev.target as HTMLInputElement;
-   Settings.rounding = parseInt(target.value);
-   Settings.save();
-}
-
-function infoCountChangeHandler(ev: Event): void {
-   const target = ev.target as HTMLInputElement;
-   Settings.infoRowCount = parseInt(target.value);
-   updateTableRow();
-   Settings.save();
-}
-
-function dataCheckChangeHandler(ev: Event): void {
-   const target = ev.target as HTMLInputElement;
-   Settings.dataCheck = target.checked;
-   Settings.save();
-}
-
-function showCheckHandler(ev: Event): void {
-   const target = ev.target as HTMLInputElement;
-   const id = target.id.replace('settings__show-', '') as ISettings['show'];
-   Settings.show = id;
-   Settings.save();
-}
-
-function checksPersistCheckHandler(ev: Event): void {
-   const target = ev.target as HTMLInputElement;
-   Settings.checks.persistent = target.checked;
-   Settings.save();
-}
-
-function setShowCheck(id: string): void {
-   htmlSettingsShow.forEach((elem) => {
-      if (elem.id.endsWith(id)) {
-         elem.checked = true;
+   static reset(): void {
+      UISettings.setTheme(Settings.props.theme);
+      UISettings.setBeatNumbering(Settings.props.beatNumbering);
+      UISettings.setRounding(Settings.props.rounding);
+      UISettings.setInfoRow(Settings.props.infoRowCount);
+      UISettings.setDataCheck(Settings.props.dataCheck);
+      UISettings.setSortCheck(Settings.props.sorting);
+      UISettings.setShowCheck(Settings.props.show);
+      for (const id in Settings.props.load) {
+         UISettings.setLoadCheck(id, Settings.props.load[id]);
       }
-   });
-}
+   }
 
-function sortCheckHandler(ev: Event): void {
-   const target = ev.target as HTMLInputElement;
-   Settings.sorting = target.checked;
-   Settings.save();
-}
+   static clearHandler(): void {
+      Settings.clear();
+      Settings.reset();
+      location.reload();
+   }
 
-function setSortCheck(bool: boolean): void {
-   if (htmlSettingsSort) {
-      htmlSettingsSort.checked = bool;
+   static #themeChangeHandler(ev: Event): void {
+      const target = ev.target as HTMLSelectElement;
+      Settings.props.theme = target.options[target.options.selectedIndex].value as ThemeName;
+      UITheme.set(Settings.props.theme);
+      Settings.save();
+   }
+
+   static #beatNumberingChangeHandler(ev: Event): void {
+      const target = ev.target as HTMLSelectElement;
+      Settings.props.beatNumbering = target.options[target.options.selectedIndex]
+         .value as BeatNumbering;
+      Settings.save();
+   }
+
+   static #roundingChangeHandler(ev: Event): void {
+      const target = ev.target as HTMLInputElement;
+      Settings.props.rounding = parseInt(target.value);
+      Settings.save();
+   }
+
+   static #infoCountChangeHandler(ev: Event): void {
+      const target = ev.target as HTMLInputElement;
+      Settings.props.infoRowCount = parseInt(target.value);
+      updateTableRow();
+      Settings.save();
+   }
+
+   static #dataCheckChangeHandler(ev: Event): void {
+      const target = ev.target as HTMLInputElement;
+      Settings.props.dataCheck = target.checked;
+      Settings.save();
+   }
+
+   static #showCheckHandler(ev: Event): void {
+      const target = ev.target as HTMLInputElement;
+      const id = target.id.replace('settings__show-', '') as ISettingsProps['show'];
+      Settings.props.show = id;
+      Settings.save();
+   }
+
+   static #checksPersistCheckHandler(ev: Event): void {
+      const target = ev.target as HTMLInputElement;
+      Settings.props.checks.persistent = target.checked;
+      Settings.save();
+   }
+
+   static setShowCheck(id: string): void {
+      UISettings.#htmlSettingsShow.forEach((elem) => {
+         if (elem.id.endsWith(id)) {
+            elem.checked = true;
+         }
+      });
+   }
+
+   static #sortCheckHandler(ev: Event): void {
+      const target = ev.target as HTMLInputElement;
+      Settings.props.sorting = target.checked;
+      Settings.save();
+   }
+
+   static setSortCheck(bool: boolean): void {
+      if (UISettings.#htmlSettingsSort) {
+         UISettings.#htmlSettingsSort.checked = bool;
+      }
+   }
+
+   static #loadCheckHandler(ev: Event): void {
+      const target = ev.target as HTMLInputElement;
+      const id = target.name;
+      Settings.props.load[id] = target.checked;
+      Settings.save();
+   }
+
+   static setLoadCheck(id: string, bool: boolean): void {
+      UISettings.#htmlSettingsLoad.forEach((elem) => {
+         if (elem.name === id) {
+            elem.checked = bool;
+         }
+      });
+   }
+
+   static setTheme(str: ThemeName): void {
+      UISettings.#htmlSettingsTheme.value = str;
+   }
+
+   static setBeatNumbering(str: BeatNumbering): void {
+      UISettings.#htmlSettingsBeatNumbering.value = str;
+   }
+
+   static setRounding(num: number): void {
+      UISettings.#htmlSettingsRounding.value = num.toString();
+   }
+
+   static setInfoRow(num: number): void {
+      UISettings.#htmlSettingsInfoCount.value = num.toString();
+      updateTableRow();
+   }
+
+   static setDataCheck(bool: boolean): void {
+      UISettings.#htmlSettingsDataCheck.checked = bool;
+   }
+
+   static setChecksPersistent(bool: boolean): void {
+      UISettings.#htmlSettingsChecksPersistent.checked = bool;
    }
 }
-
-function loadCheckHandler(ev: Event): void {
-   const target = ev.target as HTMLInputElement;
-   const id = target.name;
-   Settings.load[id] = target.checked;
-   Settings.save();
-}
-
-function setLoadCheck(id: string, bool: boolean): void {
-   htmlSettingsLoad.forEach((elem) => {
-      if (elem.name === id) {
-         elem.checked = bool;
-      }
-   });
-}
-
-function setTheme(str: UIThemeName): void {
-   htmlSettingsTheme.value = str;
-}
-
-function setBeatNumbering(str: BeatNumbering): void {
-   htmlSettingsBeatNumbering.value = str;
-}
-
-function setRounding(num: number): void {
-   htmlSettingsRounding.value = num.toString();
-}
-
-function setInfoRow(num: number): void {
-   htmlSettingsInfoCount.value = num.toString();
-   updateTableRow();
-}
-
-function setDataCheck(bool: boolean): void {
-   htmlSettingsDataCheck.checked = bool;
-}
-
-function setChecksPersistent(bool: boolean): void {
-   htmlSettingsChecksPersistent.checked = bool;
-}
-
-function clear(): void {
-   Settings.clear();
-   Settings.reset();
-   location.reload();
-}
-
-export default {
-   setShowCheck,
-   setSortCheck,
-   setLoadCheck,
-   setTheme,
-   setBeatNumbering,
-   setRounding,
-   setInfoRow,
-   setDataCheck,
-   clear,
-};

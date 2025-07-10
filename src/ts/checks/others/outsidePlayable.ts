@@ -1,7 +1,7 @@
 import { round, secToMmss } from 'bsmap/utils';
 import * as types from 'bsmap/types';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import UIInput from '../../ui/helpers/input';
+import { UIInput } from '../../ui/helpers/input';
 
 const name = 'Outside Playable Object';
 const description = 'Look for any object starting before and after song timer.';

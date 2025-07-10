@@ -1,51 +1,63 @@
 import { NoteJumpSpeed } from 'bsmap';
 import { round } from 'bsmap/utils';
 import * as types from 'bsmap/types';
-import { IBeatmapItem } from '../../types';
+import { IBeatmapContainer } from '../../types';
 
-const htmlSettingsVersion = document.getElementById(
-   'stats__table-settings-version',
-) as HTMLTableCellElement;
-const htmlSettingsNjs = document.getElementById(
-   'stats__table-settings-njs',
-) as HTMLTableCellElement;
-const htmlSettingsNjsMin = document.getElementById(
-   'stats__table-settings-njs-min',
-) as HTMLTableCellElement;
-const htmlSettingsNjsMax = document.getElementById(
-   'stats__table-settings-njs-max',
-) as HTMLTableCellElement;
-const htmlSettingsNjsCount = document.getElementById(
-   'stats__table-settings-njs-count',
-) as HTMLTableCellElement;
-const htmlSettingsSdm = document.getElementById(
-   'stats__table-settings-sdm',
-) as HTMLTableCellElement;
-const htmlSettingsHjd = document.getElementById(
-   'stats__table-settings-hjd',
-) as HTMLTableCellElement;
-const htmlSettingsJd = document.getElementById('stats__table-settings-jd') as HTMLTableCellElement;
-const htmlSettingsRt = document.getElementById('stats__table-settings-rt') as HTMLTableCellElement;
+export class UIStatsSettings {
+   static #htmlSettingsVersion: HTMLTableCellElement;
+   static #htmlSettingsNjs: HTMLTableCellElement;
+   static #htmlSettingsNjsMin: HTMLTableCellElement;
+   static #htmlSettingsNjsMax: HTMLTableCellElement;
+   static #htmlSettingsNjsCount: HTMLTableCellElement;
+   static #htmlSettingsSdm: HTMLTableCellElement;
+   static #htmlSettingsHjd: HTMLTableCellElement;
+   static #htmlSettingsJd: HTMLTableCellElement;
+   static #htmlSettingsRt: HTMLTableCellElement;
 
-export function updateSettingsTable(
-   info: types.wrapper.IWrapInfo,
-   beatmapItem: IBeatmapItem,
-): void {
-   const njs = NoteJumpSpeed.create(
-      info.audio.bpm,
-      beatmapItem.settings.njs || NoteJumpSpeed.FallbackNJS[beatmapItem.settings.difficulty],
-      beatmapItem.settings.njsOffset,
-   );
-   const njsEvents = beatmapItem.data.difficulty.njsEvents.toSorted((a, b) => a.value - b.value);
+   static init(): void {
+      UIStatsSettings.#htmlSettingsVersion = document.querySelector(
+         '#stats__table-settings-version',
+      )!;
+      UIStatsSettings.#htmlSettingsNjs = document.querySelector('#stats__table-settings-njs')!;
+      UIStatsSettings.#htmlSettingsNjsMin = document.querySelector(
+         '#stats__table-settings-njs-min',
+      )!;
+      UIStatsSettings.#htmlSettingsNjsMax = document.querySelector(
+         '#stats__table-settings-njs-max',
+      )!;
+      UIStatsSettings.#htmlSettingsNjsCount = document.querySelector(
+         '#stats__table-settings-njs-count',
+      )!;
+      UIStatsSettings.#htmlSettingsSdm = document.querySelector('#stats__table-settings-sdm')!;
+      UIStatsSettings.#htmlSettingsHjd = document.querySelector('#stats__table-settings-hjd')!;
+      UIStatsSettings.#htmlSettingsJd = document.querySelector('#stats__table-settings-jd')!;
+      UIStatsSettings.#htmlSettingsRt = document.querySelector('#stats__table-settings-rt')!;
+   }
 
-   htmlSettingsVersion.textContent =
-      (beatmapItem.rawData as any).version || (beatmapItem.rawData as any)._version || 'N/A';
-   htmlSettingsNjs.textContent = round(njs.value, 3).toString();
-   htmlSettingsNjsMax.textContent = round(njs.value + (njsEvents.at(0)?.value || 0), 3).toString();
-   htmlSettingsNjsMin.textContent = round(njs.value + (njsEvents.at(-1)?.value || 0), 3).toString();
-   htmlSettingsNjsCount.textContent = round(njsEvents.length, 3).toString();
-   htmlSettingsSdm.textContent = round(njs.offset, 3).toString();
-   htmlSettingsHjd.textContent = round(njs.hjd, 3).toString();
-   htmlSettingsJd.textContent = round(njs.jd, 3).toString();
-   htmlSettingsRt.textContent = round(njs.reactionTime * 1000).toString() + 'ms';
+   static updateTable(info: types.wrapper.IWrapInfo, beatmap: IBeatmapContainer): void {
+      const njs = NoteJumpSpeed.create(
+         info.audio.bpm,
+         beatmap.info.njs || NoteJumpSpeed.FallbackNJS[beatmap.info.difficulty],
+         beatmap.info.njsOffset,
+      );
+      const njsEvents = beatmap.data.difficulty.njsEvents.toSorted((a, b) => a.value - b.value);
+
+      UIStatsSettings.#htmlSettingsVersion.textContent =
+         (beatmap.rawData as any).version || (beatmap.rawData as any)._version || 'N/A';
+      UIStatsSettings.#htmlSettingsNjs.textContent = round(njs.value, 3).toString();
+      UIStatsSettings.#htmlSettingsNjsMax.textContent = round(
+         njs.value + (njsEvents.at(0)?.value || 0),
+         3,
+      ).toString();
+      UIStatsSettings.#htmlSettingsNjsMin.textContent = round(
+         njs.value + (njsEvents.at(-1)?.value || 0),
+         3,
+      ).toString();
+      UIStatsSettings.#htmlSettingsNjsCount.textContent = round(njsEvents.length, 3).toString();
+      UIStatsSettings.#htmlSettingsSdm.textContent = round(njs.offset, 3).toString();
+      UIStatsSettings.#htmlSettingsHjd.textContent = round(njs.hjd, 3).toString();
+      UIStatsSettings.#htmlSettingsJd.textContent = round(njs.jd, 3).toString();
+      UIStatsSettings.#htmlSettingsRt.textContent =
+         round(njs.reactionTime * 1000).toString() + 'ms';
+   }
 }

@@ -1,13 +1,13 @@
 import { sortObjectFn } from 'bsmap';
 import {
-   IBeatmapItem,
+   IBeatmapContainer,
    ITool,
    IToolOutput,
    ToolArgs,
    ToolInputOrder,
    ToolOutputOrder,
 } from '../../types';
-import UIInput from '../../ui/helpers/input';
+import { UIInput } from '../../ui/helpers/input';
 
 const name = 'Acceptable Beat Precision';
 const description = 'Validate note timing placement is within timing precision.\ni.e: 1/8 1/6 1/x';
@@ -60,7 +60,7 @@ const tool: ITool<{ prec: number[] }> = {
    run,
 };
 
-function check(beatmapItem: IBeatmapItem) {
+function check(beatmapItem: IBeatmapContainer) {
    const swingContainer = beatmapItem.swingAnalysis.container;
    const { prec } = tool.input.params;
 

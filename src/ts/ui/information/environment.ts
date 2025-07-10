@@ -1,5 +1,5 @@
 import { renamer } from 'bsmap/extensions';
-import { htmlTableEnvironmentEnhancement } from './constants';
+import { UIInfoHTML } from './html';
 import { displayTableRow, hideTableRow } from './helpers';
 import * as types from 'bsmap/types';
 
@@ -8,7 +8,7 @@ export function setEnvironmentEnhancement(
    arr?: Partial<types.v2.IChromaEnvironment & types.v3.IChromaEnvironment>[],
 ): void {
    if (arr == null || !arr.length) {
-      hideTableRow(htmlTableEnvironmentEnhancement);
+      hideTableRow(UIInfoHTML.htmlTableEnvironmentEnhancement);
       return;
    }
    const envEnhance = arr.map((elem, i) => {
@@ -45,5 +45,5 @@ export function setEnvironmentEnhancement(
          geometry ? (geometry as any).type || (geometry as any)._type : id
       }`;
    });
-   displayTableRow(htmlTableEnvironmentEnhancement, envEnhance, 'environments');
+   displayTableRow(UIInfoHTML.htmlTableEnvironmentEnhancement, envEnhance, 'environments');
 }

@@ -1,4 +1,4 @@
-import settings from '../../settings';
+import { Settings } from '../../settings';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
 
 const name = 'April Fools';
@@ -25,14 +25,14 @@ function run(args: ToolArgs): IToolOutput[] {
    const isAprilFirst =
       aprilFirst.getDate() === currDate.getDate() && aprilFirst.getMonth() === currDate.getMonth();
 
-   if (!settings.aprilFooled && isAprilFirst) {
+   if (!Settings.props.aprilFooled && isAprilFirst) {
       const htmlContainer = document.createElement('div');
       const htmlLink = <HTMLAnchorElement>document.createElement('a');
       htmlLink.text = 'this link for more info.';
       htmlLink.href = 'https://youtu.be/dQw4w9WgXcQ';
       htmlLink.addEventListener('click', function () {
-         settings.aprilFooled = 1;
-         settings.save();
+         Settings.props.aprilFooled = 1;
+         Settings.save();
       });
       htmlContainer.innerHTML = `<b><span title="Info: no action necessary, take note."> ⚠️ </span>AI generated content detected:</b> this may violate TOS, please refer to `;
       htmlContainer.append(htmlLink);

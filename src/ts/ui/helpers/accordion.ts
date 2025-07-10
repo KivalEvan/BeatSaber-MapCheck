@@ -1,34 +1,41 @@
-import { UIBackgroundColor, UIBackgroundColorType } from '../../types/ui/accordion';
+import * as types from 'bsmap/types';
 
-const prefix = 'accordion__';
-const htmlAccordion: NodeListOf<HTMLInputElement> =
-   document.querySelectorAll<HTMLInputElement>('.accordion__button');
+type BackgroundColorType = types.DifficultyName | 'none';
+const BackgroundColor: Record<BackgroundColorType, string> = {
+   none: '',
+   'Expert+': 'accordion__label--bg-expertplus',
+   ExpertPlus: 'accordion__label--bg-expertplus',
+   Expert: 'accordion__label--bg-expert',
+   Hard: 'accordion__label--bg-hard',
+   Normal: 'accordion__label--bg-normal',
+   Easy: 'accordion__label--bg-easy',
+};
 
-export default {
-   create: function (
+export class UIAccordion {
+   static create(
       id: string,
       title: string,
-      bg: UIBackgroundColorType,
+      bg: BackgroundColorType,
       isFlex: boolean = false,
    ): HTMLElement {
       const accBase = document.createElement('div');
       accBase.className = 'accordion';
 
       const accButton = document.createElement('input');
-      accButton.className = prefix + 'button';
+      accButton.className = 'accordion__button';
       accButton.id = id;
       accButton.setAttribute('type', 'checkbox');
 
       const accLabel = document.createElement('label');
-      accLabel.className = prefix + 'label unselectable';
+      accLabel.className = 'accordion__label unselectable';
       accLabel.htmlFor = id;
       accLabel.textContent = title;
       if (bg) {
-         accLabel.classList.add(UIBackgroundColor[bg]);
+         accLabel.classList.add(BackgroundColor[bg]);
       }
 
       const accCollapsible = document.createElement('div');
-      accCollapsible.className = isFlex ? prefix + 'collapsible-flex' : prefix + 'collapsible';
+      accCollapsible.className = isFlex ? 'accordion__collapsible-flex' : 'accordion__collapsible';
       accCollapsible.id = id + '-content';
 
       accBase.appendChild(accButton);
@@ -36,14 +43,5 @@ export default {
       accBase.appendChild(accCollapsible);
 
       return accBase;
-   },
-
-   // FIXME: htmlAccordion should be redefined as create exist, but that doesn't matter because there's no use case for it as of yet
-   show: function (id: string, check: boolean): void {
-      htmlAccordion.forEach((elem) => {
-         if (elem.id.endsWith(id)) {
-            elem.checked = check;
-         }
-      });
-   },
-};
+   }
+}

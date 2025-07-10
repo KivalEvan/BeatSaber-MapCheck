@@ -1,6 +1,6 @@
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import LoadedData from '../../loadedData';
-import UIInput from '../../ui/helpers/input';
+import { State } from '../../state';
+import { UIInput } from '../../ui/helpers/input';
 import { DifficultyRename } from 'bsmap';
 import { round } from 'bsmap/utils';
 import * as types from 'bsmap/types';
@@ -79,8 +79,8 @@ function run(args: ToolArgs): IToolOutput[] {
    if (!audioDuration) {
       return [];
    }
-   const standardSpsAry = LoadedData.beatmaps
-      .filter((a) => a.settings.characteristic === 'Standard')
+   const standardSpsAry = State.data.beatmaps
+      .filter((a) => a.info.characteristic === 'Standard')
       .map((d) => d.swingAnalysis)
       .filter((a) => tool.input.params[a.difficulty] && a.total.total > 0)
       .sort((a, b) => b.total.perSecond - a.total.perSecond);

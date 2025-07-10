@@ -2,7 +2,7 @@ import { Obstacle, PosX, PosY, TimeProcessor } from 'bsmap';
 import { round } from 'bsmap/utils';
 import * as types from 'bsmap/types';
 import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import UIInput from '../../ui/helpers/input';
+import { UIInput } from '../../ui/helpers/input';
 
 const name = '2-wide Center Obstacle';
 const description =
