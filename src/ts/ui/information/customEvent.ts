@@ -47,7 +47,7 @@ export function setCustomEvents(
       const track = (elem.d as any)?.track ?? (elem._data as any)?._track;
       return `${round(time, Settings.props.rounding)}${
          rt ? ' | ' + secToMmss(rt) : ''
-      } -- ${type} -> [${keyArr.join('')}]${type !== 'AssignTrackParent' ? `(${track})` : ''}`;
+      } -- ${type} -> [${keyArr.join('')}]${track ? `(${track})` : ''}`;
    });
    displayTableRow(UIInfoHTML.htmlTableCustomEvents, customEv, 'customEvents');
 }
