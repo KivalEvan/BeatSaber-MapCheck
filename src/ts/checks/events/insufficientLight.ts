@@ -1,5 +1,14 @@
 import * as types from 'bsmap/types';
-import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import {
+   ICheck,
+   ICheckOutput,
+   CheckArgs,
+   CheckInputOrder,
+   CheckOutputOrder,
+   CheckType,
+   OutputType,
+   OutputStatus,
+} from '../../types';
 import { UIInput } from '../../ui/helpers/input';
 import { isLightEventType, isOffEventValue } from 'bsmap';
 
@@ -20,15 +29,15 @@ function update() {
    htmlInput.checked = tool.input.params.enabled;
 }
 
-const tool: ITool = {
+const tool: ICheck = {
    name,
    description,
-   type: 'event',
+   type: CheckType.EVENT,
    order: {
-      input: ToolInputOrder.EVENTS_INSUFFICIENT_LIGHT,
-      output: ToolOutputOrder.EVENTS_INSUFFICIENT_LIGHT,
+      input: CheckInputOrder.EVENTS_INSUFFICIENT_LIGHT,
+      output: CheckOutputOrder.EVENTS_INSUFFICIENT_LIGHT,
    },
-   input: { params: { enabled }, html: UIInput.createBlock(htmlInput, htmlLabel), update },
+   input: { params: { enabled }, ui: () => UIInput.createBlock(htmlInput, htmlLabel), update },
    run,
 };
 
@@ -48,7 +57,7 @@ function sufficientLight(
    return false;
 }
 
-function run(args: ToolArgs): IToolOutput[] {
+function run(args: CheckArgs): ICheckOutput[] {
    const env = args.beatmap.environment;
    const result = sufficientLight(args.beatmap.data.lightshow.basicEvents, env);
 
@@ -79,15 +88,20 @@ function run(args: ToolArgs): IToolOutput[] {
          case 'GagaEnvironment':
          case 'GlassDesertEnvironment':
             return [
-               { type: 'string', label: 'Insufficient light event', value: '', symbol: 'rank' },
+               {
+                  status: OutputStatus.RANK,
+                  label: 'Insufficient light event',
+                  type: OutputType.STRING,
+                  value: '',
+               },
             ];
          default:
             return [
                {
-                  type: 'string',
+                  status: OutputStatus.RANK,
                   label: 'Unknown light event',
+                  type: OutputType.STRING,
                   value: 'v3 environment light should be manually checked',
-                  symbol: 'rank',
                },
             ];
       }

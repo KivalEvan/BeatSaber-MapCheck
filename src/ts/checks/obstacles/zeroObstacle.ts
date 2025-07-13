@@ -1,5 +1,14 @@
 import { isZeroValueObstacle } from 'bsmap';
-import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import {
+   ICheck,
+   ICheckOutput,
+   CheckArgs,
+   CheckInputOrder,
+   CheckOutputOrder,
+   CheckType,
+   OutputType,
+   OutputStatus,
+} from '../../types';
 import { UIInput } from '../../ui/helpers/input';
 
 const name = 'Zero Obstacle';
@@ -19,37 +28,37 @@ function update() {
    htmlInput.checked = tool.input.params.enabled;
 }
 
-const tool: ITool = {
+const tool: ICheck = {
    name,
    description,
-   type: 'obstacle',
+   type: CheckType.OBSTACLE,
    order: {
-      input: ToolInputOrder.OBSTACLES_ZERO,
-      output: ToolOutputOrder.OBSTACLES_ZERO,
+      input: CheckInputOrder.OBSTACLES_ZERO,
+      output: CheckOutputOrder.OBSTACLES_ZERO,
    },
    input: {
       params: { enabled },
-      html: UIInput.createBlock(htmlInput, htmlLabel),
+      ui: () => UIInput.createBlock(htmlInput, htmlLabel),
       update,
    },
    run,
 };
 
-function check(args: ToolArgs) {
+function check(args: CheckArgs) {
    const { obstacles } = args.beatmap.data.difficulty;
    return obstacles.filter(isZeroValueObstacle);
 }
 
-function run(args: ToolArgs): IToolOutput[] {
+function run(args: CheckArgs): ICheckOutput[] {
    const result = check(args);
 
    if (result.length) {
       return [
          {
-            type: 'time',
+            status: OutputStatus.ERROR,
             label: 'Zero value obstacle',
+            type: OutputType.TIME,
             value: result,
-            symbol: 'error',
          },
       ];
    }

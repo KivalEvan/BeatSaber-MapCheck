@@ -8,8 +8,17 @@ import {
 import { round } from 'bsmap/utils';
 import * as types from 'bsmap/types';
 import { swing } from 'bsmap/extensions';
-import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import { ObjectContainerType } from '../../types/checks/container';
+import {
+   ICheck,
+   ICheckOutput,
+   CheckArgs,
+   CheckInputOrder,
+   CheckOutputOrder,
+   CheckType,
+   OutputType,
+   OutputStatus,
+} from '../../types';
+import { ObjectContainerType } from '../../types/container';
 import { UIInput } from '../../ui/helpers/input';
 
 const name = 'shrado Angle';
@@ -76,23 +85,27 @@ function update(timeProcessor?: TimeProcessor) {
    if (timeProcessor) adjustTimeHandler(timeProcessor);
 }
 
-const tool: ITool<{ distance: number; maxTime: number }> = {
+const tool: ICheck<{ distance: number; maxTime: number }> = {
    name,
    description,
-   type: 'note',
-   order: { input: ToolInputOrder.NOTES_SHRADO_ANGLE, output: ToolOutputOrder.NOTES_SHRADO_ANGLE },
+   type: CheckType.NOTE,
+   order: {
+      input: CheckInputOrder.NOTES_SHRADO_ANGLE,
+      output: CheckOutputOrder.NOTES_SHRADO_ANGLE,
+   },
    input: {
       params: { enabled, distance: defaultDistance, maxTime: defaultMaxTime },
-      html: UIInput.createBlock(
-         htmlEnabled,
-         document.createElement('br'),
-         htmlDistance,
-         document.createElement('br'),
-         htmlLabelMaxTime,
-         htmlInputMaxTime,
-         htmlLabelMaxBeat,
-         htmlInputMaxBeat,
-      ),
+      ui: () =>
+         UIInput.createBlock(
+            htmlEnabled,
+            document.createElement('br'),
+            htmlDistance,
+            document.createElement('br'),
+            htmlLabelMaxTime,
+            htmlInputMaxTime,
+            htmlLabelMaxBeat,
+            htmlInputMaxBeat,
+         ),
       update,
       adjustTime: adjustTimeHandler,
    },
@@ -107,7 +120,7 @@ function adjustTimeHandler(bpm: TimeProcessor) {
    ).toString();
 }
 
-function check(args: ToolArgs) {
+function check(args: CheckArgs) {
    const { timeProcessor, noteContainer } = args.beatmap;
    const { maxTime: temp, distance } = tool.input.params;
    const maxTime = timeProcessor.toBeatTime(temp, false) + 0.001;
@@ -179,11 +192,18 @@ function checkShrAngle(currCutDirection: number, prevCutDirection: number, type:
    return false;
 }
 
-function run(args: ToolArgs): IToolOutput[] {
+function run(args: CheckArgs): ICheckOutput[] {
    const result = check(args);
 
    if (result.length) {
-      return [{ type: 'time', label: 'Shrado angle', value: result, symbol: 'warning' }];
+      return [
+         {
+            status: OutputStatus.WARNING,
+            label: 'Shrado angle',
+            type: OutputType.TIME,
+            value: result,
+         },
+      ];
    }
    return [];
 }

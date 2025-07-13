@@ -1,7 +1,16 @@
 import { PosX, PosY, TimeProcessor } from 'bsmap';
 import { round } from 'bsmap/utils';
-import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import { IObjectContainer, ObjectContainerType } from '../../types/checks/container';
+import {
+   ICheck,
+   ICheckOutput,
+   CheckArgs,
+   CheckInputOrder,
+   CheckOutputOrder,
+   CheckType,
+   OutputType,
+   OutputStatus,
+} from '../../types';
+import { IObjectContainer, ObjectContainerType } from '../../types/container';
 import { UIInput } from '../../ui/helpers/input';
 
 const name = 'Vision Block';
@@ -152,13 +161,13 @@ function update(timeProcessor?: TimeProcessor) {
    if (timeProcessor) adjustTimeHandler(timeProcessor);
 }
 
-const tool: ITool<{ specific: 'difficulty' | 'time'; minTime: number; maxTime: number }> = {
+const tool: ICheck<{ specific: 'difficulty' | 'time'; minTime: number; maxTime: number }> = {
    name,
    description,
-   type: 'note',
+   type: CheckType.NOTE,
    order: {
-      input: ToolInputOrder.NOTES_VISION_BLOCK,
-      output: ToolOutputOrder.NOTES_VISION_BLOCK,
+      input: CheckInputOrder.NOTES_VISION_BLOCK,
+      output: CheckOutputOrder.NOTES_VISION_BLOCK,
    },
    input: {
       params: {
@@ -167,24 +176,25 @@ const tool: ITool<{ specific: 'difficulty' | 'time'; minTime: number; maxTime: n
          minTime: defaultMinTime,
          maxTime: defaultMaxTime,
       },
-      html: UIInput.createBlock(
-         htmlEnabled,
-         document.createElement('br'),
-         htmlInputTimeCheck,
-         htmlLabelTimeCheck,
-         htmlInputDiffCheck,
-         htmlLabelDiffCheck,
-         document.createElement('br'),
-         htmlLabelMinTime,
-         htmlInputMinTime,
-         htmlLabelMinBeat,
-         htmlInputMinBeat,
-         document.createElement('br'),
-         htmlLabelMaxTime,
-         htmlInputMaxTime,
-         htmlLabelMaxBeat,
-         htmlInputMaxBeat,
-      ),
+      ui: () =>
+         UIInput.createBlock(
+            htmlEnabled,
+            document.createElement('br'),
+            htmlInputTimeCheck,
+            htmlLabelTimeCheck,
+            htmlInputDiffCheck,
+            htmlLabelDiffCheck,
+            document.createElement('br'),
+            htmlLabelMinTime,
+            htmlInputMinTime,
+            htmlLabelMinBeat,
+            htmlInputMinBeat,
+            document.createElement('br'),
+            htmlLabelMaxTime,
+            htmlInputMaxTime,
+            htmlLabelMaxBeat,
+            htmlInputMaxBeat,
+         ),
       update,
       adjustTime: adjustTimeHandler,
    },
@@ -208,7 +218,7 @@ function inputSpecCheckHandler(this: HTMLInputElement) {
    tool.input.params.specific = this.value as 'difficulty' | 'time';
 }
 
-function check(args: ToolArgs) {
+function check(args: CheckArgs) {
    const { timeProcessor, njs } = args.beatmap;
    const noteContainer = args.beatmap.noteContainer.filter(
       (n) => n.type !== ObjectContainerType.ARC,
@@ -266,16 +276,16 @@ function check(args: ToolArgs) {
    return result;
 }
 
-function run(args: ToolArgs): IToolOutput[] {
+function run(args: CheckArgs): ICheckOutput[] {
    const result = check(args);
 
    if (result.length) {
       return [
          {
-            type: 'time',
+            status: OutputStatus.WARNING,
             label: 'Vision block',
+            type: OutputType.TIME,
             value: result.map((n) => n.data),
-            symbol: 'warning',
          },
       ];
    }

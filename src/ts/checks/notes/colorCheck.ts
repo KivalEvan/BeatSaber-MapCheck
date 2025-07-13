@@ -1,7 +1,16 @@
 import { ColorScheme, EnvironmentSchemeName } from 'bsmap';
 import { colorFrom, deltaE00, round } from 'bsmap/utils';
 import * as types from 'bsmap/types';
-import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import {
+   ICheck,
+   ICheckOutput,
+   CheckArgs,
+   CheckInputOrder,
+   CheckOutputOrder,
+   CheckType,
+   OutputType,
+   OutputStatus,
+} from '../../types';
 import { UIInput } from '../../ui/helpers/input';
 
 const name = 'Color Check';
@@ -39,23 +48,23 @@ function update() {
    htmlInput.checked = tool.input.params.enabled;
 }
 
-const tool: ITool = {
+const tool: ICheck = {
    name,
    description,
-   type: 'note',
+   type: CheckType.NOTE,
    order: {
-      input: ToolInputOrder.NOTES_COLOR_CHECK,
-      output: ToolOutputOrder.NOTES_COLOR_CHECK,
+      input: CheckInputOrder.NOTES_COLOR_CHECK,
+      output: CheckOutputOrder.NOTES_COLOR_CHECK,
    },
    input: {
       params: { enabled },
-      html: UIInput.createBlock(htmlInput, htmlLabel),
+      ui: () => UIInput.createBlock(htmlInput, htmlLabel),
       update,
    },
    run,
 };
 
-function customColorSimilarity(map: ToolArgs) {
+function customColorSimilarity(map: CheckArgs) {
    const colorScheme = map.info.colorSchemes[map.beatmap.info.colorSchemeId];
    const checkColorLeft =
       map.beatmap?.info.customData?._colorLeft ??
@@ -71,7 +80,7 @@ function customColorSimilarity(map: ToolArgs) {
    return 100;
 }
 
-function customColorArrowSimilarity(map: ToolArgs) {
+function customColorArrowSimilarity(map: CheckArgs) {
    const colorScheme = map.info.colorSchemes[map.beatmap.info.colorSchemeId];
    let deltaELeft = 100,
       deltaERight = 100;
@@ -92,7 +101,7 @@ function customColorArrowSimilarity(map: ToolArgs) {
    return Math.min(deltaELeft, deltaERight);
 }
 
-function run(args: ToolArgs): IToolOutput[] {
+function run(args: CheckArgs): ICheckOutput[] {
    const colorScheme = args.info.colorSchemes[args.beatmap.info.colorSchemeId];
    if (
       !args.beatmap.info.customData?._colorLeft &&
@@ -105,21 +114,21 @@ function run(args: ToolArgs): IToolOutput[] {
    const ccSimilar = customColorSimilarity(args);
    const ccaSimilar = customColorArrowSimilarity(args);
 
-   const results: IToolOutput[] = [];
+   const results: ICheckOutput[] = [];
    if (ccSimilar <= 20) {
       results.push({
-         type: 'string',
+         type: OutputType.STRING,
          label: `${levelMsg(deltaELevel, ccSimilar)} note color (dE${round(ccSimilar, 1)})`,
          value: 'suggest change to better differentiate between 2 note colour',
-         symbol: 'warning',
+         status: OutputStatus.WARNING,
       });
    }
    if (ccaSimilar <= 20) {
       results.push({
-         type: 'string',
+         type: OutputType.STRING,
          label: `${levelMsg(deltaELevel, ccaSimilar)} arrow note color (dE${round(ccaSimilar, 1)})`,
          value: 'may be difficult to see the arrow',
-         symbol: 'warning',
+         status: OutputStatus.WARNING,
       });
    }
 

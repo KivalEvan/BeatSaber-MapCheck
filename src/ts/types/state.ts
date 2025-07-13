@@ -1,4 +1,4 @@
-import { IBeatmapContainer } from './checks/container';
+import { IBeatmapContainer } from './container';
 import { IContributorB64 } from './contributor';
 import { IAnalysis } from './checks/analysis';
 import * as types from 'bsmap/types';

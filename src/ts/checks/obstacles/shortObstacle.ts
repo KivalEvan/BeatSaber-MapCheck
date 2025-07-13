@@ -1,6 +1,15 @@
 import { Obstacle, PosX, PosY } from 'bsmap';
 import * as types from 'bsmap/types';
-import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import {
+   ICheck,
+   ICheckOutput,
+   CheckArgs,
+   CheckInputOrder,
+   CheckOutputOrder,
+   CheckType,
+   OutputType,
+   OutputStatus,
+} from '../../types';
 import { UIInput } from '../../ui/helpers/input';
 
 const name = '<15ms Obstacle';
@@ -21,17 +30,17 @@ function update() {
    htmlInput.checked = tool.input.params.enabled;
 }
 
-const tool: ITool<{ minDur: number }> = {
+const tool: ICheck<{ minDur: number }> = {
    name,
    description,
-   type: 'obstacle',
+   type: CheckType.OBSTACLE,
    order: {
-      input: ToolInputOrder.OBSTACLES_SHORT,
-      output: ToolOutputOrder.OBSTACLES_SHORT,
+      input: CheckInputOrder.OBSTACLES_SHORT,
+      output: CheckOutputOrder.OBSTACLES_SHORT,
    },
    input: {
       params: { enabled, minDur: 0.015 },
-      html: UIInput.createBlock(htmlInput, htmlLabel),
+      ui: () => UIInput.createBlock(htmlInput, htmlLabel),
       update,
    },
    run,
@@ -50,7 +59,7 @@ function customIsLonger(
    );
 }
 
-function check(args: ToolArgs) {
+function check(args: CheckArgs) {
    const { obstacles } = args.beatmap.data.difficulty;
    const { minDur } = tool.input.params;
    const ary: types.wrapper.IWrapObstacle[] = [];
@@ -184,16 +193,16 @@ function check(args: ToolArgs) {
    return ary;
 }
 
-function run(args: ToolArgs): IToolOutput[] {
+function run(args: CheckArgs): ICheckOutput[] {
    const result = check(args);
 
    if (result.length) {
       return [
          {
-            type: 'time',
+            status: OutputStatus.WARNING,
             label: '<15ms obstacle',
+            type: OutputType.TIME,
             value: result,
-            symbol: 'warning',
          },
       ];
    }

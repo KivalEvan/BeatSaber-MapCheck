@@ -12,8 +12,17 @@ import {
 import { round } from 'bsmap/utils';
 import * as types from 'bsmap/types';
 import { placement, swing } from 'bsmap/extensions';
-import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import { IObjectContainer, ObjectContainerType } from '../../types/checks/container';
+import {
+   ICheck,
+   ICheckOutput,
+   CheckArgs,
+   CheckInputOrder,
+   CheckOutputOrder,
+   CheckType,
+   OutputType,
+   OutputStatus,
+} from '../../types';
+import { IObjectContainer, ObjectContainerType } from '../../types/container';
 import { UIInput } from '../../ui/helpers/input';
 
 const name = 'Inline Sharp Angle';
@@ -69,27 +78,28 @@ function update(timeProcessor?: TimeProcessor) {
    if (timeProcessor) adjustTimeHandler(timeProcessor);
 }
 
-const tool: ITool<{ maxTime: number }> = {
+const tool: ICheck<{ maxTime: number }> = {
    name,
    description,
-   type: 'note',
+   type: CheckType.NOTE,
    order: {
-      input: ToolInputOrder.NOTES_INLINE_ANGLE,
-      output: ToolOutputOrder.NOTES_INLINE_ANGLE,
+      input: CheckInputOrder.NOTES_INLINE_ANGLE,
+      output: CheckOutputOrder.NOTES_INLINE_ANGLE,
    },
    input: {
       params: {
          enabled,
          maxTime: defaultMaxTime,
       },
-      html: UIInput.createBlock(
-         htmlEnabled,
-         document.createElement('br'),
-         htmlLabelMaxTime,
-         htmlInputMaxTime,
-         htmlLabelMaxBeat,
-         htmlInputMaxBeat,
-      ),
+      ui: () =>
+         UIInput.createBlock(
+            htmlEnabled,
+            document.createElement('br'),
+            htmlLabelMaxTime,
+            htmlInputMaxTime,
+            htmlLabelMaxBeat,
+            htmlInputMaxBeat,
+         ),
       update,
       adjustTime: adjustTimeHandler,
    },
@@ -104,7 +114,7 @@ function adjustTimeHandler(bpm: TimeProcessor) {
    ).toString();
 }
 
-function check(args: ToolArgs) {
+function check(args: CheckArgs) {
    const { timeProcessor } = args.beatmap;
    const noteContainer = args.beatmap.noteContainer;
    const { maxTime: temp } = tool.input.params;
@@ -217,16 +227,16 @@ function checkInline(
    return false;
 }
 
-function run(args: ToolArgs): IToolOutput[] {
+function run(args: CheckArgs): ICheckOutput[] {
    const result = check(args);
 
    if (result.length) {
       return [
          {
-            type: 'time',
+            status: OutputStatus.WARNING,
             label: 'Inline sharp angle',
+            type: OutputType.TIME,
             value: result,
-            symbol: 'warning',
          },
       ];
    }

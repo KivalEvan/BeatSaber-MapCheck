@@ -1,5 +1,14 @@
 import { State } from '../../state';
-import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import {
+   ICheck,
+   ICheckOutput,
+   CheckArgs,
+   CheckInputOrder,
+   CheckOutputOrder,
+   CheckType,
+   OutputStatus,
+   OutputType,
+} from '../../types';
 import { UIInput } from '../../ui/helpers/input';
 
 const name = 'Beatmap ZIP';
@@ -19,30 +28,30 @@ function update() {
    htmlInput.checked = tool.input.params.enabled;
 }
 
-const tool: ITool = {
+const tool: ICheck = {
    name,
    description,
-   type: 'general',
+   type: CheckType.GENERAL,
    order: {
-      input: ToolInputOrder.GENERAL_ZIP,
-      output: ToolOutputOrder.GENERAL_ZIP,
+      input: CheckInputOrder.GENERAL_ZIP,
+      output: CheckOutputOrder.GENERAL_ZIP,
    },
    input: {
       params: { enabled },
-      html: UIInput.createBlock(htmlInput, htmlLabel),
+      ui: () => UIInput.createBlock(htmlInput, htmlLabel),
       update,
    },
    run,
 };
 
-function run(args: ToolArgs): IToolOutput[] {
+function run(args: CheckArgs): ICheckOutput[] {
    if (State.flag.nested) {
       return [
          {
-            type: 'string',
+            status: OutputStatus.ERROR,
             label: 'Beatmap in folder ZIP',
+            type: OutputType.STRING,
             value: 'Info file and the rest should be in the root of zip file.',
-            symbol: 'error',
          },
       ];
    }

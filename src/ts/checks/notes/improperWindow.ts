@@ -1,8 +1,17 @@
 import { isSlantedWindow, NoteColor, NoteDirection } from 'bsmap';
 import * as types from 'bsmap/types';
 import { swing } from 'bsmap/extensions';
-import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import { ObjectContainerType } from '../../types/checks/container';
+import {
+   ICheck,
+   ICheckOutput,
+   CheckArgs,
+   CheckInputOrder,
+   CheckOutputOrder,
+   CheckType,
+   OutputType,
+   OutputStatus,
+} from '../../types';
+import { ObjectContainerType } from '../../types/container';
 import { UIInput } from '../../ui/helpers/input';
 
 const name = 'Improper Window Snap';
@@ -22,23 +31,23 @@ function update() {
    htmlInput.checked = tool.input.params.enabled;
 }
 
-const tool: ITool = {
+const tool: ICheck = {
    name,
    description,
-   type: 'note',
+   type: CheckType.NOTE,
    order: {
-      input: ToolInputOrder.NOTES_IMPROPER_WINDOW,
-      output: ToolOutputOrder.NOTES_IMPROPER_WINDOW,
+      input: CheckInputOrder.NOTES_IMPROPER_WINDOW,
+      output: CheckOutputOrder.NOTES_IMPROPER_WINDOW,
    },
    input: {
       params: { enabled },
-      html: UIInput.createBlock(htmlInput, htmlLabel),
+      ui: () => UIInput.createBlock(htmlInput, htmlLabel),
       update,
    },
    run,
 };
 
-function check(args: ToolArgs) {
+function check(args: CheckArgs) {
    const { timeProcessor, noteContainer } = args.beatmap;
    const lastNote: { [key: number]: types.wrapper.IWrapColorNote } = {};
    const swingNoteArray: { [key: number]: types.wrapper.IWrapColorNote[] } = {
@@ -73,16 +82,16 @@ function check(args: ToolArgs) {
    return result;
 }
 
-function run(args: ToolArgs): IToolOutput[] {
+function run(args: CheckArgs): ICheckOutput[] {
    const result = check(args);
 
    if (result.length) {
       return [
          {
-            type: 'time',
+            status: OutputStatus.ERROR,
             label: 'Improper window snap',
+            type: OutputType.TIME,
             value: result,
-            symbol: 'error',
          },
       ];
    }

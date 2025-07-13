@@ -1,6 +1,15 @@
 import { TimeProcessor } from 'bsmap';
 import { round } from 'bsmap/utils';
-import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import {
+   ICheck,
+   ICheckOutput,
+   CheckArgs,
+   CheckInputOrder,
+   CheckOutputOrder,
+   CheckType,
+   OutputType,
+   OutputStatus,
+} from '../../types';
 import { UIInput } from '../../ui/helpers/input';
 
 const name = 'Slow Slider';
@@ -55,27 +64,28 @@ function update(timeProcessor?: TimeProcessor) {
    if (timeProcessor) adjustTimeHandler(timeProcessor);
 }
 
-const tool: ITool<{ minSpeed: number }> = {
+const tool: ICheck<{ minSpeed: number }> = {
    name,
    description,
-   type: 'note',
+   type: CheckType.NOTE,
    order: {
-      input: ToolInputOrder.NOTES_SLOW_SLIDER,
-      output: ToolOutputOrder.NOTES_SLOW_SLIDER,
+      input: CheckInputOrder.NOTES_SLOW_SLIDER,
+      output: CheckOutputOrder.NOTES_SLOW_SLIDER,
    },
    input: {
       params: {
          enabled,
          minSpeed: defaultSpeed,
       },
-      html: UIInput.createBlock(
-         htmlEnabled,
-         document.createElement('br'),
-         htmlLabelMinTime,
-         htmlInputMinTime,
-         htmlLabelMinPrec,
-         htmlInputMinPrec,
-      ),
+      ui: () =>
+         UIInput.createBlock(
+            htmlEnabled,
+            document.createElement('br'),
+            htmlLabelMinTime,
+            htmlInputMinTime,
+            htmlLabelMinPrec,
+            htmlInputMinPrec,
+         ),
       update,
       adjustTime: adjustTimeHandler,
    },
@@ -90,24 +100,24 @@ function adjustTimeHandler(bpm: TimeProcessor) {
    ).toString();
 }
 
-function check(args: ToolArgs) {
+function check(args: CheckArgs) {
    const { swingAnalysis } = args.beatmap;
    const { minSpeed } = tool.input.params;
 
    return swingAnalysis.container.filter((s) => s.maxSpeed > minSpeed || s.minSpeed > minSpeed);
 }
 
-function run(args: ToolArgs): IToolOutput[] {
+function run(args: CheckArgs): ICheckOutput[] {
    const { minSpeed } = tool.input.params;
    const result = check(args);
 
    if (result.length) {
       return [
          {
-            type: 'time',
+            status: OutputStatus.WARNING,
             label: `Slow slider (>${round(minSpeed * 1000, 1)}ms)`,
+            type: OutputType.TIME,
             value: result.map((n) => n.data[0]),
-            symbol: 'warning',
          },
       ];
    }

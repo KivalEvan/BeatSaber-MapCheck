@@ -2,13 +2,16 @@ import { NoteColor, NoteDirection, NoteDirectionAngle, PosX, PosY, resolveNoteAn
 import * as types from 'bsmap/types';
 import {
    IBeatmapContainer,
-   ITool,
-   IToolOutput,
-   ToolArgs,
-   ToolInputOrder,
-   ToolOutputOrder,
+   ICheck,
+   ICheckOutput,
+   CheckArgs,
+   CheckInputOrder,
+   CheckOutputOrder,
+   CheckType,
+   OutputStatus,
+   OutputType,
 } from '../../types';
-import { ObjectContainerType } from '../../types/checks/container';
+import { ObjectContainerType } from '../../types/container';
 import { UIInput } from '../../ui/helpers/input';
 import { placement, swing } from 'bsmap/extensions';
 
@@ -29,17 +32,17 @@ function update() {
    htmlInput.checked = tool.input.params.enabled;
 }
 
-const tool: ITool = {
+const tool: ICheck = {
    name,
    description,
-   type: 'note',
+   type: CheckType.NOTE,
    order: {
-      input: ToolInputOrder.NOTES_DOUBLE_DIRECTIONAL,
-      output: ToolOutputOrder.NOTES_DOUBLE_DIRECTIONAL,
+      input: CheckInputOrder.NOTES_DOUBLE_DIRECTIONAL,
+      output: CheckOutputOrder.NOTES_DOUBLE_DIRECTIONAL,
    },
    input: {
       params: { enabled },
-      html: UIInput.createBlock(htmlInput, htmlLabel),
+      ui: () => UIInput.createBlock(htmlInput, htmlLabel),
       update,
    },
    run,
@@ -134,16 +137,16 @@ function check(beatmapItem: IBeatmapContainer) {
    return arr;
 }
 
-function run(args: ToolArgs): IToolOutput[] {
+function run(args: CheckArgs): ICheckOutput[] {
    const result = check(args.beatmap);
 
    if (result.length) {
       return [
          {
-            type: 'time',
+            status: OutputStatus.WARNING,
             label: 'Double-directional',
+            type: OutputType.TIME,
             value: result,
-            symbol: 'warning',
          },
       ];
    }

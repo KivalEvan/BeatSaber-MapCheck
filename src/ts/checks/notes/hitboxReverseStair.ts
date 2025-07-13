@@ -1,7 +1,16 @@
 import { NoteColor, NoteDirection, resolveNoteAngle } from 'bsmap';
 import * as types from 'bsmap/types';
-import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import { IObjectContainerColor, ObjectContainerType } from '../../types/checks/container';
+import {
+   ICheck,
+   ICheckOutput,
+   CheckArgs,
+   CheckInputOrder,
+   CheckOutputOrder,
+   CheckType,
+   OutputType,
+   OutputStatus,
+} from '../../types';
+import { IObjectContainerColor, ObjectContainerType } from '../../types/container';
 import { UIInput } from '../../ui/helpers/input';
 import { placement, swing } from 'bsmap/extensions';
 
@@ -22,17 +31,17 @@ function update() {
    htmlInput.checked = tool.input.params.enabled;
 }
 
-const tool: ITool = {
+const tool: ICheck = {
    name,
    description,
-   type: 'note',
+   type: CheckType.NOTE,
    order: {
-      input: ToolInputOrder.NOTES_HITBOX_REVERSE_STAIR,
-      output: ToolOutputOrder.NOTES_HITBOX_REVERSE_STAIR,
+      input: CheckInputOrder.NOTES_HITBOX_REVERSE_STAIR,
+      output: CheckOutputOrder.NOTES_HITBOX_REVERSE_STAIR,
    },
    input: {
       params: { enabled },
-      html: UIInput.createBlock(htmlInput, htmlLabel),
+      ui: () => UIInput.createBlock(htmlInput, htmlLabel),
       update,
    },
    run,
@@ -40,7 +49,7 @@ const tool: ITool = {
 
 const constant = 0.03414823529;
 const constantDiagonal = 0.03414823529;
-function check(args: ToolArgs) {
+function check(args: CheckArgs) {
    const { timeProcessor, njs, noteContainer } = args.beatmap;
 
    const lastNote: { [key: number]: types.wrapper.IWrapColorNote } = {};
@@ -100,16 +109,16 @@ function check(args: ToolArgs) {
    return result;
 }
 
-function run(args: ToolArgs): IToolOutput[] {
+function run(args: CheckArgs): ICheckOutput[] {
    const result = check(args);
 
    if (result.length) {
       return [
          {
-            type: 'time',
+            status: OutputStatus.RANK,
             label: 'Hitbox reverse Staircase',
+            type: OutputType.TIME,
             value: result,
-            symbol: 'rank',
          },
       ];
    }

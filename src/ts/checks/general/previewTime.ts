@@ -1,4 +1,13 @@
-import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import {
+   ICheck,
+   ICheckOutput,
+   CheckArgs,
+   CheckInputOrder,
+   CheckOutputOrder,
+   CheckType,
+   OutputType,
+   OutputStatus,
+} from '../../types';
 import { UIInput } from '../../ui/helpers/input';
 
 const name = 'Preview Time';
@@ -18,32 +27,32 @@ function update() {
    htmlInput.checked = tool.input.params.enabled;
 }
 
-const tool: ITool = {
+const tool: ICheck = {
    name,
    description,
-   type: 'general',
+   type: CheckType.GENERAL,
    order: {
-      input: ToolInputOrder.GENERAL_PREVIEW_TIME,
-      output: ToolOutputOrder.GENERAL_PREVIEW_TIME,
+      input: CheckInputOrder.GENERAL_PREVIEW_TIME,
+      output: CheckOutputOrder.GENERAL_PREVIEW_TIME,
    },
    input: {
       params: { enabled },
-      html: UIInput.createBlock(htmlInput, htmlLabel),
+      ui: () => UIInput.createBlock(htmlInput, htmlLabel),
       update,
    },
    run,
 };
 
-function run(args: ToolArgs): IToolOutput[] {
+function run(args: CheckArgs): ICheckOutput[] {
    const { previewStartTime, previewDuration } = args.info.audio;
 
    if (previewStartTime === 12 && previewDuration === 10) {
       return [
          {
-            type: 'string',
+            type: OutputType.STRING,
             label: 'Default preview time',
             value: "strongly recommended to set for audience's 1st impression",
-            symbol: 'info',
+            status: OutputStatus.INFO,
          },
       ];
    }

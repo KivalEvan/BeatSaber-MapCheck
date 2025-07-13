@@ -1,5 +1,14 @@
 import { round } from 'bsmap/utils';
-import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import {
+   ICheck,
+   ICheckOutput,
+   CheckArgs,
+   CheckInputOrder,
+   CheckOutputOrder,
+   CheckType,
+   OutputType,
+   OutputStatus,
+} from '../../types';
 import { UIInput } from '../../ui/helpers/input';
 import { getFirstInteractiveTime } from 'bsmap';
 
@@ -33,33 +42,33 @@ function update() {
    htmlTime.value = tool.input.params.time.toString();
 }
 
-const tool: ITool<{ time: number }> = {
+const tool: ICheck<{ time: number }> = {
    name,
    description,
-   type: 'other',
+   type: CheckType.OTHER,
    order: {
-      input: ToolInputOrder.OTHERS_HOT_START,
-      output: ToolOutputOrder.OTHERS_HOT_START,
+      input: CheckInputOrder.OTHERS_HOT_START,
+      output: CheckOutputOrder.OTHERS_HOT_START,
    },
    input: {
       params: { enabled, time: defaultTime },
-      html: UIInput.createBlock(htmlInput, htmlLabel, htmlTimeLabel, htmlTime),
+      ui: () => UIInput.createBlock(htmlInput, htmlLabel, htmlTimeLabel, htmlTime),
       update,
    },
    run,
 };
 
-function run(args: ToolArgs): IToolOutput[] {
+function run(args: CheckArgs): ICheckOutput[] {
    const { time } = tool.input.params;
    const result = args.beatmap.timeProcessor.toRealTime(getFirstInteractiveTime(args.beatmap.data));
 
    if (result < time) {
       return [
          {
-            type: 'string',
+            type: OutputType.STRING,
             label: 'Hot start',
             value: `${round(result, 2)}s`,
-            symbol: 'warning',
+            status: OutputStatus.WARNING,
          },
       ];
    }

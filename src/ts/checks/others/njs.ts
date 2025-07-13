@@ -1,6 +1,15 @@
 import { NoteJumpSpeed } from 'bsmap';
 import { round } from 'bsmap/utils';
-import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import {
+   ICheck,
+   ICheckOutput,
+   CheckArgs,
+   CheckInputOrder,
+   CheckOutputOrder,
+   CheckType,
+   OutputType,
+   OutputStatus,
+} from '../../types';
 import { UIInput } from '../../ui/helpers/input';
 
 const name = 'NJS Check';
@@ -20,90 +29,90 @@ function update() {
    htmlInput.checked = tool.input.params.enabled;
 }
 
-const tool: ITool = {
+const tool: ICheck = {
    name,
    description,
-   type: 'other',
+   type: CheckType.OTHER,
    order: {
-      input: ToolInputOrder.OTHERS_NJS,
-      output: ToolOutputOrder.OTHERS_NJS,
+      input: CheckInputOrder.OTHERS_NJS,
+      output: CheckOutputOrder.OTHERS_NJS,
    },
    input: {
       params: { enabled },
-      html: UIInput.createBlock(htmlInput, htmlLabel),
+      ui: () => UIInput.createBlock(htmlInput, htmlLabel),
       update,
    },
    run,
 };
 
-function run(args: ToolArgs): IToolOutput[] {
+function run(args: CheckArgs): ICheckOutput[] {
    const { njs, timeProcessor } = args.beatmap;
 
-   const results: IToolOutput[] = [];
+   const results: ICheckOutput[] = [];
    if (args.beatmap.info.njs === 0) {
       results.push({
-         type: 'string',
+         type: OutputType.STRING,
          label: 'Unset NJS',
          value: 'fallback NJS is used',
-         symbol: 'error',
+         status: OutputStatus.ERROR,
       });
    }
    if (njs.value > 23) {
       results.push({
-         type: 'string',
+         type: OutputType.STRING,
          label: `NJS is too high (${round(njs.value, 2)})`,
          value: 'use lower whenever possible',
-         symbol: 'warning',
+         status: OutputStatus.WARNING,
       });
    }
    if (njs.value < 3) {
       results.push({
-         type: 'string',
+         type: OutputType.STRING,
          label: `NJS is too low (${round(njs.value, 2)})`,
          value: 'timing is less significant below this',
-         symbol: 'warning',
+         status: OutputStatus.WARNING,
       });
    }
    if (njs.jd > 36) {
       results.push({
-         type: 'string',
+         type: OutputType.STRING,
          label: 'Very high jump distance',
          value: `${round(njs.jd, 2)}`,
-         symbol: 'warning',
+         status: OutputStatus.WARNING,
       });
    }
    if (njs.jd < 18) {
       results.push({
-         type: 'string',
+         type: OutputType.STRING,
          label: 'Very low jump distance',
          value: `${round(njs.jd, 2)}`,
-         symbol: 'warning',
+         status: OutputStatus.WARNING,
       });
    }
    if (njs.jd > njs.calcJdOptimal()[1]) {
       results.push({
-         type: 'string',
+         type: OutputType.STRING,
          label: `High jump distance warning (>${round(njs.calcJdOptimal()[1], 2)})`,
          value: 'NJS & offset may be uncomfortable to play',
-         symbol: 'warning',
+         status: OutputStatus.WARNING,
       });
    }
    if (timeProcessor.toRealTime(njs.hjd, false) < 0.42) {
       results.push({
-         type: 'string',
+         type: OutputType.STRING,
          label: `Very quick reaction time (${round(
             timeProcessor.toRealTime(njs.hjd, false) * 1000,
          )}ms)`,
          value: 'may lead to suboptimal gameplay',
-         symbol: 'warning',
+         status: OutputStatus.WARNING,
       });
    }
    if (njs.calcHjd(0) + njs.offset < NoteJumpSpeed.HJD_MIN) {
       results.push({
-         type: 'string',
+         type: OutputType.STRING,
          label: 'Unnecessary negative offset',
          value: `will not drop below ${NoteJumpSpeed.HJD_MIN}`,
-         symbol: 'warning',
+         status: OutputStatus.WARNING,
       });
    }
 

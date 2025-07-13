@@ -1,5 +1,14 @@
 import { NoteColor } from 'bsmap/types';
-import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import {
+   ICheck,
+   ICheckOutput,
+   CheckArgs,
+   CheckInputOrder,
+   CheckOutputOrder,
+   CheckType,
+   OutputType,
+   OutputStatus,
+} from '../../types';
 import { UIInput } from '../../ui/helpers/input';
 import { round } from 'bsmap/utils';
 
@@ -20,23 +29,23 @@ function update() {
    htmlInput.checked = tool.input.params.enabled;
 }
 
-const tool: ITool<{ threshold: number }> = {
+const tool: ICheck<{ threshold: number }> = {
    name,
    description,
-   type: 'note',
+   type: CheckType.NOTE,
    order: {
-      input: ToolInputOrder.NOTES_EXCESSIVE_DOUBLE,
-      output: ToolOutputOrder.NOTES_EXCESSIVE_DOUBLE,
+      input: CheckInputOrder.NOTES_EXCESSIVE_DOUBLE,
+      output: CheckOutputOrder.NOTES_EXCESSIVE_DOUBLE,
    },
    input: {
       params: { enabled, threshold: 0.6 },
-      html: UIInput.createBlock(htmlInput, htmlLabel),
+      ui: () => UIInput.createBlock(htmlInput, htmlLabel),
       update,
    },
    run,
 };
 
-function run(args: ToolArgs): IToolOutput[] {
+function run(args: CheckArgs): ICheckOutput[] {
    const blueSet = new Set<number>();
    const redSet = new Set<number>();
 
@@ -56,10 +65,10 @@ function run(args: ToolArgs): IToolOutput[] {
    if (perc > tool.input.params.threshold) {
       return [
          {
-            type: 'string',
+            type: OutputType.STRING,
             label: `Excessive Double Hit (${round(perc * 100, 1)}%)`,
             value: 'Too many is not ideal mapping practices',
-            symbol: 'warning',
+            status: OutputStatus.WARNING,
          },
       ];
    }

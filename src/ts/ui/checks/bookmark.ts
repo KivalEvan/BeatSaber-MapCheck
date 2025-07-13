@@ -2,7 +2,7 @@ import * as types from 'bsmap/types';
 import { State } from '../../state';
 import { UISelection } from '../selection';
 import { colorFrom, colorToHex, random } from 'bsmap/utils';
-import { IToolOutputTime } from '../../types/checks/check';
+import { ICheckOutputTime, OutputType } from '../../types/checks/check';
 
 export class UIBookmark {
    static #htmlOutSelected: HTMLInputElement;
@@ -45,9 +45,9 @@ export class UIBookmark {
          characteristic,
          color: difficultyColor[difficulty] ?? randomColor,
          bookmarks: analysis.output
-            .filter((h) => h.type === 'time')
+            .filter((h) => h.type === OutputType.TIME)
             .flatMap((h) => {
-               const x = h as IToolOutputTime;
+               const x = h as ICheckOutputTime;
                return x.value.map((v) => {
                   return {
                      beat: v.time,

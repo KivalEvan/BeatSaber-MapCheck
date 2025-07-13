@@ -1,6 +1,6 @@
 import { deepCopy } from 'bsmap/utils';
 import { presets, original } from '../../checks/presets';
-import { updateChecksPreset } from '../../checks/main';
+import { updateChecksPreset } from '../../checks/components';
 import { Settings } from '../../settings';
 
 export class UIPresets {

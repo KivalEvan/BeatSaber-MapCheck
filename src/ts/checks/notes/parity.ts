@@ -1,6 +1,15 @@
-import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import {
+   ICheck,
+   ICheckOutput,
+   CheckArgs,
+   CheckInputOrder,
+   CheckOutputOrder,
+   CheckType,
+   OutputType,
+   OutputStatus,
+} from '../../types';
 import { UISelect } from '../../ui/helpers/select';
-import { ObjectContainerType } from '../../types/checks/container';
+import { ObjectContainerType } from '../../types/container';
 import { UIInput } from '../../ui/helpers/input';
 import { NoteColor } from 'bsmap';
 import * as types from 'bsmap/types';
@@ -54,14 +63,14 @@ function update() {
    htmlInput.checked = tool.input.params.enabled;
 }
 
-const tool: ITool<{ warningThres: number; errorThres: number; allowedRot: number }> = {
+const tool: ICheck<{ warningThres: number; errorThres: number; allowedRot: number }> = {
    name,
    description,
-   type: 'note',
-   order: { input: ToolInputOrder.NOTES_PARITY, output: ToolOutputOrder.NOTES_PARITY },
+   type: CheckType.NOTE,
+   order: { input: CheckInputOrder.NOTES_PARITY, output: CheckOutputOrder.NOTES_PARITY },
    input: {
       params: { enabled, warningThres: 90, errorThres: 45, allowedRot: 90 },
-      html: htmlContainer,
+      ui: () => htmlContainer,
       update,
    },
    run,
@@ -70,7 +79,7 @@ const tool: ITool<{ warningThres: number; errorThres: number; allowedRot: number
 function inputSelectRotateHandler(this: HTMLInputElement) {}
 function inputSelectParityHandler(this: HTMLInputElement) {}
 
-function check(args: ToolArgs) {
+function check(args: CheckArgs) {
    const { timeProcessor, noteContainer } = args.beatmap;
    const { warningThres, errorThres, allowedRot } = tool.input.params;
 
@@ -175,22 +184,27 @@ function check(args: ToolArgs) {
    return parityAry;
 }
 
-function run(args: ToolArgs): IToolOutput[] {
+function run(args: CheckArgs): ICheckOutput[] {
    const result = check(args);
    result.warning = result.warning;
    result.error = result.error;
 
-   const results: IToolOutput[] = [];
+   const results: ICheckOutput[] = [];
    if (result.warning.length) {
       results.push({
-         type: 'time',
+         status: OutputStatus.WARNING,
          label: 'Parity warning',
+         type: OutputType.TIME,
          value: result.warning,
-         symbol: 'warning',
       });
    }
    if (result.error.length) {
-      results.push({ type: 'time', label: 'Parity error', value: result.error, symbol: 'error' });
+      results.push({
+         status: OutputStatus.ERROR,
+         label: 'Parity error',
+         type: OutputType.TIME,
+         value: result.error,
+      });
    }
    return results;
 }

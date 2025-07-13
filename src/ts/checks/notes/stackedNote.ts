@@ -1,11 +1,14 @@
 import * as types from 'bsmap/types';
 import {
    IBeatmapContainer,
-   ITool,
-   IToolOutput,
-   ToolArgs,
-   ToolInputOrder,
-   ToolOutputOrder,
+   ICheck,
+   ICheckOutput,
+   CheckArgs,
+   CheckInputOrder,
+   CheckOutputOrder,
+   CheckType,
+   OutputStatus,
+   OutputType,
 } from '../../types';
 import { UIInput } from '../../ui/helpers/input';
 import { isInline } from 'bsmap';
@@ -27,12 +30,15 @@ function update() {
    htmlInput.checked = tool.input.params.enabled;
 }
 
-const tool: ITool = {
+const tool: ICheck = {
    name,
    description,
-   type: 'note',
-   order: { input: ToolInputOrder.NOTES_STACKED_NOTE, output: ToolOutputOrder.NOTES_STACKED_NOTE },
-   input: { params: { enabled }, html: UIInput.createBlock(htmlInput, htmlLabel), update },
+   type: CheckType.NOTE,
+   order: {
+      input: CheckInputOrder.NOTES_STACKED_NOTE,
+      output: CheckOutputOrder.NOTES_STACKED_NOTE,
+   },
+   input: { params: { enabled }, ui: () => UIInput.createBlock(htmlInput, htmlLabel), update },
    run,
 };
 
@@ -93,16 +99,26 @@ function checkBomb(map: IBeatmapContainer) {
    return result;
 }
 
-function run(args: ToolArgs): IToolOutput[] {
+function run(args: CheckArgs): ICheckOutput[] {
    const resultNote = checkNote(args.beatmap);
    const resultBomb = checkBomb(args.beatmap);
 
-   const results: IToolOutput[] = [];
+   const results: ICheckOutput[] = [];
    if (resultNote.length) {
-      results.push({ type: 'time', label: 'Stacked note', value: resultNote, symbol: 'error' });
+      results.push({
+         status: OutputStatus.ERROR,
+         label: 'Stacked note',
+         type: OutputType.TIME,
+         value: resultNote,
+      });
    }
    if (resultBomb.length) {
-      results.push({ type: 'time', label: 'Stacked bomb', value: resultBomb, symbol: 'error' });
+      results.push({
+         status: OutputStatus.ERROR,
+         label: 'Stacked bomb',
+         type: OutputType.TIME,
+         value: resultBomb,
+      });
    }
 
    return results;

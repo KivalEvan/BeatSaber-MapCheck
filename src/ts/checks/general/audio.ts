@@ -1,4 +1,13 @@
-import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import {
+   ICheck,
+   ICheckOutput,
+   CheckArgs,
+   CheckInputOrder,
+   CheckOutputOrder,
+   CheckType,
+   OutputType,
+   OutputStatus,
+} from '../../types';
 import { Settings } from '../../settings';
 import { State } from '../../state';
 import { UIInput } from '../../ui/helpers/input';
@@ -21,38 +30,38 @@ function update() {
    htmlInput.checked = tool.input.params.enabled;
 }
 
-const tool: ITool = {
+const tool: ICheck = {
    name,
    description,
-   type: 'general',
+   type: CheckType.GENERAL,
    order: {
-      input: ToolInputOrder.GENERAL_AUDIO,
-      output: ToolOutputOrder.GENERAL_AUDIO,
+      input: CheckInputOrder.GENERAL_AUDIO,
+      output: CheckOutputOrder.GENERAL_AUDIO,
    },
    input: {
       params: { enabled },
-      html: UIInput.createBlock(htmlInput, htmlLabel),
+      ui: () => UIInput.createBlock(htmlInput, htmlLabel),
       update,
    },
    run,
 };
 
-function run(args: ToolArgs): IToolOutput[] {
+function run(args: CheckArgs): ICheckOutput[] {
    const audioDuration = args.audioDuration;
 
    if (audioDuration && audioDuration < 20) {
       return [
          {
-            type: 'string',
+            type: OutputType.STRING,
             label: 'Unrankable audio length',
             value: `too short (${secToMmss(audioDuration)}s)`,
-            symbol: 'rank',
+            status: OutputStatus.RANK,
          },
       ];
    } else if (!State.flag.audio) {
       return [
          {
-            type: 'string',
+            type: OutputType.STRING,
             label: 'No audio',
             value: Settings.props.load.audio
                ? 'could not be loaded or not found'

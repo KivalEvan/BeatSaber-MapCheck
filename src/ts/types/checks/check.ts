@@ -1,69 +1,87 @@
 import { TimeProcessor } from 'bsmap';
 import * as types from 'bsmap/types';
-import { IBeatmapContainer } from './container';
-import { ToolInputOrder, ToolOutputOrder } from './order';
+import { IBeatmapContainer } from '../container';
+import { CheckInputOrder, CheckOutputOrder } from './order';
 
-export type ToolType = 'note' | 'event' | 'obstacle' | 'other' | 'general';
+export const enum CheckType {
+   NOTE,
+   EVENT,
+   OBSTACLE,
+   OTHER,
+   GENERAL,
+}
+export const enum OutputType {
+   STRING,
+   NUMBER,
+   TIME,
+   HTML,
+}
+export const enum OutputStatus {
+   INFO,
+   WARNING,
+   ERROR,
+   RANK,
+}
 
-// TODO: refactor to delegate HTML to be processed elsewhere
-export interface IToolInput<TParam extends Record<string, unknown>> {
+export interface ICheckInput<TParam extends Record<string, unknown>> {
    params: TParam & {
       enabled: boolean;
    };
-   html?: HTMLElement;
+   ui?: () => HTMLElement;
    adjustTime?: (timeProcessor: TimeProcessor) => void;
    update?: (timeProcessor?: TimeProcessor) => void;
 }
 
-export type OutputType = 'string' | 'number' | 'time' | 'html';
-export type OutputSymbol = 'info' | 'warning' | 'error' | 'rank';
-
-export interface IToolOutputBase {
-   readonly type: OutputType;
-   readonly symbol?: OutputSymbol;
+export interface ICheckOutputBase {
+   readonly status?: OutputStatus;
    readonly label: string;
+   readonly type: OutputType;
    readonly value?: unknown;
 }
 
-export interface IToolOutputString extends IToolOutputBase {
-   readonly type: 'string';
+export interface ICheckOutputString extends ICheckOutputBase {
+   readonly type: OutputType.STRING;
    readonly value: string;
 }
 
-export interface IToolOutputNumber extends IToolOutputBase {
-   readonly type: 'number';
+export interface ICheckOutputNumber extends ICheckOutputBase {
+   readonly type: OutputType.NUMBER;
    readonly value: number[];
 }
 
-export interface IToolOutputTime extends IToolOutputBase {
-   readonly type: 'time';
+export interface ICheckOutputTime extends ICheckOutputBase {
+   readonly type: OutputType.TIME;
    readonly value: types.wrapper.IWrapBaseObject[];
 }
 
-export interface IToolOutputHTML extends IToolOutputBase {
-   readonly type: 'html';
+export interface ICheckOutputHTML extends ICheckOutputBase {
+   readonly type: OutputType.HTML;
    readonly value: HTMLElement[];
 }
 
-export type IToolOutput = IToolOutputString | IToolOutputNumber | IToolOutputTime | IToolOutputHTML;
+export type ICheckOutput =
+   | ICheckOutputString
+   | ICheckOutputNumber
+   | ICheckOutputTime
+   | ICheckOutputHTML;
 
-export interface ToolArgs {
+export interface CheckArgs {
    readonly audioDuration: number | null;
    readonly mapDuration: number | null;
    readonly beatmap: IBeatmapContainer;
    readonly info: types.wrapper.IWrapInfo;
 }
 
-export type ToolRun = (args: ToolArgs) => IToolOutput[];
+export type ICheckRun = (args: CheckArgs) => ICheckOutput[];
 
-export interface ITool<TParam extends Record<string, unknown> = Record<string, unknown>> {
+export interface ICheck<TParam extends Record<string, unknown> = Record<string, unknown>> {
    readonly name: string;
    readonly description: string;
-   readonly type: ToolType;
+   readonly type: CheckType;
    readonly order: {
-      input: ToolInputOrder;
-      output: ToolOutputOrder;
+      input: CheckInputOrder;
+      output: CheckOutputOrder;
    };
-   readonly input: IToolInput<TParam>;
-   run: ToolRun;
+   readonly input: ICheckInput<TParam>;
+   run: ICheckRun;
 }

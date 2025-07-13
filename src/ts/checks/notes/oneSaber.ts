@@ -1,5 +1,14 @@
 import { isBlueNoteColor, isRedNoteColor } from 'bsmap';
-import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import {
+   ICheck,
+   ICheckOutput,
+   CheckArgs,
+   CheckInputOrder,
+   CheckOutputOrder,
+   CheckType,
+   OutputType,
+   OutputStatus,
+} from '../../types';
 import { UIInput } from '../../ui/helpers/input';
 
 const name = 'One Saber';
@@ -19,16 +28,16 @@ function update() {
    htmlInput.checked = tool.input.params.enabled;
 }
 
-const tool: ITool = {
+const tool: ICheck = {
    name,
    description,
-   type: 'note',
-   order: { input: ToolInputOrder.NOTES_ONE_SABER, output: ToolOutputOrder.NOTES_ONE_SABER },
-   input: { params: { enabled }, html: UIInput.createBlock(htmlInput, htmlLabel), update },
+   type: CheckType.NOTE,
+   order: { input: CheckInputOrder.NOTES_ONE_SABER, output: CheckOutputOrder.NOTES_ONE_SABER },
+   input: { params: { enabled }, ui: () => UIInput.createBlock(htmlInput, htmlLabel), update },
    run,
 };
 
-function run(args: ToolArgs): IToolOutput[] {
+function run(args: CheckArgs): ICheckOutput[] {
    let notOneSaberNote;
    let whyisthisonesaber = false;
    let isOneSaber =
@@ -47,15 +56,20 @@ function run(args: ToolArgs): IToolOutput[] {
 
    if (notOneSaberNote!?.length) {
       return [
-         { type: 'time', label: 'Wrong One Saber Note', value: notOneSaberNote!, symbol: 'error' },
+         {
+            status: OutputStatus.ERROR,
+            label: 'Wrong One Saber Note',
+            type: OutputType.TIME,
+            value: notOneSaberNote!,
+         },
       ];
    } else if (whyisthisonesaber) {
       return [
          {
-            type: 'string',
+            status: OutputStatus.RANK,
             label: 'Unintended One Saber',
+            type: OutputType.STRING,
             value: 'One Saber gameplay outside of One Saber characteristic',
-            symbol: 'rank',
          },
       ];
    }

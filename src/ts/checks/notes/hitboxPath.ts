@@ -1,6 +1,15 @@
-import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import {
+   ICheck,
+   ICheckOutput,
+   CheckArgs,
+   CheckInputOrder,
+   CheckOutputOrder,
+   CheckType,
+   OutputType,
+   OutputStatus,
+} from '../../types';
 import { UIInput } from '../../ui/helpers/input';
-import { ObjectContainerType } from '../../types/checks/container';
+import { ObjectContainerType } from '../../types/container';
 import * as types from 'bsmap/types';
 import { placement } from 'bsmap/extensions';
 import { isHorizontal, isVertical, isDiagonal } from 'bsmap';
@@ -22,23 +31,23 @@ function update() {
    htmlInput.checked = tool.input.params.enabled;
 }
 
-const tool: ITool = {
+const tool: ICheck = {
    name,
    description,
-   type: 'note',
+   type: CheckType.NOTE,
    order: {
-      input: ToolInputOrder.NOTES_HITBOX_PATH,
-      output: ToolOutputOrder.NOTES_HITBOX_PATH,
+      input: CheckInputOrder.NOTES_HITBOX_PATH,
+      output: CheckOutputOrder.NOTES_HITBOX_PATH,
    },
    input: {
       params: { enabled },
-      html: UIInput.createBlock(htmlInput, htmlLabel),
+      ui: () => UIInput.createBlock(htmlInput, htmlLabel),
       update,
    },
    run,
 };
 
-function check(args: ToolArgs) {
+function check(args: CheckArgs) {
    const noteContainer = args.beatmap.noteContainer.filter(
       (n) => n.type === ObjectContainerType.BOMB || n.type === ObjectContainerType.COLOR,
    );
@@ -93,16 +102,16 @@ function check(args: ToolArgs) {
    return result;
 }
 
-function run(args: ToolArgs): IToolOutput[] {
+function run(args: CheckArgs): ICheckOutput[] {
    const result = check(args);
 
    if (result.length) {
       return [
          {
-            type: 'time',
+            status: OutputStatus.ERROR,
             label: 'Hitbox path',
+            type: OutputType.TIME,
             value: result,
-            symbol: 'error',
          },
       ];
    }

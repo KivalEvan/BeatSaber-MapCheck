@@ -1,10 +1,13 @@
 import {
    IBeatmapContainer,
-   ITool,
-   IToolOutput,
-   ToolArgs,
-   ToolInputOrder,
-   ToolOutputOrder,
+   ICheck,
+   ICheckOutput,
+   CheckArgs,
+   CheckInputOrder,
+   CheckOutputOrder,
+   CheckType,
+   OutputType,
+   OutputStatus,
 } from '../../types';
 import { UIInput } from '../../ui/helpers/input';
 
@@ -25,17 +28,17 @@ function update() {
    htmlInput.checked = tool.input.params.enabled;
 }
 
-const tool: ITool = {
+const tool: ICheck = {
    name,
    description,
-   type: 'note',
+   type: CheckType.NOTE,
    order: {
-      input: ToolInputOrder.NOTES_VARY_SWING,
-      output: ToolOutputOrder.NOTES_VARY_SWING,
+      input: CheckInputOrder.NOTES_VARY_SWING,
+      output: CheckOutputOrder.NOTES_VARY_SWING,
    },
    input: {
       params: { enabled },
-      html: UIInput.createBlock(htmlInput, htmlLabel),
+      ui: () => UIInput.createBlock(htmlInput, htmlLabel),
       update,
    },
    run,
@@ -46,16 +49,16 @@ function check(difficulty: IBeatmapContainer) {
    return swingAnalysis.container.filter((n) => Math.abs(n.minSpeed - n.maxSpeed) > 0.002);
 }
 
-function run(args: ToolArgs): IToolOutput[] {
+function run(args: CheckArgs): ICheckOutput[] {
    const result = check(args.beatmap);
 
    if (result.length) {
       return [
          {
-            type: 'time',
+            status: OutputStatus.ERROR,
             label: 'Varying swing speed',
+            type: OutputType.TIME,
             value: result.map((n) => n.data[0]),
-            symbol: 'error',
          },
       ];
    }

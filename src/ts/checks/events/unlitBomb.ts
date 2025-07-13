@@ -8,7 +8,16 @@ import {
    TimeProcessor,
 } from 'bsmap';
 import * as types from 'bsmap/types';
-import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import {
+   ICheck,
+   ICheckOutput,
+   CheckArgs,
+   CheckInputOrder,
+   CheckOutputOrder,
+   CheckType,
+   OutputType,
+   OutputStatus,
+} from '../../types';
 import { UIInput } from '../../ui/helpers/input';
 
 const name = 'Unlit Bomb';
@@ -28,17 +37,17 @@ function update() {
    htmlInput.checked = tool.input.params.enabled;
 }
 
-const tool: ITool = {
+const tool: ICheck = {
    name,
    description,
-   type: 'event',
+   type: CheckType.EVENT,
    order: {
-      input: ToolInputOrder.EVENTS_UNLIT_BOMB,
-      output: ToolOutputOrder.EVENTS_UNLIT_BOMB,
+      input: CheckInputOrder.EVENTS_UNLIT_BOMB,
+      output: CheckOutputOrder.EVENTS_UNLIT_BOMB,
    },
    input: {
       params: { enabled },
-      html: UIInput.createBlock(htmlInput, htmlLabel),
+      ui: () => UIInput.createBlock(htmlInput, htmlLabel),
       update,
    },
    run,
@@ -169,7 +178,7 @@ const unlitBomb = (
    return result;
 };
 
-function run(args: ToolArgs): IToolOutput[] {
+function run(args: CheckArgs): ICheckOutput[] {
    const result = unlitBomb(
       args.beatmap.data.difficulty.bombNotes,
       args.beatmap.data.lightshow.basicEvents,
@@ -180,10 +189,10 @@ function run(args: ToolArgs): IToolOutput[] {
    if (result.length) {
       return [
          {
-            type: 'time',
+            status: OutputStatus.WARNING,
             label: 'Unlit bomb',
+            type: OutputType.TIME,
             value: result,
-            symbol: 'warning',
          },
       ];
    }

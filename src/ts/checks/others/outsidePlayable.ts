@@ -1,6 +1,15 @@
 import { round, secToMmss } from 'bsmap/utils';
 import * as types from 'bsmap/types';
-import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import {
+   ICheck,
+   ICheckOutput,
+   CheckArgs,
+   CheckInputOrder,
+   CheckOutputOrder,
+   CheckType,
+   OutputType,
+   OutputStatus,
+} from '../../types';
 import { UIInput } from '../../ui/helpers/input';
 
 const name = 'Outside Playable Object';
@@ -20,17 +29,17 @@ function update() {
    htmlInput.checked = tool.input.params.enabled;
 }
 
-const tool: ITool = {
+const tool: ICheck = {
    name,
    description,
-   type: 'other',
+   type: CheckType.OTHER,
    order: {
-      input: ToolInputOrder.OTHERS_OUTSIDE_PLAYABLE,
-      output: ToolOutputOrder.OTHERS_OUTSIDE_PLAYABLE,
+      input: CheckInputOrder.OTHERS_OUTSIDE_PLAYABLE,
+      output: CheckOutputOrder.OTHERS_OUTSIDE_PLAYABLE,
    },
    input: {
       params: { enabled },
-      html: UIInput.createBlock(htmlInput, htmlLabel),
+      ui: () => UIInput.createBlock(htmlInput, htmlLabel),
       update,
    },
    run,
@@ -39,16 +48,16 @@ const tool: ITool = {
 function objectBeforeTime(
    tag: string,
    objects: types.wrapper.IWrapBaseObject[],
-   results: IToolOutput[],
+   results: ICheckOutput[],
 ) {
    if (objects.length && objects[0].time < 0) {
       results.push({
-         type: 'string',
+         type: OutputType.STRING,
          label: tag + '(s) before start time',
          value: `${round(objects[0].time, 3)} (${secToMmss(
             objects[0].customData.__mapcheck_secondtime,
          )}`,
-         symbol: 'error',
+         status: OutputStatus.ERROR,
       });
    }
 }
@@ -57,21 +66,21 @@ function objectAfterTime(
    tag: string,
    objects: types.wrapper.IWrapBaseObject[],
    endTime: number,
-   results: IToolOutput[],
+   results: ICheckOutput[],
 ) {
    if (objects.length && objects[objects.length - 1].time > endTime) {
       results.push({
-         type: 'string',
+         type: OutputType.STRING,
          label: tag + '(s) after end time',
          value: `${round(objects[objects.length - 1].time, 3)} (${secToMmss(
             objects[objects.length - 1].customData.__mapcheck_secondtime,
          )})`,
-         symbol: 'error',
+         status: OutputStatus.ERROR,
       });
    }
 }
 
-function run(args: ToolArgs): IToolOutput[] {
+function run(args: CheckArgs): ICheckOutput[] {
    const duration = args.audioDuration;
    const timeProcessor = args.beatmap.timeProcessor;
    const { colorNotes, bombNotes, obstacles, arcs, chains } = args.beatmap.data.difficulty;
@@ -85,7 +94,7 @@ function run(args: ToolArgs): IToolOutput[] {
       fxEventBoxGroups,
    } = args.beatmap.data.lightshow;
 
-   const results: IToolOutput[] = [];
+   const results: ICheckOutput[] = [];
    if (duration) {
       let endBeat = timeProcessor.toBeatTime(duration, true);
       objectBeforeTime('Note', colorNotes, results);

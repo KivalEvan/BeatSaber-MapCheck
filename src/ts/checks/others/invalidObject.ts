@@ -27,7 +27,16 @@ import {
    RandomType,
 } from 'bsmap';
 import * as types from 'bsmap/types';
-import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import {
+   ICheck,
+   ICheckOutput,
+   CheckArgs,
+   CheckInputOrder,
+   CheckOutputOrder,
+   CheckType,
+   OutputType,
+   OutputStatus,
+} from '../../types';
 import { UIInput } from '../../ui/helpers/input';
 
 const name = 'Invalid Object';
@@ -47,17 +56,17 @@ function update() {
    htmlInput.checked = tool.input.params.enabled;
 }
 
-const tool: ITool = {
+const tool: ICheck = {
    name,
    description,
-   type: 'other',
+   type: CheckType.OTHER,
    order: {
-      input: ToolInputOrder.OTHERS_INVALID_OBJECT,
-      output: ToolOutputOrder.OTHERS_INVALID_OBJECT,
+      input: CheckInputOrder.OTHERS_INVALID_OBJECT,
+      output: CheckOutputOrder.OTHERS_INVALID_OBJECT,
    },
    input: {
       params: { enabled },
-      html: UIInput.createBlock(htmlInput, htmlLabel),
+      ui: () => UIInput.createBlock(htmlInput, htmlLabel),
       update,
    },
    run,
@@ -218,7 +227,7 @@ function isValidFxEventBoxGroup(obj: types.wrapper.IWrapFxEventBoxGroup): boolea
    return obj.boxes.every(isValidFxEventBox);
 }
 
-function run(args: ToolArgs): IToolOutput[] {
+function run(args: CheckArgs): ICheckOutput[] {
    const { colorNotes, bombNotes, obstacles, arcs, chains, rotationEvents } =
       args.beatmap.data.difficulty;
    const {
@@ -269,105 +278,101 @@ function run(args: ToolArgs): IToolOutput[] {
    );
    const fxEventBoxResult = fxEventBoxGroups.filter((e) => !isValidFxEventBoxGroup(e));
 
-   const results: IToolOutput[] = [];
+   const results: ICheckOutput[] = [];
    if (noteResult.length) {
       results.push({
-         type: 'time',
+         status: OutputStatus.ERROR,
          label: 'Invalid note',
+         type: OutputType.TIME,
          value: noteResult,
-         symbol: 'error',
       });
    }
    if (bombResult.length) {
       results.push({
-         type: 'time',
+         status: OutputStatus.ERROR,
          label: 'Invalid bomb',
+         type: OutputType.TIME,
          value: bombResult,
-         symbol: 'error',
       });
    }
    if (arcResult.length) {
       results.push({
-         type: 'time',
+         status: OutputStatus.ERROR,
          label: 'Invalid arc',
+         type: OutputType.TIME,
          value: arcResult,
-         symbol: 'error',
       });
    }
    if (chainResult.length) {
       results.push({
-         type: 'time',
+         status: OutputStatus.ERROR,
          label: 'Invalid chain',
+         type: OutputType.TIME,
          value: chainResult,
-         symbol: 'error',
       });
    }
    if (obstacleResult.length) {
       results.push({
-         type: 'time',
+         status: OutputStatus.ERROR,
          label: 'Invalid obstacle',
+         type: OutputType.TIME,
          value: obstacleResult,
-         symbol: 'error',
       });
    }
    if (rotationEventResult.length) {
       results.push({
-         type: 'time',
+         status: OutputStatus.ERROR,
          label: 'Invalid rotation event',
+         type: OutputType.TIME,
          value: rotationEventResult,
-         symbol: 'error',
       });
    }
    if (waypointResult.length) {
       results.push({
-         type: 'time',
+         status: OutputStatus.ERROR,
          label: 'Invalid waypoint',
+         type: OutputType.TIME,
          value: waypointResult,
-         symbol: 'error',
       });
    }
    if (eventResult.length) {
       results.push({
-         type: 'time',
+         status: OutputStatus.ERROR,
          label: 'Invalid event',
+         type: OutputType.TIME,
          value: eventResult,
-         symbol: 'error',
       });
    }
    if (lightColorBoxResult.length) {
       results.push({
-         type: 'time',
+         status: OutputStatus.ERROR,
          label: 'Invalid light color event',
+         type: OutputType.TIME,
          value: lightColorBoxResult,
-
-         symbol: 'error',
       });
    }
    if (lightRotationBoxResult.length) {
       results.push({
-         type: 'time',
+         status: OutputStatus.ERROR,
          label: 'Invalid light rotation event',
+         type: OutputType.TIME,
          value: lightRotationBoxResult,
-
-         symbol: 'error',
       });
    }
    if (lightTranslationBoxResult.length) {
       results.push({
-         type: 'time',
+         status: OutputStatus.ERROR,
          label: 'Invalid light translation event',
+         type: OutputType.TIME,
          value: lightTranslationBoxResult,
-
-         symbol: 'error',
       });
    }
    if (fxEventBoxResult.length) {
       results.push({
-         type: 'time',
+         status: OutputStatus.ERROR,
          label: 'Invalid FX event',
+         type: OutputType.TIME,
          value: fxEventBoxResult,
-
-         symbol: 'error',
       });
    }
 

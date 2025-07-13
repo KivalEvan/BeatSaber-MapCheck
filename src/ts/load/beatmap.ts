@@ -1,7 +1,7 @@
 import JSZip from 'jszip';
-import { IBeatmapContainer } from '../types/checks/container';
+import { IBeatmapContainer } from '../types/container';
 import { Settings } from '../settings';
-import { IObjectContainer, ObjectContainerType } from '../types/checks/container';
+import { IObjectContainer, ObjectContainerType } from '../types/container';
 import {
    Beatmap,
    calculateScore,

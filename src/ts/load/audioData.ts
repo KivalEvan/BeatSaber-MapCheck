@@ -1,5 +1,5 @@
 import JSZip from 'jszip';
-import { IBeatmapAudio } from '../types/checks/container';
+import { IBeatmapAudio } from '../types/container';
 import { logger } from 'bsmap';
 import * as types from 'bsmap/types';
 

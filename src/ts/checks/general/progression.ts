@@ -1,4 +1,13 @@
-import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import {
+   ICheck,
+   ICheckOutput,
+   CheckArgs,
+   CheckInputOrder,
+   CheckOutputOrder,
+   CheckType,
+   OutputType,
+   OutputStatus,
+} from '../../types';
 import { State } from '../../state';
 import { UIInput } from '../../ui/helpers/input';
 import { DifficultyRename } from 'bsmap';
@@ -50,13 +59,13 @@ function update() {
    }
 }
 
-const tool: ITool<{ [k in types.DifficultyName]: boolean }> = {
+const tool: ICheck<{ [k in types.DifficultyName]: boolean }> = {
    name,
    description,
-   type: 'general',
+   type: CheckType.GENERAL,
    order: {
-      input: ToolInputOrder.GENERAL_PROGRESSION,
-      output: ToolOutputOrder.GENERAL_PROGRESSION,
+      input: CheckInputOrder.GENERAL_PROGRESSION,
+      output: CheckOutputOrder.GENERAL_PROGRESSION,
    },
    input: {
       params: {
@@ -68,13 +77,13 @@ const tool: ITool<{ [k in types.DifficultyName]: boolean }> = {
          Normal: true,
          Easy: true,
       },
-      html: UIInput.createBlock(UIInput.createBlock(htmlInput, htmlLabel), htmlDifficultyList),
+      ui: () => UIInput.createBlock(UIInput.createBlock(htmlInput, htmlLabel), htmlDifficultyList),
       update,
    },
    run,
 };
 
-function run(args: ToolArgs): IToolOutput[] {
+function run(args: CheckArgs): ICheckOutput[] {
    const audioDuration = args.audioDuration;
    if (!audioDuration) {
       return [];
@@ -92,24 +101,24 @@ function run(args: ToolArgs): IToolOutput[] {
       round(swing.getSpsHighest(standardSpsAry) * 0.4, 2),
    );
 
-   const results: IToolOutput[] = [];
+   const results: ICheckOutput[] = [];
    if (audioDuration < 360 && swing.getSpsLowest(standardSpsAry) > targetMinSps) {
       standardSpsAry.forEach((e) => e.total.perSecond);
       results.push({
-         type: 'string',
+         type: OutputType.STRING,
          label: `Minimum SPS not met (<${targetMinSps})`,
          value: `lowest SPS is ${round(swing.getSpsLowest(standardSpsAry), 2)}, ${round(
             swing.calcSpsTotalPercDrop(standardSpsAry),
             2,
          )}% drop from highest SPS (${round(swing.getSpsHighest(standardSpsAry), 2)})`,
-         symbol: 'rank',
+         status: OutputStatus.RANK,
       });
    }
    const progMax = swing.getProgressionMax(standardSpsAry, targetMinSps);
    const progMin = swing.getProgressionMin(standardSpsAry, targetMinSps);
    if (progMax && audioDuration < 360) {
       results.push({
-         type: 'string',
+         type: OutputType.STRING,
          label: 'Violates progression',
          value: `${DifficultyRename[progMax.result.difficulty]} exceeded 40% SPS drop, ${round(
             progMax.result.total.perSecond,
@@ -120,12 +129,12 @@ function run(args: ToolArgs): IToolOutput[] {
             (progMax.comparedTo?.total?.perSecond || 0) * 0.6,
             2,
          )}-${round((progMax.comparedTo?.total.perSecond || 0) * 0.9, 2)})`,
-         symbol: 'rank',
+         status: OutputStatus.RANK,
       });
    }
    if (progMin && audioDuration < 360) {
       results.push({
-         type: 'string',
+         type: OutputType.STRING,
          label: 'Violates progression',
          value: `${DifficultyRename[progMin.result.difficulty]} has less than 10% SPS drop, ${round(
             progMin.result.total.perSecond,
@@ -136,7 +145,7 @@ function run(args: ToolArgs): IToolOutput[] {
             (progMin.comparedTo?.total.perSecond || 0) * 0.6,
             2,
          )}-${round((progMin.comparedTo?.total.perSecond || 0) * 0.9, 2)})`,
-         symbol: 'rank',
+         status: OutputStatus.RANK,
       });
    }
 

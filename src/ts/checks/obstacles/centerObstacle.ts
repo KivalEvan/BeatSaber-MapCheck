@@ -1,7 +1,16 @@
 import { Obstacle, PosX, PosY, TimeProcessor } from 'bsmap';
 import { round } from 'bsmap/utils';
 import * as types from 'bsmap/types';
-import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import {
+   ICheck,
+   ICheckOutput,
+   CheckArgs,
+   CheckInputOrder,
+   CheckOutputOrder,
+   CheckType,
+   OutputType,
+   OutputStatus,
+} from '../../types';
 import { UIInput } from '../../ui/helpers/input';
 
 const name = '2-wide Center Obstacle';
@@ -57,24 +66,25 @@ function update(timeProcessor?: TimeProcessor) {
    if (timeProcessor) adjustTimeHandler(timeProcessor);
 }
 
-const tool: ITool<{ recovery: number }> = {
+const tool: ICheck<{ recovery: number }> = {
    name,
    description,
-   type: 'obstacle',
+   type: CheckType.OBSTACLE,
    order: {
-      input: ToolInputOrder.OBSTACLES_CENTER,
-      output: ToolOutputOrder.OBSTACLES_CENTER,
+      input: CheckInputOrder.OBSTACLES_CENTER,
+      output: CheckOutputOrder.OBSTACLES_CENTER,
    },
    input: {
       params: { enabled, recovery: defaultMaxTime },
-      html: UIInput.createBlock(
-         htmlEnabled,
-         document.createElement('br'),
-         htmlLabelMaxTime,
-         htmlInputMaxTime,
-         htmlLabelMaxBeat,
-         htmlInputMaxBeat,
-      ),
+      ui: () =>
+         UIInput.createBlock(
+            htmlEnabled,
+            document.createElement('br'),
+            htmlLabelMaxTime,
+            htmlInputMaxTime,
+            htmlLabelMaxBeat,
+            htmlInputMaxBeat,
+         ),
       update,
       adjustTime: adjustTimeHandler,
    },
@@ -102,7 +112,7 @@ function customIsLonger(
    );
 }
 
-function check(args: ToolArgs) {
+function check(args: CheckArgs) {
    const { obstacles } = args.beatmap.data.difficulty;
    const { timeProcessor } = args.beatmap;
    const { recovery } = tool.input.params;
@@ -199,17 +209,17 @@ function check(args: ToolArgs) {
    return arr;
 }
 
-function run(args: ToolArgs): IToolOutput[] {
+function run(args: CheckArgs): ICheckOutput[] {
    const result = check(args);
    const { recovery } = tool.input.params;
 
    if (result.length) {
       return [
          {
-            type: 'time',
+            status: OutputStatus.ERROR,
             label: `2-wide center obstacle (<${round(recovery * 1000)}ms)`,
+            type: OutputType.TIME,
             value: result,
-            symbol: 'error',
          },
       ];
    }

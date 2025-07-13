@@ -1,4 +1,4 @@
-export const enum ToolInputOrder {
+export const enum CheckInputOrder {
    APRIL_FOOLS,
 
    GENERAL_ZIP,
@@ -45,7 +45,7 @@ export const enum ToolInputOrder {
    OBSTACLES_NEGATIVE,
 }
 
-export const enum ToolOutputOrder {
+export const enum CheckOutputOrder {
    APRIL_FOOLS,
 
    GENERAL_ZIP,

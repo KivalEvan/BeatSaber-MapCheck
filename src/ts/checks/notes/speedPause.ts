@@ -4,11 +4,14 @@ import * as types from 'bsmap/types';
 import { swing } from 'bsmap/extensions';
 import {
    IBeatmapContainer,
-   ITool,
-   IToolOutput,
-   ToolArgs,
-   ToolInputOrder,
-   ToolOutputOrder,
+   ICheck,
+   ICheckOutput,
+   CheckArgs,
+   CheckInputOrder,
+   CheckOutputOrder,
+   CheckType,
+   OutputStatus,
+   OutputType,
 } from '../../types';
 import { UIInput } from '../../ui/helpers/input';
 
@@ -63,27 +66,28 @@ function update(timeProcessor?: TimeProcessor) {
    if (timeProcessor) adjustTimeHandler(timeProcessor);
 }
 
-const tool: ITool<{ maxTime: number }> = {
+const tool: ICheck<{ maxTime: number }> = {
    name,
    description,
-   type: 'note',
+   type: CheckType.NOTE,
    order: {
-      input: ToolInputOrder.NOTES_SPEED_PAUSE,
-      output: ToolOutputOrder.NOTES_SPEED_PAUSE,
+      input: CheckInputOrder.NOTES_SPEED_PAUSE,
+      output: CheckOutputOrder.NOTES_SPEED_PAUSE,
    },
    input: {
       params: {
          enabled,
          maxTime: defaultMaxTime,
       },
-      html: UIInput.createBlock(
-         htmlEnabled,
-         document.createElement('br'),
-         htmlLabelMinTime,
-         htmlInputMinTime,
-         htmlLabelMinPrec,
-         htmlInputMinPrec,
-      ),
+      ui: () =>
+         UIInput.createBlock(
+            htmlEnabled,
+            document.createElement('br'),
+            htmlLabelMinTime,
+            htmlInputMinTime,
+            htmlLabelMinPrec,
+            htmlInputMinPrec,
+         ),
       update,
       adjustTime: adjustTimeHandler,
    },
@@ -144,16 +148,16 @@ function check(beatmapItem: IBeatmapContainer) {
    return result;
 }
 
-function run(args: ToolArgs): IToolOutput[] {
+function run(args: CheckArgs): ICheckOutput[] {
    const result = check(args.beatmap);
 
    if (result.length) {
       return [
          {
-            type: 'time',
+            status: OutputStatus.WARNING,
             label: 'Speed pause',
+            type: OutputType.TIME,
             value: result,
-            symbol: 'warning',
          },
       ];
    }

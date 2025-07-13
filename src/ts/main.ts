@@ -4,7 +4,6 @@ import { UIInfo } from './ui/information/main.ts';
 import { UIChecks } from './ui/checks/main.ts';
 import { UISelection } from './ui/selection.ts';
 import { toggleInputs } from './ui/input.ts';
-import Analyser from './checks/main.ts';
 import { Settings } from './settings.ts';
 import { State } from './state.ts';
 import { extractBeatmaps, extractBpmInfo, extractInfo } from './load/index.ts';
@@ -17,6 +16,7 @@ import { IBeatmapAudio, IBeatmapContainer } from './types';
 import { init } from './init';
 import JSZip from 'jszip';
 import { UIInfoMetadata } from './ui/information/metadata.ts';
+import { checkAllDifficulty, checkGeneral } from './checks/main.ts';
 
 function tag() {
    return ['main'];
@@ -99,7 +99,7 @@ export async function main(payload: Payload): Promise<void> {
             lerp(itemDone / maxItem, 15, 80),
          );
       }
-      const toPromise = [
+      const dataToLoad = [
          new Promise(async (resolve) => {
             logger.tInfo(tag(), 'Loading cover image');
             const imageFile = beatmapZip.file(info.coverImageFilename);
@@ -195,9 +195,9 @@ export async function main(payload: Payload): Promise<void> {
             return res;
          }),
       ] as const;
-      maxItem = toPromise.length + 2;
+      maxItem = dataToLoad.length + 2;
       updateStatus();
-      const promises = await Promise.allSettled(toPromise);
+      const promises = await Promise.allSettled(dataToLoad);
       State.data.beatmaps = promises
          .slice(4)
          .map((v) => (v.status === 'fulfilled' ? v.value : null))
@@ -224,12 +224,12 @@ export async function main(payload: Payload): Promise<void> {
 
       logger.tInfo(tag(), 'Analysing map');
       UILoading.status(LoadStatus.INFO, 'Analysing general...', 85);
-      Analyser.runGeneral();
+      checkGeneral();
       UIChecks.displayOutputGeneral();
       await sleep(5);
 
       UILoading.status(LoadStatus.INFO, 'Analysing difficulty...', 90);
-      Analyser.applyAll();
+      checkAllDifficulty();
       UIChecks.displayOutputDifficulty();
       await sleep(5);
 

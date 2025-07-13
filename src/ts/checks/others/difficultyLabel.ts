@@ -1,4 +1,13 @@
-import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import {
+   ICheck,
+   ICheckOutput,
+   CheckArgs,
+   CheckInputOrder,
+   CheckOutputOrder,
+   CheckType,
+   OutputType,
+   OutputStatus,
+} from '../../types';
 import { UIInput } from '../../ui/helpers/input';
 
 const name = 'Difficulty Label Check';
@@ -18,32 +27,32 @@ function update() {
    htmlInput.checked = tool.input.params.enabled;
 }
 
-const tool: ITool = {
+const tool: ICheck = {
    name,
    description,
-   type: 'other',
+   type: CheckType.OTHER,
    order: {
-      input: ToolInputOrder.OTHERS_DIFFICULTY_LABEL,
-      output: ToolOutputOrder.OTHERS_DIFFICULTY_LABEL,
+      input: CheckInputOrder.OTHERS_DIFFICULTY_LABEL,
+      output: CheckOutputOrder.OTHERS_DIFFICULTY_LABEL,
    },
    input: {
       params: { enabled },
-      html: UIInput.createBlock(htmlInput, htmlLabel),
+      ui: () => UIInput.createBlock(htmlInput, htmlLabel),
       update,
    },
    run,
 };
 
-function run(args: ToolArgs): IToolOutput[] {
+function run(args: CheckArgs): ICheckOutput[] {
    const result = args.beatmap.info.customData._difficultyLabel;
 
    if (result && result.length > 30) {
       return [
          {
-            type: 'string',
+            type: OutputType.STRING,
             label: `Difficulty label is too long (${result.length} characters)`,
             value: 'exceeded 30 max characters by ranking criteria',
-            symbol: 'rank',
+            status: OutputStatus.RANK,
          },
       ];
    }

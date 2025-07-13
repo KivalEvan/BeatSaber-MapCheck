@@ -4,7 +4,7 @@ import { logPrefix, prefix } from './constants';
 import { round } from 'bsmap/utils';
 import * as types from 'bsmap/types';
 import { stats } from 'bsmap/extensions';
-import { ObjectContainerType } from '../../types/checks/container';
+import { ObjectContainerType } from '../../types/container';
 import { UISelection } from '../selection';
 
 export class UIStatsNotePlacement {

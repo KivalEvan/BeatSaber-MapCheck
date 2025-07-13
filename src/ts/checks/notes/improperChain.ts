@@ -1,5 +1,14 @@
-import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
-import { IObjectContainer, ObjectContainerType } from '../../types/checks/container';
+import {
+   ICheck,
+   ICheckOutput,
+   CheckArgs,
+   CheckInputOrder,
+   CheckOutputOrder,
+   CheckType,
+   OutputType,
+   OutputStatus,
+} from '../../types';
+import { IObjectContainer, ObjectContainerType } from '../../types/container';
 import { UIInput } from '../../ui/helpers/input';
 import { NoteDirection } from 'bsmap';
 
@@ -20,23 +29,23 @@ function update() {
    htmlInput.checked = tool.input.params.enabled;
 }
 
-const tool: ITool = {
+const tool: ICheck = {
    name,
    description,
-   type: 'note',
+   type: CheckType.NOTE,
    order: {
-      input: ToolInputOrder.NOTES_IMPROPER_CHAIN,
-      output: ToolOutputOrder.NOTES_IMPROPER_CHAIN,
+      input: CheckInputOrder.NOTES_IMPROPER_CHAIN,
+      output: CheckOutputOrder.NOTES_IMPROPER_CHAIN,
    },
    input: {
       params: { enabled },
-      html: UIInput.createBlock(htmlInput, htmlLabel),
+      ui: () => UIInput.createBlock(htmlInput, htmlLabel),
       update,
    },
    run,
 };
 
-function check(args: ToolArgs) {
+function check(args: CheckArgs) {
    // kinda slow but i need slider first
    const noteContainer = [...args.beatmap.noteContainer]
       .sort((a, b) =>
@@ -86,16 +95,16 @@ function check(args: ToolArgs) {
    return result;
 }
 
-function run(args: ToolArgs): IToolOutput[] {
+function run(args: CheckArgs): ICheckOutput[] {
    const result = check(args);
 
    if (result.length) {
       return [
          {
-            type: 'time',
+            status: OutputStatus.ERROR,
             label: 'Improper chain',
+            type: OutputType.TIME,
             value: result.map((n) => n.data),
-            symbol: 'error',
          },
       ];
    }

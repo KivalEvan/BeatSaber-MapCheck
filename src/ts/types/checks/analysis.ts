@@ -1,8 +1,8 @@
 import type { CharacteristicName, DifficultyName } from 'bsmap/types';
-import { IToolOutput } from './check';
+import { ICheckOutput } from './check';
 
 interface IAnalysisBase {
-   output: IToolOutput[];
+   output: ICheckOutput[];
 }
 
 export interface IAnalysisMap extends IAnalysisBase {

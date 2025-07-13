@@ -1,4 +1,13 @@
-import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import {
+   ICheck,
+   ICheckOutput,
+   CheckArgs,
+   CheckInputOrder,
+   CheckOutputOrder,
+   CheckType,
+   OutputType,
+   OutputStatus,
+} from '../../types';
 import { TimeProcessor } from 'bsmap';
 import { round } from 'bsmap/utils';
 import { UIInput } from '../../ui/helpers/input';
@@ -42,13 +51,13 @@ function update(timeProcessor?: TimeProcessor) {
    if (timeProcessor) adjustTimeHandler(timeProcessor);
 }
 
-const tool: ITool<{ ebpmThres: number; ebpmsThres: number }> = {
+const tool: ICheck<{ ebpmThres: number; ebpmsThres: number }> = {
    name,
    description,
-   type: 'note',
+   type: CheckType.NOTE,
    order: {
-      input: ToolInputOrder.NOTES_EFFECTIVE_BPM,
-      output: ToolOutputOrder.NOTES_EFFECTIVE_BPM,
+      input: CheckInputOrder.NOTES_EFFECTIVE_BPM,
+      output: CheckOutputOrder.NOTES_EFFECTIVE_BPM,
    },
    input: {
       params: {
@@ -56,7 +65,7 @@ const tool: ITool<{ ebpmThres: number; ebpmsThres: number }> = {
          ebpmThres: defaultEBPM,
          ebpmsThres: defaultEBPMS,
       },
-      html: UIInput.createBlock(htmlEnabled, htmlEBPM, htmlEBPMS),
+      ui: () => UIInput.createBlock(htmlEnabled, htmlEBPM, htmlEBPMS),
       update,
       adjustTime: adjustTimeHandler,
    },
@@ -70,7 +79,7 @@ function adjustTimeHandler(timeProcessor: TimeProcessor) {
    htmlEBPMS[1].value = tool.input.params.ebpmsThres.toString();
 }
 
-function check(args: ToolArgs) {
+function check(args: CheckArgs) {
    const { swingAnalysis } = args.beatmap;
    let { ebpmThres, ebpmsThres } = tool.input.params;
    ebpmThres += 0.001;
@@ -84,25 +93,25 @@ function check(args: ToolArgs) {
    return { base: noteEBPM, swing: noteEBPMS };
 }
 
-function run(args: ToolArgs): IToolOutput[] {
+function run(args: CheckArgs): ICheckOutput[] {
    const result = check(args);
    const { ebpmThres, ebpmsThres } = tool.input.params;
 
-   const results: IToolOutput[] = [];
+   const results: ICheckOutput[] = [];
    if (result.base.length) {
       results.push({
-         type: 'time',
+         status: OutputStatus.WARNING,
          label: `>${ebpmThres}EBPM warning`,
+         type: OutputType.TIME,
          value: result.base,
-         symbol: 'warning',
       });
    }
    if (result.swing.length) {
       results.push({
-         type: 'time',
+         status: OutputStatus.WARNING,
          label: `>${ebpmsThres}EBPM (swing) warning`,
+         type: OutputType.TIME,
          value: result.swing,
-         symbol: 'warning',
       });
    }
 

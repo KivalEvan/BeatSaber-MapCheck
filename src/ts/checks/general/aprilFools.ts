@@ -1,17 +1,26 @@
 import { Settings } from '../../settings';
-import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import {
+   ICheck,
+   ICheckOutput,
+   CheckArgs,
+   CheckInputOrder,
+   CheckOutputOrder,
+   CheckType,
+   OutputType,
+   OutputStatus,
+} from '../../types';
 
 const name = 'April Fools';
 const description = 'xdd.';
 const enabled = true;
 
-const tool: ITool = {
+const tool: ICheck = {
    name,
    description,
-   type: 'general',
+   type: CheckType.GENERAL,
    order: {
-      input: ToolInputOrder.APRIL_FOOLS,
-      output: ToolOutputOrder.APRIL_FOOLS,
+      input: CheckInputOrder.APRIL_FOOLS,
+      output: CheckOutputOrder.APRIL_FOOLS,
    },
    input: {
       params: { enabled },
@@ -19,7 +28,7 @@ const tool: ITool = {
    run,
 };
 
-function run(args: ToolArgs): IToolOutput[] {
+function run(args: CheckArgs): ICheckOutput[] {
    const aprilFirst = new Date('01 April 1984');
    const currDate = new Date();
    const isAprilFirst =
@@ -37,7 +46,7 @@ function run(args: ToolArgs): IToolOutput[] {
       htmlContainer.innerHTML = `<b><span title="Info: no action necessary, take note."> ⚠️ </span>AI generated content detected:</b> this may violate TOS, please refer to `;
       htmlContainer.append(htmlLink);
 
-      return [{ type: 'html', label: '', value: [htmlContainer] }];
+      return [{ type: OutputType.HTML, label: '', value: [htmlContainer] }];
    }
    return [];
 }

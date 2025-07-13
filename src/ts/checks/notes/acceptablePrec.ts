@@ -1,11 +1,14 @@
 import { sortObjectFn } from 'bsmap';
 import {
    IBeatmapContainer,
-   ITool,
-   IToolOutput,
-   ToolArgs,
-   ToolInputOrder,
-   ToolOutputOrder,
+   ICheck,
+   ICheckOutput,
+   CheckArgs,
+   CheckInputOrder,
+   CheckOutputOrder,
+   CheckType,
+   OutputType,
+   OutputStatus,
 } from '../../types';
 import { UIInput } from '../../ui/helpers/input';
 
@@ -41,20 +44,20 @@ function update() {
    htmlPrec.value = tool.input.params.prec.join(' ');
 }
 
-const tool: ITool<{ prec: number[] }> = {
+const tool: ICheck<{ prec: number[] }> = {
    name,
    description,
-   type: 'note',
+   type: CheckType.NOTE,
    order: {
-      input: ToolInputOrder.NOTES_ACCEPTABLE_PRECISION,
-      output: ToolOutputOrder.NOTES_ACCEPTABLE_PRECISION,
+      input: CheckInputOrder.NOTES_ACCEPTABLE_PRECISION,
+      output: CheckOutputOrder.NOTES_ACCEPTABLE_PRECISION,
    },
    input: {
       params: {
          enabled,
          prec: [...defaultPrec],
       },
-      html: UIInput.createBlock(htmlInput, htmlLabel, htmlPrec, htmlPrecLabel),
+      ui: () => UIInput.createBlock(htmlInput, htmlLabel, htmlPrec, htmlPrecLabel),
       update,
    },
    run,
@@ -80,16 +83,16 @@ function check(beatmapItem: IBeatmapContainer) {
       });
 }
 
-function run(args: ToolArgs): IToolOutput[] {
+function run(args: CheckArgs): ICheckOutput[] {
    const result = check(args.beatmap);
 
    if (result.length) {
       return [
          {
-            type: 'time',
+            status: OutputStatus.WARNING,
             label: 'Off-beat precision',
+            type: OutputType.TIME,
             value: result,
-            symbol: 'warning',
          },
       ];
    }

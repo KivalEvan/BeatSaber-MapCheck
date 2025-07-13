@@ -1,6 +1,15 @@
 import { EventList, IndexFilterType } from 'bsmap';
 import * as types from 'bsmap/types';
-import { ITool, IToolOutput, ToolArgs, ToolInputOrder, ToolOutputOrder } from '../../types';
+import {
+   ICheck,
+   ICheckOutput,
+   CheckArgs,
+   CheckInputOrder,
+   CheckOutputOrder,
+   CheckType,
+   OutputType,
+   OutputStatus,
+} from '../../types';
 import { UIInput } from '../../ui/helpers/input';
 
 const name = 'Invalid Event Box';
@@ -20,17 +29,17 @@ function update() {
    htmlInput.checked = tool.input.params.enabled;
 }
 
-const tool: ITool = {
+const tool: ICheck = {
    name,
    description,
-   type: 'event',
+   type: CheckType.EVENT,
    order: {
-      input: ToolInputOrder.EVENTS_INVALID_EVENT_BOX,
-      output: ToolOutputOrder.EVENTS_INVALID_EVENT_BOX,
+      input: CheckInputOrder.EVENTS_INVALID_EVENT_BOX,
+      output: CheckOutputOrder.EVENTS_INVALID_EVENT_BOX,
    },
    input: {
       params: { enabled },
-      html: UIInput.createBlock(htmlInput, htmlLabel),
+      ui: () => UIInput.createBlock(htmlInput, htmlLabel),
       update,
    },
    run,
@@ -287,24 +296,24 @@ function check(map: types.wrapper.IWrapLightshow, environment: types.Environment
    };
 }
 
-function run(args: ToolArgs): IToolOutput[] {
+function run(args: CheckArgs): ICheckOutput[] {
    const result = check(args.beatmap.data.lightshow, args.beatmap.environment);
 
-   const results: IToolOutput[] = [];
+   const results: ICheckOutput[] = [];
    if (result.defectID.length) {
       results.push({
-         type: 'time',
+         status: OutputStatus.ERROR,
          label: 'Invalid event box group ID',
+         type: OutputType.TIME,
          value: result.defectID,
-         symbol: 'error',
       });
    }
    if (result.defectFilter.length) {
       results.push({
-         type: 'time',
+         status: OutputStatus.ERROR,
          label: 'Invalid event box filter',
+         type: OutputType.TIME,
          value: result.defectFilter,
-         symbol: 'error',
       });
    }
 

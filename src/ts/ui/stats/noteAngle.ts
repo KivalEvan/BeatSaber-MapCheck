@@ -5,7 +5,7 @@ import { stats } from 'bsmap/extensions';
 import { round } from 'bsmap/utils';
 import * as types from 'bsmap/types';
 import { UISelection } from '../selection';
-import { ObjectContainerType } from '../../types/checks/container';
+import { ObjectContainerType } from '../../types/container';
 
 export class UIStatsNoteAngle {
    static #htmlCheckNote: HTMLInputElement;

@@ -1,13 +1,14 @@
-import Analyser from '../../checks/main';
+import { getComponentsAll, applyBpmToComponents } from '../../checks/components';
 import { LoadStatus, UILoading } from '../loading';
 import { TimeProcessor } from 'bsmap';
 import * as types from 'bsmap/types';
 import { State } from '../../state';
 import { UISelection } from '../selection';
-import { IToolOutput } from '../../types/checks/check';
+import { CheckType, ICheckOutput, OutputType } from '../../types/checks/check';
 import { printResult, printResultTime } from './output';
 import { UIPresets } from './presets';
 import { UIBookmark } from './bookmark';
+import { checkAllDifficulty, checkDifficulty, checkGeneral } from '../../checks/main';
 
 const logPrefix = 'UI Checks: ';
 
@@ -106,15 +107,15 @@ export class UIChecks {
       }
    }
 
-   static #outputToHtml(output: IToolOutput): HTMLDivElement {
+   static #outputToHtml(output: ICheckOutput): HTMLDivElement {
       switch (output.type) {
-         case 'string':
-            return printResult(output.label, output.value, output.symbol);
-         case 'number':
-            return printResult(output.label, output.value.join(', '), output.symbol);
-         case 'time':
-            return printResultTime(output.label, output.value, output.symbol);
-         case 'html':
+         case OutputType.STRING:
+            return printResult(output.label, output.value, output.status);
+         case OutputType.NUMBER:
+            return printResult(output.label, output.value.join(', '), output.status);
+         case OutputType.TIME:
+            return printResultTime(output.label, output.value, output.status);
+         case OutputType.HTML:
             const htmlContainer = document.createElement('div');
             output.value.forEach((h) => htmlContainer.appendChild(h));
             return htmlContainer;
@@ -133,31 +134,31 @@ export class UIChecks {
          throw new Error(logPrefix + 'could not find map info');
       }
       const bpm = TimeProcessor.create(mapInfo.audio.bpm);
-      Analyser.adjustTime(bpm);
+      applyBpmToComponents(bpm);
    }
 
    static populateTool(): void {
-      Analyser.toolListInput.forEach((tl) => {
-         if (tl.input.html) {
+      getComponentsAll().forEach((tl) => {
+         if (tl.input.ui) {
             switch (tl.type) {
-               case 'note': {
-                  UIChecks.#htmlChecksNote.appendChild(tl.input.html);
+               case CheckType.NOTE: {
+                  UIChecks.#htmlChecksNote.appendChild(tl.input.ui());
                   break;
                }
-               case 'obstacle': {
-                  UIChecks.#htmlChecksObstacle.appendChild(tl.input.html);
+               case CheckType.OBSTACLE: {
+                  UIChecks.#htmlChecksObstacle.appendChild(tl.input.ui());
                   break;
                }
-               case 'event': {
-                  UIChecks.#htmlChecksEvent.appendChild(tl.input.html);
+               case CheckType.EVENT: {
+                  UIChecks.#htmlChecksEvent.appendChild(tl.input.ui());
                   break;
                }
-               case 'other': {
-                  UIChecks.#htmlChecksOther.appendChild(tl.input.html);
+               case CheckType.OTHER: {
+                  UIChecks.#htmlChecksOther.appendChild(tl.input.ui());
                   break;
                }
-               case 'general': {
-                  UIChecks.#htmlChecksGeneral.appendChild(tl.input.html);
+               case CheckType.GENERAL: {
+                  UIChecks.#htmlChecksGeneral.appendChild(tl.input.ui());
                   break;
                }
                default: {
@@ -182,7 +183,7 @@ export class UIChecks {
          throw new Error(logPrefix + 'characteristic/difficulty does not exist');
       }
       UILoading.status(LoadStatus.INFO, `Re-analysing ${characteristic} ${difficulty}`);
-      Analyser.runDifficulty(characteristic, difficulty);
+      checkDifficulty(characteristic, difficulty);
       UILoading.status(LoadStatus.INFO, `Re-analysed ${characteristic} ${difficulty}`);
       UIChecks.displayOutputDifficulty(characteristic, difficulty);
    }
@@ -194,14 +195,14 @@ export class UIChecks {
          throw new Error(logPrefix + 'characteristic/difficulty does not exist');
       }
       UILoading.status(LoadStatus.INFO, `Re-analysing all difficulties`);
-      Analyser.applyAll();
+      checkAllDifficulty();
       UILoading.status(LoadStatus.INFO, `Re-analysed all difficulties`);
       UIChecks.displayOutputDifficulty(characteristic, difficulty);
    }
 
    static #applyGeneralHandler(): void {
       UILoading.status(LoadStatus.INFO, `Re-analysing general`);
-      Analyser.runGeneral();
+      checkGeneral();
       UILoading.status(LoadStatus.INFO, `Re-analysed general`);
       UIChecks.displayOutputGeneral();
    }

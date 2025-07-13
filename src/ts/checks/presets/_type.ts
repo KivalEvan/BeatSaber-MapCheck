@@ -3,9 +3,9 @@ import type * as notes from '../notes/index.ts';
 import type * as obstacles from '../obstacles/index.ts';
 import type * as events from '../events/index.ts';
 import type * as others from '../others/index.ts';
-import type { ITool } from '../../types/index.ts';
+import type { ICheck } from '../../types/index.ts';
 
-type Crawl<T> = T extends { [key: string]: ITool }
+type Crawl<T> = T extends { [key: string]: ICheck }
    ? { [key in keyof T]: { params: T[key]['input']['params'] } }
    : never;
 

@@ -1,5 +1,3 @@
-// idk i just needed init just so this shit fukin import
-// but at the same time i need some way to initialise some variable like watermark, version, etc.
 import { Settings } from '../settings.ts';
 import { UIFooter } from './footer.ts';
 import { UISettings } from './settings/main.ts';
@@ -13,6 +11,7 @@ import { UIStats } from './stats/main.ts';
 import { UIInfo } from './information/main.ts';
 import { UILoading } from './loading.ts';
 import { UISelection } from './selection.ts';
+import { UIReset } from './reset.ts';
 
 let executed = false;
 export function uiInit(): void {
@@ -38,5 +37,6 @@ export function uiInit(): void {
    UITheme.set(Settings.props.theme);
    UITab.showMain(Settings.props.show);
 
+   UIReset.init();
    logger.tInfo(['UI', 'init'], 'User interface initialised');
 }
