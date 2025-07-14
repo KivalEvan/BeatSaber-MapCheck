@@ -11,6 +11,7 @@ import {
    OutputStatus,
 } from '../../types';
 import { UIInput } from '../../ui/helpers/input';
+import { PrecalculateKey } from '../../types/precalculate';
 
 const name = 'Acceptable Beat Precision';
 const description = 'Validate note timing placement is within timing precision.\ni.e: 1/8 1/6 1/x';
@@ -73,7 +74,7 @@ function check(beatmapItem: IBeatmapContainer) {
          if (!prec.length) {
             return false;
          }
-         const beat = n.customData.__mapcheck_beattime;
+         const beat = n.customData[PrecalculateKey.BEAT_TIME];
          for (let i = 0; i < prec.length; i++) {
             if ((beat + 0.001) % (1 / prec[i]) < 0.01) {
                return false;

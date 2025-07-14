@@ -2,9 +2,10 @@ import { round, secToMmss, secToMmssms } from 'bsmap/utils';
 import * as types from 'bsmap/types';
 import { Settings } from '../../settings';
 import { OutputStatus } from '../../types/checks/check';
+import { PrecalculateKey } from '../../types/precalculate';
 
-function addLabel(str: string, symbol?: OutputStatus): string {
-   switch (symbol) {
+function addLabel(str: string, status?: OutputStatus): string {
+   switch (status) {
       case OutputStatus.RANK:
          str = '<span title="Ranking: for rankability reason."> 🚧 </span>' + str;
          break;
@@ -25,10 +26,10 @@ function addLabel(str: string, symbol?: OutputStatus): string {
    return str;
 }
 
-export function printResult(label: string, text?: string, symbol?: OutputStatus) {
+export function printResult(label: string, text?: string, status?: OutputStatus) {
    const htmlContainer = document.createElement('div');
 
-   label = addLabel(label, symbol);
+   label = addLabel(label, status);
 
    if (text) {
       htmlContainer.innerHTML = `<b>${label}:</b> ${text}`;
@@ -60,23 +61,23 @@ export function printResultTime(
          switch (Settings.props.beatNumbering) {
             case 'realtime':
                return `<span title="Beat ${round(
-                  n.customData.__mapcheck_beattime,
+                  n.customData[PrecalculateKey.BEAT_TIME],
                   Settings.props.rounding,
-               )}">${secToMmss(n.customData.__mapcheck_secondtime)}</span>`;
+               )}">${secToMmss(n.customData[PrecalculateKey.SECOND_TIME])}</span>`;
             case 'realtimems':
                return `<span title="Beat ${round(
-                  n.customData.__mapcheck_beattime,
+                  n.customData[PrecalculateKey.BEAT_TIME],
                   Settings.props.rounding,
-               )}">${secToMmssms(n.customData.__mapcheck_secondtime)}</span>`;
+               )}">${secToMmssms(n.customData[PrecalculateKey.SECOND_TIME])}</span>`;
             case 'jsontime':
-               return `<span title="Time ${secToMmssms(n.customData.__mapcheck_secondtime)}">${round(
+               return `<span title="Time ${secToMmssms(n.customData[PrecalculateKey.SECOND_TIME])}">${round(
                   n.time,
                   Settings.props.rounding,
                )}</span>`;
             case 'beattime':
             default:
-               return `<span title="Time ${secToMmssms(n.customData.__mapcheck_secondtime)}">${round(
-                  n.customData.__mapcheck_beattime,
+               return `<span title="Time ${secToMmssms(n.customData[PrecalculateKey.SECOND_TIME])}">${round(
+                  n.customData[PrecalculateKey.BEAT_TIME],
                   Settings.props.rounding,
                )}</span>`;
          }

@@ -12,6 +12,7 @@ import {
 } from '../../types';
 import { UIInput } from '../../ui/helpers/input';
 import { isInline } from 'bsmap';
+import { PrecalculateKey } from '../../types/precalculate';
 
 const name = 'Stacked Note';
 const description = 'Look for stacked note.';
@@ -49,19 +50,19 @@ function checkNote(map: IBeatmapContainer) {
    // to avoid multiple of stack popping up, ignore anything within this time
    let lastTime: number = 0;
    for (let i = 0, len = colorNotes.length; i < len; i++) {
-      if (colorNotes[i].customData.__mapcheck_secondtime < lastTime + 0.01) {
+      if (colorNotes[i].customData[PrecalculateKey.SECOND_TIME] < lastTime + 0.01) {
          continue;
       }
       for (let j = i + 1; j < len; j++) {
          if (
-            colorNotes[j].customData.__mapcheck_secondtime >
-            colorNotes[i].customData.__mapcheck_secondtime + 0.01
+            colorNotes[j].customData[PrecalculateKey.SECOND_TIME] >
+            colorNotes[i].customData[PrecalculateKey.SECOND_TIME] + 0.01
          ) {
             break;
          }
          if (isInline(colorNotes[j], colorNotes[i])) {
             result.push(colorNotes[i]);
-            lastTime = colorNotes[i].customData.__mapcheck_secondtime;
+            lastTime = colorNotes[i].customData[PrecalculateKey.SECOND_TIME];
          }
       }
    }
@@ -78,19 +79,19 @@ function checkBomb(map: IBeatmapContainer) {
       for (let j = i + 1; j < len; j++) {
          // arbitrary break after 1s to not loop too much often
          if (
-            bombNotes[j].customData.__mapcheck_secondtime >
-            bombNotes[i].customData.__mapcheck_secondtime + 1
+            bombNotes[j].customData[PrecalculateKey.SECOND_TIME] >
+            bombNotes[i].customData[PrecalculateKey.SECOND_TIME] + 1
          ) {
             break;
          }
          if (
             isInline(bombNotes[i], bombNotes[j]) &&
             (njs.value <
-               (bombNotes[j].customData.__mapcheck_secondtime -
-                  bombNotes[i].customData.__mapcheck_secondtime) *
+               (bombNotes[j].customData[PrecalculateKey.SECOND_TIME] -
+                  bombNotes[i].customData[PrecalculateKey.SECOND_TIME]) *
                   2 ||
-               bombNotes[j].customData.__mapcheck_secondtime <
-                  bombNotes[i].customData.__mapcheck_secondtime + 0.02)
+               bombNotes[j].customData[PrecalculateKey.SECOND_TIME] <
+                  bombNotes[i].customData[PrecalculateKey.SECOND_TIME] + 0.02)
          ) {
             result.push(bombNotes[i]);
          }

@@ -13,6 +13,7 @@ import {
 import { IObjectContainerColor, ObjectContainerType } from '../../types/container';
 import { UIInput } from '../../ui/helpers/input';
 import { placement, swing } from 'bsmap/extensions';
+import { PrecalculateKey } from '../../types/precalculate';
 
 const name = 'Hitbox Reverse Staircase';
 const description = 'Check for overlapping pre-swing hitbox with note hitbox during swing.';
@@ -80,8 +81,8 @@ function check(args: CheckArgs) {
          if (other.direction !== NoteDirection.ANY) {
             if (
                !(
-                  note.data.customData.__mapcheck_secondtime >
-                  other.customData.__mapcheck_secondtime + 0.01
+                  note.data.customData[PrecalculateKey.SECOND_TIME] >
+                  other.customData[PrecalculateKey.SECOND_TIME] + 0.01
                )
             ) {
                continue;
@@ -93,8 +94,8 @@ function check(args: CheckArgs) {
             if (
                njs.value <
                   1.425 /
-                     (note.data.customData.__mapcheck_secondtime -
-                        other.customData.__mapcheck_secondtime +
+                     (note.data.customData[PrecalculateKey.SECOND_TIME] -
+                        other.customData[PrecalculateKey.SECOND_TIME] +
                         (isDiagonal ? constantDiagonal : constant)) &&
                placement.isIntersectNote(note.data, other, [[15, 1.5]])[1]
             ) {

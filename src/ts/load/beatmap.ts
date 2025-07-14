@@ -13,6 +13,7 @@ import {
 } from 'bsmap';
 import * as types from 'bsmap/types';
 import { stats, swing } from 'bsmap/extensions';
+import { PrecalculateKey } from '../types/precalculate';
 
 function tag(name: string) {
    return ['load', name];
@@ -224,21 +225,21 @@ function precalculateTimes(beatmap: types.wrapper.IWrapBeatmap, timeProcessor: T
 
 function applyTime(timeProcessor: TimeProcessor) {
    return function (object: types.wrapper.IWrapBaseObject) {
-      object.customData.__mapcheck_secondtime = timeProcessor.toRealTime(object.time);
-      object.customData.__mapcheck_beattime = timeProcessor.adjustTime(object.time);
+      object.customData[PrecalculateKey.SECOND_TIME] = timeProcessor.toRealTime(object.time);
+      object.customData[PrecalculateKey.BEAT_TIME] = timeProcessor.adjustTime(object.time);
       if ('tailTime' in object) {
-         object.customData.__mapcheck_tail_secondtime = timeProcessor.toRealTime(
+         object.customData[PrecalculateKey.TAIL_SECOND_TIME] = timeProcessor.toRealTime(
             object.tailTime as number,
          );
-         object.customData.__mapcheck_tail_beattime = timeProcessor.adjustTime(
+         object.customData[PrecalculateKey.TAIL_BEAT_TIME] = timeProcessor.adjustTime(
             object.tailTime as number,
          );
       }
       if ('duration' in object) {
-         object.customData.__mapcheck_duration_secondtime =
+         object.customData[PrecalculateKey.DURATION_SECOND_TIME] =
             timeProcessor.toRealTime(object.time + (object.duration as number)) -
-            object.customData.__mapcheck_secondtime;
-         object.customData.__mapcheck_duration_beattime = object.duration;
+            object.customData[PrecalculateKey.SECOND_TIME];
+         object.customData[PrecalculateKey.DURATION_BEAT_TIME] = object.duration;
       }
    };
 }

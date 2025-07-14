@@ -11,6 +11,7 @@ import {
    OutputStatus,
 } from '../../types';
 import { UIInput } from '../../ui/helpers/input';
+import { PrecalculateKey } from '../../types/precalculate';
 
 const name = '<15ms Obstacle';
 const description =
@@ -52,9 +53,9 @@ function customIsLonger(
    prevOffset = 0,
 ) {
    return (
-      o.customData.__mapcheck_secondtime + o.customData.__mapcheck_duration_secondtime >
-      compareTo.customData.__mapcheck_secondtime +
-         compareTo.customData.__mapcheck_duration_secondtime +
+      o.customData[PrecalculateKey.SECOND_TIME] + o.customData[PrecalculateKey.DURATION_SECOND_TIME] >
+      compareTo.customData[PrecalculateKey.SECOND_TIME] +
+         compareTo.customData[PrecalculateKey.DURATION_SECOND_TIME] +
          prevOffset
    );
 }
@@ -69,7 +70,7 @@ function check(args: CheckArgs) {
    let obstacleRHalf: types.wrapper.IWrapObstacle = new Obstacle({ time: Number.MIN_SAFE_INTEGER });
    for (let i = 0; i < obstacles.length; i++) {
       const o = obstacles[i];
-      const wallDur = o.customData.__mapcheck_duration_secondtime;
+      const wallDur = o.customData[PrecalculateKey.DURATION_SECOND_TIME];
       if (o.posY === PosY.BOTTOM && o.height > 2 && wallDur > 0) {
          if (o.width > 2 || (o.width > 1 && o.posX === 1)) {
             if (customIsLonger(o, obstacleLFull)) {

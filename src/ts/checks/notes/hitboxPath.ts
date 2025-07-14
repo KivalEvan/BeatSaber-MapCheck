@@ -13,6 +13,7 @@ import { ObjectContainerType } from '../../types/container';
 import * as types from 'bsmap/types';
 import { placement } from 'bsmap/extensions';
 import { isHorizontal, isVertical, isDiagonal } from 'bsmap';
+import { PrecalculateKey } from '../../types/precalculate';
 
 const name = 'Hitbox Path';
 const description = 'Check for overlapping pre-swing note hitbox at same time.';
@@ -59,15 +60,15 @@ function check(args: CheckArgs) {
       const currentNote = noteContainer[i];
       if (
          currentNote.type !== ObjectContainerType.COLOR ||
-         currentNote.data.customData.__mapcheck_secondtime < lastTime + 0.01
+         currentNote.data.customData[PrecalculateKey.SECOND_TIME] < lastTime + 0.01
       ) {
          continue;
       }
       for (let j = i + 1; j < len; j++) {
          const compareTo = noteContainer[j];
          if (
-            compareTo.data.customData.__mapcheck_secondtime >
-            currentNote.data.customData.__mapcheck_secondtime + 0.01
+            compareTo.data.customData[PrecalculateKey.SECOND_TIME] >
+            currentNote.data.customData[PrecalculateKey.SECOND_TIME] + 0.01
          ) {
             break;
          }
@@ -95,7 +96,7 @@ function check(args: CheckArgs) {
                   .some((b) => b))
          ) {
             result.push(currentNote.data);
-            lastTime = currentNote.data.customData.__mapcheck_secondtime;
+            lastTime = currentNote.data.customData[PrecalculateKey.SECOND_TIME];
          }
       }
    }

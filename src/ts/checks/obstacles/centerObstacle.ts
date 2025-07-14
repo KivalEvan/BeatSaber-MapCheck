@@ -12,6 +12,7 @@ import {
    OutputStatus,
 } from '../../types';
 import { UIInput } from '../../ui/helpers/input';
+import { PrecalculateKey } from '../../types/precalculate';
 
 const name = '2-wide Center Obstacle';
 const description =
@@ -105,9 +106,9 @@ function customIsLonger(
    prevOffset = 0,
 ) {
    return (
-      o.customData.__mapcheck_secondtime + o.customData.__mapcheck_duration_secondtime >
-      compareTo.customData.__mapcheck_secondtime +
-         compareTo.customData.__mapcheck_duration_secondtime +
+      o.customData[PrecalculateKey.SECOND_TIME] + o.customData[PrecalculateKey.DURATION_SECOND_TIME] >
+      compareTo.customData[PrecalculateKey.SECOND_TIME] +
+         compareTo.customData[PrecalculateKey.DURATION_SECOND_TIME] +
          prevOffset
    );
 }
@@ -135,11 +136,11 @@ function check(args: CheckArgs) {
             if (o.posX === PosX.LEFT) {
                if (customIsLonger(o, obstacleLeftFull)) {
                   if (
-                     o.customData.__mapcheck_secondtime >
-                        obstacleRightFull.customData.__mapcheck_secondtime - recovery &&
-                     o.customData.__mapcheck_secondtime <
-                        obstacleRightFull.customData.__mapcheck_secondtime +
-                           obstacleRightFull.customData.__mapcheck_duration_secondtime +
+                     o.customData[PrecalculateKey.SECOND_TIME] >
+                        obstacleRightFull.customData[PrecalculateKey.SECOND_TIME] - recovery &&
+                     o.customData[PrecalculateKey.SECOND_TIME] <
+                        obstacleRightFull.customData[PrecalculateKey.SECOND_TIME] +
+                           obstacleRightFull.customData[PrecalculateKey.DURATION_SECOND_TIME] +
                            recovery
                   ) {
                      arr.push(o);
@@ -159,11 +160,11 @@ function check(args: CheckArgs) {
             if (o.posX === PosX.MIDDLE_RIGHT) {
                if (customIsLonger(o, obstacleRightFull)) {
                   if (
-                     o.customData.__mapcheck_secondtime >
-                        obstacleLeftFull.customData.__mapcheck_secondtime - recovery &&
-                     o.customData.__mapcheck_secondtime <
-                        obstacleLeftFull.customData.__mapcheck_secondtime +
-                           obstacleLeftFull.customData.__mapcheck_duration_secondtime +
+                     o.customData[PrecalculateKey.SECOND_TIME] >
+                        obstacleLeftFull.customData[PrecalculateKey.SECOND_TIME] - recovery &&
+                     o.customData[PrecalculateKey.SECOND_TIME] <
+                        obstacleLeftFull.customData[PrecalculateKey.SECOND_TIME] +
+                           obstacleLeftFull.customData[PrecalculateKey.DURATION_SECOND_TIME] +
                            recovery
                   ) {
                      arr.push(o);
@@ -176,11 +177,11 @@ function check(args: CheckArgs) {
             if (o.posX === PosX.MIDDLE_LEFT) {
                if (customIsLonger(o, obstacleLeftFull)) {
                   if (
-                     o.customData.__mapcheck_secondtime >
-                        obstacleRightFull.customData.__mapcheck_secondtime - recovery &&
-                     o.customData.__mapcheck_secondtime <
-                        obstacleRightFull.customData.__mapcheck_secondtime +
-                           obstacleRightFull.customData.__mapcheck_duration_secondtime +
+                     o.customData[PrecalculateKey.SECOND_TIME] >
+                        obstacleRightFull.customData[PrecalculateKey.SECOND_TIME] - recovery &&
+                     o.customData[PrecalculateKey.SECOND_TIME] <
+                        obstacleRightFull.customData[PrecalculateKey.SECOND_TIME] +
+                           obstacleRightFull.customData[PrecalculateKey.DURATION_SECOND_TIME] +
                            recovery
                   ) {
                      arr.push(o);
@@ -191,11 +192,11 @@ function check(args: CheckArgs) {
             if (o.posX === PosX.MIDDLE_RIGHT) {
                if (customIsLonger(o, obstacleRightFull)) {
                   if (
-                     o.customData.__mapcheck_secondtime >
-                        obstacleLeftFull.customData.__mapcheck_secondtime - recovery &&
-                     o.customData.__mapcheck_secondtime <
-                        obstacleLeftFull.customData.__mapcheck_secondtime +
-                           obstacleLeftFull.customData.__mapcheck_duration_secondtime +
+                     o.customData[PrecalculateKey.SECOND_TIME] >
+                        obstacleLeftFull.customData[PrecalculateKey.SECOND_TIME] - recovery &&
+                     o.customData[PrecalculateKey.SECOND_TIME] <
+                        obstacleLeftFull.customData[PrecalculateKey.SECOND_TIME] +
+                           obstacleLeftFull.customData[PrecalculateKey.DURATION_SECOND_TIME] +
                            recovery
                   ) {
                      arr.push(o);

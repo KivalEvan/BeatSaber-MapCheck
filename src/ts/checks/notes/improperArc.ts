@@ -60,7 +60,7 @@ function check(args: CheckArgs) {
       const lastTime = noteContainer.at(-1)!.data.time;
       if (arc.type === ObjectContainerType.ARC) {
          potential = true;
-         for (let j = i, sike = false; j < len; j++) {
+         for (let j = i, isProblem = false; j < len; j++) {
             const head = noteContainer[j];
             if (head.type === ObjectContainerType.COLOR) {
                if (
@@ -80,7 +80,7 @@ function check(args: CheckArgs) {
                            arc.data.posY === tail.data.posY &&
                            tail.data.time <= arc.data.time + 0.001
                         ) {
-                           sike = true;
+                           isProblem = true;
                            break;
                         }
                      }
@@ -99,14 +99,14 @@ function check(args: CheckArgs) {
                               ? arc.data.direction !== head.data.direction
                               : true))
                      ) {
-                        sike = true;
+                        isProblem = true;
                         break;
                      }
                      if (head.data.time > arc.data.tailTime + 0.001) {
                         break;
                      }
                   }
-                  potential = sike || false;
+                  potential = isProblem || false;
                   break;
                }
             }

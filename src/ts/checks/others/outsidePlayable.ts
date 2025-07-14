@@ -11,6 +11,7 @@ import {
    OutputStatus,
 } from '../../types';
 import { UIInput } from '../../ui/helpers/input';
+import { PrecalculateKey } from '../../types/precalculate';
 
 const name = 'Outside Playable Object';
 const description = 'Look for any object starting before and after song timer.';
@@ -55,7 +56,7 @@ function objectBeforeTime(
          type: OutputType.STRING,
          label: tag + '(s) before start time',
          value: `${round(objects[0].time, 3)} (${secToMmss(
-            objects[0].customData.__mapcheck_secondtime,
+            objects[0].customData[PrecalculateKey.SECOND_TIME],
          )}`,
          status: OutputStatus.ERROR,
       });
@@ -73,7 +74,7 @@ function objectAfterTime(
          type: OutputType.STRING,
          label: tag + '(s) after end time',
          value: `${round(objects[objects.length - 1].time, 3)} (${secToMmss(
-            objects[objects.length - 1].customData.__mapcheck_secondtime,
+            objects[objects.length - 1].customData[PrecalculateKey.SECOND_TIME],
          )})`,
          status: OutputStatus.ERROR,
       });

@@ -12,6 +12,7 @@ import {
    OutputStatus,
 } from '../../types';
 import { UIInput } from '../../ui/helpers/input';
+import { PrecalculateKey } from '../../types/precalculate';
 
 const name = 'Hitbox Inline';
 const description = 'Check for overlapping note hitbox for inline note.';
@@ -70,8 +71,8 @@ function check(args: CheckArgs) {
          if (
             njs.value <
                1.425 /
-                  (note.customData.__mapcheck_secondtime -
-                     other.customData.__mapcheck_secondtime +
+                  (note.customData[PrecalculateKey.SECOND_TIME] -
+                     other.customData[PrecalculateKey.SECOND_TIME] +
                      constant) &&
             isInline(note, other)
          ) {
