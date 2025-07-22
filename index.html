@@ -8,8 +8,8 @@
   <meta name="theme-color" content="#dd0000">
   <link rel="shortcut icon" type="image/png" href="/BeatSaber-MapCheck/img/favicon.png">
   <title>BS Map Check</title>
-  <script type="module" crossorigin src="/BeatSaber-MapCheck/assets/index-BoWQLxrm.js"></script>
-  <link rel="stylesheet" crossorigin href="/BeatSaber-MapCheck/assets/index-BmhKNVSM.css">
+  <script type="module" crossorigin src="/BeatSaber-MapCheck/assets/index-Cknr6dzK.js"></script>
+  <link rel="stylesheet" crossorigin href="/BeatSaber-MapCheck/assets/index-CWSvAmL4.css">
 </head>
 
 <body>
@@ -50,7 +50,7 @@
               <input type="text" class="input__intro-hash input-toggle" id="input__intro-hash"
                 placeholder="66f2eb99f41fb5b9d872c3019e9fb90033b52c1f"><br>
               <input type="button" class="input__search-button input-toggle" id="input__search-button"
-                value="Get map from input">
+                value="FETCH">
             </div>
             <div class="panel panel--large panel--offset-half">
               <input type="file" class="input__file input-toggle" id="input__file" accept=".zip,.bsl">
@@ -60,7 +60,7 @@
             </div>
           </div>
         </div>
-        <input type="button" class="input__reset-button input-toggle" id="input__reset-button" value="Reset">
+        <input type="button" class="input__reset-button input-toggle" id="input__reset-button" value="RESET">
       </div>
     </header>
     <div class="loading">
@@ -72,13 +72,13 @@
       <div class="tabs__tab" id="info">
         <div class="panel panel--flex">
           <div class="panel panel--small panel--offset-half">
-            <div class="info__level-author" title="Level Author">Level Author</div>
-            <div class="info__environment" title="Environment">Environment</div>
+            <div class="info__level-author" title="Level Author"></div>
+            <div class="info__environment" title="Environment"></div>
             <div class="info__tags hidden">Tag</div>
             <div class="info__editors hidden">Editors</div>
             <div class="info__contributors hidden">
               <div class="info__label" for="info__contributors-select">
-                <span>Contributors:</span>
+                <span><b>Contributors:</b></span>
               </div>
               <div class="info__contributors-list">
                 <div class="info__contributors-card">
@@ -316,12 +316,10 @@
             </div>
             <div class="panel">
               <span>Legend:</span><br>
-              <span>🚧 <b>Ranking:</b> for rankability reason.</span><br>
-              <span>❌ <b>Error:</b> should be fixed unless you know what you are
-                doing.</span><br>
-              <span>❗ <b>Warning:</b> not necessarily needed to be fixed, worth
-                considering.</span><br>
-              <span>⚠️ <b>Info:</b> no action necessary, take note.</span>
+              <span>🚧 <b>Ranking:</b> criteria-breaking issue.</span><br>
+              <span>❌ <b>Error:</b> major issue, fix is recommended</span><br>
+              <span>❗ <b>Warning:</b> potential issue, check and fix if necessary.</span><br>
+              <span>⚠️ <b>Info:</b> minor or not an issue, can be ignored.</span>
             </div>
             <div class="panel">
               <br>
@@ -344,27 +342,39 @@
               <tbody>
                 <tr>
                   <th class="stats__table-header" colspan="2">Version</th>
-                  <td class="stats__table-element" id="stats__table-settings-version"></td>
+                  <td class="stats__table-element" id="stats__table-settings-version" colspan="2"></td>
                 </tr>
                 <tr>
-                  <th class="stats__table-header" colspan="2">Note Jump Speed</th>
-                  <td class="stats__table-element" id="stats__table-settings-njs"></td>
+                  <th class="stats__table-header" rowspan="4" colspan="2">Note Jump Speed</th>
+                  <td class="stats__table-element" id="stats__table-settings-njs" colspan="2"></td>
+                </tr>
+                <tr>
+                  <th class="stats__table-header">Min</th>
+                  <td class="stats__table-element" id="stats__table-settings-njs-min"></td>
+                </tr>
+                <tr>
+                  <th class="stats__table-header">Max</th>
+                  <td class="stats__table-element" id="stats__table-settings-njs-max"></td>
+                </tr>
+                <tr>
+                  <th class="stats__table-header">Events</th>
+                  <td class="stats__table-element" id="stats__table-settings-njs-count"></td>
                 </tr>
                 <tr>
                   <th class="stats__table-header" colspan="2">Spawn Distance Modifier</th>
-                  <td class="stats__table-element" id="stats__table-settings-sdm"></td>
+                  <td class="stats__table-element" id="stats__table-settings-sdm" colspan="2"></td>
                 </tr>
                 <tr>
                   <th class="stats__table-header" colspan="2">Half Jump Duration</th>
-                  <td class="stats__table-element" id="stats__table-settings-hjd"></td>
+                  <td class="stats__table-element" id="stats__table-settings-hjd" colspan="2"></td>
                 </tr>
                 <tr>
                   <th class="stats__table-header" colspan="2">Jump Distance</th>
-                  <td class="stats__table-element" id="stats__table-settings-jd"></td>
+                  <td class="stats__table-element" id="stats__table-settings-jd" colspan="2"></td>
                 </tr>
                 <tr>
                   <th class="stats__table-header" colspan="2">Reaction Time</th>
-                  <td class="stats__table-element" id="stats__table-settings-rt"></td>
+                  <td class="stats__table-element" id="stats__table-settings-rt" colspan="2"></td>
                 </tr>
               </tbody>
             </table>
