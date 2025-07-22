@@ -106,7 +106,8 @@ function customIsLonger(
    prevOffset = 0,
 ) {
    return (
-      o.customData[PrecalculateKey.SECOND_TIME] + o.customData[PrecalculateKey.DURATION_SECOND_TIME] >
+      o.customData[PrecalculateKey.SECOND_TIME] +
+         o.customData[PrecalculateKey.DURATION_SECOND_TIME] >
       compareTo.customData[PrecalculateKey.SECOND_TIME] +
          compareTo.customData[PrecalculateKey.DURATION_SECOND_TIME] +
          prevOffset
@@ -115,11 +116,14 @@ function customIsLonger(
 
 function check(args: CheckArgs) {
    const { obstacles } = args.beatmap.data.difficulty;
-   const { timeProcessor } = args.beatmap;
    const { recovery } = tool.input.params;
    const arr: types.wrapper.IWrapObstacle[] = [];
    let obstacleLeftFull: types.wrapper.IWrapObstacle = new Obstacle();
+   obstacleLeftFull.customData[PrecalculateKey.SECOND_TIME] = 0;
+   obstacleLeftFull.customData[PrecalculateKey.DURATION_SECOND_TIME] = 0;
    let obstacleRightFull: types.wrapper.IWrapObstacle = new Obstacle();
+   obstacleRightFull.customData[PrecalculateKey.SECOND_TIME] = 0;
+   obstacleRightFull.customData[PrecalculateKey.DURATION_SECOND_TIME] = 0;
    for (let i = 0; i < obstacles.length; i++) {
       const o = obstacles[i];
       if (o.posY < PosY.TOP && o.height > 1) {

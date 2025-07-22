@@ -1,0 +1,23 @@
+{
+  "name" : "ChroMapper",
+  "characteristic" : "Legacy",
+  "difficulty" : "Easy",
+  "color" : "00FFFF",
+  "bookmarks" : [
+    {
+      "beat" : 6,
+      "label" : "13",
+      "text" : "13"
+    },
+    {
+      "beat" : 8,
+      "label" : "23",
+      "text" : "23"
+    },
+    {
+      "beat" : 16,
+      "label" : "3",
+      "text" : "3"
+    }
+  ]
+}

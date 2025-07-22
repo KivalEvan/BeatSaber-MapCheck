@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.7.0 [2025-07-14]
+## 2.7.0 [2025-07-23]
 
 Major changes here should result in better QoL, faster loading, and less memory
 usage.
@@ -15,8 +15,15 @@ usage.
 -  Checks preset
 -  Bookmark export
 -  Nested folder loading
--  Excessive double check
--  NJS event check
+-  Several new checks
+   -  Angle offset
+   -  Excessive double
+   -  Hammer hit
+   -  Handclap pattern
+   -  Outro
+   -  Parallel notes
+   -  Rankable obstacle
+   -  Variable NJS
 
 ### Changed
 
@@ -25,9 +32,11 @@ usage.
 -  UI revamped
    -  Stats no longer generate all difficulty at once, uses currently selected
    -  Overall should result in less memory usage
+-  Internal changes, now includes integration & regression testing
 
 ### Fixed
 
+-  Plenty of fixes from regression testing
 -  Mappers and lighters information does not reset upon reset
 -  BPM change shows even if the minimum and maximum are equal
 -  Stacked bomb, hitbox inline, reverse staircase and short obstacle not accounting for BPM change

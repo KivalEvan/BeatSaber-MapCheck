@@ -1,3 +1,3 @@
-export { extractBpmInfo } from './audioData.ts';
-export { extractBeatmaps } from './beatmap.ts';
-export { extractInfo } from './info.ts';
+export * from './audioData.ts';
+export * from './beatmap.ts';
+export * from './info.ts';

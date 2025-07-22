@@ -11,7 +11,7 @@ import { deepCopy } from 'bsmap/utils';
 import { State } from '../state';
 import { TimeProcessor } from 'bsmap';
 
-export function getComponentsAll(): ICheck[] {
+export function getAllComponents(): ICheck[] {
    return [
       ...Object.values(notes),
       ...Object.values(obstacles),
@@ -27,7 +27,7 @@ export const cachedKeyedComponents = {
    ...events,
    ...others,
    ...general,
-};
+} as const;
 
 export function updateChecksPreset(preset: PresetParamsList): void {
    const characteristic = UISelection.getSelectedCharacteristic();

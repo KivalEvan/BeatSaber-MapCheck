@@ -66,7 +66,7 @@ function run(args: CheckArgs): ICheckOutput[] {
       return [
          {
             type: OutputType.STRING,
-            label: `Excessive Double Hit (${round(perc * 100, 1)}%)`,
+            label: `Excessive double (${round(perc * 100, 1)}%)`,
             value: 'Too many is not ideal mapping practices',
             status: OutputStatus.WARNING,
          },

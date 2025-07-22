@@ -9,17 +9,21 @@ import {
    loadLightshow,
    logger,
    NoteJumpSpeed,
+   resolveGridPosition,
+   resolveNoteAngle,
    TimeProcessor,
 } from 'bsmap';
 import * as types from 'bsmap/types';
 import { stats, swing } from 'bsmap/extensions';
 import { PrecalculateKey } from '../types/precalculate';
+import { isNoteSwingable, isNoteSwingableRaw, noteDistance } from '../utils/beatmap';
+import { nearEqual, shortRotDistance } from 'bsmap/utils';
 
 function tag(name: string) {
    return ['load', name];
 }
 
-async function fetchLightshow(
+export async function extractLightshow(
    zip: JSZip,
    infoDiff: types.wrapper.IWrapInfoBeatmap,
    path = '',
@@ -27,12 +31,12 @@ async function fetchLightshow(
    const file = zip.file(path + infoDiff.lightshowFilename);
    if (!file) {
       logger.tError(
-         tag('fetchLightshow'),
+         tag('extractLightshow'),
          `Missing ${infoDiff.lightshowFilename} lightshow file for ${infoDiff.characteristic} ${infoDiff.difficulty}, ignoring.`,
       );
    }
    logger.tInfo(
-      tag('fetchLightshow'),
+      tag('extractLightshow'),
       `Loading ${infoDiff.characteristic} ${infoDiff.difficulty} lightshow`,
    );
    try {
@@ -44,7 +48,7 @@ async function fetchLightshow(
       return [json, lightshow];
    } catch (err) {
       logger.tError(
-         tag('fetchLightshow'),
+         tag('extractLightshow'),
          `Could not load ${infoDiff.lightshowFilename} lightshow file; ${err}`,
       );
    }
@@ -110,83 +114,103 @@ export function extractBeatmaps(
       let jsonLightshow;
       if (jsonDifficultyVer === 4) {
          if (!loaded[infoDiff.lightshowFilename]) {
-            loaded[infoDiff.lightshowFilename] = fetchLightshow(zip, infoDiff, path);
+            loaded[infoDiff.lightshowFilename] = extractLightshow(zip, infoDiff, path);
          }
          const res = await loaded[infoDiff.lightshowFilename];
          if (res) {
-            jsonLightshow = res[0];
-            lightshow = res[1];
+            [jsonLightshow, lightshow] = res;
          }
       }
       data.lightshow = lightshow.lightshow;
 
-      const timeProcessor = TimeProcessor.create(
-         info.audio.bpm,
-         jsonDifficultyVer === 3
-            ? [
-                 ...(data.difficulty.customData.BPMChanges ?? []),
-                 ...(jsonDifficulty.bpmEvents ?? []).map((be: types.v3.IBPMEvent) => be),
-              ]
-            : jsonDifficultyVer === 2
-              ? (data.difficulty.customData._BPMChanges ?? data.difficulty.customData._bpmChanges)
-              : jsonDifficultyVer === 1
-                ? jsonDifficulty._BPMChanges
-                : [],
-         infoDiff.customData?._editorOffset,
-      );
-      precalculateTimes(data, timeProcessor);
-
-      const env =
-         info.environmentNames.at(infoDiff.environmentId) ||
-         (infoDiff.characteristic === '360Degree' || infoDiff.characteristic === '90Degree'
-            ? info.environmentBase.allDirections
-            : info.environmentBase.normal) ||
-         'DefaultEnvironment';
-      return {
-         info: infoDiff,
-         environment: env,
-         timeProcessor,
-         njs: new NoteJumpSpeed(
-            timeProcessor.bpm,
-            infoDiff.njs || NoteJumpSpeed.FallbackNJS[infoDiff.difficulty] || 0,
-            infoDiff.njsOffset,
-         ),
+      return createBeatmapContainer(
+         info,
+         infoDiff,
          data,
-         noteContainer: getNoteContainer(data),
-         swingAnalysis: swing.info(
-            data,
-            timeProcessor,
-            infoDiff.characteristic,
-            infoDiff.difficulty,
-         ),
-         score: calculateScore(data),
-         stats: {
-            basicEvents: stats.countEvent(
-               data.lightshow.basicEvents,
-               data.lightshow.colorBoostEvents,
-               env,
-            ),
-            lightColorEventBoxGroups: stats.countEbg(data.lightshow.lightColorEventBoxGroups, env),
-            lightRotationEventBoxGroups: stats.countEbg(
-               data.lightshow.lightRotationEventBoxGroups,
-               env,
-            ),
-            lightTranslationEventBoxGroups: stats.countEbg(
-               data.lightshow.lightTranslationEventBoxGroups,
-               env,
-            ),
-            fxEventBoxGroups: stats.countEbg(data.lightshow.fxEventBoxGroups, env),
-            notes: stats.countNote(data.difficulty.colorNotes),
-            bombs: stats.countBomb(data.difficulty.bombNotes),
-            arcs: stats.countNote(data.difficulty.arcs),
-            chains: stats.countNote(data.difficulty.chains),
-            obstacles: stats.countObstacle(data.difficulty.obstacles),
-         },
-         rawVersion: jsonDifficultyVer as 4,
-         rawData: jsonDifficulty,
-         rawLightshow: jsonLightshow,
-      } satisfies IBeatmapContainer;
+         jsonDifficulty,
+         jsonLightshow,
+         jsonDifficultyVer,
+      );
    });
+}
+
+export function createBeatmapContainer(
+   info: types.wrapper.IWrapInfo,
+   infoBeatmap: types.wrapper.IWrapInfoBeatmap,
+   beatmap: types.wrapper.IWrapBeatmap,
+   jsonDifficulty: any,
+   jsonLightshow: any,
+   version: number,
+): IBeatmapContainer {
+   const timeProcessor = TimeProcessor.create(
+      info.audio.bpm,
+      version === 3
+         ? [
+              ...(beatmap.difficulty.customData.BPMChanges ?? []),
+              ...(jsonDifficulty.bpmEvents ?? []).map((be: types.v3.IBPMEvent) => be),
+           ]
+         : version === 2
+           ? (beatmap.difficulty.customData._BPMChanges ??
+             beatmap.difficulty.customData._bpmChanges)
+           : version === 1
+             ? jsonDifficulty._BPMChanges
+             : [],
+      infoBeatmap.customData?._editorOffset,
+   );
+   const swingAnalysis = swing.info(
+      beatmap,
+      timeProcessor,
+      infoBeatmap.characteristic,
+      infoBeatmap.difficulty,
+   );
+   precalculateObjects(beatmap, swingAnalysis, timeProcessor);
+
+   const env =
+      info.environmentNames.at(infoBeatmap.environmentId) ||
+      (infoBeatmap.characteristic === '360Degree' || infoBeatmap.characteristic === '90Degree'
+         ? info.environmentBase.allDirections
+         : info.environmentBase.normal) ||
+      'DefaultEnvironment';
+
+   return {
+      info: infoBeatmap,
+      environment: env,
+      timeProcessor,
+      njs: new NoteJumpSpeed(
+         timeProcessor.bpm,
+         infoBeatmap.njs || NoteJumpSpeed.FallbackNJS[infoBeatmap.difficulty] || 0,
+         infoBeatmap.njsOffset,
+      ),
+      data: beatmap,
+      noteContainer: getNoteContainer(beatmap),
+      swingAnalysis,
+      score: calculateScore(beatmap),
+      stats: {
+         basicEvents: stats.countEvent(
+            beatmap.lightshow.basicEvents,
+            beatmap.lightshow.colorBoostEvents,
+            env,
+         ),
+         lightColorEventBoxGroups: stats.countEbg(beatmap.lightshow.lightColorEventBoxGroups, env),
+         lightRotationEventBoxGroups: stats.countEbg(
+            beatmap.lightshow.lightRotationEventBoxGroups,
+            env,
+         ),
+         lightTranslationEventBoxGroups: stats.countEbg(
+            beatmap.lightshow.lightTranslationEventBoxGroups,
+            env,
+         ),
+         fxEventBoxGroups: stats.countEbg(beatmap.lightshow.fxEventBoxGroups, env),
+         notes: stats.countNote(beatmap.difficulty.colorNotes),
+         bombs: stats.countBomb(beatmap.difficulty.bombNotes),
+         arcs: stats.countNote(beatmap.difficulty.arcs),
+         chains: stats.countNote(beatmap.difficulty.chains),
+         obstacles: stats.countObstacle(beatmap.difficulty.obstacles),
+      },
+      rawVersion: version as 4,
+      rawData: jsonDifficulty,
+      rawLightshow: jsonLightshow,
+   } satisfies IBeatmapContainer;
 }
 
 function getNoteContainer(beatmap: types.wrapper.IWrapBeatmap): IObjectContainer[] {
@@ -198,32 +222,109 @@ function getNoteContainer(beatmap: types.wrapper.IWrapBeatmap): IObjectContainer
    ].sort((a, b) => a.data.time - b.data.time) as IObjectContainer[];
 }
 
-function precalculateTimes(beatmap: types.wrapper.IWrapBeatmap, timeProcessor: TimeProcessor) {
-   const fn = applyTime(timeProcessor);
-   if (!beatmap.difficulty.customData.__mapcheck_precalculatetime) {
-      beatmap.difficulty.bpmEvents.forEach(fn);
-      beatmap.difficulty.rotationEvents.forEach(fn);
-      beatmap.difficulty.colorNotes.forEach(fn);
-      beatmap.difficulty.bombNotes.forEach(fn);
-      beatmap.difficulty.obstacles.forEach(fn);
-      beatmap.difficulty.arcs.forEach(fn);
-      beatmap.difficulty.chains.forEach(fn);
-      beatmap.difficulty.customData.__mapcheck_precalculatetime = true;
+function precalculateObjects(
+   beatmap: types.wrapper.IWrapBeatmap,
+   swingAnalysis: swing.types.ISwingAnalysis,
+   timeProcessor: TimeProcessor,
+) {
+   const applyTime = applyTimeFn(timeProcessor);
+   if (!beatmap.difficulty.customData[PrecalculateKey.CALCULATED]) {
+      beatmap.difficulty.bpmEvents.forEach(applyTime);
+      beatmap.difficulty.njsEvents.forEach(applyTime);
+      beatmap.difficulty.rotationEvents.forEach(applyTime);
+
+      beatmap.difficulty.colorNotes.forEach(applyTime);
+      beatmap.difficulty.colorNotes.forEach(applyPosition);
+      beatmap.difficulty.colorNotes.forEach(applyAngle);
+
+      beatmap.difficulty.bombNotes.forEach(applyTime);
+      beatmap.difficulty.bombNotes.forEach(applyPosition);
+
+      beatmap.difficulty.obstacles.forEach(applyTime);
+      beatmap.difficulty.obstacles.forEach(applyPosition);
+
+      beatmap.difficulty.arcs.forEach(applyTime);
+      beatmap.difficulty.arcs.forEach(applyPosition);
+      beatmap.difficulty.arcs.forEach(applyAngle);
+
+      beatmap.difficulty.chains.forEach(applyTime);
+      beatmap.difficulty.chains.forEach(applyPosition);
+      beatmap.difficulty.chains.forEach(applyAngle);
+
+      beatmap.difficulty.customData[PrecalculateKey.CALCULATED] = true;
    }
 
-   if (!beatmap.lightshow.customData.__mapcheck_precalculatetimelightshow) {
-      beatmap.lightshow.waypoints.forEach(fn);
-      beatmap.lightshow.basicEvents.forEach(fn);
-      beatmap.lightshow.colorBoostEvents.forEach(fn);
-      beatmap.lightshow.lightColorEventBoxGroups.forEach(fn);
-      beatmap.lightshow.lightRotationEventBoxGroups.forEach(fn);
-      beatmap.lightshow.lightTranslationEventBoxGroups.forEach(fn);
-      beatmap.lightshow.fxEventBoxGroups.forEach(fn);
-      beatmap.lightshow.customData.__mapcheck_precalculatetimelightshow = true;
+   if (!beatmap.lightshow.customData[PrecalculateKey.CALCULATED]) {
+      beatmap.lightshow.waypoints.forEach(applyTime);
+      beatmap.lightshow.basicEvents.forEach(applyTime);
+      beatmap.lightshow.colorBoostEvents.forEach(applyTime);
+      beatmap.lightshow.lightColorEventBoxGroups.forEach(applyTime);
+      beatmap.lightshow.lightRotationEventBoxGroups.forEach(applyTime);
+      beatmap.lightshow.lightTranslationEventBoxGroups.forEach(applyTime);
+      beatmap.lightshow.fxEventBoxGroups.forEach(applyTime);
+      beatmap.lightshow.customData[PrecalculateKey.CALCULATED] = true;
+   }
+
+   for (const cont of swingAnalysis.container) {
+      if (cont.data.length !== 2) {
+         continue;
+      }
+
+      if (
+         nearEqual(cont.data[0].time, cont.data[1].time) &&
+         (cont.data[0].direction !== types.NoteDirection.ANY &&
+         cont.data[1].direction !== types.NoteDirection.ANY
+            ? resolveNoteAngle(cont.data[0].direction) ===
+                 resolveNoteAngle(cont.data[1].direction) &&
+              isNoteSwingableRaw(cont.data[0], cont.data[1], 30)
+            : true)
+      ) {
+         const [pX, pY] = cont.data[0].customData[PrecalculateKey.POSITION];
+         const [qX, qY] = cont.data[1].customData[PrecalculateKey.POSITION];
+         const direction =
+            resolveNoteAngle(cont.data[0].direction) || resolveNoteAngle(cont.data[1].direction);
+         const angle1 = (Math.atan2(pY - qY, pX - qX) * 180) / Math.PI + 90;
+         const angle2 = (Math.atan2(qY - pY, qX - pX) * 180) / Math.PI + 90;
+
+         cont.data[0].customData[PrecalculateKey.ANGLE] = cont.data[1].customData[
+            PrecalculateKey.ANGLE
+         ] =
+            shortRotDistance(direction, angle1, 360) > shortRotDistance(direction, angle2, 360)
+               ? angle2
+               : angle1;
+         cont.data[0].customData[PrecalculateKey.SNAPPED] = cont.data[1].customData[
+            PrecalculateKey.SNAPPED
+         ] = true;
+      }
    }
 }
 
-function applyTime(timeProcessor: TimeProcessor) {
+function applyPosition(
+   object: types.wrapper.IWrapGridObject & Partial<types.wrapper.IWrapBaseSlider>,
+) {
+   object.customData[PrecalculateKey.POSITION] = resolveGridPosition(object);
+   if (typeof object.tailPosX === 'number' && typeof object.tailPosY === 'number') {
+      object.customData[PrecalculateKey.TAIL_POSITION] = [object.tailPosX, object.tailPosY];
+   }
+}
+
+function applyAngle(
+   object: types.wrapper.IWrapBaseNote & { angleOffset?: number } & Partial<types.wrapper.IWrapArc>,
+) {
+   object.customData[PrecalculateKey.ANGLE] =
+      resolveNoteAngle(object.direction) + (object.angleOffset || 0);
+   if (object.direction === types.NoteDirection.ANY) {
+      object.customData[PrecalculateKey.ANGLE] += 180;
+   }
+   if (typeof object.tailDirection === 'number') {
+      object.customData[PrecalculateKey.TAIL_ANGLE] = resolveNoteAngle(object.tailDirection);
+      if (object.tailDirection === types.NoteDirection.ANY) {
+         object.customData[PrecalculateKey.TAIL_ANGLE] += 180;
+      }
+   }
+}
+
+function applyTimeFn(timeProcessor: TimeProcessor) {
    return function (object: types.wrapper.IWrapBaseObject) {
       object.customData[PrecalculateKey.SECOND_TIME] = timeProcessor.toRealTime(object.time);
       object.customData[PrecalculateKey.BEAT_TIME] = timeProcessor.adjustTime(object.time);

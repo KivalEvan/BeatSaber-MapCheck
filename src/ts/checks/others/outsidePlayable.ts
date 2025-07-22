@@ -53,12 +53,10 @@ function objectBeforeTime(
 ) {
    if (objects.length && objects[0].time < 0) {
       results.push({
-         type: OutputType.STRING,
-         label: tag + '(s) before start time',
-         value: `${round(objects[0].time, 3)} (${secToMmss(
-            objects[0].customData[PrecalculateKey.SECOND_TIME],
-         )}`,
          status: OutputStatus.ERROR,
+         label: tag + '(s) before start time',
+         type: OutputType.TIME,
+         value: objects.filter((o) => o.time < 0),
       });
    }
 }
@@ -69,22 +67,23 @@ function objectAfterTime(
    endTime: number,
    results: ICheckOutput[],
 ) {
-   if (objects.length && objects[objects.length - 1].time > endTime) {
+   if (
+      objects.length &&
+      objects[objects.length - 1].customData[PrecalculateKey.SECOND_TIME] > endTime
+   ) {
       results.push({
-         type: OutputType.STRING,
-         label: tag + '(s) after end time',
-         value: `${round(objects[objects.length - 1].time, 3)} (${secToMmss(
-            objects[objects.length - 1].customData[PrecalculateKey.SECOND_TIME],
-         )})`,
          status: OutputStatus.ERROR,
+         label: tag + '(s) after end time',
+         type: OutputType.TIME,
+         value: objects.filter((o) => o.customData[PrecalculateKey.SECOND_TIME] > endTime),
       });
    }
 }
 
 function run(args: CheckArgs): ICheckOutput[] {
    const duration = args.audioDuration;
-   const timeProcessor = args.beatmap.timeProcessor;
-   const { colorNotes, bombNotes, obstacles, arcs, chains } = args.beatmap.data.difficulty;
+   const { colorNotes, bombNotes, obstacles, arcs, chains, njsEvents, rotationEvents } =
+      args.beatmap.data.difficulty;
    const {
       basicEvents,
       colorBoostEvents,
@@ -97,14 +96,16 @@ function run(args: CheckArgs): ICheckOutput[] {
 
    const results: ICheckOutput[] = [];
    if (duration) {
-      let endBeat = timeProcessor.toBeatTime(duration, true);
+      let endTime = duration;
       objectBeforeTime('Note', colorNotes, results);
       objectBeforeTime('Bomb', bombNotes, results);
       objectBeforeTime('Obstacle', obstacles, results);
       objectBeforeTime('Arc', arcs, results);
       objectBeforeTime('Chain', chains, results);
-      objectBeforeTime('Event', basicEvents, results);
-      objectBeforeTime('Color Boost', colorBoostEvents, results);
+      objectBeforeTime('Rotation Event', rotationEvents, results);
+      objectBeforeTime('NJS Event', njsEvents, results);
+      objectBeforeTime('Basic Event', basicEvents, results);
+      objectBeforeTime('Color Boost Event', colorBoostEvents, results);
       objectBeforeTime('Waypoint', waypoints, results);
       objectBeforeTime('Light Color Event Box Group', lightColorEventBoxGroups, results);
       objectBeforeTime('Light Rotation Event Box Group', lightRotationEventBoxGroups, results);
@@ -115,28 +116,30 @@ function run(args: CheckArgs): ICheckOutput[] {
       );
       objectBeforeTime('FX Event Box Group', fxEventBoxGroups, results);
 
-      objectAfterTime('Note', colorNotes, endBeat, results);
-      objectAfterTime('Bomb', bombNotes, endBeat, results);
-      objectAfterTime('Obstacle', obstacles, endBeat, results);
-      objectAfterTime('Arc', arcs, endBeat, results);
-      objectAfterTime('Chain', chains, endBeat, results);
-      objectAfterTime('Event', basicEvents, endBeat, results);
-      objectAfterTime('Color Boost', colorBoostEvents, endBeat, results);
-      objectAfterTime('Waypoint', waypoints, endBeat, results);
-      objectAfterTime('Light Color Event Box Group', lightColorEventBoxGroups, endBeat, results);
+      objectAfterTime('Note', colorNotes, endTime, results);
+      objectAfterTime('Bomb', bombNotes, endTime, results);
+      objectAfterTime('Obstacle', obstacles, endTime, results);
+      objectAfterTime('Arc', arcs, endTime, results);
+      objectAfterTime('Chain', chains, endTime, results);
+      objectAfterTime('Rotation Event', rotationEvents, endTime, results);
+      objectAfterTime('NJS Event', njsEvents, endTime, results);
+      objectAfterTime('Basic Event', basicEvents, endTime, results);
+      objectAfterTime('Color Boost Event', colorBoostEvents, endTime, results);
+      objectAfterTime('Waypoint', waypoints, endTime, results);
+      objectAfterTime('Light Color Event Box Group', lightColorEventBoxGroups, endTime, results);
       objectAfterTime(
          'Light Rotation Event Box Group',
          lightRotationEventBoxGroups,
-         endBeat,
+         endTime,
          results,
       );
       objectAfterTime(
          'Light Translation Event Box Group',
          lightTranslationEventBoxGroups,
-         endBeat,
+         endTime,
          results,
       );
-      objectAfterTime('FX Event Box Group', fxEventBoxGroups, endBeat, results);
+      objectAfterTime('FX Event Box Group', fxEventBoxGroups, endTime, results);
    }
 
    return results;

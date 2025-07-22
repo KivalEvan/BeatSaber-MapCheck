@@ -1,4 +1,4 @@
-import { NoteColor, NoteDirection, resolveNoteAngle } from 'bsmap';
+import { NoteColor, NoteDirection } from 'bsmap';
 import * as types from 'bsmap/types';
 import {
    ICheck,
@@ -12,8 +12,9 @@ import {
 } from '../../types';
 import { IObjectContainerColor, ObjectContainerType } from '../../types/container';
 import { UIInput } from '../../ui/helpers/input';
-import { placement, swing } from 'bsmap/extensions';
+import { swing } from 'bsmap/extensions';
 import { PrecalculateKey } from '../../types/precalculate';
+import { isNotePointing, noteDistance } from '../../utils/beatmap';
 
 const name = 'Hitbox Reverse Staircase';
 const description = 'Check for overlapping pre-swing hitbox with note hitbox during swing.';
@@ -88,8 +89,8 @@ function check(args: CheckArgs) {
                continue;
             }
             const isDiagonal =
-               resolveNoteAngle(other.direction) % 90 > 15 &&
-               resolveNoteAngle(other.direction) % 90 < 75;
+               other.customData[PrecalculateKey.ANGLE] % 90 > 15 &&
+               other.customData[PrecalculateKey.ANGLE] % 90 < 75;
             // magic number 1.425 from saber length + good/bad hitbox
             if (
                njs.value <
@@ -97,7 +98,8 @@ function check(args: CheckArgs) {
                      (note.data.customData[PrecalculateKey.SECOND_TIME] -
                         other.customData[PrecalculateKey.SECOND_TIME] +
                         (isDiagonal ? constantDiagonal : constant)) &&
-               placement.isIntersectNote(note.data, other, [[15, 1.5]])[1]
+               noteDistance(note.data, other) <= 1.5 &&
+               isNotePointing(note.data, other, 15)
             ) {
                result.push(other);
                break;
@@ -117,7 +119,7 @@ function run(args: CheckArgs): ICheckOutput[] {
       return [
          {
             status: OutputStatus.RANK,
-            label: 'Hitbox reverse Staircase',
+            label: 'Hitbox reverse staircase',
             type: OutputType.TIME,
             value: result,
          },

@@ -10,7 +10,10 @@ import {
 } from '../../types';
 import { IObjectContainer, ObjectContainerType } from '../../types/container';
 import { UIInput } from '../../ui/helpers/input';
-import { NoteDirection } from 'bsmap';
+import { BombNote, NoteDirection } from 'bsmap';
+import { isNotePointing } from '../../utils/beatmap';
+import { PrecalculateKey } from '../../types/precalculate';
+import { nearEqual, shortRotDistance, vectorDistance } from 'bsmap/utils';
 
 const name = 'Improper Chain';
 const description = 'Check for correct use of chain.';
@@ -66,9 +69,38 @@ function check(args: CheckArgs) {
                   chain.data.posY === other.data.posY &&
                   other.data.time <= chain.data.time + 0.001 &&
                   chain.data.color === other.data.color &&
-                  (other.data.direction !== NoteDirection.ANY
+                  (((other.data.direction !== NoteDirection.ANY
                      ? chain.data.direction === other.data.direction
-                     : true)
+                     : true) &&
+                     (chain.data.sliceCount === 1 ||
+                        (vectorDistance(
+                           other.data.customData[PrecalculateKey.POSITION],
+                           chain.data.customData[PrecalculateKey.TAIL_POSITION],
+                        ) > 0.1 &&
+                           chain.data.sliceCount > 1 &&
+                           isNotePointing(
+                              other.data,
+                              {
+                                 posX: chain.data.tailPosX,
+                                 posY: chain.data.tailPosY,
+                                 customData: {
+                                    [PrecalculateKey.POSITION]:
+                                       chain.data.customData[PrecalculateKey.TAIL_POSITION],
+                                 },
+                              },
+                              60,
+                           )))) ||
+                     (other.data.direction === NoteDirection.ANY &&
+                        vectorDistance(
+                           other.data.customData[PrecalculateKey.POSITION],
+                           chain.data.customData[PrecalculateKey.TAIL_POSITION],
+                        ) > 0.1 &&
+                        chain.data.sliceCount > 1 &&
+                        shortRotDistance(
+                           other.data.customData[PrecalculateKey.ANGLE],
+                           chain.data.customData[PrecalculateKey.ANGLE],
+                           360,
+                        ) < 5))
                ) {
                   potential = false;
                   break;

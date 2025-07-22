@@ -1,4 +1,4 @@
-import { getComponentsAll, applyBpmToComponents } from '../../checks/components';
+import { getAllComponents, applyBpmToComponents } from '../../checks/components';
 import { LoadStatus, UILoading } from '../loading';
 import { TimeProcessor } from 'bsmap';
 import * as types from 'bsmap/types';
@@ -138,37 +138,39 @@ export class UIChecks {
    }
 
    static populateTool(): void {
-      getComponentsAll().forEach((tl) => {
-         if (tl.input.ui) {
-            switch (tl.type) {
-               case CheckType.NOTE: {
-                  UIChecks.#htmlChecksNote.appendChild(tl.input.ui());
-                  break;
-               }
-               case CheckType.OBSTACLE: {
-                  UIChecks.#htmlChecksObstacle.appendChild(tl.input.ui());
-                  break;
-               }
-               case CheckType.EVENT: {
-                  UIChecks.#htmlChecksEvent.appendChild(tl.input.ui());
-                  break;
-               }
-               case CheckType.OTHER: {
-                  UIChecks.#htmlChecksOther.appendChild(tl.input.ui());
-                  break;
-               }
-               case CheckType.GENERAL: {
-                  UIChecks.#htmlChecksGeneral.appendChild(tl.input.ui());
-                  break;
-               }
-               default: {
-                  console.error(
-                     logPrefix + 'could not recognise type ' + tl.type + ' for ' + tl.name,
-                  );
+      getAllComponents()
+         .sort((a, b) => a.order.input - b.order.input)
+         .forEach((tl) => {
+            if (tl.input.ui) {
+               switch (tl.type) {
+                  case CheckType.NOTE: {
+                     UIChecks.#htmlChecksNote.appendChild(tl.input.ui());
+                     break;
+                  }
+                  case CheckType.OBSTACLE: {
+                     UIChecks.#htmlChecksObstacle.appendChild(tl.input.ui());
+                     break;
+                  }
+                  case CheckType.EVENT: {
+                     UIChecks.#htmlChecksEvent.appendChild(tl.input.ui());
+                     break;
+                  }
+                  case CheckType.OTHER: {
+                     UIChecks.#htmlChecksOther.appendChild(tl.input.ui());
+                     break;
+                  }
+                  case CheckType.GENERAL: {
+                     UIChecks.#htmlChecksGeneral.appendChild(tl.input.ui());
+                     break;
+                  }
+                  default: {
+                     console.error(
+                        logPrefix + 'could not recognise type ' + tl.type + ' for ' + tl.name,
+                     );
+                  }
                }
             }
-         }
-      });
+         });
    }
 
    static #clearOutput(): void {

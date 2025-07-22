@@ -1,0 +1,83 @@
+{
+  "name" : "ChroMapper",
+  "characteristic" : "Standard",
+  "difficulty" : "ExpertPlus",
+  "color" : "00FFFF",
+  "bookmarks" : [
+    {
+      "beat" : 5,
+      "label" : "1",
+      "text" : "1"
+    },
+    {
+      "beat" : 6,
+      "label" : "1",
+      "text" : "1"
+    },
+    {
+      "beat" : 7,
+      "label" : "0 - not handclap because same color",
+      "text" : "0 - not handclap because same color"
+    },
+    {
+      "beat" : 9,
+      "label" : "1",
+      "text" : "1"
+    },
+    {
+      "beat" : 10,
+      "label" : "0 - enough gap where clap is less severe",
+      "text" : "0 - enough gap where clap is less severe"
+    },
+    {
+      "beat" : 11,
+      "label" : "0 - should be fixed but this can be classified as error in another category",
+      "text" : "0 - should be fixed but this can be classified as error in another category"
+    },
+    {
+      "beat" : 12,
+      "label" : "0 - while technically can be handclap, it is very setup dependent",
+      "text" : "0 - while technically can be handclap, it is very setup dependent"
+    },
+    {
+      "beat" : 16,
+      "label" : "0 - not pointing into each other",
+      "text" : "0 - not pointing into each other"
+    },
+    {
+      "beat" : 17,
+      "label" : "1 - while not pointing, it is close enough to count",
+      "text" : "1 - while not pointing, it is close enough to count"
+    },
+    {
+      "beat" : 18,
+      "label" : "1",
+      "text" : "1"
+    },
+    {
+      "beat" : 19,
+      "label" : "1",
+      "text" : "1"
+    },
+    {
+      "beat" : 25,
+      "label" : "0 - debatable",
+      "text" : "0 - debatable"
+    },
+    {
+      "beat" : 26,
+      "label" : "1",
+      "text" : "1"
+    },
+    {
+      "beat" : 28,
+      "label" : "1",
+      "text" : "1"
+    },
+    {
+      "beat" : 39,
+      "label" : "1",
+      "text" : "1"
+    }
+  ]
+}

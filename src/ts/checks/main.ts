@@ -1,5 +1,5 @@
 export * from './presets';
-import { getComponentsAll } from './components';
+import { getAllComponents } from './components';
 import { State } from '../state';
 import { ICheckOutput, CheckType } from '../types/checks/check';
 import { IBeatmapContainer, ICheck } from '../types';
@@ -10,7 +10,7 @@ function tag(name: string) {
    return ['checks', name];
 }
 
-const toolListOutput: ReadonlyArray<ICheck> = getComponentsAll().sort(
+const toolListOutput: ReadonlyArray<ICheck> = getAllComponents().sort(
    (a, b) => a.order.output - b.order.output,
 );
 

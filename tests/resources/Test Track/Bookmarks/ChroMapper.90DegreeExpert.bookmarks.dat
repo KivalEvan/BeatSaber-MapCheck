@@ -1,0 +1,48 @@
+{
+  "name" : "ChroMapper",
+  "characteristic" : "90Degree",
+  "difficulty" : "Expert",
+  "color" : "00FFFF",
+  "bookmarks" : [
+    {
+      "beat" : 4,
+      "label" : "1",
+      "text" : "1"
+    },
+    {
+      "beat" : 7.5,
+      "label" : "0 - close but not quite",
+      "text" : "0 - close but not quite"
+    },
+    {
+      "beat" : 9.75,
+      "label" : "1",
+      "text" : "1"
+    },
+    {
+      "beat" : 11.375,
+      "label" : "1",
+      "text" : "1"
+    },
+    {
+      "beat" : 13,
+      "label" : "1",
+      "text" : "1"
+    },
+    {
+      "beat" : 15,
+      "label" : "1",
+      "text" : "1"
+    },
+    {
+      "beat" : 17,
+      "label" : "1",
+      "text" : "1"
+    },
+    {
+      "beat" : 19,
+      "label" : "1",
+      "text" : "1"
+    }
+  ]
+}

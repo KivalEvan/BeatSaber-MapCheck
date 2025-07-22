@@ -14,6 +14,7 @@ import * as types from 'bsmap/types';
 import { placement } from 'bsmap/extensions';
 import { isHorizontal, isVertical, isDiagonal } from 'bsmap';
 import { PrecalculateKey } from '../../types/precalculate';
+import { isNotePointing, isNoteSwingable, noteDistance } from '../../utils/beatmap';
 
 const name = 'Hitbox Path';
 const description = 'Check for overlapping pre-swing note hitbox at same time.';
@@ -79,21 +80,9 @@ function check(args: CheckArgs) {
             continue;
          }
          if (
-            ((isHorizontal(currentNote.data, compareTo.data) ||
-               isVertical(currentNote.data, compareTo.data)) &&
-               placement
-                  .isIntersectNote(currentNote.data, compareTo.data, [
-                     [45, 1],
-                     [15, 2],
-                  ])
-                  .some((b) => b)) ||
-            (isDiagonal(currentNote.data, compareTo.data) &&
-               placement
-                  .isIntersectNote(currentNote.data, compareTo.data, [
-                     [45, 1],
-                     [15, 1.5],
-                  ])
-                  .some((b) => b))
+            noteDistance(currentNote.data, compareTo.data) <= 2 &&
+            (!isNotePointing(currentNote.data, compareTo.data, 150) ||
+               !isNotePointing(compareTo.data, currentNote.data, 150))
          ) {
             result.push(currentNote.data);
             lastTime = currentNote.data.customData[PrecalculateKey.SECOND_TIME];

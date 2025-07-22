@@ -1,0 +1,803 @@
+{
+  "version" : "4.0.1",
+  "song" : {
+    "title" : "Test Vanilla",
+    "subTitle" : "",
+    "author" : "The Map Checker"
+  },
+  "audio" : {
+    "songFilename" : "track.ogg",
+    "songDuration" : 32,
+    "audioDataFilename" : "AudioData.dat",
+    "bpm" : 120,
+    "lufs" : 0,
+    "previewStartTime" : 12,
+    "previewDuration" : 10
+  },
+  "songPreviewFilename" : "track.ogg",
+  "coverImageFilename" : "cover.jpg",
+  "environmentNames" : [
+    "DefaultEnvironment"
+  ],
+  "colorSchemes" : [
+  ],
+  "difficultyBeatmaps" : [
+    {
+      "characteristic" : "360Degree",
+      "difficulty" : "Easy",
+      "beatmapAuthors" : {
+        "mappers" : [
+        ],
+        "lighters" : [
+        ]
+      },
+      "environmentNameIdx" : 0,
+      "beatmapColorSchemeIdx" : 0,
+      "noteJumpMovementSpeed" : 10,
+      "noteJumpStartBeatOffset" : 0,
+      "beatmapDataFilename" : "Easy360Degree.dat",
+      "lightshowDataFilename" : "Lightshow.dat",
+      "customData" : {
+        "difficultyLabel" : "Stacked Note"
+      }
+    },
+    {
+      "characteristic" : "360Degree",
+      "difficulty" : "Normal",
+      "beatmapAuthors" : {
+        "mappers" : [
+        ],
+        "lighters" : [
+        ]
+      },
+      "environmentNameIdx" : 0,
+      "beatmapColorSchemeIdx" : 0,
+      "noteJumpMovementSpeed" : 10,
+      "noteJumpStartBeatOffset" : 0,
+      "beatmapDataFilename" : "Normal360Degree.dat",
+      "lightshowDataFilename" : "Lightshow.dat",
+      "customData" : {
+        "difficultyLabel" : "Vary Swing"
+      }
+    },
+    {
+      "characteristic" : "360Degree",
+      "difficulty" : "Hard",
+      "beatmapAuthors" : {
+        "mappers" : [
+        ],
+        "lighters" : [
+        ]
+      },
+      "environmentNameIdx" : 0,
+      "beatmapColorSchemeIdx" : 0,
+      "noteJumpMovementSpeed" : 10,
+      "noteJumpStartBeatOffset" : 0,
+      "beatmapDataFilename" : "Hard360Degree.dat",
+      "lightshowDataFilename" : "Lightshow.dat",
+      "customData" : {
+        "difficultyLabel" : "Slow Slider"
+      }
+    },
+    {
+      "characteristic" : "360Degree",
+      "difficulty" : "Expert",
+      "beatmapAuthors" : {
+        "mappers" : [
+        ],
+        "lighters" : [
+        ]
+      },
+      "environmentNameIdx" : 0,
+      "beatmapColorSchemeIdx" : 0,
+      "noteJumpMovementSpeed" : 12,
+      "noteJumpStartBeatOffset" : 0,
+      "beatmapDataFilename" : "Expert360Degree.dat",
+      "lightshowDataFilename" : "Lightshow.dat",
+      "customData" : {
+        "difficultyLabel" : "Speed Pause"
+      }
+    },
+    {
+      "characteristic" : "360Degree",
+      "difficulty" : "ExpertPlus",
+      "beatmapAuthors" : {
+        "mappers" : [
+        ],
+        "lighters" : [
+        ]
+      },
+      "environmentNameIdx" : 0,
+      "beatmapColorSchemeIdx" : 0,
+      "noteJumpMovementSpeed" : 16,
+      "noteJumpStartBeatOffset" : 0,
+      "beatmapDataFilename" : "ExpertPlus360Degree.dat",
+      "lightshowDataFilename" : "Lightshow.dat",
+      "customData" : {
+        "difficultyLabel" : "EBPM"
+      }
+    },
+    {
+      "characteristic" : "90Degree",
+      "difficulty" : "Easy",
+      "beatmapAuthors" : {
+        "mappers" : [
+        ],
+        "lighters" : [
+        ]
+      },
+      "environmentNameIdx" : 0,
+      "beatmapColorSchemeIdx" : 0,
+      "noteJumpMovementSpeed" : 10,
+      "noteJumpStartBeatOffset" : 0,
+      "beatmapDataFilename" : "Easy90Degree.dat",
+      "lightshowDataFilename" : "Lightshow.dat",
+      "customData" : {
+        "difficultyLabel" : "Zero Obstacle"
+      }
+    },
+    {
+      "characteristic" : "90Degree",
+      "difficulty" : "Normal",
+      "beatmapAuthors" : {
+        "mappers" : [
+        ],
+        "lighters" : [
+        ]
+      },
+      "environmentNameIdx" : 0,
+      "beatmapColorSchemeIdx" : 0,
+      "noteJumpMovementSpeed" : 10,
+      "noteJumpStartBeatOffset" : 0,
+      "beatmapDataFilename" : "Normal90Degree.dat",
+      "lightshowDataFilename" : "Lightshow.dat",
+      "customData" : {
+        "difficultyLabel" : "Short Obstacle"
+      }
+    },
+    {
+      "characteristic" : "90Degree",
+      "difficulty" : "Hard",
+      "beatmapAuthors" : {
+        "mappers" : [
+        ],
+        "lighters" : [
+        ]
+      },
+      "environmentNameIdx" : 0,
+      "beatmapColorSchemeIdx" : 0,
+      "noteJumpMovementSpeed" : 10,
+      "noteJumpStartBeatOffset" : 0,
+      "beatmapDataFilename" : "Hard90Degree.dat",
+      "lightshowDataFilename" : "Lightshow.dat",
+      "customData" : {
+        "difficultyLabel" : "Rankable Obstacle"
+      }
+    },
+    {
+      "characteristic" : "90Degree",
+      "difficulty" : "Expert",
+      "beatmapAuthors" : {
+        "mappers" : [
+        ],
+        "lighters" : [
+        ]
+      },
+      "environmentNameIdx" : 0,
+      "beatmapColorSchemeIdx" : 0,
+      "noteJumpMovementSpeed" : 12,
+      "noteJumpStartBeatOffset" : 0,
+      "beatmapDataFilename" : "Expert90Degree.dat",
+      "lightshowDataFilename" : "Lightshow.dat",
+      "customData" : {
+        "difficultyLabel" : "Center Obstacle"
+      }
+    },
+    {
+      "characteristic" : "90Degree",
+      "difficulty" : "ExpertPlus",
+      "beatmapAuthors" : {
+        "mappers" : [
+        ],
+        "lighters" : [
+        ]
+      },
+      "environmentNameIdx" : 0,
+      "beatmapColorSchemeIdx" : 0,
+      "noteJumpMovementSpeed" : 16,
+      "noteJumpStartBeatOffset" : 0,
+      "beatmapDataFilename" : "ExpertPlus90Degree.dat",
+      "lightshowDataFilename" : "Lightshow.dat",
+      "customData" : {
+        "difficultyLabel" : "Vision Block"
+      }
+    },
+    {
+      "characteristic" : "Lawless",
+      "difficulty" : "Easy",
+      "beatmapAuthors" : {
+        "mappers" : [
+        ],
+        "lighters" : [
+        ]
+      },
+      "environmentNameIdx" : 0,
+      "beatmapColorSchemeIdx" : 0,
+      "noteJumpMovementSpeed" : 10,
+      "noteJumpStartBeatOffset" : 0,
+      "beatmapDataFilename" : "EasyLawless.dat",
+      "lightshowDataFilename" : "Lightshow.dat",
+      "customData" : {
+        "difficultyLabel" : "Reserved"
+      }
+    },
+    {
+      "characteristic" : "Lawless",
+      "difficulty" : "Normal",
+      "beatmapAuthors" : {
+        "mappers" : [
+        ],
+        "lighters" : [
+        ]
+      },
+      "environmentNameIdx" : 0,
+      "beatmapColorSchemeIdx" : 0,
+      "noteJumpMovementSpeed" : 10,
+      "noteJumpStartBeatOffset" : 0,
+      "beatmapDataFilename" : "NormalLawless.dat",
+      "lightshowDataFilename" : "Lightshow.dat",
+      "customData" : {
+        "difficultyLabel" : "Outside Playable"
+      }
+    },
+    {
+      "characteristic" : "Lawless",
+      "difficulty" : "Hard",
+      "beatmapAuthors" : {
+        "mappers" : [
+        ],
+        "lighters" : [
+        ]
+      },
+      "environmentNameIdx" : 0,
+      "beatmapColorSchemeIdx" : 0,
+      "noteJumpMovementSpeed" : 10,
+      "noteJumpStartBeatOffset" : 0,
+      "beatmapDataFilename" : "HardLawless.dat",
+      "lightshowDataFilename" : "NoLightshow.dat",
+      "customData" : {
+        "difficultyLabel" : "Outro (Empty)"
+      }
+    },
+    {
+      "characteristic" : "Lawless",
+      "difficulty" : "Expert",
+      "beatmapAuthors" : {
+        "mappers" : [
+        ],
+        "lighters" : [
+        ]
+      },
+      "environmentNameIdx" : 0,
+      "beatmapColorSchemeIdx" : 0,
+      "noteJumpMovementSpeed" : 12,
+      "noteJumpStartBeatOffset" : 0,
+      "beatmapDataFilename" : "ExpertLawless.dat",
+      "lightshowDataFilename" : "NoLightshow.dat",
+      "customData" : {
+        "difficultyLabel" : "Outro (Quick)"
+      }
+    },
+    {
+      "characteristic" : "Lawless",
+      "difficulty" : "ExpertPlus",
+      "beatmapAuthors" : {
+        "mappers" : [
+        ],
+        "lighters" : [
+        ]
+      },
+      "environmentNameIdx" : 0,
+      "beatmapColorSchemeIdx" : 0,
+      "noteJumpMovementSpeed" : 16,
+      "noteJumpStartBeatOffset" : 0,
+      "beatmapDataFilename" : "ExpertPlusLawless.dat",
+      "lightshowDataFilename" : "Lightshow.dat",
+      "customData" : {
+        "difficultyLabel" : "Hot Start"
+      }
+    },
+    {
+      "characteristic" : "Legacy",
+      "difficulty" : "Easy",
+      "beatmapAuthors" : {
+        "mappers" : [
+        ],
+        "lighters" : [
+        ]
+      },
+      "environmentNameIdx" : 0,
+      "beatmapColorSchemeIdx" : 0,
+      "noteJumpMovementSpeed" : 10,
+      "noteJumpStartBeatOffset" : 0,
+      "beatmapDataFilename" : "EasyLegacy.dat",
+      "lightshowDataFilename" : "Lightshow.dat",
+      "customData" : {
+        "difficultyLabel" : "VNJS"
+      }
+    },
+    {
+      "characteristic" : "Legacy",
+      "difficulty" : "Normal",
+      "beatmapAuthors" : {
+        "mappers" : [
+        ],
+        "lighters" : [
+        ]
+      },
+      "environmentNameIdx" : 0,
+      "beatmapColorSchemeIdx" : 0,
+      "noteJumpMovementSpeed" : 10,
+      "noteJumpStartBeatOffset" : 0,
+      "beatmapDataFilename" : "NormalLegacy.dat",
+      "lightshowDataFilename" : "UnlitBomb.dat",
+      "customData" : {
+        "difficultyLabel" : "Unlit Bomb"
+      }
+    },
+    {
+      "characteristic" : "Legacy",
+      "difficulty" : "Hard",
+      "beatmapAuthors" : {
+        "mappers" : [
+        ],
+        "lighters" : [
+        ]
+      },
+      "environmentNameIdx" : 0,
+      "beatmapColorSchemeIdx" : 0,
+      "noteJumpMovementSpeed" : 10,
+      "noteJumpStartBeatOffset" : 0,
+      "beatmapDataFilename" : "HardLegacy.dat",
+      "lightshowDataFilename" : "Lightshow.dat",
+      "customData" : {
+        "difficultyLabel" : "Invalid Event Box"
+      }
+    },
+    {
+      "characteristic" : "Legacy",
+      "difficulty" : "Expert",
+      "beatmapAuthors" : {
+        "mappers" : [
+        ],
+        "lighters" : [
+        ]
+      },
+      "environmentNameIdx" : 0,
+      "beatmapColorSchemeIdx" : 0,
+      "noteJumpMovementSpeed" : 12,
+      "noteJumpStartBeatOffset" : 0,
+      "beatmapDataFilename" : "ExpertLegacy.dat",
+      "lightshowDataFilename" : "Lightshow.dat",
+      "customData" : {
+        "difficultyLabel" : "Insufficient Light (v3 env)"
+      }
+    },
+    {
+      "characteristic" : "Legacy",
+      "difficulty" : "ExpertPlus",
+      "beatmapAuthors" : {
+        "mappers" : [
+        ],
+        "lighters" : [
+        ]
+      },
+      "environmentNameIdx" : 0,
+      "beatmapColorSchemeIdx" : 0,
+      "noteJumpMovementSpeed" : 16,
+      "noteJumpStartBeatOffset" : 0,
+      "beatmapDataFilename" : "ExpertPlusLegacy.dat",
+      "lightshowDataFilename" : "Lightshow.dat",
+      "customData" : {
+        "difficultyLabel" : "Insufficient Light (pre-v3 env)"
+      }
+    },
+    {
+      "characteristic" : "Lightshow",
+      "difficulty" : "Easy",
+      "beatmapAuthors" : {
+        "mappers" : [
+        ],
+        "lighters" : [
+        ]
+      },
+      "environmentNameIdx" : 0,
+      "beatmapColorSchemeIdx" : 0,
+      "noteJumpMovementSpeed" : 10,
+      "noteJumpStartBeatOffset" : 0,
+      "beatmapDataFilename" : "EasyLightshow.dat",
+      "lightshowDataFilename" : "InvalidGlsLightshow.dat",
+      "customData" : {
+        "difficultyLabel" : "Invalid Object (GLS)"
+      }
+    },
+    {
+      "characteristic" : "Lightshow",
+      "difficulty" : "Normal",
+      "beatmapAuthors" : {
+        "mappers" : [
+        ],
+        "lighters" : [
+        ]
+      },
+      "environmentNameIdx" : 0,
+      "beatmapColorSchemeIdx" : 0,
+      "noteJumpMovementSpeed" : 10,
+      "noteJumpStartBeatOffset" : 0,
+      "beatmapDataFilename" : "NormalLightshow.dat",
+      "lightshowDataFilename" : "InvalidEventLightshow.dat",
+      "customData" : {
+        "difficultyLabel" : "Invalid Object (Event)"
+      }
+    },
+    {
+      "characteristic" : "Lightshow",
+      "difficulty" : "Hard",
+      "beatmapAuthors" : {
+        "mappers" : [
+        ],
+        "lighters" : [
+        ]
+      },
+      "environmentNameIdx" : 0,
+      "beatmapColorSchemeIdx" : 0,
+      "noteJumpMovementSpeed" : 10,
+      "noteJumpStartBeatOffset" : 0,
+      "beatmapDataFilename" : "HardLightshow.dat",
+      "lightshowDataFilename" : "Lightshow.dat",
+      "customData" : {
+        "difficultyLabel" : "Invalid Object (Obstacle)",
+        "requirements" : [
+          "Mapping Extensions"
+        ]
+      }
+    },
+    {
+      "characteristic" : "Lightshow",
+      "difficulty" : "Expert",
+      "beatmapAuthors" : {
+        "mappers" : [
+        ],
+        "lighters" : [
+        ]
+      },
+      "environmentNameIdx" : 0,
+      "beatmapColorSchemeIdx" : 0,
+      "noteJumpMovementSpeed" : 12,
+      "noteJumpStartBeatOffset" : 0,
+      "beatmapDataFilename" : "ExpertLightshow.dat",
+      "lightshowDataFilename" : "Lightshow.dat",
+      "customData" : {
+        "difficultyLabel" : "Invalid Object (Chain/Arc)",
+        "requirements" : [
+          "Mapping Extensions"
+        ]
+      }
+    },
+    {
+      "characteristic" : "Lightshow",
+      "difficulty" : "ExpertPlus",
+      "beatmapAuthors" : {
+        "mappers" : [
+        ],
+        "lighters" : [
+        ]
+      },
+      "environmentNameIdx" : 0,
+      "beatmapColorSchemeIdx" : 0,
+      "noteJumpMovementSpeed" : 16,
+      "noteJumpStartBeatOffset" : 0,
+      "beatmapDataFilename" : "ExpertPlusLightshow.dat",
+      "lightshowDataFilename" : "Lightshow.dat",
+      "customData" : {
+        "difficultyLabel" : "Invalid Object (Note/Bomb)",
+        "requirements" : [
+          "Mapping Extensions"
+        ]
+      }
+    },
+    {
+      "characteristic" : "NoArrows",
+      "difficulty" : "Easy",
+      "beatmapAuthors" : {
+        "mappers" : [
+        ],
+        "lighters" : [
+        ]
+      },
+      "environmentNameIdx" : 0,
+      "beatmapColorSchemeIdx" : 0,
+      "noteJumpMovementSpeed" : 10,
+      "noteJumpStartBeatOffset" : 0,
+      "beatmapDataFilename" : "EasyNoArrows.dat",
+      "lightshowDataFilename" : "Lightshow.dat",
+      "customData" : {
+        "difficultyLabel" : "Hammer Hit"
+      }
+    },
+    {
+      "characteristic" : "NoArrows",
+      "difficulty" : "Normal",
+      "beatmapAuthors" : {
+        "mappers" : [
+        ],
+        "lighters" : [
+        ]
+      },
+      "environmentNameIdx" : 0,
+      "beatmapColorSchemeIdx" : 0,
+      "noteJumpMovementSpeed" : 10,
+      "noteJumpStartBeatOffset" : 0,
+      "beatmapDataFilename" : "NormalNoArrows.dat",
+      "lightshowDataFilename" : "Lightshow.dat",
+      "customData" : {
+        "difficultyLabel" : "Angle Offset"
+      }
+    },
+    {
+      "characteristic" : "NoArrows",
+      "difficulty" : "Hard",
+      "beatmapAuthors" : {
+        "mappers" : [
+        ],
+        "lighters" : [
+        ]
+      },
+      "environmentNameIdx" : 0,
+      "beatmapColorSchemeIdx" : 0,
+      "noteJumpMovementSpeed" : 10,
+      "noteJumpStartBeatOffset" : 0,
+      "beatmapDataFilename" : "HardNoArrows.dat",
+      "lightshowDataFilename" : "Lightshow.dat",
+      "customData" : {
+        "difficultyLabel" : "Improper Window"
+      }
+    },
+    {
+      "characteristic" : "NoArrows",
+      "difficulty" : "Expert",
+      "beatmapAuthors" : {
+        "mappers" : [
+        ],
+        "lighters" : [
+        ]
+      },
+      "environmentNameIdx" : 0,
+      "beatmapColorSchemeIdx" : 0,
+      "noteJumpMovementSpeed" : 12,
+      "noteJumpStartBeatOffset" : 0,
+      "beatmapDataFilename" : "ExpertNoArrows.dat",
+      "lightshowDataFilename" : "Lightshow.dat",
+      "customData" : {
+        "difficultyLabel" : "Improper Chain"
+      }
+    },
+    {
+      "characteristic" : "NoArrows",
+      "difficulty" : "ExpertPlus",
+      "beatmapAuthors" : {
+        "mappers" : [
+        ],
+        "lighters" : [
+        ]
+      },
+      "environmentNameIdx" : 0,
+      "beatmapColorSchemeIdx" : 0,
+      "noteJumpMovementSpeed" : 16,
+      "noteJumpStartBeatOffset" : 0,
+      "beatmapDataFilename" : "ExpertPlusNoArrows.dat",
+      "lightshowDataFilename" : "Lightshow.dat",
+      "customData" : {
+        "difficultyLabel" : "Improper Arc"
+      }
+    },
+    {
+      "characteristic" : "OneSaber",
+      "difficulty" : "Easy",
+      "beatmapAuthors" : {
+        "mappers" : [
+        ],
+        "lighters" : [
+        ]
+      },
+      "environmentNameIdx" : 0,
+      "beatmapColorSchemeIdx" : 0,
+      "noteJumpMovementSpeed" : 10,
+      "noteJumpStartBeatOffset" : 0,
+      "beatmapDataFilename" : "EasyOneSaber.dat",
+      "lightshowDataFilename" : "Lightshow.dat",
+      "customData" : {
+        "difficultyLabel" : "Parallel Notes"
+      }
+    },
+    {
+      "characteristic" : "OneSaber",
+      "difficulty" : "Normal",
+      "beatmapAuthors" : {
+        "mappers" : [
+        ],
+        "lighters" : [
+        ]
+      },
+      "environmentNameIdx" : 0,
+      "beatmapColorSchemeIdx" : 0,
+      "noteJumpMovementSpeed" : 10,
+      "noteJumpStartBeatOffset" : 0,
+      "beatmapDataFilename" : "NormalOneSaber.dat",
+      "lightshowDataFilename" : "Lightshow.dat",
+      "customData" : {
+        "difficultyLabel" : "Excessive Double"
+      }
+    },
+    {
+      "characteristic" : "OneSaber",
+      "difficulty" : "Hard",
+      "beatmapAuthors" : {
+        "mappers" : [
+        ],
+        "lighters" : [
+        ]
+      },
+      "environmentNameIdx" : 0,
+      "beatmapColorSchemeIdx" : 0,
+      "noteJumpMovementSpeed" : 10,
+      "noteJumpStartBeatOffset" : 0,
+      "beatmapDataFilename" : "HardOneSaber.dat",
+      "lightshowDataFilename" : "Lightshow.dat",
+      "customData" : {
+        "difficultyLabel" : "Parity"
+      }
+    },
+    {
+      "characteristic" : "OneSaber",
+      "difficulty" : "Expert",
+      "beatmapAuthors" : {
+        "mappers" : [
+        ],
+        "lighters" : [
+        ]
+      },
+      "environmentNameIdx" : 0,
+      "beatmapColorSchemeIdx" : 0,
+      "noteJumpMovementSpeed" : 12,
+      "noteJumpStartBeatOffset" : 0,
+      "beatmapDataFilename" : "ExpertOneSaber.dat",
+      "lightshowDataFilename" : "Lightshow.dat",
+      "customData" : {
+        "difficultyLabel" : "Double Directional"
+      }
+    },
+    {
+      "characteristic" : "OneSaber",
+      "difficulty" : "ExpertPlus",
+      "beatmapAuthors" : {
+        "mappers" : [
+        ],
+        "lighters" : [
+        ]
+      },
+      "environmentNameIdx" : 0,
+      "beatmapColorSchemeIdx" : 0,
+      "noteJumpMovementSpeed" : 16,
+      "noteJumpStartBeatOffset" : 0,
+      "beatmapDataFilename" : "ExpertPlusOneSaber.dat",
+      "lightshowDataFilename" : "Lightshow.dat",
+      "customData" : {
+        "difficultyLabel" : "Acceptable Precision"
+      }
+    },
+    {
+      "characteristic" : "Standard",
+      "difficulty" : "Easy",
+      "beatmapAuthors" : {
+        "mappers" : [
+        ],
+        "lighters" : [
+        ]
+      },
+      "environmentNameIdx" : 0,
+      "beatmapColorSchemeIdx" : 0,
+      "noteJumpMovementSpeed" : 10,
+      "noteJumpStartBeatOffset" : 0,
+      "beatmapDataFilename" : "EasyStandard.dat",
+      "lightshowDataFilename" : "Lightshow.dat",
+      "customData" : {
+        "difficultyLabel" : "Hitbox Reverse Staircase"
+      }
+    },
+    {
+      "characteristic" : "Standard",
+      "difficulty" : "Normal",
+      "beatmapAuthors" : {
+        "mappers" : [
+        ],
+        "lighters" : [
+        ]
+      },
+      "environmentNameIdx" : 0,
+      "beatmapColorSchemeIdx" : 0,
+      "noteJumpMovementSpeed" : 10,
+      "noteJumpStartBeatOffset" : 0,
+      "beatmapDataFilename" : "NormalStandard.dat",
+      "lightshowDataFilename" : "Lightshow.dat",
+      "customData" : {
+        "difficultyLabel" : "Hitbox Staircase"
+      }
+    },
+    {
+      "characteristic" : "Standard",
+      "difficulty" : "Hard",
+      "beatmapAuthors" : {
+        "mappers" : [
+        ],
+        "lighters" : [
+        ]
+      },
+      "environmentNameIdx" : 0,
+      "beatmapColorSchemeIdx" : 0,
+      "noteJumpMovementSpeed" : 10,
+      "noteJumpStartBeatOffset" : 0,
+      "beatmapDataFilename" : "HardStandard.dat",
+      "lightshowDataFilename" : "Lightshow.dat",
+      "customData" : {
+        "difficultyLabel" : "Hitbox Path"
+      }
+    },
+    {
+      "characteristic" : "Standard",
+      "difficulty" : "Expert",
+      "beatmapAuthors" : {
+        "mappers" : [
+        ],
+        "lighters" : [
+        ]
+      },
+      "environmentNameIdx" : 0,
+      "beatmapColorSchemeIdx" : 0,
+      "noteJumpMovementSpeed" : 12,
+      "noteJumpStartBeatOffset" : 0,
+      "beatmapDataFilename" : "ExpertStandard.dat",
+      "lightshowDataFilename" : "Lightshow.dat",
+      "customData" : {
+        "difficultyLabel" : "Hitbox Inline"
+      }
+    },
+    {
+      "characteristic" : "Standard",
+      "difficulty" : "ExpertPlus",
+      "beatmapAuthors" : {
+        "mappers" : [
+        ],
+        "lighters" : [
+        ]
+      },
+      "environmentNameIdx" : 0,
+      "beatmapColorSchemeIdx" : 0,
+      "noteJumpMovementSpeed" : 16,
+      "noteJumpStartBeatOffset" : 0,
+      "beatmapDataFilename" : "ExpertPlusStandard.dat",
+      "lightshowDataFilename" : "Lightshow.dat",
+      "customData" : {
+        "difficultyLabel" : "Handclap"
+      }
+    }
+  ],
+  "customData" : {
+    "editors" : {
+      "lastEditedBy" : "ChroMapper",
+      "ChroMapper" : {
+        "version" : "0.12.867"
+      }
+    }
+  }
+}

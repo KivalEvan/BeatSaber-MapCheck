@@ -12,6 +12,8 @@ import {
 } from '../../types';
 import { ObjectContainerType } from '../../types/container';
 import { UIInput } from '../../ui/helpers/input';
+import { nearEqual } from 'bsmap/utils';
+import { isNotePointing } from '../../utils/beatmap';
 
 const name = 'Improper Arc';
 const description = 'Check for correct use of arc.';
@@ -55,83 +57,47 @@ function check(args: CheckArgs) {
       .sort((a, b) => a.data.time - b.data.time);
 
    const result: types.wrapper.IWrapArc[] = [];
-   for (let i = 0, potential = true, len = noteContainer.length; i < len; i++) {
+   for (let i = 0, len = noteContainer.length; i < len; i++) {
       const arc = noteContainer[i];
-      const lastTime = noteContainer.at(-1)!.data.time;
       if (arc.type === ObjectContainerType.ARC) {
-         potential = true;
-         for (let j = i, isProblem = false; j < len; j++) {
-            const head = noteContainer[j];
-            if (head.type === ObjectContainerType.COLOR) {
-               if (
-                  arc.data.posX === head.data.posX &&
-                  arc.data.posY === head.data.posY &&
-                  head.data.time <= arc.data.time + 0.001 &&
-                  arc.data.color === head.data.color &&
-                  (head.data.direction !== NoteDirection.ANY
-                     ? arc.data.direction === head.data.direction
-                     : true)
-               ) {
-                  for (let k = j; k < len; k++) {
-                     const tail = noteContainer[j];
-                     if (tail.type === ObjectContainerType.BOMB) {
-                        if (
-                           arc.data.posX === tail.data.posX &&
-                           arc.data.posY === tail.data.posY &&
-                           tail.data.time <= arc.data.time + 0.001
-                        ) {
-                           isProblem = true;
-                           break;
-                        }
-                     }
-                     if (
-                        tail.type !== ObjectContainerType.COLOR ||
-                        tail.data.time < arc.data.tailTime
-                     ) {
-                        continue;
-                     }
-                     if (
-                        arc.data.posX === head.data.posX &&
-                        arc.data.posY === head.data.posY &&
-                        head.data.time <= arc.data.time + 0.001 &&
-                        (arc.data.color !== head.data.color ||
-                           (head.data.direction !== NoteDirection.ANY
-                              ? arc.data.direction !== head.data.direction
-                              : true))
-                     ) {
-                        isProblem = true;
-                        break;
-                     }
-                     if (head.data.time > arc.data.tailTime + 0.001) {
-                        break;
-                     }
-                  }
-                  potential = isProblem || false;
-                  break;
-               }
-            }
-            if (head.type === ObjectContainerType.COLOR) {
-               if (
-                  arc.data.posX === head.data.posX &&
-                  arc.data.posY === head.data.posY &&
-                  head.data.time <= arc.data.time + 0.001
-               ) {
-                  break;
-               }
-            }
-            if (head.data.time > arc.data.time + 0.001) {
-               potential = false;
+         if (nearEqual(arc.data.time, arc.data.tailTime)) {
+            result.push(arc.data);
+            continue;
+         }
+
+         for (let j = i; j < len; j++) {
+            const other = noteContainer[j];
+            if (other.data.time > arc.data.tailTime + 0.001) {
                break;
             }
-            if (
-               (head.type === ObjectContainerType.ARC || head.type === ObjectContainerType.CHAIN) &&
-               head.data.time + 0.001 > lastTime
-            ) {
-               potential = false;
+            if (other.type === ObjectContainerType.COLOR) {
+               if (
+                  (arc.data.posX === other.data.posX &&
+                     arc.data.posY === other.data.posY &&
+                     nearEqual(other.data.time, arc.data.time) &&
+                     arc.data.color !== other.data.color) ||
+                  (arc.data.tailPosX === other.data.posX &&
+                     arc.data.tailPosY === other.data.posY &&
+                     nearEqual(other.data.time, arc.data.tailTime) &&
+                     arc.data.color !== other.data.color)
+               ) {
+                  result.push(arc.data);
+                  break;
+               }
             }
-         }
-         if (potential) {
-            result.push(arc.data);
+            if (other.type === ObjectContainerType.BOMB) {
+               if (
+                  (arc.data.posX === other.data.posX &&
+                     arc.data.posY === other.data.posY &&
+                     nearEqual(other.data.time, arc.data.time)) ||
+                  (arc.data.tailPosX === other.data.posX &&
+                     arc.data.tailPosY === other.data.posY &&
+                     nearEqual(other.data.time, arc.data.tailTime))
+               ) {
+                  result.push(arc.data);
+                  break;
+               }
+            }
          }
       }
    }

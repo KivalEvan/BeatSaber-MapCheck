@@ -28,6 +28,9 @@ const preset: InputParamsList = {
    acceptablePrec: {
       params: deepCopy(notes.acceptablePrec.input.params),
    },
+   angleOffset: {
+      params: deepCopy(notes.angleOffset.input.params),
+   },
    colorCheck: {
       params: deepCopy(notes.colorCheck.input.params),
    },
@@ -39,6 +42,12 @@ const preset: InputParamsList = {
    },
    excessiveDouble: {
       params: deepCopy(notes.excessiveDouble.input.params),
+   },
+   hammerHit: {
+      params: deepCopy(notes.hammerHit.input.params),
+   },
+   handclap: {
+      params: deepCopy(notes.handclap.input.params),
    },
    hitboxInline: {
       params: deepCopy(notes.hitboxInline.input.params),
@@ -67,6 +76,9 @@ const preset: InputParamsList = {
    oneSaber: {
       params: deepCopy(notes.oneSaber.input.params),
    },
+   parallelNotes: {
+      params: deepCopy(notes.parallelNotes.input.params),
+   },
    parity: {
       params: deepCopy(notes.parity.input.params),
    },
@@ -90,6 +102,9 @@ const preset: InputParamsList = {
    },
    centerObstacle: {
       params: deepCopy(obstacles.centerObstacle.input.params),
+   },
+   rankableObstacle: {
+      params: deepCopy(obstacles.rankableObstacle.input.params),
    },
    shortObstacle: {
       params: deepCopy(obstacles.shortObstacle.input.params),
@@ -118,8 +133,14 @@ const preset: InputParamsList = {
    njs: {
       params: deepCopy(others.njs.input.params),
    },
+   outro: {
+      params: deepCopy(others.outro.input.params),
+   },
    outsidePlayable: {
       params: deepCopy(others.outsidePlayable.input.params),
+   },
+   vnjs: {
+      params: deepCopy(others.vnjs.input.params),
    },
 };
 

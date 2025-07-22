@@ -1,0 +1,13 @@
+{
+  "name" : "ChroMapper",
+  "characteristic" : "NoArrows",
+  "difficulty" : "Hard",
+  "color" : "00FFFF",
+  "bookmarks" : [
+    {
+      "beat" : 15,
+      "label" : "1",
+      "text" : "1"
+    }
+  ]
+}

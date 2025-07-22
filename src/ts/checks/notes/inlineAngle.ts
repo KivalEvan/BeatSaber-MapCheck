@@ -6,7 +6,6 @@ import {
    NoteDirectionAngle,
    PosX,
    PosY,
-   resolveNoteAngle,
    TimeProcessor,
 } from 'bsmap';
 import { round } from 'bsmap/utils';
@@ -24,6 +23,7 @@ import {
 } from '../../types';
 import { IObjectContainer, ObjectContainerType } from '../../types/container';
 import { UIInput } from '../../ui/helpers/input';
+import { PrecalculateKey } from '../../types/precalculate';
 
 const name = 'Inline Sharp Angle';
 const description = 'Check for angle changes within inline note.';
@@ -154,7 +154,7 @@ function check(args: CheckArgs) {
             if (note.data.direction === NoteDirection.ANY) {
                startNoteDot[note.data.color] = note.data;
             } else {
-               lastNoteAngle[note.data.color] = resolveNoteAngle(note.data.direction);
+               lastNoteAngle[note.data.color] = note.data.customData[PrecalculateKey.ANGLE];
             }
             swingNoteArray[note.data.color] = [];
          } else {
@@ -167,11 +167,11 @@ function check(args: CheckArgs) {
                startNoteDot[note.data.color] = null;
             }
             if (note.data.direction !== NoteDirection.ANY) {
-               lastNoteAngle[note.data.color] = resolveNoteAngle(note.data.direction);
+               lastNoteAngle[note.data.color] = note.data.customData[PrecalculateKey.ANGLE];
             }
          }
       } else if (note.type === ObjectContainerType.COLOR) {
-         lastNoteAngle[note.data.color] = resolveNoteAngle(note.data.direction);
+         lastNoteAngle[note.data.color] = note.data.customData[PrecalculateKey.ANGLE];
       }
       if (note.type === ObjectContainerType.COLOR) {
          lastNote[note.data.color] = note.data;

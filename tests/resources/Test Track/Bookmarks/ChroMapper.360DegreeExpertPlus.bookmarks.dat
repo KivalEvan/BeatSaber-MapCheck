@@ -1,0 +1,28 @@
+{
+  "name" : "ChroMapper",
+  "characteristic" : "360Degree",
+  "difficulty" : "ExpertPlus",
+  "color" : "00FFFF",
+  "bookmarks" : [
+    {
+      "beat" : 5.375,
+      "label" : "12",
+      "text" : "12"
+    },
+    {
+      "beat" : 5.5,
+      "label" : "12",
+      "text" : "12"
+    },
+    {
+      "beat" : 5.5625,
+      "label" : "12",
+      "text" : "12"
+    },
+    {
+      "beat" : 8,
+      "label" : "2",
+      "text" : "2"
+    }
+  ]
+}

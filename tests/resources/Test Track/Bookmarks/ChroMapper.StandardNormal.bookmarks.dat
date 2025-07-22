@@ -1,0 +1,33 @@
+{
+  "name" : "ChroMapper",
+  "characteristic" : "Standard",
+  "difficulty" : "Normal",
+  "color" : "00FFFF",
+  "bookmarks" : [
+    {
+      "beat" : 7.25,
+      "label" : "1",
+      "text" : "1"
+    },
+    {
+      "beat" : 10.25,
+      "label" : "1",
+      "text" : "1"
+    },
+    {
+      "beat" : 11.5,
+      "label" : "1",
+      "text" : "1"
+    },
+    {
+      "beat" : 13.75,
+      "label" : "1",
+      "text" : "1"
+    },
+    {
+      "beat" : 16.75,
+      "label" : "1",
+      "text" : "1"
+    }
+  ]
+}

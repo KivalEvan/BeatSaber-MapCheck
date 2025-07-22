@@ -1,0 +1,23 @@
+{
+  "name" : "ChroMapper",
+  "characteristic" : "90Degree",
+  "difficulty" : "Easy",
+  "color" : "00FFFF",
+  "bookmarks" : [
+    {
+      "beat" : 5,
+      "label" : "1",
+      "text" : "1"
+    },
+    {
+      "beat" : 6,
+      "label" : "1",
+      "text" : "1"
+    },
+    {
+      "beat" : 7,
+      "label" : "1",
+      "text" : "1"
+    }
+  ]
+}

@@ -12,6 +12,7 @@ import {
 } from '../../types';
 import { UIInput } from '../../ui/helpers/input';
 import { PrecalculateKey } from '../../types/precalculate';
+import { nearEqual } from 'bsmap/utils';
 
 const name = '<15ms Obstacle';
 const description =
@@ -31,7 +32,7 @@ function update() {
    htmlInput.checked = tool.input.params.enabled;
 }
 
-const tool: ICheck<{ minDur: number }> = {
+const tool: ICheck<{ minDuration: number }> = {
    name,
    description,
    type: CheckType.OBSTACLE,
@@ -40,7 +41,7 @@ const tool: ICheck<{ minDur: number }> = {
       output: CheckOutputOrder.OBSTACLES_SHORT,
    },
    input: {
-      params: { enabled, minDur: 0.015 },
+      params: { enabled, minDuration: 0.015 },
       ui: () => UIInput.createBlock(htmlInput, htmlLabel),
       update,
    },
@@ -53,7 +54,8 @@ function customIsLonger(
    prevOffset = 0,
 ) {
    return (
-      o.customData[PrecalculateKey.SECOND_TIME] + o.customData[PrecalculateKey.DURATION_SECOND_TIME] >
+      o.customData[PrecalculateKey.SECOND_TIME] +
+         o.customData[PrecalculateKey.DURATION_SECOND_TIME] >
       compareTo.customData[PrecalculateKey.SECOND_TIME] +
          compareTo.customData[PrecalculateKey.DURATION_SECOND_TIME] +
          prevOffset
@@ -62,25 +64,39 @@ function customIsLonger(
 
 function check(args: CheckArgs) {
    const { obstacles } = args.beatmap.data.difficulty;
-   const { minDur } = tool.input.params;
+   const { minDuration } = tool.input.params;
    const ary: types.wrapper.IWrapObstacle[] = [];
-   let obstacleLFull: types.wrapper.IWrapObstacle = new Obstacle({ time: Number.MIN_SAFE_INTEGER });
-   let obstacleRFull: types.wrapper.IWrapObstacle = new Obstacle({ time: Number.MIN_SAFE_INTEGER });
-   let obstacleLHalf: types.wrapper.IWrapObstacle = new Obstacle({ time: Number.MIN_SAFE_INTEGER });
-   let obstacleRHalf: types.wrapper.IWrapObstacle = new Obstacle({ time: Number.MIN_SAFE_INTEGER });
+   let obstacleLFull: types.wrapper.IWrapObstacle = new Obstacle({
+      time: Number.MIN_SAFE_INTEGER,
+      customData: { [PrecalculateKey.SECOND_TIME]: 0, [PrecalculateKey.DURATION_SECOND_TIME]: 0 },
+   });
+   let obstacleRFull: types.wrapper.IWrapObstacle = new Obstacle({
+      time: Number.MIN_SAFE_INTEGER,
+      customData: { [PrecalculateKey.SECOND_TIME]: 0, [PrecalculateKey.DURATION_SECOND_TIME]: 0 },
+   });
+   let obstacleLHalf: types.wrapper.IWrapObstacle = new Obstacle({
+      time: Number.MIN_SAFE_INTEGER,
+      customData: { [PrecalculateKey.SECOND_TIME]: 0, [PrecalculateKey.DURATION_SECOND_TIME]: 0 },
+   });
+   let obstacleRHalf: types.wrapper.IWrapObstacle = new Obstacle({
+      time: Number.MIN_SAFE_INTEGER,
+      customData: { [PrecalculateKey.SECOND_TIME]: 0, [PrecalculateKey.DURATION_SECOND_TIME]: 0 },
+   });
    for (let i = 0; i < obstacles.length; i++) {
       const o = obstacles[i];
-      const wallDur = o.customData[PrecalculateKey.DURATION_SECOND_TIME];
-      if (o.posY === PosY.BOTTOM && o.height > 2 && wallDur > 0) {
+      const wallDuration = o.customData[PrecalculateKey.DURATION_SECOND_TIME];
+      if (nearEqual(wallDuration, 0)) {
+         ary.push(o);
+      } else if (o.posY === PosY.BOTTOM && o.height > 2) {
          if (o.width > 2 || (o.width > 1 && o.posX === 1)) {
             if (customIsLonger(o, obstacleLFull)) {
-               if (wallDur < minDur) {
+               if (wallDuration < minDuration) {
                   ary.push(o);
                }
                obstacleLFull = o;
             }
             if (customIsLonger(o, obstacleRFull)) {
-               if (wallDur < minDur) {
+               if (wallDuration < minDuration) {
                   ary.push(o);
                }
                obstacleRFull = o;
@@ -88,14 +104,14 @@ function check(args: CheckArgs) {
          } else if (o.width === 2) {
             if (o.posX === PosX.LEFT) {
                if (customIsLonger(o, obstacleLFull)) {
-                  if (wallDur < minDur) {
+                  if (wallDuration < minDuration) {
                      ary.push(o);
                   }
                   obstacleLFull = o;
                }
             } else if (o.posX === PosX.MIDDLE_RIGHT) {
                if (customIsLonger(o, obstacleRFull)) {
-                  if (wallDur < minDur) {
+                  if (wallDuration < minDuration) {
                      ary.push(o);
                   }
                   obstacleRFull = o;
@@ -104,27 +120,27 @@ function check(args: CheckArgs) {
          } else if (o.width === 1) {
             if (o.posX === PosX.MIDDLE_LEFT) {
                if (customIsLonger(o, obstacleLFull)) {
-                  if (wallDur < minDur) {
+                  if (wallDuration < minDuration) {
                      ary.push(o);
                   }
                   obstacleLFull = o;
                }
             } else if (o.posX === PosX.MIDDLE_RIGHT) {
                if (customIsLonger(o, obstacleRFull)) {
-                  if (wallDur < minDur) {
+                  if (wallDuration < minDuration) {
                      ary.push(o);
                   }
                   obstacleRFull = o;
                }
             }
          }
-      } else if (o.posY === PosY.TOP && o.height > 2 && wallDur > 0) {
+      } else if (o.posY === PosY.TOP && o.height > 2 && wallDuration > 0) {
          if (o.width > 2 || (o.width > 1 && o.posX === PosX.MIDDLE_LEFT)) {
             if (customIsLonger(o, obstacleLHalf)) {
                if (
-                  wallDur < minDur &&
-                  customIsLonger(o, obstacleLFull, minDur) &&
-                  customIsLonger(o, obstacleLHalf, minDur)
+                  wallDuration < minDuration &&
+                  customIsLonger(o, obstacleLFull, minDuration) &&
+                  customIsLonger(o, obstacleLHalf, minDuration)
                ) {
                   ary.push(o);
                }
@@ -132,9 +148,9 @@ function check(args: CheckArgs) {
             }
             if (customIsLonger(o, obstacleRHalf)) {
                if (
-                  wallDur < minDur &&
-                  customIsLonger(o, obstacleRFull, minDur) &&
-                  customIsLonger(o, obstacleRHalf, minDur)
+                  wallDuration < minDuration &&
+                  customIsLonger(o, obstacleRFull, minDuration) &&
+                  customIsLonger(o, obstacleRHalf, minDuration)
                ) {
                   ary.push(o);
                }
@@ -144,9 +160,9 @@ function check(args: CheckArgs) {
             if (o.posX === PosX.LEFT) {
                if (customIsLonger(o, obstacleLHalf)) {
                   if (
-                     wallDur < minDur &&
-                     customIsLonger(o, obstacleLFull, minDur) &&
-                     customIsLonger(o, obstacleLHalf, minDur)
+                     wallDuration < minDuration &&
+                     customIsLonger(o, obstacleLFull, minDuration) &&
+                     customIsLonger(o, obstacleLHalf, minDuration)
                   ) {
                      ary.push(o);
                   }
@@ -155,9 +171,9 @@ function check(args: CheckArgs) {
             } else if (o.posX === PosX.MIDDLE_RIGHT) {
                if (customIsLonger(o, obstacleRHalf)) {
                   if (
-                     wallDur < minDur &&
-                     customIsLonger(o, obstacleRFull, minDur) &&
-                     customIsLonger(o, obstacleRHalf, minDur)
+                     wallDuration < minDuration &&
+                     customIsLonger(o, obstacleRFull, minDuration) &&
+                     customIsLonger(o, obstacleRHalf, minDuration)
                   ) {
                      ary.push(o);
                   }
@@ -168,9 +184,9 @@ function check(args: CheckArgs) {
             if (o.posX === PosX.MIDDLE_LEFT) {
                if (customIsLonger(o, obstacleLHalf)) {
                   if (
-                     wallDur < minDur &&
-                     customIsLonger(o, obstacleLFull, minDur) &&
-                     customIsLonger(o, obstacleLHalf, minDur)
+                     wallDuration < minDuration &&
+                     customIsLonger(o, obstacleLFull, minDuration) &&
+                     customIsLonger(o, obstacleLHalf, minDuration)
                   ) {
                      ary.push(o);
                   }
@@ -179,9 +195,9 @@ function check(args: CheckArgs) {
             } else if (o.posX === PosX.MIDDLE_RIGHT) {
                if (customIsLonger(o, obstacleRHalf)) {
                   if (
-                     wallDur < minDur &&
-                     customIsLonger(o, obstacleRFull, minDur) &&
-                     customIsLonger(o, obstacleRHalf, minDur)
+                     wallDuration < minDuration &&
+                     customIsLonger(o, obstacleRFull, minDuration) &&
+                     customIsLonger(o, obstacleRHalf, minDuration)
                   ) {
                      ary.push(o);
                   }

@@ -1,0 +1,23 @@
+{
+  "name" : "ChroMapper",
+  "characteristic" : "OneSaber",
+  "difficulty" : "Expert",
+  "color" : "00FFFF",
+  "bookmarks" : [
+    {
+      "beat" : 7,
+      "label" : "1",
+      "text" : "1"
+    },
+    {
+      "beat" : 8,
+      "label" : "1",
+      "text" : "1"
+    },
+    {
+      "beat" : 11,
+      "label" : "1",
+      "text" : "1"
+    }
+  ]
+}

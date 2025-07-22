@@ -1,4 +1,4 @@
-import { NoteColor, NoteDirection, NoteDirectionAngle, PosX, PosY, resolveNoteAngle } from 'bsmap';
+import { NoteColor, NoteDirection, NoteDirectionAngle, PosX, PosY } from 'bsmap';
 import * as types from 'bsmap/types';
 import {
    IBeatmapContainer,
@@ -14,6 +14,7 @@ import {
 import { ObjectContainerType } from '../../types/container';
 import { UIInput } from '../../ui/helpers/input';
 import { placement, swing } from 'bsmap/extensions';
+import { PrecalculateKey } from '../../types/precalculate';
 
 const name = 'Double-directional';
 const description = 'Check double-directional note swing (this may not mean parity break).';
@@ -81,7 +82,7 @@ function check(beatmapItem: IBeatmapContainer) {
             if (note.data.direction === NoteDirection.ANY) {
                startNoteDot[note.data.color] = note.data;
             } else {
-               lastNoteAngle[note.data.color] = resolveNoteAngle(note.data.direction);
+               lastNoteAngle[note.data.color] = note.data.customData[PrecalculateKey.ANGLE];
             }
             swingNoteArray[note.data.color] = [];
          } else {
@@ -91,15 +92,15 @@ function check(beatmapItem: IBeatmapContainer) {
             ) {
                arr.push(note.data);
                startNoteDot[note.data.color] = null;
-               lastNoteAngle[note.data.color] = resolveNoteAngle(note.data.direction);
+               lastNoteAngle[note.data.color] = note.data.customData[PrecalculateKey.ANGLE];
             }
             if (note.data.direction !== NoteDirection.ANY) {
                startNoteDot[note.data.color] = null;
-               lastNoteAngle[note.data.color] = resolveNoteAngle(note.data.direction);
+               lastNoteAngle[note.data.color] = note.data.customData[PrecalculateKey.ANGLE];
             }
          }
       } else if (note.type === ObjectContainerType.COLOR) {
-         lastNoteAngle[note.data.color] = resolveNoteAngle(note.data.direction);
+         lastNoteAngle[note.data.color] = note.data.customData[PrecalculateKey.ANGLE];
       }
       if (note.type === ObjectContainerType.COLOR) {
          lastNote[note.data.color] = note.data;

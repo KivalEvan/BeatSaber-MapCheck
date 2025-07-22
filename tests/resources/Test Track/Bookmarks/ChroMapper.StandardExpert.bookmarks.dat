@@ -1,0 +1,23 @@
+{
+  "name" : "ChroMapper",
+  "characteristic" : "Standard",
+  "difficulty" : "Expert",
+  "color" : "00FFFF",
+  "bookmarks" : [
+    {
+      "beat" : 7.125,
+      "label" : "1",
+      "text" : "1"
+    },
+    {
+      "beat" : 7.25,
+      "label" : "1",
+      "text" : "1"
+    },
+    {
+      "beat" : 7.375,
+      "label" : "1",
+      "text" : "1"
+    }
+  ]
+}

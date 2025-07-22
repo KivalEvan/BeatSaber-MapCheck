@@ -166,7 +166,7 @@ const unlitBomb = (
       isLit = false;
       // find lit event by time
       for (const el in eventLitTime) {
-         const t = eventLitTime[el].find((e) => e[0] <= note.time);
+         const t = eventLitTime[el].find((e) => e[0] <= note.time - 0.25);
          if (t) {
             isLit = isLit || t[1];
          }
