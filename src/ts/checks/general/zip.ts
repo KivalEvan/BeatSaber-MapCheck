@@ -1,11 +1,11 @@
 import { State } from '../../state';
 import {
-   ICheck,
-   ICheckOutput,
    CheckArgs,
    CheckInputOrder,
    CheckOutputOrder,
    CheckType,
+   ICheck,
+   ICheckOutput,
    OutputStatus,
    OutputType,
 } from '../../types';

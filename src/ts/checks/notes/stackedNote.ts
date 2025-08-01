@@ -1,12 +1,12 @@
 import * as types from 'bsmap/types';
 import {
-   IBeatmapContainer,
-   ICheck,
-   ICheckOutput,
    CheckArgs,
    CheckInputOrder,
    CheckOutputOrder,
    CheckType,
+   IBeatmapContainer,
+   ICheck,
+   ICheckOutput,
    OutputStatus,
    OutputType,
 } from '../../types';
@@ -39,7 +39,11 @@ const tool: ICheck = {
       input: CheckInputOrder.NOTES_STACKED_NOTE,
       output: CheckOutputOrder.NOTES_STACKED_NOTE,
    },
-   input: { params: { enabled }, ui: () => UIInput.createBlock(htmlInput, htmlLabel), update },
+   input: {
+      params: { enabled },
+      ui: () => UIInput.createBlock(htmlInput, htmlLabel),
+      update,
+   },
    run,
 };
 

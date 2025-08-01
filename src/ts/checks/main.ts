@@ -1,7 +1,7 @@
 export * from './presets';
 import { getAllComponents } from './components';
 import { State } from '../state';
-import { ICheckOutput, CheckType } from '../types/checks/check';
+import { CheckType, ICheckOutput } from '../types/checks/check';
 import { IBeatmapContainer, ICheck } from '../types';
 import { getLastInteractiveTime, logger } from 'bsmap';
 import * as types from 'bsmap/types';

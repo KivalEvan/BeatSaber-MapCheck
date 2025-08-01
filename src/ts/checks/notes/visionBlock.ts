@@ -1,17 +1,18 @@
 import { PosX, PosY, TimeProcessor } from 'bsmap';
 import { round } from 'bsmap/utils';
 import {
-   ICheck,
-   ICheckOutput,
    CheckArgs,
    CheckInputOrder,
    CheckOutputOrder,
    CheckType,
-   OutputType,
+   ICheck,
+   ICheckOutput,
    OutputStatus,
+   OutputType,
 } from '../../types';
 import { IObjectContainer, ObjectContainerType } from '../../types/container';
 import { UIInput } from '../../ui/helpers/input';
+import { PrecalculateKey } from '../../types/precalculate';
 
 const name = 'Vision Block';
 const description = 'Check for vision block caused by center note.';
@@ -224,16 +225,13 @@ function check(args: CheckArgs) {
       (n) => n.type !== ObjectContainerType.ARC,
    );
    const { minTime: temp1, maxTime: temp2, specific: vbSpecific } = tool.input.params;
-   const minTime =
-      vbSpecific === 'time'
-         ? timeProcessor.toBeatTime(temp1, false)
-         : timeProcessor.toBeatTime(vbDiff[args.beatmap.info.difficulty].min, false);
+   const minTime = vbSpecific === 'time' ? temp1 : vbDiff[args.beatmap.info.difficulty].min;
    const maxTime =
       vbSpecific === 'time'
-         ? timeProcessor.toBeatTime(temp2, false)
+         ? temp2
          : Math.min(
-              njs.hjd,
-              timeProcessor.toBeatTime(vbDiff[args.beatmap.info.difficulty].max, false),
+              timeProcessor.toRealTime(njs.hjd, false),
+              vbDiff[args.beatmap.info.difficulty].max,
            );
 
    let lastMidL: IObjectContainer | null = null;
@@ -243,26 +241,42 @@ function check(args: CheckArgs) {
       const note = noteContainer[i];
       if (lastMidL) {
          if (
-            note.data.time - lastMidL.data.time >= minTime &&
-            note.data.time - lastMidL.data.time <= maxTime
+            note.data.customData[PrecalculateKey.SECOND_TIME] -
+               lastMidL.data.customData[PrecalculateKey.SECOND_TIME] >=
+               minTime &&
+            note.data.customData[PrecalculateKey.SECOND_TIME] -
+               lastMidL.data.customData[PrecalculateKey.SECOND_TIME] <=
+               maxTime
          ) {
             if (note.data.posX < PosX.MIDDLE_RIGHT) {
                result.push(note);
             }
          } // yeet the last note if nothing else found so we dont have to perform check every note
-         else if (note.data.time - lastMidL.data.time > maxTime) {
+         else if (
+            note.data.customData[PrecalculateKey.SECOND_TIME] -
+               lastMidL.data.customData[PrecalculateKey.SECOND_TIME] >
+            maxTime
+         ) {
             lastMidL = null;
          }
       }
       if (lastMidR) {
          if (
-            note.data.time - lastMidR.data.time >= minTime &&
-            note.data.time - lastMidR.data.time <= maxTime
+            note.data.customData[PrecalculateKey.SECOND_TIME] -
+               lastMidR.data.customData[PrecalculateKey.SECOND_TIME] >=
+               minTime &&
+            note.data.customData[PrecalculateKey.SECOND_TIME] -
+               lastMidR.data.customData[PrecalculateKey.SECOND_TIME] <=
+               maxTime
          ) {
             if (note.data.posX > PosX.MIDDLE_LEFT) {
                result.push(note);
             }
-         } else if (note.data.time - lastMidR.data.time > maxTime) {
+         } else if (
+            note.data.customData[PrecalculateKey.SECOND_TIME] -
+               lastMidR.data.customData[PrecalculateKey.SECOND_TIME] >
+            maxTime
+         ) {
             lastMidR = null;
          }
       }

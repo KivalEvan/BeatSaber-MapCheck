@@ -70,13 +70,14 @@ export function printResultTime(
                   Settings.props.rounding,
                )}">${secToMmssms(n.customData[PrecalculateKey.SECOND_TIME])}</span>`;
             case 'jsontime':
-               return `<span title="Time ${secToMmssms(n.customData[PrecalculateKey.SECOND_TIME])}">${round(
-                  n.time,
-                  Settings.props.rounding,
-               )}</span>`;
+               return `<span title="Time ${secToMmssms(
+                  n.customData[PrecalculateKey.SECOND_TIME],
+               )}">${round(n.time, Settings.props.rounding)}</span>`;
             case 'beattime':
             default:
-               return `<span title="Time ${secToMmssms(n.customData[PrecalculateKey.SECOND_TIME])}">${round(
+               return `<span title="Time ${secToMmssms(
+                  n.customData[PrecalculateKey.SECOND_TIME],
+               )}">${round(
                   n.customData[PrecalculateKey.BEAT_TIME],
                   Settings.props.rounding,
                )}</span>`;

@@ -12,14 +12,14 @@ import { round } from 'bsmap/utils';
 import * as types from 'bsmap/types';
 import { placement, swing } from 'bsmap/extensions';
 import {
-   ICheck,
-   ICheckOutput,
    CheckArgs,
    CheckInputOrder,
    CheckOutputOrder,
    CheckType,
-   OutputType,
+   ICheck,
+   ICheckOutput,
    OutputStatus,
+   OutputType,
 } from '../../types';
 import { IObjectContainer, ObjectContainerType } from '../../types/container';
 import { UIInput } from '../../ui/helpers/input';
@@ -117,8 +117,7 @@ function adjustTimeHandler(bpm: TimeProcessor) {
 function check(args: CheckArgs) {
    const { timeProcessor } = args.beatmap;
    const noteContainer = args.beatmap.noteContainer;
-   const { maxTime: temp } = tool.input.params;
-   const maxTime = timeProcessor.toBeatTime(temp, false) + 0.001;
+   const { maxTime } = tool.input.params;
 
    const lastNote: { [key: number]: types.wrapper.IWrapColorNote } = {};
    const lastNoteAngle: { [key: number]: number } = {};
@@ -215,12 +214,22 @@ function checkInline(
    index: number,
    maxTime: number,
 ) {
-   for (let i = index; notes[i].data.time < n.time; i++) {
+   for (
+      let i = index;
+      notes[i].data.customData[PrecalculateKey.SECOND_TIME] <
+      n.customData[PrecalculateKey.SECOND_TIME];
+      i++
+   ) {
       const note = notes[i];
       if (note.type !== ObjectContainerType.COLOR) {
          continue;
       }
-      if (isInline(n, note.data) && n.time - notes[i].data.time <= maxTime) {
+      if (
+         isInline(n, note.data) &&
+         n.customData[PrecalculateKey.SECOND_TIME] -
+            notes[i].data.customData[PrecalculateKey.SECOND_TIME] <=
+            maxTime
+      ) {
          return true;
       }
    }

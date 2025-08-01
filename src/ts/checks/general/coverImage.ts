@@ -1,11 +1,11 @@
 import {
-   ICheck,
-   ICheckOutput,
    CheckInputOrder,
    CheckOutputOrder,
    CheckType,
-   OutputType,
+   ICheck,
+   ICheckOutput,
    OutputStatus,
+   OutputType,
 } from '../../types';
 import { UIHeader } from '../../ui/header';
 import { State } from '../../state';

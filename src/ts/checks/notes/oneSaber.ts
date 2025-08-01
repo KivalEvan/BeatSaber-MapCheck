@@ -1,13 +1,13 @@
 import { isBlueNoteColor, isRedNoteColor } from 'bsmap';
 import {
-   ICheck,
-   ICheckOutput,
    CheckArgs,
    CheckInputOrder,
    CheckOutputOrder,
    CheckType,
-   OutputType,
+   ICheck,
+   ICheckOutput,
    OutputStatus,
+   OutputType,
 } from '../../types';
 import { UIInput } from '../../ui/helpers/input';
 
@@ -32,8 +32,15 @@ const tool: ICheck = {
    name,
    description,
    type: CheckType.NOTE,
-   order: { input: CheckInputOrder.NOTES_ONE_SABER, output: CheckOutputOrder.NOTES_ONE_SABER },
-   input: { params: { enabled }, ui: () => UIInput.createBlock(htmlInput, htmlLabel), update },
+   order: {
+      input: CheckInputOrder.NOTES_ONE_SABER,
+      output: CheckOutputOrder.NOTES_ONE_SABER,
+   },
+   input: {
+      params: { enabled },
+      ui: () => UIInput.createBlock(htmlInput, htmlLabel),
+      update,
+   },
    run,
 };
 

@@ -1,7 +1,7 @@
 // i could just rename this to watermark but it only exist in sticky footer so...
 // in the meantime, idk if i should slap these watermark on both the header and footer
 // otherwise i dont need the queryselectorall
-import { version, author } from '../../../package.json';
+import { author, version } from '../../../package.json';
 
 export class UIFooter {
    static #htmlWatermark: NodeListOf<HTMLElement>;

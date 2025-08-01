@@ -8,6 +8,7 @@ import {
    loadDifficulty,
    loadLightshow,
    logger,
+   NoteDirectionAngle,
    NoteJumpSpeed,
    resolveGridPosition,
    resolveNoteAngle,
@@ -17,7 +18,7 @@ import * as types from 'bsmap/types';
 import { stats, swing } from 'bsmap/extensions';
 import { PrecalculateKey } from '../types/precalculate';
 import { isNoteSwingable, isNoteSwingableRaw, noteDistance } from '../utils/beatmap';
-import { nearEqual, shortRotDistance } from 'bsmap/utils';
+import { isVector2, nearEqual, shortRotDistance } from 'bsmap/utils';
 
 function tag(name: string) {
    return ['load', name];
@@ -163,7 +164,16 @@ export function createBeatmapContainer(
       infoBeatmap.characteristic,
       infoBeatmap.difficulty,
    );
-   precalculateObjects(beatmap, swingAnalysis, timeProcessor);
+   precalculateObjects(
+      beatmap,
+      swingAnalysis,
+      timeProcessor,
+      {
+         'Mapping Extensions': infoBeatmap.customData._requirements?.includes('Mapping Extensions'),
+         'Noodle Extensions': infoBeatmap.customData._requirements?.includes('Noodle Extensions'),
+      },
+      version,
+   );
 
    const env =
       info.environmentNames.at(infoBeatmap.environmentId) ||
@@ -215,10 +225,22 @@ export function createBeatmapContainer(
 
 function getNoteContainer(beatmap: types.wrapper.IWrapBeatmap): IObjectContainer[] {
    return [
-      ...beatmap.difficulty.colorNotes.map((e) => ({ data: e, type: ObjectContainerType.COLOR })),
-      ...beatmap.difficulty.bombNotes.map((e) => ({ data: e, type: ObjectContainerType.BOMB })),
-      ...beatmap.difficulty.chains.map((e) => ({ data: e, type: ObjectContainerType.CHAIN })),
-      ...beatmap.difficulty.arcs.map((e) => ({ data: e, type: ObjectContainerType.ARC })),
+      ...beatmap.difficulty.colorNotes.map((e) => ({
+         data: e,
+         type: ObjectContainerType.COLOR,
+      })),
+      ...beatmap.difficulty.bombNotes.map((e) => ({
+         data: e,
+         type: ObjectContainerType.BOMB,
+      })),
+      ...beatmap.difficulty.chains.map((e) => ({
+         data: e,
+         type: ObjectContainerType.CHAIN,
+      })),
+      ...beatmap.difficulty.arcs.map((e) => ({
+         data: e,
+         type: ObjectContainerType.ARC,
+      })),
    ].sort((a, b) => a.data.time - b.data.time) as IObjectContainer[];
 }
 
@@ -226,6 +248,8 @@ function precalculateObjects(
    beatmap: types.wrapper.IWrapBeatmap,
    swingAnalysis: swing.types.ISwingAnalysis,
    timeProcessor: TimeProcessor,
+   mod?: { [key in types.ModRequirements]?: boolean },
+   version?: number,
 ) {
    const applyTime = applyTimeFn(timeProcessor);
    if (!beatmap.difficulty.customData[PrecalculateKey.CALCULATED]) {
@@ -234,22 +258,22 @@ function precalculateObjects(
       beatmap.difficulty.rotationEvents.forEach(applyTime);
 
       beatmap.difficulty.colorNotes.forEach(applyTime);
-      beatmap.difficulty.colorNotes.forEach(applyPosition);
-      beatmap.difficulty.colorNotes.forEach(applyAngle);
+      beatmap.difficulty.colorNotes.forEach((n) => applyPosition(n, mod, version));
+      beatmap.difficulty.colorNotes.forEach((n) => applyAngle(n, mod, version));
 
       beatmap.difficulty.bombNotes.forEach(applyTime);
-      beatmap.difficulty.bombNotes.forEach(applyPosition);
+      beatmap.difficulty.bombNotes.forEach((n) => applyPosition(n, mod, version));
 
       beatmap.difficulty.obstacles.forEach(applyTime);
-      beatmap.difficulty.obstacles.forEach(applyPosition);
+      beatmap.difficulty.obstacles.forEach((n) => applyPosition(n, mod, version));
 
       beatmap.difficulty.arcs.forEach(applyTime);
-      beatmap.difficulty.arcs.forEach(applyPosition);
-      beatmap.difficulty.arcs.forEach(applyAngle);
+      beatmap.difficulty.arcs.forEach((n) => applyPosition(n, mod, version));
+      beatmap.difficulty.arcs.forEach((n) => applyAngle(n, mod, version));
 
       beatmap.difficulty.chains.forEach(applyTime);
-      beatmap.difficulty.chains.forEach(applyPosition);
-      beatmap.difficulty.chains.forEach(applyAngle);
+      beatmap.difficulty.chains.forEach((n) => applyPosition(n, mod, version));
+      beatmap.difficulty.chains.forEach((n) => applyAngle(n, mod, version));
 
       beatmap.difficulty.customData[PrecalculateKey.CALCULATED] = true;
    }
@@ -301,25 +325,105 @@ function precalculateObjects(
 
 function applyPosition(
    object: types.wrapper.IWrapGridObject & Partial<types.wrapper.IWrapBaseSlider>,
+   mod?: { [key in types.ModRequirements]?: boolean },
+   version?: number,
 ) {
    object.customData[PrecalculateKey.POSITION] = resolveGridPosition(object);
+   if (mod?.['Mapping Extensions']) {
+      object.customData[PrecalculateKey.POSITION] = [
+         object.posX >= 1000
+            ? object.posX / 1000 - 1
+            : object.posX <= -1000
+              ? object.posX / 1000 + 1
+              : object.posX,
+         object.posY >= 1000
+            ? object.posY / 1000 - 1
+            : object.posY <= -1000
+              ? object.posY / 1000 + 1
+              : object.posY,
+      ];
+   }
+   if (mod?.['Noodle Extensions']) {
+      switch (version) {
+         case 2:
+            if (isVector2(object.customData._position)) {
+               object.customData[PrecalculateKey.POSITION] = object.customData._position;
+            }
+            break;
+         case 3:
+            if (isVector2(object.customData.coordinate)) {
+               object.customData[PrecalculateKey.POSITION] = object.customData.coordinates;
+            }
+            break;
+      }
+   }
    if (typeof object.tailPosX === 'number' && typeof object.tailPosY === 'number') {
       object.customData[PrecalculateKey.TAIL_POSITION] = [object.tailPosX, object.tailPosY];
+      if (mod?.['Mapping Extensions']) {
+         object.customData[PrecalculateKey.TAIL_POSITION] = [
+            object.tailPosX >= 1000
+               ? object.tailPosX / 1000 - 1
+               : object.tailPosX <= -1000
+                 ? object.tailPosX / 1000 + 1
+                 : object.tailPosX,
+            object.tailPosY >= 1000
+               ? object.tailPosY / 1000 - 1
+               : object.tailPosY <= -1000
+                 ? object.tailPosY / 1000 + 1
+                 : object.tailPosY,
+         ];
+      }
+      if (mod?.['Noodle Extensions']) {
+         switch (version) {
+            case 3:
+               if (isVector2(object.customData.tailCoordinates)) {
+                  object.customData[PrecalculateKey.TAIL_POSITION] =
+                     object.customData.tailCoordinates;
+               }
+               break;
+         }
+      }
    }
 }
 
 function applyAngle(
    object: types.wrapper.IWrapBaseNote & { angleOffset?: number } & Partial<types.wrapper.IWrapArc>,
+   mod?: { [key in types.ModRequirements]?: boolean },
+   version?: number,
 ) {
    object.customData[PrecalculateKey.ANGLE] =
       resolveNoteAngle(object.direction) + (object.angleOffset || 0);
    if (object.direction === types.NoteDirection.ANY) {
       object.customData[PrecalculateKey.ANGLE] += 180;
    }
+   NoteDirectionAngle;
+   if (mod?.['Mapping Extensions']) {
+      object.customData[PrecalculateKey.ANGLE] =
+         object.direction >= 1000 && object.direction <= 1360
+            ? 1360 - object.direction
+            : object.direction >= 2000 && object.direction <= 2360
+              ? 2360 - object.direction
+              : object.direction;
+   }
+   if (mod?.['Noodle Extensions']) {
+      switch (version) {
+         case 2:
+            if (object.customData._cutDirection) {
+               object.customData[PrecalculateKey.ANGLE] = object.customData._cutDirection;
+            }
+            break;
+      }
+   }
    if (typeof object.tailDirection === 'number') {
       object.customData[PrecalculateKey.TAIL_ANGLE] = resolveNoteAngle(object.tailDirection);
       if (object.tailDirection === types.NoteDirection.ANY) {
          object.customData[PrecalculateKey.TAIL_ANGLE] += 180;
+      }
+      if (mod?.['Mapping Extensions']) {
+         object.customData[PrecalculateKey.ANGLE] =
+            object.tailDirection >= 1000 && object.tailDirection <= 1360
+               ? 1360 - object.tailDirection
+               : object.tailDirection;
       }
    }
 }

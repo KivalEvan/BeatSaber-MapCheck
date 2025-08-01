@@ -1,4 +1,4 @@
-import { getAllComponents, applyBpmToComponents } from '../../checks/components';
+import { applyBpmToComponents, getAllComponents } from '../../checks/components';
 import { LoadStatus, UILoading } from '../loading';
 import { TimeProcessor } from 'bsmap';
 import * as types from 'bsmap/types';

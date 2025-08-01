@@ -3,17 +3,18 @@ import { round } from 'bsmap/utils';
 import * as types from 'bsmap/types';
 import { swing } from 'bsmap/extensions';
 import {
-   IBeatmapContainer,
-   ICheck,
-   ICheckOutput,
    CheckArgs,
    CheckInputOrder,
    CheckOutputOrder,
    CheckType,
+   IBeatmapContainer,
+   ICheck,
+   ICheckOutput,
    OutputStatus,
    OutputType,
 } from '../../types';
 import { UIInput } from '../../ui/helpers/input';
+import { PrecalculateKey } from '../../types/precalculate';
 
 const name = 'Speed Pause';
 const description = 'Look for stream/burst containing timing gap causing sudden change of pace.';
@@ -105,8 +106,7 @@ function adjustTimeHandler(bpm: TimeProcessor) {
 function check(beatmapItem: IBeatmapContainer) {
    const timeProcessor = beatmapItem.timeProcessor;
    const colorNotes = beatmapItem.data.difficulty.colorNotes;
-   const { maxTime: temp } = tool.input.params;
-   const maxTime = timeProcessor.toBeatTime(temp, false) + 0.001;
+   const { maxTime } = tool.input.params;
 
    const lastNote: { [key: number]: types.wrapper.IWrapColorNote } = {};
    const lastNotePause: { [key: number]: types.wrapper.IWrapColorNote } = {};
@@ -124,11 +124,17 @@ function check(beatmapItem: IBeatmapContainer) {
       const note = colorNotes[i];
       if (lastNote[note.color]) {
          if (swing.next(note, lastNote[note.color], timeProcessor, swingNoteArray[note.color])) {
-            if (note.time - lastNote[note.color].time <= maxTime * 2) {
+            if (
+               note.customData[PrecalculateKey.SECOND_TIME] -
+                  lastNote[note.color].customData[PrecalculateKey.SECOND_TIME] <=
+               maxTime * 2
+            ) {
                if (
                   maybePause[NoteColor.RED] &&
                   maybePause[NoteColor.BLUE] &&
-                  lastNote[note.color].time - lastNotePause[note.color].time <= maxTime * 3
+                  lastNote[note.color].customData[PrecalculateKey.SECOND_TIME] -
+                     lastNotePause[note.color].customData[PrecalculateKey.SECOND_TIME] <=
+                     maxTime * 3
                ) {
                   result.push(lastNote[note.color]);
                }

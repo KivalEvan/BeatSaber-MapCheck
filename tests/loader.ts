@@ -8,7 +8,9 @@ import { cachedKeyedComponents } from '../src/ts/checks/components';
 logger.setLevel(0);
 
 const cachedInfo = readInfoFileSync('./tests/resources/Test Track/Info.dat');
-const cachedBeatmaps = readFromInfoSync(cachedInfo, { directory: './tests/resources/Test Track/' });
+const cachedBeatmaps = readFromInfoSync(cachedInfo, {
+   directory: './tests/resources/Test Track/',
+});
 const cachedBookmarks: Record<string, number[][]> = {};
 
 for (const file of readdirSync('./tests/resources/Test Track/Bookmarks', {

@@ -53,7 +53,9 @@ export class UITab {
          const htmlSpan = document.createElement('span');
          htmlSpan.textContent = s;
          htmlPad.appendChild(htmlSpan);
-         if (i !== str.length - 1) htmlPad.appendChild(document.createElement('br'));
+         if (i !== str.length - 1) {
+            htmlPad.appendChild(document.createElement('br'));
+         }
       }
 
       htmlLabel.appendChild(htmlPad);

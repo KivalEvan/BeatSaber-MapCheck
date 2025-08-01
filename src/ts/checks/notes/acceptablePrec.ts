@@ -1,14 +1,14 @@
 import { sortObjectFn } from 'bsmap';
 import {
-   IBeatmapContainer,
-   ICheck,
-   ICheckOutput,
    CheckArgs,
    CheckInputOrder,
    CheckOutputOrder,
    CheckType,
-   OutputType,
+   IBeatmapContainer,
+   ICheck,
+   ICheckOutput,
    OutputStatus,
+   OutputType,
 } from '../../types';
 import { UIInput } from '../../ui/helpers/input';
 import { PrecalculateKey } from '../../types/precalculate';

@@ -50,7 +50,10 @@ export class UIIntro {
          return main({ type: PayloadType.Id, data: UIIntro.#htmlInputId.value });
       }
       if (UIIntro.#htmlInputHash && UIIntro.#htmlInputHash.value !== '') {
-         return main({ type: PayloadType.Hash, data: UIIntro.#htmlInputHash.value });
+         return main({
+            type: PayloadType.Hash,
+            data: UIIntro.#htmlInputHash.value,
+         });
       }
    }
 

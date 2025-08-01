@@ -1,13 +1,13 @@
 import {
-   IBeatmapContainer,
-   ICheck,
-   ICheckOutput,
    CheckArgs,
    CheckInputOrder,
    CheckOutputOrder,
    CheckType,
-   OutputType,
+   IBeatmapContainer,
+   ICheck,
+   ICheckOutput,
    OutputStatus,
+   OutputType,
 } from '../../types';
 import { UIInput } from '../../ui/helpers/input';
 
@@ -46,7 +46,7 @@ const tool: ICheck = {
 
 function check(difficulty: IBeatmapContainer) {
    const { swingAnalysis } = difficulty;
-   return swingAnalysis.container.filter((n) => Math.abs(n.minSpeed - n.maxSpeed) > 0.002);
+   return swingAnalysis.container.filter((n) => Math.abs(n.minSpeed - n.maxSpeed) > 0.001);
 }
 
 function run(args: CheckArgs): ICheckOutput[] {

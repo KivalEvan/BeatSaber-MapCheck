@@ -1,13 +1,13 @@
 import * as types from 'bsmap/types';
 import {
-   ICheck,
-   ICheckOutput,
    CheckArgs,
    CheckInputOrder,
    CheckOutputOrder,
    CheckType,
-   OutputType,
+   ICheck,
+   ICheckOutput,
    OutputStatus,
+   OutputType,
 } from '../../types';
 import { UIInput } from '../../ui/helpers/input';
 import { isLightEventType, isOffEventValue } from 'bsmap';
@@ -37,7 +37,11 @@ const tool: ICheck = {
       input: CheckInputOrder.EVENTS_INSUFFICIENT_LIGHT,
       output: CheckOutputOrder.EVENTS_INSUFFICIENT_LIGHT,
    },
-   input: { params: { enabled }, ui: () => UIInput.createBlock(htmlInput, htmlLabel), update },
+   input: {
+      params: { enabled },
+      ui: () => UIInput.createBlock(htmlInput, htmlLabel),
+      update,
+   },
    run,
 };
 

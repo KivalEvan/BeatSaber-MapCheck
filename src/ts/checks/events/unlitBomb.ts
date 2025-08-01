@@ -9,16 +9,17 @@ import {
 } from 'bsmap';
 import * as types from 'bsmap/types';
 import {
-   ICheck,
-   ICheckOutput,
    CheckArgs,
    CheckInputOrder,
    CheckOutputOrder,
    CheckType,
-   OutputType,
+   ICheck,
+   ICheckOutput,
    OutputStatus,
+   OutputType,
 } from '../../types';
 import { UIInput } from '../../ui/helpers/input';
+import { PrecalculateKey } from '../../types/precalculate';
 
 const name = 'Unlit Bomb';
 const description = 'Check for lighting around bomb.';
@@ -57,7 +58,6 @@ const tool: ICheck = {
 const unlitBomb = (
    bombs: types.wrapper.IWrapBombNote[],
    events: types.wrapper.IWrapBasicEvent[],
-   timeProcessor: TimeProcessor,
    environment: types.EnvironmentAllName,
 ) => {
    if (!events.length) {
@@ -89,8 +89,8 @@ const unlitBomb = (
       [key: number]: [number, boolean][];
    } = {};
    commonEvent.forEach((e) => (eventLitTime[e] = [[0, false]]));
-   const fadeTime = timeProcessor.toBeatTime(1, false);
-   const reactTime = timeProcessor.toBeatTime(0.25, false);
+   const fadeTime = 1;
+   const reactTime = 0.25;
    for (let i = 0, len = eventsLight.length; i < len; i++) {
       const ev = eventsLight[i];
       if (
@@ -99,31 +99,35 @@ const unlitBomb = (
       ) {
          eventState[ev.type] = {
             state: 'on',
-            time: ev.time,
+            time: ev.customData[PrecalculateKey.SECOND_TIME],
             fadeTime: 0,
          };
-         const elt = eventLitTime[ev.type].find((e) => e[0] >= ev.time);
+         const elt = eventLitTime[ev.type].find(
+            (e) => e[0] >= ev.customData[PrecalculateKey.SECOND_TIME],
+         );
          if (elt) {
-            elt[0] = ev.time;
+            elt[0] = ev.customData[PrecalculateKey.SECOND_TIME];
             elt[1] = true;
          } else {
-            eventLitTime[ev.type].push([ev.time, true]);
+            eventLitTime[ev.type].push([ev.customData[PrecalculateKey.SECOND_TIME], true]);
          }
       }
       if (isFadeEventValue(ev.value)) {
          eventState[ev.type] = {
             state: 'off',
-            time: ev.time,
+            time: ev.customData[PrecalculateKey.SECOND_TIME],
             fadeTime: fadeTime,
          };
-         const elt = eventLitTime[ev.type].find((e) => e[0] >= ev.time);
+         const elt = eventLitTime[ev.type].find(
+            (e) => e[0] >= ev.customData[PrecalculateKey.SECOND_TIME],
+         );
          if (elt) {
-            elt[0] = ev.time;
+            elt[0] = ev.customData[PrecalculateKey.SECOND_TIME];
             elt[1] = true;
          } else {
-            eventLitTime[ev.type].push([ev.time, true]);
+            eventLitTime[ev.type].push([ev.customData[PrecalculateKey.SECOND_TIME], true]);
          }
-         eventLitTime[ev.type].push([ev.time + fadeTime, false]);
+         eventLitTime[ev.type].push([ev.customData[PrecalculateKey.SECOND_TIME] + fadeTime, false]);
       }
       if (
          ((ev?.floatValue ?? 1) < 0.25 ||
@@ -143,14 +147,14 @@ const unlitBomb = (
       ) {
          eventState[ev.type] = {
             state: 'off',
-            time: ev.time,
+            time: ev.customData[PrecalculateKey.SECOND_TIME],
             fadeTime:
                eventState[ev.type].state === 'on'
                   ? reactTime
                   : Math.min(reactTime, eventState[ev.type].fadeTime),
          };
          eventLitTime[ev.type].push([
-            ev.time +
+            ev.customData[PrecalculateKey.SECOND_TIME] +
                (eventState[ev.type].state === 'on'
                   ? reactTime
                   : Math.min(reactTime, eventState[ev.type].fadeTime)),
@@ -166,7 +170,9 @@ const unlitBomb = (
       isLit = false;
       // find lit event by time
       for (const el in eventLitTime) {
-         const t = eventLitTime[el].find((e) => e[0] <= note.time - 0.25);
+         const t = eventLitTime[el].find(
+            (e) => e[0] <= note.customData[PrecalculateKey.SECOND_TIME] - 0.25,
+         );
          if (t) {
             isLit = isLit || t[1];
          }
@@ -182,7 +188,6 @@ function run(args: CheckArgs): ICheckOutput[] {
    const result = unlitBomb(
       args.beatmap.data.difficulty.bombNotes,
       args.beatmap.data.lightshow.basicEvents,
-      args.beatmap.timeProcessor,
       args.beatmap.environment,
    );
 

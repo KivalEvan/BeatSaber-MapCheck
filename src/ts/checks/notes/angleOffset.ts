@@ -1,12 +1,12 @@
 import {
-   ICheck,
-   ICheckOutput,
    CheckArgs,
    CheckInputOrder,
    CheckOutputOrder,
    CheckType,
-   OutputType,
+   ICheck,
+   ICheckOutput,
    OutputStatus,
+   OutputType,
 } from '../../types';
 import { PrecalculateKey } from '../../types/precalculate';
 import { UIInput } from '../../ui/helpers/input';
@@ -53,7 +53,13 @@ const tool: ICheck<{
       output: CheckOutputOrder.NOTES_ANGLE_OFFSET,
    },
    input: {
-      params: { enabled, Rankable: false, Negative: false, Excess: false, 'Ignore Snap': false },
+      params: {
+         enabled,
+         Rankable: false,
+         Negative: false,
+         Excess: false,
+         'Ignore Snap': false,
+      },
       ui: () => UIInput.createBlock(UIInput.createBlock(htmlInput, htmlLabel), htmlList),
       update,
    },

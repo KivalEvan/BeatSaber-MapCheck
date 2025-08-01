@@ -1,5 +1,5 @@
 // TODO: generate options instead of hardcoded in HTML
-import { UITheme, ThemeName } from '../theme';
+import { ThemeName, UITheme } from '../theme';
 import { Settings } from '../../settings';
 import { BeatNumbering, ISettingsProps } from '../../types/settings';
 import { updateTableRow } from '../information/helpers';

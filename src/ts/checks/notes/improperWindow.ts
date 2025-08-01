@@ -2,14 +2,14 @@ import { isSlantedWindow, NoteColor, NoteDirection } from 'bsmap';
 import * as types from 'bsmap/types';
 import { swing } from 'bsmap/extensions';
 import {
-   ICheck,
-   ICheckOutput,
    CheckArgs,
    CheckInputOrder,
    CheckOutputOrder,
    CheckType,
-   OutputType,
+   ICheck,
+   ICheckOutput,
    OutputStatus,
+   OutputType,
 } from '../../types';
 import { ObjectContainerType } from '../../types/container';
 import { UIInput } from '../../ui/helpers/input';

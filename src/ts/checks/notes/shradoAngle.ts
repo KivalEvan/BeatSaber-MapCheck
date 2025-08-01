@@ -9,17 +9,18 @@ import { round } from 'bsmap/utils';
 import * as types from 'bsmap/types';
 import { swing } from 'bsmap/extensions';
 import {
-   ICheck,
-   ICheckOutput,
    CheckArgs,
    CheckInputOrder,
    CheckOutputOrder,
    CheckType,
-   OutputType,
+   ICheck,
+   ICheckOutput,
    OutputStatus,
+   OutputType,
 } from '../../types';
 import { ObjectContainerType } from '../../types/container';
 import { UIInput } from '../../ui/helpers/input';
+import { PrecalculateKey } from '../../types/precalculate';
 
 const name = 'shrado Angle';
 const description = 'Look for common negative curvature pattern.';
@@ -122,8 +123,7 @@ function adjustTimeHandler(bpm: TimeProcessor) {
 
 function check(args: CheckArgs) {
    const { timeProcessor, noteContainer } = args.beatmap;
-   const { maxTime: temp, distance } = tool.input.params;
-   const maxTime = timeProcessor.toBeatTime(temp, false) + 0.001;
+   const { maxTime, distance } = tool.input.params;
 
    const lastNote: { [key: number]: types.wrapper.IWrapColorNote } = {};
    const lastNoteDirection: { [key: number]: number } = {};
@@ -149,7 +149,9 @@ function check(args: CheckArgs) {
             if (
                resolveGridDistance(note, lastNote[note.color]) >= distance &&
                checkShrAngle(note.direction, lastNoteDirection[note.color], note.color) &&
-               note.time - lastNote[note.color].time <= maxTime
+               note.customData[PrecalculateKey.SECOND_TIME] -
+                  lastNote[note.color].customData[PrecalculateKey.SECOND_TIME] <=
+                  maxTime
             ) {
                result.push(note);
             }
@@ -164,7 +166,9 @@ function check(args: CheckArgs) {
                startNoteDot[note.color] &&
                resolveGridDistance(note, lastNote[note.color]) >= distance &&
                checkShrAngle(note.direction, lastNoteDirection[note.color], note.color) &&
-               note.time - lastNote[note.color].time <= maxTime
+               note.customData[PrecalculateKey.SECOND_TIME] -
+                  lastNote[note.color].customData[PrecalculateKey.SECOND_TIME] <=
+                  maxTime
             ) {
                result.push(startNoteDot[note.color]!);
                startNoteDot[note.color] = null;

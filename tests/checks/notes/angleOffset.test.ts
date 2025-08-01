@@ -8,7 +8,7 @@ it('Rankable Angle Offset', () => {
    angleOffset.input.params.Negative = true;
    angleOffset.input.params.Excess = true;
    const results = angleOffset.run(checkArgs);
-   getAndCompareTimeResult("Rankable", results, expectOutput[0]);
+   getAndCompareTimeResult('Rankable', results, expectOutput[0]);
 });
 
 it('Negative Angle Offset', () => {
@@ -16,7 +16,7 @@ it('Negative Angle Offset', () => {
    angleOffset.input.params.Negative = true;
    angleOffset.input.params.Excess = true;
    const results = angleOffset.run(checkArgs);
-   getAndCompareTimeResult("Negative", results, expectOutput[1]);
+   getAndCompareTimeResult('Negative', results, expectOutput[1]);
 });
 
 it('Excess Angle Offset', () => {
@@ -24,5 +24,5 @@ it('Excess Angle Offset', () => {
    angleOffset.input.params.Negative = true;
    angleOffset.input.params.Excess = true;
    const results = angleOffset.run(checkArgs);
-   getAndCompareTimeResult("Excess", results, expectOutput[2]);
+   getAndCompareTimeResult('Excess', results, expectOutput[2]);
 });

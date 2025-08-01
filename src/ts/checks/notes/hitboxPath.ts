@@ -1,20 +1,18 @@
 import {
-   ICheck,
-   ICheckOutput,
    CheckArgs,
    CheckInputOrder,
    CheckOutputOrder,
    CheckType,
-   OutputType,
+   ICheck,
+   ICheckOutput,
    OutputStatus,
+   OutputType,
 } from '../../types';
 import { UIInput } from '../../ui/helpers/input';
 import { ObjectContainerType } from '../../types/container';
 import * as types from 'bsmap/types';
-import { placement } from 'bsmap/extensions';
-import { isHorizontal, isVertical, isDiagonal } from 'bsmap';
 import { PrecalculateKey } from '../../types/precalculate';
-import { isNotePointing, isNoteSwingable, noteDistance } from '../../utils/beatmap';
+import { isNotePointing, noteDistance } from '../../utils/beatmap';
 
 const name = 'Hitbox Path';
 const description = 'Check for overlapping pre-swing note hitbox at same time.';
@@ -61,7 +59,8 @@ function check(args: CheckArgs) {
       const currentNote = noteContainer[i];
       if (
          currentNote.type !== ObjectContainerType.COLOR ||
-         currentNote.data.customData[PrecalculateKey.SECOND_TIME] < lastTime + 0.01
+         currentNote.data.customData[PrecalculateKey.SECOND_TIME] < lastTime + 0.01 ||
+         currentNote.data.direction === types.NoteDirection.ANY
       ) {
          continue;
       }

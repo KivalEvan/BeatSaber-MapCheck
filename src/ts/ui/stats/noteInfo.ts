@@ -1,4 +1,4 @@
-import { round, formatNumber } from 'bsmap/utils';
+import { formatNumber, round } from 'bsmap/utils';
 import * as types from 'bsmap/types';
 import { IBeatmapContainer } from '../../types';
 import { swing } from 'bsmap/extensions';

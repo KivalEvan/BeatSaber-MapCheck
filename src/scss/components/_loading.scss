@@ -8,8 +8,7 @@
       background-color: var(--bg-loading-info);
       width: 0%;
       height: 100%;
-      transition:
-         // width 0.2s ease-out,
+      transition: // width 0.2s ease-out,
          background-color 0.1s linear;
       &--download {
          background-color: var(--bg-loading-download);

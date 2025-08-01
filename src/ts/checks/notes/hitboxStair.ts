@@ -1,17 +1,18 @@
 import { ColorNote, NoteColor, NoteDirection, NoteDirectionSpace } from 'bsmap';
 import * as types from 'bsmap/types';
 import {
-   ICheck,
-   ICheckOutput,
    CheckArgs,
    CheckInputOrder,
    CheckOutputOrder,
    CheckType,
-   OutputType,
+   ICheck,
+   ICheckOutput,
    OutputStatus,
+   OutputType,
 } from '../../types';
 import { UIInput } from '../../ui/helpers/input';
 import { placement, swing } from 'bsmap/extensions';
+import { PrecalculateKey } from '../../types/precalculate';
 
 const name = 'Hitbox Staircase';
 const description = 'Check for overlapping post-swing hitbox with note hitbox during swing.';
@@ -65,7 +66,7 @@ function isDouble(
 function check(args: CheckArgs) {
    const { timeProcessor } = args.beatmap;
    const notes = args.beatmap.data.difficulty.colorNotes;
-   const hitboxTime = timeProcessor.toBeatTime(0.15, false);
+   const hitboxTime = 0.15;
 
    const lastNote: { [key: number]: types.wrapper.IWrapColorNote } = {};
    const lastNoteDirection: { [key: number]: number } = {};
@@ -86,7 +87,9 @@ function check(args: CheckArgs) {
       const directionSpace = NoteDirectionSpace[note.direction as 0] || [0, 0];
       if (lastNote[note.color]) {
          if (swing.next(note, lastNote[note.color], timeProcessor, swingNoteArray[note.color])) {
-            lastSpeed[note.color] = note.time - lastNote[note.color].time;
+            lastSpeed[note.color] =
+               note.customData[PrecalculateKey.SECOND_TIME] -
+               lastNote[note.color].customData[PrecalculateKey.SECOND_TIME];
             if (note.direction !== NoteDirection.ANY) {
                noteOccupy[note.color].posX = note.posX + directionSpace[0];
                noteOccupy[note.color].posY = note.posY + directionSpace[1];
@@ -112,8 +115,11 @@ function check(args: CheckArgs) {
          }
          if (
             lastNote[(note.color + 1) % 2] &&
-            note.time - lastNote[(note.color + 1) % 2].time !== 0 &&
-            note.time - lastNote[(note.color + 1) % 2].time <
+            note.customData[PrecalculateKey.SECOND_TIME] -
+               lastNote[(note.color + 1) % 2].customData[PrecalculateKey.SECOND_TIME] !==
+               0 &&
+            note.customData[PrecalculateKey.SECOND_TIME] -
+               lastNote[(note.color + 1) % 2].customData[PrecalculateKey.SECOND_TIME] <
                Math.min(hitboxTime, lastSpeed[(note.color + 1) % 2])
          ) {
             if (

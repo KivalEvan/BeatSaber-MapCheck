@@ -1,12 +1,12 @@
 import {
-   ICheck,
-   ICheckOutput,
    CheckArgs,
    CheckInputOrder,
    CheckOutputOrder,
    CheckType,
-   OutputType,
+   ICheck,
+   ICheckOutput,
    OutputStatus,
+   OutputType,
 } from '../../types';
 import { UIInput } from '../../ui/helpers/input';
 import { ObjectContainerType } from '../../types/container';
@@ -77,7 +77,7 @@ function check(args: CheckArgs) {
 
          if (
             compareTo.data.customData[PrecalculateKey.SECOND_TIME] >
-            currentNote.data.customData[PrecalculateKey.SECOND_TIME] + 0.25
+            currentNote.data.customData[PrecalculateKey.SECOND_TIME] + 0.075
          ) {
             break;
          }

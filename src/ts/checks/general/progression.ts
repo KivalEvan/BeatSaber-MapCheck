@@ -1,12 +1,12 @@
 import {
-   ICheck,
-   ICheckOutput,
    CheckArgs,
    CheckInputOrder,
    CheckOutputOrder,
    CheckType,
-   OutputType,
+   ICheck,
+   ICheckOutput,
    OutputStatus,
+   OutputType,
 } from '../../types';
 import { State } from '../../state';
 import { UIInput } from '../../ui/helpers/input';
@@ -19,7 +19,9 @@ const name = 'Difficulty Progression';
 const description = 'For ranking purpose, check difficuly progression to fit rankability criteria.';
 const enabled = true;
 
-const cachedHtmlDiff: { [key in types.DifficultyName]: HTMLInputElement | null } = {
+const cachedHtmlDiff: {
+   [key in types.DifficultyName]: HTMLInputElement | null;
+} = {
    'Expert+': null,
    ExpertPlus: null,
    Expert: null,
@@ -55,7 +57,9 @@ const [htmlInput, htmlLabel] = UIInput.createCheckbox(
 function update() {
    htmlInput.checked = tool.input.params.enabled;
    for (const diff of diffList) {
-      if (cachedHtmlDiff[diff]) cachedHtmlDiff[diff].checked = tool.input.params[diff];
+      if (cachedHtmlDiff[diff]) {
+         cachedHtmlDiff[diff].checked = tool.input.params[diff];
+      }
    }
 }
 
@@ -114,6 +118,7 @@ function run(args: CheckArgs): ICheckOutput[] {
          status: OutputStatus.RANK,
       });
    }
+
    const progMax = swing.getProgressionMax(standardSpsAry, targetMinSps);
    const progMin = swing.getProgressionMin(standardSpsAry, targetMinSps);
    if (progMax && audioDuration < 360) {

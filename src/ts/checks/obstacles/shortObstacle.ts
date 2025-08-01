@@ -1,14 +1,14 @@
 import { Obstacle, PosX, PosY } from 'bsmap';
 import * as types from 'bsmap/types';
 import {
-   ICheck,
-   ICheckOutput,
    CheckArgs,
    CheckInputOrder,
    CheckOutputOrder,
    CheckType,
-   OutputType,
+   ICheck,
+   ICheckOutput,
    OutputStatus,
+   OutputType,
 } from '../../types';
 import { UIInput } from '../../ui/helpers/input';
 import { PrecalculateKey } from '../../types/precalculate';
@@ -68,19 +68,31 @@ function check(args: CheckArgs) {
    const ary: types.wrapper.IWrapObstacle[] = [];
    let obstacleLFull: types.wrapper.IWrapObstacle = new Obstacle({
       time: Number.MIN_SAFE_INTEGER,
-      customData: { [PrecalculateKey.SECOND_TIME]: 0, [PrecalculateKey.DURATION_SECOND_TIME]: 0 },
+      customData: {
+         [PrecalculateKey.SECOND_TIME]: 0,
+         [PrecalculateKey.DURATION_SECOND_TIME]: 0,
+      },
    });
    let obstacleRFull: types.wrapper.IWrapObstacle = new Obstacle({
       time: Number.MIN_SAFE_INTEGER,
-      customData: { [PrecalculateKey.SECOND_TIME]: 0, [PrecalculateKey.DURATION_SECOND_TIME]: 0 },
+      customData: {
+         [PrecalculateKey.SECOND_TIME]: 0,
+         [PrecalculateKey.DURATION_SECOND_TIME]: 0,
+      },
    });
    let obstacleLHalf: types.wrapper.IWrapObstacle = new Obstacle({
       time: Number.MIN_SAFE_INTEGER,
-      customData: { [PrecalculateKey.SECOND_TIME]: 0, [PrecalculateKey.DURATION_SECOND_TIME]: 0 },
+      customData: {
+         [PrecalculateKey.SECOND_TIME]: 0,
+         [PrecalculateKey.DURATION_SECOND_TIME]: 0,
+      },
    });
    let obstacleRHalf: types.wrapper.IWrapObstacle = new Obstacle({
       time: Number.MIN_SAFE_INTEGER,
-      customData: { [PrecalculateKey.SECOND_TIME]: 0, [PrecalculateKey.DURATION_SECOND_TIME]: 0 },
+      customData: {
+         [PrecalculateKey.SECOND_TIME]: 0,
+         [PrecalculateKey.DURATION_SECOND_TIME]: 0,
+      },
    });
    for (let i = 0; i < obstacles.length; i++) {
       const o = obstacles[i];

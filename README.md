@@ -23,8 +23,8 @@ Clone or fork the project and install dependencies with `npm` or `yarn`.
 
 Run the development server with `npm run dev`, the URL will be given in the CLI.
 
-To run the app locally, `npm run build` for the first time setup, then `npm run serve`
-to run the server.
+To run the app locally, `npm run build` for the first time setup, then
+`npm run serve` to run the server.
 
 ### Contributing
 
@@ -34,12 +34,12 @@ error/problem or want an improvement.
 
 #### Guidelines
 
--  File names shall use camel case.
--  Use formatting standard given in prettier config.
--  Top-level function must use regular function.
--  Use `dev` branch as base for new development/branch.
--  No other third-dependencies unless absolutely necessary.
--  Avoid circular imports.
+- File names shall use camel case.
+- Use formatting standard given in prettier config.
+- Top-level function must use regular function.
+- Use `dev` branch as base for new development/branch.
+- No other third-dependencies unless absolutely necessary.
+- Avoid circular imports.
 
 Any beatmap related has to be done in
 [Beat Saber JS Map](https://github.com/KivalEvan/BeatSaber-JSMap) repository
@@ -47,9 +47,9 @@ instead.
 
 ## Planned
 
--  Pre-render page for higher performance
--  Rewrite swing detection
--  Localization
+- Pre-render page for higher performance
+- Rewrite swing detection
+- Localization
 
 ## Note
 
@@ -59,7 +59,7 @@ or feedback, let me know on Discord@kivalevan
 
 ## Credits
 
--  Uninstaller and Qwasyx (improving it) for note swing detection algorithm
--  Top_Cat for math guidance
--  BSMG Team for CORS proxy service
--  Others for helpful feedback & indirect contribution
+- Uninstaller and Qwasyx (improving it) for note swing detection algorithm
+- Top_Cat for math guidance
+- BSMG Team for CORS proxy service
+- Others for helpful feedback & indirect contribution

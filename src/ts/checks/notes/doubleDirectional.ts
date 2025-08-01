@@ -1,13 +1,13 @@
 import { NoteColor, NoteDirection, NoteDirectionAngle, PosX, PosY } from 'bsmap';
 import * as types from 'bsmap/types';
 import {
-   IBeatmapContainer,
-   ICheck,
-   ICheckOutput,
    CheckArgs,
    CheckInputOrder,
    CheckOutputOrder,
    CheckType,
+   IBeatmapContainer,
+   ICheck,
+   ICheckOutput,
    OutputStatus,
    OutputType,
 } from '../../types';

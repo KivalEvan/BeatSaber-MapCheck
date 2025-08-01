@@ -20,12 +20,16 @@ export class UILoading {
    static status(type: LoadStatus, text: string, percentage: number = 100): void {
       UILoading.#htmlLoadingText.textContent = text;
       UILoading.#htmlLoadingBar.style.width = `${percentage}%`;
-      if (type === LoadStatus.ERROR)
+      if (type === LoadStatus.ERROR) {
          UILoading.#htmlLoadingBar.classList.add(UILoading.#htmlLoadingBarError);
-      else UILoading.#htmlLoadingBar.classList.remove(UILoading.#htmlLoadingBarError);
-      if (type === LoadStatus.DOWNLOAD)
+      } else {
+         UILoading.#htmlLoadingBar.classList.remove(UILoading.#htmlLoadingBarError);
+      }
+      if (type === LoadStatus.DOWNLOAD) {
          UILoading.#htmlLoadingBar.classList.add(UILoading.#htmlLoadingBarDownload);
-      else UILoading.#htmlLoadingBar.classList.remove(UILoading.#htmlLoadingBarDownload);
+      } else {
+         UILoading.#htmlLoadingBar.classList.remove(UILoading.#htmlLoadingBarDownload);
+      }
    }
 
    static reset(): void {

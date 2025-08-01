@@ -107,11 +107,11 @@ export class UIHeader {
 
    static async setAudio(arrayBuffer: ArrayBuffer): Promise<void> {
       const blob = new Blob([arrayBuffer], { type: 'audio/ogg' });
-      UIHeader.#htmlAudio.src = window.URL.createObjectURL(blob);
+      UIHeader.#htmlAudio.src = globalThis.URL.createObjectURL(blob);
    }
 
    static unloadAudio(): void {
       UIHeader.#htmlAudio.src = '';
-      window.URL.revokeObjectURL('');
+      globalThis.URL.revokeObjectURL('');
    }
 }

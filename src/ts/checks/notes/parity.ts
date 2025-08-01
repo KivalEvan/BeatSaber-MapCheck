@@ -1,12 +1,12 @@
 import {
-   ICheck,
-   ICheckOutput,
    CheckArgs,
    CheckInputOrder,
    CheckOutputOrder,
    CheckType,
-   OutputType,
+   ICheck,
+   ICheckOutput,
    OutputStatus,
+   OutputType,
 } from '../../types';
 import { UISelect } from '../../ui/helpers/select';
 import { ObjectContainerType } from '../../types/container';
@@ -67,7 +67,10 @@ const tool: ICheck<{ warningThres: number; errorThres: number; allowedRot: numbe
    name,
    description,
    type: CheckType.NOTE,
-   order: { input: CheckInputOrder.NOTES_PARITY, output: CheckOutputOrder.NOTES_PARITY },
+   order: {
+      input: CheckInputOrder.NOTES_PARITY,
+      output: CheckOutputOrder.NOTES_PARITY,
+   },
    input: {
       params: { enabled, warningThres: 90, errorThres: 45, allowedRot: 90 },
       ui: () => htmlContainer,
