@@ -403,7 +403,7 @@ function applyAngle(
             ? 1360 - object.direction
             : object.direction >= 2000 && object.direction <= 2360
               ? 2360 - object.direction
-              : object.direction;
+              : object.customData[PrecalculateKey.ANGLE];
    }
    if (mod?.['Noodle Extensions']) {
       switch (version) {
@@ -420,10 +420,10 @@ function applyAngle(
          object.customData[PrecalculateKey.TAIL_ANGLE] += 180;
       }
       if (mod?.['Mapping Extensions']) {
-         object.customData[PrecalculateKey.ANGLE] =
+         object.customData[PrecalculateKey.TAIL_ANGLE] =
             object.tailDirection >= 1000 && object.tailDirection <= 1360
                ? 1360 - object.tailDirection
-               : object.tailDirection;
+               : object.customData[PrecalculateKey.TAIL_ANGLE];
       }
    }
 }

@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.7.2 [2025-08-20]
+
+### Fixed
+
+- Mapping Extensions angle calculation not using actual angle for base direction
+
 ## 2.7.1 [2025-08-02]
 
 ### Changed

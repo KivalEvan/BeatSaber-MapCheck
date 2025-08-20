@@ -69,9 +69,8 @@ function check(args: CheckArgs) {
                   chain.data.posY === other.data.posY &&
                   other.data.time <= chain.data.time + 0.001 &&
                   chain.data.color === other.data.color &&
-                  (((other.data.direction !== NoteDirection.ANY
-                     ? chain.data.direction === other.data.direction
-                     : true) &&
+                  ((other.data.direction !== NoteDirection.ANY &&
+                     chain.data.direction === other.data.direction &&
                      (chain.data.sliceCount === 1 ||
                         (vectorDistance(
                            other.data.customData[PrecalculateKey.POSITION],
@@ -131,6 +130,7 @@ function run(args: CheckArgs): ICheckOutput[] {
    const result = check(args);
 
    if (result.length) {
+      console.log(result);
       return [
          {
             status: OutputStatus.ERROR,
