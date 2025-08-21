@@ -5,6 +5,8 @@ import { IObjectContainer, ObjectContainerType } from '../types/container';
 import {
    Beatmap,
    calculateScore,
+   ColorScheme,
+   EnvironmentSchemeName,
    loadDifficulty,
    loadLightshow,
    logger,
@@ -165,6 +167,9 @@ export function createBeatmapContainer(
       infoBeatmap.difficulty,
    );
    precalculateObjects(
+      infoBeatmap,
+      info.colorSchemes[infoBeatmap.colorSchemeId],
+      info.environmentNames[infoBeatmap.environmentId],
       beatmap,
       swingAnalysis,
       timeProcessor,
@@ -245,6 +250,9 @@ function getNoteContainer(beatmap: types.wrapper.IWrapBeatmap): IObjectContainer
 }
 
 function precalculateObjects(
+   mapInfo: types.wrapper.IWrapInfoBeatmap,
+   colorScheme: types.wrapper.IWrapInfoColorScheme,
+   environment: types.EnvironmentAllName,
    beatmap: types.wrapper.IWrapBeatmap,
    swingAnalysis: swing.types.ISwingAnalysis,
    timeProcessor: TimeProcessor,
@@ -252,6 +260,7 @@ function precalculateObjects(
    version?: number,
 ) {
    const applyTime = applyTimeFn(timeProcessor);
+   const applyChroma = applyChromaFn(mapInfo, colorScheme, environment, version);
    if (!beatmap.difficulty.customData[PrecalculateKey.CALCULATED]) {
       beatmap.difficulty.bpmEvents.forEach(applyTime);
       beatmap.difficulty.njsEvents.forEach(applyTime);
@@ -260,6 +269,7 @@ function precalculateObjects(
       beatmap.difficulty.colorNotes.forEach(applyTime);
       beatmap.difficulty.colorNotes.forEach((n) => applyPosition(n, mod, version));
       beatmap.difficulty.colorNotes.forEach((n) => applyAngle(n, mod, version));
+      beatmap.difficulty.colorNotes.forEach(applyChroma);
 
       beatmap.difficulty.bombNotes.forEach(applyTime);
       beatmap.difficulty.bombNotes.forEach((n) => applyPosition(n, mod, version));
@@ -270,10 +280,12 @@ function precalculateObjects(
       beatmap.difficulty.arcs.forEach(applyTime);
       beatmap.difficulty.arcs.forEach((n) => applyPosition(n, mod, version));
       beatmap.difficulty.arcs.forEach((n) => applyAngle(n, mod, version));
+      beatmap.difficulty.arcs.forEach(applyChroma);
 
       beatmap.difficulty.chains.forEach(applyTime);
       beatmap.difficulty.chains.forEach((n) => applyPosition(n, mod, version));
       beatmap.difficulty.chains.forEach((n) => applyAngle(n, mod, version));
+      beatmap.difficulty.chains.forEach(applyChroma);
 
       beatmap.difficulty.customData[PrecalculateKey.CALCULATED] = true;
    }
@@ -446,5 +458,36 @@ function applyTimeFn(timeProcessor: TimeProcessor) {
             object.customData[PrecalculateKey.SECOND_TIME];
          object.customData[PrecalculateKey.DURATION_BEAT_TIME] = object.duration;
       }
+   };
+}
+
+function applyChromaFn(
+   mapInfo: types.wrapper.IWrapInfoBeatmap,
+   colorScheme: types.wrapper.IWrapInfoColorScheme | null,
+   environment: types.EnvironmentAllName,
+   version?: number,
+) {
+   const colorLeft =
+      mapInfo.customData?._colorLeft ??
+      colorScheme?.saberLeftColor ??
+      ColorScheme[EnvironmentSchemeName[environment] ?? 'The First']._colorLeft;
+   const colorRight =
+      mapInfo.customData?._colorRight ??
+      colorScheme?.saberRightColor ??
+      ColorScheme[EnvironmentSchemeName[environment] ?? 'The First']._colorRight;
+   return function (object: types.wrapper.IWrapBaseNote) {
+      let color = null;
+      switch (version) {
+         case 2:
+            color = object.customData._color;
+            break;
+         case 3:
+            color = object.customData.color;
+            break;
+      }
+      object.customData[PrecalculateKey.COLOR] =
+         object.color === types.NoteColor.RED
+            ? (color ?? colorLeft)
+            : (color ?? colorRight);
    };
 }

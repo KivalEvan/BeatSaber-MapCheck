@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.7.3 [2025-xx-xx]
+
+### Added
+
+- Chroma note color check
+
 ## 2.7.2 [2025-08-20]
 
 ### Fixed
