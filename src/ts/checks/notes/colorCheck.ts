@@ -104,8 +104,10 @@ function customColorArrowSimilarity(map: CheckArgs) {
 const deltaECache = new Map<string, number>();
 function chromaColorCheck(map: CheckArgs): types.wrapper.IWrapBaseObject[] {
    if (
-      !map.beatmap.info.customData._suggestions?.includes('Chroma') &&
-      !map.beatmap.info.customData._requirements?.includes('Chroma')
+      (!map.beatmap.info.customData._suggestions?.includes('Chroma') &&
+         !map.beatmap.info.customData._requirements?.includes('Chroma')) ||
+      map.beatmap.info.customData._oneSaber ||
+      map.beatmap.info.characteristic === 'OneSaber'
    ) {
       return [];
    }
