@@ -54,6 +54,12 @@ const tool: ICheck = {
    run,
 };
 
+const enum LightState {
+   OFF = 0,
+   FADE = 1,
+   ON = 2,
+}
+
 // omega scuffed clusterfuck help me pls im cryin rn
 const unlitBomb = (
    bombs: types.wrapper.IWrapBombNote[],
@@ -70,115 +76,138 @@ const unlitBomb = (
       .sort((a, b) => a.type - b.type) as types.wrapper.IWrapBasicEvent[];
    const eventState: {
       [key: number]: {
-         state: 'off' | 'fading' | 'on';
+         state: LightState;
          time: number;
          fadeTime: number;
       };
    } = {
-      0: { state: 'off', time: 0, fadeTime: 0 },
-      1: { state: 'off', time: 0, fadeTime: 0 },
-      2: { state: 'off', time: 0, fadeTime: 0 },
-      3: { state: 'off', time: 0, fadeTime: 0 },
-      4: { state: 'off', time: 0, fadeTime: 0 },
-      6: { state: 'off', time: 0, fadeTime: 0 },
-      7: { state: 'off', time: 0, fadeTime: 0 },
-      10: { state: 'off', time: 0, fadeTime: 0 },
-      11: { state: 'off', time: 0, fadeTime: 0 },
+      0: { state: LightState.OFF, time: 0, fadeTime: 0 },
+      1: { state: LightState.OFF, time: 0, fadeTime: 0 },
+      2: { state: LightState.OFF, time: 0, fadeTime: 0 },
+      3: { state: LightState.OFF, time: 0, fadeTime: 0 },
+      4: { state: LightState.OFF, time: 0, fadeTime: 0 },
+      6: { state: LightState.OFF, time: 0, fadeTime: 0 },
+      7: { state: LightState.OFF, time: 0, fadeTime: 0 },
+      10: { state: LightState.OFF, time: 0, fadeTime: 0 },
+      11: { state: LightState.OFF, time: 0, fadeTime: 0 },
    };
    const eventLitTime: {
-      [key: number]: [number, boolean][];
+      [key: number]: {
+         last: [number, boolean];
+         states: [number, boolean][];
+         localPointer: number;
+      };
    } = {};
-   commonEvent.forEach((e) => (eventLitTime[e] = [[0, false]]));
+   commonEvent.forEach((e) => {
+      const state = [0, false] as [number, boolean];
+      eventLitTime[e] = { last: state, states: [state], localPointer: 0 };
+   });
    const fadeTime = 1;
    const reactTime = 0.25;
    for (let i = 0, len = eventsLight.length; i < len; i++) {
-      const ev = eventsLight[i];
+      const evt = eventsLight[i];
       if (
-         (isOnEventValue(ev.value) || isFlashEventValue(ev.value)) &&
-         eventState[ev.type].state !== 'on'
+         (isOnEventValue(evt.value) || isFlashEventValue(evt.value)) &&
+         eventState[evt.type].state !== LightState.ON
       ) {
-         eventState[ev.type] = {
-            state: 'on',
-            time: ev.customData[PrecalculateKey.SECOND_TIME],
+         eventState[evt.type] = {
+            state: LightState.ON,
+            time: evt.customData[PrecalculateKey.SECOND_TIME],
             fadeTime: 0,
          };
-         const elt = eventLitTime[ev.type].find(
-            (e) => e[0] >= ev.customData[PrecalculateKey.SECOND_TIME],
-         );
-         if (elt) {
-            elt[0] = ev.customData[PrecalculateKey.SECOND_TIME];
+         if (eventLitTime[evt.type].last[0] >= evt.customData[PrecalculateKey.SECOND_TIME]) {
+            const elt = eventLitTime[evt.type].last;
+            elt[0] = evt.customData[PrecalculateKey.SECOND_TIME];
             elt[1] = true;
          } else {
-            eventLitTime[ev.type].push([ev.customData[PrecalculateKey.SECOND_TIME], true]);
+            eventLitTime[evt.type].last = [evt.customData[PrecalculateKey.SECOND_TIME], true];
+            eventLitTime[evt.type].states.push(eventLitTime[evt.type].last);
          }
       }
-      if (isFadeEventValue(ev.value)) {
-         eventState[ev.type] = {
-            state: 'off',
-            time: ev.customData[PrecalculateKey.SECOND_TIME],
+      if (isFadeEventValue(evt.value)) {
+         eventState[evt.type] = {
+            state: LightState.OFF,
+            time: evt.customData[PrecalculateKey.SECOND_TIME],
             fadeTime: fadeTime,
          };
-         const elt = eventLitTime[ev.type].find(
-            (e) => e[0] >= ev.customData[PrecalculateKey.SECOND_TIME],
-         );
-         if (elt) {
-            elt[0] = ev.customData[PrecalculateKey.SECOND_TIME];
+         if (eventLitTime[evt.type].last[0] >= evt.customData[PrecalculateKey.SECOND_TIME]) {
+            const elt = eventLitTime[evt.type].last;
             elt[1] = true;
          } else {
-            eventLitTime[ev.type].push([ev.customData[PrecalculateKey.SECOND_TIME], true]);
+            eventLitTime[evt.type].last = [evt.customData[PrecalculateKey.SECOND_TIME], true];
+            eventLitTime[evt.type].states.push(eventLitTime[evt.type].last);
          }
-         eventLitTime[ev.type].push([ev.customData[PrecalculateKey.SECOND_TIME] + fadeTime, false]);
+         eventLitTime[evt.type].last = [
+            evt.customData[PrecalculateKey.SECOND_TIME] + fadeTime,
+            false,
+         ];
+         eventLitTime[evt.type].states.push(eventLitTime[evt.type].last);
       }
       if (
-         ((ev?.floatValue ?? 1) < 0.25 ||
-            isOffEventValue(ev.value) ||
-            (ev.customData._color &&
-               ((typeof ev.customData._color[3] === 'number' && ev.customData._color[3] < 0.25) ||
+         ((evt?.floatValue ?? 1) < 0.25 ||
+            isOffEventValue(evt.value) ||
+            (evt.customData._color &&
+               ((typeof evt.customData._color[3] === 'number' && evt.customData._color[3] < 0.25) ||
                   Math.max(
-                     ev.customData._color[0],
-                     ev.customData._color[1],
-                     ev.customData._color[2],
+                     evt.customData._color[0],
+                     evt.customData._color[1],
+                     evt.customData._color[2],
                   ) < 0.25)) ||
-            (ev.customData.color &&
-               ((typeof ev.customData.color[3] === 'number' && ev.customData.color[3] < 0.25) ||
-                  Math.max(ev.customData.color[0], ev.customData.color[1], ev.customData.color[2]) <
-                     0.25))) &&
-         eventState[ev.type].state !== 'off'
+            (evt.customData.color &&
+               ((typeof evt.customData.color[3] === 'number' && evt.customData.color[3] < 0.25) ||
+                  Math.max(
+                     evt.customData.color[0],
+                     evt.customData.color[1],
+                     evt.customData.color[2],
+                  ) < 0.25))) &&
+         eventState[evt.type].state !== LightState.OFF
       ) {
-         eventState[ev.type] = {
-            state: 'off',
-            time: ev.customData[PrecalculateKey.SECOND_TIME],
+         eventState[evt.type] = {
+            state: LightState.OFF,
+            time: evt.customData[PrecalculateKey.SECOND_TIME],
             fadeTime:
-               eventState[ev.type].state === 'on'
+               eventState[evt.type].state === LightState.ON
                   ? reactTime
-                  : Math.min(reactTime, eventState[ev.type].fadeTime),
+                  : Math.min(reactTime, eventState[evt.type].fadeTime),
          };
-         eventLitTime[ev.type].push([
-            ev.customData[PrecalculateKey.SECOND_TIME] +
-               (eventState[ev.type].state === 'on'
+         eventLitTime[evt.type].last = [
+            evt.customData[PrecalculateKey.SECOND_TIME] +
+               (eventState[evt.type].state === LightState.ON
                   ? reactTime
-                  : Math.min(reactTime, eventState[ev.type].fadeTime)),
+                  : Math.min(reactTime, eventState[evt.type].fadeTime)),
             false,
-         ]);
+         ];
+         eventLitTime[evt.type].states.push(eventLitTime[evt.type].last);
       }
    }
    for (const el in eventLitTime) {
-      eventLitTime[el].reverse();
+      eventLitTime[el].states.reverse();
    }
-   for (let i = 0, len = bombs.length, isLit = false; i < len; i++) {
-      const note = bombs[i];
-      isLit = false;
+   for (let i = 0, len = bombs.length; i < len; i++) {
+      const bomb = bombs[i];
+      let isLit = false;
       // find lit event by time
       for (const el in eventLitTime) {
-         const t = eventLitTime[el].find(
-            (e) => e[0] <= note.customData[PrecalculateKey.SECOND_TIME] - 0.25,
-         );
+         let t = null;
+         for (let j = eventLitTime[el].localPointer; j < eventLitTime[el].states.length; j++) {
+            if (
+               eventLitTime[el].states[j][0] <=
+               bomb.customData[PrecalculateKey.SECOND_TIME] - 0.25
+            ) {
+               t = eventLitTime[el].states[j];
+               break;
+            }
+            eventLitTime[el].localPointer = j;
+         }
          if (t) {
             isLit = isLit || t[1];
          }
+         if (isLit) {
+            break;
+         }
       }
       if (!isLit) {
-         result.push(note);
+         result.push(bomb);
       }
    }
    return result;

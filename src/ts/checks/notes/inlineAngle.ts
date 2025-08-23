@@ -24,6 +24,7 @@ import {
 import { IObjectContainer, ObjectContainerType } from '../../types/container';
 import { UIInput } from '../../ui/helpers/input';
 import { PrecalculateKey } from '../../types/precalculate';
+import { noteDistance } from '../../utils/beatmap';
 
 const name = 'Inline Sharp Angle';
 const description = 'Check for angle changes within inline note.';
@@ -131,6 +132,10 @@ function check(args: CheckArgs) {
    let lastIndex = 0;
    for (let i = 0, len = noteContainer.length; i < len; i++) {
       const note = noteContainer[i];
+      if (lastTime + maxTime < note.data.customData[PrecalculateKey.SECOND_TIME]) {
+         lastTime = note.data.customData[PrecalculateKey.SECOND_TIME];
+         lastIndex = i;
+      }
       if (note.type === ObjectContainerType.COLOR && lastNote[note.data.color]) {
          if (
             swing.next(
@@ -209,25 +214,25 @@ function check(args: CheckArgs) {
 }
 
 function checkInline(
-   n: types.wrapper.IWrapColorNote,
-   notes: IObjectContainer[],
+   currentNote: types.wrapper.IWrapColorNote,
+   compares: IObjectContainer[],
    index: number,
    maxTime: number,
 ) {
    for (
       let i = index;
-      notes[i].data.customData[PrecalculateKey.SECOND_TIME] <
-      n.customData[PrecalculateKey.SECOND_TIME];
+      compares[i].data.customData[PrecalculateKey.SECOND_TIME] <
+      currentNote.customData[PrecalculateKey.SECOND_TIME];
       i++
    ) {
-      const note = notes[i];
-      if (note.type !== ObjectContainerType.COLOR) {
+      const compareTo = compares[i];
+      if (compareTo.type !== ObjectContainerType.COLOR) {
          continue;
       }
       if (
-         isInline(n, note.data) &&
-         n.customData[PrecalculateKey.SECOND_TIME] -
-            notes[i].data.customData[PrecalculateKey.SECOND_TIME] <=
+         noteDistance(currentNote, compareTo.data) < 0.25 &&
+         currentNote.customData[PrecalculateKey.SECOND_TIME] -
+            compares[i].data.customData[PrecalculateKey.SECOND_TIME] <=
             maxTime
       ) {
          return true;

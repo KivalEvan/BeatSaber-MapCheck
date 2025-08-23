@@ -21,10 +21,10 @@ const preset: InputParamsList = {
    angleOffset: {
       params: {
          enabled: false,
-         Rankable: false,
+         Unrankable: false,
          Negative: false,
          Excess: false,
-         'Ignore Snap': true,
+         'Ignore Snap': false,
       },
    },
    colorCheck: { params: { enabled: true } },
@@ -37,8 +37,10 @@ const preset: InputParamsList = {
    hitboxPath: { params: { enabled: true } },
    hitboxReverseStair: { params: { enabled: true } },
    hitboxStair: { params: { enabled: true } },
-   improperArc: { params: { enabled: true } },
-   improperChain: { params: { enabled: true } },
+   improperArc: {
+      params: { enabled: true, Disconnected: false, Intersected: false, Unrankable: false },
+   },
+   improperChain: { params: { enabled: true, Unrankable: true } },
    improperWindow: { params: { enabled: true } },
    inlineAngle: { params: { enabled: true, maxTime: 0.15 } },
    oneSaber: { params: { enabled: true } },

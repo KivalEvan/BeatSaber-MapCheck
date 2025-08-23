@@ -101,7 +101,8 @@ function customColorArrowSimilarity(map: CheckArgs) {
    return Math.min(deltaELeft, deltaERight);
 }
 
-function chromaColorCheck(map: CheckArgs): types.wrapper.IWrapBaseNote[] {
+const deltaECache = new Map<string, number>();
+function chromaColorCheck(map: CheckArgs): types.wrapper.IWrapBaseObject[] {
    if (
       !map.beatmap.info.customData._suggestions?.includes('Chroma') &&
       !map.beatmap.info.customData._requirements?.includes('Chroma')
@@ -109,40 +110,56 @@ function chromaColorCheck(map: CheckArgs): types.wrapper.IWrapBaseNote[] {
       return [];
    }
 
-   let whitelist: ObjectContainerType[] = [
-      ObjectContainerType.COLOR,
-      ObjectContainerType.ARC,
-      ObjectContainerType.CHAIN,
-   ];
-   let result: types.wrapper.IWrapBaseNote[] = [];
+   let result: types.wrapper.IWrapBaseObject[] = [];
+   let prevIndex = 0;
    const container = map.beatmap.noteContainer;
    for (let i = 0; i < container.length; i++) {
       const note = container[i];
-      if (!whitelist.includes(note.type)) {
+      if (
+         note.type !== ObjectContainerType.COLOR &&
+         note.type !== ObjectContainerType.ARC &&
+         note.type !== ObjectContainerType.CHAIN
+      ) {
          continue;
       }
 
       for (let j = i + 1; j < container.length; j++) {
          const compareTo = container[j];
-         if (!whitelist.includes(compareTo.type)) {
+         if (
+            compareTo.type !== ObjectContainerType.COLOR &&
+            compareTo.type !== ObjectContainerType.ARC &&
+            compareTo.type !== ObjectContainerType.CHAIN
+         ) {
             continue;
          }
 
-         const deltaE = deltaE00(
-            note.data.customData[PrecalculateKey.COLOR],
-            compareTo.data.customData[PrecalculateKey.COLOR],
-         );
+         let deltaE;
+         const key =
+            note.data.customData[PrecalculateKey.COLOR].toString() +
+            compareTo.data.customData[PrecalculateKey.COLOR].toString();
+         if (deltaECache.has(key)) {
+            deltaE = deltaECache.get(key)!;
+         } else {
+            deltaE = deltaE00(
+               note.data.customData[PrecalculateKey.COLOR],
+               compareTo.data.customData[PrecalculateKey.COLOR],
+            );
+            deltaECache.set(key, deltaE);
+         }
 
          if (
             (note.data.color === compareTo.data.color && deltaE > 20) ||
-            (note.data.color !== compareTo.data.color && deltaE <= 20)
+            (note.data.color !== compareTo.data.color && deltaE < 20)
          ) {
             result.push(compareTo.data);
+         }
+
+         if (note.data.color === compareTo.data.color) {
             break;
          }
       }
    }
-   return result;
+   return result.sort((a, b) => a.time - b.time);
 }
 
 function run(args: CheckArgs): ICheckOutput[] {

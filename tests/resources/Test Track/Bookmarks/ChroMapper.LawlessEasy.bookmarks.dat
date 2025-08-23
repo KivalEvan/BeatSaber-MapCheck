@@ -4,5 +4,15 @@
   "difficulty" : "Easy",
   "color" : "00FFFF",
   "bookmarks" : [
+    {
+      "beat" : 5.25,
+      "label" : "1",
+      "text" : "1"
+    },
+    {
+      "beat" : 5.75,
+      "label" : "1",
+      "text" : "1"
+    }
   ]
 }

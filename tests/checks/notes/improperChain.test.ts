@@ -5,6 +5,8 @@ import { getInput } from '../../loader';
 
 it('improperChain', () => {
    const [checkArgs, expectOutput] = getInput('improperChain');
+   improperChain.input.params.Unrankable = true;
    const results = improperChain.run(checkArgs);
-   getAndCompareTimeResult(0, results, expectOutput);
+   getAndCompareTimeResult("Improper", results, expectOutput[0]);
+   getAndCompareTimeResult("Unrankable", results, expectOutput[1]);
 });

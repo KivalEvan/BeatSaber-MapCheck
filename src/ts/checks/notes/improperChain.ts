@@ -10,15 +10,44 @@ import {
 } from '../../types';
 import { IObjectContainer, ObjectContainerType } from '../../types/container';
 import { UIInput } from '../../ui/helpers/input';
-import { BombNote, NoteDirection } from 'bsmap';
+import { NoteDirection } from 'bsmap';
 import { isNotePointing } from '../../utils/beatmap';
 import { PrecalculateKey } from '../../types/precalculate';
-import { nearEqual, shortRotDistance, vectorDistance } from 'bsmap/utils';
+import { shortRotDistance, vectorDistance } from 'bsmap/utils';
 
 const name = 'Improper Chain';
 const description = 'Check for correct use of chain.';
 const enabled = true;
 
+function update() {
+   htmlInput.checked = tool.input.params.enabled;
+   cachedHtmlDiff.Unrankable!.checked = tool.input.params.Unrankable;
+}
+
+type Params = { Unrankable: boolean };
+const tool: ICheck<Params> = {
+   name,
+   description,
+   type: CheckType.NOTE,
+   order: {
+      input: CheckInputOrder.NOTES_IMPROPER_CHAIN,
+      output: CheckOutputOrder.NOTES_IMPROPER_CHAIN,
+   },
+   input: {
+      params: { enabled, Unrankable: false },
+      ui: () => UIInput.createBlock(UIInput.createBlock(htmlInput, htmlLabel), htmlList),
+      update,
+   },
+   run,
+};
+
+const cachedHtmlDiff: {
+   [key in keyof Params]: HTMLInputElement | null;
+} = {
+   Unrankable: null,
+};
+
+const htmlList = document.createElement('ul');
 const [htmlInput, htmlLabel] = UIInput.createCheckbox(
    function (this: HTMLInputElement) {
       tool.input.params.enabled = this.checked;
@@ -28,28 +57,21 @@ const [htmlInput, htmlLabel] = UIInput.createCheckbox(
    enabled,
 );
 
-function update() {
-   htmlInput.checked = tool.input.params.enabled;
+const list: (keyof Params)[] = ['Unrankable'];
+for (const key of list) {
+   const [htmlInput, htmlLabel] = UIInput.createCheckbox(
+      function (this: HTMLInputElement) {
+         tool.input.params[key] = this.checked;
+      },
+      key,
+      `Check for ${key} angle offset.`,
+      tool.input.params[key],
+   );
+   cachedHtmlDiff[key] = htmlInput;
+   htmlList.appendChild(UIInput.createBlock(htmlInput, htmlLabel));
 }
 
-const tool: ICheck = {
-   name,
-   description,
-   type: CheckType.NOTE,
-   order: {
-      input: CheckInputOrder.NOTES_IMPROPER_CHAIN,
-      output: CheckOutputOrder.NOTES_IMPROPER_CHAIN,
-   },
-   input: {
-      params: { enabled },
-      ui: () => UIInput.createBlock(htmlInput, htmlLabel),
-      update,
-   },
-   run,
-};
-
-function check(args: CheckArgs) {
-   // kinda slow but i need slider first
+function chainImproper(args: CheckArgs) {
    const noteContainer = [...args.beatmap.noteContainer]
       .sort((a, b) =>
          a.type !== ObjectContainerType.CHAIN ? 1 : b.type !== ObjectContainerType.CHAIN ? -1 : 0,
@@ -126,21 +148,57 @@ function check(args: CheckArgs) {
    return result;
 }
 
-function run(args: CheckArgs): ICheckOutput[] {
-   const result = check(args);
+function chainUnrankable(args: CheckArgs) {
+   const noteContainer = [...args.beatmap.noteContainer]
+      .sort((a, b) =>
+         a.type !== ObjectContainerType.COLOR ? 1 : b.type !== ObjectContainerType.COLOR ? -1 : 0,
+      )
+      .sort((a, b) => a.data.time - b.data.time);
 
-   if (result.length) {
-      console.log(result);
-      return [
-         {
-            status: OutputStatus.ERROR,
-            label: 'Improper chain',
-            type: OutputType.TIME,
-            value: result.map((n) => n.data),
-         },
-      ];
+   let count = 0;
+   const result = [];
+   for (let i = 0; i < noteContainer.length; i++) {
+      const object = noteContainer[i];
+      if (object.type === ObjectContainerType.COLOR) {
+         count++;
+      }
+
+      if (object.type === ObjectContainerType.CHAIN) {
+         if (count <= 16) {
+            result.push(object);
+            continue;
+         }
+         if (object.data.sliceCount < 1) {
+            result.push(object);
+         }
+      }
    }
-   return [];
+
+   return result;
+}
+
+function run(args: CheckArgs): ICheckOutput[] {
+   const improper = chainImproper(args);
+   const unrankable = tool.input.params.Unrankable ? chainUnrankable(args) : [];
+
+   const results: ICheckOutput[] = [];
+   if (improper.length) {
+      results.push({
+         status: OutputStatus.ERROR,
+         label: 'Improper chain',
+         type: OutputType.TIME,
+         value: improper.map((n) => n.data),
+      });
+   }
+   if (unrankable.length) {
+      results.push({
+         status: OutputStatus.RANK,
+         label: 'Unrankable chain',
+         type: OutputType.TIME,
+         value: unrankable.map((n) => n.data),
+      });
+   }
+   return results;
 }
 
 export default tool;

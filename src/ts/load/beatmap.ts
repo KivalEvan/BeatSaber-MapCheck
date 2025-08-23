@@ -1,5 +1,5 @@
 import JSZip from 'jszip';
-import { IBeatmapContainer } from '../types/container';
+import { IBeatmapContainer, IChainLink } from '../types/container';
 import { Settings } from '../settings';
 import { IObjectContainer, ObjectContainerType } from '../types/container';
 import {
@@ -19,8 +19,20 @@ import {
 import * as types from 'bsmap/types';
 import { stats, swing } from 'bsmap/extensions';
 import { PrecalculateKey } from '../types/precalculate';
-import { isNoteSwingable, isNoteSwingableRaw, noteDistance } from '../utils/beatmap';
-import { isVector2, nearEqual, shortRotDistance } from 'bsmap/utils';
+import { getArcPath, isNoteSwingableRaw } from '../utils/beatmap';
+import {
+   degToRad,
+   isVector2,
+   lerp,
+   mod,
+   nearEqual,
+   radToDeg,
+   shortRotDistance,
+   vectorMagnitude,
+   vectorMul,
+   vectorSub,
+} from 'bsmap/utils';
+import { bezierCurve, cubicBezier } from '../utils/cubicBezier';
 
 function tag(name: string) {
    return ['load', name];
@@ -197,7 +209,7 @@ export function createBeatmapContainer(
          infoBeatmap.njsOffset,
       ),
       data: beatmap,
-      noteContainer: getNoteContainer(beatmap),
+      noteContainer: getNoteContainer(beatmap, timeProcessor),
       swingAnalysis,
       score: calculateScore(beatmap),
       stats: {
@@ -228,7 +240,10 @@ export function createBeatmapContainer(
    } satisfies IBeatmapContainer;
 }
 
-function getNoteContainer(beatmap: types.wrapper.IWrapBeatmap): IObjectContainer[] {
+function getNoteContainer(
+   beatmap: types.wrapper.IWrapBeatmap,
+   timeProcessor: TimeProcessor,
+): IObjectContainer[] {
    return [
       ...beatmap.difficulty.colorNotes.map((e) => ({
          data: e,
@@ -246,6 +261,12 @@ function getNoteContainer(beatmap: types.wrapper.IWrapBeatmap): IObjectContainer
          data: e,
          type: ObjectContainerType.ARC,
       })),
+      ...beatmap.difficulty.chains.flatMap((e) => {
+         return createChainLinks(e, timeProcessor).map((n) => ({
+            data: n,
+            type: ObjectContainerType.LINK,
+         }));
+      }),
    ].sort((a, b) => a.data.time - b.data.time) as IObjectContainer[];
 }
 
@@ -281,12 +302,79 @@ function precalculateObjects(
       beatmap.difficulty.arcs.forEach((n) => applyPosition(n, mod, version));
       beatmap.difficulty.arcs.forEach((n) => applyAngle(n, mod, version));
       beatmap.difficulty.arcs.forEach(applyChroma);
+      let previousNoteIdx = 0;
+      for (let i = 0; i < beatmap.difficulty.arcs.length; i++) {
+         const arc = beatmap.difficulty.arcs[i];
+         arc.customData[PrecalculateKey.HEAD_NOTES] = [];
+         arc.customData[PrecalculateKey.TAIL_NOTES] = [];
+         for (let j = previousNoteIdx; j < beatmap.difficulty.colorNotes.length; j++) {
+            const note = beatmap.difficulty.colorNotes[j];
+            if (arc.time > note.time) {
+               previousNoteIdx = j;
+               continue;
+            }
+            if (arc.tailTime < note.time) {
+               break;
+            }
+            if (
+               arc.customData[PrecalculateKey.POSITION][0] ===
+                  note.customData[PrecalculateKey.POSITION][0] &&
+               arc.customData[PrecalculateKey.POSITION][1] ===
+                  note.customData[PrecalculateKey.POSITION][1] &&
+               note.time === arc.time
+            ) {
+               arc.customData[PrecalculateKey.HEAD_NOTES].push(note);
+            }
+            if (
+               arc.customData[PrecalculateKey.TAIL_POSITION][0] ===
+                  note.customData[PrecalculateKey.POSITION][0] &&
+               arc.customData[PrecalculateKey.TAIL_POSITION][1] ===
+                  note.customData[PrecalculateKey.POSITION][1] &&
+               note.time === arc.tailTime
+            ) {
+               arc.customData[PrecalculateKey.TAIL_NOTES].push(note);
+            }
+         }
+      }
+      beatmap.difficulty.arcs.forEach(applyBezier);
 
       beatmap.difficulty.chains.forEach(applyTime);
       beatmap.difficulty.chains.forEach((n) => applyPosition(n, mod, version));
       beatmap.difficulty.chains.forEach((n) => applyAngle(n, mod, version));
       beatmap.difficulty.chains.forEach(applyChroma);
 
+      for (const cont of swingAnalysis.container) {
+         if (cont.data.length !== 2) {
+            continue;
+         }
+
+         if (
+            nearEqual(cont.data[0].time, cont.data[1].time) &&
+            (cont.data[0].direction !== types.NoteDirection.ANY &&
+            cont.data[1].direction !== types.NoteDirection.ANY
+               ? resolveNoteAngle(cont.data[0].direction) ===
+                    resolveNoteAngle(cont.data[1].direction) &&
+                 isNoteSwingableRaw(cont.data[0], cont.data[1], 30)
+               : true)
+         ) {
+            const [pX, pY] = cont.data[0].customData[PrecalculateKey.POSITION];
+            const [qX, qY] = cont.data[1].customData[PrecalculateKey.POSITION];
+            const direction =
+               resolveNoteAngle(cont.data[0].direction) || resolveNoteAngle(cont.data[1].direction);
+            const angle1 = (Math.atan2(pY - qY, pX - qX) * 180) / Math.PI + 90;
+            const angle2 = (Math.atan2(qY - pY, qX - pX) * 180) / Math.PI + 90;
+
+            cont.data[0].customData[PrecalculateKey.ANGLE] = cont.data[1].customData[
+               PrecalculateKey.ANGLE
+            ] =
+               shortRotDistance(direction, angle1, 360) > shortRotDistance(direction, angle2, 360)
+                  ? angle2
+                  : angle1;
+            cont.data[0].customData[PrecalculateKey.SNAPPED] = cont.data[1].customData[
+               PrecalculateKey.SNAPPED
+            ] = true;
+         }
+      }
       beatmap.difficulty.customData[PrecalculateKey.CALCULATED] = true;
    }
 
@@ -299,39 +387,6 @@ function precalculateObjects(
       beatmap.lightshow.lightTranslationEventBoxGroups.forEach(applyTime);
       beatmap.lightshow.fxEventBoxGroups.forEach(applyTime);
       beatmap.lightshow.customData[PrecalculateKey.CALCULATED] = true;
-   }
-
-   for (const cont of swingAnalysis.container) {
-      if (cont.data.length !== 2) {
-         continue;
-      }
-
-      if (
-         nearEqual(cont.data[0].time, cont.data[1].time) &&
-         (cont.data[0].direction !== types.NoteDirection.ANY &&
-         cont.data[1].direction !== types.NoteDirection.ANY
-            ? resolveNoteAngle(cont.data[0].direction) ===
-                 resolveNoteAngle(cont.data[1].direction) &&
-              isNoteSwingableRaw(cont.data[0], cont.data[1], 30)
-            : true)
-      ) {
-         const [pX, pY] = cont.data[0].customData[PrecalculateKey.POSITION];
-         const [qX, qY] = cont.data[1].customData[PrecalculateKey.POSITION];
-         const direction =
-            resolveNoteAngle(cont.data[0].direction) || resolveNoteAngle(cont.data[1].direction);
-         const angle1 = (Math.atan2(pY - qY, pX - qX) * 180) / Math.PI + 90;
-         const angle2 = (Math.atan2(qY - pY, qX - pX) * 180) / Math.PI + 90;
-
-         cont.data[0].customData[PrecalculateKey.ANGLE] = cont.data[1].customData[
-            PrecalculateKey.ANGLE
-         ] =
-            shortRotDistance(direction, angle1, 360) > shortRotDistance(direction, angle2, 360)
-               ? angle2
-               : angle1;
-         cont.data[0].customData[PrecalculateKey.SNAPPED] = cont.data[1].customData[
-            PrecalculateKey.SNAPPED
-         ] = true;
-      }
    }
 }
 
@@ -486,8 +541,64 @@ function applyChromaFn(
             break;
       }
       object.customData[PrecalculateKey.COLOR] =
-         object.color === types.NoteColor.RED
-            ? (color ?? colorLeft)
-            : (color ?? colorRight);
+         object.color === types.NoteColor.RED ? (color ?? colorLeft) : (color ?? colorRight);
    };
+}
+
+function applyBezier(arc: types.wrapper.IWrapArc) {
+   const RESOLUTION = 15;
+   const result: types.Vector3[] = Array(RESOLUTION + 1);
+
+   const bezierPath = getArcPath(arc);
+   const segmentSize = RESOLUTION / bezierPath.segmentsCount;
+   for (let segmentIndex = 0; segmentIndex < bezierPath.segmentsCount; segmentIndex++) {
+      const points = bezierPath.getPointsInSegment(segmentIndex);
+      for (let i = 0; i < segmentSize; i++) {
+         const index = segmentIndex * segmentSize + i;
+         result[index] = cubicBezier(points[0], points[1], points[2], points[3], i / segmentSize);
+         result[index][2] += arc.customData[PrecalculateKey.SECOND_TIME];
+      }
+   }
+   const index = RESOLUTION / segmentSize;
+   const points = bezierPath.getPointsInSegment(Math.floor(index - 1));
+   result[RESOLUTION] = cubicBezier(points[0], points[1], points[2], points[3], index);
+   result[RESOLUTION][2] += arc.customData[PrecalculateKey.SECOND_TIME];
+
+   arc.customData[PrecalculateKey.BEZIER_PATH] = result;
+}
+
+export function createChainLinks(
+   chain: types.wrapper.IWrapChain,
+   timeProcessor: TimeProcessor,
+): IChainLink[] {
+   const p2: types.Vector2 = vectorSub(
+      chain.customData[PrecalculateKey.TAIL_POSITION],
+      chain.customData[PrecalculateKey.POSITION],
+   );
+
+   const mag = vectorMagnitude(p2);
+   const f = degToRad(chain.customData[PrecalculateKey.ANGLE] - 90);
+   const p1: types.Vector2 = vectorMul([Math.cos(f), Math.sin(f)], mag * 0.5);
+
+   const result: IChainLink[] = [];
+   for (let index = 1; index < chain.sliceCount; index++) {
+      const alpha = index / (chain.sliceCount - 1);
+      const [pos, tangent] = bezierCurve([0, 0], p1, p2, alpha * chain.squish);
+      const linkTime = lerp(alpha, chain.time, chain.tailTime);
+      result.push({
+         time: linkTime,
+         color: chain.color,
+         posX: pos[0],
+         posY: pos[1],
+         direction: chain.direction,
+         laneRotation: chain.laneRotation,
+         customData: {
+            [PrecalculateKey.SECOND_TIME]: linkTime,
+            [PrecalculateKey.BEAT_TIME]: timeProcessor.toBeatTime(linkTime, true),
+            [PrecalculateKey.POSITION]: pos,
+            [PrecalculateKey.ANGLE]: mod(radToDeg(Math.atan2(tangent[1], tangent[0])), 360),
+         },
+      });
+   }
+   return result;
 }

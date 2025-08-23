@@ -5,59 +5,84 @@
   "color" : "00FFFF",
   "bookmarks" : [
     {
+      "beat" : 5,
+      "label" : "2",
+      "text" : "2"
+    },
+    {
       "beat" : 6,
-      "label" : "1",
-      "text" : "1"
+      "label" : "12",
+      "text" : "12"
+    },
+    {
+      "beat" : 7,
+      "label" : "2",
+      "text" : "2"
     },
     {
       "beat" : 8,
-      "label" : "1",
-      "text" : "1"
+      "label" : "12",
+      "text" : "12"
+    },
+    {
+      "beat" : 9,
+      "label" : "2",
+      "text" : "2"
     },
     {
       "beat" : 10,
-      "label" : "1",
-      "text" : "1"
+      "label" : "12",
+      "text" : "12"
     },
     {
       "beat" : 11,
-      "label" : "1",
-      "text" : "1"
+      "label" : "12",
+      "text" : "12"
+    },
+    {
+      "beat" : 12,
+      "label" : "2",
+      "text" : "2"
     },
     {
       "beat" : 13,
-      "label" : "1",
-      "text" : "1"
+      "label" : "12",
+      "text" : "12"
+    },
+    {
+      "beat" : 14,
+      "label" : "2",
+      "text" : "2"
     },
     {
       "beat" : 15,
-      "label" : "1",
-      "text" : "1"
+      "label" : "12",
+      "text" : "12"
     },
     {
       "beat" : 16,
-      "label" : "1",
-      "text" : "1"
+      "label" : "12",
+      "text" : "12"
     },
     {
       "beat" : 17,
-      "label" : "1",
-      "text" : "1"
+      "label" : "12",
+      "text" : "12"
     },
     {
       "beat" : 18,
-      "label" : "1",
-      "text" : "1"
+      "label" : "12",
+      "text" : "12"
     },
     {
       "beat" : 19,
-      "label" : "1",
-      "text" : "1"
+      "label" : "12",
+      "text" : "12"
     },
     {
       "beat" : 20,
-      "label" : "1",
-      "text" : "1"
+      "label" : "12",
+      "text" : "12"
     },
     {
       "beat" : 21,

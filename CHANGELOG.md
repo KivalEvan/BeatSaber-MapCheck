@@ -5,6 +5,13 @@
 ### Added
 
 - Chroma note color check
+- Chain link is now generated and counted towards certain checks
+- Improper arc now check for disconnected and intersection
+- Criteria check for arc and chain (both SS and BL)
+
+### Fixed
+
+- Optimised inline angle and unlit bomb check
 
 ## 2.7.2 [2025-08-20]
 
@@ -17,7 +24,7 @@
 ### Changed
 
 - Now uses modded value position/angle when applicable
-  - Prioritise Noodle Extensions if both ME and NE is used
+   - Prioritise Noodle Extensions if both ME and NE is used
 - Reduced time overlap for hammer hit
 
 ### Fixed
@@ -34,30 +41,30 @@ usage.
 ### Added
 
 - Add environment & color scheme
-  - Collider
-  - Britney Spears
-  - Monstercat 2.0
-  - Metallica
+   - Collider
+   - Britney Spears
+   - Monstercat 2.0
+   - Metallica
 - Checks preset
 - Bookmark export
 - Nested folder loading
 - Several new checks
-  - Angle offset
-  - Excessive double
-  - Hammer hit
-  - Handclap pattern
-  - Outro
-  - Parallel notes
-  - Rankable obstacle
-  - Variable NJS
+   - Angle offset
+   - Excessive double
+   - Hammer hit
+   - Handclap pattern
+   - Outro
+   - Parallel notes
+   - Rankable obstacle
+   - Variable NJS
 
 ### Changed
 
 - Beatmap core complete overhaul
-  - No longer converts beatmap for compatibility
+   - No longer converts beatmap for compatibility
 - UI revamped
-  - Stats no longer generate all difficulty at once, uses currently selected
-  - Overall should result in less memory usage
+   - Stats no longer generate all difficulty at once, uses currently selected
+   - Overall should result in less memory usage
 - Internal changes, now includes integration & regression testing
 
 ### Fixed
@@ -93,7 +100,7 @@ usage.
 - Improved loading bar
 - Updated many checks
 - Rework asynchronous process
-  - Should be noticeably faster
+   - Should be noticeably faster
 - Minor UI tweaks
 - Various tweaks and fixes
 
@@ -106,8 +113,8 @@ usage.
 ### Deprecated
 
 - Beatmap v3.x.x is now unsupported
-  - Beatmap v3 can still be used by map check, but will not gain any feature
-    updated around it.
+   - Beatmap v3 can still be used by map check, but will not gain any feature
+     updated around it.
 
 ### Removed
 
@@ -124,8 +131,8 @@ usage.
 ### Added
 
 - Updated to beatmap v3.3.0
-  - FX Event Box Group
-  - FX Events Collection
+   - FX Event Box Group
+   - FX Events Collection
 - Linkin Park 2.0 environment & color scheme
 - [New SongCore features](https://github.com/Kylemc1413/SongCore/pull/122)
   (tags, custom characteristic label, etc.)
@@ -135,7 +142,7 @@ usage.
 ### Changed
 
 - Improved loading logic
-  - Can now load beatmap v1
+   - Can now load beatmap v1
 - Loading beatmap can now default missing attributes as given by 1.32 editor
   update
 - The Weeknd and Panic 2.0 color scheme now shows white color value
@@ -173,8 +180,8 @@ usage.
 ### Changed
 
 - Arc no longer count towards interactive time
-  - While arc can affect scoring, visibility and haptic can be disabled and
-    mostly served as cosmetic
+   - While arc can affect scoring, visibility and haptic can be disabled and
+     mostly served as cosmetic
 - Bomb should now count towards interactive time (idk why this was filtered in
   the first place)
 
@@ -221,10 +228,10 @@ usage.
 
 - Event box check
 - Tools output symbol
-  - 🚧 Ranking: for rankability reason.
-  - ❌ Error: should be fixed unless you know what you are doing.
-  - ❗ Warning: not necessarily needed to be fixed but worth considering.
-  - ⚠️ Info: no action necessary and worth noting.
+   - 🚧 Ranking: for rankability reason.
+   - ❌ Error: should be fixed unless you know what you are doing.
+   - ❗ Warning: not necessarily needed to be fixed but worth considering.
+   - ⚠️ Info: no action necessary and worth noting.
 
 ### Fixed
 
@@ -264,7 +271,7 @@ usage.
 
 - Lizzo environment & color scheme support
 - Progression check provides more information
-  - Per difficulty select
+   - Per difficulty select
 
 ### Changed
 
@@ -318,8 +325,8 @@ usage.
 
 - v3 beatmap support
 - v2 to v3 beatmap internal conversion
-  - This may be inaccurate for modded v2 map as it internally convert modded to
-    v3
+   - This may be inaccurate for modded v2 map as it internally convert modded to
+     v3
 - Weave, Pyro and EDM environment
 - Basic slider and burst slider check
 - More tool check including general
@@ -327,7 +334,7 @@ usage.
 - More stats for v3 stuff
 - Dynamic event name based on environment
 - Beat numbering and rounding settings
-  - Shows alternative on hover
+   - Shows alternative on hover
 - Standard style format (development)
 
 ### Changed
@@ -342,8 +349,8 @@ usage.
 ### Deprecated
 
 - Beatmap v2.x.x is now unsupported
-  - Beatmap v2 can still be used by map check, but will not gain any feature
-    updated around it.
+   - Beatmap v2 can still be used by map check, but will not gain any feature
+     updated around it.
 
 ### Removed
 
@@ -378,8 +385,8 @@ usage.
 ### Changed
 
 - Updated parsing
-  - Checks for type
-  - Handle missing properties
+   - Checks for type
+   - Handle missing properties
 - Updated Chroma properties
 - Updated hitbox check now uses new position/rotation system (except staircase)
 
@@ -394,11 +401,11 @@ usage.
 - Standardised note and obstacle position and rotation with
   [BeatWalls system](https://camo.githubusercontent.com/295a4c05e569c99c6bf07cfabda8d80afdec1b7d/68747470733a2f2f692e696d6775722e636f6d2f557a37614944672e706e673d31303078313030)
   to allow modded content support
-  - This allows NE/ME map to use the error check functionality
-  - This also allows for more advanced checking in the future
-  - Updated check and threshold to better fit with the system
-  - Because of the change, some functionality may not work as intended (please
-    report if you find them)
+   - This allows NE/ME map to use the error check functionality
+   - This also allows for more advanced checking in the future
+   - Updated check and threshold to better fit with the system
+   - Because of the change, some functionality may not work as intended (please
+     report if you find them)
 - Unlit bomb check
 
 ### Changed
@@ -432,7 +439,7 @@ usage.
 ### Added
 
 - Note color check (EXPERIMENTAL)
-  - Similarity (including arrow)
+   - Similarity (including arrow)
 
 ### Fixed
 
@@ -549,10 +556,10 @@ usage.
 ### Added
 
 - Information Tab
-  - SongCore, Chroma & Noodle Extensions related stuff
+   - SongCore, Chroma & Noodle Extensions related stuff
 - Stats Tab
 - Settings Tab
-  - Saves to local storage
+   - Saves to local storage
 - Theme
 - Audio player
 - Mode and difficulty ordering

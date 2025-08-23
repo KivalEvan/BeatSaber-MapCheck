@@ -5,6 +5,10 @@ import { getInput } from '../../loader';
 
 it('improperArc', () => {
    const [checkArgs, expectOutput] = getInput('improperArc');
+   improperArc.input.params.Unrankable = true;
    const results = improperArc.run(checkArgs);
-   getAndCompareTimeResult(0, results, expectOutput);
+   getAndCompareTimeResult('Improper', results, expectOutput[0]);
+   getAndCompareTimeResult('Disconnect', results, expectOutput[1]);
+   getAndCompareTimeResult('Intersect', results, expectOutput[2]);
+   getAndCompareTimeResult('Unrankable', results, expectOutput[3]);
 });

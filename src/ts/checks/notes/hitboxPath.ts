@@ -81,7 +81,9 @@ function check(args: CheckArgs) {
          if (
             noteDistance(currentNote.data, compareTo.data) <= 2 &&
             (!isNotePointing(currentNote.data, compareTo.data, 150) ||
-               !isNotePointing(compareTo.data, currentNote.data, 150))
+               (compareTo.type === ObjectContainerType.COLOR &&
+                  compareTo.data.direction !== types.NoteDirection.ANY &&
+                  !isNotePointing(compareTo.data, currentNote.data, 150)))
          ) {
             result.push(currentNote.data);
             lastTime = currentNote.data.customData[PrecalculateKey.SECOND_TIME];

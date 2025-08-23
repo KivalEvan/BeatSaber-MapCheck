@@ -87,6 +87,7 @@ const map: {
    outro1: ['Lawless', 'Expert'],
    outro2: ['Lawless', 'Hard'],
    outsidePlayable: ['Lawless', 'Normal'],
+   inlineAngle: ['Lawless', 'Easy'],
 };
 
 export function getInput(

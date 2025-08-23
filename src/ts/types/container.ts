@@ -8,6 +8,7 @@ export const enum ObjectContainerType {
    BOMB,
    ARC,
    CHAIN,
+   LINK,
 }
 
 export interface IObjectContainerBase {
@@ -35,15 +36,24 @@ export interface IObjectContainerChain extends IObjectContainerBase {
    readonly data: types.wrapper.IWrapChain;
 }
 
+export interface IObjectContainerLink extends IObjectContainerBase {
+   readonly type: ObjectContainerType.LINK;
+   readonly data: IChainLink;
+}
+
 export type IObjectContainer =
    | IObjectContainerColor
    | IObjectContainerBomb
    | IObjectContainerArc
-   | IObjectContainerChain;
+   | IObjectContainerChain
+   | IObjectContainerLink;
 
 export interface IBeatmapAudio {
    readonly duration: number;
    readonly bpm: { time: number; bpm: number }[];
+}
+
+export interface IChainLink extends types.wrapper.IWrapBaseNote {
 }
 
 interface IBeatmapContainerBase {

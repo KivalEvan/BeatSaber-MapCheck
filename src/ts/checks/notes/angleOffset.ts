@@ -16,10 +16,46 @@ const name = 'Angle Offset';
 const description = 'Check for unusual angle offset including for rankable criteria.';
 const enabled = false;
 
+function update() {
+   htmlInput.checked = tool.input.params.enabled;
+   cachedHtmlDiff.Unrankable!.checked = tool.input.params.Unrankable;
+   cachedHtmlDiff.Excess!.checked = tool.input.params.Excess;
+   cachedHtmlDiff.Negative!.checked = tool.input.params.Negative;
+   cachedHtmlDiff['Ignore Snap']!.checked = tool.input.params['Ignore Snap'];
+}
+
+type Params = {
+   Unrankable: boolean;
+   Negative: boolean;
+   Excess: boolean;
+   'Ignore Snap': boolean;
+};
+const tool: ICheck<Params> = {
+   name,
+   description,
+   type: CheckType.NOTE,
+   order: {
+      input: CheckInputOrder.NOTES_ANGLE_OFFSET,
+      output: CheckOutputOrder.NOTES_ANGLE_OFFSET,
+   },
+   input: {
+      params: {
+         enabled,
+         Unrankable: false,
+         Negative: false,
+         Excess: false,
+         'Ignore Snap': false,
+      },
+      ui: () => UIInput.createBlock(UIInput.createBlock(htmlInput, htmlLabel), htmlList),
+      update,
+   },
+   run,
+};
+
 const cachedHtmlDiff: {
-   [key in 'Rankable' | 'Negative' | 'Excess' | 'Ignore Snap']: HTMLInputElement | null;
+   [key in keyof Params]: HTMLInputElement | null;
 } = {
-   Rankable: null,
+   Unrankable: null,
    Negative: null,
    Excess: null,
    'Ignore Snap': null,
@@ -35,43 +71,7 @@ const [htmlInput, htmlLabel] = UIInput.createCheckbox(
    enabled,
 );
 
-function update() {
-   htmlInput.checked = tool.input.params.enabled;
-}
-
-const tool: ICheck<{
-   Rankable: boolean;
-   Negative: boolean;
-   Excess: boolean;
-   'Ignore Snap': boolean;
-}> = {
-   name,
-   description,
-   type: CheckType.NOTE,
-   order: {
-      input: CheckInputOrder.NOTES_ANGLE_OFFSET,
-      output: CheckOutputOrder.NOTES_ANGLE_OFFSET,
-   },
-   input: {
-      params: {
-         enabled,
-         Rankable: false,
-         Negative: false,
-         Excess: false,
-         'Ignore Snap': false,
-      },
-      ui: () => UIInput.createBlock(UIInput.createBlock(htmlInput, htmlLabel), htmlList),
-      update,
-   },
-   run,
-};
-
-const list: ('Rankable' | 'Negative' | 'Excess' | 'Ignore Snap')[] = [
-   'Rankable',
-   'Negative',
-   'Excess',
-   'Ignore Snap',
-];
+const list: (keyof Params)[] = ['Unrankable', 'Negative', 'Excess', 'Ignore Snap'];
 for (const key of list) {
    const [htmlInput, htmlLabel] = UIInput.createCheckbox(
       function (this: HTMLInputElement) {
