@@ -69,6 +69,7 @@ const preset: InputParamsList = {
    njs: { params: { enabled: true } },
    outro: { params: { enabled: true, min: 2, max: 15 } },
    outsidePlayable: { params: { enabled: true } },
+   timingDifference: { params: { enabled: true } },
    vnjs: { params: { enabled: true } },
 };
 

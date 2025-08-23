@@ -139,6 +139,9 @@ const preset: InputParamsList = {
    outsidePlayable: {
       params: deepCopy(others.outsidePlayable.input.params),
    },
+   timingDifference: {
+      params: deepCopy(others.timingDifference.input.params),
+   },
    vnjs: {
       params: deepCopy(others.vnjs.input.params),
    },

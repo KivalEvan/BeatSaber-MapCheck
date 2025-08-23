@@ -4,4 +4,5 @@ export { default as invalidObject } from './invalidObject';
 export { default as njs } from './njs';
 export { default as outro } from './outro';
 export { default as outsidePlayable } from './outsidePlayable';
+export { default as timingDifference } from './timingDifference';
 export { default as vnjs } from './vnjs';

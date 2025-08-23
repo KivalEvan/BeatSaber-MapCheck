@@ -1,13 +1,19 @@
 # Changelog
 
-## 2.7.3 [2025-xx-xx]
+## 2.7.3 [2025-08-24]
 
 ### Added
 
 - Chroma note color check
-- Chain link is now generated and counted towards certain checks
+- Timing difference check
+   - Compares current difficulty with difficulty above
 - Improper arc now check for disconnected and intersection
 - Criteria check for arc and chain (both SS and BL)
+- Chain link is now generated and counted towards certain checks
+
+### Changed
+
+- HTML tweak
 
 ### Fixed
 
