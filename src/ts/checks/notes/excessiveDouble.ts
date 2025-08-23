@@ -39,7 +39,7 @@ const tool: ICheck<{ threshold: number }> = {
    },
    input: {
       params: { enabled, threshold: 0.6 },
-      ui: () => UIInput.createBlock(htmlInput, htmlLabel),
+      ui: UIInput.createBlock(htmlInput, htmlLabel),
       update,
    },
    run,

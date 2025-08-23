@@ -42,7 +42,7 @@ const tool: ICheck<{ minDuration: number }> = {
    },
    input: {
       params: { enabled, minDuration: 0.015 },
-      ui: () => UIInput.createBlock(htmlInput, htmlLabel),
+      ui: UIInput.createBlock(htmlInput, htmlLabel),
       update,
    },
    run,

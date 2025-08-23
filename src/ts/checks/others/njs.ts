@@ -39,7 +39,7 @@ const tool: ICheck = {
    },
    input: {
       params: { enabled },
-      ui: () => UIInput.createBlock(htmlInput, htmlLabel),
+      ui: UIInput.createBlock(htmlInput, htmlLabel),
       update,
    },
    run,

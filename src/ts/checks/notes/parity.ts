@@ -73,7 +73,7 @@ const tool: ICheck<{ warningThres: number; errorThres: number; allowedRot: numbe
    },
    input: {
       params: { enabled, warningThres: 90, errorThres: 45, allowedRot: 90 },
-      ui: () => htmlContainer,
+      ui: htmlContainer,
       update,
    },
    run,

@@ -65,7 +65,7 @@ const tool: ICheck<{ ebpmThres: number; ebpmsThres: number }> = {
          ebpmThres: defaultEBPM,
          ebpmsThres: defaultEBPMS,
       },
-      ui: () => UIInput.createBlock(htmlEnabled, htmlEBPM, htmlEBPMS),
+      ui: UIInput.createBlock(htmlEnabled, htmlEBPM, htmlEBPMS),
       update,
       adjustTime: adjustTimeHandler,
    },

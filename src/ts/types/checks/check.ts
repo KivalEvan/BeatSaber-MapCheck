@@ -27,7 +27,7 @@ export interface ICheckInput<TParam extends Record<string, unknown>> {
    params: TParam & {
       enabled: boolean;
    };
-   ui?: () => HTMLElement;
+   ui?: HTMLElement;
    adjustTime?: (timeProcessor: TimeProcessor) => void;
    update?: (timeProcessor?: TimeProcessor) => void;
 }

@@ -96,7 +96,7 @@ const tool: ICheck<{ distance: number; maxTime: number }> = {
    },
    input: {
       params: { enabled, distance: defaultDistance, maxTime: defaultMaxTime },
-      ui: () =>
+      ui: 
          UIInput.createBlock(
             htmlEnabled,
             document.createElement('br'),

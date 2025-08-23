@@ -80,7 +80,7 @@ const tool: ICheck<{ maxTime: number }> = {
          enabled,
          maxTime: defaultMaxTime,
       },
-      ui: () =>
+      ui: 
          UIInput.createBlock(
             htmlEnabled,
             document.createElement('br'),

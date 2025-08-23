@@ -66,7 +66,7 @@ const tool: ICheck<{ min: number; max: number }> = {
    },
    input: {
       params: { enabled, min: defaultMin, max: defaultMax },
-      ui: () =>
+      ui: 
          UIInput.createBlock(
             UIInput.createBlock(htmlInput, htmlLabel),
             UIInput.createBlock(htmlTimeMinLabel, htmlTimeMin),

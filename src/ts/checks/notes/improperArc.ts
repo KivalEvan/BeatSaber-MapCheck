@@ -20,6 +20,7 @@ const name = 'Improper Arc';
 const description = 'Check for correct use of arc.';
 const enabled = true;
 
+const htmlList = document.createElement('ul');
 const [htmlInput, htmlLabel] = UIInput.createCheckbox(
    function (this: HTMLInputElement) {
       tool.input.params.enabled = this.checked;
@@ -47,7 +48,7 @@ const tool: ICheck<Params> = {
    },
    input: {
       params: { enabled, Disconnected: true, Intersected: true, Unrankable: false },
-      ui: () => UIInput.createBlock(UIInput.createBlock(htmlInput, htmlLabel), htmlList),
+      ui: UIInput.createBlock(UIInput.createBlock(htmlInput, htmlLabel), htmlList),
       update,
    },
    run,
@@ -61,7 +62,6 @@ const cachedHtmlDiff: {
    Unrankable: null,
 };
 
-const htmlList = document.createElement('ul');
 const list: (keyof Params)[] = ['Unrankable', 'Disconnected', 'Intersected'];
 for (const key of list) {
    const [htmlInput, htmlLabel] = UIInput.createCheckbox(

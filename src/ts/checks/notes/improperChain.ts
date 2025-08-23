@@ -19,6 +19,16 @@ const name = 'Improper Chain';
 const description = 'Check for correct use of chain.';
 const enabled = true;
 
+const htmlList = document.createElement('ul');
+const [htmlInput, htmlLabel] = UIInput.createCheckbox(
+   function (this: HTMLInputElement) {
+      tool.input.params.enabled = this.checked;
+   },
+   name,
+   description,
+   enabled,
+);
+
 function update() {
    htmlInput.checked = tool.input.params.enabled;
    cachedHtmlDiff.Unrankable!.checked = tool.input.params.Unrankable;
@@ -35,7 +45,7 @@ const tool: ICheck<Params> = {
    },
    input: {
       params: { enabled, Unrankable: false },
-      ui: () => UIInput.createBlock(UIInput.createBlock(htmlInput, htmlLabel), htmlList),
+      ui: UIInput.createBlock(UIInput.createBlock(htmlInput, htmlLabel), htmlList),
       update,
    },
    run,
@@ -46,16 +56,6 @@ const cachedHtmlDiff: {
 } = {
    Unrankable: null,
 };
-
-const htmlList = document.createElement('ul');
-const [htmlInput, htmlLabel] = UIInput.createCheckbox(
-   function (this: HTMLInputElement) {
-      tool.input.params.enabled = this.checked;
-   },
-   name,
-   description,
-   enabled,
-);
 
 const list: (keyof Params)[] = ['Unrankable'];
 for (const key of list) {

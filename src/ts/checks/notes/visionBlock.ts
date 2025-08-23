@@ -177,7 +177,7 @@ const tool: ICheck<{ specific: 'difficulty' | 'time'; minTime: number; maxTime: 
          minTime: defaultMinTime,
          maxTime: defaultMaxTime,
       },
-      ui: () =>
+      ui: 
          UIInput.createBlock(
             htmlEnabled,
             document.createElement('br'),

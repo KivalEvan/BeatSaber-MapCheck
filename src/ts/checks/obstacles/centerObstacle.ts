@@ -77,7 +77,7 @@ const tool: ICheck<{ recovery: number }> = {
    },
    input: {
       params: { enabled, recovery: defaultMaxTime },
-      ui: () =>
+      ui: 
          UIInput.createBlock(
             htmlEnabled,
             document.createElement('br'),

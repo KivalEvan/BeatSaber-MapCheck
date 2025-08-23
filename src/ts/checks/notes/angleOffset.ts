@@ -16,6 +16,16 @@ const name = 'Angle Offset';
 const description = 'Check for unusual angle offset including for rankable criteria.';
 const enabled = false;
 
+const htmlList = document.createElement('ul');
+const [htmlInput, htmlLabel] = UIInput.createCheckbox(
+   function (this: HTMLInputElement) {
+      tool.input.params.enabled = this.checked;
+   },
+   name,
+   description,
+   enabled,
+);
+
 function update() {
    htmlInput.checked = tool.input.params.enabled;
    cachedHtmlDiff.Unrankable!.checked = tool.input.params.Unrankable;
@@ -46,7 +56,7 @@ const tool: ICheck<Params> = {
          Excess: false,
          'Ignore Snap': false,
       },
-      ui: () => UIInput.createBlock(UIInput.createBlock(htmlInput, htmlLabel), htmlList),
+      ui: UIInput.createBlock(UIInput.createBlock(htmlInput, htmlLabel), htmlList),
       update,
    },
    run,
@@ -60,16 +70,6 @@ const cachedHtmlDiff: {
    Excess: null,
    'Ignore Snap': null,
 };
-
-const htmlList = document.createElement('ul');
-const [htmlInput, htmlLabel] = UIInput.createCheckbox(
-   function (this: HTMLInputElement) {
-      tool.input.params.enabled = this.checked;
-   },
-   name,
-   description,
-   enabled,
-);
 
 const list: (keyof Params)[] = ['Unrankable', 'Negative', 'Excess', 'Ignore Snap'];
 for (const key of list) {

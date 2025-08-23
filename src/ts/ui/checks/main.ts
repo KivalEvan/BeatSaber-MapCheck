@@ -144,23 +144,23 @@ export class UIChecks {
             if (tl.input.ui) {
                switch (tl.type) {
                   case CheckType.NOTE: {
-                     UIChecks.#htmlChecksNote.appendChild(tl.input.ui());
+                     UIChecks.#htmlChecksNote.appendChild(tl.input.ui);
                      break;
                   }
                   case CheckType.OBSTACLE: {
-                     UIChecks.#htmlChecksObstacle.appendChild(tl.input.ui());
+                     UIChecks.#htmlChecksObstacle.appendChild(tl.input.ui);
                      break;
                   }
                   case CheckType.EVENT: {
-                     UIChecks.#htmlChecksEvent.appendChild(tl.input.ui());
+                     UIChecks.#htmlChecksEvent.appendChild(tl.input.ui);
                      break;
                   }
                   case CheckType.OTHER: {
-                     UIChecks.#htmlChecksOther.appendChild(tl.input.ui());
+                     UIChecks.#htmlChecksOther.appendChild(tl.input.ui);
                      break;
                   }
                   case CheckType.GENERAL: {
-                     UIChecks.#htmlChecksGeneral.appendChild(tl.input.ui());
+                     UIChecks.#htmlChecksGeneral.appendChild(tl.input.ui);
                      break;
                   }
                   default: {

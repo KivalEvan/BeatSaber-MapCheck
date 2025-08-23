@@ -52,7 +52,7 @@ const tool: ICheck<{ time: number }> = {
    },
    input: {
       params: { enabled, time: defaultTime },
-      ui: () => UIInput.createBlock(htmlInput, htmlLabel, htmlTimeLabel, htmlTime),
+      ui: UIInput.createBlock(htmlInput, htmlLabel, htmlTimeLabel, htmlTime),
       update,
    },
    run,

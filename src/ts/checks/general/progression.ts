@@ -81,7 +81,7 @@ const tool: ICheck<{ [k in types.DifficultyName]: boolean }> = {
          Normal: true,
          Easy: true,
       },
-      ui: () => UIInput.createBlock(UIInput.createBlock(htmlInput, htmlLabel), htmlDifficultyList),
+      ui: UIInput.createBlock(UIInput.createBlock(htmlInput, htmlLabel), htmlDifficultyList),
       update,
    },
    run,

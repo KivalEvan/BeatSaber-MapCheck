@@ -77,7 +77,7 @@ const tool: ICheck<{ minSpeed: number }> = {
          enabled,
          minSpeed: defaultSpeed,
       },
-      ui: () =>
+      ui: 
          UIInput.createBlock(
             htmlEnabled,
             document.createElement('br'),

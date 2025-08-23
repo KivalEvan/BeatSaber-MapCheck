@@ -58,7 +58,7 @@ const tool: ICheck<{ prec: number[] }> = {
          enabled,
          prec: [...defaultPrec],
       },
-      ui: () => UIInput.createBlock(htmlInput, htmlLabel, htmlPrec, htmlPrecLabel),
+      ui: UIInput.createBlock(htmlInput, htmlLabel, htmlPrec, htmlPrecLabel),
       update,
    },
    run,
