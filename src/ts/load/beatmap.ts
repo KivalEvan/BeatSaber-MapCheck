@@ -28,6 +28,7 @@ import {
    nearEqual,
    radToDeg,
    shortRotDistance,
+   vectorAdd,
    vectorMagnitude,
    vectorMul,
    vectorSub,
@@ -583,7 +584,8 @@ export function createChainLinks(
    const result: IChainLink[] = [];
    for (let index = 1; index < chain.sliceCount; index++) {
       const alpha = index / (chain.sliceCount - 1);
-      const [pos, tangent] = bezierCurve([0, 0], p1, p2, alpha * chain.squish);
+      let [pos, tangent] = bezierCurve([0, 0], p1, p2, alpha * chain.squish);
+      pos = vectorAdd(chain.customData[PrecalculateKey.POSITION], pos);
       const linkTime = lerp(alpha, chain.time, chain.tailTime);
       result.push({
          time: linkTime,
@@ -592,13 +594,15 @@ export function createChainLinks(
          posY: pos[1],
          direction: chain.direction,
          laneRotation: chain.laneRotation,
+         chain: chain,
          customData: {
             [PrecalculateKey.SECOND_TIME]: linkTime,
-            [PrecalculateKey.BEAT_TIME]: timeProcessor.toBeatTime(linkTime, true),
+            [PrecalculateKey.BEAT_TIME]: timeProcessor.toRealTime(linkTime, true),
             [PrecalculateKey.POSITION]: pos,
             [PrecalculateKey.ANGLE]: mod(radToDeg(Math.atan2(tangent[1], tangent[0])), 360),
          },
       });
    }
+   chain.customData[PrecalculateKey.CHAIN_LINKS] = result;
    return result;
 }

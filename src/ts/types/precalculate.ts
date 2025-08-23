@@ -15,4 +15,5 @@ export const enum PrecalculateKey {
    BEZIER_PATH = '__mc_bp',
    HEAD_NOTES = '__mc_hn',
    TAIL_NOTES = '__mc_tn',
+   CHAIN_LINKS = '__mc_cl',
 }

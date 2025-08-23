@@ -8,10 +8,10 @@ import {
    OutputStatus,
    OutputType,
 } from '../../types';
-import { IObjectContainer, ObjectContainerType } from '../../types/container';
+import { IChainLink, IObjectContainer, ObjectContainerType } from '../../types/container';
 import { UIInput } from '../../ui/helpers/input';
 import { NoteDirection } from 'bsmap';
-import { isNotePointing } from '../../utils/beatmap';
+import { isNotePointing, noteDistance } from '../../utils/beatmap';
 import { PrecalculateKey } from '../../types/precalculate';
 import { shortRotDistance, vectorDistance } from 'bsmap/utils';
 
@@ -164,11 +164,23 @@ function chainUnrankable(args: CheckArgs) {
       }
 
       if (object.type === ObjectContainerType.CHAIN) {
-         if (count <= 16) {
-            result.push(object);
-            continue;
-         }
-         if (object.data.sliceCount < 1) {
+         if (
+            count <= 16 ||
+            object.data.sliceCount < 1 ||
+            object.data.customData[PrecalculateKey.CHAIN_LINKS].some(
+               (l: IChainLink) =>
+                  l.customData[PrecalculateKey.POSITION][0] < 0 - 0.5 ||
+                  l.customData[PrecalculateKey.POSITION][1] < 0 - 0.5 ||
+                  l.customData[PrecalculateKey.POSITION][0] > 3 + 0.5 ||
+                  l.customData[PrecalculateKey.POSITION][1] > 2 + 0.5,
+            ) ||
+            (object.data.tailTime - object.data.time) /
+               noteDistance(
+                  object.data.customData[PrecalculateKey.CHAIN_LINKS].at(-1),
+                  object.data,
+               ) >
+               0.1
+         ) {
             result.push(object);
          }
       }

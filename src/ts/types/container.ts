@@ -54,6 +54,7 @@ export interface IBeatmapAudio {
 }
 
 export interface IChainLink extends types.wrapper.IWrapBaseNote {
+   chain: types.wrapper.IWrapChain;
 }
 
 interface IBeatmapContainerBase {
