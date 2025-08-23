@@ -1,6 +1,6 @@
 {
   "name": "map-check",
-  "version": "2.7.2",
+  "version": "2.7.3",
   "description": "Web application for extensive overview for Beat Saber beatmap.",
   "private": true,
   "scripts": {
