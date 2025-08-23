@@ -180,24 +180,20 @@ const unlitBomb = (
          eventLitTime[evt.type].states.push(eventLitTime[evt.type].last);
       }
    }
-   for (const el in eventLitTime) {
-      eventLitTime[el].states.reverse();
-   }
    for (let i = 0, len = bombs.length; i < len; i++) {
       const bomb = bombs[i];
       let isLit = false;
-      // find lit event by time
       for (const el in eventLitTime) {
          let t = null;
-         for (let j = eventLitTime[el].localPointer; j < eventLitTime[el].states.length; j++) {
+         while (eventLitTime[el].localPointer < eventLitTime[el].states.length) {
             if (
-               eventLitTime[el].states[j][0] <=
-               bomb.customData[PrecalculateKey.SECOND_TIME] - 0.25
+               bomb.customData[PrecalculateKey.SECOND_TIME] - reactTime <
+               eventLitTime[el].states[eventLitTime[el].localPointer][0]
             ) {
-               t = eventLitTime[el].states[j];
                break;
             }
-            eventLitTime[el].localPointer = j;
+            t = eventLitTime[el].states[eventLitTime[el].localPointer];
+            eventLitTime[el].localPointer++;
          }
          if (t) {
             isLit = isLit || t[1];

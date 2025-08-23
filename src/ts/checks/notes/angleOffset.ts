@@ -99,7 +99,7 @@ function run(args: CheckArgs): ICheckOutput[] {
    if (directionalAngles.length) {
       results.push({
          status: OutputStatus.RANK,
-         label: 'Rankable angle offset',
+         label: 'Unrankable angle offset',
          type: OutputType.TIME,
          value: directionalAngles,
       });
