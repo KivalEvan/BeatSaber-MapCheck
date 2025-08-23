@@ -9,6 +9,7 @@ import { printResult, printResultTime } from './output';
 import { UIPresets } from './presets';
 import { UIBookmark } from './bookmark';
 import { checkAllDifficulty, checkDifficulty, checkGeneral } from '../../checks/main';
+import { round } from 'bsmap/utils';
 
 const logPrefix = 'UI Checks: ';
 
@@ -185,9 +186,14 @@ export class UIChecks {
          throw new Error(logPrefix + 'characteristic/difficulty does not exist');
       }
       UILoading.status(LoadStatus.INFO, `Re-analysing ${characteristic} ${difficulty}`);
+      const startTime = performance.now();
       checkDifficulty(characteristic, difficulty);
-      UILoading.status(LoadStatus.INFO, `Re-analysed ${characteristic} ${difficulty}`);
       UIChecks.displayOutputDifficulty(characteristic, difficulty);
+      const endTime = performance.now();
+      UILoading.status(
+         LoadStatus.INFO,
+         `Re-analysed ${characteristic} ${difficulty} (took ${round((endTime - startTime) / 1000, 2)}s)`,
+      );
    }
 
    static #applyAllHandler(): void {
@@ -197,15 +203,19 @@ export class UIChecks {
          throw new Error(logPrefix + 'characteristic/difficulty does not exist');
       }
       UILoading.status(LoadStatus.INFO, `Re-analysing all difficulties`);
+      const startTime = performance.now();
       checkAllDifficulty();
-      UILoading.status(LoadStatus.INFO, `Re-analysed all difficulties`);
       UIChecks.displayOutputDifficulty(characteristic, difficulty);
+      const endTime = performance.now();
+      UILoading.status(LoadStatus.INFO, `Re-analysed all difficulties (took ${round((endTime - startTime) / 1000, 2)}s)`);
    }
 
    static #applyGeneralHandler(): void {
       UILoading.status(LoadStatus.INFO, `Re-analysing general`);
+      const startTime = performance.now();
       checkGeneral();
-      UILoading.status(LoadStatus.INFO, `Re-analysed general`);
       UIChecks.displayOutputGeneral();
+      const endTime = performance.now();
+      UILoading.status(LoadStatus.INFO, `Re-analysed general (took ${round((endTime - startTime) / 1000, 2)}s)`);
    }
 }

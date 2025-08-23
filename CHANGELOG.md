@@ -17,6 +17,7 @@
 
 ### Fixed
 
+- Fixed BPM change being shown regardless if it is single BPM
 - Optimised inline angle and unlit bomb check
 
 ## 2.7.2 [2025-08-20]
