@@ -10,7 +10,7 @@ import { extractBeatmaps, extractBpmInfo, extractInfo } from './load/index.ts';
 import { downloadFromHash, downloadFromId, downloadFromUrl } from './download.ts';
 import { sanitizeBeatSaverId, sanitizeUrl, sleep } from './utils/web.ts';
 import { logger } from 'bsmap';
-import { lerp, round } from 'bsmap/utils';
+import { lerp, nearEqual, round } from 'bsmap/utils';
 import { Payload, PayloadType } from './types/main';
 import { IBeatmapAudio, IBeatmapContainer } from './types';
 import { init } from './init';
@@ -215,7 +215,7 @@ export async function main(payload: Payload): Promise<void> {
          minBPM = Math.min(minBPM, ...bpm, ...bpme);
          maxBPM = Math.max(maxBPM, ...bpm, ...bpme);
       });
-      if (minBPM !== maxBPM) {
+      if (!nearEqual(minBPM, maxBPM, 0.001)) {
          UIHeader.setSongBPM(info.audio.bpm, minBPM, maxBPM);
       }
 
