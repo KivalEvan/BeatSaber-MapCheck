@@ -96,7 +96,7 @@ function run(args: CheckArgs): ICheckOutput[] {
          (n.direction === types.NoteDirection.ANY &&
             (n.angleOffset % 45 !== 0 || Math.abs(n.angleOffset) > 45)),
    );
-   if (directionalAngles.length) {
+   if (tool.input.params.Unrankable && directionalAngles.length) {
       results.push({
          status: OutputStatus.RANK,
          label: 'Unrankable angle offset',
@@ -110,7 +110,7 @@ function run(args: CheckArgs): ICheckOutput[] {
          (tool.input.params['Ignore Snap'] || !n.customData[PrecalculateKey.SNAPPED]) &&
          n.angleOffset < 0,
    );
-   if (negativeAngles.length) {
+   if (tool.input.params.Negative && negativeAngles.length) {
       results.push({
          status: OutputStatus.INFO,
          label: 'Negative angle offset',
@@ -128,7 +128,7 @@ function run(args: CheckArgs): ICheckOutput[] {
             n.direction === types.NoteDirection.ANY &&
             Math.abs(n.angleOffset) >= 90),
    );
-   if (excessAngles.length) {
+   if (tool.input.params.Excess && excessAngles.length) {
       results.push({
          status: OutputStatus.INFO,
          label: 'Excess angle offset',

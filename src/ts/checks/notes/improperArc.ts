@@ -154,11 +154,12 @@ function arcImproper(args: CheckArgs) {
                   (arc.data.tailPosX === other.data.posX &&
                      arc.data.tailPosY === other.data.posY &&
                      nearEqual(other.data.time, arc.data.tailTime)) ||
-                  (nearEqual(
-                     arc.data.customData[PrecalculateKey.TAIL_SECOND_TIME],
-                     other.data.customData[PrecalculateKey.SECOND_TIME],
-                     0.25,
-                  ) &&
+                  (!arc.data.customData[PrecalculateKey.TAIL_NOTES].length &&
+                     nearEqual(
+                        arc.data.customData[PrecalculateKey.TAIL_SECOND_TIME],
+                        other.data.customData[PrecalculateKey.SECOND_TIME],
+                        0.25,
+                     ) &&
                      noteDistance(
                         {
                            posX: arc.data.posX,
