@@ -6,20 +6,24 @@ import { PrecalculateKey } from '../../types/precalculate';
 function addLabel(str: string, status?: OutputStatus): string {
    switch (status) {
       case OutputStatus.RANK:
-         str = '<span title="Ranking: for rankability reason."> 🚧 </span>' + str;
+         str =
+            '<span class="checks__output-icon" title="Ranking: for rankability reason.">🚧</span> ' +
+            str;
          break;
       case OutputStatus.ERROR:
          str =
-            '<span title="Error: should be fixed unless you know what you are doing."> ❌ </span>' +
+            '<span class="checks__output-icon" title="Error: should be fixed unless you know what you are doing.">❌</span> ' +
             str;
          break;
       case OutputStatus.WARNING:
          str =
-            '<span title="Warning: not necessarily needed to be fixed, worth considering."> ❗ </span>' +
+            '<span class="checks__output-icon" title="Warning: not necessarily needed to be fixed, worth considering.">❗</span> ' +
             str;
          break;
       case OutputStatus.INFO:
-         str = '<span title="Info: no action necessary, take note."> ⚠️ </span>' + str;
+         str =
+            '<span class="checks__output-icon" title="Info: no action necessary, take note.">⚠️</span> ' +
+            str;
          break;
    }
    return str;
@@ -48,7 +52,7 @@ export function printResultTime(
    timeAry: wrapper.IWrapBaseObject[],
    symbol?: OutputStatus,
 ) {
-   const htmlContainer = document.createElement('div');
+   const htmlContainer = document.createElement('p');
 
    if (Settings.props.deduplicateTime) {
       timeAry = timeAry.filter(deduplicateFilter);
@@ -59,22 +63,22 @@ export function printResultTime(
       .map((n) => {
          switch (Settings.props.beatNumbering) {
             case 'realtime':
-               return `<span title="Beat ${round(
+               return `<span class="checks__output-time" title="Beat ${round(
                   n.customData[PrecalculateKey.BEAT_TIME],
                   Settings.props.rounding,
                )}">${secToMmss(n.customData[PrecalculateKey.SECOND_TIME])}</span>`;
             case 'realtimems':
-               return `<span title="Beat ${round(
+               return `<span class="checks__output-time" title="Beat ${round(
                   n.customData[PrecalculateKey.BEAT_TIME],
                   Settings.props.rounding,
                )}">${secToMmssms(n.customData[PrecalculateKey.SECOND_TIME])}</span>`;
             case 'jsontime':
-               return `<span title="Time ${secToMmssms(
+               return `<span class="checks__output-time" title="Time ${secToMmssms(
                   n.customData[PrecalculateKey.SECOND_TIME],
                )}">${round(n.time, Settings.props.rounding)}</span>`;
             case 'beattime':
             default:
-               return `<span title="Time ${secToMmssms(
+               return `<span class="checks__output-time" title="Time ${secToMmssms(
                   n.customData[PrecalculateKey.SECOND_TIME],
                )}">${round(
                   n.customData[PrecalculateKey.BEAT_TIME],
@@ -82,7 +86,7 @@ export function printResultTime(
                )}</span>`;
          }
       })
-      .join(', ')}`;
+      .join('<span class="checks__output-hidden">, </span>')}`;
 
    return htmlContainer;
 }

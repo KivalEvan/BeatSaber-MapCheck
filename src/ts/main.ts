@@ -190,7 +190,7 @@ export async function main(payload: Payload): Promise<void> {
             resolve(audioInfo);
          }),
          ...extractBeatmaps(info, beatmapZip, path).map(async (d, _, ary) => {
-            const res = d.then((v) => v).catch(console.error);
+            const res = await d.then((v) => v).catch(console.error);
             itemDone++;
             diffCount++;
             if (ary.length === diffCount) itemSet.delete('map');

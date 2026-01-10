@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.7.5 [2026-01-11]
+
+```diff
++ Added Spoooky, Cube and Coldplay environment support
++ Improved check output time readability
+* Fixed error related to arc calculation
+* Fixed loading accuracy
+* Adjusted default preset
+```
+
 ## 2.7.4 [2025-09-05]
 
 ```diff

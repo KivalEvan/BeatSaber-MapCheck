@@ -9,12 +9,7 @@ import {
    OutputType,
 } from '../../types';
 import { UIInput } from '../../ui/helpers/input';
-import {
-   EnvironmentName,
-   isOffEventValue,
-   isV2Environment,
-   wrapper,
-} from 'bsmap';
+import { EnvironmentName, isOffEventValue, isV2Environment, wrapper } from 'bsmap';
 import { isLightEvent } from '../../utils/beatmap';
 
 const name = 'Insufficient Lighting Event';
