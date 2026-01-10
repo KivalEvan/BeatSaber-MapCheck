@@ -471,7 +471,7 @@ function applyAngle(
    version?: number,
 ) {
    object.customData[PrecalculateKey.ANGLE] =
-      resolveNoteAngle(object.direction) + (object.angleOffset || 0);
+      resolveNoteAngle(object.direction) + -(object.angleOffset || 0);
    if (object.direction === NoteDirection.ANY) {
       object.customData[PrecalculateKey.ANGLE] += 180;
    }
