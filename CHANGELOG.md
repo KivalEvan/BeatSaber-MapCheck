@@ -5,6 +5,7 @@
 ```diff
 + Added Spoooky, Cube and Coldplay environment support
 + Improved check output time readability
+* Proper light check
 * Fixed error related to arc calculation
 * Fixed loading accuracy
 * Adjusted default preset

@@ -15,7 +15,7 @@ import { PrecalculateKey } from '../../types/precalculate';
 
 const name = 'Variable NJS';
 const description = 'Look for appropriate variable NJS by change speed and relative NJS from base.';
-const enabled = false;
+const enabled = true;
 
 const [htmlInput, htmlLabel] = UIInput.createCheckbox(
    function (this: HTMLInputElement) {

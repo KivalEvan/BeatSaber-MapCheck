@@ -16,7 +16,7 @@ import * as swing from 'bsmap/extensions/swing';
 
 const name = 'Difficulty Progression';
 const description = 'For ranking purpose, check difficuly progression to fit rankability criteria.';
-const enabled = true;
+const enabled = false;
 
 const cachedHtmlDiff: {
    [key in DifficultyName]: HTMLInputElement | null;
