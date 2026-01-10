@@ -1,3 +1,4 @@
+import { NoteDirection } from 'bsmap';
 import {
    CheckArgs,
    CheckInputOrder,
@@ -10,7 +11,6 @@ import {
 } from '../../types';
 import { PrecalculateKey } from '../../types/precalculate';
 import { UIInput } from '../../ui/helpers/input';
-import * as types from 'bsmap/types';
 
 const name = 'Angle Offset';
 const description = 'Check for unusual angle offset including for rankable criteria.';
@@ -91,9 +91,9 @@ function run(args: CheckArgs): ICheckOutput[] {
    const directionalAngles = args.beatmap.data.difficulty.colorNotes.filter(
       (n) =>
          ((tool.input.params['Ignore Snap'] || !n.customData[PrecalculateKey.SNAPPED]) &&
-            n.direction !== types.NoteDirection.ANY &&
+            n.direction !== NoteDirection.ANY &&
             n.angleOffset !== 0) ||
-         (n.direction === types.NoteDirection.ANY &&
+         (n.direction === NoteDirection.ANY &&
             (n.angleOffset % 45 !== 0 || Math.abs(n.angleOffset) > 45)),
    );
    if (tool.input.params.Unrankable && directionalAngles.length) {
@@ -122,10 +122,10 @@ function run(args: CheckArgs): ICheckOutput[] {
    const excessAngles = args.beatmap.data.difficulty.colorNotes.filter(
       (n) =>
          ((tool.input.params['Ignore Snap'] || !n.customData[PrecalculateKey.SNAPPED]) &&
-            n.direction !== types.NoteDirection.ANY &&
+            n.direction !== NoteDirection.ANY &&
             Math.abs(n.angleOffset) >= 45) ||
          ((tool.input.params['Ignore Snap'] || !n.customData[PrecalculateKey.SNAPPED]) &&
-            n.direction === types.NoteDirection.ANY &&
+            n.direction === NoteDirection.ANY &&
             Math.abs(n.angleOffset) >= 90),
    );
    if (tool.input.params.Excess && excessAngles.length) {

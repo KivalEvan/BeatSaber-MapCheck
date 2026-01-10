@@ -11,9 +11,9 @@ import {
 import { UISelect } from '../../ui/helpers/select';
 import { ObjectContainerType } from '../../types/container';
 import { UIInput } from '../../ui/helpers/input';
-import { NoteColor } from 'bsmap';
-import * as types from 'bsmap/types';
-import { parity, swing } from 'bsmap/extensions';
+import { NoteColor, wrapper } from 'bsmap';
+import * as parity from 'bsmap/extensions/parity';
+import * as swing from 'bsmap/extensions/swing';
 
 const name = 'Parity Check';
 const description = 'Perform parity check.';
@@ -86,22 +86,22 @@ function check(args: CheckArgs) {
    const { timeProcessor, noteContainer } = args.beatmap;
    const { warningThres, errorThres, allowedRot } = tool.input.params;
 
-   const lastNote: { [key: number]: types.wrapper.IWrapColorNote } = {};
-   const swingNoteArray: { [key: number]: types.wrapper.IWrapColorNote[] } = {
+   const lastNote: { [key: number]: wrapper.IWrapColorNote } = {};
+   const swingNoteArray: { [key: number]: wrapper.IWrapColorNote[] } = {
       [NoteColor.RED]: [],
       [NoteColor.BLUE]: [],
    };
-   const bombContext: { [key: number]: types.wrapper.IWrapBombNote[] } = {
+   const bombContext: { [key: number]: wrapper.IWrapBombNote[] } = {
       [NoteColor.RED]: [],
       [NoteColor.BLUE]: [],
    };
-   const lastBombContext: { [key: number]: types.wrapper.IWrapBombNote[] } = {
+   const lastBombContext: { [key: number]: wrapper.IWrapBombNote[] } = {
       [NoteColor.RED]: [],
       [NoteColor.BLUE]: [],
    };
 
    const swingParity: {
-      [key: number]: parity.Parity<types.wrapper.IWrapColorNote, types.wrapper.IWrapBombNote>;
+      [key: number]: parity.Parity<wrapper.IWrapColorNote, wrapper.IWrapBombNote>;
    } = {
       [NoteColor.RED]: new parity.Parity(
          args.beatmap.data.difficulty.colorNotes,
@@ -121,8 +121,8 @@ function check(args: CheckArgs) {
       ),
    };
    const parityAry: {
-      warning: types.wrapper.IWrapColorNote[];
-      error: types.wrapper.IWrapColorNote[];
+      warning: wrapper.IWrapColorNote[];
+      error: wrapper.IWrapColorNote[];
    } = { warning: [], error: [] };
    for (let i = 0, len = noteContainer.length; i < len; i++) {
       const note = noteContainer[i];

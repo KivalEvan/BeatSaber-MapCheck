@@ -1,6 +1,6 @@
 import { Settings } from '../../settings';
 import { TimeProcessor } from 'bsmap';
-import { round, secToMmss } from 'bsmap/utils';
+import { round, secToMmss } from 'bsmap';
 import { UIInfoHTML } from './html';
 import { displayTableRow, hideTableRow } from './helpers';
 

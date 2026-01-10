@@ -1,9 +1,8 @@
-import * as types from 'bsmap/types';
+import { DifficultyName } from 'bsmap';
 
-type BackgroundColorType = types.DifficultyName | 'none';
+type BackgroundColorType = DifficultyName | 'none';
 const BackgroundColor: Record<BackgroundColorType, string> = {
    none: '',
-   'Expert+': 'accordion__label--bg-expertplus',
    ExpertPlus: 'accordion__label--bg-expertplus',
    Expert: 'accordion__label--bg-expert',
    Hard: 'accordion__label--bg-hard',

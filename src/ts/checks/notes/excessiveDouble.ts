@@ -1,4 +1,4 @@
-import { NoteColor } from 'bsmap/types';
+import { NoteColor } from 'bsmap';
 import {
    CheckArgs,
    CheckInputOrder,
@@ -10,7 +10,7 @@ import {
    OutputType,
 } from '../../types';
 import { UIInput } from '../../ui/helpers/input';
-import { round } from 'bsmap/utils';
+import { round } from 'bsmap';
 
 const name = 'Excessive Double';
 const description = 'Check for impractical amount of double notes.';

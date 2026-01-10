@@ -1,6 +1,5 @@
-import { isInline, NoteColor } from 'bsmap';
-import * as types from 'bsmap/types';
-import { swing } from 'bsmap/extensions';
+import { isInline, NoteColor, wrapper } from 'bsmap';
+import * as swing from 'bsmap/extensions/swing';
 import {
    CheckArgs,
    CheckInputOrder,
@@ -51,13 +50,13 @@ const constant = 0;
 function check(args: CheckArgs) {
    const { timeProcessor, njs } = args.beatmap;
 
-   const lastNote: { [key: number]: types.wrapper.IWrapColorNote } = {};
-   const swingNoteArray: { [key: number]: types.wrapper.IWrapColorNote[] } = {
+   const lastNote: { [key: number]: wrapper.IWrapColorNote } = {};
+   const swingNoteArray: { [key: number]: wrapper.IWrapColorNote[] } = {
       [NoteColor.RED]: [],
       [NoteColor.BLUE]: [],
    };
 
-   const arr: types.wrapper.IWrapColorNote[] = [];
+   const arr: wrapper.IWrapColorNote[] = [];
    for (let i = 0, len = args.beatmap.data.difficulty.colorNotes.length; i < len; i++) {
       const note = args.beatmap.data.difficulty.colorNotes[i];
       if (lastNote[note.color]) {

@@ -13,7 +13,6 @@ import {
    hasMappingExtensionsObstacleV2,
    hasMappingExtensionsObstacleV3,
    isInverseSlider,
-   isLaserRotationEventType,
    isNegativeValueObstacle,
    isOldChromaEventValue,
    isValidEventType,
@@ -25,8 +24,8 @@ import {
    Obstacle,
    RandomType,
    Waypoint,
+   wrapper,
 } from 'bsmap';
-import * as types from 'bsmap/types';
 import {
    CheckArgs,
    CheckInputOrder,
@@ -72,10 +71,10 @@ const tool: ICheck = {
    run,
 };
 
-function isValidBaseNote(obj: types.wrapper.IWrapBaseNote): boolean {
+function isValidBaseNote(obj: wrapper.IWrapBaseNote): boolean {
    return obj.direction >= 0 && obj.direction <= 8;
 }
-function isValidIndexFilter(obj: types.wrapper.IWrapIndexFilter): boolean {
+function isValidIndexFilter(obj: wrapper.IWrapIndexFilter): boolean {
    return (
       (obj.type === 1 || obj.type === 2) &&
       obj.p0 >= 0 &&
@@ -90,7 +89,7 @@ function isValidIndexFilter(obj: types.wrapper.IWrapIndexFilter): boolean {
       obj.limitAffectsType <= LimitAlsoAffectsType.ALL
    );
 }
-function isValidEventBox(obj: types.wrapper.IWrapEventBox): boolean {
+function isValidEventBox(obj: wrapper.IWrapEventBox): boolean {
    return (
       (obj.beatDistributionType === 1 || obj.beatDistributionType === 2) &&
       obj.easing >= -1 &&
@@ -98,19 +97,19 @@ function isValidEventBox(obj: types.wrapper.IWrapEventBox): boolean {
       isValidIndexFilter(obj.filter)
    );
 }
-function isValidEventBoxGroup(obj: types.wrapper.IWrapEventBoxGroup): boolean {
+function isValidEventBoxGroup(obj: wrapper.IWrapEventBoxGroup): boolean {
    return obj.boxes.every(isValidEventBox);
 }
-function isValidColorNote(obj: types.wrapper.IWrapColorNote): boolean {
+function isValidColorNote(obj: wrapper.IWrapColorNote): boolean {
    return isValidBaseNote(obj) && obj.posX >= 0 && obj.posX <= 3 && obj.posY >= 0 && obj.posY <= 2;
 }
-function isValidObstacle(obj: types.wrapper.IWrapObstacle): boolean {
+function isValidObstacle(obj: wrapper.IWrapObstacle): boolean {
    return !isZeroValueObstacle(obj) && !isNegativeValueObstacle(obj);
 }
-function isValidBombNote(obj: types.wrapper.IWrapBombNote): boolean {
+function isValidBombNote(obj: wrapper.IWrapBombNote): boolean {
    return isValidBaseNote(obj) && obj.posX >= 0 && obj.posX <= 3 && obj.posY >= 0 && obj.posY <= 2;
 }
-function isValidArc(obj: types.wrapper.IWrapArc): boolean {
+function isValidArc(obj: wrapper.IWrapArc): boolean {
    return (
       isValidBaseNote(obj) &&
       !(
@@ -123,7 +122,7 @@ function isValidArc(obj: types.wrapper.IWrapArc): boolean {
       )
    );
 }
-function isValidChain(obj: types.wrapper.IWrapChain): boolean {
+function isValidChain(obj: wrapper.IWrapChain): boolean {
    return (
       isValidBaseNote(obj) &&
       (!isInverseSlider(obj) ||
@@ -133,20 +132,16 @@ function isValidChain(obj: types.wrapper.IWrapChain): boolean {
          obj.tailPosY <= 2)
    );
 }
-function isValidRotationEvent(obj: types.wrapper.IWrapRotationEvent): boolean {
+function isValidRotationEvent(obj: wrapper.IWrapRotationEvent): boolean {
    return obj.executionTime === 0 || obj.executionTime === 1;
 }
-function isValidWaypoint(obj: types.wrapper.IWrapWaypoint): boolean {
+function isValidWaypoint(obj: wrapper.IWrapWaypoint): boolean {
    return obj.direction >= 0 && obj.direction <= 9 && obj.direction !== (8 as 0);
 }
-function isValidBasicEvent(obj: types.wrapper.IWrapBasicEvent): boolean {
-   return (
-      isValidEventType(obj.type) &&
-      obj.value >= 0 &&
-      !(!isLaserRotationEventType(obj.type) && obj.value > 12 && !isOldChromaEventValue(obj.value))
-   );
+function isValidBasicEvent(obj: wrapper.IWrapBasicEvent): boolean {
+   return isValidEventType(obj.type);
 }
-function isValidLightColorEvent(obj: types.wrapper.IWrapLightColorEvent): boolean {
+function isValidLightColorEvent(obj: wrapper.IWrapLightColorEvent): boolean {
    return (
       (obj.previous === 0 || obj.previous === 1) &&
       obj.easing >= -1 &&
@@ -157,17 +152,17 @@ function isValidLightColorEvent(obj: types.wrapper.IWrapLightColorEvent): boolea
       obj.frequency >= 0
    );
 }
-function isValidLightColorEventBox(obj: types.wrapper.IWrapLightColorEventBox): boolean {
+function isValidLightColorEventBox(obj: wrapper.IWrapLightColorEventBox): boolean {
    return (
       obj.events.every(isValidLightColorEvent) &&
       (obj.brightnessDistributionType === 1 || obj.brightnessDistributionType === 2) &&
       (obj.affectFirst === 0 || obj.affectFirst === 1)
    );
 }
-function isValidLightColorEventBoxGroup(obj: types.wrapper.IWrapLightColorEventBoxGroup): boolean {
+function isValidLightColorEventBoxGroup(obj: wrapper.IWrapLightColorEventBoxGroup): boolean {
    return obj.boxes.every(isValidLightColorEventBox);
 }
-function isValidLightRotationEvent(obj: types.wrapper.IWrapLightRotationEvent): boolean {
+function isValidLightRotationEvent(obj: wrapper.IWrapLightRotationEvent): boolean {
    return (
       (obj.previous === 0 || obj.previous === 1) &&
       obj.easing >= -1 &&
@@ -177,7 +172,7 @@ function isValidLightRotationEvent(obj: types.wrapper.IWrapLightRotationEvent): 
       obj.direction <= 2
    );
 }
-function isValidLightRotationEventBox(obj: types.wrapper.IWrapLightRotationEventBox): boolean {
+function isValidLightRotationEventBox(obj: wrapper.IWrapLightRotationEventBox): boolean {
    return (
       obj.events.every(isValidLightRotationEvent) &&
       (obj.rotationDistributionType === 1 || obj.rotationDistributionType === 2) &&
@@ -186,17 +181,13 @@ function isValidLightRotationEventBox(obj: types.wrapper.IWrapLightRotationEvent
       (obj.affectFirst === 0 || obj.affectFirst === 1)
    );
 }
-function isValidLightRotationEventBoxGroup(
-   obj: types.wrapper.IWrapLightRotationEventBoxGroup,
-): boolean {
+function isValidLightRotationEventBoxGroup(obj: wrapper.IWrapLightRotationEventBoxGroup): boolean {
    return obj.boxes.every(isValidLightRotationEventBox);
 }
-function isValidLightTranslationEvent(obj: types.wrapper.IWrapLightTranslationEvent): boolean {
+function isValidLightTranslationEvent(obj: wrapper.IWrapLightTranslationEvent): boolean {
    return (obj.previous === 0 || obj.previous === 1) && obj.easing >= -1 && obj.easing <= 103;
 }
-function isValidLightTranslationEventBox(
-   obj: types.wrapper.IWrapLightTranslationEventBox,
-): boolean {
+function isValidLightTranslationEventBox(obj: wrapper.IWrapLightTranslationEventBox): boolean {
    return (
       obj.events.every(isValidLightTranslationEvent) &&
       (obj.gapDistributionType === 1 || obj.gapDistributionType === 2) &&
@@ -206,24 +197,24 @@ function isValidLightTranslationEventBox(
    );
 }
 function isValidLightTranslationEventBoxGroup(
-   obj: types.wrapper.IWrapLightTranslationEventBoxGroup,
+   obj: wrapper.IWrapLightTranslationEventBoxGroup,
 ): boolean {
    return obj.boxes.every(isValidLightTranslationEventBox);
 }
-function isValidFxFloatEvent(obj: types.wrapper.IWrapFxEventFloat): boolean {
+function isValidFxFloatEvent(obj: wrapper.IWrapFxEventFloat): boolean {
    return (obj.previous === 0 || obj.previous === 1) && obj.easing >= -1 && obj.easing <= 103;
 }
-function isValidFxIntEvent(obj: types.wrapper.IWrapFxEventInt): boolean {
+function isValidFxIntEvent(obj: wrapper.IWrapFxEventInt): boolean {
    return obj.previous === 0 || obj.previous === 1;
 }
-function isValidFxEventBox(obj: types.wrapper.IWrapFxEventBox): boolean {
+function isValidFxEventBox(obj: wrapper.IWrapFxEventBox): boolean {
    return (
       obj.events.every(isValidFxFloatEvent) &&
       (obj.fxDistributionType === 1 || obj.fxDistributionType === 2) &&
       (obj.affectFirst === 0 || obj.affectFirst === 1)
    );
 }
-function isValidFxEventBoxGroup(obj: types.wrapper.IWrapFxEventBoxGroup): boolean {
+function isValidFxEventBoxGroup(obj: wrapper.IWrapFxEventBoxGroup): boolean {
    return obj.boxes.every(isValidFxEventBox);
 }
 
@@ -239,12 +230,12 @@ function run(args: CheckArgs): ICheckOutput[] {
       fxEventBoxGroups,
    } = args.beatmap.data.lightshow;
 
-   let noteResult: types.wrapper.IWrapBaseObject[] = [];
-   let obstacleResult: types.wrapper.IWrapBaseObject[] = [];
-   let bombResult: types.wrapper.IWrapBaseObject[] = [];
-   let arcResult: types.wrapper.IWrapBaseObject[] = [];
-   let chainResult: types.wrapper.IWrapBaseObject[] = [];
-   let rotationEventResult: types.wrapper.IWrapBaseObject[] = [];
+   let noteResult: wrapper.IWrapBaseObject[] = [];
+   let obstacleResult: wrapper.IWrapBaseObject[] = [];
+   let bombResult: wrapper.IWrapBaseObject[] = [];
+   let arcResult: wrapper.IWrapBaseObject[] = [];
+   let chainResult: wrapper.IWrapBaseObject[] = [];
+   let rotationEventResult: wrapper.IWrapBaseObject[] = [];
    if (!args.beatmap.info.customData._requirements?.includes('Mapping Extensions')) {
       if (args.beatmap.info.customData._requirements?.includes('Noodle Extensions')) {
          const hasMEObstacle =

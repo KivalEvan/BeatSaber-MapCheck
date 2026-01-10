@@ -1,13 +1,12 @@
 import {
-   EventList,
+   EnvironmentName,
    isFadeEventValue,
    isFlashEventValue,
-   isLightEventType,
    isOffEventValue,
    isOnEventValue,
-   TimeProcessor,
+   TrackDefinitions,
+   wrapper,
 } from 'bsmap';
-import * as types from 'bsmap/types';
 import {
    CheckArgs,
    CheckInputOrder,
@@ -20,6 +19,7 @@ import {
 } from '../../types';
 import { UIInput } from '../../ui/helpers/input';
 import { PrecalculateKey } from '../../types/precalculate';
+import { isLightEvent } from '../../utils/beatmap';
 
 const name = 'Unlit Bomb';
 const description = 'Check for lighting around bomb.';
@@ -62,18 +62,20 @@ const enum LightState {
 
 // omega scuffed clusterfuck help me pls im cryin rn
 const unlitBomb = (
-   bombs: types.wrapper.IWrapBombNote[],
-   events: types.wrapper.IWrapBasicEvent[],
-   environment: types.EnvironmentAllName,
+   bombs: wrapper.IWrapBombNote[],
+   events: wrapper.IWrapBasicEvent[],
+   environment: EnvironmentName,
 ) => {
    if (!events.length) {
       return [];
    }
-   const result: types.wrapper.IWrapBombNote[] = [];
-   const commonEvent = EventList[environment]?.[0] ?? EventList['DefaultEnvironment'][0];
+   const result: wrapper.IWrapBombNote[] = [];
+   const commonEvent = Object.keys(
+      TrackDefinitions[environment]?.[0] ?? TrackDefinitions['DefaultEnvironment'][0],
+   ).map(Number);
    const eventsLight = events
-      .filter((ev) => isLightEventType(ev.type, environment) && commonEvent.includes(ev.type))
-      .sort((a, b) => a.type - b.type) as types.wrapper.IWrapBasicEvent[];
+      .filter((ev) => isLightEvent(ev.type, environment) && ev.type in commonEvent)
+      .sort((a, b) => a.type - b.type) as wrapper.IWrapBasicEvent[];
    const eventState: {
       [key: number]: {
          state: LightState;

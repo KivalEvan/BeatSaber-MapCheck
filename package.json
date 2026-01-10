@@ -1,6 +1,6 @@
 {
   "name": "map-check",
-  "version": "2.7.4",
+  "version": "2.7.5",
   "description": "Web application for extensive overview for Beat Saber beatmap.",
   "private": true,
   "scripts": {
@@ -23,17 +23,17 @@
   },
   "homepage": "https://github.com/KivalEvan/BeatSaber-MapCheck#readme",
   "dependencies": {
-    "bsmap": "^2.2.9",
+    "bsmap": "^2.3.2",
     "jszip": "^3.10.1"
   },
   "devDependencies": {
-    "@types/node": "^24.3.1",
-    "@vitest/coverage-v8": "^3.2.4",
-    "jsdom": "^26.1.0",
-    "prettier": "^3.6.2",
-    "sass": "^1.92.0",
-    "typescript": "^5.9.2",
-    "vite": "^7.1.4",
-    "vitest": "^3.2.4"
+    "@types/node": "^25.0.5",
+    "@vitest/coverage-v8": "^4.0.16",
+    "jsdom": "^27.4.0",
+    "prettier": "^3.7.4",
+    "sass": "^1.97.2",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.1",
+    "vitest": "^4.0.0"
   }
 }

@@ -1,6 +1,5 @@
-import { NoteJumpSpeed } from 'bsmap';
-import { round } from 'bsmap/utils';
-import * as types from 'bsmap/types';
+import { NoteJumpSpeed, wrapper } from 'bsmap';
+import { round } from 'bsmap';
 import { IBeatmapContainer } from '../../types';
 
 export class UIStatsSettings {
@@ -34,7 +33,7 @@ export class UIStatsSettings {
       UIStatsSettings.#htmlSettingsRt = document.querySelector('#stats__table-settings-rt')!;
    }
 
-   static updateTable(info: types.wrapper.IWrapInfo, beatmap: IBeatmapContainer): void {
+   static updateTable(info: wrapper.IWrapInfo, beatmap: IBeatmapContainer): void {
       const njs = NoteJumpSpeed.create(
          info.audio.bpm,
          beatmap.info.njs || NoteJumpSpeed.FallbackNJS[beatmap.info.difficulty],

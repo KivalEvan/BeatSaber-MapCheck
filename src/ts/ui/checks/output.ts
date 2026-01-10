@@ -1,5 +1,4 @@
-import { round, secToMmss, secToMmssms } from 'bsmap/utils';
-import * as types from 'bsmap/types';
+import { round, secToMmss, secToMmssms, wrapper } from 'bsmap';
 import { Settings } from '../../settings';
 import { OutputStatus } from '../../types/checks/check';
 import { PrecalculateKey } from '../../types/precalculate';
@@ -40,13 +39,13 @@ export function printResult(label: string, text?: string, status?: OutputStatus)
    return htmlContainer;
 }
 
-function deduplicateFilter<T extends types.wrapper.IWrapBaseObject>(obj: T, i: number, ary: T[]) {
+function deduplicateFilter<T extends wrapper.IWrapBaseObject>(obj: T, i: number, ary: T[]) {
    return i === 0 || obj.time !== ary[i - 1].time;
 }
 
 export function printResultTime(
    label: string,
-   timeAry: types.wrapper.IWrapBaseObject[],
+   timeAry: wrapper.IWrapBaseObject[],
    symbol?: OutputStatus,
 ) {
    const htmlContainer = document.createElement('div');

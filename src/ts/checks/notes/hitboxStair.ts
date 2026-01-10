@@ -1,5 +1,4 @@
-import { ColorNote, NoteColor, NoteDirection, NoteDirectionSpace } from 'bsmap';
-import * as types from 'bsmap/types';
+import { ColorNote, NoteColor, NoteDirection, NoteDirectionSpace, wrapper } from 'bsmap';
 import {
    CheckArgs,
    CheckInputOrder,
@@ -11,7 +10,8 @@ import {
    OutputType,
 } from '../../types';
 import { UIInput } from '../../ui/helpers/input';
-import { placement, swing } from 'bsmap/extensions';
+import * as placement from 'bsmap/extensions/placement';
+import * as swing from 'bsmap/extensions/swing';
 import { PrecalculateKey } from '../../types/precalculate';
 
 const name = 'Hitbox Staircase';
@@ -48,8 +48,8 @@ const tool: ICheck = {
 };
 
 function isDouble(
-   note: types.wrapper.IWrapColorNote,
-   nc: types.wrapper.IWrapColorNote[],
+   note: wrapper.IWrapColorNote,
+   nc: wrapper.IWrapColorNote[],
    index: number,
 ): boolean {
    for (let i = index, len = nc.length; i < len; i++) {
@@ -68,10 +68,10 @@ function check(args: CheckArgs) {
    const notes = args.beatmap.data.difficulty.colorNotes;
    const hitboxTime = 0.15;
 
-   const lastNote: { [key: number]: types.wrapper.IWrapColorNote } = {};
+   const lastNote: { [key: number]: wrapper.IWrapColorNote } = {};
    const lastNoteDirection: { [key: number]: number } = {};
    const lastSpeed: { [key: number]: number } = {};
-   const swingNoteArray: { [key: number]: types.wrapper.IWrapColorNote[] } = {
+   const swingNoteArray: { [key: number]: wrapper.IWrapColorNote[] } = {
       [NoteColor.RED]: [],
       [NoteColor.BLUE]: [],
    };
@@ -81,7 +81,7 @@ function check(args: CheckArgs) {
    };
 
    // FIXME: use new system
-   const result: types.wrapper.IWrapColorNote[] = [];
+   const result: wrapper.IWrapColorNote[] = [];
    for (let i = 0, len = notes.length; i < len; i++) {
       const note = notes[i];
       const directionSpace = NoteDirectionSpace[note.direction as 0] || [0, 0];

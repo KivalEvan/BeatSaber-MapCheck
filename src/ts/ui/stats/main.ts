@@ -12,7 +12,7 @@ import { UIStatsNoteAngle } from './noteAngle';
 import { UIStatsNotePlacement } from './notePlacement';
 import { UIStatsObstacle } from './obstacle';
 import { UISelection } from '../selection';
-import * as types from 'bsmap/types';
+import { CharacteristicName, DifficultyName } from 'bsmap';
 
 export class UIStats {
    static init(): void {
@@ -32,10 +32,7 @@ export class UIStats {
       UISelection.selectionOnChangeHandlers.push(UIStats.updateStats);
    }
 
-   static updateStats(
-      characteristic?: types.CharacteristicName,
-      difficulty?: types.DifficultyName,
-   ): void {
+   static updateStats(characteristic?: CharacteristicName, difficulty?: DifficultyName): void {
       if (!State.data.info) {
          throw new Error(logPrefix + 'map info could not be found');
       }

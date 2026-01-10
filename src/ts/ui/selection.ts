@@ -1,8 +1,14 @@
 import { State } from '../state';
 import { UIInfo } from './information/main';
 import { UITab } from './helpers/tab';
-import { CharacteristicOrder, CharacteristicRename, DifficultyRename } from 'bsmap';
-import * as types from 'bsmap/types';
+import {
+   CharacteristicName,
+   CharacteristicOrder,
+   CharacteristicRename,
+   DifficultyName,
+   DifficultyRename,
+   wrapper,
+} from 'bsmap';
 
 export class UISelection {
    static #htmlSelectCharacteristic: HTMLDivElement;
@@ -22,11 +28,11 @@ export class UISelection {
    }
 
    static selectionOnChangeHandlers: ((
-      characteristic?: types.CharacteristicName,
-      difficulty?: types.DifficultyName,
+      characteristic?: CharacteristicName,
+      difficulty?: DifficultyName,
    ) => void)[] = [];
 
-   static populateSelectCharacteristic(info?: types.wrapper.IWrapInfo): void {
+   static populateSelectCharacteristic(info?: wrapper.IWrapInfo): void {
       while (UISelection.#htmlSelectCharacteristic.firstChild) {
          UISelection.#htmlSelectCharacteristic.removeChild(
             UISelection.#htmlSelectCharacteristic.firstChild,
@@ -92,7 +98,7 @@ export class UISelection {
       }
    }
 
-   static #populateSelectDifficulty(characteristic?: types.CharacteristicName): void {
+   static #populateSelectDifficulty(characteristic?: CharacteristicName): void {
       const beatmapInfo = State.data.info;
       let prevSelected = UISelection.getSelectedDifficulty();
       while (UISelection.#htmlSelectDifficulty.firstChild) {
@@ -186,17 +192,17 @@ export class UISelection {
       }
    }
 
-   static getSelectedCharacteristic(): types.CharacteristicName | null {
+   static getSelectedCharacteristic(): CharacteristicName | null {
       return (
          (UISelection.#htmlLoadedCharacteristic.filter((elem) => elem.checked)[0]
-            ?.value as types.CharacteristicName) ?? null
+            ?.value as CharacteristicName) ?? null
       );
    }
 
-   static getSelectedDifficulty(): types.DifficultyName | null {
+   static getSelectedDifficulty(): DifficultyName | null {
       return (
          (UISelection.#htmlLoadedDifficulty.filter((elem) => elem.checked)[0]
-            ?.value as types.DifficultyName) ?? null
+            ?.value as DifficultyName) ?? null
       );
    }
 }

@@ -1,5 +1,5 @@
 import { ISettingsProps } from './types/settings';
-import { deepCopy } from 'bsmap/utils';
+import { deepCopy } from 'bsmap';
 
 export class Settings {
    static default: ISettingsProps = {

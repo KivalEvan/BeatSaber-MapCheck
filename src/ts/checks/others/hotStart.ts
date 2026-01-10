@@ -1,4 +1,4 @@
-import { round } from 'bsmap/utils';
+import { round } from 'bsmap';
 import {
    CheckArgs,
    CheckInputOrder,

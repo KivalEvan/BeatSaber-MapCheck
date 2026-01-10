@@ -1,10 +1,8 @@
-import * as types from 'bsmap/types';
 import { UIInfoHTML } from './html';
 import { displayTableRow, hideTableRow } from './helpers';
+import { v2, v3 } from 'bsmap';
 
-export function setPointDefinitions(
-   obj?: types.v2.IPointDefinition | types.v3.IPointDefinition,
-): void {
+export function setPointDefinitions(obj?: v2.IPointDefinition | v3.IPointDefinition): void {
    if (obj == null) {
       hideTableRow(UIInfoHTML.htmlTablePointDefinitions);
       return;
@@ -20,7 +18,7 @@ export function setPointDefinitions(
          );
       }
    } else {
-      obj = obj as types.v3.IPointDefinition;
+      obj = obj as v3.IPointDefinition;
       for (const elem in obj) {
          if (!obj[elem]) {
             pointDef.push(`Error parsing pointDefinitions[${elem}]`);

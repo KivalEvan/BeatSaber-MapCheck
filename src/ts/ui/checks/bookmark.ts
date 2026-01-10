@@ -1,7 +1,6 @@
-import * as types from 'bsmap/types';
 import { State } from '../../state';
 import { UISelection } from '../selection';
-import { colorFrom, colorToHex, random } from 'bsmap/utils';
+import { colorFrom, colorToHex, DifficultyName, external, random } from 'bsmap';
 import { ICheckOutputTime, OutputType } from '../../types/checks/check';
 
 export class UIBookmark {
@@ -26,20 +25,19 @@ export class UIBookmark {
          return;
       }
 
-      const difficultyColor: { [k in types.DifficultyName]: string } = {
+      const difficultyColor: { [k in DifficultyName]: string } = {
          Easy: '3cb472',
          Normal: '57b0f4',
          Hard: 'ff6347',
          Expert: 'c02a43',
          ExpertPlus: '8f48db',
-         'Expert+': '8f48db',
       };
       const randomColor = colorToHex(
          colorFrom(random(0, 360), random(0.6, 0.8), random(0.75, 0.875), 'hsva'),
       )
          .slice(1)
          .toUpperCase();
-      const timed: types.external.IBookmarks = {
+      const timed: external.IBookmarkSet = {
          name: 'Map Check Auto-generated',
          difficulty,
          characteristic,
@@ -53,7 +51,7 @@ export class UIBookmark {
                      beat: v.time,
                      label: x.label,
                      text: '',
-                  } as types.external.IBookmarkElement;
+                  } as external.IBookmarkElement;
                });
             })
             .sort((a, b) => a.beat - b.beat),

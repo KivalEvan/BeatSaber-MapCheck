@@ -1,10 +1,9 @@
-import { ColorSchemeRename } from 'bsmap';
-import { colorToHex } from 'bsmap/utils';
-import * as types from 'bsmap/types';
+import { ColorSchemeRename, wrapper } from 'bsmap';
+import { colorToHex } from 'bsmap';
 import { UIInfoHTML } from './html';
 import { displayTableRow, hideTableRow } from './helpers';
 
-export function setColorScheme(colorSch?: types.wrapper.IWrapInfoColorScheme): void {
+export function setColorScheme(colorSch?: wrapper.IWrapInfoColorScheme): void {
    if (
       !colorSch ||
       (!colorSch.saberLeftColor &&

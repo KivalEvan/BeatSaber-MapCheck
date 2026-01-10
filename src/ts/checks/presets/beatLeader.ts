@@ -8,7 +8,6 @@ const preset: InputParamsList = {
    progression: {
       params: {
          enabled: false,
-         'Expert+': false,
          ExpertPlus: false,
          Expert: false,
          Hard: false,
@@ -38,7 +37,12 @@ const preset: InputParamsList = {
    hitboxReverseStair: { params: { enabled: true } },
    hitboxStair: { params: { enabled: true } },
    improperArc: {
-      params: { enabled: true, Disconnected: false, Intersected: false, Unrankable: false },
+      params: {
+         enabled: true,
+         Disconnected: false,
+         Intersected: false,
+         Unrankable: false,
+      },
    },
    improperChain: { params: { enabled: true, Unrankable: true } },
    improperWindow: { params: { enabled: true } },

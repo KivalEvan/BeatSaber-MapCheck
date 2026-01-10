@@ -20,8 +20,7 @@ import {
 import { setPointDefinitions } from './pointDefinition';
 import { setPlayTime } from './playTime';
 import { setColorScheme } from './colorScheme';
-import { getFirstInteractiveTime, getLastInteractiveTime } from 'bsmap';
-import * as types from 'bsmap/types';
+import { EnvironmentName, getFirstInteractiveTime, getLastInteractiveTime, wrapper } from 'bsmap';
 import { UIInfoHTML } from './html';
 import { State } from '../../state';
 
@@ -52,14 +51,14 @@ export class UIInfo {
       setCustomEvents();
    }
 
-   static setInfo(info: types.wrapper.IWrapInfo): void {
+   static setInfo(info: wrapper.IWrapInfo): void {
       UIHeader.setSongName(info.song.title);
       UIHeader.setSongSubname(info.song.subTitle);
       UIHeader.setSongAuthor(info.song.author);
       UIHeader.setSongBPM(info.audio.bpm);
       const mapperSet = new Set<string>();
       const lighterSet = new Set<string>();
-      const envSet = new Set<types.EnvironmentAllName>([
+      const envSet = new Set<EnvironmentName>([
          info.environmentBase.normal!,
          info.environmentBase.allDirections!,
       ]);
@@ -69,11 +68,11 @@ export class UIInfo {
          envSet.add(info.environmentNames.at(d.environmentId)!);
       });
       UIInfoMetadata.setLevelAuthor([...mapperSet], [...lighterSet]);
-      UIInfoMetadata.setEnvironment([...envSet].filter((e) => e) as types.EnvironmentAllName[]);
+      UIInfoMetadata.setEnvironment([...envSet].filter((e) => e) as EnvironmentName[]);
       UIInfoMetadata.setEditors(info.customData._editors);
    }
 
-   static setDiffInfoTable(info: types.wrapper.IWrapInfo, beatmap: IBeatmapContainer): void {
+   static setDiffInfoTable(info: wrapper.IWrapInfo, beatmap: IBeatmapContainer): void {
       setVersion(
          (beatmap.rawData as any)._version || (beatmap.rawData as any).version || 'Unknown',
       );

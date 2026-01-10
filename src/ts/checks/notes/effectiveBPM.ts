@@ -9,7 +9,7 @@ import {
    OutputType,
 } from '../../types';
 import { TimeProcessor } from 'bsmap';
-import { round } from 'bsmap/utils';
+import { round } from 'bsmap';
 import { UIInput } from '../../ui/helpers/input';
 
 const name = 'Effective BPM';

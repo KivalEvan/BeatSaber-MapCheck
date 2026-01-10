@@ -4,10 +4,10 @@ import {
    NoteDirectionFlip,
    resolveGridDistance,
    TimeProcessor,
+   wrapper,
 } from 'bsmap';
-import { round } from 'bsmap/utils';
-import * as types from 'bsmap/types';
-import { swing } from 'bsmap/extensions';
+import { round } from 'bsmap';
+import * as swing from 'bsmap/extensions/swing';
 import {
    CheckArgs,
    CheckInputOrder,
@@ -96,17 +96,16 @@ const tool: ICheck<{ distance: number; maxTime: number }> = {
    },
    input: {
       params: { enabled, distance: defaultDistance, maxTime: defaultMaxTime },
-      ui: 
-         UIInput.createBlock(
-            htmlEnabled,
-            document.createElement('br'),
-            htmlDistance,
-            document.createElement('br'),
-            htmlLabelMaxTime,
-            htmlInputMaxTime,
-            htmlLabelMaxBeat,
-            htmlInputMaxBeat,
-         ),
+      ui: UIInput.createBlock(
+         htmlEnabled,
+         document.createElement('br'),
+         htmlDistance,
+         document.createElement('br'),
+         htmlLabelMaxTime,
+         htmlInputMaxTime,
+         htmlLabelMaxBeat,
+         htmlInputMaxBeat,
+      ),
       update,
       adjustTime: adjustTimeHandler,
    },
@@ -125,19 +124,19 @@ function check(args: CheckArgs) {
    const { timeProcessor, noteContainer } = args.beatmap;
    const { maxTime, distance } = tool.input.params;
 
-   const lastNote: { [key: number]: types.wrapper.IWrapColorNote } = {};
+   const lastNote: { [key: number]: wrapper.IWrapColorNote } = {};
    const lastNoteDirection: { [key: number]: number } = {};
-   const startNoteDot: { [key: number]: types.wrapper.IWrapColorNote | null } = {};
-   const swingNoteArray: { [key: number]: types.wrapper.IWrapColorNote[] } = {
+   const startNoteDot: { [key: number]: wrapper.IWrapColorNote | null } = {};
+   const swingNoteArray: { [key: number]: wrapper.IWrapColorNote[] } = {
       [NoteColor.RED]: [],
       [NoteColor.BLUE]: [],
    };
-   const result: types.wrapper.IWrapColorNote[] = [];
+   const result: wrapper.IWrapColorNote[] = [];
    for (let i = 0, len = noteContainer.length; i < len; i++) {
       if (noteContainer[i].type !== ObjectContainerType.COLOR) {
          continue;
       }
-      const note = noteContainer[i].data as types.wrapper.IWrapColorNote;
+      const note = noteContainer[i].data as wrapper.IWrapColorNote;
       if (lastNote[note.color]) {
          if (swing.next(note, lastNote[note.color], timeProcessor, swingNoteArray[note.color])) {
             // FIXME: maybe fix rotation or something

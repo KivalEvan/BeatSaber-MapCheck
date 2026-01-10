@@ -1,4 +1,4 @@
-import type { CharacteristicName, DifficultyName } from 'bsmap/types';
+import type { CharacteristicName, DifficultyName } from 'bsmap';
 import { ICheckOutput } from './check';
 
 interface IAnalysisBase {

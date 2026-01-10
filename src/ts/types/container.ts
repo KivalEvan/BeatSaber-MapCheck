@@ -1,6 +1,6 @@
-import { NoteJumpSpeed, TimeProcessor } from 'bsmap';
-import * as types from 'bsmap/types';
-import { stats, swing } from 'bsmap/extensions';
+import { EnvironmentName, NoteJumpSpeed, TimeProcessor, v1, v2, v3, v4, wrapper } from 'bsmap';
+import * as stats from 'bsmap/extensions/stats';
+import * as swing from 'bsmap/extensions/swing';
 
 export const enum ObjectContainerType {
    OBJECT = -1,
@@ -13,27 +13,27 @@ export const enum ObjectContainerType {
 
 export interface IObjectContainerBase {
    readonly type: ObjectContainerType;
-   readonly data: types.wrapper.IWrapBaseObject;
+   readonly data: wrapper.IWrapBaseObject;
 }
 
 export interface IObjectContainerArc extends IObjectContainerBase {
    readonly type: ObjectContainerType.ARC;
-   readonly data: types.wrapper.IWrapArc;
+   readonly data: wrapper.IWrapArc;
 }
 
 export interface IObjectContainerBomb extends IObjectContainerBase {
    readonly type: ObjectContainerType.BOMB;
-   readonly data: types.wrapper.IWrapBombNote;
+   readonly data: wrapper.IWrapBombNote;
 }
 
 export interface IObjectContainerColor extends IObjectContainerBase {
    readonly type: ObjectContainerType.COLOR;
-   readonly data: types.wrapper.IWrapColorNote;
+   readonly data: wrapper.IWrapColorNote;
 }
 
 export interface IObjectContainerChain extends IObjectContainerBase {
    readonly type: ObjectContainerType.CHAIN;
-   readonly data: types.wrapper.IWrapChain;
+   readonly data: wrapper.IWrapChain;
 }
 
 export interface IObjectContainerLink extends IObjectContainerBase {
@@ -53,52 +53,52 @@ export interface IBeatmapAudio {
    readonly bpm: { time: number; bpm: number }[];
 }
 
-export interface IChainLink extends types.wrapper.IWrapBaseNote {
-   chain: types.wrapper.IWrapChain;
+export interface IChainLink extends wrapper.IWrapBaseNote {
+   chain: wrapper.IWrapChain;
 }
 
 interface IBeatmapContainerBase {
-   readonly info: types.wrapper.IWrapInfoBeatmap;
-   readonly environment: types.EnvironmentAllName;
+   readonly info: wrapper.IWrapInfoBeatmap;
+   readonly environment: EnvironmentName;
    readonly timeProcessor: TimeProcessor;
    readonly njs: NoteJumpSpeed;
-   readonly data: types.wrapper.IWrapBeatmap;
-   readonly swingAnalysis: swing.types.ISwingAnalysis;
+   readonly data: wrapper.IWrapBeatmap;
+   readonly swingAnalysis: swing.ISwingAnalysis;
    readonly noteContainer: IObjectContainer[];
    readonly score: number;
    readonly stats: {
-      readonly basicEvents: stats.types.ICountEvent;
-      readonly lightColorEventBoxGroups: stats.types.ICountEventBoxGroup;
-      readonly lightRotationEventBoxGroups: stats.types.ICountEventBoxGroup;
-      readonly lightTranslationEventBoxGroups: stats.types.ICountEventBoxGroup;
-      readonly fxEventBoxGroups: stats.types.ICountEventBoxGroup;
-      readonly notes: stats.types.ICountNote;
-      readonly bombs: stats.types.ICountStatsNote;
-      readonly arcs: stats.types.ICountNote;
-      readonly chains: stats.types.ICountNote;
-      readonly obstacles: stats.types.IObstacleCount;
+      readonly basicEvents: stats.ICountEvent;
+      readonly lightColorEventBoxGroups: stats.ICountEventBoxGroup;
+      readonly lightRotationEventBoxGroups: stats.ICountEventBoxGroup;
+      readonly lightTranslationEventBoxGroups: stats.ICountEventBoxGroup;
+      readonly fxEventBoxGroups: stats.ICountEventBoxGroup;
+      readonly notes: stats.ICountNote;
+      readonly bombs: stats.ICountStatsNote;
+      readonly arcs: stats.ICountNote;
+      readonly chains: stats.ICountNote;
+      readonly obstacles: stats.IObstacleCount;
    };
 }
 
 interface IBeatmapContainerV1 extends IBeatmapContainerBase {
    readonly rawVersion: 1;
-   readonly rawData: types.v1.IDifficulty;
+   readonly rawData: v1.IDifficulty;
 }
 
 interface IBeatmapContainerV2 extends IBeatmapContainerBase {
    readonly rawVersion: 2;
-   readonly rawData: types.v2.IDifficulty;
+   readonly rawData: v2.IDifficulty;
 }
 
 interface IBeatmapContainerV3 extends IBeatmapContainerBase {
    readonly rawVersion: 3;
-   readonly rawData: types.v3.IDifficulty;
+   readonly rawData: v3.IDifficulty;
 }
 
 interface IBeatmapContainerV4 extends IBeatmapContainerBase {
    readonly rawVersion: 4;
-   readonly rawData: types.v4.IDifficulty;
-   readonly rawLightshow: types.v4.ILightshow;
+   readonly rawData: v4.IDifficulty;
+   readonly rawLightshow: v4.ILightshow;
 }
 
 export type IBeatmapContainer =

@@ -13,7 +13,7 @@ import { UIInput } from '../../ui/helpers/input';
 import { NoteDirection } from 'bsmap';
 import { isNotePointing, noteDistance } from '../../utils/beatmap';
 import { PrecalculateKey } from '../../types/precalculate';
-import { shortRotDistance, vectorDistance } from 'bsmap/utils';
+import { lowestDifferenceMod, vectorDistance } from 'bsmap';
 
 const name = 'Improper Chain';
 const description = 'Check for correct use of chain.';
@@ -117,7 +117,7 @@ function chainImproper(args: CheckArgs) {
                            chain.data.customData[PrecalculateKey.TAIL_POSITION],
                         ) > 0.1 &&
                         chain.data.sliceCount > 1 &&
-                        shortRotDistance(
+                        lowestDifferenceMod(
                            other.data.customData[PrecalculateKey.ANGLE],
                            chain.data.customData[PrecalculateKey.ANGLE],
                            360,

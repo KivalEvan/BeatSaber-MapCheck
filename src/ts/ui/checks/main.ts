@@ -1,7 +1,6 @@
 import { applyBpmToComponents, getAllComponents } from '../../checks/components';
 import { LoadStatus, UILoading } from '../loading';
-import { TimeProcessor } from 'bsmap';
-import * as types from 'bsmap/types';
+import { CharacteristicName, DifficultyName, TimeProcessor } from 'bsmap';
 import { State } from '../../state';
 import { UISelection } from '../selection';
 import { CheckType, ICheckOutput, OutputType } from '../../types/checks/check';
@@ -9,7 +8,7 @@ import { printResult, printResultTime } from './output';
 import { UIPresets } from './presets';
 import { UIBookmark } from './bookmark';
 import { checkAllDifficulty, checkDifficulty, checkGeneral } from '../../checks/main';
-import { round } from 'bsmap/utils';
+import { round } from 'bsmap';
 
 const logPrefix = 'UI Checks: ';
 
@@ -76,8 +75,8 @@ export class UIChecks {
    }
 
    static displayOutputDifficulty(
-      characteristic?: types.CharacteristicName | null,
-      difficulty?: types.DifficultyName | null,
+      characteristic?: CharacteristicName | null,
+      difficulty?: DifficultyName | null,
    ): void {
       if (!characteristic && !difficulty) {
          characteristic = UISelection.getSelectedCharacteristic();
@@ -192,7 +191,10 @@ export class UIChecks {
       const endTime = performance.now();
       UILoading.status(
          LoadStatus.INFO,
-         `Re-analysed ${characteristic} ${difficulty} (took ${round((endTime - startTime) / 1000, 2)}s)`,
+         `Re-analysed ${characteristic} ${difficulty} (took ${round(
+            (endTime - startTime) / 1000,
+            2,
+         )}s)`,
       );
    }
 
@@ -207,7 +209,10 @@ export class UIChecks {
       checkAllDifficulty();
       UIChecks.displayOutputDifficulty(characteristic, difficulty);
       const endTime = performance.now();
-      UILoading.status(LoadStatus.INFO, `Re-analysed all difficulties (took ${round((endTime - startTime) / 1000, 2)}s)`);
+      UILoading.status(
+         LoadStatus.INFO,
+         `Re-analysed all difficulties (took ${round((endTime - startTime) / 1000, 2)}s)`,
+      );
    }
 
    static #applyGeneralHandler(): void {
@@ -216,6 +221,9 @@ export class UIChecks {
       checkGeneral();
       UIChecks.displayOutputGeneral();
       const endTime = performance.now();
-      UILoading.status(LoadStatus.INFO, `Re-analysed general (took ${round((endTime - startTime) / 1000, 2)}s)`);
+      UILoading.status(
+         LoadStatus.INFO,
+         `Re-analysed general (took ${round((endTime - startTime) / 1000, 2)}s)`,
+      );
    }
 }

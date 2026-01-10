@@ -4,7 +4,7 @@ import * as obstacles from '../obstacles/index.ts';
 import * as events from '../events/index.ts';
 import * as others from '../others/index.ts';
 import type { InputParamsList } from './_type';
-import { deepCopy } from 'bsmap/utils';
+import { deepCopy } from 'bsmap';
 
 const preset: InputParamsList = {
    aprilFools: {

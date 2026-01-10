@@ -1,7 +1,6 @@
-import { NoteColor, TimeProcessor } from 'bsmap';
-import { round } from 'bsmap/utils';
-import * as types from 'bsmap/types';
-import { swing } from 'bsmap/extensions';
+import { NoteColor, TimeProcessor, wrapper } from 'bsmap';
+import { round } from 'bsmap';
+import * as swing from 'bsmap/extensions/swing';
 import {
    CheckArgs,
    CheckInputOrder,
@@ -80,15 +79,14 @@ const tool: ICheck<{ maxTime: number }> = {
          enabled,
          maxTime: defaultMaxTime,
       },
-      ui: 
-         UIInput.createBlock(
-            htmlEnabled,
-            document.createElement('br'),
-            htmlLabelMinTime,
-            htmlInputMinTime,
-            htmlLabelMinPrec,
-            htmlInputMinPrec,
-         ),
+      ui: UIInput.createBlock(
+         htmlEnabled,
+         document.createElement('br'),
+         htmlLabelMinTime,
+         htmlInputMinTime,
+         htmlLabelMinPrec,
+         htmlInputMinPrec,
+      ),
       update,
       adjustTime: adjustTimeHandler,
    },
@@ -108,18 +106,18 @@ function check(beatmapItem: IBeatmapContainer) {
    const colorNotes = beatmapItem.data.difficulty.colorNotes;
    const { maxTime } = tool.input.params;
 
-   const lastNote: { [key: number]: types.wrapper.IWrapColorNote } = {};
-   const lastNotePause: { [key: number]: types.wrapper.IWrapColorNote } = {};
+   const lastNote: { [key: number]: wrapper.IWrapColorNote } = {};
+   const lastNotePause: { [key: number]: wrapper.IWrapColorNote } = {};
    const maybePause: { [key: number]: boolean } = {
       [NoteColor.RED]: false,
       [NoteColor.BLUE]: false,
    };
-   const swingNoteArray: { [key: number]: types.wrapper.IWrapColorNote[] } = {
+   const swingNoteArray: { [key: number]: wrapper.IWrapColorNote[] } = {
       [NoteColor.RED]: [],
       [NoteColor.BLUE]: [],
    };
 
-   const result: types.wrapper.IWrapColorNote[] = [];
+   const result: wrapper.IWrapColorNote[] = [];
    for (let i = 0, len = colorNotes.length; i < len; i++) {
       const note = colorNotes[i];
       if (lastNote[note.color]) {

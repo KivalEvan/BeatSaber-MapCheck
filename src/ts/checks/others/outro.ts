@@ -1,4 +1,4 @@
-import { round } from 'bsmap/utils';
+import { round } from 'bsmap';
 import {
    CheckArgs,
    CheckInputOrder,
@@ -66,12 +66,11 @@ const tool: ICheck<{ min: number; max: number }> = {
    },
    input: {
       params: { enabled, min: defaultMin, max: defaultMax },
-      ui: 
-         UIInput.createBlock(
-            UIInput.createBlock(htmlInput, htmlLabel),
-            UIInput.createBlock(htmlTimeMinLabel, htmlTimeMin),
-            UIInput.createBlock(htmlTimeMaxLabel, htmlTimeMax),
-         ),
+      ui: UIInput.createBlock(
+         UIInput.createBlock(htmlInput, htmlLabel),
+         UIInput.createBlock(htmlTimeMinLabel, htmlTimeMin),
+         UIInput.createBlock(htmlTimeMaxLabel, htmlTimeMax),
+      ),
       update,
    },
    run,

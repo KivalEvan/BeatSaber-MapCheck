@@ -1,11 +1,11 @@
-import { renamer } from 'bsmap/extensions';
+import { v2, v3 } from 'bsmap';
+import * as renamer from 'bsmap/extensions/renamer';
 import { UIInfoHTML } from './html';
 import { displayTableRow, hideTableRow } from './helpers';
-import * as types from 'bsmap/types';
 
 // this implementation looks hideous but whatever
 export function setEnvironmentEnhancement(
-   arr?: Partial<types.v2.IChromaEnvironment & types.v3.IChromaEnvironment>[],
+   arr?: Partial<v2.IChromaEnvironment & v3.IChromaEnvironment>[],
 ): void {
    if (arr == null || !arr.length) {
       hideTableRow(UIInfoHTML.htmlTableEnvironmentEnhancement);
@@ -31,7 +31,7 @@ export function setEnvironmentEnhancement(
             renamer.ChromaEnvironmentAbbreviation[
                key as keyof typeof renamer.ChromaEnvironmentAbbreviation
             ];
-         if (elem[key as keyof types.v3.IChromaEnvironment] != null) {
+         if (elem[key as keyof v3.IChromaEnvironment] != null) {
             keyArr.push(k);
          }
       }

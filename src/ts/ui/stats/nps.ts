@@ -1,6 +1,5 @@
-import { calculateNps, calculateNpsPeak, getLastInteractiveTime } from 'bsmap';
-import * as types from 'bsmap/types';
-import { round } from 'bsmap/utils';
+import { calculateNps, calculateNpsPeak, getLastInteractiveTime, wrapper } from 'bsmap';
+import { round } from 'bsmap';
 import { State } from '../../state';
 import { IBeatmapContainer } from '../../types';
 
@@ -19,7 +18,7 @@ export class UIStatsNPS {
       UIStatsNPS.#htmlNpsPeak4 = document.querySelector('#stats__table-nps-peak-4')!;
    }
 
-   static updateTable(_: types.wrapper.IWrapInfo, beatmap: IBeatmapContainer): void {
+   static updateTable(_: wrapper.IWrapInfo, beatmap: IBeatmapContainer): void {
       const timeProcessor = beatmap.timeProcessor;
       const duration = State.data.duration || 0;
       const mapDuration = timeProcessor.toRealTime(getLastInteractiveTime(beatmap.data));

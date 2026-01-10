@@ -1,5 +1,5 @@
+import { wrapper } from 'bsmap';
 import { IBeatmapContainer } from '../../types';
-import * as types from 'bsmap/types';
 
 export class UIStatsNote {
    static #htmlNcTotal: HTMLTableElement;
@@ -64,7 +64,7 @@ export class UIStatsNote {
       UIStatsNote.#htmlNcMeBomb = document.querySelector('#stats__table-nc-bomb-me')!;
    }
 
-   static updateTable(_: types.wrapper.IWrapInfo, beatmap: IBeatmapContainer): void {
+   static updateTable(_: wrapper.IWrapInfo, beatmap: IBeatmapContainer): void {
       const noteCount = beatmap.stats.notes;
       const arcCount = beatmap.stats.arcs;
       const chainCount = beatmap.stats.chains;

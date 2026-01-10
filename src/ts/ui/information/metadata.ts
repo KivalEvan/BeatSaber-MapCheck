@@ -1,6 +1,5 @@
 import { IContributorB64 } from '../../types';
-import { EnvironmentRename } from 'bsmap';
-import * as types from 'bsmap/types';
+import { EnvironmentName, EnvironmentRename, v2 } from 'bsmap';
 import { State } from '../../state';
 
 export class UIInfoMetadata {
@@ -52,7 +51,7 @@ export class UIInfoMetadata {
       }
    }
 
-   static setEnvironment(envs?: types.EnvironmentAllName[]): void {
+   static setEnvironment(envs?: EnvironmentName[]): void {
       if (!envs) {
          UIInfoMetadata.#htmlInfoEnvironment.textContent = '';
          return;
@@ -62,7 +61,7 @@ export class UIInfoMetadata {
          .join(', ');
    }
 
-   static setEditors(obj?: types.v2.IEditor): void {
+   static setEditors(obj?: v2.IEditor): void {
       if (!obj || !obj._lastEditedBy) {
          UIInfoMetadata.#htmlInfoEditors.classList.add('hidden');
          return;
@@ -71,7 +70,7 @@ export class UIInfoMetadata {
       const lastEdited = obj._lastEditedBy || 'Undefined';
       let text = 'Last edited on ' + lastEdited;
       if (obj[lastEdited]) {
-         const editor = obj[lastEdited] as types.v2.IEditorInfo;
+         const editor = obj[lastEdited] as v2.IEditorInfo;
          text += ' v' + editor.version;
       }
       UIInfoMetadata.#htmlInfoEditors.textContent = text;

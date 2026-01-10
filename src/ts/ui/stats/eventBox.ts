@@ -1,7 +1,7 @@
+import { wrapper } from 'bsmap';
 import { IBeatmapContainer } from '../../types';
 import { prefix } from './constants';
-import * as types from 'bsmap/types';
-import { renamer } from 'bsmap/extensions';
+import * as renamer from 'bsmap/extensions/renamer';
 
 function allPopulate(...d: Record<string, any>[]) {
    for (const r of d) {
@@ -64,7 +64,7 @@ export class UIStatsEventBox {
       UIStatsEventBox.#htmlEbgBaseFx = document.querySelector('#stats__table-ebg-base-fx')!;
    }
 
-   static updateTable(_: types.wrapper.IWrapInfo, beatmap: IBeatmapContainer): void {
+   static updateTable(_: wrapper.IWrapInfo, beatmap: IBeatmapContainer): void {
       const environment = beatmap.environment;
       const ebgColorCount = beatmap.stats.lightColorEventBoxGroups;
       const ebgRotationCount = beatmap.stats.lightRotationEventBoxGroups;

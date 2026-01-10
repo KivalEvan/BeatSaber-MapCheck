@@ -1,4 +1,4 @@
-import { deepCopy } from 'bsmap/utils';
+import { deepCopy } from 'bsmap';
 import { original, presets } from '../../checks/presets';
 import { updateChecksPreset } from '../../checks/components';
 import { Settings } from '../../settings';

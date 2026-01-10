@@ -10,9 +10,8 @@ import {
 } from '../../types';
 import { UIInput } from '../../ui/helpers/input';
 import { ObjectContainerType } from '../../types/container';
-import * as types from 'bsmap/types';
 import { PrecalculateKey } from '../../types/precalculate';
-import { shortRotDistance } from 'bsmap/utils';
+import { lowestDifferenceMod, NoteDirection, wrapper } from 'bsmap';
 import { isNoteSwingable } from '../../utils/beatmap';
 
 const name = 'Parallel Notes';
@@ -53,7 +52,7 @@ function check(args: CheckArgs) {
       (n) => n.type === ObjectContainerType.BOMB || n.type === ObjectContainerType.COLOR,
    );
 
-   const result: types.wrapper.IWrapColorNote[] = [];
+   const result: wrapper.IWrapColorNote[] = [];
    // to avoid multiple of stack popping up, ignore anything within this time
    let lastTime: number = 0;
    for (let i = 0, len = noteContainer.length; i < len; i++) {
@@ -76,9 +75,9 @@ function check(args: CheckArgs) {
          if (
             compareTo.type !== ObjectContainerType.COLOR ||
             currentNote.data.color !== compareTo.data.color ||
-            currentNote.data.direction === types.NoteDirection.ANY ||
-            compareTo.data.direction === types.NoteDirection.ANY ||
-            shortRotDistance(
+            currentNote.data.direction === NoteDirection.ANY ||
+            compareTo.data.direction === NoteDirection.ANY ||
+            lowestDifferenceMod(
                currentNote.data.customData[PrecalculateKey.ANGLE],
                compareTo.data.customData[PrecalculateKey.ANGLE],
                360,

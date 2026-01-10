@@ -4,7 +4,7 @@
 
 ```diff
 * Fixed arc tail proximity bomb not accounting existing tail note
-* Fixed angle offset option not respecting option
+* Fixed angle offset check not respecting option
 * Updated change log format
 ```
 
@@ -176,8 +176,6 @@ usage.
 * Potential index filter instantiating error fix
 * Fixed index filter validation error for random type and limit affects type
 ```
-
-### Fixed
 
 ## 2.5.7 [2022-11-16]
 

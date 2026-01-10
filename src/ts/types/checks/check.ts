@@ -1,5 +1,4 @@
-import { TimeProcessor } from 'bsmap';
-import * as types from 'bsmap/types';
+import { TimeProcessor, wrapper } from 'bsmap';
 import { IBeatmapContainer } from '../container';
 import { CheckInputOrder, CheckOutputOrder } from './order';
 
@@ -51,7 +50,7 @@ export interface ICheckOutputNumber extends ICheckOutputBase {
 
 export interface ICheckOutputTime extends ICheckOutputBase {
    readonly type: OutputType.TIME;
-   readonly value: types.wrapper.IWrapBaseObject[];
+   readonly value: wrapper.IWrapBaseObject[];
 }
 
 export interface ICheckOutputHTML extends ICheckOutputBase {
@@ -69,7 +68,7 @@ export interface CheckArgs {
    readonly audioDuration: number | null;
    readonly mapDuration: number | null;
    readonly beatmap: IBeatmapContainer;
-   readonly info: types.wrapper.IWrapInfo;
+   readonly info: wrapper.IWrapInfo;
 }
 
 export type ICheckRun = (args: CheckArgs) => ICheckOutput[];

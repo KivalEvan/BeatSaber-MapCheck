@@ -1,5 +1,4 @@
-import { round } from 'bsmap/utils';
-import * as types from 'bsmap/types';
+import { round, wrapper } from 'bsmap';
 import { IBeatmapContainer } from '../../types';
 
 export class UIStatsSPS {
@@ -31,7 +30,7 @@ export class UIStatsSPS {
       UIStatsSPS.#htmlSpsTotalBlue = document.querySelector('#stats__table-sps-total-blue')!;
    }
 
-   static updateTable(_: types.wrapper.IWrapInfo, beatmap: IBeatmapContainer): void {
+   static updateTable(_: wrapper.IWrapInfo, beatmap: IBeatmapContainer): void {
       const swingInfo = beatmap.swingAnalysis;
 
       UIStatsSPS.#htmlSpsAvgTotal.innerText = round(swingInfo.total.perSecond, 2).toString();

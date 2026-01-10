@@ -1,4 +1,3 @@
-import * as types from 'bsmap/types';
 import {
    CheckArgs,
    CheckInputOrder,
@@ -11,7 +10,15 @@ import {
 } from '../../types';
 import { ObjectContainerType } from '../../types/container';
 import { UIInput } from '../../ui/helpers/input';
-import { nearEqual, normalize, vectorDistance } from 'bsmap/utils';
+import {
+   nearEqual,
+   normalize,
+   NoteColor,
+   NoteDirection,
+   Vector3,
+   vectorDistance,
+   wrapper,
+} from 'bsmap';
 import { PrecalculateKey } from '../../types/precalculate';
 import { vectorLerp } from '../../utils/vector';
 import { isNotePointing, noteDistance } from '../../utils/beatmap';
@@ -37,7 +44,11 @@ function update() {
    cachedHtmlDiff.Intersected!.checked = tool.input.params.Intersected;
 }
 
-type Params = { Disconnected: boolean; Intersected: boolean; Unrankable: boolean };
+type Params = {
+   Disconnected: boolean;
+   Intersected: boolean;
+   Unrankable: boolean;
+};
 const tool: ICheck<Params> = {
    name,
    description,
@@ -47,7 +58,12 @@ const tool: ICheck<Params> = {
       output: CheckOutputOrder.NOTES_IMPROPER_ARC,
    },
    input: {
-      params: { enabled, Disconnected: true, Intersected: true, Unrankable: false },
+      params: {
+         enabled,
+         Disconnected: true,
+         Intersected: true,
+         Unrankable: false,
+      },
       ui: UIInput.createBlock(UIInput.createBlock(htmlInput, htmlLabel), htmlList),
       update,
    },
@@ -83,7 +99,7 @@ function arcImproper(args: CheckArgs) {
       )
       .sort((a, b) => a.data.time - b.data.time);
 
-   const result: types.wrapper.IWrapArc[] = [];
+   const result: wrapper.IWrapArc[] = [];
    for (let i = 0, len = noteContainer.length; i < len; i++) {
       const arc = noteContainer[i];
       if (arc.type === ObjectContainerType.ARC) {
@@ -204,7 +220,7 @@ function arcDisconnected(args: CheckArgs) {
       )
       .sort((a, b) => a.data.time - b.data.time);
 
-   const result: types.wrapper.IWrapArc[] = [];
+   const result: wrapper.IWrapArc[] = [];
    for (let i = 0, len = noteContainer.length; i < len; i++) {
       const arc = noteContainer[i];
       if (arc.type === ObjectContainerType.ARC) {
@@ -273,7 +289,7 @@ function arcIntersect(args: CheckArgs) {
       .sort((a, b) => a.data.time - b.data.time);
 
    const result = [];
-   let arcs: types.wrapper.IWrapArc[] = [];
+   let arcs: wrapper.IWrapArc[] = [];
    for (let i = 0, len = noteContainer.length; i < len; i++) {
       const object = noteContainer[i];
       if (object.type === ObjectContainerType.ARC) {
@@ -294,7 +310,7 @@ function arcIntersect(args: CheckArgs) {
             ) {
                continue;
             }
-            const bezier: types.Vector3[] = arc.customData[PrecalculateKey.BEZIER_PATH];
+            const bezier: Vector3[] = arc.customData[PrecalculateKey.BEZIER_PATH];
             let prevPoint = bezier[0];
             for (let k = 1; k < bezier.length; k++) {
                const currPoint = bezier[k];
@@ -333,19 +349,19 @@ function arcIntersect(args: CheckArgs) {
 
 function arcUnrankable(args: CheckArgs) {
    const arcs = args.beatmap.data.difficulty.arcs;
-   let actives: types.wrapper.IWrapArc[] = [];
+   let actives: wrapper.IWrapArc[] = [];
    const result = [];
    for (let i = 0; i < arcs.length; i++) {
       const arc = arcs[i];
       actives.push(arc);
       actives = actives.filter((a) => a.tailTime > arc.time);
-      const blueArcCount = actives.filter((a) => a.color === types.NoteColor.BLUE).length;
+      const blueArcCount = actives.filter((a) => a.color === NoteColor.BLUE).length;
       const redArcCount = actives.length - blueArcCount;
       if (
          blueArcCount > 5 ||
          redArcCount > 5 ||
          (arc.customData[PrecalculateKey.HEAD_NOTES].length &&
-            arc.direction === types.NoteDirection.ANY) ||
+            arc.direction === NoteDirection.ANY) ||
          arc.lengthMultiplier < 0.1 ||
          arc.lengthMultiplier > 1.5 ||
          arc.tailLengthMultiplier < 0.1 ||

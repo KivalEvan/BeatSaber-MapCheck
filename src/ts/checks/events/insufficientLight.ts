@@ -1,4 +1,3 @@
-import * as types from 'bsmap/types';
 import {
    CheckArgs,
    CheckInputOrder,
@@ -10,7 +9,13 @@ import {
    OutputType,
 } from '../../types';
 import { UIInput } from '../../ui/helpers/input';
-import { isLightEventType, isOffEventValue } from 'bsmap';
+import {
+   EnvironmentName,
+   isOffEventValue,
+   isV2Environment,
+   wrapper,
+} from 'bsmap';
+import { isLightEvent } from '../../utils/beatmap';
 
 const name = 'Insufficient Lighting Event';
 const description = 'Check if there is enough light event.';
@@ -45,13 +50,10 @@ const tool: ICheck = {
    run,
 };
 
-function sufficientLight(
-   events: types.wrapper.IWrapBasicEvent[],
-   environment: types.EnvironmentAllName,
-): boolean {
+function sufficientLight(events: wrapper.IWrapBasicEvent[], environment: EnvironmentName): boolean {
    let count = 0;
    for (let i = events.length - 1; i >= 0; i--) {
-      if (isLightEventType(events[i].type, environment) && !isOffEventValue(events[i].value)) {
+      if (isLightEvent(events[i].type, environment) && !isOffEventValue(events[i].value)) {
          count++;
          if (count > 10) {
             return true;
@@ -66,49 +68,24 @@ function run(args: CheckArgs): ICheckOutput[] {
    const result = sufficientLight(args.beatmap.data.lightshow.basicEvents, env);
 
    if (!result) {
-      switch (env) {
-         case 'DefaultEnvironment':
-         case 'OriginsEnvironment':
-         case 'TriangleEnvironment':
-         case 'NiceEnvironment':
-         case 'BigMirrorEnvironment':
-         case 'DragonsEnvironment':
-         case 'KDAEnvironment':
-         case 'MonstercatEnvironment':
-         case 'CrabRaveEnvironment':
-         case 'PanicEnvironment':
-         case 'RocketEnvironment':
-         case 'GreenDayEnvironment':
-         case 'GreenDayGrenadeEnvironment':
-         case 'TimbalandEnvironment':
-         case 'FitBeatEnvironment':
-         case 'LinkinParkEnvironment':
-         case 'BTSEnvironment':
-         case 'KaleidoscopeEnvironment':
-         case 'InterscopeEnvironment':
-         case 'SkrillexEnvironment':
-         case 'BillieEnvironment':
-         case 'HalloweenEnvironment':
-         case 'GagaEnvironment':
-         case 'GlassDesertEnvironment':
-            return [
-               {
-                  status: OutputStatus.RANK,
-                  label: 'Insufficient light event',
-                  type: OutputType.STRING,
-                  value: '',
-               },
-            ];
-         default:
-            return [
-               {
-                  status: OutputStatus.RANK,
-                  label: 'Unknown light event',
-                  type: OutputType.STRING,
-                  value: 'v3 environment light should be manually checked',
-               },
-            ];
-      }
+      if (isV2Environment(env))
+         return [
+            {
+               status: OutputStatus.RANK,
+               label: 'Insufficient light event',
+               type: OutputType.STRING,
+               value: '',
+            },
+         ];
+      else
+         return [
+            {
+               status: OutputStatus.RANK,
+               label: 'Unknown light event',
+               type: OutputType.STRING,
+               value: 'v3 environment light should be manually checked',
+            },
+         ];
    }
    return [];
 }

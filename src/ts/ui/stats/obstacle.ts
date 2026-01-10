@@ -1,4 +1,4 @@
-import * as types from 'bsmap/types';
+import { wrapper } from 'bsmap';
 import { IBeatmapContainer } from '../../types';
 
 export class UIStatsObstacle {
@@ -24,7 +24,7 @@ export class UIStatsObstacle {
       )!;
    }
 
-   static updateTable(_: types.wrapper.IWrapInfo, beatmap: IBeatmapContainer): void {
+   static updateTable(_: wrapper.IWrapInfo, beatmap: IBeatmapContainer): void {
       const obstacleCount = beatmap.stats.obstacles;
 
       UIStatsObstacle.#htmlObstacleTotal.textContent = obstacleCount.total.toString();

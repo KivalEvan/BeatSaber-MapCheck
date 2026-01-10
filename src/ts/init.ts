@@ -1,6 +1,6 @@
 import { uiInit } from './ui/init';
 import { main } from './main';
-import { logger } from 'bsmap';
+import { getLogger } from 'bsmap';
 import { PayloadType } from './types/main';
 import { Settings } from './settings';
 
@@ -9,7 +9,8 @@ function webTag(tag: string[]): string {
 }
 
 export async function init(): Promise<void> {
-   logger.tagPrint = webTag;
+   const logger = getLogger();
+   if (logger) logger.tagPrint = webTag;
 
    const url = new URL(location.href);
 

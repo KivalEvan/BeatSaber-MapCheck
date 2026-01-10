@@ -11,7 +11,7 @@ import {
 import { Settings } from '../../settings';
 import { State } from '../../state';
 import { UIInput } from '../../ui/helpers/input';
-import { secToMmss } from 'bsmap/utils';
+import { secToMmss } from 'bsmap';
 
 const name = 'Audio Duration';
 const description = 'For ranking purpose, check for audio duration.';

@@ -1,5 +1,5 @@
 import { EnvironmentRename } from 'bsmap';
-import { minToHhmmss } from 'bsmap/utils';
+import { minToHhmmss } from 'bsmap';
 import { UIInfoHTML } from './html';
 import { displayTableRow, hideTableRow } from './helpers';
 

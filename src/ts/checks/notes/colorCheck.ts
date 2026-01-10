@@ -1,6 +1,5 @@
-import { ColorScheme, EnvironmentSchemeName } from 'bsmap';
-import { colorFrom, deltaE00, round } from 'bsmap/utils';
-import * as types from 'bsmap/types';
+import { ColorArray, ColorScheme, EnvironmentSchemeName, wrapper } from 'bsmap';
+import { colorFrom, deltaE00, round } from 'bsmap';
 import {
    CheckArgs,
    CheckInputOrder,
@@ -19,7 +18,7 @@ const name = 'Color Check';
 const description = 'Compare note color with other colored note and the arrow on itself.';
 const enabled = true;
 
-const arrowColor: types.ColorArray = [1, 1, 1];
+const arrowColor: ColorArray = [1, 1, 1];
 
 const deltaELevel: { [key: number]: string } = {
    2.5: 'Indistinguishable',
@@ -102,7 +101,7 @@ function customColorArrowSimilarity(map: CheckArgs) {
 }
 
 const deltaECache = new Map<string, number>();
-function chromaColorCheck(map: CheckArgs): types.wrapper.IWrapBaseObject[] {
+function chromaColorCheck(map: CheckArgs): wrapper.IWrapBaseObject[] {
    if (
       (!map.beatmap.info.customData._suggestions?.includes('Chroma') &&
          !map.beatmap.info.customData._requirements?.includes('Chroma')) ||
@@ -112,7 +111,7 @@ function chromaColorCheck(map: CheckArgs): types.wrapper.IWrapBaseObject[] {
       return [];
    }
 
-   let result: types.wrapper.IWrapBaseObject[] = [];
+   let result: wrapper.IWrapBaseObject[] = [];
    let prevIndex = 0;
    const container = map.beatmap.noteContainer;
    for (let i = 0; i < container.length; i++) {

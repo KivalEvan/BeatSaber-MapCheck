@@ -1,4 +1,4 @@
-import { DifficultyRank } from 'bsmap/types';
+import { DifficultyRank } from 'bsmap';
 import {
    CheckArgs,
    CheckInputOrder,

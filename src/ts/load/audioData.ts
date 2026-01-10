@@ -1,22 +1,22 @@
 import JSZip from 'jszip';
 import { IBeatmapAudio } from '../types/container';
-import { logger } from 'bsmap';
-import * as types from 'bsmap/types';
+import { getLogger, v2, v4, wrapper } from 'bsmap';
 
 function tag(name: string) {
    return ['load', name];
 }
 
 export async function extractBpmInfo(
-   info: types.wrapper.IWrapInfo,
+   info: wrapper.IWrapInfo,
    zip: JSZip,
    path = '',
 ): Promise<IBeatmapAudio | null> {
+   const logger = getLogger();
    if (info.version === 4) {
       const audioFile = zip.file(path + info.audio.audioDataFilename);
-      logger.tInfo(tag('extractBPMInfo'), 'loading', info.audio.audioDataFilename);
+      logger?.tInfo(tag('extractBPMInfo'), 'loading', info.audio.audioDataFilename);
       if (audioFile) {
-         const bpmInfo = (await audioFile.async('string').then(JSON.parse)) as types.v4.IAudio;
+         const bpmInfo = (await audioFile.async('string').then(JSON.parse)) as v4.IAudio;
          return {
             duration: bpmInfo.songSampleCount / bpmInfo.songFrequency,
             bpm: bpmInfo.bpmData.map((r) => ({
@@ -27,9 +27,9 @@ export async function extractBpmInfo(
       }
    }
    const bpmFile = zip.file(path + 'BPMInfo.dat');
-   logger.tInfo(tag('extractBPMInfo'), 'loading BPMInfo.dat');
+   logger?.tInfo(tag('extractBPMInfo'), 'loading BPMInfo.dat');
    if (bpmFile) {
-      const bpmInfo = (await bpmFile.async('string').then(JSON.parse)) as types.v2.IBPMInfo;
+      const bpmInfo = (await bpmFile.async('string').then(JSON.parse)) as v2.IBPMInfo;
       return {
          duration: bpmInfo._songSampleCount / bpmInfo._songFrequency,
          bpm: bpmInfo._regions.map((r) => ({

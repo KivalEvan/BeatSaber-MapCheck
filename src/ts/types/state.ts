@@ -1,7 +1,7 @@
 import { IBeatmapContainer } from './container';
 import { IContributorB64 } from './contributor';
 import { IAnalysis } from './checks/analysis';
-import * as types from 'bsmap/types';
+import { wrapper } from 'bsmap';
 
 export interface IStateFlag {
    nested: boolean;
@@ -15,7 +15,7 @@ export interface IStateFlag {
 }
 
 export interface IStateData {
-   info: types.wrapper.IWrapInfo | null;
+   info: wrapper.IWrapInfo | null;
    beatmaps: IBeatmapContainer[];
    contributors: IContributorB64[];
    analysis: IAnalysis | null;

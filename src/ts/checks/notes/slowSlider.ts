@@ -1,5 +1,5 @@
 import { TimeProcessor } from 'bsmap';
-import { round } from 'bsmap/utils';
+import { round } from 'bsmap';
 import {
    CheckArgs,
    CheckInputOrder,
@@ -77,15 +77,14 @@ const tool: ICheck<{ minSpeed: number }> = {
          enabled,
          minSpeed: defaultSpeed,
       },
-      ui: 
-         UIInput.createBlock(
-            htmlEnabled,
-            document.createElement('br'),
-            htmlLabelMinTime,
-            htmlInputMinTime,
-            htmlLabelMinPrec,
-            htmlInputMinPrec,
-         ),
+      ui: UIInput.createBlock(
+         htmlEnabled,
+         document.createElement('br'),
+         htmlLabelMinTime,
+         htmlInputMinTime,
+         htmlLabelMinPrec,
+         htmlInputMinPrec,
+      ),
       update,
       adjustTime: adjustTimeHandler,
    },

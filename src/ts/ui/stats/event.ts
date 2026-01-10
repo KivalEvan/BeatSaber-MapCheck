@@ -1,7 +1,7 @@
-import { renamer } from 'bsmap/extensions';
+import * as renamer from 'bsmap/extensions/renamer';
 import { IBeatmapContainer } from '../../types';
 import { prefix } from './constants';
-import * as types from 'bsmap/types';
+import { wrapper } from 'bsmap';
 
 export class UIStatsEvent {
    static #htmlEventsContent: HTMLTableElement;
@@ -10,7 +10,7 @@ export class UIStatsEvent {
       UIStatsEvent.#htmlEventsContent = document.querySelector('#stats__table-events-content')!;
    }
 
-   static updateTable(_: types.wrapper.IWrapInfo, beatmap: IBeatmapContainer): void {
+   static updateTable(_: wrapper.IWrapInfo, beatmap: IBeatmapContainer): void {
       const environment = beatmap.environment;
       const eventCount = beatmap.stats.basicEvents;
       let total = 0;

@@ -1,4 +1,4 @@
-import { round, secToMmssms } from 'bsmap/utils';
+import { round, secToMmssms } from 'bsmap';
 import { State } from '../state';
 
 export class UIHeader {

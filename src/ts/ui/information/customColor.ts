@@ -1,14 +1,17 @@
-import { ColorScheme, CustomColorRename, EnvironmentSchemeName } from 'bsmap';
-import { colorToHex } from 'bsmap/utils';
-import * as types from 'bsmap/types';
+import {
+   ColorScheme,
+   CustomColorRename,
+   EnvironmentName,
+   EnvironmentSchemeName,
+   IColor,
+   v2,
+} from 'bsmap';
+import { colorToHex } from 'bsmap';
 import uiPanel from '../helpers/panel';
 import { UIInfoHTML } from './html';
 import { displayTableRow, hideTableRow } from './helpers';
 
-export function setCustomColor(
-   customColor?: types.v2.IColorScheme,
-   environment?: types.EnvironmentName,
-): void {
+export function setCustomColor(customColor?: v2.IColorScheme, environment?: EnvironmentName): void {
    if (
       !customColor ||
       (!customColor._colorLeft &&
@@ -27,7 +30,7 @@ export function setCustomColor(
    if (!environment) {
       environment = 'DefaultEnvironment';
    }
-   const existColor: { [key: string]: Omit<types.IColor, 'a'> | null } = {
+   const existColor: { [key: string]: Omit<IColor, 'a'> | null } = {
       _colorLeft: ColorScheme[EnvironmentSchemeName[environment]]?._colorLeft || null,
       _colorRight: ColorScheme[EnvironmentSchemeName[environment]]?._colorRight || null,
       _envColorLeft: ColorScheme[EnvironmentSchemeName[environment]]?._envColorLeft || null,

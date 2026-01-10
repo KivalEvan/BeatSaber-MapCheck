@@ -4,36 +4,44 @@ import { Settings } from '../settings';
 import { IObjectContainer, ObjectContainerType } from '../types/container';
 import {
    Beatmap,
+   bezierCubic,
+   bezierQuad,
    calculateScore,
    ColorScheme,
+   degToRad,
+   EnvironmentName,
    EnvironmentSchemeName,
+   getLogger,
+   isVector2,
+   lerp,
    loadDifficulty,
    loadLightshow,
-   logger,
+   lowestDifferenceMod,
+   mod,
+   ModRequirements,
+   nearEqual,
+   NoteColor,
+   NoteDirection,
    NoteDirectionAngle,
    NoteJumpSpeed,
+   radToDeg,
    resolveGridPosition,
    resolveNoteAngle,
    TimeProcessor,
-} from 'bsmap';
-import * as types from 'bsmap/types';
-import { stats, swing } from 'bsmap/extensions';
-import { PrecalculateKey } from '../types/precalculate';
-import { getArcPath, isNoteSwingableRaw } from '../utils/beatmap';
-import {
-   degToRad,
-   isVector2,
-   lerp,
-   mod,
-   nearEqual,
-   radToDeg,
-   shortRotDistance,
+   v3,
+   Vector2,
+   Vector3,
    vectorAdd,
    vectorMagnitude,
    vectorMul,
    vectorSub,
-} from 'bsmap/utils';
-import { bezierCurve, cubicBezier } from '../utils/cubicBezier';
+   wrapper,
+} from 'bsmap';
+import * as stats from 'bsmap/extensions/stats';
+import * as swing from 'bsmap/extensions/swing';
+import { PrecalculateKey } from '../types/precalculate';
+import { getArcPath, isNoteSwingableRaw } from '../utils/beatmap';
+import {} from 'bsmap';
 
 function tag(name: string) {
    return ['load', name];
@@ -41,17 +49,18 @@ function tag(name: string) {
 
 export async function extractLightshow(
    zip: JSZip,
-   infoDiff: types.wrapper.IWrapInfoBeatmap,
+   infoDiff: wrapper.IWrapInfoBeatmap,
    path = '',
-): Promise<[any, types.wrapper.IWrapBeatmap] | null> {
+): Promise<[any, wrapper.IWrapBeatmap] | null> {
+   const logger = getLogger();
    const file = zip.file(path + infoDiff.lightshowFilename);
    if (!file) {
-      logger.tError(
+      logger?.tError(
          tag('extractLightshow'),
          `Missing ${infoDiff.lightshowFilename} lightshow file for ${infoDiff.characteristic} ${infoDiff.difficulty}, ignoring.`,
       );
    }
-   logger.tInfo(
+   logger?.tInfo(
       tag('extractLightshow'),
       `Loading ${infoDiff.characteristic} ${infoDiff.difficulty} lightshow`,
    );
@@ -63,7 +72,7 @@ export async function extractLightshow(
       });
       return [json, lightshow];
    } catch (err) {
-      logger.tError(
+      logger?.tError(
          tag('extractLightshow'),
          `Could not load ${infoDiff.lightshowFilename} lightshow file; ${err}`,
       );
@@ -72,22 +81,23 @@ export async function extractLightshow(
 }
 
 export function extractBeatmaps(
-   info: types.wrapper.IWrapInfo,
+   info: wrapper.IWrapInfo,
    zip: JSZip,
    path = '',
 ): Promise<IBeatmapContainer | null>[] {
-   const loaded: Record<string, Promise<[any, types.wrapper.IWrapBeatmap] | null>> = {};
+   const loaded: Record<string, Promise<[any, wrapper.IWrapBeatmap] | null>> = {};
+   const logger = getLogger();
    return info.difficulties.map(async (d) => {
       const infoDiff = d;
       const difficultyFile = zip.file(path + infoDiff.filename);
       if (!difficultyFile) {
-         logger.tError(
+         logger?.tError(
             tag('extractBeatmaps'),
             `Missing ${infoDiff.filename} file for ${infoDiff.characteristic} ${infoDiff.difficulty}, ignoring.`,
          );
          return null;
       }
-      logger.tInfo(
+      logger?.tInfo(
          tag('extractBeatmaps'),
          `Loading ${infoDiff.characteristic} ${infoDiff.difficulty}`,
       );
@@ -107,7 +117,7 @@ export function extractBeatmaps(
       if (jsonVerStr) {
          jsonDifficultyVer = parseInt(jsonVerStr);
       } else {
-         logger.tWarn(
+         logger?.tWarn(
             tag('extractBeatmaps'),
             'Could not identify beatmap version from JSON, assume implicit version',
             2,
@@ -116,7 +126,7 @@ export function extractBeatmaps(
       }
 
       if (jsonDifficulty._notes && jsonDifficulty.version) {
-         logger.tError(
+         logger?.tError(
             tag('extractBeatmaps'),
             `${infoDiff.characteristic} ${infoDiff.difficulty} contains 2 version of the map in the same file, attempting to load v3 instead`,
          );
@@ -151,9 +161,9 @@ export function extractBeatmaps(
 }
 
 export function createBeatmapContainer(
-   info: types.wrapper.IWrapInfo,
-   infoBeatmap: types.wrapper.IWrapInfoBeatmap,
-   beatmap: types.wrapper.IWrapBeatmap,
+   info: wrapper.IWrapInfo,
+   infoBeatmap: wrapper.IWrapInfoBeatmap,
+   beatmap: wrapper.IWrapBeatmap,
    jsonDifficulty: any,
    jsonLightshow: any,
    version: number,
@@ -163,7 +173,7 @@ export function createBeatmapContainer(
       version === 3
          ? [
               ...(beatmap.difficulty.customData.BPMChanges ?? []),
-              ...(jsonDifficulty.bpmEvents ?? []).map((be: types.v3.IBPMEvent) => be),
+              ...(jsonDifficulty.bpmEvents ?? []).map((be: v3.IBPMEvent) => be),
            ]
          : version === 2
            ? (beatmap.difficulty.customData._BPMChanges ??
@@ -242,7 +252,7 @@ export function createBeatmapContainer(
 }
 
 function getNoteContainer(
-   beatmap: types.wrapper.IWrapBeatmap,
+   beatmap: wrapper.IWrapBeatmap,
    timeProcessor: TimeProcessor,
 ): IObjectContainer[] {
    return [
@@ -272,13 +282,13 @@ function getNoteContainer(
 }
 
 function precalculateObjects(
-   mapInfo: types.wrapper.IWrapInfoBeatmap,
-   colorScheme: types.wrapper.IWrapInfoColorScheme,
-   environment: types.EnvironmentAllName,
-   beatmap: types.wrapper.IWrapBeatmap,
-   swingAnalysis: swing.types.ISwingAnalysis,
+   mapInfo: wrapper.IWrapInfoBeatmap,
+   colorScheme: wrapper.IWrapInfoColorScheme,
+   environment: EnvironmentName,
+   beatmap: wrapper.IWrapBeatmap,
+   swingAnalysis: swing.ISwingAnalysis,
    timeProcessor: TimeProcessor,
-   mod?: { [key in types.ModRequirements]?: boolean },
+   mod?: { [key in ModRequirements]?: boolean },
    version?: number,
 ) {
    const applyTime = applyTimeFn(timeProcessor);
@@ -351,8 +361,8 @@ function precalculateObjects(
 
          if (
             nearEqual(cont.data[0].time, cont.data[1].time) &&
-            (cont.data[0].direction !== types.NoteDirection.ANY &&
-            cont.data[1].direction !== types.NoteDirection.ANY
+            (cont.data[0].direction !== NoteDirection.ANY &&
+            cont.data[1].direction !== NoteDirection.ANY
                ? resolveNoteAngle(cont.data[0].direction) ===
                     resolveNoteAngle(cont.data[1].direction) &&
                  isNoteSwingableRaw(cont.data[0], cont.data[1], 30)
@@ -368,7 +378,8 @@ function precalculateObjects(
             cont.data[0].customData[PrecalculateKey.ANGLE] = cont.data[1].customData[
                PrecalculateKey.ANGLE
             ] =
-               shortRotDistance(direction, angle1, 360) > shortRotDistance(direction, angle2, 360)
+               lowestDifferenceMod(direction, angle1, 360) >
+               lowestDifferenceMod(direction, angle2, 360)
                   ? angle2
                   : angle1;
             cont.data[0].customData[PrecalculateKey.SNAPPED] = cont.data[1].customData[
@@ -392,8 +403,8 @@ function precalculateObjects(
 }
 
 function applyPosition(
-   object: types.wrapper.IWrapGridObject & Partial<types.wrapper.IWrapBaseSlider>,
-   mod?: { [key in types.ModRequirements]?: boolean },
+   object: wrapper.IWrapGridObject & Partial<wrapper.IWrapBaseSlider>,
+   mod?: { [key in ModRequirements]?: boolean },
    version?: number,
 ) {
    object.customData[PrecalculateKey.POSITION] = resolveGridPosition(object);
@@ -455,13 +466,13 @@ function applyPosition(
 }
 
 function applyAngle(
-   object: types.wrapper.IWrapBaseNote & { angleOffset?: number } & Partial<types.wrapper.IWrapArc>,
-   mod?: { [key in types.ModRequirements]?: boolean },
+   object: wrapper.IWrapBaseNote & { angleOffset?: number } & Partial<wrapper.IWrapArc>,
+   mod?: { [key in ModRequirements]?: boolean },
    version?: number,
 ) {
    object.customData[PrecalculateKey.ANGLE] =
       resolveNoteAngle(object.direction) + (object.angleOffset || 0);
-   if (object.direction === types.NoteDirection.ANY) {
+   if (object.direction === NoteDirection.ANY) {
       object.customData[PrecalculateKey.ANGLE] += 180;
    }
    NoteDirectionAngle;
@@ -484,7 +495,7 @@ function applyAngle(
    }
    if (typeof object.tailDirection === 'number') {
       object.customData[PrecalculateKey.TAIL_ANGLE] = resolveNoteAngle(object.tailDirection);
-      if (object.tailDirection === types.NoteDirection.ANY) {
+      if (object.tailDirection === NoteDirection.ANY) {
          object.customData[PrecalculateKey.TAIL_ANGLE] += 180;
       }
       if (mod?.['Mapping Extensions']) {
@@ -497,7 +508,7 @@ function applyAngle(
 }
 
 function applyTimeFn(timeProcessor: TimeProcessor) {
-   return function (object: types.wrapper.IWrapBaseObject) {
+   return function (object: wrapper.IWrapBaseObject) {
       object.customData[PrecalculateKey.SECOND_TIME] = timeProcessor.toRealTime(object.time);
       object.customData[PrecalculateKey.BEAT_TIME] = timeProcessor.adjustTime(object.time);
       if ('tailTime' in object) {
@@ -518,9 +529,9 @@ function applyTimeFn(timeProcessor: TimeProcessor) {
 }
 
 function applyChromaFn(
-   mapInfo: types.wrapper.IWrapInfoBeatmap,
-   colorScheme: types.wrapper.IWrapInfoColorScheme | null,
-   environment: types.EnvironmentAllName,
+   mapInfo: wrapper.IWrapInfoBeatmap,
+   colorScheme: wrapper.IWrapInfoColorScheme | null,
+   environment: EnvironmentName,
    version?: number,
 ) {
    const colorLeft =
@@ -531,7 +542,7 @@ function applyChromaFn(
       mapInfo.customData?._colorRight ??
       colorScheme?.saberRightColor ??
       ColorScheme[EnvironmentSchemeName[environment] ?? 'The First']._colorRight;
-   return function (object: types.wrapper.IWrapBaseNote) {
+   return function (object: wrapper.IWrapBaseNote) {
       let color = null;
       switch (version) {
          case 2:
@@ -542,13 +553,13 @@ function applyChromaFn(
             break;
       }
       object.customData[PrecalculateKey.COLOR] =
-         object.color === types.NoteColor.RED ? (color ?? colorLeft) : (color ?? colorRight);
+         object.color === NoteColor.RED ? (color ?? colorLeft) : (color ?? colorRight);
    };
 }
 
-function applyBezier(arc: types.wrapper.IWrapArc) {
+function applyBezier(arc: wrapper.IWrapArc) {
    const RESOLUTION = 15;
-   const result: types.Vector3[] = Array(RESOLUTION + 1);
+   const result: Vector3[] = Array(RESOLUTION + 1);
 
    const bezierPath = getArcPath(arc);
    const segmentSize = RESOLUTION / bezierPath.segmentsCount;
@@ -556,35 +567,35 @@ function applyBezier(arc: types.wrapper.IWrapArc) {
       const points = bezierPath.getPointsInSegment(segmentIndex);
       for (let i = 0; i < segmentSize; i++) {
          const index = segmentIndex * segmentSize + i;
-         result[index] = cubicBezier(points[0], points[1], points[2], points[3], i / segmentSize);
+         result[index] = bezierCubic(points[0], points[1], points[2], points[3], i / segmentSize)[0];
          result[index][2] += arc.customData[PrecalculateKey.SECOND_TIME];
       }
    }
    const index = RESOLUTION / segmentSize;
    const points = bezierPath.getPointsInSegment(Math.floor(index - 1));
-   result[RESOLUTION] = cubicBezier(points[0], points[1], points[2], points[3], index);
+   result[RESOLUTION] = bezierCubic(points[0], points[1], points[2], points[3], index)[0];
    result[RESOLUTION][2] += arc.customData[PrecalculateKey.SECOND_TIME];
 
    arc.customData[PrecalculateKey.BEZIER_PATH] = result;
 }
 
 export function createChainLinks(
-   chain: types.wrapper.IWrapChain,
+   chain: wrapper.IWrapChain,
    timeProcessor: TimeProcessor,
 ): IChainLink[] {
-   const p2: types.Vector2 = vectorSub(
+   const p2: Vector2 = vectorSub(
       chain.customData[PrecalculateKey.TAIL_POSITION],
       chain.customData[PrecalculateKey.POSITION],
    );
 
    const mag = vectorMagnitude(p2);
    const f = degToRad(chain.customData[PrecalculateKey.ANGLE] - 90);
-   const p1: types.Vector2 = vectorMul([Math.cos(f), Math.sin(f)], mag * 0.5);
+   const p1: Vector2 = vectorMul([Math.cos(f), Math.sin(f)], mag * 0.5);
 
    const result: IChainLink[] = [];
    for (let index = 1; index < chain.sliceCount; index++) {
       const alpha = index / (chain.sliceCount - 1);
-      let [pos, tangent] = bezierCurve([0, 0], p1, p2, alpha * chain.squish);
+      let [pos, tangent] = bezierQuad([0, 0], p1, p2, alpha * chain.squish);
       pos = vectorAdd(chain.customData[PrecalculateKey.POSITION], pos);
       const linkTime = lerp(alpha, chain.time, chain.tailTime);
       result.push({

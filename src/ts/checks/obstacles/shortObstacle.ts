@@ -1,5 +1,4 @@
-import { Obstacle, PosX, PosY } from 'bsmap';
-import * as types from 'bsmap/types';
+import { Obstacle, PosX, PosY, wrapper } from 'bsmap';
 import {
    CheckArgs,
    CheckInputOrder,
@@ -12,7 +11,7 @@ import {
 } from '../../types';
 import { UIInput } from '../../ui/helpers/input';
 import { PrecalculateKey } from '../../types/precalculate';
-import { nearEqual } from 'bsmap/utils';
+import { nearEqual } from 'bsmap';
 
 const name = '<15ms Obstacle';
 const description =
@@ -49,8 +48,8 @@ const tool: ICheck<{ minDuration: number }> = {
 };
 
 function customIsLonger(
-   o: types.wrapper.IWrapObstacle,
-   compareTo: types.wrapper.IWrapObstacle,
+   o: wrapper.IWrapObstacle,
+   compareTo: wrapper.IWrapObstacle,
    prevOffset = 0,
 ) {
    return (
@@ -65,29 +64,29 @@ function customIsLonger(
 function check(args: CheckArgs) {
    const { obstacles } = args.beatmap.data.difficulty;
    const { minDuration } = tool.input.params;
-   const ary: types.wrapper.IWrapObstacle[] = [];
-   let obstacleLFull: types.wrapper.IWrapObstacle = new Obstacle({
+   const ary: wrapper.IWrapObstacle[] = [];
+   let obstacleLFull: wrapper.IWrapObstacle = new Obstacle({
       time: Number.MIN_SAFE_INTEGER,
       customData: {
          [PrecalculateKey.SECOND_TIME]: 0,
          [PrecalculateKey.DURATION_SECOND_TIME]: 0,
       },
    });
-   let obstacleRFull: types.wrapper.IWrapObstacle = new Obstacle({
+   let obstacleRFull: wrapper.IWrapObstacle = new Obstacle({
       time: Number.MIN_SAFE_INTEGER,
       customData: {
          [PrecalculateKey.SECOND_TIME]: 0,
          [PrecalculateKey.DURATION_SECOND_TIME]: 0,
       },
    });
-   let obstacleLHalf: types.wrapper.IWrapObstacle = new Obstacle({
+   let obstacleLHalf: wrapper.IWrapObstacle = new Obstacle({
       time: Number.MIN_SAFE_INTEGER,
       customData: {
          [PrecalculateKey.SECOND_TIME]: 0,
          [PrecalculateKey.DURATION_SECOND_TIME]: 0,
       },
    });
-   let obstacleRHalf: types.wrapper.IWrapObstacle = new Obstacle({
+   let obstacleRHalf: wrapper.IWrapObstacle = new Obstacle({
       time: Number.MIN_SAFE_INTEGER,
       customData: {
          [PrecalculateKey.SECOND_TIME]: 0,

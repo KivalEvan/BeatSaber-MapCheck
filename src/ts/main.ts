@@ -9,8 +9,8 @@ import { State } from './state.ts';
 import { extractBeatmaps, extractBpmInfo, extractInfo } from './load/index.ts';
 import { downloadFromHash, downloadFromId, downloadFromUrl } from './download.ts';
 import { sanitizeBeatSaverId, sanitizeUrl, sleep } from './utils/web.ts';
-import { logger } from 'bsmap';
-import { lerp, nearEqual, round } from 'bsmap/utils';
+import { getLogger, Logger, setupLogger } from 'bsmap';
+import { lerp, nearEqual, round } from 'bsmap';
 import { Payload, PayloadType } from './types/main';
 import { IBeatmapAudio, IBeatmapContainer } from './types';
 import { init } from './init';
@@ -21,6 +21,8 @@ import { checkAllDifficulty, checkGeneral } from './checks/main.ts';
 function tag() {
    return ['main'];
 }
+
+setupLogger(new Logger());
 
 async function getInputData(payload: Payload): Promise<ArrayBuffer | File> {
    switch (payload.type) {
@@ -39,6 +41,7 @@ async function getInputData(payload: Payload): Promise<ArrayBuffer | File> {
 
 export async function main(payload: Payload): Promise<void> {
    let start = 0;
+   const logger = getLogger();
    try {
       console.time('loading time');
       start = performance.now();
@@ -71,7 +74,7 @@ export async function main(payload: Payload): Promise<void> {
 
       toggleInputs(false);
       UILoading.status(LoadStatus.INFO, 'Parsing map info...', 10);
-      logger.tInfo(tag(), 'Parsing map info');
+      logger?.tInfo(tag(), 'Parsing map info');
       const info = await extractInfo(beatmapZip, path);
       State.data.info = info;
       UIInfo.setInfo(info);
@@ -101,14 +104,14 @@ export async function main(payload: Payload): Promise<void> {
       }
       const dataToLoad = [
          new Promise(async (resolve) => {
-            logger.tInfo(tag(), 'Loading cover image');
+            logger?.tInfo(tag(), 'Loading cover image');
             const imageFile = beatmapZip.file(info.coverImageFilename);
             if (Settings.props.load.imageCover && imageFile) {
                let imgBase64 = await imageFile.async('base64');
                UIHeader.setCoverImage('data:image;base64,' + imgBase64);
                State.flag.coverImage = true;
             } else {
-               logger.tError(tag(), `${info.coverImageFilename} does not exists.`);
+               logger?.tError(tag(), `${info.coverImageFilename} does not exists.`);
             }
             itemDone++;
             itemSet.delete('cover image');
@@ -119,13 +122,13 @@ export async function main(payload: Payload): Promise<void> {
             State.data.contributors = [];
             if (info.customData._contributors) {
                for (const contr of info.customData._contributors) {
-                  logger.tInfo(tag(), 'Loading contributor image ' + contr._name);
+                  logger?.tInfo(tag(), 'Loading contributor image ' + contr._name);
                   const imageFile = beatmapZip.file(contr._iconPath);
                   let _base64 = null;
                   if (Settings.props.load.imageContributor && imageFile) {
                      _base64 = await imageFile.async('base64');
                   } else {
-                     logger.tError(tag(), `${contr._iconPath} does not exists.`);
+                     logger?.tError(tag(), `${contr._iconPath} does not exists.`);
                   }
                   State.data.contributors.push({ ...contr, _base64 });
                }
@@ -137,7 +140,7 @@ export async function main(payload: Payload): Promise<void> {
             resolve(null);
          }),
          new Promise(async (resolve) => {
-            logger.tInfo(tag(), 'Loading audio');
+            logger?.tInfo(tag(), 'Loading audio');
             let audioFile = beatmapZip.file(info.audio.filename);
             if (Settings.props.load.audio && audioFile) {
                let loaded = false;
@@ -164,11 +167,11 @@ export async function main(payload: Payload): Promise<void> {
                   })
                   .catch(function (err) {
                      UIHeader.setSongDuration();
-                     logger.tError(tag(), err);
+                     logger?.tError(tag(), err);
                   });
             } else {
                if (!State.data.duration) UIHeader.setSongDuration();
-               logger.tError(tag(), `${info.audio.filename} does not exist.`);
+               logger?.tError(tag(), `${info.audio.filename} does not exist.`);
             }
             itemDone += 2;
             itemSet.delete('Audio');
@@ -222,7 +225,7 @@ export async function main(payload: Payload): Promise<void> {
       UIChecks.adjustBeatTime();
       UISelection.populateSelectCharacteristic(info);
 
-      logger.tInfo(tag(), 'Analysing map');
+      logger?.tInfo(tag(), 'Analysing map');
       UILoading.status(LoadStatus.INFO, 'Analysing general...', 85);
       checkGeneral();
       UIChecks.displayOutputGeneral();
@@ -237,7 +240,7 @@ export async function main(payload: Payload): Promise<void> {
       UILoading.status(LoadStatus.INFO, `Completed! (took ${round((end - start) / 1000, 2)}s)`);
    } catch (err) {
       UILoading.status(LoadStatus.ERROR, err);
-      logger.tError(tag(), err);
+      logger?.tError(tag(), err);
       State.clear();
       UIHeader.switchToIntro();
    } finally {

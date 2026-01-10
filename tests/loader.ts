@@ -1,11 +1,15 @@
-import { CharacteristicName, DifficultyName, external, LooseAutocomplete } from 'bsmap/types';
+import {
+   CharacteristicName,
+   DifficultyName,
+   external,
+   LooseAutocomplete,
+   readFromInfoSync,
+   readInfoFileSync,
+} from 'bsmap';
 import { createBeatmapContainer } from '../src/ts/load';
 import { CheckArgs } from '../src/ts/types';
-import { logger, readFromInfoSync, readInfoFileSync } from 'bsmap';
 import { readdirSync, readFileSync } from 'fs';
 import { cachedKeyedComponents } from '../src/ts/checks/components';
-
-logger.setLevel(0);
 
 const cachedInfo = readInfoFileSync('./tests/resources/Test Track/Info.dat');
 const cachedBeatmaps = readFromInfoSync(cachedInfo, {
@@ -18,7 +22,7 @@ for (const file of readdirSync('./tests/resources/Test Track/Bookmarks', {
 }).filter((f) => f.isFile())) {
    const data = JSON.parse(
       readFileSync(`./tests/resources/Test Track/Bookmarks/${file.name}`, 'utf-8'),
-   ) as external.IBookmarks;
+   ) as external.IBookmarkSet;
    cachedBookmarks[data.characteristic + data.difficulty] = [];
 
    data.bookmarks

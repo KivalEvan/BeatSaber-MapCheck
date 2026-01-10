@@ -7,10 +7,11 @@ import {
    PosX,
    PosY,
    TimeProcessor,
+   wrapper,
 } from 'bsmap';
-import { round } from 'bsmap/utils';
-import * as types from 'bsmap/types';
-import { placement, swing } from 'bsmap/extensions';
+import { round } from 'bsmap';
+import * as placement from 'bsmap/extensions/placement';
+import * as swing from 'bsmap/extensions/swing';
 import {
    CheckArgs,
    CheckInputOrder,
@@ -92,15 +93,14 @@ const tool: ICheck<{ maxTime: number }> = {
          enabled,
          maxTime: defaultMaxTime,
       },
-      ui: 
-         UIInput.createBlock(
-            htmlEnabled,
-            document.createElement('br'),
-            htmlLabelMaxTime,
-            htmlInputMaxTime,
-            htmlLabelMaxBeat,
-            htmlInputMaxBeat,
-         ),
+      ui: UIInput.createBlock(
+         htmlEnabled,
+         document.createElement('br'),
+         htmlLabelMaxTime,
+         htmlInputMaxTime,
+         htmlLabelMaxBeat,
+         htmlInputMaxBeat,
+      ),
       update,
       adjustTime: adjustTimeHandler,
    },
@@ -120,14 +120,14 @@ function check(args: CheckArgs) {
    const noteContainer = args.beatmap.noteContainer;
    const { maxTime } = tool.input.params;
 
-   const lastNote: { [key: number]: types.wrapper.IWrapColorNote } = {};
+   const lastNote: { [key: number]: wrapper.IWrapColorNote } = {};
    const lastNoteAngle: { [key: number]: number } = {};
-   const startNoteDot: { [key: number]: types.wrapper.IWrapColorNote | null } = {};
-   const swingNoteArray: { [key: number]: types.wrapper.IWrapColorNote[] } = {
+   const startNoteDot: { [key: number]: wrapper.IWrapColorNote | null } = {};
+   const swingNoteArray: { [key: number]: wrapper.IWrapColorNote[] } = {
       [NoteColor.RED]: [],
       [NoteColor.BLUE]: [],
    };
-   const result: types.wrapper.IWrapColorNote[] = [];
+   const result: wrapper.IWrapColorNote[] = [];
    let lastTime = 0;
    let lastIndex = 0;
    for (let i = 0, len = noteContainer.length; i < len; i++) {
@@ -214,7 +214,7 @@ function check(args: CheckArgs) {
 }
 
 function checkInline(
-   currentNote: types.wrapper.IWrapColorNote,
+   currentNote: wrapper.IWrapColorNote,
    compares: IObjectContainer[],
    index: number,
    maxTime: number,

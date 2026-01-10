@@ -1,9 +1,8 @@
 import { State } from '../../state';
 import { IBeatmapContainer } from '../../types';
 import { logPrefix, prefix } from './constants';
-import { round } from 'bsmap/utils';
-import * as types from 'bsmap/types';
-import { stats } from 'bsmap/extensions';
+import { round, wrapper } from 'bsmap';
+import * as stats from 'bsmap/extensions/stats';
 import { ObjectContainerType } from '../../types/container';
 import { UISelection } from '../selection';
 
@@ -86,7 +85,7 @@ export class UIStatsNotePlacement {
       UIStatsNotePlacement.updateTable(beatmapInfo, beatmapItem);
    }
 
-   static #notePlacementTableString(nc: types.wrapper.IWrapGridObject[]): string {
+   static #notePlacementTableString(nc: wrapper.IWrapGridObject[]): string {
       const totalNote = nc.length || 1;
       let htmlString = '';
       for (let l = 2; l >= 0; l--) {
@@ -116,7 +115,7 @@ export class UIStatsNotePlacement {
       return htmlString;
    }
 
-   static updateTable(_: types.wrapper.IWrapInfo, beatmap: IBeatmapContainer): void {
+   static updateTable(_: wrapper.IWrapInfo, beatmap: IBeatmapContainer): void {
       let nc = beatmap.noteContainer;
 
       if (!UIStatsNotePlacement.#options.note) {

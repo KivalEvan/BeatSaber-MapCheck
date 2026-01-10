@@ -1,4 +1,3 @@
-import * as types from 'bsmap/types';
 import {
    CheckArgs,
    CheckInputOrder,
@@ -11,7 +10,7 @@ import {
    OutputType,
 } from '../../types';
 import { UIInput } from '../../ui/helpers/input';
-import { isInline } from 'bsmap';
+import { isInline, wrapper } from 'bsmap';
 import { PrecalculateKey } from '../../types/precalculate';
 
 const name = 'Stacked Note';
@@ -50,7 +49,7 @@ const tool: ICheck = {
 function checkNote(map: IBeatmapContainer) {
    const colorNotes = map.data.difficulty.colorNotes;
 
-   const result: types.wrapper.IWrapBaseObject[] = [];
+   const result: wrapper.IWrapBaseObject[] = [];
    // to avoid multiple of stack popping up, ignore anything within this time
    let lastTime: number = 0;
    for (let i = 0, len = colorNotes.length; i < len; i++) {
@@ -78,7 +77,7 @@ function checkBomb(map: IBeatmapContainer) {
    const njs = map.njs;
    const bombNotes = map.data.difficulty.bombNotes;
 
-   const result: types.wrapper.IWrapBaseObject[] = [];
+   const result: wrapper.IWrapBaseObject[] = [];
    for (let i = 0, len = bombNotes.length; i < len; i++) {
       for (let j = i + 1; j < len; j++) {
          // arbitrary break after 1s to not loop too much often

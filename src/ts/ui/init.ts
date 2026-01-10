@@ -4,7 +4,7 @@ import { UISettings } from './settings/main.ts';
 import { UITab } from './helpers/tab.ts';
 import { UITheme } from './theme.ts';
 import { UIChecks } from './checks/main.ts';
-import { logger } from 'bsmap';
+import { getLogger } from 'bsmap';
 import { UIHeader } from './header.ts';
 import { UIIntro } from './intro.ts';
 import { UIStats } from './stats/main.ts';
@@ -18,6 +18,7 @@ export function uiInit(): void {
    if (executed) {
       return;
    }
+   const logger = getLogger();
    executed = true;
 
    UITab.init();
@@ -38,5 +39,5 @@ export function uiInit(): void {
    UITab.showMain(Settings.props.show);
 
    UIReset.init();
-   logger.tInfo(['UI', 'init'], 'User interface initialised');
+   logger?.tInfo(['UI', 'init'], 'User interface initialised');
 }

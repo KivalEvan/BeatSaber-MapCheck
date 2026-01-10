@@ -1,6 +1,5 @@
-import { Obstacle, PosX, PosY, TimeProcessor } from 'bsmap';
-import { round } from 'bsmap/utils';
-import * as types from 'bsmap/types';
+import { Obstacle, PosX, PosY, TimeProcessor, wrapper } from 'bsmap';
+import { round } from 'bsmap';
 import {
    CheckArgs,
    CheckInputOrder,
@@ -77,15 +76,14 @@ const tool: ICheck<{ recovery: number }> = {
    },
    input: {
       params: { enabled, recovery: defaultMaxTime },
-      ui: 
-         UIInput.createBlock(
-            htmlEnabled,
-            document.createElement('br'),
-            htmlLabelMaxTime,
-            htmlInputMaxTime,
-            htmlLabelMaxBeat,
-            htmlInputMaxBeat,
-         ),
+      ui: UIInput.createBlock(
+         htmlEnabled,
+         document.createElement('br'),
+         htmlLabelMaxTime,
+         htmlInputMaxTime,
+         htmlLabelMaxBeat,
+         htmlInputMaxBeat,
+      ),
       update,
       adjustTime: adjustTimeHandler,
    },
@@ -101,8 +99,8 @@ function adjustTimeHandler(bpm: TimeProcessor) {
 }
 
 function customIsLonger(
-   o: types.wrapper.IWrapObstacle,
-   compareTo: types.wrapper.IWrapObstacle,
+   o: wrapper.IWrapObstacle,
+   compareTo: wrapper.IWrapObstacle,
    prevOffset = 0,
 ) {
    return (
@@ -117,11 +115,11 @@ function customIsLonger(
 function check(args: CheckArgs) {
    const { obstacles } = args.beatmap.data.difficulty;
    const { recovery } = tool.input.params;
-   const arr: types.wrapper.IWrapObstacle[] = [];
-   let obstacleLeftFull: types.wrapper.IWrapObstacle = new Obstacle();
+   const arr: wrapper.IWrapObstacle[] = [];
+   let obstacleLeftFull: wrapper.IWrapObstacle = new Obstacle();
    obstacleLeftFull.customData[PrecalculateKey.SECOND_TIME] = 0;
    obstacleLeftFull.customData[PrecalculateKey.DURATION_SECOND_TIME] = 0;
-   let obstacleRightFull: types.wrapper.IWrapObstacle = new Obstacle();
+   let obstacleRightFull: wrapper.IWrapObstacle = new Obstacle();
    obstacleRightFull.customData[PrecalculateKey.SECOND_TIME] = 0;
    obstacleRightFull.customData[PrecalculateKey.DURATION_SECOND_TIME] = 0;
    for (let i = 0; i < obstacles.length; i++) {

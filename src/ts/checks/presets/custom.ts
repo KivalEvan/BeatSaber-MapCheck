@@ -1,4 +1,4 @@
-import { deepCopy } from 'bsmap/utils';
+import { deepCopy } from 'bsmap';
 import presetDefault from './default';
 import type { InputParamsList } from './_type';
 

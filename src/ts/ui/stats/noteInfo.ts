@@ -1,7 +1,6 @@
-import { formatNumber, round } from 'bsmap/utils';
-import * as types from 'bsmap/types';
+import { formatNumber, round, wrapper } from 'bsmap';
 import { IBeatmapContainer } from '../../types';
-import { swing } from 'bsmap/extensions';
+import * as swing from 'bsmap/extensions/swing';
 
 export class UIStatsNoteInfo {
    static #htmlNiRatio: HTMLTableCellElement;
@@ -22,7 +21,7 @@ export class UIStatsNoteInfo {
       UIStatsNoteInfo.#htmlNiMaxSliderSpeed = document.querySelector('#stats__table-ni-maxspeed')!;
    }
 
-   static updateTable(_: types.wrapper.IWrapInfo, beatmap: IBeatmapContainer): void {
+   static updateTable(_: wrapper.IWrapInfo, beatmap: IBeatmapContainer): void {
       const noteCount = beatmap.stats.notes;
 
       UIStatsNoteInfo.#htmlNiRatio.textContent = round(

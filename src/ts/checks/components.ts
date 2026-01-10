@@ -7,7 +7,7 @@ import { ICheck } from '../types/checks/check';
 import { InputParamsList as PresetParamsList } from './presets/_type';
 import { UISelection } from '../ui/selection';
 import { presets } from './presets';
-import { deepCopy } from 'bsmap/utils';
+import { deepCopy } from 'bsmap';
 import { State } from '../state';
 import { TimeProcessor } from 'bsmap';
 

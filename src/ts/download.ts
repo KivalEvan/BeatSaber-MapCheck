@@ -1,13 +1,14 @@
 import { fetchMapFromHash, fetchMapFromId } from './beatsaver';
 import { LoadStatus, UILoading } from './ui/loading';
 import { UIHeader } from './ui/header';
-import { logger } from 'bsmap';
-import { isHex, round } from 'bsmap/utils';
+import { getLogger, isHex, round } from 'bsmap';
 import { sanitizeBeatSaverId, sanitizeUrl } from './utils/web';
 
 function tag(name: string) {
    return ['download', name];
 }
+
+const logger = getLogger()!;
 
 export async function downloadMap(url: string): Promise<ArrayBuffer> {
    return new Promise(function (resolve, reject) {
@@ -58,10 +59,10 @@ export async function downloadFromId(input: string): Promise<ArrayBuffer> {
    // sanitize & validate id
    const id = sanitizeBeatSaverId(input);
 
-   logger.tInfo(tag('downloadFromID'), `fetching download URL from BeatSaver for map ID ${id}`);
+   logger?.tInfo(tag('downloadFromID'), `fetching download URL from BeatSaver for map ID ${id}`);
    UILoading.status(LoadStatus.INFO, 'Fetching download URL from BeatSaver', 0);
    const url = await fetchMapFromId(id);
-   logger.tInfo(tag('downloadFromID'), `downloading from BeatSaver for map ID ${id}`);
+   logger?.tInfo(tag('downloadFromID'), `downloading from BeatSaver for map ID ${id}`);
    UILoading.status(LoadStatus.INFO, 'Requesting download from BeatSaver', 0);
    const res = await downloadMap(url);
    UIHeader.setCoverLink('https://beatsaver.com/maps/' + id, id);
@@ -80,7 +81,7 @@ export async function downloadFromUrl(input: string): Promise<ArrayBuffer> {
    }
 
    UILoading.status(LoadStatus.INFO, 'Requesting download from link', 0);
-   logger.tInfo(tag('downloadFromURL'), `downloading from ${url}`);
+   logger?.tInfo(tag('downloadFromURL'), `downloading from ${url}`);
    // thanks BSMG for CORS proxy
    let res = await downloadMap('https://cors.bsmg.dev/' + url);
    UIHeader.setCoverLink(url);
@@ -96,13 +97,13 @@ export async function downloadFromHash(input: string): Promise<ArrayBuffer> {
       throw new Error('invalid hash');
    }
 
-   logger.tInfo(
+   logger?.tInfo(
       tag('downloadFromHash'),
       `fetching download URL from BeatSaver for map hash ${hash}`,
    );
    UILoading.status(LoadStatus.INFO, 'Fetching download URL from BeatSaver', 0);
    const url = await fetchMapFromHash(hash);
-   logger.tInfo(tag('downloadFromHash'), `downloading from BeatSaver for map hash ${hash}`);
+   logger?.tInfo(tag('downloadFromHash'), `downloading from BeatSaver for map hash ${hash}`);
    UILoading.status(LoadStatus.INFO, 'Requesting download from BeatSaver', 0);
    const res = await downloadMap(url);
    return res;

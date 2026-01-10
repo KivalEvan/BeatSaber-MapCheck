@@ -1,6 +1,5 @@
-import { isSlantedWindow, NoteColor, NoteDirection } from 'bsmap';
-import * as types from 'bsmap/types';
-import { swing } from 'bsmap/extensions';
+import { isSlantedWindow, NoteColor, NoteDirection, wrapper } from 'bsmap';
+import * as swing from 'bsmap/extensions/swing';
 import {
    CheckArgs,
    CheckInputOrder,
@@ -49,18 +48,18 @@ const tool: ICheck = {
 
 function check(args: CheckArgs) {
    const { timeProcessor, noteContainer } = args.beatmap;
-   const lastNote: { [key: number]: types.wrapper.IWrapColorNote } = {};
-   const swingNoteArray: { [key: number]: types.wrapper.IWrapColorNote[] } = {
+   const lastNote: { [key: number]: wrapper.IWrapColorNote } = {};
+   const swingNoteArray: { [key: number]: wrapper.IWrapColorNote[] } = {
       [NoteColor.RED]: [],
       [NoteColor.BLUE]: [],
    };
 
-   const result: types.wrapper.IWrapColorNote[] = [];
+   const result: wrapper.IWrapColorNote[] = [];
    for (let i = 0, len = noteContainer.length; i < len; i++) {
       if (noteContainer[i].type !== ObjectContainerType.COLOR) {
          continue;
       }
-      const note = noteContainer[i].data as types.wrapper.IWrapColorNote;
+      const note = noteContainer[i].data as wrapper.IWrapColorNote;
       if (lastNote[note.color]) {
          if (swing.next(note, lastNote[note.color], timeProcessor, swingNoteArray[note.color])) {
             lastNote[note.color] = note;

@@ -1,9 +1,8 @@
 import { State } from '../../state';
 import { IBeatmapContainer } from '../../types';
 import { logPrefix, prefix } from './constants';
-import { stats } from 'bsmap/extensions';
-import { round } from 'bsmap/utils';
-import * as types from 'bsmap/types';
+import * as stats from 'bsmap/extensions/stats';
+import { round, wrapper } from 'bsmap';
 import { UISelection } from '../selection';
 import { ObjectContainerType } from '../../types/container';
 
@@ -77,7 +76,7 @@ export class UIStatsNoteAngle {
    }
 
    // TODO: use angle instead of cut direction
-   static #noteAngleTableString(notes: types.wrapper.IWrapBaseNote[]): string {
+   static #noteAngleTableString(notes: wrapper.IWrapBaseNote[]): string {
       const totalNote = notes.length || 1;
       const cutOrder = [4, 0, 5, 2, 8, 3, 6, 1, 7];
       let htmlString = '';
@@ -95,7 +94,7 @@ export class UIStatsNoteAngle {
       return htmlString;
    }
 
-   static updateTable(_: types.wrapper.IWrapInfo, beatmap: IBeatmapContainer): void {
+   static updateTable(_: wrapper.IWrapInfo, beatmap: IBeatmapContainer): void {
       let nc = beatmap.noteContainer;
 
       if (!UIStatsNoteAngle.#options.note) {

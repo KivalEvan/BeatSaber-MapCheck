@@ -1,4 +1,4 @@
-import { deepCopy } from 'bsmap/utils';
+import { deepCopy } from 'bsmap';
 import { default as beatLeader } from './beatLeader';
 import { default as beginner } from './beginner';
 import { default as custom } from './custom';

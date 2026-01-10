@@ -1,5 +1,4 @@
-import { NoteColor, NoteDirection } from 'bsmap';
-import * as types from 'bsmap/types';
+import { NoteColor, NoteDirection, wrapper } from 'bsmap';
 import {
    CheckArgs,
    CheckInputOrder,
@@ -12,7 +11,7 @@ import {
 } from '../../types';
 import { IObjectContainerColor, ObjectContainerType } from '../../types/container';
 import { UIInput } from '../../ui/helpers/input';
-import { swing } from 'bsmap/extensions';
+import * as swing from 'bsmap/extensions/swing';
 import { PrecalculateKey } from '../../types/precalculate';
 import { isNotePointing, noteDistance } from '../../utils/beatmap';
 
@@ -54,13 +53,13 @@ const constantDiagonal = 0.03414823529;
 function check(args: CheckArgs) {
    const { timeProcessor, njs, noteContainer } = args.beatmap;
 
-   const lastNote: { [key: number]: types.wrapper.IWrapColorNote } = {};
-   const swingNoteArray: { [key: number]: types.wrapper.IWrapColorNote[] } = {
+   const lastNote: { [key: number]: wrapper.IWrapColorNote } = {};
+   const swingNoteArray: { [key: number]: wrapper.IWrapColorNote[] } = {
       [NoteColor.RED]: [],
       [NoteColor.BLUE]: [],
    };
 
-   const result: types.wrapper.IWrapColorNote[] = [];
+   const result: wrapper.IWrapColorNote[] = [];
    for (let i = 0, len = noteContainer.length; i < len; i++) {
       if (noteContainer[i].type !== ObjectContainerType.COLOR) {
          continue;

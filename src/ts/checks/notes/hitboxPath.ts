@@ -10,9 +10,9 @@ import {
 } from '../../types';
 import { UIInput } from '../../ui/helpers/input';
 import { ObjectContainerType } from '../../types/container';
-import * as types from 'bsmap/types';
 import { PrecalculateKey } from '../../types/precalculate';
 import { isNotePointing, noteDistance } from '../../utils/beatmap';
+import { NoteDirection, wrapper } from 'bsmap';
 
 const name = 'Hitbox Path';
 const description = 'Check for overlapping pre-swing note hitbox at same time.';
@@ -52,7 +52,7 @@ function check(args: CheckArgs) {
       (n) => n.type === ObjectContainerType.BOMB || n.type === ObjectContainerType.COLOR,
    );
 
-   const result: types.wrapper.IWrapColorNote[] = [];
+   const result: wrapper.IWrapColorNote[] = [];
    // to avoid multiple of stack popping up, ignore anything within this time
    let lastTime: number = 0;
    for (let i = 0, len = noteContainer.length; i < len; i++) {
@@ -60,7 +60,7 @@ function check(args: CheckArgs) {
       if (
          currentNote.type !== ObjectContainerType.COLOR ||
          currentNote.data.customData[PrecalculateKey.SECOND_TIME] < lastTime + 0.01 ||
-         currentNote.data.direction === types.NoteDirection.ANY
+         currentNote.data.direction === NoteDirection.ANY
       ) {
          continue;
       }
@@ -82,7 +82,7 @@ function check(args: CheckArgs) {
             noteDistance(currentNote.data, compareTo.data) <= 2 &&
             (!isNotePointing(currentNote.data, compareTo.data, 150) ||
                (compareTo.type === ObjectContainerType.COLOR &&
-                  compareTo.data.direction !== types.NoteDirection.ANY &&
+                  compareTo.data.direction !== NoteDirection.ANY &&
                   !isNotePointing(compareTo.data, currentNote.data, 150)))
          ) {
             result.push(currentNote.data);

@@ -10,19 +10,17 @@ import {
 } from '../../types';
 import { State } from '../../state';
 import { UIInput } from '../../ui/helpers/input';
-import { DifficultyRename } from 'bsmap';
-import { round } from 'bsmap/utils';
-import * as types from 'bsmap/types';
-import { swing } from 'bsmap/extensions';
+import { DifficultyName, DifficultyRename } from 'bsmap';
+import { round } from 'bsmap';
+import * as swing from 'bsmap/extensions/swing';
 
 const name = 'Difficulty Progression';
 const description = 'For ranking purpose, check difficuly progression to fit rankability criteria.';
 const enabled = true;
 
 const cachedHtmlDiff: {
-   [key in types.DifficultyName]: HTMLInputElement | null;
+   [key in DifficultyName]: HTMLInputElement | null;
 } = {
-   'Expert+': null,
    ExpertPlus: null,
    Expert: null,
    Hard: null,
@@ -31,7 +29,7 @@ const cachedHtmlDiff: {
 };
 
 const htmlDifficultyList = document.createElement('ul');
-const diffList: types.DifficultyName[] = ['ExpertPlus', 'Expert', 'Hard', 'Normal', 'Easy'];
+const diffList: DifficultyName[] = ['ExpertPlus', 'Expert', 'Hard', 'Normal', 'Easy'];
 for (const diff of diffList) {
    const [htmlInput, htmlLabel] = UIInput.createCheckbox(
       function (this: HTMLInputElement) {
@@ -63,7 +61,7 @@ function update() {
    }
 }
 
-const tool: ICheck<{ [k in types.DifficultyName]: boolean }> = {
+const tool: ICheck<{ [k in DifficultyName]: boolean }> = {
    name,
    description,
    type: CheckType.GENERAL,
@@ -74,7 +72,6 @@ const tool: ICheck<{ [k in types.DifficultyName]: boolean }> = {
    input: {
       params: {
          enabled,
-         'Expert+': true,
          ExpertPlus: true,
          Expert: true,
          Hard: true,

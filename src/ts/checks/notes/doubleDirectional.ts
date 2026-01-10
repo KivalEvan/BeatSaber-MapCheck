@@ -1,5 +1,4 @@
-import { NoteColor, NoteDirection, NoteDirectionAngle, PosX, PosY } from 'bsmap';
-import * as types from 'bsmap/types';
+import { NoteColor, NoteDirection, NoteDirectionAngle, PosX, PosY, wrapper } from 'bsmap';
 import {
    CheckArgs,
    CheckInputOrder,
@@ -13,7 +12,8 @@ import {
 } from '../../types';
 import { ObjectContainerType } from '../../types/container';
 import { UIInput } from '../../ui/helpers/input';
-import { placement, swing } from 'bsmap/extensions';
+import * as placement from 'bsmap/extensions/placement';
+import * as swing from 'bsmap/extensions/swing';
 import { PrecalculateKey } from '../../types/precalculate';
 
 const name = 'Double-directional';
@@ -52,15 +52,15 @@ const tool: ICheck = {
 function check(beatmapItem: IBeatmapContainer) {
    const timeProcessor = beatmapItem.timeProcessor;
    const noteContainer = beatmapItem.noteContainer;
-   const lastNote: { [key: number]: types.wrapper.IWrapColorNote } = {};
+   const lastNote: { [key: number]: wrapper.IWrapColorNote } = {};
    const lastNoteAngle: { [key: number]: number } = {};
-   const startNoteDot: { [key: number]: types.wrapper.IWrapColorNote | null } = {};
-   const swingNoteArray: { [key: number]: types.wrapper.IWrapColorNote[] } = {
+   const startNoteDot: { [key: number]: wrapper.IWrapColorNote | null } = {};
+   const swingNoteArray: { [key: number]: wrapper.IWrapColorNote[] } = {
       [NoteColor.RED]: [],
       [NoteColor.BLUE]: [],
    };
 
-   const arr: types.wrapper.IWrapColorNote[] = [];
+   const arr: wrapper.IWrapColorNote[] = [];
    for (let i = 0, len = noteContainer.length; i < len; i++) {
       const note = noteContainer[i];
       if (note.type === ObjectContainerType.COLOR && lastNote[note.data.color]) {

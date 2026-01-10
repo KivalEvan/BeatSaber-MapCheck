@@ -1,5 +1,4 @@
-import { round, secToMmss } from 'bsmap/utils';
-import * as types from 'bsmap/types';
+import { round, secToMmss, wrapper } from 'bsmap';
 import {
    CheckArgs,
    CheckInputOrder,
@@ -48,7 +47,7 @@ const tool: ICheck = {
 
 function objectBeforeTime(
    tag: string,
-   objects: types.wrapper.IWrapBaseObject[],
+   objects: wrapper.IWrapBaseObject[],
    results: ICheckOutput[],
 ) {
    if (objects.length && objects[0].time < 0) {
@@ -63,7 +62,7 @@ function objectBeforeTime(
 
 function objectAfterTime(
    tag: string,
-   objects: types.wrapper.IWrapBaseObject[],
+   objects: wrapper.IWrapBaseObject[],
    endTime: number,
    results: ICheckOutput[],
 ) {

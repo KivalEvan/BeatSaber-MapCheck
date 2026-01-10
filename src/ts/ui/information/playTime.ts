@@ -1,5 +1,5 @@
 import { State } from '../../state';
-import { secToMmss } from 'bsmap/utils';
+import { secToMmss } from 'bsmap';
 import { UIInfoHTML } from './html';
 import { displayTableRow, hideTableRow } from './helpers';
 

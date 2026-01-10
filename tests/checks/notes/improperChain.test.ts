@@ -7,6 +7,6 @@ it('improperChain', () => {
    const [checkArgs, expectOutput] = getInput('improperChain');
    improperChain.input.params.Unrankable = true;
    const results = improperChain.run(checkArgs);
-   getAndCompareTimeResult("Improper", results, expectOutput[0]);
-   getAndCompareTimeResult("Unrankable", results, expectOutput[1]);
+   getAndCompareTimeResult('Improper', results, expectOutput[0]);
+   getAndCompareTimeResult('Unrankable', results, expectOutput[1]);
 });

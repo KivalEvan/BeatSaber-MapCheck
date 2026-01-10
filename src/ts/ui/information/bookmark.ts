@@ -1,12 +1,11 @@
 import { Settings } from '../../settings';
-import { TimeProcessor } from 'bsmap';
-import { colorToHex, round, secToMmss } from 'bsmap/utils';
-import * as types from 'bsmap/types';
+import { TimeProcessor, v2, v3 } from 'bsmap';
+import { colorToHex, round, secToMmss } from 'bsmap';
 import { UIInfoHTML } from './html';
 import { displayTableRow, hideTableRow } from './helpers';
 
 export function setBookmarks(
-   ary?: Partial<types.v2.IBookmark & types.v3.IBookmark>[],
+   ary?: Partial<v2.IBookmark & v3.IBookmark>[],
    bpm?: TimeProcessor | null,
 ): void {
    if (ary == null || !ary.length) {

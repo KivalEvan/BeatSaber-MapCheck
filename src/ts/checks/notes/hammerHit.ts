@@ -10,9 +10,9 @@ import {
 } from '../../types';
 import { UIInput } from '../../ui/helpers/input';
 import { ObjectContainerType } from '../../types/container';
-import * as types from 'bsmap/types';
 import { PrecalculateKey } from '../../types/precalculate';
 import { isNotePointing, noteDistance } from '../../utils/beatmap';
+import { NoteDirection, wrapper } from 'bsmap';
 
 const name = 'Hammer Hit';
 const description =
@@ -53,7 +53,7 @@ function check(args: CheckArgs) {
       (n) => n.type === ObjectContainerType.BOMB || n.type === ObjectContainerType.COLOR,
    );
 
-   const result: types.wrapper.IWrapColorNote[] = [];
+   const result: wrapper.IWrapColorNote[] = [];
    // to avoid multiple of stack popping up, ignore anything within this time
    let lastTime: number = 0;
    let lastIndex: number = 0;
@@ -84,7 +84,7 @@ function check(args: CheckArgs) {
 
          if (
             compareTo.type !== ObjectContainerType.BOMB ||
-            currentNote.data.direction === types.NoteDirection.ANY
+            currentNote.data.direction === NoteDirection.ANY
          ) {
             continue;
          }

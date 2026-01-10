@@ -3,8 +3,7 @@ import { getAllComponents } from './components';
 import { State } from '../state';
 import { CheckType, ICheckOutput } from '../types/checks/check';
 import { IBeatmapContainer, ICheck } from '../types';
-import { getLastInteractiveTime, logger } from 'bsmap';
-import * as types from 'bsmap/types';
+import { CharacteristicName, DifficultyName, getLastInteractiveTime, getLogger } from 'bsmap';
 
 function tag(name: string) {
    return ['checks', name];
@@ -24,9 +23,10 @@ function init(): void {
 }
 
 export function checkGeneral(): ICheckOutput[] {
+   const logger = getLogger();
    const mapInfo = State.data.info;
    if (!mapInfo) {
-      logger.tError(tag('checkGeneral'), 'Could not analyse, missing map info');
+      logger?.tError(tag('checkGeneral'), 'Could not analyse, missing map info');
       return [];
    }
 
@@ -36,7 +36,7 @@ export function checkGeneral(): ICheckOutput[] {
 
    const analysisExist = State.data.analysis?.general;
 
-   logger.tInfo(tag('checkGeneral'), `Analysing general`);
+   logger?.tInfo(tag('checkGeneral'), `Analysing general`);
    const collections: ICheckOutput[] = [];
    toolListOutput
       .filter((tool) => tool.type === CheckType.GENERAL)
@@ -51,7 +51,7 @@ export function checkGeneral(): ICheckOutput[] {
                });
                collections.push(...results);
             } catch (err) {
-               logger.tError(tag('checkGeneral'), err);
+               logger?.tError(tag('checkGeneral'), err);
             }
          }
       });
@@ -64,12 +64,13 @@ export function checkGeneral(): ICheckOutput[] {
 }
 
 export function checkDifficulty(
-   characteristic: types.CharacteristicName,
-   difficulty: types.DifficultyName,
+   characteristic: CharacteristicName,
+   difficulty: DifficultyName,
 ): ICheckOutput[] {
+   const logger = getLogger();
    const mapInfo = State.data.info;
    if (!mapInfo) {
-      logger.tError(tag('checkDifficulty'), 'Could not analyse, missing map info');
+      logger?.tError(tag('checkDifficulty'), 'Could not analyse, missing map info');
       return [];
    }
 
@@ -81,11 +82,11 @@ export function checkDifficulty(
       (bm) => bm.info.characteristic === characteristic && bm.info.difficulty === difficulty,
    );
    if (!beatmap) {
-      logger.tError(tag('checkDifficulty'), 'Could not analyse, missing map data');
+      logger?.tError(tag('checkDifficulty'), 'Could not analyse, missing map data');
       return [];
    }
 
-   logger.tInfo(tag('checkDifficulty'), `Analysing ${characteristic} ${difficulty}`);
+   logger?.tInfo(tag('checkDifficulty'), `Analysing ${characteristic} ${difficulty}`);
    const collections: ICheckOutput[] = [];
    toolListOutput
       .filter((tool) => tool.type !== CheckType.GENERAL)
@@ -102,7 +103,7 @@ export function checkDifficulty(
                });
                collections.push(...results);
             } catch (err) {
-               logger.tError(tag('runDifficulty'), err);
+               logger?.tError(tag('runDifficulty'), err);
             }
          }
       });
