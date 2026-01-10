@@ -562,16 +562,22 @@ function applyBezier(arc: wrapper.IWrapArc) {
    const result: Vector3[] = Array(RESOLUTION + 1);
 
    const bezierPath = getArcPath(arc);
-   const segmentSize = RESOLUTION / bezierPath.segmentsCount;
+   const segmentSize = Math.ceil(RESOLUTION / bezierPath.segmentsCount);
    for (let segmentIndex = 0; segmentIndex < bezierPath.segmentsCount; segmentIndex++) {
       const points = bezierPath.getPointsInSegment(segmentIndex);
       for (let i = 0; i < segmentSize; i++) {
          const index = segmentIndex * segmentSize + i;
-         result[index] = bezierCubic(points[0], points[1], points[2], points[3], i / segmentSize)[0];
+         result[index] = bezierCubic(
+            points[0],
+            points[1],
+            points[2],
+            points[3],
+            i / segmentSize,
+         )[0];
          result[index][2] += arc.customData[PrecalculateKey.SECOND_TIME];
       }
    }
-   const index = RESOLUTION / segmentSize;
+   const index = Math.ceil(RESOLUTION / segmentSize);
    const points = bezierPath.getPointsInSegment(Math.floor(index - 1));
    result[RESOLUTION] = bezierCubic(points[0], points[1], points[2], points[3], index)[0];
    result[RESOLUTION][2] += arc.customData[PrecalculateKey.SECOND_TIME];
