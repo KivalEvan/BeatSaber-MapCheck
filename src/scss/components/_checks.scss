@@ -17,13 +17,14 @@
    }
    &__output {
       &-icon {
-         padding: 0 0 0 0.25em;
+         display: inline-block;
+         padding: 0.1em 0 0.15em 0.25em;
       }
       &-time {
          display: inline-block;
          border: 1px solid gray;
          border-radius: 0.5em;
-         margin: 0.1em 0.1em;
+         margin: 0 0.05em 0.05em;
          padding: 0.1em 0.25em;
       }
       &-hidden {
