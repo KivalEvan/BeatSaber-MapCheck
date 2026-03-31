@@ -8,7 +8,7 @@ import {
    NoteDirection,
    resolveNoteAngle,
    SliderMidAnchorMode,
-   TrackDefinitions,
+   BasicTrackDefinitions,
    Vector2,
    Vector3,
    vectorAdd,
@@ -225,6 +225,6 @@ export function cutDirectionToControlPointPosition(cutDirection: number, angle: 
 }
 
 export function isLightEvent(type: number, environment: EnvironmentName): boolean {
-   const e = TrackDefinitions[environment]?.[0][type];
+   const e = BasicTrackDefinitions[environment]?.[type];
    return e ? e.type === EventKind.Light : true;
 }

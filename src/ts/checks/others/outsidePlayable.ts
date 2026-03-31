@@ -6,6 +6,7 @@ import {
    CheckType,
    ICheck,
    ICheckOutput,
+   ICheckOutputGLS,
    OutputStatus,
    OutputType,
 } from '../../types';
@@ -79,6 +80,36 @@ function objectAfterTime(
    }
 }
 
+function glsObjectAfterTime(
+   tag: string,
+   objects: wrapper.IWrapEventBoxGroup[],
+   endTime: number,
+   results: ICheckOutput[],
+) {
+   if (objects.length) {
+      const res = {
+         status: OutputStatus.ERROR,
+         label: tag + '(s) after end time',
+         type: OutputType.GLS,
+         value: objects
+            .flatMap((group) =>
+               group.boxes.flatMap((b, i) =>
+                  b.events.map(
+                     (e) =>
+                        [group, i, e] as [
+                           wrapper.IWrapEventBoxGroup,
+                           number,
+                           wrapper.IWrapBaseObject,
+                        ],
+                  ),
+               ),
+            )
+            .filter((o) => o[2].customData[PrecalculateKey.SECOND_TIME] > endTime),
+      } satisfies ICheckOutputGLS;
+      if (res.value.length) results.push(res);
+   }
+}
+
 function run(args: CheckArgs): ICheckOutput[] {
    const duration = args.audioDuration;
    const { colorNotes, bombNotes, obstacles, arcs, chains, njsEvents, rotationEvents } =
@@ -138,7 +169,22 @@ function run(args: CheckArgs): ICheckOutput[] {
          endTime,
          results,
       );
-      objectAfterTime('FX Event Box Group', fxEventBoxGroups, endTime, results);
+      objectAfterTime('FX Event', fxEventBoxGroups, endTime, results);
+
+      glsObjectAfterTime('Light Color Event', lightColorEventBoxGroups, endTime, results);
+      glsObjectAfterTime(
+         'Light Rotation Event Box Group',
+         lightRotationEventBoxGroups,
+         endTime,
+         results,
+      );
+      glsObjectAfterTime(
+         'Light Translation Event',
+         lightTranslationEventBoxGroups,
+         endTime,
+         results,
+      );
+      glsObjectAfterTime('FX Event', fxEventBoxGroups, endTime, results);
    }
 
    return results;

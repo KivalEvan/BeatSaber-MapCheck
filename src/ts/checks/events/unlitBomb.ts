@@ -4,7 +4,7 @@ import {
    isFlashEventValue,
    isOffEventValue,
    isOnEventValue,
-   TrackDefinitions,
+   BasicTrackDefinitions,
    wrapper,
 } from 'bsmap';
 import {
@@ -71,7 +71,7 @@ const unlitBomb = (
    }
    const result: wrapper.IWrapBombNote[] = [];
    const commonEvent = Object.keys(
-      TrackDefinitions[environment]?.[0] ?? TrackDefinitions['DefaultEnvironment'][0],
+      BasicTrackDefinitions[environment] ?? BasicTrackDefinitions['DefaultEnvironment'],
    ).map(Number);
    const eventsLight = events
       .filter((ev) => isLightEvent(ev.type, environment) && ev.type in commonEvent)

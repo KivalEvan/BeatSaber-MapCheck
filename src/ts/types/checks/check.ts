@@ -14,6 +14,7 @@ export const enum OutputType {
    NUMBER,
    TIME,
    HTML,
+   GLS,
 }
 export const enum OutputStatus {
    INFO,
@@ -53,6 +54,11 @@ export interface ICheckOutputTime extends ICheckOutputBase {
    readonly value: wrapper.IWrapBaseObject[];
 }
 
+export interface ICheckOutputGLS extends ICheckOutputBase {
+   readonly type: OutputType.GLS;
+   readonly value: [wrapper.IWrapEventBoxGroup, number, wrapper.IWrapBaseObject][];
+}
+
 export interface ICheckOutputHTML extends ICheckOutputBase {
    readonly type: OutputType.HTML;
    readonly value: HTMLElement[];
@@ -62,7 +68,8 @@ export type ICheckOutput =
    | ICheckOutputString
    | ICheckOutputNumber
    | ICheckOutputTime
-   | ICheckOutputHTML;
+   | ICheckOutputHTML
+   | ICheckOutputGLS;
 
 export interface CheckArgs {
    readonly audioDuration: number | null;

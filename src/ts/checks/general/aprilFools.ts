@@ -34,16 +34,16 @@ function run(args: CheckArgs): ICheckOutput[] {
    const isAprilFirst =
       aprilFirst.getDate() === currDate.getDate() && aprilFirst.getMonth() === currDate.getMonth();
 
-   if (!Settings.props.aprilFooled && isAprilFirst) {
+   if ((!Settings.props.aprilFooled || Settings.props.aprilFooled !== 2) && isAprilFirst) {
       const htmlContainer = document.createElement('div');
       const htmlLink = <HTMLAnchorElement>document.createElement('a');
       htmlLink.text = 'this link for more info.';
       htmlLink.href = 'https://youtu.be/dQw4w9WgXcQ';
       htmlLink.addEventListener('click', function () {
-         Settings.props.aprilFooled = 1;
+         Settings.props.aprilFooled = 2;
          Settings.save();
       });
-      htmlContainer.innerHTML = `<b><span title="Info: no action necessary, take note."> ⚠️ </span>AI generated content detected:</b> this may violate TOS, please refer to `;
+      htmlContainer.innerHTML = `<b><span title="Info: no action necessary, take note."> ⚠️ </span>Agentic AM usage spotted:</b> the beatmap may have used automated mapping or vibe mapped check and may fall under violation, click `;
       htmlContainer.append(htmlLink);
 
       return [{ type: OutputType.HTML, label: '', value: [htmlContainer] }];

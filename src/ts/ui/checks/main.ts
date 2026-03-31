@@ -4,7 +4,7 @@ import { CharacteristicName, DifficultyName, TimeProcessor } from 'bsmap';
 import { State } from '../../state';
 import { UISelection } from '../selection';
 import { CheckType, ICheckOutput, OutputType } from '../../types/checks/check';
-import { printResult, printResultTime } from './output';
+import { printResult, printResultGLS, printResultTime } from './output';
 import { UIPresets } from './presets';
 import { UIBookmark } from './bookmark';
 import { checkAllDifficulty, checkDifficulty, checkGeneral } from '../../checks/main';
@@ -115,6 +115,8 @@ export class UIChecks {
             return printResult(output.label, output.value.join(', '), output.status);
          case OutputType.TIME:
             return printResultTime(output.label, output.value, output.status);
+         case OutputType.GLS:
+            return printResultGLS(output.label, output.value, output.status);
          case OutputType.HTML:
             const htmlContainer = document.createElement('div');
             output.value.forEach((h) => htmlContainer.appendChild(h));

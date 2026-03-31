@@ -2,7 +2,7 @@ import {
    EnvironmentName,
    EnvironmentV3Name,
    IndexFilterType,
-   TrackDefinitions,
+   GroupTrackDefinitions,
    wrapper,
 } from 'bsmap';
 import {
@@ -55,11 +55,11 @@ function check(map: wrapper.IWrapLightshow, environment: EnvironmentName) {
    const defectID: wrapper.IWrapEventBoxGroup[] = [];
    const defectFilter: wrapper.IWrapEventBoxGroup[] = [];
 
-   if (!TrackDefinitions[environment as EnvironmentV3Name]) {
+   if (!GroupTrackDefinitions[environment as EnvironmentV3Name]) {
       return { defectID: [], defectFilter: [] };
    }
    const envV3 = environment as EnvironmentV3Name;
-   const eventListEBG = Object.keys(TrackDefinitions[envV3][1]).map(Number);
+   const eventListEBG = Object.keys(GroupTrackDefinitions[envV3]).map(Number);
 
    const ebg = [
       ...map.lightColorEventBoxGroups,
@@ -73,7 +73,7 @@ function check(map: wrapper.IWrapLightshow, environment: EnvironmentName) {
       for (const eb of g.boxes) {
          const filter = eb.filter;
          if (filter.type === IndexFilterType.STEP_AND_OFFSET) {
-            if (filter.p0 > TrackDefinitions[envV3][1]![g.id].count) {
+            if (filter.p0 > GroupTrackDefinitions[envV3]![g.id].count) {
                defectFilter.push(g);
             }
          }

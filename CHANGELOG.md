@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.7.6 [2026-03-28]
+
+```diff
++ GLS event OOB check
+```
+
 ## 2.7.5 [2026-01-11]
 
 ```diff

@@ -90,3 +90,46 @@ export function printResultTime(
 
    return htmlContainer;
 }
+
+export function printResultGLS(
+   label: string,
+   timeAry: [wrapper.IWrapEventBoxGroup, number, wrapper.IWrapBaseObject][],
+   symbol?: OutputStatus,
+) {
+   const htmlContainer = document.createElement('p');
+
+   label = addLabel(label, symbol);
+   htmlContainer.innerHTML = `<b>${label} [${timeAry.length}]:</b> ${timeAry
+      .map((n) => {
+         switch (Settings.props.beatNumbering) {
+            case 'realtime':
+               return `<span class="checks__output-time" title="Beat ${round(
+                  n[0].customData[PrecalculateKey.BEAT_TIME],
+                  Settings.props.rounding,
+               )}">${secToMmss(n[2].customData[PrecalculateKey.SECOND_TIME])} in group ${n[0].id} time ${secToMmss(n[0].customData[PrecalculateKey.SECOND_TIME])} box ${n[1]}</span>`;
+            case 'realtimems':
+               return `<span class="checks__output-time" title="Beat ${round(
+                  n[0].customData[PrecalculateKey.BEAT_TIME],
+                  Settings.props.rounding,
+               )}">${secToMmssms(n[2].customData[PrecalculateKey.SECOND_TIME])} in group ${n[0].id} time ${secToMmssms(n[0].customData[PrecalculateKey.SECOND_TIME])} box ${n[1]}</span>`;
+            case 'jsontime':
+               return `<span class="checks__output-time" title="Time ${secToMmssms(
+                  n[0].customData[PrecalculateKey.SECOND_TIME],
+               )}">${round(n[2].time, Settings.props.rounding)} in group ${n[0].id} time ${round(n[0].time, Settings.props.rounding)} box ${n[1]}</span>`;
+            case 'beattime':
+            default:
+               return `<span class="checks__output-time" title="Time ${secToMmssms(
+                  n[0].customData[PrecalculateKey.SECOND_TIME],
+               )}">${round(
+                  n[2].customData[PrecalculateKey.BEAT_TIME],
+                  Settings.props.rounding,
+               )} in group ${n[0].id} time ${round(
+                  n[0].customData[PrecalculateKey.BEAT_TIME],
+                  Settings.props.rounding,
+               )} box ${n[1]}</span>`;
+         }
+      })
+      .join('<span class="checks__output-hidden">, </span>')}`;
+
+   return htmlContainer;
+}

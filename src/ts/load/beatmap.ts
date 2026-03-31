@@ -525,6 +525,14 @@ function applyTimeFn(timeProcessor: TimeProcessor) {
             object.customData[PrecalculateKey.SECOND_TIME];
          object.customData[PrecalculateKey.DURATION_BEAT_TIME] = object.duration;
       }
+      if ('boxes' in object) {
+         (object as wrapper.IWrapEventBoxGroup).boxes.forEach((b) => {
+            b.events.forEach((e) => {
+               e.customData[PrecalculateKey.SECOND_TIME] = timeProcessor.toRealTime(object.time + e.time);
+               e.customData[PrecalculateKey.BEAT_TIME] = timeProcessor.adjustTime(object.time + e.time);
+            });
+         });
+      }
    };
 }
 
