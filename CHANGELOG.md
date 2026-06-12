@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.7.7 [2026-06-xx]
+
+```diff
++ Added The Prodigy environment support
+* Fixed unlit bomb still being checked in v3 environment
+* Fixed v4 info custom data not being displayed
+```
+
 ## 2.7.6 [2026-03-28]
 
 ```diff

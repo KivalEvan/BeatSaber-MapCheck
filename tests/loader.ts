@@ -75,8 +75,8 @@ const map: {
    shortObstacle: ['90Degree', 'Normal'],
    zeroObstacle: ['90Degree', 'Easy'],
 
-   insufficientLight1: ['Legacy', 'ExpertPlus'],
-   insufficientLight2: ['Legacy', 'Expert'],
+   insufficientLight2: ['Legacy', 'ExpertPlus'],
+   insufficientLight1: ['Legacy', 'Expert'],
    invalidEventBox: ['Legacy', 'Hard'],
    unlitBomb: ['Legacy', 'Normal'],
    vnjs: ['Legacy', 'Easy'],

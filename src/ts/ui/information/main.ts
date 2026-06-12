@@ -81,10 +81,10 @@ export class UIInfo {
       setEnvironmentId(info.environmentNames.at(beatmap.info.environmentId));
       setColorScheme(info.colorSchemes.at(beatmap.info.colorSchemeId));
       setCustomColor(beatmap.info.customData);
-      setRequirements(beatmap.info.customData._requirements as string[]);
-      setSuggestions(beatmap.info.customData._suggestions as string[]);
-      setInformation(beatmap.info.customData._information);
-      setWarnings(beatmap.info.customData._warnings);
+      setRequirements(beatmap.info.customData._requirements || beatmap.info.customData.requirements as string[]);
+      setSuggestions(beatmap.info.customData._suggestions || beatmap.info.customData.suggestions as string[]);
+      setInformation(beatmap.info.customData._information || beatmap.info.customData.information);
+      setWarnings(beatmap.info.customData._warnings || beatmap.info.customData.warnings);
 
       const bpm = beatmap.timeProcessor;
       setTimeSpend(

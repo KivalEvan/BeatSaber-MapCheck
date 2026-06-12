@@ -6,6 +6,7 @@ import {
    isOnEventValue,
    BasicTrackDefinitions,
    wrapper,
+   isV2Environment,
 } from 'bsmap';
 import {
    CheckArgs,
@@ -66,7 +67,7 @@ const unlitBomb = (
    events: wrapper.IWrapBasicEvent[],
    environment: EnvironmentName,
 ) => {
-   if (!events.length) {
+   if (isV2Environment(environment) || !events.length) {
       return [];
    }
    const result: wrapper.IWrapBombNote[] = [];

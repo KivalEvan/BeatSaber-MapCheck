@@ -17,7 +17,8 @@
   "songPreviewFilename" : "track.ogg",
   "coverImageFilename" : "cover.jpg",
   "environmentNames" : [
-    "DefaultEnvironment"
+    "DefaultEnvironment",
+    "WeaveEnvironment"
   ],
   "colorSchemes" : [
   ],
@@ -373,7 +374,7 @@
         "lighters" : [
         ]
       },
-      "environmentNameIdx" : 0,
+      "environmentNameIdx" : 1,
       "beatmapColorSchemeIdx" : 0,
       "noteJumpMovementSpeed" : 12,
       "noteJumpStartBeatOffset" : 0,
@@ -796,7 +797,7 @@
     "editors" : {
       "lastEditedBy" : "ChroMapper",
       "ChroMapper" : {
-        "version" : "0.13.890"
+        "version" : "0.14.970"
       }
     }
   }
