@@ -1,5 +1,5 @@
 export const enum PrecalculateKey {
-   CALCULATED = '__mc_c',
+   CALCULATED = '__mc_calc',
    SECOND_TIME = '__mc_st',
    BEAT_TIME = '__mc_bt',
    DURATION_SECOND_TIME = '__mc_dst',
@@ -11,7 +11,7 @@ export const enum PrecalculateKey {
    ANGLE = '__mc_a',
    TAIL_ANGLE = '__mc_ta',
    SNAPPED = '__mc_s',
-   COLOR = '__mc_c',
+   COLOR = '__mc_color',
    BEZIER_PATH = '__mc_bp',
    HEAD_NOTES = '__mc_hn',
    TAIL_NOTES = '__mc_tn',

@@ -38,9 +38,10 @@ export class Settings {
          }
          for (const key in Settings.default) {
             const k = key as keyof ISettingsProps;
-            (Settings.props as any)[k] = temp[k] ?? Settings.default[k];
-            if (typeof Settings.props[k] !== typeof Settings.default[k]) {
-               (Settings.props as any)[k] = Settings.default[k];
+            if (temp[k] === undefined || typeof temp[k] !== typeof Settings.default[k]) {
+               (Settings.props as unknown as Record<string, unknown>)[k] = Settings.default[k];
+            } else {
+               (Settings.props as unknown as Record<string, unknown>)[k] = temp[k];
             }
          }
          Settings.props.version = Settings.default.version;

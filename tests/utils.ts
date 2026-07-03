@@ -30,9 +30,9 @@ export function getAndCompareTimeResult(
    if (typeof index === 'number') result = results[index];
    else result = results.find((o) => o.label.includes(index));
 
-   if (Array.isArray(expected[0])) {
-      expected = expected[0];
-   }
+   const expectedFlat: number[] = Array.isArray(expected[0])
+      ? (expected as number[][])[0]
+      : (expected as number[]);
 
    if (!result) {
       throw new Error(
@@ -45,7 +45,7 @@ results: ${JSON.stringify(results, null, 2)}`,
       throw new Error('output type should be TIME');
    }
    expect(result.value.map((o) => o.time).toSorted((a, b) => a - b)).toEqual(
-      expected.toSorted((a, b) => a - b),
+      expectedFlat.toSorted((a, b) => a - b),
    );
 }
 

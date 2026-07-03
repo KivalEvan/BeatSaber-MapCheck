@@ -28,7 +28,7 @@ export class State {
          analysis: null,
          duration: null,
       };
-      for (const k in State.flag) {
+      for (const k of Object.keys(State.flag)) {
          State.flag[k as keyof IStateFlag] = false;
       }
    }
