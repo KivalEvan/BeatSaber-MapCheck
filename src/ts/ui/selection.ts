@@ -119,6 +119,7 @@ export class UISelection {
       const targetIdx = beatmapInfo.difficulties.findIndex(
          (e) => e.difficulty === prevSelected && e.characteristic === characteristic,
       );
+      let firstDefaultSelected = false;
       for (let i = 0; i < beatmapInfo.difficulties.length; i++) {
          const diff = beatmapInfo.difficulties[i];
          if (characteristic !== diff.characteristic) continue;
@@ -127,18 +128,21 @@ export class UISelection {
                  DifficultyRename[diff.difficulty] || diff.difficulty
               })`
             : DifficultyRename[diff.difficulty] || diff.difficulty;
+         const isSelected = targetIdx === -1 ? !firstDefaultSelected : i === targetIdx;
+         if (targetIdx === -1 && isSelected) {
+            firstDefaultSelected = true;
+         }
          const htmlSelect = UITab.create(
             `select-${diff.difficulty}`,
             difficultyLabel,
             'select-difficulty',
             diff.difficulty,
-            targetIdx === -1 || i === targetIdx,
+            isSelected,
             UISelection.#selectDifficultyHandler,
          );
          UISelection.#htmlLoadedDifficulty.push(htmlSelect.firstChild as HTMLInputElement);
          UISelection.#htmlSelectDifficulty.appendChild(htmlSelect);
-         // FIXME: this should only run once
-         if (targetIdx === -1 || i === targetIdx) {
+         if (isSelected) {
             const diffData = State.data.beatmaps.find(
                (bm) =>
                   bm.info.difficulty === diff.difficulty &&

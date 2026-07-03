@@ -57,29 +57,42 @@ export class UIIntro {
       }
    }
 
-   // TODO: maybe break up into individual function
    static async #inputFileHandler(ev: Event): Promise<void> {
       const target = ev.target as HTMLInputElement;
-      UILoading.status(LoadStatus.INFO, 'Reading file input', 0);
-      const file = target.files ? target.files[0] : null;
+      const file = UIIntro.#getFileFromInput(target);
       try {
-         if (file == null) {
-            UILoading.status(LoadStatus.INFO, 'No file input', 0);
-            throw new Error('No file input');
-         }
-         if (file && (file.name.substr(-4) === '.zip' || file.name.substr(-4) === '.bsl')) {
-            const fr = new FileReader();
-            fr.readAsArrayBuffer(file);
-            fr.addEventListener('load', async () => {
-               return main({ type: PayloadType.File, data: file });
-            });
-         } else {
-            throw new Error('Unsupported file format, please enter zip file');
-         }
+         await UIIntro.#processFile(file);
       } catch (err) {
          UILoading.status(LoadStatus.ERROR, err, 0);
          console.error(err);
       }
+   }
+
+   static #getFileFromInput(input: HTMLInputElement): File | null {
+      return input.files ? input.files[0] : null;
+   }
+
+   static async #processFile(file: File | null): Promise<void> {
+      UILoading.status(LoadStatus.INFO, 'Reading file input', 0);
+      if (file == null) {
+         UILoading.status(LoadStatus.INFO, 'No file input', 0);
+         throw new Error('No file input');
+      }
+      if (!UIIntro.#isValidFile(file)) {
+         throw new Error('Unsupported file format, please enter zip file');
+      }
+      const fr = new FileReader();
+      fr.readAsArrayBuffer(file);
+      await new Promise<void>((resolve) => {
+         fr.addEventListener('load', async () => {
+            await main({ type: PayloadType.File, data: file });
+            resolve();
+         });
+      });
+   }
+
+   static #isValidFile(file: File): boolean {
+      return file.name.substr(-4) === '.zip' || file.name.substr(-4) === '.bsl';
    }
 
    static async #inputFileDropHandler(ev: DragEvent): Promise<void> {

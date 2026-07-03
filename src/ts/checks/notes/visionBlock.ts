@@ -214,8 +214,9 @@ function adjustTimeHandler(bpm: TimeProcessor) {
 }
 
 function inputSpecCheckHandler(this: HTMLInputElement) {
-   // FIXME: check for string
-   tool.input.params.specific = this.value as 'difficulty' | 'time';
+   if (this.value === 'difficulty' || this.value === 'time') {
+      tool.input.params.specific = this.value;
+   }
 }
 
 function check(args: CheckArgs) {

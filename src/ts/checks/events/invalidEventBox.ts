@@ -50,7 +50,6 @@ const tool: ICheck = {
    run,
 };
 
-// FIXME: EDMEnvironment special case 12 and 13 filter is 1 for rotation
 function check(map: wrapper.IWrapLightshow, environment: EnvironmentName) {
    const defectID: wrapper.IWrapEventBoxGroup[] = [];
    const defectFilter: wrapper.IWrapEventBoxGroup[] = [];
@@ -73,7 +72,10 @@ function check(map: wrapper.IWrapLightshow, environment: EnvironmentName) {
       for (const eb of g.boxes) {
          const filter = eb.filter;
          if (filter.type === IndexFilterType.STEP_AND_OFFSET) {
-            if (filter.p0 > GroupTrackDefinitions[envV3]![g.id].count) {
+            const trackDef = GroupTrackDefinitions[envV3]![g.id];
+            const maxFilter =
+               (g.id === 12 || g.id === 13) && !trackDef ? 1 : (trackDef?.count ?? Infinity);
+            if (filter.p0 > maxFilter) {
                defectFilter.push(g);
             }
          }
