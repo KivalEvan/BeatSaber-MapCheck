@@ -42,7 +42,10 @@ export function setEnvironmentEnhancement(
       return `${geometry ? 'Geometry' : elem.lookupMethod || elem._lookupMethod} [${keyArr.join(
          '',
       )}]${track ? `(${track})` : ''} -> ${
-         geometry ? (geometry as any).type || (geometry as any)._type : id
+         geometry
+            ? (geometry as unknown as Record<string, unknown>).type ||
+              (geometry as unknown as Record<string, unknown>)._type
+            : id
       }`;
    });
    displayTableRow(UIInfoHTML.htmlTableEnvironmentEnhancement, envEnhance, 'environments');

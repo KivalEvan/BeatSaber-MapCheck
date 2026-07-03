@@ -85,13 +85,7 @@ export interface MapVersion {
 export interface MapDifficulty {
    bombs: number;
    characteristics:
-      | 'Standard'
-      | 'OneSaber'
-      | 'NoArrows'
-      | '_90Degree'
-      | '_360Degree'
-      | 'Lightshow'
-      | 'Lawless';
+      'Standard' | 'OneSaber' | 'NoArrows' | '_90Degree' | '_360Degree' | 'Lightshow' | 'Lawless';
    chroma: boolean;
    cinema: boolean;
    difficulty: 'Easy' | 'Normal' | 'Hard' | 'Expert' | 'ExpertPlus';

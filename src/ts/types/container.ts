@@ -102,7 +102,4 @@ interface IBeatmapContainerV4 extends IBeatmapContainerBase {
 }
 
 export type IBeatmapContainer =
-   | IBeatmapContainerV1
-   | IBeatmapContainerV2
-   | IBeatmapContainerV3
-   | IBeatmapContainerV4;
+   IBeatmapContainerV1 | IBeatmapContainerV2 | IBeatmapContainerV3 | IBeatmapContainerV4;

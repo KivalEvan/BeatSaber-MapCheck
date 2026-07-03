@@ -20,7 +20,14 @@ import {
 import { setPointDefinitions } from './pointDefinition';
 import { setPlayTime } from './playTime';
 import { setColorScheme } from './colorScheme';
-import { EnvironmentName, getFirstInteractiveTime, getLastInteractiveTime, wrapper } from 'bsmap';
+import {
+   EnvironmentName,
+   getFirstInteractiveTime,
+   getLastInteractiveTime,
+   v2,
+   v3,
+   wrapper,
+} from 'bsmap';
 import { UIInfoHTML } from './html';
 import { State } from '../../state';
 
@@ -73,16 +80,20 @@ export class UIInfo {
    }
 
    static setDiffInfoTable(info: wrapper.IWrapInfo, beatmap: IBeatmapContainer): void {
-      setVersion(
-         (beatmap.rawData as any)._version || (beatmap.rawData as any).version || 'Unknown',
-      );
+      const rawDataRecord = beatmap.rawData as unknown as Record<string, string | undefined>;
+      setVersion(rawDataRecord._version ?? rawDataRecord.version ?? 'Unknown');
       setMappers(beatmap.info.authors.mappers);
       setLighters(beatmap.info.authors.lighters);
       setEnvironmentId(info.environmentNames.at(beatmap.info.environmentId));
       setColorScheme(info.colorSchemes.at(beatmap.info.colorSchemeId));
       setCustomColor(beatmap.info.customData);
-      setRequirements(beatmap.info.customData._requirements || beatmap.info.customData.requirements as string[]);
-      setSuggestions(beatmap.info.customData._suggestions || beatmap.info.customData.suggestions as string[]);
+      setRequirements(
+         beatmap.info.customData._requirements ||
+            (beatmap.info.customData.requirements as string[]),
+      );
+      setSuggestions(
+         beatmap.info.customData._suggestions || (beatmap.info.customData.suggestions as string[]),
+      );
       setInformation(beatmap.info.customData._information || beatmap.info.customData.information);
       setWarnings(beatmap.info.customData._warnings || beatmap.info.customData.warnings);
 
@@ -101,8 +112,9 @@ export class UIInfo {
             beatmap.data.difficulty.customData._environment,
       );
       setPointDefinitions(
-         (beatmap.data.difficulty.customData.pointDefinitions as any) ??
-            beatmap.data.difficulty.customData._pointDefinitions,
+         (beatmap.data.difficulty.customData.pointDefinitions ??
+            beatmap.data.difficulty.customData._pointDefinitions) as
+            v2.IPointDefinition | v3.IPointDefinition | undefined,
       );
       setCustomEvents(
          beatmap.data.difficulty.customData.customEvents ??

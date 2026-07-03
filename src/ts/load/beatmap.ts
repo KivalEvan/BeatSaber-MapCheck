@@ -29,6 +29,7 @@ import {
    resolveNoteAngle,
    TimeProcessor,
    v3,
+   v4,
    Vector2,
    Vector3,
    vectorAdd,
@@ -51,7 +52,7 @@ export async function extractLightshow(
    zip: JSZip,
    infoDiff: wrapper.IWrapInfoBeatmap,
    path = '',
-): Promise<[any, wrapper.IWrapBeatmap] | null> {
+): Promise<[unknown, wrapper.IWrapBeatmap] | null> {
    const logger = getLogger();
    const file = zip.file(path + infoDiff.lightshowFilename);
    if (!file) {
@@ -85,7 +86,7 @@ export function extractBeatmaps(
    zip: JSZip,
    path = '',
 ): Promise<IBeatmapContainer | null>[] {
-   const loaded: Record<string, Promise<[any, wrapper.IWrapBeatmap] | null>> = {};
+   const loaded: Record<string, Promise<[unknown, wrapper.IWrapBeatmap] | null>> = {};
    const logger = getLogger();
    return info.difficulties.map(async (d) => {
       const infoDiff = d;
@@ -164,8 +165,8 @@ export function createBeatmapContainer(
    info: wrapper.IWrapInfo,
    infoBeatmap: wrapper.IWrapInfoBeatmap,
    beatmap: wrapper.IWrapBeatmap,
-   jsonDifficulty: any,
-   jsonLightshow: any,
+   jsonDifficulty: unknown,
+   jsonLightshow: unknown,
    version: number,
 ): IBeatmapContainer {
    const timeProcessor = TimeProcessor.create(
@@ -173,13 +174,13 @@ export function createBeatmapContainer(
       version === 3
          ? [
               ...(beatmap.difficulty.customData.BPMChanges ?? []),
-              ...(jsonDifficulty.bpmEvents ?? []).map((be: v3.IBPMEvent) => be),
+              ...((jsonDifficulty as Record<string, any>).bpmEvents ?? []),
            ]
          : version === 2
            ? (beatmap.difficulty.customData._BPMChanges ??
              beatmap.difficulty.customData._bpmChanges)
            : version === 1
-             ? jsonDifficulty._BPMChanges
+             ? (jsonDifficulty as Record<string, any>)._BPMChanges
              : [],
       infoBeatmap.customData?._editorOffset,
    );
@@ -246,9 +247,9 @@ export function createBeatmapContainer(
          obstacles: stats.countObstacle(beatmap.difficulty.obstacles),
       },
       rawVersion: version as 4,
-      rawData: jsonDifficulty,
-      rawLightshow: jsonLightshow,
-   } satisfies IBeatmapContainer;
+      rawData: jsonDifficulty as unknown,
+      rawLightshow: jsonLightshow as v4.ILightshow,
+   } as IBeatmapContainer;
 }
 
 function getNoteContainer(
@@ -528,8 +529,12 @@ function applyTimeFn(timeProcessor: TimeProcessor) {
       if ('boxes' in object) {
          (object as wrapper.IWrapEventBoxGroup).boxes.forEach((b) => {
             b.events.forEach((e) => {
-               e.customData[PrecalculateKey.SECOND_TIME] = timeProcessor.toRealTime(object.time + e.time);
-               e.customData[PrecalculateKey.BEAT_TIME] = timeProcessor.adjustTime(object.time + e.time);
+               e.customData[PrecalculateKey.SECOND_TIME] = timeProcessor.toRealTime(
+                  object.time + e.time,
+               );
+               e.customData[PrecalculateKey.BEAT_TIME] = timeProcessor.adjustTime(
+                  object.time + e.time,
+               );
             });
          });
       }

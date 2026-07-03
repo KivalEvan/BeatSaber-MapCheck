@@ -43,7 +43,9 @@ export function setCustomEvents(
       }
 
       const type = elem.t ?? elem._type;
-      const track = (elem.d as any)?.track ?? (elem._data as any)?._track;
+      const track =
+         ((elem.d as unknown as Record<string, unknown>)?.track as string | undefined) ??
+         ((elem._data as unknown as Record<string, unknown>)?._track as string | undefined);
       return `${round(time, Settings.props.rounding)}${
          rt ? ' | ' + secToMmss(rt) : ''
       } -- ${type} -> [${keyArr.join('')}]${track ? `(${track})` : ''}`;

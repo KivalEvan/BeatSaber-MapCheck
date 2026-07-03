@@ -65,11 +65,7 @@ export interface ICheckOutputHTML extends ICheckOutputBase {
 }
 
 export type ICheckOutput =
-   | ICheckOutputString
-   | ICheckOutputNumber
-   | ICheckOutputTime
-   | ICheckOutputHTML
-   | ICheckOutputGLS;
+   ICheckOutputString | ICheckOutputNumber | ICheckOutputTime | ICheckOutputHTML | ICheckOutputGLS;
 
 export interface CheckArgs {
    readonly audioDuration: number | null;

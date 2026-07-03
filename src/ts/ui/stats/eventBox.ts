@@ -1,14 +1,15 @@
+import type { ICountEventBoxGroup, ICountStatsEventBoxGroup } from 'bsmap/extensions/stats';
 import { wrapper } from 'bsmap';
 import { IBeatmapContainer } from '../../types';
 import { prefix } from './constants';
 import * as renamer from 'bsmap/extensions/renamer';
 
-function allPopulate(...d: Record<string, any>[]) {
+function allPopulate(...d: (ICountEventBoxGroup | ICountStatsEventBoxGroup)[]) {
    for (const r of d) {
       for (const k in r) {
          for (const n of d) {
-            if (!n[k]) {
-               n[k] = {
+            if (!(n as unknown as Record<string, unknown>)[k]) {
+               (n as unknown as Record<string, unknown>)[k] = {
                   groups: 0,
                   boxes: 0,
                   bases: 0,

@@ -1,6 +1,6 @@
 import { MapDetail } from './types/beatsaver';
 
-async function fetchJson(url: string): Promise<any> {
+async function fetchJson<T>(url: string): Promise<T> {
    return new Promise(function (resolve, reject) {
       const xhr = new XMLHttpRequest();
       xhr.open('GET', url, true);
@@ -39,7 +39,7 @@ async function fetchJson(url: string): Promise<any> {
 
 export async function fetchMapFromId(id: string): Promise<string> {
    const url = `https://api.beatsaver.com/maps/id/${id}`;
-   const json = (await fetchJson(url)) as MapDetail;
+   const json = await fetchJson<MapDetail>(url);
    if (json?.versions.length) {
       return json.versions[json.versions.length - 1].downloadURL;
    }
@@ -48,7 +48,7 @@ export async function fetchMapFromId(id: string): Promise<string> {
 
 export async function fetchMapFromHash(hash: string): Promise<string> {
    const url = `https://api.beatsaver.com/maps/hash/${hash}`;
-   const json = (await fetchJson(url)) as MapDetail;
+   const json = await fetchJson<MapDetail>(url);
    if (json?.versions.length) {
       return json.versions[json.versions.length - 1].downloadURL;
    }

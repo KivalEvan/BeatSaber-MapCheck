@@ -41,8 +41,10 @@ export class UIStatsSettings {
       );
       const njsEvents = beatmap.data.difficulty.njsEvents.toSorted((a, b) => a.value - b.value);
 
+      const rawDataUnknown = beatmap.rawData as unknown;
+      const rawDataRecord = rawDataUnknown as Record<string, string | undefined>;
       UIStatsSettings.#htmlSettingsVersion.textContent =
-         (beatmap.rawData as any).version || (beatmap.rawData as any)._version || 'N/A';
+         rawDataRecord.version ?? rawDataRecord._version ?? 'N/A';
       UIStatsSettings.#htmlSettingsNjs.textContent = round(njs.value, 3).toString();
       UIStatsSettings.#htmlSettingsNjsMax.textContent = round(
          njs.value + (njsEvents.at(0)?.value || 0),
