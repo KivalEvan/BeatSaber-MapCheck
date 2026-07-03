@@ -72,10 +72,7 @@ function check(map: wrapper.IWrapLightshow, environment: EnvironmentName) {
       for (const eb of g.boxes) {
          const filter = eb.filter;
          if (filter.type === IndexFilterType.STEP_AND_OFFSET) {
-            const trackDef = GroupTrackDefinitions[envV3]![g.id];
-            const maxFilter =
-               (g.id === 12 || g.id === 13) && !trackDef ? 1 : (trackDef?.count ?? Infinity);
-            if (filter.p0 > maxFilter) {
+            if (filter.p0 > GroupTrackDefinitions[envV3]![g.id].count) {
                defectFilter.push(g);
             }
          }

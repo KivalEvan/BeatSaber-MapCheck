@@ -1,10 +1,11 @@
+import { clamp, NoteDirection, NoteDirectionAngle, round, wrapper } from 'bsmap';
 import { State } from '../../state';
 import { IBeatmapContainer } from '../../types';
 import { logPrefix, prefix } from './constants';
 import * as stats from 'bsmap/extensions/stats';
-import { round, wrapper } from 'bsmap';
 import { UISelection } from '../selection';
 import { ObjectContainerType } from '../../types/container';
+import { PrecalculateKey } from '../../types/precalculate';
 
 export class UIStatsNoteAngle {
    static #htmlCheckNote: HTMLInputElement;
@@ -75,15 +76,25 @@ export class UIStatsNoteAngle {
       UIStatsNoteAngle.updateTable(beatmapInfo, beatmapItem);
    }
 
-   // TODO: use angle instead of cut direction
    static #noteAngleTableString(notes: wrapper.IWrapBaseNote[]): string {
       const totalNote = notes.length || 1;
-      const cutOrder = [4, 0, 5, 2, 8, 3, 6, 1, 7];
+      const angleBuckets: number[] = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+      for (const note of notes) {
+         if (note.direction === NoteDirection.ANY) {
+            angleBuckets[4]++;
+            continue;
+         }
+         const angle = note.customData[PrecalculateKey.ANGLE] as number;
+         let bucket = Math.floor(clamp(Math.round(angle / 45), 0, 7));
+         if (bucket >= 4) bucket++;
+         angleBuckets[bucket]++;
+      }
       let htmlString = '';
       for (let y = 0; y < 3; y++) {
          htmlString += '<tr>';
          for (let x = 0; x < 3; x++) {
-            let count = stats.countDirection(notes, cutOrder[y * 3 + x]);
+            const idx = y * 3 + x;
+            const count = angleBuckets[idx];
             htmlString += `<td class="${prefix}table-element">${count}<br>(${round(
                (count / totalNote) * 100,
                1,
