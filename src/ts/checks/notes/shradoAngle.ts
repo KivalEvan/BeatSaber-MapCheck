@@ -1,6 +1,8 @@
 import {
+   lowestDifferenceMod,
    NoteColor,
    NoteDirection,
+   NoteDirectionAngle,
    NoteDirectionFlip,
    resolveGridDistance,
    TimeProcessor,
@@ -125,7 +127,7 @@ function check(args: CheckArgs) {
    const { maxTime, distance } = tool.input.params;
 
    const lastNote: { [key: number]: wrapper.IWrapColorNote } = {};
-   const lastNoteDirection: { [key: number]: number } = {};
+   const lastNoteDirection: { [key: number]: [wrapper.IWrapColorNote, number] } = {};
    const startNoteDot: { [key: number]: wrapper.IWrapColorNote | null } = {};
    const swingNoteArray: { [key: number]: wrapper.IWrapColorNote[] } = {
       [NoteColor.RED]: [],
@@ -139,15 +141,14 @@ function check(args: CheckArgs) {
       const note = noteContainer[i].data as wrapper.IWrapColorNote;
       if (lastNote[note.color]) {
          if (swing.next(note, lastNote[note.color], timeProcessor, swingNoteArray[note.color])) {
-            // FIXME: maybe fix rotation or something
             if (startNoteDot[note.color]) {
                startNoteDot[note.color] = null;
-               lastNoteDirection[note.color] =
-                  NoteDirectionFlip[lastNoteDirection[note.color] as 0] ?? 8;
+               lastNoteDirection[note.color][1] =
+                  NoteDirectionFlip[lastNoteDirection[note.color][1] as 0] ?? 8;
             }
             if (
                resolveGridDistance(note, lastNote[note.color]) >= distance &&
-               checkShrAngle(note.direction, lastNoteDirection[note.color], note.color) &&
+               checkShrAngle(note, lastNoteDirection[note.color][0]) &&
                note.customData[PrecalculateKey.SECOND_TIME] -
                   lastNote[note.color].customData[PrecalculateKey.SECOND_TIME] <=
                   maxTime
@@ -157,14 +158,14 @@ function check(args: CheckArgs) {
             if (note.direction === NoteDirection.ANY) {
                startNoteDot[note.color] = note;
             } else {
-               lastNoteDirection[note.color] = note.direction;
+               lastNoteDirection[note.color][1] = note.direction;
             }
             swingNoteArray[note.color] = [];
          } else {
             if (
                startNoteDot[note.color] &&
                resolveGridDistance(note, lastNote[note.color]) >= distance &&
-               checkShrAngle(note.direction, lastNoteDirection[note.color], note.color) &&
+               checkShrAngle(note, lastNoteDirection[note.color][0]) &&
                note.customData[PrecalculateKey.SECOND_TIME] -
                   lastNote[note.color].customData[PrecalculateKey.SECOND_TIME] <=
                   maxTime
@@ -173,11 +174,11 @@ function check(args: CheckArgs) {
                startNoteDot[note.color] = null;
             }
             if (note.direction !== NoteDirection.ANY) {
-               lastNoteDirection[note.color] = note.direction;
+               lastNoteDirection[note.color][1] = note.direction;
             }
          }
       } else {
-         lastNoteDirection[note.color] = note.direction;
+         lastNoteDirection[note.color][1] = note.direction;
       }
       lastNote[note.color] = note;
       swingNoteArray[note.color].push(note);
@@ -185,11 +186,20 @@ function check(args: CheckArgs) {
    return result;
 }
 
-function checkShrAngle(currCutDirection: number, prevCutDirection: number, type: number) {
-   if (currCutDirection === 8 || prevCutDirection === 8) {
+function checkShrAngle(currNote: wrapper.IWrapBaseNote, prevNote: wrapper.IWrapBaseNote) {
+   if (currNote.direction === 8 || prevNote.direction === 8) {
       return false;
    }
-   if ((type === 0 ? prevCutDirection === 7 : prevCutDirection === 6) && currCutDirection === 0) {
+   if (
+      lowestDifferenceMod(
+         prevNote.color === NoteColor.RED
+            ? NoteDirectionAngle[NoteDirection.DOWN_RIGHT]
+            : NoteDirectionAngle[NoteDirection.DOWN_LEFT],
+         prevNote.customData[PrecalculateKey.ANGLE] as number,
+         360,
+      ) < 22.5 &&
+      lowestDifferenceMod(0, prevNote.customData[PrecalculateKey.ANGLE] as number, 360) < 11.25
+   ) {
       return true;
    }
    return false;

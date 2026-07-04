@@ -1,4 +1,12 @@
-import { ColorNote, NoteColor, NoteDirection, NoteDirectionSpace, wrapper } from 'bsmap';
+import {
+   degToRad,
+   NoteColor,
+   NoteDirection,
+   NoteDirectionSpace,
+   Vector2,
+   vectorDistance,
+   wrapper,
+} from 'bsmap';
 import {
    CheckArgs,
    CheckInputOrder,
@@ -75,27 +83,28 @@ function check(args: CheckArgs) {
       [NoteColor.RED]: [],
       [NoteColor.BLUE]: [],
    };
-   const noteOccupy: { [key: number]: ColorNote } = {
-      [NoteColor.RED]: new ColorNote(),
-      [NoteColor.BLUE]: new ColorNote({ color: 1 }),
+   const noteOccupiedSpace: { [key: number]: Vector2 } = {
+      [NoteColor.RED]: [-999, -999],
+      [NoteColor.BLUE]: [-999, -999],
    };
 
-   // FIXME: use new system
    const result: wrapper.IWrapColorNote[] = [];
    for (let i = 0, len = notes.length; i < len; i++) {
       const note = notes[i];
-      const directionSpace = NoteDirectionSpace[note.direction as 0] || [0, 0];
+      const occupiedSpace = getOccupiedSpace(note);
       if (lastNote[note.color]) {
          if (swing.next(note, lastNote[note.color], timeProcessor, swingNoteArray[note.color])) {
             lastSpeed[note.color] =
                note.customData[PrecalculateKey.SECOND_TIME] -
                lastNote[note.color].customData[PrecalculateKey.SECOND_TIME];
             if (note.direction !== NoteDirection.ANY) {
-               noteOccupy[note.color].posX = note.posX + directionSpace[0];
-               noteOccupy[note.color].posY = note.posY + directionSpace[1];
+               noteOccupiedSpace[note.color][0] =
+                  note.customData[PrecalculateKey.POSITION][0] + occupiedSpace[0];
+               noteOccupiedSpace[note.color][1] =
+                  note.customData[PrecalculateKey.POSITION][1] + occupiedSpace[1];
             } else {
-               noteOccupy[note.color].posX = -1;
-               noteOccupy[note.color].posY = -1;
+               noteOccupiedSpace[note.color][0] = -999;
+               noteOccupiedSpace[note.color][1] = -999;
             }
             swingNoteArray[note.color] = [];
             lastNoteDirection[note.color] = note.direction;
@@ -103,14 +112,18 @@ function check(args: CheckArgs) {
             placement.isEndNote(note, lastNote[note.color], lastNoteDirection[note.color])
          ) {
             if (note.direction !== NoteDirection.ANY) {
-               noteOccupy[note.color].posX = note.posX + directionSpace[0];
-               noteOccupy[note.color].posY = note.posY + directionSpace[1];
+               noteOccupiedSpace[note.color][0] =
+                  note.customData[PrecalculateKey.POSITION][0] + occupiedSpace[0];
+               noteOccupiedSpace[note.color][1] =
+                  note.customData[PrecalculateKey.POSITION][1] + occupiedSpace[1];
                lastNoteDirection[note.color] = note.direction;
             } else {
-               noteOccupy[note.color].posX =
-                  note.posX + (NoteDirectionSpace[lastNoteDirection[note.color] as 0]?.[0] || 0);
-               noteOccupy[note.color].posY =
-                  note.posY + (NoteDirectionSpace[lastNoteDirection[note.color] as 0]?.[1] || 0);
+               noteOccupiedSpace[note.color][0] =
+                  note.customData[PrecalculateKey.POSITION][0] +
+                  (NoteDirectionSpace[lastNoteDirection[note.color] as 0]?.[0] || 0);
+               noteOccupiedSpace[note.color][1] =
+                  note.customData[PrecalculateKey.POSITION][1] +
+                  (NoteDirectionSpace[lastNoteDirection[note.color] as 0]?.[1] || 0);
             }
          }
          if (
@@ -123,8 +136,10 @@ function check(args: CheckArgs) {
                Math.min(hitboxTime, lastSpeed[(note.color + 1) % 2])
          ) {
             if (
-               note.posX === noteOccupy[(note.color + 1) % 2].posX &&
-               note.posY === noteOccupy[(note.color + 1) % 2].posY &&
+               vectorDistance(
+                  note.customData[PrecalculateKey.POSITION],
+                  noteOccupiedSpace[(note.color + 1) % 2],
+               ) < 0.5 &&
                !isDouble(note, args.beatmap.data.difficulty.colorNotes, i)
             ) {
                result.push(note);
@@ -132,11 +147,13 @@ function check(args: CheckArgs) {
          }
       } else {
          if (note.direction !== NoteDirection.ANY) {
-            noteOccupy[note.color].posX = note.posX + directionSpace[0];
-            noteOccupy[note.color].posY = note.posY + directionSpace[1];
+            noteOccupiedSpace[note.color][0] =
+               note.customData[PrecalculateKey.POSITION][0] + occupiedSpace[0];
+            noteOccupiedSpace[note.color][1] =
+               note.customData[PrecalculateKey.POSITION][1] + occupiedSpace[1];
          } else {
-            noteOccupy[note.color].posX = -1;
-            noteOccupy[note.color].posY = -1;
+            noteOccupiedSpace[note.color][0] = -999;
+            noteOccupiedSpace[note.color][1] = -999;
          }
          lastNoteDirection[note.color] = note.direction;
       }
@@ -163,3 +180,8 @@ function run(args: CheckArgs): ICheckOutput[] {
 }
 
 export default tool;
+
+function getOccupiedSpace(note: wrapper.IWrapColorNote): Vector2 {
+   const angle = note.customData[PrecalculateKey.ANGLE] as number;
+   return [-Math.cos(degToRad(angle - 90)), -Math.sin(degToRad(angle - 90))];
+}
