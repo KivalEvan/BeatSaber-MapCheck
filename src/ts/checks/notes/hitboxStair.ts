@@ -183,5 +183,5 @@ export default tool;
 
 function getOccupiedSpace(note: wrapper.IWrapColorNote): Vector2 {
    const angle = note.customData[PrecalculateKey.ANGLE] as number;
-   return [-Math.cos(degToRad(angle - 90)), -Math.sin(degToRad(angle - 90))];
+   return [-Math.cos(degToRad(angle + 90)), -Math.sin(degToRad(angle + 90))];
 }
